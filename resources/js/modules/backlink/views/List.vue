@@ -1,0 +1,319 @@
+<template>
+    <div class="row">
+        <section class="content-header col-sm-12">
+        <h1>Backlinks</h1>
+        </section>
+        <div class="col-sm-12">
+            <div class="box">
+                <div class="box-header">
+                    <div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="form-row">
+                                <div class="col-md-8 mb-8">
+                                <label class="int-domain">Search</label>
+                                <div class="input-group">
+                                    <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
+                                    <div class="input-group-btn">
+                                        <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                                <div v-if="Object.keys(listBackLink).length !== 0" class="col-md-3 mb-3">
+                                    <label class="int-domain">Download CSV</label>
+                                    <br>
+                                    <download-csv
+                                        :data = "listBackLink.data"
+                                        :fileds = "data_filed"
+                                        :nameFile = "file_csv">
+                                    </download-csv>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <!-- /.box-footer-->
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-bordered table-striped rlink-table">
+                        <tbody>
+                            <tr class="label-primary">
+                                <th>#</th>
+                                <th>External Domain</th>
+                                <th>Internal Domain</th>
+                                <th>Link</th>
+                                <th>Price</th>
+                                <th>Anchor Text</th>
+                                <th>Live Date</th>
+                                <th>Status</th>
+                                <th>Employee</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr v-for="(backLink, index) in listBackLink.data" :key="index">
+                                <td class="center-content">{{ index + 1 }}</td>
+                                <td>{{ backLink.ext_domain.domain }}</td>
+                                <td>{{ backLink.int_domain.domain }}</td>
+                                <td><a href="backLink.link">{{ backLink.link }}</a></td>
+                                <td>{{ convertPrice(backLink.price) }}$</td>
+                                <td>{{ backLink.anchor_text }}</td>
+                                <td>{{ backLink.live_date }}</td>
+                                <td>{{ backLink.status }}</td>
+                                <td>{{ backLink.user.name }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!--    Modal Add Backlink-->
+        <div v-if="openModalBackLink" class="modal fade"  ref="modalEditBacklink" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add BackLink Domain</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                            <span v-if="messageBacklinkForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageBacklinkForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageBacklinkForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body relative">
+                        <form class="row" action="">
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
+                                    <label style="color: #333">Ext Domain</label>
+                                    <input type="text" v-model="modelBaclink.ext_domain.domain" :disabled="true" class="form-control" required="required" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
+                                    <label style="color: #333">Internal Domain</label>
+                                    <input type="text" v-model="modelBaclink.int_domain.domain" :disabled="true"  class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Price</label>
+                                        <input type="number" v-model="modelBaclink.price" class="form-control" value="" required="required" >
+                                        <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
+                                    <label style="color: #333">User</label>
+                                    <input type="text" v-model="modelBaclink.user.name" :disabled="true"  class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Anchor text</label>
+                                        <input type="text" v-model="modelBaclink.anchor_text" class="form-control" required="required" >
+                                        <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Link</label>
+                                        
+                                        <input type="text" v-model="modelBaclink.link" class="form-control"  required="required" >
+                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                              <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Live date</label>
+                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" >
+                                        <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Status</label>
+                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;">
+                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        </select>
+                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="overlay" v-if="isPopupLoading"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" @click="closeModalBacklink">Close</button>
+                        <button type="button" :disabled="checkSelectIntDomain" @click="submitEditBacklink" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--    End Modal Add-->
+    </div>
+</template>
+<script>
+    import Hepler from '@/library/Helper';
+    import { mapState } from 'vuex';
+    import { Domain } from 'domain';
+    import DownloadCsv from '@/components/export-csv/Csv.vue'
+    import _ from 'lodash'
+    
+    export default {
+      name: 'BackLinkList',
+      data() {
+        return {
+          file_csv: 'baclink.xls',
+          statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
+          data_filed: {
+            'Ext Domain': 'ext_domain.domain',
+            'Int Domain': 'int_domain.domain',
+            'Link': 'link',
+            'Price': 'price',
+            'Anchor Text': 'anchor_text',
+            'Live Date': 'live_date',
+            'Status': 'status',
+            'User': 'user.name'
+          },
+          json_meta: [
+            [{
+              'key': 'charset',
+              'value': 'utf-8'
+            }]
+          ],
+          page: this.$route.query.page || 1,
+          modalAddBackLink: false,
+          modelBaclink: {
+            ext_domain: {
+              domain: ''
+            },
+            int_domain: {
+              domain: ''
+            },
+            user: {
+              name: ''
+            }
+          },
+          loadIntDomain: false,
+          isPopupLoading: false,
+        }
+      },
+      async created() {
+          await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
+          await this.getBackLinkList();
+      },
+    
+      computed: {
+        ...mapState({
+          listBackLink: state => state.storeBackLink.listBackLink,
+          fillter: state => state.storeBackLink.fillter,
+          user: state => state.storeAuth.currentUser,
+          messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
+          
+        }),
+        openModalBackLink() {
+          if (this.modalAddBackLink = true) {
+              return true
+          }
+    
+          return false
+        },
+    
+        checkSelectIntDomain () {
+          if (this.modelBaclink.int_domain_id == 0) {
+              return true
+          }
+    
+          return false
+        },
+      },
+    
+      mounted() {
+        $(this.$refs.modalEditBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
+      },
+    
+      methods: {
+        getBackLinkList: _.debounce(async function(page) {
+          if (page) {
+            this.page = page
+          }
+          this.$router.push({
+            query: {
+              page: this.page,
+            },
+          })
+          await this.$store.dispatch('actionGetBackLink', {
+            vue: this,
+            page: this.page,
+            params: this.fillter
+          });
+        }, 200),
+    
+        checkArray(array) {
+          return Hepler.arrayNotEmpty(array);
+        },
+    
+        editBackLink(baclink) {
+            this.modalAddBackLink = true
+            this.modelBaclink = Object.assign({}, baclink)
+            let element = this.$refs.modalEditBacklink
+            $(element).modal('show')          
+        },
+
+        closeModalBacklink() {
+          this.modalAddBackLink = false
+          let element = this.$refs.modalEditBacklink
+          $(element).modal('hide')
+        },
+
+        async submitEditBacklink () {
+            await this.$store.dispatch('actionSaveBacklink', {
+                params: this.modelBaclink
+            })
+            
+            if (this.messageBacklinkForms.action === 'saved_backlink') {
+                this.closeModalBacklink()
+                this.getBackLinkList()
+            }
+        },
+
+        handleCloseBacklinkModal () {
+            this.modalAddBackLink =  false
+            this.$store.dispatch('clearMessageBacklinkForm')
+        },
+
+        convertPrice(price) {
+            return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+      },
+       components: {
+          DownloadCsv
+        }
+    }
+</script>

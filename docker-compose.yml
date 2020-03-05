@@ -1,0 +1,83 @@
+version: '2'
+
+services:
+    application:
+        container_name: rlink_application
+        image: debian
+        volumes:
+            - ./:/var/www/laravel
+    workspace:
+        container_name: rlink_workspace
+        restart: always
+        image: kenini1805/laravel-workspace
+        volumes_from:
+            - application
+        tty: true
+    php-fpm:
+        container_name: rlink_php-fpm
+        restart: always
+        image: kenini1805/laravel-php-fpm
+        volumes_from:
+            - application
+        expose:
+            - "9000"
+        links:
+            - workspace
+        command: docker-php-ext-install opcache
+    nginx:
+        container_name: rlink_nginx
+        restart: always
+        image: framgia/laravel-nginx
+        volumes_from:
+            - data
+            - logs
+            - application
+        ports:
+            - "8888:80"
+        links:
+            - php-fpm
+    data:
+        container_name: rlink_data
+        image: debian
+        volumes:
+            - .docker/mysql:/var/lib/mysql
+            - .docker/data:/data
+    data_test:
+        container_name: rlink_data_test
+        image: debian
+        volumes:
+            - .docker/mysql_test:/var/lib/mysql
+            - .docker/data_test:/data
+    logs:
+        container_name: rlink_logs
+        image: debian
+        volumes:
+            - .docker/logs/nginx:/var/log/nginx
+            - .docker/logs/mongodb:/var/log/mongodb
+    mysql:
+        container_name: rlink_mysql
+        restart: always
+        image: mysql:5.7
+        volumes_from:
+            - data
+            - logs
+        expose:
+            - "3306"
+        environment:
+            MYSQL_DATABASE: rlink
+            MYSQL_USER: root
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+
+    phpmyadmin:
+        container_name: rlink_phpmyadmin
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: root
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "8080:80"
+        links:
+            - "mysql:mysql"

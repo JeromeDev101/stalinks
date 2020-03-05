@@ -1,0 +1,56 @@
+.homepage-login {
+    background: url($image-path + 'background-login.jpg');
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+
+    &__login {
+        padding: 20px 10px 10px 10px;
+        border: 1px solid #ddd;
+        background-color: #f7f7f7;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        margin: 0 auto;
+        transform: translateY(-50%);
+    }
+
+    &__title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    &__login-form, &__forgot-password  {
+        margin: auto;
+        width: 70%;
+    }
+
+    &__button-login {
+        margin-bottom: 1rem;
+        padding: 0.375rem 2rem;
+    }
+
+    &__actions {
+        margin: 15px;
+    }
+
+    &__button-login {
+        text-align: center;
+    }
+
+    .text-right {
+        position: relative;
+        float: right;
+        clear: both;
+    }
+
+    .btn-sign {
+        transform: translate(50%, 50%);
+    }
+
+    .btn-sign.homepage-login__button-login {
+        margin-bottom: 2em;
+        margin-left: 3em;
+    }
+}

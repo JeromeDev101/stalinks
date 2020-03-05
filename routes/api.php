@@ -1,0 +1,87 @@
+<?php
+
+use Illuminate\Http\Request;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::name('login')->post('/login', 'AuthController@login');
+
+Route::middleware('auth:api')->group(function () {
+
+    //User
+    Route::resource('users', 'UserController');
+    Route::name('current-user')->get('current-user', 'UserController@currentInforUser');
+    Route::name('check-admin-user')->get('/is_admin', 'UserController@checkUserAdmin');
+    Route::name('get-type')->get('/user/type', 'UserController@getTypes');
+
+    //Dashboard
+    Route::name('ext-reports')->post('/ext/reports', 'ExtDomainController@reports');
+    Route::name('int-reports')->post('/int/reports', 'IntDomainController@reports');
+    Route::name('baclink-reports')->post('/backlink/reports', 'BackLinkController@reports');
+    Route::name('baclink-reports-price')->post('/backlink/reports-price', 'BackLinkController@reportsPrice');
+
+    //External Page
+    Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
+    Route::name('ext-get-ahrefs')->get('/ext/ahrefs', 'ExtDomainController@getAhrefs');
+    Route::name('ext-get')->get('/ext', 'ExtDomainController@getList');
+    Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
+    Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
+    Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
+    Route::name('ext-get-contacts')->get('/ext/get-contacts', 'ExtDomainController@crawlContact');
+
+    //Internal Page
+    Route::name('int-get')->get('/int', 'IntDomainController@getList');
+    Route::name('int-create')->post('/int', 'IntDomainController@store');
+    Route::name('int-update')->put('/int', 'IntDomainController@update');
+
+    //Backlink
+    Route::resource('backlinks', 'BackLinkController');
+
+    //Intdomain
+    Route::resource('intdomains', 'IntDomainController')->only(['index', 'show']);
+    Route::name('list-by-hosting')->get('/list-by-hosting/{id}', 'IntDomainController@getIntByHosting');
+    Route::name('list-by-domain')->get('/list-by-domain/{id}', 'IntDomainController@getIntByDomain');
+
+    //Hosting
+    Route::resource('hostings', 'HostingController');
+
+    //Domain provider
+    Route::resource('domains', 'DomainProviderController');
+
+    //Role
+    Route::name('role-get')->get('/roles', 'RoleController@getRoles');
+    Route::name('get-countries')->get('/countries', 'CountryController@getCountries');
+    Route::name('get-countries-int')->get('/countries-int', 'UserController@getCountriesIntDomain');
+    Route::name('get-mail-template')->get('/mails', 'MailController@getList');
+    Route::name('send-mail')->post('/send-mails', 'MailController@sendEmails');
+    Route::name('add-mail-template')->post('/mails', 'MailController@store');
+    Route::name('update-mail-template')->put('/mails', 'MailController@edit');
+    Route::name('delete-mail-template')->delete('/mails', 'MailController@delete');
+    Route::name('get-mail-logs')->get('/mail-logs', 'LogController@getMailList');
+
+    Route::middleware(['check_admin'])->prefix('admin')->group(function() {
+        Route::name('add-user')->post('/add-user', 'AuthController@register');
+        Route::name('update-user')->put('/update-user', 'AuthController@edit');
+        Route::name('update-user-permission')->put('/update-user-permission', 'UserController@editPermissions');
+        Route::name('update-user-int-permission')->put('/update-user-int-permission', 'UserController@editIntPermissions');
+        Route::name('get-logs')->get('/logs', 'LogController@getList');
+        Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
+        Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
+        Route::name('add-country')->post('/countries', 'CountryController@store');
+        Route::name('update-country')->put('/countries', 'CountryController@edit');
+        Route::name('get-configs')->get('/configs', 'ConfigController@getList');
+        Route::name('update-configs')->put('/configs', 'ConfigController@edit');
+    });
+
+    // Auth routes.
+    Route::name('logout')->post('/logout', 'AuthController@logout');
+});
