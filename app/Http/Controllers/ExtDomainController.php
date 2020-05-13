@@ -166,6 +166,7 @@ class ExtDomainController extends Controller
 
     public function getList(Request $request) {
         $input = $request->all();
+
         $page = 0;
         $perPage =  10;
         $userId = Auth::id();
@@ -230,10 +231,14 @@ class ExtDomainController extends Controller
             $filters['where'][] = ['email', '!=', ''];
         }
 
+        if (isset($input['email'])) {
+            $filters['where'][] = ['email', 'like', '%'.$input['email'].'%'];
+        }
+
         if (isset($input['domain']) && $input['domain'] != '') {
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
         }
-
+        
         $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
         $data = $this->extDomainRepository->paginate($page, $perPage, $filters,  $countryIds, $countryIdsInt, $countriesExceptIds, $findAllExt, $sort, $extDomainIds);
         return response()->json($this->addPaginationRaw($data));

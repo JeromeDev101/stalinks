@@ -7,6 +7,7 @@ import Toasted from 'vue-toasted';
 import JsonExcel from 'vue-json-excel'
 import Pagination from 'laravel-vue-pagination'
 import Cookies from 'js-cookie'
+import 'vue-select/dist/vue-select.css';
 
 require('./bootstrap');
 
@@ -14,7 +15,7 @@ Vue.use(VueRouter);
 Vue.use(Toasted);
 Vue.use(Cookies);
  
-Vue.component('downloadExcel', JsonExcel)
+Vue.component('downloadExcel', JsonExcel)   
 Vue.component('pagination', Pagination)
 
 

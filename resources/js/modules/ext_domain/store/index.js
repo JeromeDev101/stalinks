@@ -116,7 +116,7 @@ const actions = {
     async filterExtDomain({ commit }, {vue, params}) {
         try {
             let response = await ExtDomainService.getTotalExt(params);
-            commit(EXT_DOMAIN_SET_TOTAL, response.data)
+            commit(EXT_DOMAIN_SET_TOTAL, response.data);
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

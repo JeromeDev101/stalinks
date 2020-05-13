@@ -35,6 +35,7 @@
                             <div class="form-group">
                                 <label style="color: #333">Country</label>
                                 <select v-model="filterModel.country_id_temp" class="form-control pull-right">
+                                    <option value="0" selected>All country</option>
                                     <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
@@ -49,10 +50,17 @@
                             </div>
                         </div>
 
+                        <div v-if="tableShow.email" class="col-md-2">
+                            <div class="from-group">
+                                <label style="color: #333">Email</label>
+                                <input type="text" v-model="filterModel.email_temp" class="form-control pull-right" placeholder="Search Email">
+                            </div>
+                        </div>
+
                         <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group">
                                 <label style="color: #333">Status</label>
-                                <select v-model="filterModel.status_temp" class="form-control">
+                                <select v-model="filterModel.status_temp" class="form-control select2">
                                     <option v-for="(option, key) in listStatusText" v-bind:value="key">
                                         {{ option.text }}
                                     </option>
@@ -720,11 +728,15 @@
                                     </div>
                                     <div class="col-md-9">
                                         <div  class="form-group">
+                                            <!--
                                             <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
+                                            -->
+                                            
+                                            <label style="color: #333">Select Email Name</label>
                                             <div>
                                                 <select @change="doChangeEmailTemplate" v-model="mailInfo.tpl" class="form-control pull-right">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
-                                                        {{ option.title }}
+                                                        {{ option.mail_name }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -733,6 +745,7 @@
                                 </div>
                             </div>
 
+                            <!--
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
                                     <label style="color: #333">Email Name</label>
@@ -740,6 +753,7 @@
                                     <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+                            -->
 
 
                             <div class="col-md-12" style="margin-top: 15px;">
@@ -814,6 +828,7 @@
                     countryList: { data: [], total: 0},
                     domain: this.$route.query.domain || '',
                     domain_temp: this.$route.query.domain_temp || '',
+                    email_temp: this.$route.query.email_temp || '',
                     status: this.$route.query.status || -1,
                     status_temp: this.$route.query.status_temp || 0,
                     page: this.$route.query.page || 0,
@@ -1065,6 +1080,7 @@
                 that.filterModel.country_id = that.filterModel.country_id_temp;
                 that.filterModel.status = that.filterModel.status_temp;
                 that.filterModel.domain = that.filterModel.domain_temp;
+                that.filterModel.email = that.filterModel.email_temp;
                 that.filterModel.id = that.filterModel.id_temp;
                 that.filterModel.required_email = that.filterModel.required_email_temp;
                 that.filterModel.sort = that.filterModel.sort_key + ',' +  that.filterModel.sort_value;
@@ -1078,6 +1094,7 @@
                         country_id: that.filterModel.country_id,
                         status: that.filterModel.status,
                         domain: that.filterModel.domain,
+                        email: that.filterModel.email,
                         employee_id: that.filterModel.employee_id,
                         required_email: that.filterModel.required_email,
                         id: that.filterModel.id,
@@ -1363,10 +1380,10 @@
                     return;
                 }
 
-                if (ext.email === '' || ext.email.split('|').length > 1) {
-                    alert("can't not handle with external domain not have email or multiple emails");
-                    return;
-                }
+                // if (ext.email === '' || ext.email.split('|').length > 1) {
+                //     alert("can't not handle with external domain not have email or multiple emails");
+                //     return;
+                // }
 
                 this.mailInfo.ids = ext.id;
                 this.mailInfo.receiver_text = ext.domain;
