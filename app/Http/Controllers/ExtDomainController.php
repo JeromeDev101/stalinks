@@ -76,7 +76,8 @@ class ExtDomainController extends Controller
             config('constant.EXT_STATUS_CONTACTED'),
             config('constant.EXT_STATUS_REFUSED'),
             config('constant.EXT_STATUS_IN_TOUCHED'),
-            config('constant.UNQUALIFIED')
+            config('constant.UNQUALIFIED'),
+            config('constant.EXT_STATUS_QUALIFIED')
         );
 
         $this->validStatus = [];
@@ -396,6 +397,9 @@ class ExtDomainController extends Controller
             array_push($listStatusExclude, config('constant.EXT_STATUS_REFUSED'));
             array_push($listStatusExclude, config('constant.EXT_STATUS_IN_TOUCHED'));
         }
+
+        // array_push($listStatusExclude, config('constant.EXT_STATUS_QUALIFIED'));
+
         $arrayStatusListString = $this->implodeStatusList(",", $listStatusExclude);
         $validateRule['status'] = ['required', 'integer', 'in:'.$arrayStatusListString];
         if (!$this->startsWith($input['domain'], 'https://') && !$this->startsWith($input['domain'], 'http://')) {

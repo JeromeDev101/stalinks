@@ -63,6 +63,7 @@ class AuthController extends Controller
     public function edit(UpdateUserRequest $request) {
         $response = ['success' => false];
         $input = $request->all();
+
         unset($input['c_password']);
         unset($input['role']);
 
@@ -78,6 +79,10 @@ class AuthController extends Controller
 
         if (!isset($input['work_mail_pass'])) {
             $input['work_mail_pass'] = '';
+        }
+
+        if (!isset($input['host_work_mail'])) {
+            $input['host_work_mail'] = '';
         }
 
         $user = $this->userRepository->findById($input['id']);

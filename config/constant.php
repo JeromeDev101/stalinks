@@ -11,6 +11,7 @@ return [
     'EXT_STATUS_IN_TOUCHED' => 70,
     'EXT_STATUS_UNDEFINED' => 80,
     'UNQUALIFIED' => 90,
+    'EXT_STATUS_QUALIFIED' => 100,
 
     //user type
     'USER_TYPE_NORMAL' => 0,

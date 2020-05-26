@@ -19,7 +19,8 @@ const EXT_STATUS_AHREAFED = "Ahrefed";
 const EXT_STATUS_CONTACTED = "Contacted";
 const EXT_STATUS_REFUSED = "Refused";
 const EXT_STATUS_IN_TOUCHED = "InTouched";
-const UNQUALIFIED = "Unqualified"
+const UNQUALIFIED = "Unqualified";
+const EXT_STATUS_QUALIFIED = "Qualified";
 
 const state = {
     totalExtDomain: 0,
@@ -40,7 +41,8 @@ const state = {
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
         60: { text: EXT_STATUS_REFUSED, label: "warning" },
         70: { text: EXT_STATUS_IN_TOUCHED, label: "success" },
-        90: { text: UNQUALIFIED, label: "success" }
+        90: { text: UNQUALIFIED, label: "success" },
+        100: { text: EXT_STATUS_QUALIFIED, label: "success" }
     },
     tableExtShowOptions: {
         id: true,

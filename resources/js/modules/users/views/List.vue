@@ -305,6 +305,14 @@
                                 </div>
                             </div>
 
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Work Host mail</label>
+                                    <input type="text" v-model="userUpdate.host_work_mail" class="form-control" required placeholder="Enter SMTP mail">
+                                </div>
+                            </div>
+
                             <hr>
                             <div class="col-md-12" style="margin-top: 15px">
                                 <div class="row">
@@ -627,7 +635,8 @@ export default {
                 role_id: '',
                 type: 0,
                 work_mail_pass: '',
-                work_mail: ''
+                work_mail: '',
+                host_work_mail: ''
             },
 
             userCountryUpdate: { id: 0 },
