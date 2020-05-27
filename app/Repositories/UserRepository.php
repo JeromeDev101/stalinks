@@ -27,7 +27,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUser(bool $isFullList, $perPage, array $filters)
     {
         if ($isFullList === true) {
-            $results = $this->model->select('id', 'name', 'email', 'phone', 'role_id', 'type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with('role')->get();
+            $results = $this->model->select('id', 'name', 'email', 'phone', 'role_id', 'type', 'status', 'host_work_mail', 'work_mail', 'work_mail_pass')->with('role')->get();
             return [
                 'data' => $results,
                 'total' => $results->count()
@@ -35,7 +35,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $queryBuilder = $queryBuilder->select('id', 'name', 'email', 'phone', 'role_id', 'type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with(['role' => function($query) {
+        $queryBuilder = $queryBuilder->select('id', 'name', 'email', 'phone', 'role_id', 'type', 'status', 'host_work_mail', 'work_mail', 'work_mail_pass')->with(['role' => function($query) {
             $query->select(['id', 'name']);
         }]);
 

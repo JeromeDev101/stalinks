@@ -39,12 +39,27 @@
                       <i class="fa fa-dashboard"></i> <span> Dashboard </span>
                     </router-link>
                 </li>
-                <li>
+                <li class="treeview">
                     <router-link :to="{ path: '/ext' }">
                         <i class="fa fa-circle-o"></i>
-                        <span>External Domains</span>
-                        <span class="pull-right-container"></span>
+                        <span>Search  Domains</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </router-link>
+                    <ul class="treeview-menu">
+                        <li>
+                            <router-link class="page-sidebar__item" :to="{ path: '/mail-logs' }">
+                                <i class="fa fa-fw fa-square"></i> <span>Mail Logs</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+
+                            <router-link class="page-sidebar__item" :to="{ path: '/mail-template' }">
+                                <i class="fa fa-fw fa-envelope-o"></i> <span>Mail Template</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                    </ul>
                 </li>
 
                 <li>
@@ -72,20 +87,6 @@
                 <li>
                     <router-link class="page-sidebar__item" :to="{ path: '/domains' }">
                         <i class="fa fa-fw fa-server"></i> <span>Domain Provider List</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                <li>
-                    <router-link class="page-sidebar__item" :to="{ path: '/mail-logs' }">
-                        <i class="fa fa-fw fa-square"></i> <span>Mail Logs</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                <li>
-                    <router-link class="page-sidebar__item" :to="{ path: '/mail-template' }">
-                        <i class="fa fa-fw fa-envelope-o"></i> <span>Mail Template</span>
                         <span class="pull-right-container"></span>
                     </router-link>
                 </li>

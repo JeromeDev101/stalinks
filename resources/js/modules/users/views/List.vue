@@ -22,6 +22,7 @@
                                 <th>Work mail</th>
                                 <th>Phone</th>
                                 <th>Role</th>
+                                <th>Active</th>
                                 <th>Type</th>
                                 <th>Action</th>
                             </tr>
@@ -69,6 +70,7 @@
                                 <td>{{ user.work_mail }}</td>
                                 <td>{{ user.phone }}</td>
                                 <td>{{ user.role ? user.role.name : '' }}</td>
+                                <td>{{ user.status }}</td>
                                 <td>{{ userTypeList[user.type] }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -309,7 +311,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">Work Host mail</label>
-                                    <input type="text" v-model="userUpdate.host_work_mail" class="form-control" required placeholder="Enter SMTP mail">
+                                    <input type="text" v-model="userUpdate.host_mail" class="form-control" required placeholder="Enter SMTP mail">
                                 </div>
                             </div>
 
@@ -329,6 +331,16 @@
                                             <label style="color: #333">Work mail Password</label>
                                             <input type="text" v-model="userUpdate.work_mail_pass" class="form-control" value="" required="required" placeholder="Enter Work Mail Password">
                                             <span v-if="messageForms.errors.work_mail_pass" v-for="err in messageForms.errors.work_mail_pass" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="color: #333">Status</label>
+                                            <select name="" id="" class="form-control" v-model="userUpdate.status">
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -636,7 +648,8 @@ export default {
                 type: 0,
                 work_mail_pass: '',
                 work_mail: '',
-                host_work_mail: ''
+                host_mail: '',
+                status: ''
             },
 
             userCountryUpdate: { id: 0 },
