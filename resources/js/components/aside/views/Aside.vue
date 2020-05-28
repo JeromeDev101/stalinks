@@ -36,19 +36,31 @@
                 <li class="header">MAIN NAVIGATION</li>
                 <li>
                     <router-link  :to="{ path: '/' }">
-                      <i class="fa fa-dashboard"></i> <span> Dashboard </span>
+                      <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                     </router-link>
                 </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-btc"></i> <span>Buyer Backlinks</span>
+                    </a>
+                </li>
+
                 <li class="treeview">
-                    <router-link :to="{ path: '/ext' }">
-                        <i class="fa fa-circle-o"></i>
+                    <a href="#">
+                        <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
-                    </router-link>
+                    </a>
                     <ul class="treeview-menu">
                         <li>
+                            <router-link :to="{ path: '/ext' }">
+                                <i class="fa fa-reorder"></i> 
+                                <span>Summary</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
                             <router-link class="page-sidebar__item" :to="{ path: '/mail-logs' }">
                                 <i class="fa fa-fw fa-square"></i> <span>Mail Logs</span>
                                 <span class="pull-right-container"></span>
@@ -63,6 +75,18 @@
                 </li>
 
                 <li>
+                    <a href="#">
+                        <i class="fa fa-dollar"></i> <span>Seller Backlinks</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-file"></i> <span>Publisher List</span>
+                    </a>
+                </li>
+
+                <li>
                     <router-link class="page-sidebar__item" :to="{ path: '/backlinks' }">
                         <i class="fa fa-fw fa-link"></i>
                         <span>Backlinks</span>
@@ -70,6 +94,7 @@
                     </router-link>
                 </li>
 
+                <!--
                 <li>
                     <router-link :to="{ path: '/intdomains' }">
                         <i class="fa fa-fw fa-anchor"></i> <span>Internal Domains</span>
@@ -91,6 +116,8 @@
                     </router-link>
                 </li>
 
+                -->
+
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -106,7 +133,11 @@ export default {
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
-        })
+        }),
+
+        currentPage() {
+            return this.$route.path;
+        }
     },
 
 }

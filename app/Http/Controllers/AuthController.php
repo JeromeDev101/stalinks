@@ -40,13 +40,25 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        $email = $this->getStatus($request->input('email'));
         $data = Config::get('services.passport') + [
-            'username' => $request->input('email'),
+            'username' => $email,
             'password' => $request->input('password'),
         ];
         $request = Request::create('/oauth/token', 'POST', $data);
 
         return App::handle($request);
+    }
+
+    private function getStatus($email)
+    {
+        $user = User::where('email', $email)->select('status')->first();
+        if($user->status === 'active'){
+            $email = $email;
+        }else{
+            $email = 'invalid@email.address';
+        }
+        return $email;
     }
 
     public function register(RegisterRequest $request)
