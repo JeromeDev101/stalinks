@@ -29,6 +29,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('baclink-reports')->post('/backlink/reports', 'BackLinkController@reports');
     Route::name('baclink-reports-price')->post('/backlink/reports-price', 'BackLinkController@reportsPrice');
 
+    //Publisher URL list page
+    Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
+
     //External Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
     Route::name('ext-get-ahrefs')->get('/ext/ahrefs', 'ExtDomainController@getAhrefs');

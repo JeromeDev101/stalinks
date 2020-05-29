@@ -9,7 +9,9 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\CountryRepository;
 use App\Repositories\HostingRepository;
 use App\Repositories\ExtDomainRepository;
+use App\Repositories\PublisherRepository;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
+use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\HostingRepositoryInterface;
 use App\Repositories\Contracts\IntDomainRepositoryInterface;
@@ -51,6 +53,7 @@ class RepositoryProvider extends ServiceProvider
         DomainProviderRepositoryInterface::class => DomainProviderRepository::class,
         ConfigRepositoryInterface::class => ConfigRepository::class,
         MailRepositoryInterface::class => MailRepository::class,
+        PublisherRepositoryInterface::class => PublisherRepository::class,
     ];
     /**
      * Register services.

@@ -15,7 +15,8 @@ import DetailDomain from '@/modules/domain/views/DetailDomain.vue'
 import Domain from '@/modules/domain/views/Domain.vue'
 import System from '@/modules/system/views/List.vue'
 import MailTemplate from '@/modules/template_email/views/List.vue'
-import MailLog from '@/modules/logs/views/MailLog.vue'
+import MailLog from '@/modules/logs/views/MailLog.vue';
+import Publisher from '@/modules/publisher/views/List.vue';
 
 const routes = [{
     path: '/login',
@@ -36,6 +37,11 @@ const routes = [{
         path: '/users',
         name: 'List User',
         component: ListUser,
+    },
+    {
+        path: '/publisher',
+        name: 'Publisher URL List',
+        component: Publisher,
     },
     {
         path: '/profile/:id',

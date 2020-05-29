@@ -81,9 +81,11 @@
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-file"></i> <span>Publisher List</span>
-                    </a>
+                     <router-link class="page-sidebar__item" :to="{ path: '/publisher' }">
+                        <i class="fa fa-file"></i>
+                        <span>Publisher URL List</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
                 </li>
 
                 <li>

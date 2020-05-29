@@ -22,7 +22,7 @@
                                 <th>Work mail</th>
                                 <th>Phone</th>
                                 <th>Role</th>
-                                <th>Active</th>
+                                <th>Status</th>
                                 <th>Type</th>
                                 <th>Action</th>
                             </tr>
@@ -53,6 +53,7 @@
                                         <input type="text" v-model="filterModel.phone_temp"  class="form-control pull-right" placeholder="Search Phone">
                                     </div>
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td>
