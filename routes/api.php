@@ -83,6 +83,9 @@ Route::middleware('auth:api')->group(function () {
         Route::name('update-country')->put('/countries', 'CountryController@edit');
         Route::name('get-configs')->get('/configs', 'ConfigController@getList');
         Route::name('update-configs')->put('/configs', 'ConfigController@edit');
+        Route::name('get-payment')->get('/payments', 'PaymentController@getList');
+        Route::name('add-payment')->post('/payments', 'PaymentController@store');
+        Route::name('update-payment')->put('/payments', 'PaymentController@edit');
     });
 
     // Auth routes.
