@@ -41,9 +41,11 @@
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-btc"></i> <span>Buyer Backlinks</span>
-                    </a>
+                    <router-link class="page-sidebar__item" :to="{ path: '/buyer-backlinks' }">
+                        <i class="fa fa-btc"></i>
+                        <span>Buyer Backlinks</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
                 </li>
 
                 <li class="treeview">
@@ -75,13 +77,15 @@
                 </li>
 
                 <li>
-                    <a href="#">
-                        <i class="fa fa-dollar"></i> <span>Seller Backlinks</span>
-                    </a>
+                    <router-link class="page-sidebar__item" :to="{ path: '/seller-backlinks' }">
+                        <i class="fa fa-dollar"></i>
+                        <span>Seller Backlinks</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
                 </li>
 
                 <li>
-                     <router-link class="page-sidebar__item" :to="{ path: '/publisher' }">
+                    <router-link class="page-sidebar__item" :to="{ path: '/publisher' }">
                         <i class="fa fa-file"></i>
                         <span>Publisher URL List</span>
                         <span class="pull-right-container"></span>
