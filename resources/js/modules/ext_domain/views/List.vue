@@ -57,7 +57,15 @@
                             </div>
                         </div>
 
+                        <!-- Multiple status --> 
                         <div v-if="tableShow.status" class="col-md-2">
+                            <div class="form-group">
+                                <label style="color: #333">Status</label>
+                                <v-select multiple placeholder="Select Status" label="text" :reduce="statusOptions => statusOptions.value" v-model="filterModel.status_multiple" :options="statusOptions" />
+                            </div>
+                        </div>
+                        
+                        <!-- <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group">
                                 <label style="color: #333">Status</label>
                                 <select v-model="filterModel.status_temp" class="form-control select2">
@@ -66,7 +74,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-2">
                             <div class="form-group">
@@ -819,6 +827,7 @@
                         }]
                     ]
                 },
+                statusOptions: [],
                 dataTable: null,
                 filterModel: {
                     id: this.$route.query.id || 0,
@@ -837,7 +846,8 @@
                     required_email_temp: this.$route.query.required_email_temp || 0,
                     required_email: this.$route.query.required_email || 0,
                     sort_key: this.$route.query.sort_key || 'id',
-                    sort_value: this.$route.query.sort_value || 'desc'
+                    sort_value: this.$route.query.sort_value || 'desc',
+                    status_multiple: this.$route.query.status_multiple || '',
                 },
 
                 listPageOptions: [5, 10, 25, 50, 100],
@@ -904,6 +914,7 @@
                 params: this.filterModel
             });
             this.fillterIntByCountry()
+            this.getStatusList()
         },
 
         computed: {
@@ -984,12 +995,25 @@
                 e.preventDefault();
                 var index = $(this).attr('data-index');
                 $('#data-table th[data-index=' + index + ']').click();
-                var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
+                var m_class = $('#data-table th[data-index=' + index +  ']').attr('class');
                 $(this).attr('class', m_class);
             });
         },
 
         methods: {
+            getStatusList(){
+                let status = this.listStatusText
+                var stat = '';
+                var list = {};
+                for( stat in status ){
+                    list = {
+                        text: status[stat].text,
+                        label: status[stat].label,
+                        value: stat,
+                    }
+                    this.statusOptions.push(list)
+                }
+            },
             async updateUserPermission() {
                 let that = this;
                 await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
@@ -1084,6 +1108,7 @@
                 that.filterModel.id = that.filterModel.id_temp;
                 that.filterModel.required_email = that.filterModel.required_email_temp;
                 that.filterModel.sort = that.filterModel.sort_key + ',' +  that.filterModel.sort_value;
+                that.filterModel.status_multiple = that.filterModel.status_multiple;
 
                 this.$router.push({
                     query: that.filterModel,
@@ -1100,6 +1125,7 @@
                         id: that.filterModel.id,
                         sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
                         per_page: that.filterModel.per_page,
+                        status_multiple: that.filterModel.status_multiple,
                     }
                 });
             },

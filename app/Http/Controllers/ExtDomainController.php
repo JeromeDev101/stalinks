@@ -166,7 +166,7 @@ class ExtDomainController extends Controller
     }
 
     public function getList(Request $request) {
-        $input = $request->all();
+        $input = $request->except('status');
 
         $page = 0;
         $perPage =  10;
@@ -224,9 +224,13 @@ class ExtDomainController extends Controller
         $filters['other']['whereIn'][] = ['country_id', $countryIds];
         $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
 
-        if (isset($input['status']) && $input['status'] >= 0) {
-            $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        if( isset($input['status_multiple']) ){
+            $filters['whereIn'][] = ['status', $input['status_multiple']];
         }
+
+        // if (isset($input['status']) && $input['status'] >= 0) {
+        //     $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        // }
 
         if (isset($input['required_email']) && $input['required_email'] > 0) {
             $filters['where'][] = ['email', '!=', ''];

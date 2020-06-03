@@ -8,6 +8,7 @@ import JsonExcel from 'vue-json-excel'
 import Pagination from 'laravel-vue-pagination'
 import Cookies from 'js-cookie'
 import 'vue-select/dist/vue-select.css';
+import Select2 from 'vue-select';
 
 require('./bootstrap');
 
@@ -17,6 +18,7 @@ Vue.use(Cookies);
  
 Vue.component('downloadExcel', JsonExcel)   
 Vue.component('pagination', Pagination)
+Vue.component('v-select', Select2)
 
 
 const router = new VueRouter({
