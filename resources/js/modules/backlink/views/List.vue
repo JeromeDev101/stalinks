@@ -92,13 +92,13 @@
                         <form class="row" action="">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
-                                    <label style="color: #333">Ext Domain</label>
+                                    <label style="color: #333">URL Publisher</label>
                                     <input type="text" v-model="modelBaclink.ext_domain.domain" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
-                                    <label style="color: #333">Internal Domain</label>
+                                    <label style="color: #333">URL Advertiser</label>
                                     <input type="text" v-model="modelBaclink.int_domain.domain" :disabled="true"  class="form-control" required="required" >
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
-                                    <label style="color: #333">User</label>
+                                    <label style="color: #333">Buyer Backlink</label>
                                     <input type="text" v-model="modelBaclink.user.name" :disabled="true"  class="form-control" required="required" >
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                               <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Live date</label>
+                                        <label style="color: #333">Date Completed</label>
                                         <input type="date" v-model="modelBaclink.live_date" class="form-control" >
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
                                     </div>
@@ -159,6 +159,33 @@
                                           <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
                                         <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Payment Type</label>
+                                        <input type="text" class="form-control" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Article ID</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" class="form-control">
                                     </div>
                                 </div>
                             </div>
