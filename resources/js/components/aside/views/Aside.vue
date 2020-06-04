@@ -95,7 +95,7 @@
                     </router-link>
                 </li>
 
-                <li>
+                <li :class="{ active: $route.name == 'BackLink' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/backlinks' }">
                         <i class="fa fa-fw fa-link"></i>
                         <span>Backlinks</span>
