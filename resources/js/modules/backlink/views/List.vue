@@ -46,7 +46,7 @@
                                 <th>Link</th>
                                 <th>Price</th>
                                 <th>Anchor Text</th>
-                                <th>Live Date</th>
+                                <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Employee</th>
                                 <th>Action</th>
