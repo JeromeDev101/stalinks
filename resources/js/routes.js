@@ -17,8 +17,7 @@ import System from '@/modules/system/views/List.vue'
 import MailTemplate from '@/modules/template_email/views/List.vue'
 import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue';
-import Seller from '@/modules/seller/views/List.vue';
-import Buyer from '@/modules/buyer/views/List.vue';
+import Registration from '@/modules/registration/views/List.vue';
 
 const routes = [{
     path: '/login',
@@ -66,14 +65,9 @@ const routes = [{
         component: BackLink,
     },
     {
-        path: '/seller-backlinks',
-        name: 'Seller',
-        component: Seller,
-    },
-    {
-        path: '/buyer-backlinks',
-        name: 'Buyer',
-        component: Buyer,
+        path: '/accounts',
+        name: 'Registration',
+        component: Registration,
     },
     {
         path: 'intdomains',

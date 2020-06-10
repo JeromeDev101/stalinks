@@ -12,9 +12,11 @@ const SET_USER_TYPE_LIST = 'USER_SET_USER_TYPE_LIST';
 const SET_INT_SELECT_LIST = 'SET_INT_SELECT_LIST';
 const MESSAGE_FORMS = 'USER_MESSAGE_FORMS';
 const SET_ERROR = 'USER_SET_ERROR';
+const LIST_PAYMENT = 'LIST_PAYMENT';
 
 const state = {
     listUser: {},
+    listPayment: {},
     errors: null,
     userInfor: {},
     countryList: [],
@@ -29,6 +31,10 @@ const state = {
 const mutations = {
     [LIST_USER](state, { listUser }) {
         return state.listUser = listUser;
+    },
+
+    [LIST_PAYMENT](state, { listPayment }) {
+        return state.listPayment = listPayment;
     },
 
     [SET_ERROR](state, error) {
@@ -103,6 +109,17 @@ const actions = {
 
         let errorResponse = response.response;
 
+        return Helper.handleError(vue, errorResponse.status);
+    },
+
+    async actionGetListPayment({commit}, { vue }) {
+        let response = await UserService.getListPayment();
+
+        if (response.status === 200) {
+            return commit(LIST_PAYMENT, { listPayment: response.data });
+        }
+
+        let errorResponse = response.response;
         return Helper.handleError(vue, errorResponse.status);
     },
 

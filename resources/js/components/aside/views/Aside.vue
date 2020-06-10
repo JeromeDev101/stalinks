@@ -5,6 +5,14 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu tree" data-widget="tree">
                 <li v-if="user.isAdmin" class="header">Admin</li>
+
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'system' }">
+                    <router-link class="page-sidebar__item" :to="{ path: '/system' }">
+                        <i class="fa fa-fw fa-cog"></i> <span>Admin setting</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'List User' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/users' }">
                         <i class="fa fa-fw fa-users"></i> <span>Employees</span>
@@ -18,13 +26,6 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'system' }">
-                    <router-link class="page-sidebar__item" :to="{ path: '/system' }">
-                        <i class="fa fa-fw fa-cog"></i> <span>Admin setting</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'AlexaDomain' }">
                     <router-link :to="{ path: '/ext/alexa' }">
                         <i class="fa fa-circle-o"></i>
@@ -33,18 +34,18 @@
                     </router-link>
                 </li>
 
+                <li :class="{ active: $route.name == 'Registration' }">
+                    <router-link :to="{ path: '/accounts' }">
+                        <i class="fa fa-user"></i>
+                        <span>Accounts</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li class="header">MAIN NAVIGATION</li>
                 <li :class="{ active: $route.name == 'Dashboard' }">
                     <router-link  :to="{ path: '/' }">
                       <i class="fa fa-dashboard"></i> <span> Dashboard</span>
-                    </router-link>
-                </li>
-
-                <li :class="{ active: $route.name == 'Buyer' }">
-                    <router-link class="page-sidebar__item" :to="{ path: '/buyer-backlinks' }">
-                        <i class="fa fa-btc"></i>
-                        <span>Buyer Backlinks</span>
-                        <span class="pull-right-container"></span>
                     </router-link>
                 </li>
 
@@ -77,14 +78,6 @@
                             </router-link>
                         </li>
                     </ul>
-                </li>
-
-                <li :class="{ active: $route.name == 'Seller' }">
-                    <router-link class="page-sidebar__item" :to="{ path: '/seller-backlinks' }">
-                        <i class="fa fa-dollar"></i>
-                        <span>Seller Backlinks</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
                 </li>
 
                 <li :class="{ active: $route.name == 'Publisher URL List' }">

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex'
 import * as Cookies from 'js-cookie';
 import storeLoading from '@/modules/loading/store';
+import storeAccount from '@/modules/registration/store';
 import storeAuth from '@/modules/auth/store';
 import storeUser from '@/modules/users/store';
 import storeExtDomain from '@/modules/ext_domain/store';
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     modules: {
         storeAuth,
         storeUser,
+        storeAccount,
         storeLoading,
         storePublisher,
         storeExtDomain,

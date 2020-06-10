@@ -185,7 +185,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Processed</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
                             </div>

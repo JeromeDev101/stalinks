@@ -337,6 +337,18 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label style="color: #333">Payment Type</label>
+                                            <select v-model="userUpdate.id_payment_type" class="form-control pull-right">
+                                                <option value="">-- Select Payment Type --</option>
+                                                <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                                    {{ option.type }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label style="color: #333">Status</label>
                                             <select name="" id="" class="form-control" v-model="userUpdate.status">
                                                 <option value="active">Active</option>
@@ -344,6 +356,7 @@
                                             </select>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </form>
@@ -650,7 +663,8 @@ export default {
                 work_mail_pass: '',
                 work_mail: '',
                 host_mail: '',
-                status: ''
+                status: '',
+                id_payment_type: ''
             },
 
             userCountryUpdate: { id: 0 },
@@ -676,12 +690,16 @@ export default {
         this.getCountryList();
         this.getRoleList();
         this.getUserTypeList();
+        this.getPaymentList();
+
+        console.log(this.listPayment)
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
             listUser: state => state.storeUser.listUser,
+            listPayment: state => state.storeUser.listPayment,
             messageForms: state => state.storeUser.messageForms,
             filter: state => state.storeUser.filter,
             countryList: state => state.storeUser.countryList,
@@ -700,6 +718,10 @@ export default {
 
         async getRoleList() {
             await this.$store.dispatch('actionGetListRole', { vue: this });
+        },
+
+        async getPaymentList() {
+            await this.$store.dispatch('actionGetListPayment', { vue: this });
         },
 
         async getUserTypeList() {

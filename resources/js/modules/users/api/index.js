@@ -24,6 +24,12 @@ export default class UserService {
             .catch(error => error);
     }
 
+    static getListPayment(params) {
+        return axios.get('api/payment-list', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static getCountryList(params) {
         return axios.get('/api/countries', params)
             .then(response => response)

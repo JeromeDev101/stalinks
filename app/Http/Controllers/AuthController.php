@@ -97,6 +97,10 @@ class AuthController extends Controller
             $input['host_work_mail'] = '';
         }
 
+        if (!isset($input['id_payment_type'])) {
+            $input['id_payment_type'] = '';
+        }
+
         $user = $this->userRepository->findById($input['id']);
         if (!$user) {
             return response()->json($response);

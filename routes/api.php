@@ -22,6 +22,12 @@ Route::middleware('auth:api')->group(function () {
     Route::name('current-user')->get('current-user', 'UserController@currentInforUser');
     Route::name('check-admin-user')->get('/is_admin', 'UserController@checkUserAdmin');
     Route::name('get-type')->get('/user/type', 'UserController@getTypes');
+    Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
+
+    //Accounts
+    Route::name('add-accounts')->post('accounts', 'AccountController@store');
+    Route::name('get-accounts')->get('accounts', 'AccountController@getList');
+    Route::name('update-accounts')->put('accounts', 'AccountController@edit');
 
     //Dashboard
     Route::name('ext-reports')->post('/ext/reports', 'ExtDomainController@reports');
