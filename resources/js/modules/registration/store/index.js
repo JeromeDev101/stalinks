@@ -96,6 +96,10 @@ const actions= {
             }
         }
     },
+
+    clearMessageFormAccount({commit}) {
+        commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
+    },
 }
 
 const storeAccount = {

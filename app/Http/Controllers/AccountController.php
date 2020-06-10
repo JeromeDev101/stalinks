@@ -21,9 +21,21 @@ class AccountController extends Controller
         return response()->json(['success' => true, 'data' => $registration], 200);
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        $list = Registration::all();
+        $status = $request->status;
+        $type = $request->type;
+        $search = $request->search;
+
+        $list = Registration::when( $status, function($query) use ($status){
+            return $query->where( 'status', $status );
+        })->when( $type, function($query) use ($type){
+            return $query->where( 'type', $type );
+        })->when( $search, function($query) use ($search){
+            return $query->where( 'name', 'LIKE', '%'.$search.'%' )
+                ->orWhere( 'email', 'LIKE', '%'.$search.'%' );
+        })->get();
+        
 
         return response()->json([
             'data' => $list

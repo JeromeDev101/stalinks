@@ -15,15 +15,15 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search</label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search Name and Email</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" id="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="filterModel.status">
                                     <option value="">Select Status</option>
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
@@ -34,7 +34,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Account type</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="filterModel.type">
                                     <option value="">Select Type</option>
                                     <option value="seller">Seller</option>
                                     <option value="buyer">Buyer</option>
@@ -46,7 +46,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Search</button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i></button>
                         </div>
                     </div>
                 </div>
@@ -399,6 +400,13 @@
                     commission: '',
                 },
 
+
+                filterModel: {
+                    type: this.$route.query.type || '',
+                    search: this.$route.query.search || '',
+                    status: this.$route.query.status || ''
+                },
+
                 accountUpdate: {
                     id: '',
                     name: '',
@@ -416,7 +424,9 @@
                     status: '',
                 },
 
-                isPopupLoading: false
+                isPopupLoading: false,
+                isSearchLoading: false,
+
             }
         },
 
@@ -442,7 +452,9 @@
 
                 if (this.messageForms.action === 'saved_account') {
                     this.clearAccountModel();
-                    this.getAccountList();
+                    this.getAccountList({
+                        params: this.filterModel
+                    });
                 }
             },
 
@@ -461,7 +473,12 @@
                 }
             },
 
+            clearMessageform() {
+                this.$store.dispatch('clearMessageFormAccount');
+            },
+
             doUpdateAccount(account){
+                this.clearMessageform();
                 this.accountUpdate = JSON.parse(JSON.stringify(account))
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
@@ -473,8 +490,36 @@
 
             async getAccountList(params) {
                 this.isLoadingTable = true;
+                this.isSearchLoading = true;
                 await this.$store.dispatch('actionGetAccount', params);
                 this.isLoadingTable = false;
+                this.isSearchLoading = false;
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    type: '',
+                    status: '',
+                    search: '',
+                }
+
+                this.getAccountList({
+                    params: this.filterModel
+                });
+            },
+
+            async doSearch(){
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getAccountList({
+                    params: {
+                        status: this.filterModel.status,
+                        search: this.filterModel.search,
+                        type: this.filterModel.type
+                    }
+                });
             },
 
             clearAccountModel() {
