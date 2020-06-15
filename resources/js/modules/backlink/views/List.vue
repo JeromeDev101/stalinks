@@ -1,41 +1,55 @@
 <template>
     <div class="row">
-        <section class="content-header col-sm-12">
-        <h1>Backlinks</h1>
-        </section>
         <div class="col-sm-12">
+
             <div class="box">
                 <div class="box-header">
-                    <div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <div class="form-row">
-                                <div class="col-md-8 mb-8">
-                                <label class="int-domain">Search</label>
-                                <div class="input-group">
-                                    <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
-                                    <div class="input-group-btn">
-                                        <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                                <div v-if="Object.keys(listBackLink).length !== 0" class="col-md-3 mb-3">
-                                    <label class="int-domain">Download CSV</label>
-                                    <br>
-                                    <download-csv
-                                        :data = "listBackLink.data"
-                                        :fileds = "data_filed"
-                                        :nameFile = "file_csv">
-                                    </download-csv>
-                                </div>
+                    <h3 class="box-title">Filter</h3>
+                </div>
+
+                <div class="box-body m-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search</label>
+                                <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
                             </div>
                         </div>
-                        <!-- /.box-body -->
-                        <!-- /.box-footer-->
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select class="form-control" name="" id="">
+                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default">Clear</button>
+                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default">Search</button>
+                        </div>
                     </div>
                 </div>
-                <!-- /.box-header -->
+            </div>
+
+            <div class="box">
+
+                <div class="box-header">
+                    <h3 class="box-title">Backlinks</h3>
+                    
+                    <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
+                        <download-csv
+                            :data = "listBackLink.data"
+                            :fileds = "data_filed"
+                            :nameFile = "file_csv">
+                        </download-csv>
+                    </div>
+                </div>
+
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover table-bordered table-striped rlink-table">
                         <tbody>

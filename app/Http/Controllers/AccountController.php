@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\RegistrationAccountRequest;
+use App\Http\Requests\UpdateSetPasswordRequest;
 use App\Models\Registration;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\SendEmailVerification;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class AccountController extends Controller
 {
@@ -63,4 +69,49 @@ class AccountController extends Controller
         $response['success'] = true;
         return response()->json($response);
     }
+
+    public function register(RegistrationAccountRequest $request){
+        $input = $request->all();
+        $verification_code = md5(uniqid(rand(), true));
+        $input['verification_code'] = $verification_code;
+
+        $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
+        $email->sendEmail();
+
+        Registration::create($input);
+
+        return response()->json(['success' => true], 200);
+    }
+
+    public function checkVerificationCode(Request $request) {
+        $result = false;
+        $code = Registration::where('verification_code', $request->code)->first();
+        if( $code['verification_code'] ){
+            $result = true;
+        }
+        return response()->json(['success' => $result]);
+    }
+
+    public function setPassword(UpdateSetPasswordRequest $request){
+        $input = $request->only('password');
+
+        $registration = Registration::where('verification_code', $request->code)->first();
+        $input['verification_code'] = null;
+        $input['password'] = Hash::make($input['password']);
+
+        // duplicate the record in Users Table
+        $data['name'] = $registration['name'];
+        $data['email'] = $registration['email'];
+        $data['phone'] = $registration['phone'];
+        $data['avatar'] = 'images/noavatar.jpg';
+        $data['role_id'] = 4;
+        $data['type'] = 1;
+        $data['password'] = $input['password'];
+        User::create($data);
+
+        $registration->update($input);
+
+        return response()->json(['success'=> true], 200);
+
+    } 
 }

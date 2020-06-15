@@ -97,6 +97,66 @@ const actions= {
         }
     },
 
+    async actionRegister({commit}, params) {
+        try {
+            let response = await AccountService.addRegister(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'registration_success', message: 'Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionCheckVerificationCode({commit}, params) {
+        try {
+            let response = await AccountService.checkVerificationCode(params);
+
+            if (response.status === 200 ) {
+                commit(MESSAGE_FORMS, { action: response.data.success , message: '', errors: {} });
+            }
+
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionSetPassword({commit}, params) {
+        try {
+            let response = await AccountService.updatePassword(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'success', message: 'Saved', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     clearMessageFormAccount({commit}) {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },

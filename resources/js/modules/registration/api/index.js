@@ -8,6 +8,12 @@ export default class AccountService {
             .catch(error => error);
     }
 
+    static addRegister(params){
+        return axios.post('api/register', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 
     static getAccount(params){
         return axios.get('api/accounts', params)
@@ -23,6 +29,18 @@ export default class AccountService {
 
     static updateAccount(params) {
         return axios.put('/api/accounts', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static checkVerificationCode(params) {
+        return axios.get(`/api/check-verification-code?code=${params.code}`, params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static updatePassword(params) {
+        return axios.put('/api/verification', params)
             .then(response => response)
             .catch(error => error);
     }

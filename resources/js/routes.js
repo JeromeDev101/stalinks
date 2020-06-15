@@ -18,11 +18,23 @@ import MailTemplate from '@/modules/template_email/views/List.vue'
 import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
+import RegistrationPage from '@/modules/registration/views/Registration.vue';
+import Verification from '@/modules/registration/views/Verification.vue';
 
 const routes = [{
     path: '/login',
     name: 'login',
     component: Login,
+},
+{
+    path: '/registration',
+    name: 'registration',
+    component: RegistrationPage,
+},
+{
+    path: '/verification/:code',
+    name: 'verification',
+    component: Verification,
 },
 {
     path: '/',
