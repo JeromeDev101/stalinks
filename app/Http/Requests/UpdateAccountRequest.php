@@ -29,7 +29,6 @@ class UpdateAccountRequest extends FormRequest
         return [
             'name' => [ 'required' ],
             'email' => [
-                'unique:users,email',
                 'required',
                 'between:6,60',
                 'email',

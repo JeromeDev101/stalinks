@@ -13,11 +13,13 @@
                         <div class="col-md-5 mb-3">
                             <label class="int-domain">Upload CSV</label>
                             <div class="input-group">
-                                <input type="file" class="form-control" placeholder="Search by external domains or internal domain">
+                                <input type="file" class="form-control" v-on:change="checkData" enctype="multipart/form-data" ref="excel" name="file">
                                 <div class="input-group-btn">
-                                    <button title="Upload CSV File" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                    <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
                                 </div>
                             </div>
+                            <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
+                            <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
                         </div>
                     </div>
                 </div>
@@ -27,11 +29,12 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Domain</th>
-                                <th>Seller ID</th>
-                                <th>URL rating</th>
-                                <th>Domain rating</th>
-                                <th>No Backlinks</th>
+                                <th>Company Name</th>
+                                <th>Name</th>
+                                <th>URL</th>
+                                <th>UR</th>
+                                <th>DR</th>
+                                <th>Backlinks</th>
                                 <th>Ref Domains</th>
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
@@ -40,17 +43,21 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="listPublish.data.length == 0">
+                                <td colspan="12" class="text-center">No record</td>
+                            </tr>
                             <tr v-for="(publish, index) in listPublish.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td>{{ publish.domain }}</td>
                                 <td></td>
-                                <td>{{ publish.url_rating }}</td>
-                                <td>{{ publish.domain_rating }}</td>
-                                <td>{{ publish.no_backlinks }}</td>
-                                <td>{{ publish.ref_domains }}</td>
-                                <td>{{ publish.organic_keywords }}</td>
-                                <td>{{ publish.organic_traffic }}</td>
                                 <td></td>
+                                <td>{{ publish.url }}</td>
+                                <td>{{ publish.ur }}</td>
+                                <td>{{ publish.dr }}</td>
+                                <td>{{ publish.backlinks }}</td>
+                                <td>{{ publish.ref_domain }}</td>
+                                <td>{{ publish.org_keywords }}</td>
+                                <td>{{ publish.org_traffic }}</td>
+                                <td>{{ publish.price }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -167,7 +174,7 @@
         name: '',
         data(){
             return {
-                // code
+                isEnableBtn: true,
             }
         },
 
@@ -177,14 +184,39 @@
 
         computed:{
             ...mapState({
-                listPublish: state => state.storePublisher.listPublish
+                listPublish: state => state.storePublisher.listPublish,
+                messageForms: state => state.storePublisher.messageForms,
             })
         },
 
         methods: {
             async getPublisherList(params) {
                 await this.$store.dispatch('getListPublisher', params);
-            }
+            },
+
+            async submitUpload() {
+                this.formData = new FormData();
+                this.formData.append('file', this.$refs.excel.files[0]);
+
+                await this.$store.dispatch('actionUploadCsv', this.formData);
+
+                if (this.messageForms.action === 'uploaded') {
+                    this.getPublisherList();
+                    this.$refs.excel.value = '';
+                    this.isEnableBtn = true;
+                }
+            },
+
+            checkData() {
+                this.isEnableBtn = true;
+                if( this.$refs.excel.value ){
+                    this.isEnableBtn = false;
+                }
+            },
+
+            clearMessageform() {
+                this.$store.dispatch('clearMessageform');
+            },
         }
     }
 </script>

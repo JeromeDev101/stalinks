@@ -40,6 +40,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Publisher URL list page
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
+    Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
 
     //External Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UserService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
+use App\Models\Publisher;
 
 class ExtDomainController extends Controller
 {
@@ -418,6 +419,20 @@ class ExtDomainController extends Controller
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
+
+        if( $input['status'] === '100'){
+            Publisher::create([
+                'user_id' => 1,
+                'url' => $input['domain'],
+                'ur' => $input['url_rating'],
+                'dr' => $input['domain_rating'],
+                'backlinks' => $input['no_backlinks'],
+                'ref_domain' => $input['ref_domains'],
+                'org_keywords' => $input['organic_keywords'],
+                'org_traffic' => $input['organic_traffic'],
+                'price' => null,
+            ]);
+        }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];

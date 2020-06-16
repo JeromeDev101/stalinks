@@ -13,10 +13,22 @@ class PublisherController extends Controller
     {
         $this->publisherRepository = $publisherRepository;
     }
+
     public function getList()
     {
         $data = $this->publisherRepository->getList();
-
         return response()->json($data);
+    }
+
+    public function importExcel(Request $request){
+        $request->validate([
+            'file' => 'bail|required|mimes:csv,txt'
+        ]);
+
+        $file = $request->file;
+        $this->publisherRepository->importExcel($file);
+        
+        return response()->json(['success' => true], 200);
+        
     }
 }

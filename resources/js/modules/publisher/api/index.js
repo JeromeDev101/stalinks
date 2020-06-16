@@ -7,4 +7,14 @@ export default class PublisherService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static uploadCsv(params) {
+        return axios.post('/api/publisher/upload-csv', params, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response => response)
+        .catch(error => error);
+    }
 }

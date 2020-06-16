@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-green">
@@ -12,12 +13,14 @@
                 </div>
             </div>
         </div>
+
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
                 </div>
-                <div class="box-body col-md-10 offset-md-1 relative">
+
+                <div class="box-body m-3">
                     <div class="row">
 
                         <div v-if="tableShow.country" class="col-md-2">
@@ -57,7 +60,6 @@
                             </div>
                         </div>
 
-                        <!-- Multiple status --> 
                         <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group">
                                 <label style="color: #333">Status</label>
@@ -94,6 +96,9 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="row">
 
                         <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group pull-right">
