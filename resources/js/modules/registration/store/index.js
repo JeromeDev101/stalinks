@@ -1,4 +1,5 @@
 import AccountService from '@/modules/registration/api';
+import ConfigAxios from '@/library/ConfigAxios';
 
 const MESSAGE_FORMS = 'ACCOUNT_MESSAGE_FORMS';
 const SET_ERROR = 'ACCOUNT_SET_ERROR';
@@ -35,7 +36,7 @@ const actions= {
             let response = await AccountService.addAccount(user);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'saved_account', message: '#' + response.data.data.id + ' Saved !', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'saved_account', message: 'Saved !', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

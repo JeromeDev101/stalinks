@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::name('login')->post('/login', 'AuthController@login');
 Route::name('registration')->post('/register', 'AccountController@register');
 Route::name('check-verification-code')->get('/check-verification-code', 'AccountController@checkVerificationCode');
-Route::name('update-registration')->put('/verification', 'AccountController@setPassword');
+Route::name('update-registration')->post('/verification', 'AccountController@setPassword');
 
 Route::middleware('auth:api')->group(function () {
 

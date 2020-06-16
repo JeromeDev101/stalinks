@@ -39,6 +39,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function isOurs() {
+        return $this->where('isOurs', 0);
+    }
+
     public function role()
     {
         return $this->belongsTo('App\Models\Role', 'role_id');

@@ -24,6 +24,17 @@ class AccountController extends Controller
         $input['password'] = Hash::make($input['password']);
         $registration = Registration::create($input);
 
+        // duplicate the record in Users Table
+        $data['name'] = $registration['name'];
+        $data['email'] = $registration['email'];
+        $data['phone'] = $registration['phone'];
+        $data['avatar'] = '/images/noavatar.jpg';
+        $data['role_id'] = 4;
+        $data['type'] = 1;
+        $data['isOurs'] = 1;
+        $data['password'] = $input['password'];
+        User::create($data);
+
         return response()->json(['success' => true, 'data' => $registration], 200);
     }
 
@@ -103,15 +114,21 @@ class AccountController extends Controller
         $data['name'] = $registration['name'];
         $data['email'] = $registration['email'];
         $data['phone'] = $registration['phone'];
-        $data['avatar'] = 'images/noavatar.jpg';
+        $data['avatar'] = '/images/noavatar.jpg';
         $data['role_id'] = 4;
         $data['type'] = 1;
+        $data['isOurs'] = 1;
         $data['password'] = $input['password'];
-        User::create($data);
+        $user = User::create($data);
 
         $registration->update($input);
 
-        return response()->json(['success'=> true], 200);
+        $credentials = [
+            'email' => $user->email,
+            'password' => $request->password,
+        ];
+
+        return response()->json(['success'=> true, 'data' => $user, 'credentials' => $credentials], 200);
 
     } 
 }

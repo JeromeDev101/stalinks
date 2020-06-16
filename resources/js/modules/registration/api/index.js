@@ -40,7 +40,7 @@ export default class AccountService {
     }
 
     static updatePassword(params) {
-        return axios.put('/api/verification', params)
+        return axios.post('/api/verification', params)
             .then(response => response)
             .catch(error => error);
     }

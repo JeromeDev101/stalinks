@@ -75,6 +75,9 @@ class UserController extends Controller
             $filters['where'][] = ['name', 'like', '%'.$input['name'].'%'];
         }
 
+        //it doesnt show the seller/buyer
+        $filters['where'][] = ['isOurs',0];
+
         $isFullList = false;
         if (isset($request->full_data)) {
             $isFullList = $request->full_data;
