@@ -2,16 +2,39 @@
     <div class="row">
         <div class="col-sm-12">
 
-            <section class="content-header col-sm-12">
-                <h1>Publisher URL List</h1>
-            </section>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                </div>
+
+                <div class="box-body m-3">
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search Company Name and Name</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" id="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch" >Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
             <div class="box">
 
                 <div class="box-header">
+                    <h3 class="box-title">Publisher URL List</h3>
+
                     <div class="form-row">
-                        <div class="col-md-5 mb-3">
-                            <label class="int-domain">Upload CSV</label>
+                        <div class="col-md-4 my-3">
                             <div class="input-group">
                                 <input type="file" class="form-control" v-on:change="checkData" enctype="multipart/form-data" ref="excel" name="file">
                                 <div class="input-group-btn">
@@ -48,8 +71,8 @@
                             </tr>
                             <tr v-for="(publish, index) in listPublish.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
+                                <td>{{ publish.name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.ur }}</td>
                                 <td>{{ publish.dr }}</td>
@@ -57,10 +80,10 @@
                                 <td>{{ publish.ref_domain }}</td>
                                 <td>{{ publish.org_keywords }}</td>
                                 <td>{{ publish.org_traffic }}</td>
-                                <td>{{ publish.price }}</td>
+                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button data-toggle="modal" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -76,87 +99,80 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Domain Information</h5>
+                        <h5 class="modal-title">Update Information</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Domain</label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="">
+                                    <label for="">Company Name</label>
+                                    <input type="text" v-model="updateModel.company_name" class="form-control" name="" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Status</label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="">
+                                    <label for="">Name</label>
+                                    <input type="text" v-model="updateModel.name" class="form-control" name="" placeholder="" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Facebook</label>
-                                    <textarea class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Email</label>
-                                    <textarea class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Phone</label>
-                                    <textarea class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Ahrefs Rank</label>
-                                    <input type="number" class="form-control" name="" id="" placeholder="">
+                                    <label for="">URL</label>
+                                    <input type="text" v-model="updateModel.url" class="form-control" name="" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Ref Domains</label>
-                                    <input type="number" class="form-control" name="" id="" placeholder="">
+                                    <input type="number" v-model="updateModel.ref_domain" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">No Backlinks</label>
-                                    <input type="number" class="form-control" name="" id="" placeholder="">
+                                    <input type="number" v-model="updateModel.backlinks" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">URL Rating</label>
-                                    <input type="number" class="form-control" name="" id="" placeholder="">
+                                    <input type="number" v-model="updateModel.ur" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Domain Rating</label>
-                                    <input type="number" class="form-control" name="" id="" placeholder="">
+                                    <input type="number" v-model="updateModel.dr" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Organic Keywords</label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="">
+                                    <input type="text" v-model="updateModel.org_keywords" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Organic traffic</label>
-                                    <input type="text" class="form-control" name="" id="" placeholder="">
+                                    <input type="text" v-model="updateModel.org_traffic" class="form-control" name="" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Price</label>
+                                    <input type="number" v-model="updateModel.price" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Update</button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
@@ -174,7 +190,25 @@
         name: '',
         data(){
             return {
+                updateModel: {
+                    id: '',
+                    company_name: '',
+                    name: '',
+                    url: '',
+                    ur: '',
+                    dr: '',
+                    backlinks: '',
+                    ref_domain: '',
+                    org_keywords: '',
+                    org_traffic: '',
+                    price: '',
+                },
                 isEnableBtn: true,
+                isPopupLoading: false,
+                filterModel: {
+                    search: this.$route.query.search || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -191,7 +225,9 @@
 
         methods: {
             async getPublisherList(params) {
+                this.searchLoading = true;
                 await this.$store.dispatch('getListPublisher', params);
+                this.searchLoading = false;
             },
 
             async submitUpload() {
@@ -207,10 +243,62 @@
                 }
             },
 
+            clearSearch() {
+                this.filterModel = {
+                    search: ''
+                }
+
+                this.getPublisherList()
+            },
+
+            async submitUpdate(params) {
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdatePublisher', this.updateModel);
+                this.isPopupLoading = false;
+
+                if (this.messageForms.action === 'updated_publisher') {
+                    this.getPublisherList();
+                }
+            },
+
+            doUpdate(publish) {
+                this.clearMessageform()
+                this.updateModel = JSON.parse(JSON.stringify(publish))
+                this.updateModel.company_name = this.updateModel.isOurs == '0' ? 'Stalinks':this.updateModel.company_name;
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getPublisherList({
+                    params: {
+                        search: this.filterModel.search,
+                    }
+                });
+            },
+
             checkData() {
                 this.isEnableBtn = true;
                 if( this.$refs.excel.value ){
                     this.isEnableBtn = false;
+                }
+            },
+
+            clearModel () {
+                this.updateModel = {
+                    id: '',
+                    company_name: '',
+                    name: '',
+                    url: '',
+                    ur: '',
+                    dr: '',
+                    backlinks: '',
+                    ref_domain: '',
+                    org_keywords: '',
+                    org_traffic: '',
+                    price: '',
                 }
             },
 

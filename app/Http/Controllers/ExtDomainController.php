@@ -19,6 +19,7 @@ use App\Services\UserService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\Auth;
 
 class ExtDomainController extends Controller
 {
@@ -350,6 +351,8 @@ class ExtDomainController extends Controller
     }
 
     public function update(Request $request) {
+        $id = Auth::user()->id;
+
         $input = $request->only(['id', 'status', 'email', 'domain',
             'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
 
@@ -422,7 +425,7 @@ class ExtDomainController extends Controller
 
         if( $input['status'] === '100'){
             Publisher::create([
-                'user_id' => 1,
+                'user_id' => $id,
                 'url' => $input['domain'],
                 'ur' => $input['url_rating'],
                 'dr' => $input['domain_rating'],

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
+use App\Models\Publisher;
 
 class PublisherController extends Controller
 {
@@ -14,7 +15,7 @@ class PublisherController extends Controller
         $this->publisherRepository = $publisherRepository;
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
         $data = $this->publisherRepository->getList();
         return response()->json($data);
@@ -30,5 +31,14 @@ class PublisherController extends Controller
         
         return response()->json(['success' => true], 200);
         
+    }
+
+    public function update(Request $request){
+        $input = $request->except('company_name', 'name', 'user_id', 'url', 'created_at', 'updated_at', 'isOurs');
+       
+        $publisher = Publisher::findOrFail($input['id']);
+        $publisher->update($input);
+
+        return response()->json(['success' => true], 200);
     }
 }

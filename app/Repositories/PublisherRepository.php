@@ -7,6 +7,8 @@ use App\Repositories\BaseRepository;
 use App\Models\ExtDomain;
 use App\Models\Publisher;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
@@ -18,7 +20,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
     public function getList()
     {
-        $list = Publisher::get();
+        // $list = DB::table('publisher')
+        //             ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name')
+        //             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+        //             ->leftJoin('registration', 'users.email', '=', 'registration.email')
+        //             ->paginate(15);
+
+        // return $list;
+
+        $list = DB::table('publisher')
+                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name')
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                    ->get();
+
         return [
             "data" => $list,
             "total" => $list->count()
@@ -26,6 +41,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     }
 
     public function importExcel($file){
+        $id = Auth::user()->id;
         $csv = fopen($file, 'r');
         $ctr = 0;
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
@@ -41,7 +57,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 $price = $line[7];
 
                 Publisher::create([
-                    'user_id' => 1,
+                    'user_id' => $id,
                     'url' => $url,
                     'ur' => $ur,
                     'dr' => $dr,
@@ -49,7 +65,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     'ref_domain' => $ref_domain,
                     'org_keywords' => $org_keywords,
                     'org_traffic' => $org_traffic,
-                    'price' => $price,
+                    'price' => preg_replace('/[^0-9.\-]/', '', $price),
                 ]);
             }
                 

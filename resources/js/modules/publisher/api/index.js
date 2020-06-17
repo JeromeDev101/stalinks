@@ -17,4 +17,11 @@ export default class PublisherService {
         .then(response => response)
         .catch(error => error);
     }
+
+    static updatePublisher(params) {
+        return axios.put('/api/publisher', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }
