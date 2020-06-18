@@ -3,10 +3,12 @@ import PublisherService from '@/modules/publisher/api';
 const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
+const LIST_COUNTRY = 'LIST_COUNTRY';
 
 const state = {
     listPublish: { data:[], total: 0 },
     messageForms: { action: '', message: '', errors: {} },
+    listCountries: { data: [], total: 0 },
 }
 
 const mutations = {
@@ -26,7 +28,11 @@ const mutations = {
         }
 
         state.listPublish = dataSet.listPublish;
-    }
+    },
+
+    [LIST_COUNTRY](state, listCountries) {
+        state.listCountries = listCountries;
+    },
 }
 
 const actions = {
@@ -54,6 +60,20 @@ const actions = {
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);
             }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListCountries({ commit }, params) {
+        try {
+            let response = await PublisherService.getListCountries(params);
+            commit(LIST_COUNTRY, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

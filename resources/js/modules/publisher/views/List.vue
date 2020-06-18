@@ -12,10 +12,23 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search Company Name and Name</label>
-                                <input type="text" class="form-control" v-model="filterModel.search" name="" id="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search Company and User</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Language</label>
+                                <select name="" class="form-control">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -52,8 +65,9 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Company Name</th>
-                                <th>Name</th>
+                                <th>Company</th>
+                                <th>User</th>
+                                <th>Language</th>
                                 <th>URL</th>
                                 <th>UR</th>
                                 <th>DR</th>
@@ -62,7 +76,7 @@
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
                                 <th>Price</th>
-                                <th>Action</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,6 +87,7 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
                                 <td>{{ publish.name }}</td>
+                                <td>{{ publish.language }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.ur }}</td>
                                 <td>{{ publish.dr }}</td>
@@ -164,6 +179,19 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="">Language</label>
+                                    <select name="" v-model="updateModel.language_id" class="form-control">
+                                        <option value=""></option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="">Price</label>
                                     <input type="number" v-model="updateModel.price" class="form-control" name="" placeholder="">
                                 </div>
@@ -202,6 +230,7 @@
                     org_keywords: '',
                     org_traffic: '',
                     price: '',
+                    language_id: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -214,12 +243,14 @@
 
         async created() {
             this.getPublisherList();
+            this.getListCountries();
         },
 
         computed:{
             ...mapState({
                 listPublish: state => state.storePublisher.listPublish,
                 messageForms: state => state.storePublisher.messageForms,
+                listCountries: state => state.storePublisher.listCountries,
             })
         },
 
@@ -261,9 +292,28 @@
                 }
             },
 
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
             doUpdate(publish) {
                 this.clearMessageform()
-                this.updateModel = JSON.parse(JSON.stringify(publish))
+                let that = JSON.parse(JSON.stringify(publish))
+
+                this.updateModel = {
+                    id: that.id,
+                    language_id: that.language_id,
+                    ur: that.ur,
+                    dr: that.dr,
+                    backlinks: that.backlinks,
+                    ref_domain: that.ref_domain,
+                    org_keywords: that.org_keywords,
+                    org_traffic: that.org_traffic,
+                    price: that.price,
+                    anchor_text: that.anchor_text,
+                    link: that.link,
+                }
+                
                 this.updateModel.company_name = this.updateModel.isOurs == '0' ? 'Stalinks':this.updateModel.company_name;
             },
 

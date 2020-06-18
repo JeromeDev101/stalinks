@@ -27,6 +27,10 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-type')->get('/user/type', 'UserController@getTypes');
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
 
+    //Buy
+    Route::name('get-buy')->get('buy','BuyController@getList');
+    Route::name('update-buy')->put('buy','BuyController@update');
+
     //Accounts
     Route::name('add-accounts')->post('accounts', 'AccountController@store');
     Route::name('get-accounts')->get('accounts', 'AccountController@getList');

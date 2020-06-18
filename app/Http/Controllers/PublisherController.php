@@ -34,7 +34,7 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
-        $input = $request->except('company_name', 'name', 'user_id', 'url', 'created_at', 'updated_at', 'isOurs');
+        $input = $request->all();
        
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);

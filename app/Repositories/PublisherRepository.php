@@ -20,19 +20,24 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
     public function getList()
     {
-        // $list = DB::table('publisher')
-        //             ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name')
-        //             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-        //             ->leftJoin('registration', 'users.email', '=', 'registration.email')
-        //             ->paginate(15);
+        $user = Auth::user();
 
-        // return $list;
-
-        $list = DB::table('publisher')
-                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name')
+        if( $user->isOurs == 0 && $user->type == 10 ){
+            $list = DB::table('publisher')
+                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
                     ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                     ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
                     ->get();
+        }else{
+            $list = DB::table('publisher')
+                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                    ->where('users.id', $user->id)
+                    ->get();
+        }
 
         return [
             "data" => $list,

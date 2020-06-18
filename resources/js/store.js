@@ -7,6 +7,7 @@ import storeAuth from '@/modules/auth/store';
 import storeUser from '@/modules/users/store';
 import storeExtDomain from '@/modules/ext_domain/store';
 import storePublisher from '@/modules/publisher/store';
+import storeBuy from '@/modules/buy/store';
 import storeIntDomain from '@/modules/int_domain/store';
 import storeBackLink from '@/modules/backlink/store';
 import storeHosting from '@/modules/hosting/store';
@@ -25,6 +26,7 @@ export default new Vuex.Store({
         storeAccount,
         storeLoading,
         storePublisher,
+        storeBuy,
         storeExtDomain,
         storeIntDomain,
         storeBackLink,

@@ -60,7 +60,7 @@
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'ExtDomain' }">
                             <router-link :to="{ path: '/ext' }">
-                                <i class="fa fa-reorder"></i> 
+                                <i class="fa fa-fw fa-reorder"></i> 
                                 <span>Summary</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
@@ -88,12 +88,31 @@
                     </router-link>
                 </li>
 
-                <li :class="{ active: $route.name == 'BackLink' }">
-                    <router-link class="page-sidebar__item" :to="{ path: '/backlinks' }">
+                <li :class="{ active: $route.name == 'BackLink' || $route.name == 'buy', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'buy' }">
+                    <a href="#">
                         <i class="fa fa-fw fa-link"></i>
                         <span>Backlinks</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li :class="{ active: $route.name == 'buy' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/buy' }">
+                                <i class="fa fa-fw fa-btc"></i>
+                                <span>Buy</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'BackLink' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/backlinks' }">
+                                <i class="fa fa-fw fa-mail-reply"></i>
+                                <span>Follow up</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                    </ul>
+                        
                 </li>
 
                 <!--

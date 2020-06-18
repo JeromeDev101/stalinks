@@ -1,5 +1,4 @@
 import AccountService from '@/modules/registration/api';
-import ConfigAxios from '@/library/ConfigAxios';
 
 const MESSAGE_FORMS = 'ACCOUNT_MESSAGE_FORMS';
 const SET_ERROR = 'ACCOUNT_SET_ERROR';

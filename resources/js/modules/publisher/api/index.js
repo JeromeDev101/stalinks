@@ -24,4 +24,10 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getListCountries(params) {
+        return axios.get('/api/countries', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

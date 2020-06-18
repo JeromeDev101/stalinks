@@ -19,7 +19,6 @@ use App\Services\UserService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 use App\Models\Publisher;
-use Illuminate\Support\Facades\Auth;
 
 class ExtDomainController extends Controller
 {

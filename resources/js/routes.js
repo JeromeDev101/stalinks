@@ -20,6 +20,7 @@ import Publisher from '@/modules/publisher/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
+import Buy from '@/modules/buy/views/List.vue';
 
 const routes = [{
     path: '/login',
@@ -75,6 +76,11 @@ const routes = [{
         path: '/backlinks',
         name: 'BackLink',
         component: BackLink,
+    },
+    {
+        path: '/buy',
+        name: 'buy',
+        component: Buy,
     },
     {
         path: '/accounts',
