@@ -491,7 +491,13 @@
             async getAccountList(params) {
                 this.isLoadingTable = true;
                 this.isSearchLoading = true;
-                await this.$store.dispatch('actionGetAccount', params);
+                await this.$store.dispatch('actionGetAccount', {
+                    params: {
+                        type: this.filterModel.type,
+                        status: this.filterModel.status,
+                        search: this.filterModel.search,
+                    }
+                });
                 this.isLoadingTable = false;
                 this.isSearchLoading = false;
             },
@@ -506,6 +512,8 @@
                 this.getAccountList({
                     params: this.filterModel
                 });
+
+                this.$router.replace({'query': null});
             },
 
             async doSearch(){

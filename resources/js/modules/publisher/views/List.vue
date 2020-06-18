@@ -20,7 +20,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
-                                <select name="" class="form-control">
+                                <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
                                         {{ option.name }}
@@ -236,6 +236,7 @@
                 isPopupLoading: false,
                 filterModel: {
                     search: this.$route.query.search || '',
+                    language_id: this.$route.query.language_id || '',
                 },
                 searchLoading: false,
             }
@@ -257,7 +258,12 @@
         methods: {
             async getPublisherList(params) {
                 this.searchLoading = true;
-                await this.$store.dispatch('getListPublisher', params);
+                await this.$store.dispatch('getListPublisher', {
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                    }
+                });
                 this.searchLoading = false;
             },
 
@@ -276,10 +282,15 @@
 
             clearSearch() {
                 this.filterModel = {
-                    search: ''
+                    search: '',
+                    language_id: '',
                 }
 
-                this.getPublisherList()
+                this.getPublisherList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             async submitUpdate(params) {
@@ -325,6 +336,7 @@
                 this.getPublisherList({
                     params: {
                         search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
                     }
                 });
             },

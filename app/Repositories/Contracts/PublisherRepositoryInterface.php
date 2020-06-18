@@ -6,6 +6,6 @@ use App\Repositories\Contracts\RepositoryInterface;
 
 interface PublisherRepositoryInterface extends RepositoryInterface
 {
-    public function getList();
+    public function getList($filter);
     public function importExcel($file);
 }

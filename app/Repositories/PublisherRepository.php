@@ -18,29 +18,30 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         parent::__construct($model);
     }
 
-    public function getList()
+    public function getList($filter)
     {
         $user = Auth::user();
+        $list = DB::table('publisher')
+                ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
+                ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id');
 
-        if( $user->isOurs == 0 && $user->type == 10 ){
-            $list = DB::table('publisher')
-                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-                    ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-                    ->get();
-        }else{
-            $list = DB::table('publisher')
-                    ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-                    ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-                    ->where('users.id', $user->id)
-                    ->get();
+        if( $user->isOurs != 0 && $user->type != 10 ){
+            $list = $list->where('users.id', $user->id);
+        }
+
+        if( isset($filter['search']) && !empty($filter['search']) ){
+            $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
+                    ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+        }
+
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            $list = $list->where('language_id', $filter['language_id']);
         }
 
         return [
-            "data" => $list,
+            "data" => $list->get(),
             "total" => $list->count()
         ];
     }

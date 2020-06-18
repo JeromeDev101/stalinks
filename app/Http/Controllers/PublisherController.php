@@ -17,7 +17,8 @@ class PublisherController extends Controller
 
     public function getList(Request $request)
     {
-        $data = $this->publisherRepository->getList();
+        $filter = $request->all();
+        $data = $this->publisherRepository->getList($filter);
         return response()->json($data);
     }
 
