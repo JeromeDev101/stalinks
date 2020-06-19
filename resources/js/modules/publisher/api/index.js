@@ -30,4 +30,11 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+
+    static deletePublisher(params) {
+        return axios.delete('/api/publisher', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

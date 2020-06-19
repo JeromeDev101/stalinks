@@ -34,6 +34,7 @@
                     <div class="row mb-3">
                         <div class="col-md-2">
                             <button class="btn btn-default" @click="clearSearch" >Clear</button>
+                            <button class="btn btn-default" @click="doMultipleDelete" >Selected</button>
                             <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
@@ -65,6 +66,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>Select</th>
                                 <th>Company</th>
                                 <th>User</th>
                                 <th>Language</th>
@@ -85,6 +87,13 @@
                             </tr>
                             <tr v-for="(publish, index) in listPublish.data" :key="index">
                                 <td>{{ index + 1}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <input type="checkbox" :id="publish.id" :value="publish.id" v-model="checkIds">
+                                        </button>
+                                    </div>
+                                </td>
                                 <td>{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
                                 <td>{{ publish.name }}</td>
                                 <td>{{ publish.language }}</td>
@@ -99,6 +108,9 @@
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default" title="Delete" @click="doDelete(publish.id)"><i class="fa fa-fw fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -239,6 +251,7 @@
                     language_id: this.$route.query.language_id || '',
                 },
                 searchLoading: false,
+                checkIds: [],
             }
         },
 
@@ -265,6 +278,20 @@
                     }
                 });
                 this.searchLoading = false;
+            },
+
+            async doMultipleDelete(){
+                this.clearMessageform()
+                if( confirm("Are you sure you want to delete selected records?") ){
+                    await this.$store.dispatch('actionDeletePublisher', {
+                        params: {
+                            id: this.checkIds,
+                        }
+                    });
+
+                    this.getPublisherList();
+                    this.checkIds = []
+                }
             },
 
             async submitUpload() {
@@ -313,6 +340,8 @@
 
                 this.updateModel = {
                     id: that.id,
+                    name: that.name,
+                    url: that.url,
                     language_id: that.language_id,
                     ur: that.ur,
                     dr: that.dr,
@@ -325,7 +354,20 @@
                     link: that.link,
                 }
                 
-                this.updateModel.company_name = this.updateModel.isOurs == '0' ? 'Stalinks':this.updateModel.company_name;
+                this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
+            },
+
+            async doDelete(id){
+                this.clearMessageform()
+                if( confirm("Do you want to delete these record?") ){
+                    await this.$store.dispatch('actionDeletePublisher', {
+                        params: {
+                            id: id,
+                        }
+                    });
+
+                    this.getPublisherList();
+                }
             },
 
             doSearch() {

@@ -23,4 +23,9 @@ class Backlink extends Model
     {
         return $this->belongsTo('App\Models\ExtDomain', 'ext_domain_id', 'id');
     }
+
+    public function publisher()
+    {
+        return $this->belongsTo('App\Models\Publisher', 'ext_domain_id', 'id');
+    }
 }

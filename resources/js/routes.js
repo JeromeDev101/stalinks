@@ -21,6 +21,7 @@ import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
 import Buy from '@/modules/buy/views/List.vue';
+import NewBacklink from '@/modules/new_backlink/views/List.vue';
 
 const routes = [{
     path: '/login',

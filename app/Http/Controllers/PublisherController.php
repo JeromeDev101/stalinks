@@ -35,10 +35,26 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
-        $input = $request->all();
+        $input = $request->except('name', 'company_name', 'url');
        
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
+
+        return response()->json(['success' => true], 200);
+    }
+
+    public function delete(Request $request){
+        if( is_array($request->id) ){
+            foreach( $request->id as $ids ){
+                $publisher = Publisher::findOrFail($ids);
+                $publisher->delete();
+            }
+
+            return response()->json(['success' => true], 200);
+        }
+
+        $publisher = Publisher::findOrFail($request->id);
+        $publisher->delete();
 
         return response()->json(['success' => true], 200);
     }

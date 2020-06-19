@@ -5,27 +5,46 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
+use App\Models\Backlink;
 
 class BuyController extends Controller
 {
-    public function getList(){
+    public function getList(Request $request){
+        $filter = $request->all();
         $list = DB::table('publisher')
                     ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
                     ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                     ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-                    ->get();
+                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id');
+        
+        if( isset($filter['search']) && !empty($filter['search']) ){
+            $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
+                    ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+        }
+
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            $list = $list->where('language_id', $filter['language_id']);
+        }
 
 
         return [
-            'data' => $list
+            'data' => $list->get()
         ];
     }
 
     public function update(Request $request) {
-        $input = $request->all();
         $publisher = Publisher::findOrFail($request->id);
-        $publisher->update($input);
+
+        Backlink::create([
+            'price' => $publisher->price,
+            'anchor_text' => $request->anchor_text,
+            'link' => $request->link,
+            'ext_domain_id' => $publisher->id,
+            'user_id' => $publisher->user_id,
+            'status' => 'Processing',
+            'date_process' => date('Y-m-d'),
+            'article_id' => 0
+        ]);
 
         return response()->json(['success'=> true], 200);
     }

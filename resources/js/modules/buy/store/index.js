@@ -63,7 +63,7 @@ const actions = {
             let response = await BuyService.updateBuy(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'updated', message: 'Saved !', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'updated', message: 'Buyed Successfully!', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

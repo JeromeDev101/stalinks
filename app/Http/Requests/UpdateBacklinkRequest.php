@@ -25,7 +25,6 @@ class UpdateBacklinkRequest extends FormRequest
     {
         return [
             'ext_domain_id' => 'required',
-            'int_domain_id' => 'required',
             'link' => 'required|url',
             'price' => 'required',
             'anchor_text' => 'required',

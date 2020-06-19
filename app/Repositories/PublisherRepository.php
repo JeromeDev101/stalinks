@@ -22,7 +22,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     {
         $user = Auth::user();
         $list = DB::table('publisher')
-                ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS language')
+                ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id');
@@ -53,17 +53,19 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
 
             if( $ctr > 0 ){
-                $url = $line[0];
-                $ur = $line[1];
-                $dr = $line[2];
-                $backlinks = $line[3];
-                $ref_domain = $line[4];
-                $org_keywords = $line[5];
-                $org_traffic = $line[6];
-                $price = $line[7];
+                $language = $line[0];
+                $url = $line[1];
+                $ur = $line[2];
+                $dr = $line[3];
+                $backlinks = $line[4];
+                $ref_domain = $line[5];
+                $org_keywords = $line[6];
+                $org_traffic = $line[7];
+                $price = $line[8];
 
                 Publisher::create([
                     'user_id' => $id,
+                    'language' => $language,
                     'url' => $url,
                     'ur' => $ur,
                     'dr' => $dr,

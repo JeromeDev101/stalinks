@@ -55,26 +55,26 @@
                         <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>External Domain</th>
-                                <th>Internal Domain</th>
-                                <th>Link</th>
+                                <th>URL Publisher</th>
+                                <th>URL Advertiser</th>
+                                <th>Link To</th>
                                 <th>Price</th>
                                 <th>Anchor Text</th>
+                                <th>Date for Proccessing</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
-                                <th>Employee</th>
                                 <th>Action</th>
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ backLink.ext_domain.domain }}</td>
-                                <td>{{ backLink.int_domain.domain }}</td>
+                                <td>{{ backLink.publisher == null ? backLink.ext_domain.domain:backLink.publisher.url }}</td>
+                                <td>{{ backLink.int_domain == null ? '':backLink.int_domain.domain }}</td>
                                 <td><a href="backLink.link">{{ backLink.link }}</a></td>
-                                <td>{{ convertPrice(backLink.price) }}$</td>
+                                <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td>{{ backLink.anchor_text }}</td>
+                                <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
                                 <td>{{ backLink.status }}</td>
-                                <td>{{ backLink.user.name }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
@@ -322,7 +322,21 @@
     
         editBackLink(baclink) {
             this.modalAddBackLink = true
-            this.modelBaclink = Object.assign({}, baclink)
+            let that = Object.assign({}, baclink)
+
+            this.modelBaclink.id = that.id
+            this.modelBaclink.ext_domain_id = that.publisher == null ? that.ext_domain.id:that.publisher.id
+            this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
+            this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
+            this.modelBaclink.user.name = that.user.name
+            this.modelBaclink.anchor_text = that.anchor_text
+            this.modelBaclink.price = that.price
+            this.modelBaclink.link = that.link
+            this.modelBaclink.live_date = that.live_date
+            this.modelBaclink.status = that.status
+            this.modelBaclink.user_id = that.user_id
+            this.modelBaclink.date_process = that.date_process
+
             let element = this.$refs.modalEditBacklink
             $(element).modal('show')          
         },

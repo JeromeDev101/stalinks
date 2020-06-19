@@ -10,6 +10,7 @@ import storePublisher from '@/modules/publisher/store';
 import storeBuy from '@/modules/buy/store';
 import storeIntDomain from '@/modules/int_domain/store';
 import storeBackLink from '@/modules/backlink/store';
+import storeNewBackLink from '@/modules/new_backlink/store';
 import storeHosting from '@/modules/hosting/store';
 import storeLog from '@/modules/logs/store';
 import storeDomain from '@/modules/domain/store';
@@ -30,6 +31,7 @@ export default new Vuex.Store({
         storeExtDomain,
         storeIntDomain,
         storeBackLink,
+        // storeNewBackLink,
         storeHosting,
         storeLog,
         storeDomain,

@@ -62,6 +62,7 @@ class BackLinkController extends Controller
         $countryIds = $this->userService->findAccessByCountryByUserId($userId);
         $intDomains = $this->userService->findAccessByIntDomainEmployee($userId);
         $backLinks = $this->backLinkRepository->getBackLink($countryIds, $intDomains, $filters);
+
         return response()->json($backLinks);
     }
 

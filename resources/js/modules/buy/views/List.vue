@@ -13,14 +13,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search Company and User</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
-                                <select name="" class="form-control">
+                                <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
                                         {{ option.name }}
@@ -33,8 +33,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -84,7 +84,7 @@
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ buy.price }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="Edit" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -100,7 +100,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Information</h5>
+                        <h5 class="modal-title">Buy Backlink</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -117,19 +117,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Language</label>
-                                    <select name="" v-model="updateModel.language_id" class="form-control">
-                                        <option value=""></option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="">Price</label>
-                                    <input type="number" class="form-control" v-model="updateModel.price" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="number" class="form-control" v-model="updateModel.price" name="" aria-describedby="helpId" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -168,9 +157,13 @@
                     price: '',
                     anchor_text: '',
                     link: '',
-                    language_id: '',
                 },
                 isPopupLoading: false,
+                filterModel: {
+                    search: this.$route.query.search || '',
+                    language_id: this.$route.query.language_id || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -189,21 +182,42 @@
 
         methods: {
             async getBuyList(params) {
+                this.searchLoading = true;
                 await this.$store.dispatch('actionGetBuyList', params);
+                this.searchLoading = false;
             },
 
             doUpdate(buy) {
                 this.clearMessageform();
-                let that = JSON.parse(JSON.stringify(buy))
+                this.updateModel = JSON.parse(JSON.stringify(buy))
+            },
 
-                this.updateModel = {
-                    id: that.id,
-                    url: that.url,
-                    price: that.price,
-                    anchor_text: that.anchor_text,
-                    link: that.link,
-                    language_id: that.language_id,
+            clearSearch() {
+                
+                this.filterModel = {
+                    search: '',
+                    language_id: '',
                 }
+
+                this.getBuyList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+            
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getBuyList({
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                    }
+                });
             },
 
             async getListCountries(params) {

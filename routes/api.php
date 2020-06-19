@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
     //Publisher URL list page
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');
+    Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
 
     //External Page
@@ -60,6 +61,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('int-get')->get('/int', 'IntDomainController@getList');
     Route::name('int-create')->post('/int', 'IntDomainController@store');
     Route::name('int-update')->put('/int', 'IntDomainController@update');
+
+    // New Backlink
+    // Route::name('get-backlink')->get('backlinks', 'NewBacklinkController@getList');
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');

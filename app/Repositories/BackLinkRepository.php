@@ -97,19 +97,20 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
     public function getBackLink($countryIds, $intDomains, $filters)
     {
-        $query = $this->model->whereHas('intDomain', function ($query) use ($countryIds, $intDomains, $filters) {
-            if (isset($filters->int_id) && $filters->int_id > 0) {
-                $query->where('id', $filters->int_id)->where(function($queryIn) use ($countryIds, $intDomains) {
-                    $queryIn->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
-                });
-            } else {
-                $query->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
-            }
-        })->orderBy('id', 'desc');
+        // $query = $this->model->whereHas('intDomain', function ($query) use ($countryIds, $intDomains, $filters) {
+        //     if (isset($filters->int_id) && $filters->int_id > 0) {
+        //         $query->where('id', $filters->int_id)->where(function($queryIn) use ($countryIds, $intDomains) {
+        //             $queryIn->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
+        //         });
+        //     } else {
+        //         $query->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
+        //     }
+        // })->orderBy('id', 'desc');
+        $query = $this->model->orderBy('id', 'desc');
         $backlink = $this->fillter($query, $filters);
 
         if ($filters->full_data === true) {
-            $data = $backlink->with('intDomain', 'extDomain', 'user')->get();
+            $data = $backlink->with('intDomain', 'extDomain', 'publisher', 'user')->get();
 
             return [
                 'data' => $data,
@@ -117,7 +118,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        return $backlink->with('intDomain', 'extDomain', 'user')->paginate(config('common.paginate.default'));
+        return $backlink->with('intDomain', 'extDomain', 'publisher', 'user')->paginate(config('common.paginate.default'));
     }
 
     protected function fillter($query, $filters)
