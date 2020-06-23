@@ -80,7 +80,7 @@
                     </ul>
                 </li>
 
-                <li :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
+                <li v-if="isSeller || user.isAdmin" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
                     <a href="#">
                         <i class="fa fa-fw fa-user-o"></i>
                         <span>Seller</span>
@@ -114,7 +114,7 @@
                             
                 </li>
 
-                <li :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' }">
+                <li v-if="isBuyer || user.isAdmin" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' }">
                     <a href="#">
                         <i class="fa fa-fw fa-money"></i>
                         <span>Buyer</span>
@@ -157,14 +157,35 @@
 import { mapActions, mapState } from 'vuex';
 export default {
     name: 'AppAside',
+    data() {
+        return {
+            isSeller: false,
+            isBuyer: false,
+        }
+    },
+    created() {
+        this.checkAccountType()
+    },
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
         }),
 
-        currentPage() {
-            return this.$route.path;
-        }
+    },
+
+    methods: {
+        checkAccountType() {
+            let that = this.user
+            if( that.user_type ){
+                if( that.user_type.type == 'Seller' ){
+                    this.isSeller = true;
+                }
+
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
+        },
     },
 
 }

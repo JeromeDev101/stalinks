@@ -126,6 +126,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination> -->
                 </div>
             </div>
 
@@ -286,6 +287,17 @@
         },
 
         methods: {
+            // async getPublisherList(page = 1) {
+            //     this.searchLoading = true;
+            //     await this.$store.dispatch('getListPublisher', {
+            //         params: {
+            //             search: this.filterModel.search,
+            //             page: page
+            //         }
+            //     });
+            //     this.searchLoading = false;
+            // },
+            
             async getPublisherList(params) {
                 this.searchLoading = true;
                 await this.$store.dispatch('getListPublisher', {

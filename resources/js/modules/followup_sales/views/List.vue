@@ -130,7 +130,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Anchor text</label>
-                                        <input type="text" class="form-control" v-model="updateModel.anchor_text" required="required" >
+                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.anchor_text" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Link</label>
-                                        <input type="text" class="form-control" v-model="updateModel.link" required="required" >
+                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Processed</label>
-                                        <input type="date" class="form-control" v-model="updateModel.date_process">
+                                        <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
                                     </div>
                                 </div>
                             </div>

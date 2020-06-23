@@ -44,7 +44,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function showInfo($id)
     {
-        $user = $this->model->with('role', 'countriesAccessable', 'internalDomainsAccessable.country', 'backlinks.intDomain.country')->findOrFail($id);
+        $user = $this->model->with('UserType','role', 'countriesAccessable', 'internalDomainsAccessable.country', 'backlinks.intDomain.country')->findOrFail($id);
         $user->isAdmin = $user->isAdmin();
         return $user;
     }

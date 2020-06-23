@@ -36,6 +36,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
         }
 
+        // return $list->paginate(5);
+
         return [
             "data" => $list->get(),
             "total" => $list->count()

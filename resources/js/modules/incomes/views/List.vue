@@ -12,15 +12,15 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search URL Publisher and User</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search User</label>
+                                <input type="text" class="form-control" v-model="filterModel.user" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Payment Status</label>
-                                <select name="" id="" class="form-control">
+                                <select name="" id="" class="form-control" v-model="filterModel.payment_status">
                                     <option value="">All</option>
                                     <option value="Paid">Paid</option>
                                     <option value="Not paid">Not paid</option>
@@ -32,8 +32,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" >Clear</button>
-                            <button class="btn btn-default" >Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -153,6 +153,11 @@
                     payment_status: '',
                 },
                 isPopupLoading: false,
+                filterModel: {
+                    user: this.$route.query.user || '',
+                    payment_status: this.$route.query.payment_status || '',
+                },
+                isSearching: false,
             }
         },
 
@@ -169,11 +174,44 @@
 
         methods: {
             async getListIncomes(params){
-                await this.$store.dispatch('actionGetListIncomes', params);
+                this.isSearching = true;
+                await this.$store.dispatch('actionGetListIncomes', {
+                    params: {
+                        user: this.filterModel.user,
+                        payment_status: this.filterModel.payment_status,
+                    }
+                });
+                this.isSearching = false;
             },
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getListIncomes({
+                    params: {
+                        user: this.filterModel.user,
+                        payment_status: this.filterModel.payment_status,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    user: '',
+                    payment_status: '',
+                }
+
+                this.getListIncomes({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             async submitUpdate(params) {

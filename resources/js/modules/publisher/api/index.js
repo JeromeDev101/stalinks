@@ -2,6 +2,12 @@ import axios from 'axios';
 
 export default class PublisherService {
 
+    // static getList(params) {
+    //     return axios.get(`/api/publisher?page=${params.page}`, params)
+    //         .then(response => response)
+    //         .catch(error => error);
+    // }
+
     static getList(params) {
         return axios.get('/api/publisher', params)
             .then(response => response)
