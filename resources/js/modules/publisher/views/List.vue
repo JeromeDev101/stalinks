@@ -17,7 +17,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <!-- <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -27,14 +27,13 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-2">
                             <button class="btn btn-default" @click="clearSearch" >Clear</button>
-                            <button class="btn btn-default" @click="doMultipleDelete" >Selected</button>
                             <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
@@ -57,6 +56,20 @@
                             </div>
                             <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                             <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
+                        </div>
+
+                        <div class="col-md-2 my-3">
+                            <div class="input-group">
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Selected Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
+                                        <a class="dropdown-item" href="#">Get Ahref</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -90,7 +103,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default">
-                                            <input type="checkbox" :id="publish.id" :value="publish.id" v-model="checkIds">
+                                            <input type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
@@ -108,9 +121,6 @@
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default" title="Delete" @click="doDelete(publish.id)"><i class="fa fa-fw fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -162,7 +172,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">No Backlinks</label>
-                                    <input type="number" v-model="updateModel.backlinks" class="form-control" name="" placeholder="">
+                                    <input type="text" v-model="updateModel.backlinks" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -189,7 +199,8 @@
                                     <input type="text" v-model="updateModel.org_traffic" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Language</label>
                                     <select name="" v-model="updateModel.language_id" class="form-control">
@@ -199,9 +210,15 @@
                                         </option>
                                     </select>
                                 </div>
+                            </div> -->
 
-                                
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Language</label>
+                                    <input type="text" v-model="updateModel.language" class="form-control" name="" placeholder="">
+                                </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Price</label>
@@ -242,16 +259,16 @@
                     org_keywords: '',
                     org_traffic: '',
                     price: '',
-                    language_id: '',
+                    language: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
                     search: this.$route.query.search || '',
-                    language_id: this.$route.query.language_id || '',
                 },
                 searchLoading: false,
                 checkIds: [],
+                isDisabled: true,
             }
         },
 
@@ -274,10 +291,16 @@
                 await this.$store.dispatch('getListPublisher', {
                     params: {
                         search: this.filterModel.search,
-                        language_id: this.filterModel.language_id,
                     }
                 });
                 this.searchLoading = false;
+            },
+
+            checkSelected() {
+                this.isDisabled = true;
+                if( this.checkIds.length > 0 ){
+                    this.isDisabled = false;
+                }
             },
 
             async doMultipleDelete(){
@@ -291,6 +314,7 @@
 
                     this.getPublisherList();
                     this.checkIds = []
+                    this.isDisabled = true;
                 }
             },
 
@@ -310,7 +334,6 @@
             clearSearch() {
                 this.filterModel = {
                     search: '',
-                    language_id: '',
                 }
 
                 this.getPublisherList({
@@ -342,7 +365,7 @@
                     id: that.id,
                     name: that.name,
                     url: that.url,
-                    language_id: that.language_id,
+                    language: that.language,
                     ur: that.ur,
                     dr: that.dr,
                     backlinks: that.backlinks,
@@ -378,7 +401,6 @@
                 this.getPublisherList({
                     params: {
                         search: this.filterModel.search,
-                        language_id: this.filterModel.language_id,
                     }
                 });
             },

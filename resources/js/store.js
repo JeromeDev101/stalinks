@@ -7,11 +7,12 @@ import storeAuth from '@/modules/auth/store';
 import storeUser from '@/modules/users/store';
 import storeExtDomain from '@/modules/ext_domain/store';
 import storePublisher from '@/modules/publisher/store';
+import storeIncomes from '@/modules/incomes/store';
 import storeBuy from '@/modules/buy/store';
 import storeIntDomain from '@/modules/int_domain/store';
 import storeBackLink from '@/modules/backlink/store';
-import storeNewBackLink from '@/modules/new_backlink/store';
 import storeHosting from '@/modules/hosting/store';
+import storeFollowupSales from '@/modules/followup_sales/store';
 import storeLog from '@/modules/logs/store';
 import storeDomain from '@/modules/domain/store';
 import storeSystem from '@/modules/system/store';
@@ -29,10 +30,11 @@ export default new Vuex.Store({
         storePublisher,
         storeBuy,
         storeExtDomain,
+        storeIncomes,
         storeIntDomain,
         storeBackLink,
-        // storeNewBackLink,
         storeHosting,
+        storeFollowupSales,
         storeLog,
         storeDomain,
         storeSystem,

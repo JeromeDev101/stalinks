@@ -80,65 +80,72 @@
                     </ul>
                 </li>
 
-                <li :class="{ active: $route.name == 'Publisher URL List' }">
-                    <router-link class="page-sidebar__item" :to="{ path: '/publisher' }">
-                        <i class="fa fa-file"></i>
-                        <span>Publisher URL List</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                <li :class="{ active: $route.name == 'BackLink' || $route.name == 'buy', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'buy' }">
+                <li :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
                     <a href="#">
-                        <i class="fa fa-fw fa-link"></i>
-                        <span>Backlinks</span>
+                        <i class="fa fa-fw fa-user-o"></i>
+                        <span>Seller</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li :class="{ active: $route.name == 'buy' }">
-                            <router-link class="page-sidebar__item" :to="{ path: '/buy' }">
-                                <i class="fa fa-fw fa-btc"></i>
-                                <span>Buy</span>
+                        <li :class="{ active: $route.name == 'publisher' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/publisher' }">
+                                <i class="fa fa-fw fa-reorder"></i>
+                                <span>List Publisher</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'BackLink' }">
-                            <router-link class="page-sidebar__item" :to="{ path: '/backlinks' }">
-                                <i class="fa fa-fw fa-mail-reply"></i>
-                                <span>Follow up</span>
+                        <li :class="{ active: $route.name == 'followup-sales' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/followup-sales' }">
+                                <i class="fa fa-fw fa-share"></i>
+                                <span>Follow up Sale</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'incomes' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/incomes' }">
+                                <i class="fa fa-fw fa-dollar"></i>
+                                <span>Incomes</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
                     </ul>
+                            
+                </li>
+
+                <li :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' }">
+                    <a href="#">
+                        <i class="fa fa-fw fa-money"></i>
+                        <span>Buyer</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li :class="{ active: $route.name == 'list-backlinks' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/list-backlinks' }">
+                                <i class="fa fa-fw fa-reorder"></i>
+                                <span>List Backlinks to Buy</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'BackLink' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/followup-backlinks' }">
+                                <i class="fa fa-fw fa-share"></i>
+                                <span>Follow up Backlinks</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-fw fa-btc"></i>
+                                <span>Purchase</span>
+                            </a>
+                        </li>
+                    </ul>
                         
                 </li>
-
-                <!--
-                <li>
-                    <router-link :to="{ path: '/intdomains' }">
-                        <i class="fa fa-fw fa-anchor"></i> <span>Internal Domains</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                <li>
-                    <router-link class="page-sidebar__item" :to="{ path: '/hostings' }">
-                        <i class="fa fa-fw fa-external-link-square"></i> <span>Hosting List</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                <li>
-                    <router-link class="page-sidebar__item" :to="{ path: '/domains' }">
-                        <i class="fa fa-fw fa-server"></i> <span>Domain Provider List</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
-                -->
-
             </ul>
         </section>
         <!-- /.sidebar -->

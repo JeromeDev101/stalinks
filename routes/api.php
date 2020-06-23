@@ -62,8 +62,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('int-create')->post('/int', 'IntDomainController@store');
     Route::name('int-update')->put('/int', 'IntDomainController@update');
 
-    // New Backlink
-    // Route::name('get-backlink')->get('backlinks', 'NewBacklinkController@getList');
+    // Incomes
+    Route::name('get-incomes')->get('incomes', 'IncomesController@getList');
+    Route::name('update-incomes')->put('incomes', 'IncomesController@update');
+
+    // Followup Sales
+    Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');
+    Route::name('update-sales')->put('sales', 'FollowupSalesController@update');
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');

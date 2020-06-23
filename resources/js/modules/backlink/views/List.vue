@@ -155,12 +155,11 @@
                                 </div>
                             </div>
 
-                              <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Completed</label>
-                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" >
-                                        <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -196,10 +195,11 @@
                             </div>
                             
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Processed</label>
-                                        <input type="date" v-model="modelBaclink.date_process" class="form-control">
+                                        <label style="color: #333">Date Completed</label>
+                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" >
+                                        <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>

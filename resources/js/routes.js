@@ -17,11 +17,12 @@ import System from '@/modules/system/views/List.vue'
 import MailTemplate from '@/modules/template_email/views/List.vue'
 import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue';
+import FollowupSales from '@/modules/followup_sales/views/List.vue';
+import Incomes from '@/modules/incomes/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
 import Buy from '@/modules/buy/views/List.vue';
-import NewBacklink from '@/modules/new_backlink/views/List.vue';
 
 const routes = [{
     path: '/login',
@@ -54,8 +55,13 @@ const routes = [{
         component: ListUser,
     },
     {
+        path: '/followup-sales',
+        name: 'followup-sales',
+        component: FollowupSales,
+    },
+    {
         path: '/publisher',
-        name: 'Publisher URL List',
+        name: 'publisher',
         component: Publisher,
     },
     {
@@ -74,14 +80,19 @@ const routes = [{
         component: AlexaDomain,
     },
     {
-        path: '/backlinks',
+        path: '/followup-backlinks',
         name: 'BackLink',
         component: BackLink,
     },
     {
-        path: '/buy',
-        name: 'buy',
+        path: '/list-backlinks',
+        name: 'list-backlinks',
         component: Buy,
+    },
+    {
+        path: '/incomes',
+        name: 'incomes',
+        component: Incomes,
     },
     {
         path: '/accounts',

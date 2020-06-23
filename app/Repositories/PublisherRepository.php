@@ -36,10 +36,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
         }
 
-        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
-            $list = $list->where('language_id', $filter['language_id']);
-        }
-
         return [
             "data" => $list->get(),
             "total" => $list->count()
@@ -63,18 +59,21 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 $org_traffic = $line[7];
                 $price = $line[8];
 
-                Publisher::create([
-                    'user_id' => $id,
-                    'language' => $language,
-                    'url' => $url,
-                    'ur' => $ur,
-                    'dr' => $dr,
-                    'backlinks' => $backlinks,
-                    'ref_domain' => $ref_domain,
-                    'org_keywords' => $org_keywords,
-                    'org_traffic' => $org_traffic,
-                    'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                ]);
+                if( trim($url, " ") != '' ){
+                    Publisher::create([
+                        'user_id' => $id,
+                        'language' => $language,
+                        'url' => $url,
+                        'ur' => $ur,
+                        'dr' => $dr,
+                        'backlinks' => $backlinks,
+                        'ref_domain' => $ref_domain,
+                        'org_keywords' => $org_keywords,
+                        'org_traffic' => $org_traffic,
+                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                    ]);
+                }
+                    
             }
                 
             $ctr++;
