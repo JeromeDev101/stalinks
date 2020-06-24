@@ -52,18 +52,20 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function fillterExtDomain($status, $countryIds, $countryIdsInt, $extDomainAdditionIds = [])
     {
-        $data = $this->model->selectRaw('ext_domains.country_id, ext_domains.status, count(DISTINCT(ext_domains.id)) as total')
-            ->leftJoin('backlinks','backlinks.ext_domain_id', '=', 'ext_domains.id')
-            ->leftJoin('int_domains','backlinks.int_domain_id', '=', 'int_domains.id')
-            ->whereIn('ext_domains.country_id', $countryIds)
-            ->orWhereIn('int_domains.country_id', $countryIdsInt)
-            ->orWhereIn('ext_domains.id', $extDomainAdditionIds)
-            ->with(['country' => function($query) {
-                $query->select('id', 'name', 'code');
-            }])
-            ->groupBy('ext_domains.country_id', 'ext_domains.status')
-            ->distinct()
-            ->get();
+        // $data = $this->model->selectRaw('ext_domains.country_id, ext_domains.status, count(DISTINCT(ext_domains.id)) as total')
+        //     ->leftJoin('backlinks','backlinks.ext_domain_id', '=', 'ext_domains.id')
+        //     ->leftJoin('int_domains','backlinks.int_domain_id', '=', 'int_domains.id')
+        //     ->whereIn('ext_domains.country_id', $countryIds)
+        //     ->orWhereIn('int_domains.country_id', $countryIdsInt)
+        //     ->orWhereIn('ext_domains.id', $extDomainAdditionIds)
+        //     ->with(['country' => function($query) {
+        //         $query->select('id', 'name', 'code');
+        //     }])
+        //     ->groupBy('ext_domains.country_id', 'ext_domains.status')
+        //     ->distinct()
+        //     ->get();
+
+        $data = [];
 
         $dataReturn = [];
         $sumTotal = 0;

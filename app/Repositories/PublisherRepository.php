@@ -25,7 +25,9 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id');
+                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                ->where('deleted_at', '=', '')
+                ->orWhereNull('deleted_at');
 
         if( $user->isOurs != 0 && $user->type != 10 ){
             $list = $list->where('users.id', $user->id);

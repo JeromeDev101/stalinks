@@ -44,17 +44,18 @@ class PublisherController extends Controller
     }
 
     public function delete(Request $request){
+        $input['deleted_at'] = date('Y-m-d');
         if( is_array($request->id) ){
             foreach( $request->id as $ids ){
                 $publisher = Publisher::findOrFail($ids);
-                $publisher->delete();
+                $publisher->update($input);
             }
 
             return response()->json(['success' => true], 200);
         }
 
         $publisher = Publisher::findOrFail($request->id);
-        $publisher->delete();
+        $publisher->update($input);
 
         return response()->json(['success' => true], 200);
     }
