@@ -118,7 +118,7 @@
                                 <td>{{ publish.ref_domain }}</td>
                                 <td>{{ publish.org_keywords }}</td>
                                 <td>{{ publish.org_traffic }}</td>
-                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
+                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
                                 <td>{{ publish.inc_article }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -169,37 +169,37 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Ref Domains</label>
-                                    <input type="number" v-model="updateModel.ref_domain" class="form-control" name="" placeholder="">
+                                    <input type="number" v-model="updateModel.ref_domain" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">No Backlinks</label>
-                                    <input type="text" v-model="updateModel.backlinks" class="form-control" name="" placeholder="">
+                                    <input type="text" v-model="updateModel.backlinks" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">URL Rating</label>
-                                    <input type="number" v-model="updateModel.ur" class="form-control" name="" placeholder="">
+                                    <input type="number" v-model="updateModel.ur" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Domain Rating</label>
-                                    <input type="number" v-model="updateModel.dr" class="form-control" name="" placeholder="">
+                                    <input type="number" v-model="updateModel.dr" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Organic Keywords</label>
-                                    <input type="text" v-model="updateModel.org_keywords" class="form-control" name="" placeholder="">
+                                    <input type="text" v-model="updateModel.org_keywords" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Organic traffic</label>
-                                    <input type="text" v-model="updateModel.org_traffic" class="form-control" name="" placeholder="">
+                                    <input type="text" v-model="updateModel.org_traffic" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
 
@@ -284,12 +284,14 @@
                 searchLoading: false,
                 checkIds: [],
                 isDisabled: true,
+                isSeller: false,
             }
         },
 
         async created() {
             this.getPublisherList();
             this.getListCountries();
+            this.checkAccountType();
         },
 
         computed:{
@@ -297,6 +299,7 @@
                 listPublish: state => state.storePublisher.listPublish,
                 messageForms: state => state.storePublisher.messageForms,
                 listCountries: state => state.storePublisher.listCountries,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
@@ -344,6 +347,10 @@
                 }
             },
 
+            computePrice( price, article ) {
+                return price;
+            },
+
             async submitUpload() {
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
@@ -354,6 +361,15 @@
                     this.getPublisherList();
                     this.$refs.excel.value = '';
                     this.isEnableBtn = true;
+                }
+            },
+
+            checkAccountType() {
+                let that = this.user
+                if( that.user_type ){
+                    if( that.user_type.type == 'Seller' ){
+                        this.isSeller = true;
+                    }
                 }
             },
 

@@ -175,7 +175,6 @@ class UserController extends Controller
     public function getTypes() {
         $data = [
             0 => 'Employee',
-            1 => 'Others',
             10 => 'Admin'
         ];
 

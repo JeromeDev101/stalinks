@@ -61,9 +61,9 @@
                             </tr>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td>{{ sales.publisher == null ? sales.ext_domain.id:sales.publisher.id }}</td>
-                                <td>{{ sales.publisher == null ? sales.ext_domain.domain:sales.publisher.url }}</td>
-                                <td>$ {{ sales.price }}</td>
+                                <td>{{ sales.publisher.id }}</td>
+                                <td>{{ sales.publisher.url }}</td>
+                                <td>$ {{ sales.publisher.price }}</td>
                                 <td><a href="sales.link">{{ sales.link }}</a></td>
                                 <td>{{ sales.anchor_text }}</td>
                                 <td>{{ sales.date_process }}</td>

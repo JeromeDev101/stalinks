@@ -4,19 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Backlink;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Registration;
+use App\Models\Publisher;
 
 class IncomesController extends Controller
 {
-    /**
-     * get list of backlink
-     *
-     * @return json
-     */
     public function getList(Request $request){
         $filter = $request->all();
+        $user = Auth::user();
         $list = Backlink::with('publisher', 'user')
                     ->where('status', 'Live')
                     ->orderBy('created_at', 'desc');
+
+        $registered = Registration::where('email', $user->email)->first();
+        $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
+
+        if( $user->type != 10 && $registered->type == 'Seller' ){
+            $list->whereIn('publisher_id', $publisher_ids);
+        }
 
         if( isset($filter['user']) && $filter['user'] != ''){
             $user = $filter['user'];

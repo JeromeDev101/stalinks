@@ -6,6 +6,7 @@ use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\BaseRepository;
 use App\Models\ExtDomain;
 use App\Models\Publisher;
+use App\Models\Registration;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,12 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
                 ->where('deleted_at', '=', '')
                 ->orWhereNull('deleted_at');
+
+        $registered = Registration::where('email', $user->email)->first();
+
+        if( $user->type != 10 && $registered->type == 'Seller' ){
+            $list->where('user_id', $user->id);
+        }
 
         if( $user->isOurs != 0 && $user->type != 10 ){
             $list = $list->where('users.id', $user->id);

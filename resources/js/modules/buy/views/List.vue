@@ -17,7 +17,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <!-- <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -27,7 +27,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
@@ -67,7 +67,7 @@
                         </thead>
                         <tbody>
                            <tr v-if="listBuy.data.length == 0">
-                                <td colspan="12" class="text-center">No record</td>
+                                <td colspan="13" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
@@ -81,7 +81,7 @@
                                 <td>{{ buy.ref_domain }}</td>
                                 <td>{{ buy.org_keywords }}</td>
                                 <td>{{ buy.org_traffic }}</td>
-                                <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ buy.price }}</td>
+                                <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -172,6 +172,7 @@
                 listBuy: state => state.storeBuy.listBuy,
                 listCountries: state => state.storeBuy.listCountries,
                 messageForms: state => state.storeBuy.messageForms,
+                user: state => state.storeAuth.currentUser,
             }),
         },
 
@@ -189,7 +190,62 @@
 
             doUpdate(buy) {
                 this.clearMessageform();
-                this.updateModel = JSON.parse(JSON.stringify(buy))
+                let that = JSON.parse(JSON.stringify(buy))
+
+                console.log(that)
+
+                this.updateModel = that
+                this.updateModel.price = this.computePrice(that.price, that.inc_article);
+            },
+
+            computePrice(price, article) {
+
+                let activeUser = this.user
+                let selling_price = price
+
+                if( activeUser.user_type ){ //check if has user_type value
+
+                    let type = activeUser.user_type.type
+                    let commission = activeUser.user_type.commission
+                    
+                    if( price != '' && price != null ){ // check if price has a value
+
+                        if( type == 'Buyer' ){ // check if the user_type is a 'Buyer'
+
+                            if( article == 'Yes' ){ //check if with article
+
+                                if( commission == 'no' ){
+                                    selling_price = price
+                                }
+
+                                if( commission == 'yes' ){
+                                    let percentage = this.percentage(10, price)
+                                    selling_price = parseFloat(percentage) + parseFloat(price)
+                                }
+                            }
+
+                            if( article == 'No' ){ //check if without article
+
+                                if( commission == 'no' ){
+                                    selling_price = parseFloat(price) + 10
+                                }
+
+                                if( commission == 'yes' ){
+                                    let percentage = this.percentage(10, price)
+                                    selling_price = parseFloat(percentage) + parseFloat(price) + 10
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+
+                return selling_price;
+            },
+
+            percentage(percent, total) {
+                return ((percent/ 100) * total).toFixed(2)
             },
 
             clearSearch() {

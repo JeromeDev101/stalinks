@@ -85,6 +85,7 @@ class AccountController extends Controller
         $input = $request->all();
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
+        $input['commission'] = 'no';
 
         $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
         $email->sendEmail();
