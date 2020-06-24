@@ -34,7 +34,7 @@
                     </router-link>
                 </li>
 
-                <li :class="{ active: $route.name == 'Registration' }">
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'Registration' }">
                     <router-link :to="{ path: '/accounts' }">
                         <i class="fa fa-user"></i>
                         <span>Accounts</span>

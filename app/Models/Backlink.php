@@ -14,18 +14,8 @@ class Backlink extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
-    public function intDomain()
-    {
-        return $this->belongsTo(IntDomain::class);
-    }
-
-    public function extDomain()
-    {
-        return $this->belongsTo('App\Models\ExtDomain', 'ext_domain_id', 'id');
-    }
-
     public function publisher()
     {
-        return $this->belongsTo('App\Models\Publisher', 'ext_domain_id', 'id');
+        return $this->belongsTo('App\Models\Publisher', 'publisher_id', 'id');
     }
 }

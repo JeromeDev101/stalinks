@@ -60,6 +60,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 $org_keywords = $line[6];
                 $org_traffic = $line[7];
                 $price = $line[8];
+                $article = $line[9];
 
                 if( trim($url, " ") != '' ){
                     Publisher::create([
@@ -73,6 +74,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                         'org_keywords' => $org_keywords,
                         'org_traffic' => $org_traffic,
                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                        'inc_article' => ucwords( strtolower( trim($article, " ") ) )
                     ]);
                 }
                     

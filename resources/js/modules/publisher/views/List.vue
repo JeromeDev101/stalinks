@@ -91,12 +91,13 @@
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
                                 <th>Price</th>
+                                <th>Inc Article</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="listPublish.data.length == 0">
-                                <td colspan="12" class="text-center">No record</td>
+                                <td colspan="15" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(publish, index) in listPublish.data" :key="index">
                                 <td>{{ index + 1}}</td>
@@ -118,6 +119,7 @@
                                 <td>{{ publish.org_keywords }}</td>
                                 <td>{{ publish.org_traffic }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
+                                <td>{{ publish.inc_article }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -226,6 +228,17 @@
                                     <input type="number" v-model="updateModel.price" class="form-control" name="" placeholder="">
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Include Article</label>
+                                    <select name="" id="" class="form-control" v-model="updateModel.inc_article">
+                                        <option value=""></option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -261,6 +274,7 @@
                     org_traffic: '',
                     price: '',
                     language: '',
+                    inc_article: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -387,6 +401,7 @@
                     price: that.price,
                     anchor_text: that.anchor_text,
                     link: that.link,
+                    inc_article: that.inc_article,
                 }
                 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;

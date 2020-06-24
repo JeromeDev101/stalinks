@@ -39,11 +39,10 @@ class BuyController extends Controller
             'price' => $publisher->price,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
-            'ext_domain_id' => $publisher->id,
+            'publisher_id' => $publisher->id,
             'user_id' => $publisher->user_id,
             'status' => 'Processing',
-            'date_process' => date('Y-m-d'),
-            'article_id' => 0
+            'date_process' => date('Y-m-d')
         ]);
 
         return response()->json(['success'=> true], 200);

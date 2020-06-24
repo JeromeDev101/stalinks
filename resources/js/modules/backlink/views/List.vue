@@ -67,8 +67,8 @@
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ backLink.publisher == null ? backLink.ext_domain.domain:backLink.publisher.url }}</td>
-                                <td>{{ backLink.int_domain == null ? '':backLink.int_domain.domain }}</td>
+                                <td>{{ backLink.publisher.url}}</td>
+                                <td>{{ backLink.url_advertiser }}</td>
                                 <td><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td>{{ backLink.anchor_text }}</td>
@@ -111,9 +111,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
+                                <div class="form-group">
                                     <label style="color: #333">URL Advertiser</label>
-                                    <input type="text" v-model="modelBaclink.int_domain.domain" :disabled="true"  class="form-control" required="required" >
+                                    <input type="text" v-model="modelBaclink.url_advertiser" class="form-control" required="required" >
                                 </div>
                             </div>
 
@@ -121,14 +121,14 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label style="color: #333">Price</label>
-                                        <input type="number" v-model="modelBaclink.price" class="form-control" value="" required="required" >
+                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
+                                <div class="form-group">
                                     <label style="color: #333">Buyer Backlink</label>
                                     <input type="text" v-model="modelBaclink.user.name" :disabled="true"  class="form-control" required="required" >
                                 </div>
@@ -159,7 +159,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Processed</label>
-                                        <input type="date" v-model="modelBaclink.date_process" class="form-control">
+                                        <input type="date" :disabled="isBuyer" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +168,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
                                     <div>
                                         <label style="color: #333">Status</label>
-                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;">
+                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer">
                                           <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
                                         <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
@@ -179,17 +179,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Payment Type</label>
-                                        <input type="text" class="form-control" disabled>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
                                         <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" :disabled="isBuyer">
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +189,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
                                         <label style="color: #333">Date Completed</label>
-                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" >
+                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer">
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
@@ -263,11 +254,13 @@
           },
           loadIntDomain: false,
           isPopupLoading: false,
+          isBuyer: false,
         }
       },
       async created() {
           await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
           await this.getBackLinkList();
+          this.checkAccountType()
       },
     
       computed: {
@@ -319,13 +312,22 @@
         checkArray(array) {
           return Hepler.arrayNotEmpty(array);
         },
+
+        checkAccountType() {
+            let that = this.user
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
+        },
     
         editBackLink(baclink) {
             this.modalAddBackLink = true
             let that = Object.assign({}, baclink)
 
             this.modelBaclink.id = that.id
-            this.modelBaclink.ext_domain_id = that.publisher == null ? that.ext_domain.id:that.publisher.id
+            this.modelBaclink.publisher_id = that.publisher.id
             this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
             this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
             this.modelBaclink.user.name = that.user.name
@@ -336,6 +338,7 @@
             this.modelBaclink.status = that.status
             this.modelBaclink.user_id = that.user_id
             this.modelBaclink.date_process = that.date_process
+            this.modelBaclink.url_advertiser = that.url_advertiser
 
             let element = this.$refs.modalEditBacklink
             $(element).modal('show')          

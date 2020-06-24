@@ -14,7 +14,7 @@ class IncomesController extends Controller
      */
     public function getList(Request $request){
         $filter = $request->all();
-        $list = Backlink::with('publisher', 'extDomain', 'user')
+        $list = Backlink::with('publisher', 'user')
                     ->where('status', 'Live')
                     ->orderBy('created_at', 'desc');
 
