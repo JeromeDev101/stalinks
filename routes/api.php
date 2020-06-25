@@ -36,6 +36,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-accounts')->get('accounts', 'AccountController@getList');
     Route::name('update-accounts')->put('accounts', 'AccountController@edit');
 
+    //Purchase
+    Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
+
     //Dashboard
     Route::name('ext-reports')->post('/ext/reports', 'ExtDomainController@reports');
     Route::name('int-reports')->post('/int/reports', 'IntDomainController@reports');

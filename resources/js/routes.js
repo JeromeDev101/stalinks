@@ -18,6 +18,7 @@ import MailTemplate from '@/modules/template_email/views/List.vue'
 import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue';
 import FollowupSales from '@/modules/followup_sales/views/List.vue';
+import Purchase from '@/modules/purchase/views/List.vue';
 import Incomes from '@/modules/incomes/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
@@ -63,6 +64,11 @@ const routes = [{
         path: '/publisher',
         name: 'publisher',
         component: Publisher,
+    },
+    {
+        path: '/purchase',
+        name: 'purchase',
+        component: Purchase,
     },
     {
         path: '/profile/:id',

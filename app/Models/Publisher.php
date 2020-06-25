@@ -8,4 +8,8 @@ class Publisher extends Model
 {
     protected $guarded = [];
     protected $table = 'publisher';
+
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
 }

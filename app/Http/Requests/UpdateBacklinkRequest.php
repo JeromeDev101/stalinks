@@ -28,7 +28,7 @@ class UpdateBacklinkRequest extends FormRequest
             'link' => 'required|url',
             'price' => 'required',
             'anchor_text' => 'required',
-            'live_date' => 'required',
+            // 'live_date' => 'required',
             'status' => 'required',
             'user_id' => 'required',
         ];

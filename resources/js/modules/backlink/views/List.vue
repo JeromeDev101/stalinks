@@ -39,7 +39,7 @@
             <div class="box">
 
                 <div class="box-header">
-                    <h3 class="box-title">Backlinks</h3>
+                    <h3 class="box-title">Follow up Backlinks</h3>
                     
                     <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
                         <download-csv

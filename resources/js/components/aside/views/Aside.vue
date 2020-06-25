@@ -114,7 +114,7 @@
                             
                 </li>
 
-                <li v-if="isBuyer || user.isAdmin" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' }">
+                <li v-if="isBuyer || user.isAdmin" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
                     <a href="#">
                         <i class="fa fa-fw fa-money"></i>
                         <span>Buyer</span>
@@ -137,11 +137,12 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li>
-                            <a href="#">
+                        <li :class="{ active: $route.name == 'purchase' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/purchase' }">
                                 <i class="fa fa-fw fa-btc"></i>
                                 <span>Purchase</span>
-                            </a>
+                                <span class="pull-right-container"></span>
+                            </router-link>
                         </li>
                     </ul>
                         

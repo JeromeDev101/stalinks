@@ -63,9 +63,9 @@
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
+                                <td>{{ incomes.publisher.user.name }}</td>
                                 <td>{{ incomes.user.name }}</td>
-                                <td>{{ incomes.user.name }}</td>
-                                <td>{{ incomes.publisher == null ? incomes.ext_domain.domain:incomes.publisher.url }}</td>
+                                <td>{{ incomes.publisher.url }}</td>
                                 <td>$ {{ incomes.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>
@@ -227,7 +227,7 @@
                 let that = JSON.parse( JSON.stringify(incomes) )
                 this.updateModel = that
 
-                this.updateModel.seller = that.user.name
+                this.updateModel.seller = that.publisher.user.name
                 this.updateModel.buyer = that.user.name
             },
 
