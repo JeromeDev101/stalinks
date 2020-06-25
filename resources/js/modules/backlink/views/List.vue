@@ -57,6 +57,7 @@
                                 <th>#</th>
                                 <th>URL Publisher</th>
                                 <th>URL Advertiser</th>
+                                <th>Link From</th>
                                 <th>Link To</th>
                                 <th>Price</th>
                                 <th>Anchor Text</th>
@@ -69,6 +70,7 @@
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ backLink.publisher.url}}</td>
                                 <td>{{ backLink.url_advertiser }}</td>
+                                <td>{{ backLink.link_from }}</td>
                                 <td><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td>{{ backLink.anchor_text }}</td>

@@ -24,10 +24,11 @@ class PublisherController extends Controller
 
     public function importExcel(Request $request){
         $request->validate([
-            'file' => 'bail|required|mimes:csv,txt'
+            'file' => 'bail|required|mimes:csv,txt',
+            'language' => 'required'
         ]);
 
-        $file = $request->file;
+        $file = $request->all();
         $this->publisherRepository->importExcel($file);
         
         return response()->json(['success' => true], 200);

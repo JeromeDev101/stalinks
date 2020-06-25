@@ -16,7 +16,8 @@ class BuyController extends Controller
                     ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                     ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                     ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id');
+                    ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                    ->orderBy('created_at', 'desc');
         
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')

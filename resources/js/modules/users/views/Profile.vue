@@ -242,10 +242,10 @@ export default {
 
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-        if (!this.currentUser.isAdmin) {
-            window.location.href = '/';
-            return;
-        }
+        // if (!this.currentUser.isAdmin) {
+        //     window.location.href = '/';
+        //     return;
+        // }
 
         let userId = this.$route.params.id || null;
         await this.$store.dispatch('actionGetUserInformation', {

@@ -28,7 +28,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
                 ->where('deleted_at', '=', '')
-                ->orWhereNull('deleted_at');
+                ->orWhereNull('deleted_at')
+                ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
 
@@ -54,27 +55,29 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     }
 
     public function importExcel($file){
+        $language = $file['language'];
+        $csv_file = $file['file'];
+
         $id = Auth::user()->id;
-        $csv = fopen($file, 'r');
+        $csv = fopen($csv_file, 'r');
         $ctr = 0;
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
 
             if( $ctr > 0 ){
-                $language = $line[0];
-                $url = $line[1];
-                $ur = $line[2];
-                $dr = $line[3];
-                $backlinks = $line[4];
-                $ref_domain = $line[5];
-                $org_keywords = $line[6];
-                $org_traffic = $line[7];
-                $price = $line[8];
-                $article = $line[9];
+                $url = $line[0];
+                $ur = $line[1];
+                $dr = $line[2];
+                $backlinks = $line[3];
+                $ref_domain = $line[4];
+                $org_keywords = $line[5];
+                $org_traffic = $line[6];
+                $price = $line[7];
+                $article = $line[8];
 
                 if( trim($url, " ") != '' ){
                     Publisher::create([
                         'user_id' => $id,
-                        'language' => $language,
+                        'language_id' => $language,
                         'url' => $url,
                         'ur' => $ur,
                         'dr' => $dr,

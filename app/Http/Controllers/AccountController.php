@@ -30,7 +30,7 @@ class AccountController extends Controller
         $data['phone'] = $registration['phone'];
         $data['avatar'] = '/images/noavatar.jpg';
         $data['role_id'] = 4;
-        $data['type'] = 1;
+        $data['type'] = 0;
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];
         User::create($data);
@@ -75,7 +75,13 @@ class AccountController extends Controller
         if (!$account) {
             return response()->json($response);
         }
-
+        
+        if (isset($input['password']) && $input['password'] != '') {
+            $user_data['password'] = $input['password'];
+            $user = User::where('email', $account->email);
+            $user->update($user_data);
+        }
+            
         $account->update($input);
         $response['success'] = true;
         return response()->json($response);
@@ -117,7 +123,7 @@ class AccountController extends Controller
         $data['phone'] = $registration['phone'];
         $data['avatar'] = '/images/noavatar.jpg';
         $data['role_id'] = 4;
-        $data['type'] = 1;
+        $data['type'] = 0;
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];
         $user = User::create($data);

@@ -51,7 +51,9 @@
                                 <th>#</th>
                                 <th>ID</th>
                                 <th>URL Publisher</th>
+                                <th>URL From</th>
                                 <th>Price</th>
+                                <th>Link From</th>
                                 <th>Link To</th>
                                 <th>Anchor Text</th>
                                 <th>Date for Proccessing</th>
@@ -63,7 +65,9 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.publisher.url }}</td>
+                                <td>{{ sales.url_from }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
+                                <td>{{ sales.link_from }}</td>
                                 <td><a href="sales.link">{{ sales.link }}</a></td>
                                 <td>{{ sales.anchor_text }}</td>
                                 <td>{{ sales.date_process }}</td>
@@ -138,8 +142,26 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Link</label>
+                                        <label style="color: #333">Link To</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">URL From</label>
+                                        <input type="text" class="form-control" v-model="updateModel.url_from" required="required" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Link From</label>
+                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -214,6 +236,8 @@
                     user: {
                         name: ''
                     },
+                    link_from: '',
+                    url_from: '',
                 },
                 isPopupLoading: false,
             }

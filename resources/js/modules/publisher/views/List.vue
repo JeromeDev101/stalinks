@@ -48,14 +48,29 @@
 
                     <div class="form-row">
                         <div class="col-md-4 my-3">
-                            <div class="input-group">
-                                <input type="file" class="form-control" v-on:change="checkData" enctype="multipart/form-data" ref="excel" name="file">
-                                <div class="input-group-btn">
-                                    <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
+                                        <div class="input-group-btn">
+                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                        </div>
+                                    </div>
+                                    <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
+                                    <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
                                 </div>
                             </div>
-                            <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
-                            <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
+
+                            <div class="row mt-3" v-show="showLang">
+                                <div class="col-sm-12">
+                                    <select class="form-control" name="language" ref="language" v-on:change="checkDataLanguage">
+                                        <option value="">Select language</option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>     
                         </div>
 
                         <div class="col-md-2 my-3">
@@ -70,6 +85,12 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, UR, DR, Backlinks, Referring domains, Organic keywords, Organic traffic, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
                         </div>
                     </div>
                 </div>
@@ -110,7 +131,7 @@
                                 </td>
                                 <td>{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
                                 <td>{{ publish.name }}</td>
-                                <td>{{ publish.language }}</td>
+                                <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.ur }}</td>
                                 <td>{{ publish.dr }}</td>
@@ -218,7 +239,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Language</label>
-                                    <input type="text" v-model="updateModel.language" class="form-control" name="" placeholder="">
+                                    <select name="" class="form-control" v-model="updateModel.language_id">
+                                        <option value="">Select Language</option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -275,6 +301,7 @@
                     price: '',
                     language: '',
                     inc_article: '',
+                    language_id: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -284,6 +311,7 @@
                 searchLoading: false,
                 checkIds: [],
                 isDisabled: true,
+                showLang: false,
                 isSeller: false,
             }
         },
@@ -354,13 +382,16 @@
             async submitUpload() {
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
+                this.formData.append('language', this.$refs.language.value);
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
 
                 if (this.messageForms.action === 'uploaded') {
                     this.getPublisherList();
                     this.$refs.excel.value = '';
+                    this.$refs.language.value = '';
                     this.isEnableBtn = true;
+                    this.showLang = false;
                 }
             },
 
@@ -407,7 +438,7 @@
                     id: that.id,
                     name: that.name,
                     url: that.url,
-                    language: that.language,
+                    language_id: that.language_id,
                     ur: that.ur,
                     dr: that.dr,
                     backlinks: that.backlinks,
@@ -448,10 +479,17 @@
                 });
             },
 
-            checkData() {
+            checkDataLanguage() {
                 this.isEnableBtn = true;
-                if( this.$refs.excel.value ){
+                if( this.$refs.language.value ){
                     this.isEnableBtn = false;
+                }
+            },
+
+            checkDataExcel() {
+                this.showLang = false;
+                if( this.$refs.excel.value ){
+                    this.showLang = true;
                 }
             },
 

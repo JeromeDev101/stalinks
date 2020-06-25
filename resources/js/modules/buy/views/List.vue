@@ -73,7 +73,7 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.name }}</td>
-                                <td>{{ buy.language }}</td>
+                                <td>{{ buy.country_name }}</td>
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>
                                 <td>{{ buy.dr }}</td>
