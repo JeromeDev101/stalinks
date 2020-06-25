@@ -21,14 +21,8 @@ class PurchaseController extends Controller
             $query->with('user:id,name');
         }, 'user'])
                     ->where('status', 'Live')
+                    ->where('user_id', $user->id)
                     ->orderBy('created_at', 'desc');
-
-        $registered = Registration::where('email', $user->email)->first();
-        $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
-
-        if( $user->type != 10 && $registered->type == 'Seller' ){
-            $list->whereIn('publisher_id', $publisher_ids);
-        }
 
         return [
             'data' => $list->get()

@@ -30,24 +30,40 @@
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td><i class="fa fa-user"></i><b> Name</b></td>
+                                    <td><b>Name</b></td>
                                     <td>{{ user.name }}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-envelope-o"></i><b> Email</b></td>
+                                    <td><b>Email</b></td>
                                     <td>{{ user.email }}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-phone"></i><b> Phone</b></td>
+                                    <td><b>Phone</b></td>
                                     <td>{{ user.phone }}</td>
                                 </tr>
-                                <tr>
-                                    <td><i class="fa fa-gavel"></i><b> Role</b></td>
+                                <tr v-if="currentUser.isAdmin">
+                                    <td><b>Role</b></td>
                                     <td>{{ user.role ? user.role.name : null }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Type</b></td>
+                                    <td>{{ user.user_type ? user.user_type.type: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Company Name</b></td>
+                                    <td>{{ user.user_type ? user.user_type.company_name: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Status</b></td>
+                                    <td>{{ user.user_type ? user.user_type.status: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Skype</b></td>
+                                    <td>{{ user.user_type ? user.user_type.skype: '' }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div>  
                     <!-- /.table-responsive -->
                 </div>
             </div>

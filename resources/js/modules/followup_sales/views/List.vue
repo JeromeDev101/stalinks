@@ -51,7 +51,6 @@
                                 <th>#</th>
                                 <th>ID</th>
                                 <th>URL Publisher</th>
-                                <th>URL From</th>
                                 <th>Price</th>
                                 <th>Link From</th>
                                 <th>Link To</th>
@@ -65,7 +64,6 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.publisher.url }}</td>
-                                <td>{{ sales.url_from }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>
                                 <td><a href="sales.link">{{ sales.link }}</a></td>
@@ -148,14 +146,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">URL From</label>
                                         <input type="text" class="form-control" v-model="updateModel.url_from" required="required" >
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
