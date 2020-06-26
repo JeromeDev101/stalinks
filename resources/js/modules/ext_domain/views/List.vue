@@ -1319,9 +1319,19 @@
 
                     var i =0;
                     this.checkIds.forEach(function(entry) {
+                        if (entry.status != 30 && entry.status != 40) {
+                            alert("can't not handle with external domain not have contacts or was contacted");
+                            return;
+                        }
+                        if (entry.email === '' || entry.email.split('|').length > 1) {
+                            alert("can't not handle with external domain not have email or multiple emails");
+                            return;
+                        }
+
                         ext_id[i] = entry.id;
                         ext_domain[i] = entry.domain;
                         ext_country[i] = entry.country;
+
                         i++;
                     });
 
