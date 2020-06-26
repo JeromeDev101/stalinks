@@ -9,6 +9,7 @@ const EXT_DOMAIN_SET_LIST_COUNTRY_EXT = 'EXT_DOMAIN_SET_LIST_COUNTRY_EXT';
 const EXT_DOMAIN_SET_LIST_AHERFS = 'EXT_DOMAIN_SET_LIST_AHERFS';
 const EXT_DOMAIN_SET_LIST_MAIL = 'EXT_DOMAIN_SET_LIST_MAIL';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
+const TOTAL_TOPSITES = "TOTAL_TOPSITES";
 
 //status external domain
 const EXT_STATUS_NEW = "New";
@@ -44,6 +45,7 @@ const state = {
         90: { text: UNQUALIFIED, label: "success" },
         100: { text: EXT_STATUS_QUALIFIED, label: "success" }
     },
+    totalTopSites: 0,
     tableExtShowOptions: {
         id: true,
         country: true,
@@ -109,9 +111,8 @@ const mutations = {
         } else {
             state.listAlexa = [];
         }
-
-        console.log("listAlexa", state.listAlexa);
     }
+
 };
 
 const actions = {

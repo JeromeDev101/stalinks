@@ -51,7 +51,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
-                                <th>User Seller</th>
+                                <th v-if="isSeller">User Seller</th>
                                 <th>User Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
@@ -63,7 +63,7 @@
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
-                                <td>{{ incomes.publisher.user.name }}</td>
+                                <td v-if="isSeller">{{ incomes.publisher.user.name }}</td>
                                 <td>{{ incomes.user.name }}</td>
                                 <td>{{ incomes.publisher.url }}</td>
                                 <td>$ {{ incomes.price }}</td>
@@ -158,17 +158,20 @@
                     payment_status: this.$route.query.payment_status || '',
                 },
                 isSearching: false,
+                isSeller: true,
             }
         },
 
         async created() {
             this.getListIncomes();
+            this.checkAccountType();
         },
 
         computed: {
             ...mapState({
                 listIncomes: state => state.storeIncomes.listIncomes,
                 messageForms: state => state.storeIncomes.messageForms,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
@@ -182,6 +185,15 @@
                     }
                 });
                 this.isSearching = false;
+            },
+
+            checkAccountType() {
+                let that = this.user
+                if( that.user_type ){
+                    if( that.user_type.type == 'Seller' ){
+                        this.isSeller = false;
+                    }
+                }
             },
 
             clearMessageform() {

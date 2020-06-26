@@ -8,7 +8,7 @@ interface ExtDomainRepositoryInterface extends RepositoryInterface
 {
     public function fillterExtDomain($status, $countryIds, $countryIdsInt, $extDomainAdditionIds = []);
 
-    public function importAlexaSites($data, $countryCode, $start, $count);
+    public function importAlexaSites($data, $total, $countryCode, $start, $count);
 
     public function getContacts($listIdExtDomains);
 
