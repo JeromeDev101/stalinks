@@ -101,10 +101,27 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Buyers name</label>
+                                    <input type="text" :disabled="true" v-model="updateModel.user.name" class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label style="color: #333">URL Publisher</label>
                                     <input type="text" v-model="updateModel.url_publisher" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">URL Advertiser</label>
@@ -123,16 +140,18 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Buyer Backlink</label>
-                                    <input type="text" :disabled="true" v-model="updateModel.user.name" class="form-control" required="required" >
+                                    <div>
+                                        <label style="color: #333">Anchor text</label>
+                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.anchor_text" required="required" >
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Anchor text</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.anchor_text" required="required" >
+                                        <label style="color: #333">Link From</label>
+                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -154,24 +173,6 @@
                                     </div>
                                 </div>
                             </div> -->
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">Link From</label>
-                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">Date Processed</label>
-                                        <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -260,6 +261,7 @@
             doUpdate(sales) {
                 this.clearMessageform()
                 let that = JSON.parse( JSON.stringify(sales) )
+
                 this.updateModel = that
                 this.updateModel.url_publisher = that.publisher == null ? that.ext_domain.domain:that.publisher.url
             },

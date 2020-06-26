@@ -12,7 +12,9 @@ class FollowupSalesController extends Controller
 {
     public function getList(){
         $user = Auth::user();
-        $list = Backlink::with('publisher', 'user')
+        $list = Backlink::with(['publisher' => function($query) {
+            $query->with('user:id,name');
+        }, 'user'])
                     ->orderBy('created_at', 'desc');
         
         $registered = Registration::where('email', $user->email)->first();
