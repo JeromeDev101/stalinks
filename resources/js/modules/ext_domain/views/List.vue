@@ -101,7 +101,7 @@
                     <div v-if="user.isAdmin" class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 300px;">
                        <div class="input-group">
                             <label style="color: #333;margin: 5%;">Selected Action</label>
-                            <button @click="doSendEmail(-1, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
+                            <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
                             <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                         </div>
                     </div>
@@ -112,6 +112,7 @@
                         <thead>
                         <tr class="label-primary">
                             <th>Action</th>
+                            <th>Select</th>
                             <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
                             <th class="sorting" data-index="1" v-show="tableShow.country">Country</th>
                             <th class="sorting" data-index="2" v-show="tableShow.domain">Domain</th>
@@ -140,6 +141,13 @@
                                     <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                                 </div>
                                 <!--                                <router-link class="btn btn-success" :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i> View</router-link>-->
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-default">
+                                        <input type="checkbox" v-on:change="checkSelected" :id="ext.id" :value="ext" v-model="checkIds">
+                                    </button>
+                                </div>
                             </td>
                             <td v-if="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
                             <td v-if="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
@@ -858,7 +866,8 @@
                 loadIntDomain: false,
                 allowSending: true,
                 listSortKey: [],
-                listSortValue: []
+                listSortValue: [],
+                checkIds: [],
              };
         },
         async created() {
@@ -945,6 +954,14 @@
             });
         },
         methods: {
+
+            checkSelected() {
+                this.isDisabled = true;
+                if( this.checkIds.length > 0 ){
+                    this.isDisabled = false;
+                }
+            },
+
             async updateUserPermission() {
                 let that = this;
                 await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
@@ -1247,48 +1264,76 @@
             async doSendEmail(ext, event) {
                 this.$store.dispatch('clearMessageForm');
                 var ids = '';
-                if (ext === -1) {
-                    ids = this.listExt.data.map(item => item.id).join(",");
-                    var ctemp = -1;
-                    if (this.listExt.data.some(item => {
-                        if (ctemp === -1) ctemp = item.country;
-                        return item.country.id !== ctemp.id;
-                    })) {
-                        alert("can't not handle with multiple countries");
+
+                if(ext != null) {
+                    if (ext === -1) {
+                        ids = this.listExt.data.map(item => item.id).join(",");
+                        var ctemp = -1;
+                        if (this.listExt.data.some(item => {
+                            if (ctemp === -1) ctemp = item.country;
+                            return item.country.id !== ctemp.id;
+                        })) {
+                            alert("can't not handle with multiple countries");
+                            return;
+                        }
+                        if (this.listExt.data.some(item => {
+                            return (item.status != 30 && item.status != 40);
+                        })) {
+                            alert("can't not handle with external domain not have contacts or was contacted");
+                            return;
+                        }
+                        if (this.listExt.data.some(item => {
+                            return (item.email === '' || item.email.split('|').length > 1);
+                        })) {
+                            alert("can't not handle with external domain not have email or multiple emails");
+                            return;
+                        }
+                        this.mailInfo.ids = ids;
+                        this.mailInfo.receiver_text = " all list";
+                        this.mailInfo.country = ctemp;
+                        this.fetchTemplateMail(this.mailInfo.country.id);
+                        this.openModalEmailElem();
                         return;
                     }
-                    if (this.listExt.data.some(item => {
-                        return (item.status != 30 && item.status != 40);
-                    })) {
+                    if (ext.status != 30 && ext.status != 40) {
                         alert("can't not handle with external domain not have contacts or was contacted");
                         return;
                     }
-                    if (this.listExt.data.some(item => {
-                        return (item.email === '' || item.email.split('|').length > 1);
-                    })) {
+                    if (ext.email === '' || ext.email.split('|').length > 1) {
                         alert("can't not handle with external domain not have email or multiple emails");
                         return;
                     }
-                    this.mailInfo.ids = ids;
-                    this.mailInfo.receiver_text = " all list";
-                    this.mailInfo.country = ctemp;
+
+                    this.mailInfo.ids = ext.id;
+                    this.mailInfo.receiver_text = ext.domain;
+                    this.mailInfo.country = ext.country;
                     this.fetchTemplateMail(this.mailInfo.country.id);
                     this.openModalEmailElem();
-                    return;
                 }
-                if (ext.status != 30 && ext.status != 40) {
-                    alert("can't not handle with external domain not have contacts or was contacted");
-                    return;
+
+                // for mulitiple selection
+                if(ext == null) {
+                    var ext_id = [];
+                    var ext_domain = [];
+                    var ext_country = [];
+
+                    var i =0;
+                    this.checkIds.forEach(function(entry) {
+                        ext_id[i] = entry.id;
+                        ext_domain[i] = entry.domain;
+                        ext_country[i] = entry.country;
+                        i++;
+                    });
+
+                    ext_id = ext_id.join(", ");
+                    ext_domain = ext_domain.join(", ");
+
+                    this.mailInfo.ids = ext_id;
+                    this.mailInfo.receiver_text = ext_domain;
+                    this.mailInfo.country =ext_country[0];
+                    this.fetchTemplateMail(this.mailInfo.country.id);
+                    this.openModalEmailElem();
                 }
-                if (ext.email === '' || ext.email.split('|').length > 1) {
-                    alert("can't not handle with external domain not have email or multiple emails");
-                    return;
-                }
-                this.mailInfo.ids = ext.id;
-                this.mailInfo.receiver_text = ext.domain;
-                this.mailInfo.country = ext.country;
-                this.fetchTemplateMail(this.mailInfo.country.id);
-                this.openModalEmailElem();
             },
             async doSendEmailIndex(index) {
                 let extDomain = this.listExt.data[index];
