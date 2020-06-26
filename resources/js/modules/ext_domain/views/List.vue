@@ -1,6 +1,5 @@
 <template>
     <div class="row">
-
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-green">
@@ -13,14 +12,12 @@
                 </div>
             </div>
         </div>
-
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
                 </div>
-
-                <div class="box-body m-3">
+                <div class="box-body col-md-10 offset-md-1 relative">
                     <div class="row">
 
                         <div v-if="tableShow.country" class="col-md-2">
@@ -38,7 +35,6 @@
                             <div class="form-group">
                                 <label style="color: #333">Country</label>
                                 <select v-model="filterModel.country_id_temp" class="form-control pull-right">
-                                    <option value="0" selected>All country</option>
                                     <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
@@ -53,52 +49,26 @@
                             </div>
                         </div>
 
-                        <div v-if="tableShow.email" class="col-md-2">
-                            <div class="from-group">
-                                <label style="color: #333">Email</label>
-                                <input type="text" v-model="filterModel.email_temp" class="form-control pull-right" placeholder="Search Email">
-                            </div>
-                        </div>
-
                         <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group">
                                 <label style="color: #333">Status</label>
-                                <v-select multiple placeholder="Select Status" label="text" :reduce="statusOptions => statusOptions.value" v-model="filterModel.status_multiple" :options="statusOptions" />
-                            </div>
-                        </div>
-                        
-                        <!-- <div v-if="tableShow.status" class="col-md-2">
-                            <div class="form-group">
-                                <label style="color: #333">Status</label>
-                                <select v-model="filterModel.status_temp" class="form-control select2">
+                                <select v-model="filterModel.status_temp" class="form-control">
                                     <option v-for="(option, key) in listStatusText" v-bind:value="key">
                                         {{ option.text }}
                                     </option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" v-if="user.isAdmin">
                             <div class="form-group">
-                                <label style="color: #333">Sort Column</label>
-                                <select v-model="filterModel.sort_key" class="form-control">
-                                    <option v-for="(option, key) in listSortKey" v-bind:value="key">
-                                        {{ option.text }}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <select v-model="filterModel.sort_value" class="form-control">
-                                    <option v-for="(option, key) in listSortValue" v-bind:value="key">
-                                        {{ option.text }}
-                                    </option>
+                                <label style="color: #333">Employee</label>
+                                <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
+                                    <option value="0">Select Employee</option>
+                                    <option v-for="user in listUser.data" :value="user.id">{{ user.name }}</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
 
                         <div v-if="tableShow.status" class="col-md-2">
                             <div class="form-group pull-right">
@@ -107,8 +77,6 @@
                                 <div class="btn-group">
                                     <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
                                     <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
-                                    <button @click="doSendEmail(-1, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                                    <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -131,10 +99,11 @@
                     </div>
 
                     <div v-if="user.isAdmin" class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 300px;">
-                        <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
-                            <option value="0">Select Employee</option>
-                            <option v-for="user in listUser.data" :value="user.id">{{ user.name }}</option>
-                        </select>
+                       <div class="input-group">
+                            <label style="color: #333;margin: 5%;">Selected Action</label>
+                            <button @click="doSendEmail(-1, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
+                            <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
+                        </div>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -143,22 +112,22 @@
                         <thead>
                         <tr class="label-primary">
                             <th>Action</th>
-                            <th class="sorting" data-index="0" v-if="tableShow.id">#</th>
-                            <th class="sorting" data-index="1" v-if="tableShow.country">Country</th>
-                            <th class="sorting" data-index="2" v-if="tableShow.domain">Domain</th>
-                            <th class="sorting" data-index="3" v-if="tableShow.email">Emails</th>
-                            <th class="sorting" data-index="4" v-if="tableShow.facebook">Facebook</th>
-                            <th class="sorting" data-index="5" v-if="tableShow.phone">Phone</th>
-                            <th class="sorting" data-index="6" v-if="tableShow.rank">Rank</th>
-                            <th class="sorting" data-index="7" v-if="tableShow.status">Status</th>
-                            <th class="sorting" data-index="8" v-if="tableShow.total_spent">Total Spent</th>
-                            <th class="sorting" data-index="9" v-if="tableShow.ahrefs_rank">Ahreafs Rank</th>
-                            <th class="sorting" data-index="10" v-if="tableShow.no_backlinks">No Backlinks</th>
-                            <th class="sorting" data-index="11" v-if="tableShow.url_rating">URL Rating</th>
-                            <th class="sorting" data-index="12" v-if="tableShow.domain_rating">Domain Rating</th>
-                            <th class="sorting" data-index="13" v-if="tableShow.ref_domains">Ref Domains</th>
-                            <th class="sorting" data-index="14" v-if="tableShow.organic_keywords">Organic Keywords</th>
-                            <th class="sorting" data-index="15" v-if="tableShow.organic_traffic">Organic Traffic</th>
+                            <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
+                            <th class="sorting" data-index="1" v-show="tableShow.country">Country</th>
+                            <th class="sorting" data-index="2" v-show="tableShow.domain">Domain</th>
+                            <th class="sorting" data-index="3" v-show="tableShow.email">Emails</th>
+                            <th class="sorting" data-index="4" v-show="tableShow.facebook">Facebook</th>
+                            <th class="sorting" data-index="5" v-show="tableShow.phone">Phone</th>
+                            <th class="sorting" data-index="6" v-show="tableShow.rank">Rank</th>
+                            <th class="sorting" data-index="7" v-show="tableShow.status">Status</th>
+                            <th class="sorting" data-index="8" v-show="tableShow.total_spent">Total Spent</th>
+                            <th class="sorting" data-index="9" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
+                            <th class="sorting" data-index="10" v-show="tableShow.no_backlinks">No Backlinks</th>
+                            <th class="sorting" data-index="11" v-show="tableShow.url_rating">UR</th>
+                            <th class="sorting" data-index="12" v-show="tableShow.domain_rating">DR</th>
+                            <th class="sorting" data-index="13" v-show="tableShow.ref_domains">Ref Domains</th>
+                            <th class="sorting" data-index="14" v-show="tableShow.organic_keywords">Organic Keywords</th>
+                            <th class="sorting" data-index="15" v-show="tableShow.organic_traffic">Organic Traffic</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -167,7 +136,6 @@
                                 <div class="btn-group">
                                     <button data-action="a1" :data-index="index" @click="doEditExt(ext)" data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
                                     <button data-action="a2" :data-index="index" v-if="hasBacklink(ext.status)" @click="doShowBackLink(ext)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
-                                    <button data-action="a3" :data-index="index" @click="addBackLink(ext)" data-toggle="modal" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-plus"></i></button>
                                     <button data-action="a4" :data-index="index" @click="doSendEmail(ext, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
                                     <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                                 </div>
@@ -602,11 +570,11 @@
                             </div>
 
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">URL Rating</label>
+                                <label><input type="checkbox" :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">UR</label>
                             </div>
 
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">Domain Rating</label>
+                                <label><input type="checkbox" :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">DR</label>
                             </div>
 
                             <div class="checkbox col-md-4">
@@ -741,15 +709,11 @@
                                     </div>
                                     <div class="col-md-9">
                                         <div  class="form-group">
-                                            <!--
                                             <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
-                                            -->
-                                            
-                                            <label style="color: #333">Select Email Name</label>
                                             <div>
                                                 <select @change="doChangeEmailTemplate" v-model="mailInfo.tpl" class="form-control pull-right">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
-                                                        {{ option.mail_name }}
+                                                        {{ option.title }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -758,7 +722,6 @@
                                 </div>
                             </div>
 
-                            <!--
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
                                     <label style="color: #333">Email Name</label>
@@ -766,7 +729,6 @@
                                     <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                            -->
 
 
                             <div class="col-md-12" style="margin-top: 15px;">
@@ -807,10 +769,8 @@
     import { mapState } from 'vuex';
     import DownloadCsv from '@/components/export-csv/Csv.vue'
     import { async } from 'q';
-
     export default {
         name: 'ExtList',
-
         data() {
             return {
                 csvExport: {
@@ -832,7 +792,6 @@
                         }]
                     ]
                 },
-                statusOptions: [],
                 dataTable: null,
                 filterModel: {
                     id: this.$route.query.id || 0,
@@ -842,7 +801,6 @@
                     countryList: { data: [], total: 0},
                     domain: this.$route.query.domain || '',
                     domain_temp: this.$route.query.domain_temp || '',
-                    email_temp: this.$route.query.email_temp || '',
                     status: this.$route.query.status || -1,
                     status_temp: this.$route.query.status_temp || 0,
                     page: this.$route.query.page || 0,
@@ -851,12 +809,9 @@
                     required_email_temp: this.$route.query.required_email_temp || 0,
                     required_email: this.$route.query.required_email || 0,
                     sort_key: this.$route.query.sort_key || 'id',
-                    sort_value: this.$route.query.sort_value || 'desc',
-                    status_multiple: this.$route.query.status_multiple || '',
+                    sort_value: this.$route.query.sort_value || 'desc'
                 },
-
                 listPageOptions: [5, 10, 25, 50, 100],
-
                 extModel: {
                     id: 0,
                     domain: '',
@@ -874,7 +829,6 @@
                     phone: '',
                     status: 0
                 },
-
                 mailInfo: {
                     tpl: 0,
                     ids: '',
@@ -885,13 +839,11 @@
                         code: ''
                     }
                 },
-
                 modelMail: {
                     title: '',
                     content: '',
                     mail_name: '',
                 },
-
                 extBackLink: {},
                 extUpdate: {},
                 isUpdateMode: false,
@@ -909,7 +861,6 @@
                 listSortValue: []
              };
         },
-
         async created() {
             await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
             this.updateUserPermission();
@@ -919,9 +870,7 @@
                 params: this.filterModel
             });
             this.fillterIntByCountry()
-            this.getStatusList()
         },
-
         computed: {
             ...mapState({
                 user: state => state.storeAuth.currentUser,
@@ -938,7 +887,6 @@
                 listAhrefs: state => state.storeExtDomain.listAhrefs,
                 listMailTemplate: state => state.storeExtDomain.listMailTemplate,
             }),
-
             pagination() {
                 return {
                     props: {
@@ -952,28 +900,22 @@
                     }
                 }
             },
-
             checkSelectIntDomain () {
                 if (this.modelBaclink.int_domain_id == 0) {
                     return true
                 }
-
                 return false
             },
-
             allowSendMail() {
                 if (this.allowSending = true) {
                     return true;
                 }
-
                 return false;
             },
-
             openModalBackLink() {
                 if (this.modalAddBackLink = true) {
                     return true
                 }
-
                 return false
             },
         },
@@ -984,7 +926,6 @@
                 e.preventDefault();
                 var action = $(this).attr('data-action');
                 var index = $(this).attr('data-index');
-
                 if (action == "a1") {
                     that.doEditExtIndex(index);
                 } else if (action == "a2") {
@@ -995,36 +936,20 @@
                     that.doSendEmailIndex(index);
                 }
             });
-
             $('.freeze-table').on('click', '.clone-head-table-wrap th', function(e) {
                 e.preventDefault();
                 var index = $(this).attr('data-index');
                 $('#data-table th[data-index=' + index + ']').click();
-                var m_class = $('#data-table th[data-index=' + index +  ']').attr('class');
+                var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
                 $(this).attr('class', m_class);
             });
         },
-
         methods: {
-            getStatusList(){
-                let status = this.listStatusText
-                var stat = '';
-                var list = {};
-                for( stat in status ){
-                    list = {
-                        text: status[stat].text,
-                        label: status[stat].label,
-                        value: stat,
-                    }
-                    this.statusOptions.push(list)
-                }
-            },
             async updateUserPermission() {
                 let that = this;
                 await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
                 this.initFilter();
             },
-
             clearExtModel() {
                 this.extModel = {
                     id: 0,
@@ -1044,13 +969,11 @@
                     status: 0
                 }
             },
-
             initFilter() {
                 let that = this;
                 this.user.countries_ext_accessable.forEach(function(country) {
                     that.filterModel.countryList.data.push({id: country.id, name: country.name});
                 });
-
                 this.listSortKey = {
                     'id': { text: '----' },
                     'alexa_rank': { text: 'Alexa Rank' },
@@ -1063,15 +986,12 @@
                     'organic_traffic': { text: 'Organic traffic' },
                     'total_spent': { text: 'Total Spent' },
                 };
-
                 this.listSortValue = {
                     'asc': { text: 'Ascending ' },
                     'desc': { text: 'Descending '}
                 };
-
                 this.filterModel.sort_value = 'desc';
             },
-
             async getUserList() {
                 await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
                 if (this.user.isAdmin) {
@@ -1082,20 +1002,16 @@
                     });
                 }
             },
-
            async getListCountriesInt() {
                 await this.$store.dispatch('getListCountriesInt', { vue: this });
             },
-
             async getExtList(params) {
                 this.isLoadingTable = true;
                 if (this.dataTable != null) {
                     this.dataTable.destroy();
                 }
-
                 await this.$store.dispatch('getListExt', params);
                 this.isLoadingTable = false;
-
                 $('.freeze-table').freezeTable({ 'columnNum': 4, 'shadow': true, 'scrollable': true });
                 this.dataTable = $('#data-table').DataTable({
                     paging: false,
@@ -1103,44 +1019,35 @@
                     ordering: true
                 });
             },
-
             async doSearchList() {
                 let that = this;
                 that.filterModel.country_id = that.filterModel.country_id_temp;
                 that.filterModel.status = that.filterModel.status_temp;
                 that.filterModel.domain = that.filterModel.domain_temp;
-                that.filterModel.email = that.filterModel.email_temp;
                 that.filterModel.id = that.filterModel.id_temp;
                 that.filterModel.required_email = that.filterModel.required_email_temp;
                 that.filterModel.sort = that.filterModel.sort_key + ',' +  that.filterModel.sort_value;
-                that.filterModel.status_multiple = that.filterModel.status_multiple;
-
                 this.$router.push({
                     query: that.filterModel,
                 });
-
                 this.getExtList({
                     params: {
                         country_id: that.filterModel.country_id,
                         status: that.filterModel.status,
                         domain: that.filterModel.domain,
-                        email: that.filterModel.email,
                         employee_id: that.filterModel.employee_id,
                         required_email: that.filterModel.required_email,
                         id: that.filterModel.id,
                         sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
                         per_page: that.filterModel.per_page,
-                        status_multiple: that.filterModel.status_multiple,
                     }
                 });
             },
-
             async goToPage(pageNum) {
                 let that = this;
                 this.$router.push({
                     query: that.filterModel,
                 });
-
                 await this.getExtList({
                     params: {
                         page: pageNum,
@@ -1155,18 +1062,15 @@
                     }
                 });
             },
-
             async doCrawlExtList() {
                 this.isCrawling = true;
                 var arrayIds = [];
-
                 if (this.listExt.data) {
                     console.log(this.listExt.data);
                     for (let key in this.listExt.data) {
                         arrayIds.push(this.listExt.data[key].id);
                     }
                 }
-
                 if (arrayIds.length == 0) return;
                 await this.$store.dispatch('crawlExtList', {
                     params: {
@@ -1174,16 +1078,13 @@
                         queue: false
                     }
                 });
-
                 this.isCrawling = false;
             },
-
             async submitAdd() {
                 let that = this;
                 this.isPopupLoading = true;
                 await this.$store.dispatch('addExt', that.extModel);
                 this.isPopupLoading = false;
-
                 if (this.messageForms.action === 'saved_ext') {
                     this.clearExtModel();
                     //this.listExt.data.pop();
@@ -1191,16 +1092,13 @@
                     this.doSearchList();
                 }
             },
-
             convertPrice(price) {
                 return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
             },
-
             async submitUpdate() {
                 this.isPopupLoading = true;
                 await this.$store.dispatch('updateExt', this.extUpdate);
                 this.isPopupLoading = false;
-
                 if (this.messageForms.action === 'updated_ext') {
                     for (var index in this.listExt.data) {
                         if (this.listExt.data[index].id === this.extUpdate.id) {
@@ -1210,7 +1108,6 @@
                     }
                 }
             },
-
             async doShowBackLink(extDomain) {
                 this.extBackLink = extDomain;
                 this.filterBackLink.ext= extDomain.id;
@@ -1222,47 +1119,38 @@
                 });
                 this.isPopupLoading = false;
             },
-
             async doShowBackLinkIndex(index) {
                 var extDomain = this.listExt.data[index];
                 this.doShowBackLinkIndex(extDomain);
             },
-
             doAddExt() {
                 this.$store.dispatch('clearMessageForm');
             },
-
             doEditExt(extDomain) {
                 this.$store.dispatch('clearMessageForm');
                 this.extUpdate = JSON.parse(JSON.stringify(extDomain))
             },
-
             doEditExtIndex(index) {
                 let extDomain = this.listExt.data[index];
                 this.doEditExt(extDomain);
             },
-
             hasBacklink(status) {
                 if (status == 70) {
                     return true
                 }
-
                 return false
             },
-
             async addBackLink(ext) {
                 this.modalAddBackLink = true
                 this.modelBaclink.ext_domain_id = ext.id
                 this.modelBaclink.ext_name = ext.domain
                 let element = this.$refs.modalBacklink
-                $(element).modal('show')          
+                $(element).modal('show')
             },
-
             async addBackLinkIndex(index) {
                 let extDomain = this.listExt.data[index];
                 this.addBackLink(extDomain);
             },
-
             async fillterIntByCountry (event) {
                 if (typeof event == 'undefined') {
                     var countryID = 0
@@ -1278,17 +1166,15 @@
                 });
                 this.loadIntDomain = false
             },
-
             async submitAddBacklink () {
                 await this.$store.dispatch('actionSaveBacklink', {
                     params: this.modelBaclink
                 })
-                
+
                 if (this.messageForms.action === 'saved_backlink') {
                     this.closeModalBacklink()
                 }
             },
-
             handleCloseBacklinkModal () {
                 this.modelBaclink = {
                     int_domain_id: 0,
@@ -1296,30 +1182,24 @@
                 }
                 this.$store.dispatch('clearMessageBacklinkForm')
             },
-
             closeModalBacklink() {
                 let element = this.$refs.modalBacklink
                 $(element).modal('hide')
             },
-
             closeModalEmail() {
                 let element = this.$refs.modalEmail
                 $(element).modal('hide')
             },
-
             async getAhrefs() {
                 var listInvalid = this.listExt.data.some(ext => ext.status != 30);
-
                 if (listInvalid === true) {
                     alert('List invalid: status diff with GotContacts');
                     return;
                 }
-
                 var listIds = this.listExt.data.map(ext => ext.id).join(',');
                 this.isLoadingTable = true;
                 await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
                 this.isLoadingTable = false;
-
                 var that = this;
                 this.listExt.data.forEach(item => {
                     if (that.listAhrefs.hasOwnProperty(item.id)) {
@@ -1335,18 +1215,15 @@
                     }
                 });
             },
-
             async getAhrefsById(extId, extStatus) {
                 if (extStatus != 30) {
                     alert('List invalid: status diff with GotContacts');
                     return;
                 }
-
                 var listIds = extId;
                 this.isLoadingTable = true;
                 await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
                 this.isLoadingTable = false;
-
                 var that = this;
                 this.listExt.data.forEach(item => {
                     if (that.listAhrefs.hasOwnProperty(item.id)) {
@@ -1362,20 +1239,17 @@
                     }
                 });
             },
-
             openModalEmailElem() {
                 let element = this.$refs.modalEmail;
                 $(element).modal('show');
                 this.allowSending = true;
             },
-
             async doSendEmail(ext, event) {
                 this.$store.dispatch('clearMessageForm');
                 var ids = '';
                 if (ext === -1) {
                     ids = this.listExt.data.map(item => item.id).join(",");
                     var ctemp = -1;
-
                     if (this.listExt.data.some(item => {
                         if (ctemp === -1) ctemp = item.country;
                         return item.country.id !== ctemp.id;
@@ -1383,21 +1257,18 @@
                         alert("can't not handle with multiple countries");
                         return;
                     }
-
                     if (this.listExt.data.some(item => {
                         return (item.status != 30 && item.status != 40);
                     })) {
                         alert("can't not handle with external domain not have contacts or was contacted");
                         return;
                     }
-
                     if (this.listExt.data.some(item => {
                         return (item.email === '' || item.email.split('|').length > 1);
                     })) {
                         alert("can't not handle with external domain not have email or multiple emails");
                         return;
                     }
-
                     this.mailInfo.ids = ids;
                     this.mailInfo.receiver_text = " all list";
                     this.mailInfo.country = ctemp;
@@ -1405,46 +1276,38 @@
                     this.openModalEmailElem();
                     return;
                 }
-
                 if (ext.status != 30 && ext.status != 40) {
                     alert("can't not handle with external domain not have contacts or was contacted");
                     return;
                 }
-
-                // if (ext.email === '' || ext.email.split('|').length > 1) {
-                //     alert("can't not handle with external domain not have email or multiple emails");
-                //     return;
-                // }
-
+                if (ext.email === '' || ext.email.split('|').length > 1) {
+                    alert("can't not handle with external domain not have email or multiple emails");
+                    return;
+                }
                 this.mailInfo.ids = ext.id;
                 this.mailInfo.receiver_text = ext.domain;
                 this.mailInfo.country = ext.country;
                 this.fetchTemplateMail(this.mailInfo.country.id);
                 this.openModalEmailElem();
             },
-
             async doSendEmailIndex(index) {
                 let extDomain = this.listExt.data[index];
                 this.doSendEmail(extDomain);
             },
-
             async fetchTemplateMail(countryId) {
                 this.isPopupLoading = true;
                 await this.$store.dispatch('getListMails', { params: { country_id: countryId, full_page: 1} });
                 this.isPopupLoading = false;
             },
-
             async doChangeEmailTemplate() {
                 let that = this;
                 this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
             },
-
             async doChangeEmailCountry() {
                 let that = this;
                 this.mailInfo.country = this.filterModel.countryList.data.filter(item => item.id === that.mailInfo.country.id)[0];
                 this.fetchTemplateMail(this.mailInfo.country.id);
             },
-
             async submitSendMail() {
                 this.allowSending = false;
                 this.isPopupLoading = true;
@@ -1452,7 +1315,6 @@
                 this.isPopupLoading = false;
             }
         },
-
         components: {
             DownloadCsv
         }
