@@ -6,7 +6,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Avatar</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <ul class="users-list avatar clearfix">
                         <li>
@@ -14,17 +13,15 @@
                             <span class="users-list-date"><strong>{{ user.name }}</strong></span>
                         </li>
                     </ul>
-                    <!-- /.users-list -->
                 </div>
             </div>
-            <!--/.box -->
         </div>
+
         <div class="col-sm-9">
             <div class="box box-primary table-user">
                 <div class="box-header">
                     <h3 class="box-title">Information</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <div class="table-responsive">
                         <table class="table no-margin">
@@ -63,17 +60,17 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>  
-                    <!-- /.table-responsive -->
+                    </div> 
                 </div>
             </div>
         </div>
-                <div class="col-lg-8">
+
+        <div class="col-lg-8">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total External Domain: {{ totalExt.total}}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -102,12 +99,13 @@
                 </div>
             </div>
         </div>
-    <div class="col-lg-4">
+
+        <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Internals Domain: {{ totalInt.total }}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -131,13 +129,14 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
+
         <div class="col-lg-8">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Backlink: {{ totalBackLink.total}} </h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -168,12 +167,13 @@
                 </div>
             </div>
         </div>
-            <div class="col-lg-4">
+
+        <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Price: {{ price.total }}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -198,6 +198,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -241,7 +242,9 @@ export default {
                 { text: 'New', value: 'new' },
                 { text: 'Crawl Failed', value: 'crawlfail' },
                 { text: 'Contacts Null', value: 'contactnull' },
-            ]
+            ],
+            isBuyer: false,
+            isSeller: false,
         };
     },
 
@@ -262,7 +265,6 @@ export default {
         //     window.location.href = '/';
         //     return;
         // }
-
         let userId = this.$route.params.id || null;
         await this.$store.dispatch('actionGetUserInformation', {
             vue: this,
@@ -273,6 +275,7 @@ export default {
         this.filterIntDomain();
         this.filterBacklink();
         this.filterPrice();
+        this.checkAccountType();
     },
 
     methods: {
@@ -293,6 +296,15 @@ export default {
                 vue: this,
                 params: this.extDomain,
             });
+        },
+
+        checkAccountType() {
+            let that = this.currentUser
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
         },
 
         async filterIntDomain() {

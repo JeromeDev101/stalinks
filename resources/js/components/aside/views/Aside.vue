@@ -42,7 +42,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" class="treeview">
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' , 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing' }" >
                     <a href="#">
                         <i class="fa fa-btc"></i>
                         <span>Billing</span>
@@ -51,17 +51,19 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-user-o"></i>
-                                <span>Seller</span>
-                            </a>
+                        <li :class="{ active: $route.name == 'seller-billing' }">
+                            <router-link :to="{ path: '/seller-billing' }">
+                                <i class="fa fa-fw fa-user-o"></i> 
+                                <span>Seller Billing</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
                         </li>
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-money"></i>
-                                <span>Buyer</span>
-                            </a>
+                        <li :class="{ active: $route.name == 'buyer-billing' }">
+                            <router-link :to="{ path: '/buyer-billing' }">
+                                <i class="fa fa-fw fa-money"></i> 
+                                <span>Buyer Billing</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
                         </li>
                     </ul>
                 </li>

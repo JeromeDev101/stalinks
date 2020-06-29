@@ -14,6 +14,8 @@ import storeIntDomain from '@/modules/int_domain/store';
 import storeBackLink from '@/modules/backlink/store';
 import storeHosting from '@/modules/hosting/store';
 import storeFollowupSales from '@/modules/followup_sales/store';
+import storeBillingBuyer from '@/modules/billing/buyer/store';
+import storeBillingSeller from '@/modules/billing/seller/store';
 import storeLog from '@/modules/logs/store';
 import storeDomain from '@/modules/domain/store';
 import storeSystem from '@/modules/system/store';
@@ -30,6 +32,8 @@ export default new Vuex.Store({
         storeLoading,
         storePublisher,
         storeBuy,
+        storeBillingBuyer,
+        storeBillingSeller,
         storePurchase,
         storeExtDomain,
         storeIncomes,

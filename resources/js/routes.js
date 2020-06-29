@@ -20,6 +20,8 @@ import Publisher from '@/modules/publisher/views/List.vue';
 import FollowupSales from '@/modules/followup_sales/views/List.vue';
 import Purchase from '@/modules/purchase/views/List.vue';
 import Incomes from '@/modules/incomes/views/List.vue';
+import BillingBuyer from '@/modules/billing/buyer/views/List.vue';
+import BillingSeller from '@/modules/billing/seller/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
@@ -61,9 +63,19 @@ const routes = [{
         component: FollowupSales,
     },
     {
-        path: '/publisher',
-        name: 'publisher',
-        component: Publisher,
+        path: '/buyer-billing',
+        name: 'buyer-billing',
+        component: BillingBuyer,
+    },
+    {
+        path: '/buyer-billing',
+        name: 'buyer-billing',
+        component: BillingBuyer,
+    },
+    {
+        path: '/seller-billing',
+        name: 'seller-billing',
+        component: BillingSeller,
     },
     {
         path: '/purchase',
