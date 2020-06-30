@@ -14,8 +14,11 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- User Account: style can be found in dropdown.less -->
+                    <li v-if="isBuyer" style="margin-left:-105px;margin-bottom:-55px;">
+                        <a href="#">Wallet: <strong>$0</strong></a>
+                    </li>
 
+                    <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <img :src="user.avatar" class="user-image" alt="User Image">
@@ -40,7 +43,6 @@
                             </li>
                         </ul>
                     </li>
-
                     <!-- <li class="dropdown user user-menu">
                         <a href="#">
                         <img :src="user.avatar" class="user-image" alt="User Image">
@@ -59,6 +61,16 @@ import Cookies from 'js-cookie';
 export default {
     name: 'AppHeader',
 
+    data() {
+        return {
+            isBuyer: false,
+        }
+    },
+
+    created() {
+        this.checkAccountType();
+    },
+
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
@@ -75,6 +87,23 @@ export default {
             localStorage.clear();
             Cookies.remove('vuex');
             this.$router.push({ name: 'login' });
+        },
+
+        checkAccountType() {
+            let that = this.user
+
+            // not employee
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
+
+            // for emaployee with a role of seller/buyer
+            if( that.role.description == 'Buyer' ){
+                this.isBuyer = true;
+            }
+
         },
     }
 }

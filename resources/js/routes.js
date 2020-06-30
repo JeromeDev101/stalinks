@@ -25,6 +25,7 @@ import BillingSeller from '@/modules/billing/seller/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
+import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
 import Buy from '@/modules/buy/views/List.vue';
 
 const routes = [{
@@ -63,14 +64,19 @@ const routes = [{
         component: FollowupSales,
     },
     {
-        path: '/buyer-billing',
-        name: 'buyer-billing',
-        component: BillingBuyer,
+        path: '/wallet-transaction',
+        name: 'wallet-transaction',
+        component: WalletTransaction,
     },
     {
         path: '/buyer-billing',
         name: 'buyer-billing',
         component: BillingBuyer,
+    },
+    {
+        path: '/publisher',
+        name: 'publisher',
+        component: Publisher,
     },
     {
         path: '/seller-billing',
