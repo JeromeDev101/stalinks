@@ -20,4 +20,10 @@ export default class BuyService {
             .catch(error => error);
     }
 
+    static updateDislike(params) {
+        return axios.post('api/buy-dislike', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

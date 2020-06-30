@@ -17,7 +17,19 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-2">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status of Purchased</label>
+                                <select name="" class="form-control" v-model="filterModel.status_purchase">
+                                    <option value="">All</option>
+                                    <option value="New">New</option>
+                                    <option value="Not interested">Not interested</option>
+                                    <option value="Purchased">Purchased</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -27,7 +39,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
 
                     </div>
 
@@ -62,18 +74,25 @@
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
                                 <th>Price</th>
+                                <th>Status</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
                         <tbody>
                            <tr v-if="listBuy.data.length == 0">
-                                <td colspan="13" class="text-center">No record</td>
+                                <td colspan="14" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
+
                                 <td>{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.name }}</td>
                                 <td>{{ buy.country_name }}</td>
+
+                                <!-- <td>{{ buy.user.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
+                                <td>{{ buy.user.name }}</td>
+                                <td>{{ buy.country.name }}</td> -->
+
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>
                                 <td>{{ buy.dr }}</td>
@@ -82,9 +101,11 @@
                                 <td>{{ buy.org_keywords }}</td>
                                 <td>{{ buy.org_traffic }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td>{{ buy.status_purchased }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                        <button v-if="buy.status_purchased != 'Purchased'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -162,6 +183,7 @@
                 filterModel: {
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
+                    status_purchase: this.$route.query.status_purchase || 'New',
                 },
                 searchLoading: false,
             }
@@ -184,7 +206,13 @@
         methods: {
             async getBuyList(params) {
                 this.searchLoading = true;
-                await this.$store.dispatch('actionGetBuyList', params);
+                await this.$store.dispatch('actionGetBuyList', {
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        status_purchase: this.filterModel.status_purchase,
+                    }
+                });
                 this.searchLoading = false;
             },
 
@@ -196,6 +224,12 @@
 
                 this.updateModel = that
                 this.updateModel.price = this.computePrice(that.price, that.inc_article);
+            },
+
+            async doDislike(id) {
+                this.searchLoading = true;
+                await this.$store.dispatch('actionDislike', { id:id })
+                this.searchLoading = false;
             },
 
             computePrice(price, article) {
@@ -253,6 +287,7 @@
                 this.filterModel = {
                     search: '',
                     language_id: '',
+                    status_purchase: 'New',
                 }
 
                 this.getBuyList({
@@ -272,6 +307,7 @@
                     params: {
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
+                        status_purchase: this.filterModel.status_purchase,
                     }
                 });
             },

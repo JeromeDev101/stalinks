@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function () {
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');
     Route::name('update-buy')->put('buy','BuyController@update');
+    Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
 
     //Accounts
     Route::name('add-accounts')->post('accounts', 'AccountController@store');

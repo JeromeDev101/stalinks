@@ -21,8 +21,11 @@ class PurchaseController extends Controller
             $query->with('user:id,name');
         }, 'user'])
                     ->where('status', 'Live')
-                    ->where('user_id', $user->id)
                     ->orderBy('created_at', 'desc');
+
+        if( !$user->isAdmin() ){
+            $list->where('user_id', $user->id);
+        }
 
         return [
             'data' => $list->get()
