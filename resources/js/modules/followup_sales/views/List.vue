@@ -51,7 +51,6 @@
                                 <th>#</th>
                                 <th>ID</th>
                                 <th>URL Publisher</th>
-                                <th>URL From</th>
                                 <th>Price</th>
                                 <th>Link From</th>
                                 <th>Link To</th>
@@ -65,7 +64,6 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.publisher.url }}</td>
-                                <td>{{ sales.url_from }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>
                                 <td><a href="sales.link">{{ sales.link }}</a></td>
@@ -103,10 +101,27 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Buyers name</label>
+                                    <input type="text" :disabled="true" v-model="updateModel.user.name" class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label style="color: #333">URL Publisher</label>
                                     <input type="text" v-model="updateModel.url_publisher" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">URL Advertiser</label>
@@ -125,34 +140,9 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Buyer Backlink</label>
-                                    <input type="text" :disabled="true" v-model="updateModel.user.name" class="form-control" required="required" >
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <div>
                                         <label style="color: #333">Anchor text</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="updateModel.anchor_text" required="required" >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">Link To</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">URL From</label>
-                                        <input type="text" class="form-control" v-model="updateModel.url_from" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -169,11 +159,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Processed</label>
-                                        <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
+                                        <label style="color: #333">Link To</label>
+                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">URL From</label>
+                                        <input type="text" class="form-control" v-model="updateModel.url_from" required="required" >
+                                    </div>
+                                </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -262,6 +261,7 @@
             doUpdate(sales) {
                 this.clearMessageform()
                 let that = JSON.parse( JSON.stringify(sales) )
+
                 this.updateModel = that
                 this.updateModel.url_publisher = that.publisher == null ? that.ext_domain.domain:that.publisher.url
             },

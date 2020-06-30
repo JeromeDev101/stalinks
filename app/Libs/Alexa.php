@@ -179,6 +179,8 @@ class Alexa {
 
         $startArr = [];
 
+        $dataTotalTopSites = 0;
+
         $promises = (function () use ($count, $start, $guzzleClient, $extDomainRepository, &$startArr) {
             $countTemp = ($count <= 100) ? $count : 100;
 
@@ -217,11 +219,13 @@ class Alexa {
                 if (isset($topsitesArray)) {
                     if (isset($topsitesArray["Ats"]) && $topsitesArray["Ats"]["Results"]["ResponseStatus"]["StatusCode"] == 200) {
                         $dataExtDomain = $topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["Sites"]["Site"];
-                        $newData = $extDomainRepository->importAlexaSites($dataExtDomain, $this->countryCode, $oldStart, $oldCount);
+                        $dataTotalTopSites = $topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["TotalSites"];
+                        $newData = $extDomainRepository->importAlexaSites($dataExtDomain, $dataTotalTopSites, $this->countryCode, $oldStart, $oldCount);
                         yield $newData;
                     }
                 } else yield [
                     'extDomains' => [],
+                    'total' => 0,
                     'new' => 0,
                     'existed' => 0,
                 ];
@@ -246,6 +250,7 @@ class Alexa {
             'extDomains' => [],
             'new' => 0,
             'existed' => 0,
+            'total' => 0,
         ];
 
         $maxProcess = config('crawler.max_process_ahrefs');
@@ -256,6 +261,7 @@ class Alexa {
                 $dataReturn['extDomains'] = array_merge($dataReturn['extDomains'], $newData['extDomains']);
                 $dataReturn['new'] += $newData['new'];
                 $dataReturn['existed'] += $newData['existed'];
+                $dataReturn['total'] = $newData['total'];
                 $totalCount++;
             },
             'rejected' => function ($reason) {

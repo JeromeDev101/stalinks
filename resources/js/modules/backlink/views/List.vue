@@ -96,7 +96,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add BackLink Domain</h4>
+                        <h4 class="modal-title">Follow up Backlinks Information</h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
                             <span v-if="messageBacklinkForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageBacklinkForms.errors).length > 0) ? 'danger' : 'success')">
@@ -106,6 +106,23 @@
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Seller name</label>
+                                    <input type="text" v-model="modelBaclink.seller" :disabled="true" class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" :disabled="isBuyer" v-model="modelBaclink.date_process" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
                                     <label style="color: #333">URL Publisher</label>
@@ -130,38 +147,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label style="color: #333">Buyer Backlink</label>
-                                    <input type="text" v-model="modelBaclink.user.name" :disabled="true"  class="form-control" required="required" >
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
                                     <div>
                                         <label style="color: #333">Anchor text</label>
                                         <input type="text" v-model="modelBaclink.anchor_text" class="form-control" required="required" >
                                         <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
-                                    <div>
-                                        <label style="color: #333">Link</label>
-                                        
-                                        <input type="text" v-model="modelBaclink.link" class="form-control"  required="required" >
-                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">Date Processed</label>
-                                        <input type="date" :disabled="isBuyer" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -179,14 +169,16 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control" :disabled="isBuyer">
+                                        <label style="color: #333">Link</label>
+                                        
+                                        <input type="text" v-model="modelBaclink.link" class="form-control"  required="required" >
+                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
@@ -196,6 +188,16 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Article ID</label>
+                                        <input type="text" class="form-control" :disabled="isBuyer">
+                                    </div>
+                                </div>
+                            </div>
+                            
 
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -332,7 +334,6 @@
             this.modelBaclink.publisher_id = that.publisher.id
             this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
             this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
-            this.modelBaclink.user.name = that.user.name
             this.modelBaclink.anchor_text = that.anchor_text
             this.modelBaclink.price = that.price
             this.modelBaclink.link = that.link
@@ -341,6 +342,8 @@
             this.modelBaclink.user_id = that.user_id
             this.modelBaclink.date_process = that.date_process
             this.modelBaclink.url_advertiser = that.url_advertiser
+
+            this.modelBaclink.seller = that.publisher.user.name
 
             let element = this.$refs.modalEditBacklink
             $(element).modal('show')          

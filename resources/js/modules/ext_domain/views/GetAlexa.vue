@@ -126,6 +126,8 @@
                         start: that.filterModel2.start,
                         count: that.filterModel2.count
                     });
+
+                console.log(this.listAlexa)
             },
 
             initFilter() {
