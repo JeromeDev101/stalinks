@@ -26,4 +26,10 @@ export default class BuyService {
             .catch(error => error);
     }
 
+    static updateLike(params) {
+        return axios.post('api/buy-like', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

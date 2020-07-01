@@ -41,11 +41,18 @@ class BuyController extends Controller
         }
 
         if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
-            if( $filter['status_purchase'] == 'New'){
-                $list = $list->whereNull('buyer_purchased.publisher_id');
-            }else{
-                $list = $list->where('buyer_purchased.status', $filter['status_purchase']);
-            }   
+            if( is_array($filter['status_purchase']) ){
+                $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
+                if( in_array('New', $filter['status_purchase']) ){
+                    $list = $list->orWhereNull('buyer_purchased.publisher_id');
+                }
+            }
+
+            // if( $filter['status_purchase'] == 'New'){
+            //     $list = $list->whereNull('buyer_purchased.publisher_id');
+            // }else{
+            //     $list = $list->where('buyer_purchased.status', $filter['status_purchase']);
+            // }   
         }
 
 
@@ -58,6 +65,12 @@ class BuyController extends Controller
         $publisher = Publisher::findOrFail($request->id);
         $user = Auth::user();
 
+        BuyerPurchased::create([
+            'user_id_buyer' => $user->id,
+            'publisher_id' => $publisher->id,
+            'status' => 'Purchased',
+        ]);
+        
         Backlink::create([
             'price' => $request->price,
             'anchor_text' => $request->anchor_text,
@@ -70,25 +83,35 @@ class BuyController extends Controller
             'int_domain_id' => 0,
         ]);
 
-        BuyerPurchased::create([
-            'user_id_buyer' => $user->id,
-            'publisher_id' => $publisher->id,
-            'status' => 'Purchased',
-        ]);
-
         return response()->json(['success'=> true], 200);
     }
 
     public function updateDislike(Request $request) {
-        $user = Auth::user();
         $publisher = Publisher::findOrFail($request->id);
-
-        BuyerPurchased::create([
-            'user_id_buyer' => $user->id,
-            'publisher_id' => $publisher->id,
-            'status' => 'Not interested',
-        ]);
+        $this->updateStatus($request->id, 'Not interested', $publisher->id);
 
         return response()->json(['success'=> true], 200);
     }
+
+    public function updateLike(Request $request) {
+        $publisher = Publisher::findOrFail($request->id);
+        $this->updateStatus($request->id, 'Interested', $publisher->id);
+
+        return response()->json(['success'=> true], 200);
+    }
+
+    private function updateStatus($id, $status, $id_publisher) {
+        $buyer_purchased = BuyerPurchased::where('publisher_id',$id)->first();
+        $user = Auth::user();
+        if( !$buyer_purchased ){
+            BuyerPurchased::create([
+                'user_id_buyer' => $user->id,
+                'publisher_id' => $id_publisher,
+                'status' => $status,
+            ]);
+        }else{
+            $buyer_purchased->update(['status' => $status]);
+        }
+    }
+
 }

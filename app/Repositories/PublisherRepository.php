@@ -65,14 +65,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             if( $ctr > 0 ){
                 $url = $line[0];
-                $ur = $line[1];
-                $dr = $line[2];
-                $backlinks = $line[3];
-                $ref_domain = $line[4];
-                $org_keywords = $line[5];
-                $org_traffic = $line[6];
-                $price = $line[7];
-                $article = $line[8];
+                $price = $line[1];
+                $article = $line[2];
+                $ur = $line[3];
+                $dr = $line[4];
+                $backlinks = $line[5];
+                $ref_domain = $line[6];
+                $org_keywords = $line[7];
+                $org_traffic = $line[8];
 
                 if( trim($url, " ") != '' ){
                     Publisher::create([
