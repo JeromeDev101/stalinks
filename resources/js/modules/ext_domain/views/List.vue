@@ -1208,17 +1208,17 @@
                 $(element).modal('hide')
             },
             async getAhrefs() {
-                var listInvalid = this.listExt.data.some(ext => ext.status != 30);
+                var listInvalid = this.checkIds.some(ext => ext.status != 30);
                 if (listInvalid === true) {
                     alert('List invalid: status diff with GotContacts');
                     return;
                 }
-                var listIds = this.listExt.data.map(ext => ext.id).join(',');
+                var listIds = this.checkIds.map(ext => ext.id).join(',');
                 this.isLoadingTable = true;
                 await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
                 this.isLoadingTable = false;
                 var that = this;
-                this.listExt.data.forEach(item => {
+                this.checkIds.forEach(item => {
                     if (that.listAhrefs.hasOwnProperty(item.id)) {
                         let itemAherf = that.listAhrefs[item.id];
                         item.ahrefs_rank = itemAherf.ahrefs_rank;
