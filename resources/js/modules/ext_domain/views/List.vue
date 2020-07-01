@@ -1033,7 +1033,8 @@
                 this.dataTable = $('#data-table').DataTable({
                     paging: false,
                     searching: false,
-                    ordering: true
+                    ordering: true,
+                    bDestroy: true
                 });
             },
             async doSearchList() {
