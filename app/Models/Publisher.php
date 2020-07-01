@@ -12,4 +12,12 @@ class Publisher extends Model
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+    public function country() {
+        return $this->belongsTo('App\Models\Country', 'language_id');
+    }
+
+    public function buyer_purchased() {
+        return $this->belongsToMany('App\Models\BuyerPurchased', 'publisher_id');
+    }
 }

@@ -17,7 +17,14 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-2">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status of Purchased</label>
+                                <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -27,7 +34,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
 
                     </div>
 
@@ -62,18 +69,25 @@
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
                                 <th>Price</th>
+                                <th>Status</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
                         <tbody>
-                           <tr v-if="listBuy.data.length == 0">
-                                <td colspan="13" class="text-center">No record</td>
+                            <tr v-if="listBuy.data.length == 0">
+                                <td colspan="14" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
+
                                 <td>{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.name }}</td>
                                 <td>{{ buy.country_name }}</td>
+
+                                <!-- <td>{{ buy.user.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
+                                <td>{{ buy.user.name }}</td>
+                                <td>{{ buy.country.name }}</td> -->
+
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>
                                 <td>{{ buy.dr }}</td>
@@ -82,9 +96,12 @@
                                 <td>{{ buy.org_keywords }}</td>
                                 <td>{{ buy.org_traffic }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                        <button v-if="buy.status_purchased != 'Purchased'" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                        <button v-if="buy.status_purchased != 'Purchased'" :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
+                                        <button v-if="buy.status_purchased != 'Purchased'" :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -145,6 +162,13 @@
     </div>
 </template>
 
+<style>
+    #custom .vs__dropdown-toggle
+    {
+        height: 37px;
+    }
+</style>
+
 <script>
     import { mapState } from 'vuex';
 
@@ -162,6 +186,7 @@
                 filterModel: {
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
+                    status_purchase: this.$route.query.status_purchase || ['New'],
                 },
                 searchLoading: false,
             }
@@ -184,7 +209,13 @@
         methods: {
             async getBuyList(params) {
                 this.searchLoading = true;
-                await this.$store.dispatch('actionGetBuyList', params);
+                await this.$store.dispatch('actionGetBuyList', {
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        status_purchase: this.filterModel.status_purchase,
+                    }
+                });
                 this.searchLoading = false;
             },
 
@@ -192,10 +223,26 @@
                 this.clearMessageform();
                 let that = JSON.parse(JSON.stringify(buy))
 
-                console.log(that)
-
                 this.updateModel = that
                 this.updateModel.price = this.computePrice(that.price, that.inc_article);
+            },
+
+            async doDislike(id) {
+                if( confirm("Are you sure you're Not Interested in these backlink?") ){
+                    this.searchLoading = true;
+                    await this.$store.dispatch('actionDislike', { id:id })
+                    this.searchLoading = false;
+
+                    this.getBuyList();
+                }
+            },
+
+            async doLike(id) {
+                this.searchLoading = true;
+                await this.$store.dispatch('actionLike', { id:id })
+                this.searchLoading = false;
+
+                this.getBuyList();
             },
 
             computePrice(price, article) {
@@ -253,6 +300,7 @@
                 this.filterModel = {
                     search: '',
                     language_id: '',
+                    status_purchase: ['New'],
                 }
 
                 this.getBuyList({
@@ -272,6 +320,7 @@
                     params: {
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
+                        status_purchase: this.filterModel.status_purchase,
                     }
                 });
             },

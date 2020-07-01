@@ -42,6 +42,14 @@
                     </router-link>
                 </li>
 
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'wallet-transaction' }">
+                    <router-link :to="{ path: '/wallet-transaction' }">
+                        <i class="fa fa-money"></i>
+                        <span>Wallet Transaction</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' , 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing' }" >
                     <a href="#">
                         <i class="fa fa-btc"></i>
@@ -192,6 +200,8 @@ export default {
     },
     created() {
         this.checkAccountType()
+
+        console.log( this.user )
     },
     computed: {
         ...mapState({
@@ -203,6 +213,8 @@ export default {
     methods: {
         checkAccountType() {
             let that = this.user
+
+            // not employee
             if( that.user_type ){
                 if( that.user_type.type == 'Seller' ){
                     this.isSeller = true;
@@ -211,6 +223,15 @@ export default {
                 if( that.user_type.type == 'Buyer' ){
                     this.isBuyer = true;
                 }
+            }
+
+            // for emaployee with a role of seller/buyer
+            if( that.role.description == 'Buyer' ){
+                this.isBuyer = true;
+            }
+
+            if( that.role.description == 'Seller' ){
+                this.isSeller = true;
             }
         },
     },

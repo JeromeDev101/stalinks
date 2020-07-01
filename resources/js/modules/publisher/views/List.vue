@@ -90,7 +90,7 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <small class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, UR, DR, Backlinks, Referring domains, Organic keywords, Organic traffic, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
+                            <small class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, UR, DR, Backlinks, Referring domains, Organic keywords and Organic traffic. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
                         </div>
                     </div>
                 </div>
@@ -105,14 +105,14 @@
                                 <th>User</th>
                                 <th>Language</th>
                                 <th>URL</th>
+                                <th>Price</th>
+                                <th>Inc Article</th>
                                 <th>UR</th>
                                 <th>DR</th>
                                 <th>Backlinks</th>
                                 <th>Ref Domains</th>
                                 <th>Organic Keywords</th>
                                 <th>Organic Traffic</th>
-                                <th>Price</th>
-                                <th>Inc Article</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -133,14 +133,14 @@
                                 <td>{{ publish.name }}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
+                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
+                                <td>{{ publish.inc_article }}</td>
                                 <td>{{ publish.ur }}</td>
                                 <td>{{ publish.dr }}</td>
                                 <td>{{ publish.backlinks }}</td>
                                 <td>{{ publish.ref_domain }}</td>
                                 <td>{{ publish.org_keywords }}</td>
                                 <td>{{ publish.org_traffic }}</td>
-                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
-                                <td>{{ publish.inc_article }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>

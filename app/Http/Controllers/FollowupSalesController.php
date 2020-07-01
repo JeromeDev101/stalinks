@@ -33,6 +33,9 @@ class FollowupSalesController extends Controller
         $input = $request->only('status', 'url_from', 'link_from');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
+        if( $input['status'] == 'Live' ){
+            $input['live_date'] = date('Y-m-d');
+        }
         $backlink->update($input);
 
         return response()->json(['success'=> true], 200);
