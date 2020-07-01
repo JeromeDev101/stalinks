@@ -51,13 +51,11 @@ class Ahref {
             'ahrefs_rank',
             'domain_rating',
             'metrics',
-            'positions_metrics'
+            'positions_metrics',
+            'refdomains'
         ];
 
-        $mapDataExt = [];
         $guzzleClient = new GuzzleClient();
-
-
         $promises = (function () use ($extDomains, $guzzleClient, $getFrom) {
             foreach ($extDomains as $extDomain) {
                 foreach($getFrom as $from) {
@@ -67,25 +65,27 @@ class Ahref {
 
                             if (isset($result['metrics']) && isset($result['metrics']['backlinks'])) {
                                 $extDomain->no_backlinks = $result['metrics']['backlinks'];
-                                $extDomain->save();
                             }
 
                             if(isset($result['metrics']) && isset($result['metrics']['positions']) ){
                                 $extDomain->organic_keywords = $result['metrics']['positions'];
                                 $extDomain->organic_traffic = $result['metrics']['traffic'];
-                                $extDomain->save();
                             }
 
                             if(isset($result['domain'])){
                                 $extDomain->ahrefs_rank = $result['domain']['ahrefs_top'];
                                 $extDomain->domain_rating = $result['domain']['domain_rating'];
-                                $extDomain->save();
                             }
 
                             if(isset($result['pages'])){
                                 $extDomain->url_rating = $result['pages'][0]['ahrefs_rank'];
-                                $extDomain->save();
                             }
+
+                            if(isset($result['stats'])){
+                                $extDomain->ref_domains = $result['stats']['refdomains'];
+                            }
+
+                            $extDomain->save();
 
                             return $extDomain;
                         });
