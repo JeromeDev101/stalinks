@@ -81,6 +81,39 @@
                         </div>
                     </div>
                     <!-- /.box -->
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Payment Method</h3>
+                            <button data-toggle="modal" data-target="#modal-add-payment" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                        </div>
+
+                        <div class="box-body table-responsive no-padding relative">
+                            <table class="table table-condensed table-hover table-striped table-bordered">
+                                <thead>
+                                    <tr class="label-primary">
+                                        <th>#</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in paymentList.data" :key="index">
+                                        <td>{{ index + 1}}</td>
+                                        <td>{{ item.type }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="submit" @click="doEditPayment(item)" data-toggle="modal" data-target="#modal-update-payment" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                            </div>
+                                            <!-- <div class="btn-group">
+                                                <button title="Delete" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
+                                            </div> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-sm-6">
@@ -111,6 +144,62 @@
                             </div>
                             <!-- /.box -->
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Update Payment Type -->
+        <div class="modal fade" id="modal-update-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Payment Type</h5>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Payment Type</label>
+                            <input type="text" v-model="paymentUpdate.type" class="form-control" placeholder="Enter Payment Type" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitUpdatePayment" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Add Payment-->
+        <div class="modal fade" id="modal-add-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Payment Type</h5>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Payment Type</label>
+                            <input type="text" v-model="paymentModel.type" class="form-control" placeholder="Enter Payment Type" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitAddPayment" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +251,7 @@
         </div>
         <!--    End Modal Add-->
 
-        <!--    Modal Add-->
+        <!--    Modal Update -->
         <div class="modal fade" id="modal-update" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -230,6 +319,16 @@
                     code: ''
                 },
 
+                paymentModel: {
+                    id: 0,
+                    type: ''
+                },
+
+                paymentUpdate: {
+                    id: 0,
+                    type: ''
+                },
+
                 filterModel: {
                     name: this.$route.query.name || '',
                     code: this.$route.query.name || '',
@@ -258,6 +357,7 @@
             }
 
             this.getConfigList();
+            this.getPaymentList();
             this.getCountryList({
                 params: this.filterModel
             });
@@ -267,6 +367,7 @@
             ...mapState({
                 user: state => state.storeAuth.currentUser,
                 countryList: state => state.storeSystem.countryList,
+                paymentList: state => state.storeSystem.paymentList,
                 messageForms: state => state.storeSystem.messageForms,
                 configList: state => state.storeSystem.configList,
             }),
@@ -290,6 +391,13 @@
                 this.isLoadingTable = false;
             },
 
+
+            async getPaymentList(params) {
+                this.isLoadingTable = true;
+                await this.$store.dispatch('actionGetPaymentList', params);
+                this.isLoadingTable = false;
+            },
+
             async doSearchList() {
                 let that = this;
                 that.filterModel.name = that.filterModel.name_temp;
@@ -309,6 +417,11 @@
                     id: 0,
                     name: '',
                     code: ''
+                };
+
+                this.paymentModel = {
+                    id: 0,
+                    type: ''
                 };
             },
 
@@ -333,6 +446,11 @@
                 this.countryUpdate = JSON.parse(JSON.stringify(item))
             },
 
+            doEditPayment(item) {
+                this.$store.dispatch('clearMessageFormSystem');
+                this.paymentUpdate = JSON.parse(JSON.stringify(item))
+            },
+
             async submitAdd() {
                 let that = this;
                 this.isPopupLoading = true;
@@ -347,6 +465,18 @@
                 }
             },
 
+            async submitAddPayment() {
+                let that = this;
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionAddPayment', that.paymentModel);
+                this.isPopupLoading = false;
+
+                if (this.messageForms.action === 'saved_payment') {
+                    this.clearModel();
+                    this.getPaymentList();
+                }
+            },
+
             async submitUpdate() {
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateCountry', this.countryUpdate);
@@ -356,6 +486,21 @@
                     for (var index in this.countryList.data) {
                         if (this.countryList.data[index].id === this.countryUpdate.id) {
                             this.countryList.data[index] = this.countryUpdate;
+                            break;
+                        }
+                    }
+                }
+            },
+
+            async submitUpdatePayment() {
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdatePayment', this.paymentUpdate);
+                this.isPopupLoading = false;
+
+                if (this.messageForms.action === 'updated_payment') {
+                    for (var index in this.paymentList.data) {
+                        if (this.paymentList.data[index].id === this.paymentUpdate.id) {
+                            this.paymentList.data[index] = this.paymentUpdate;
                             break;
                         }
                     }

@@ -6,6 +6,8 @@ use App\Models\Backlink;
 use App\Repositories\BaseRepository;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use Illuminate\Support\Arr;
+use App\Models\Registration;
+use Illuminate\Support\Facades\Auth;
 
 
 class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInterface
@@ -97,19 +99,21 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
     public function getBackLink($countryIds, $intDomains, $filters)
     {
-        $query = $this->model->whereHas('intDomain', function ($query) use ($countryIds, $intDomains, $filters) {
-            if (isset($filters->int_id) && $filters->int_id > 0) {
-                $query->where('id', $filters->int_id)->where(function($queryIn) use ($countryIds, $intDomains) {
-                    $queryIn->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
-                });
-            } else {
-                $query->whereIn('country_id', $countryIds)->orWhereIn('id', $intDomains);
-            }
-        })->orderBy('id', 'desc');
+        $user = Auth::user();
+        $query = $this->model->orderBy('id', 'desc');
+
+        $registered = Registration::where('email', $user->email)->first();
+
+        if( $user->type != 10 && $registered->type == 'Buyer' ){
+            $query->where('user_id', $user->id);
+        }
+        
         $backlink = $this->fillter($query, $filters);
 
         if ($filters->full_data === true) {
-            $data = $backlink->with('intDomain', 'extDomain', 'user')->get();
+            $data = $backlink->with(['publisher' => function($query) {
+                $query->with('user:id,name');
+            }, 'user'])->get();
 
             return [
                 'data' => $data,
@@ -117,7 +121,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        return $backlink->with('intDomain', 'extDomain', 'user')->paginate(config('common.paginate.default'));
+        return $backlink->with(['publisher' => function($query){ $query->with('user:id,name'); }, 'user'])->paginate(config('common.paginate.default'));
     }
 
     protected function fillter($query, $filters)

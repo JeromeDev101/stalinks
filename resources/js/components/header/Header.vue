@@ -3,9 +3,9 @@
         <!-- Logo -->
         <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
+            <span class="logo-mini">STA</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>RLink </b>System</span>
+            <span class="logo-lg"><b>StaLink </b>System</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -14,6 +14,10 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+                    <li v-if="isBuyer" style="margin-left:-105px;margin-bottom:-55px;">
+                        <a href="#">Wallet: <strong>$0</strong></a>
+                    </li>
+
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -57,6 +61,16 @@ import Cookies from 'js-cookie';
 export default {
     name: 'AppHeader',
 
+    data() {
+        return {
+            isBuyer: false,
+        }
+    },
+
+    created() {
+        this.checkAccountType();
+    },
+
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
@@ -73,6 +87,23 @@ export default {
             localStorage.clear();
             Cookies.remove('vuex');
             this.$router.push({ name: 'login' });
+        },
+
+        checkAccountType() {
+            let that = this.user
+
+            // not employee
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
+
+            // for emaployee with a role of seller/buyer
+            if( that.role.description == 'Buyer' ){
+                this.isBuyer = true;
+            }
+
         },
     }
 }

@@ -18,4 +18,5 @@ class ExtDomain extends Model
     {
         return $this->hasMany('App\Models\Backlink', 'ext_domain_id');
     }
+
 }

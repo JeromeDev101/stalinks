@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\UserService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
+use App\Models\Publisher;
 
 class ExtDomainController extends Controller
 {
@@ -76,7 +77,8 @@ class ExtDomainController extends Controller
             config('constant.EXT_STATUS_CONTACTED'),
             config('constant.EXT_STATUS_REFUSED'),
             config('constant.EXT_STATUS_IN_TOUCHED'),
-            config('constant.UNQUALIFIED')
+            config('constant.UNQUALIFIED'),
+            config('constant.EXT_STATUS_QUALIFIED')
         );
 
         $this->validStatus = [];
@@ -165,7 +167,8 @@ class ExtDomainController extends Controller
     }
 
     public function getList(Request $request) {
-        $input = $request->all();
+        $input = $request->except('status');
+
         $page = 0;
         $perPage =  10;
         $userId = Auth::id();
@@ -222,18 +225,26 @@ class ExtDomainController extends Controller
         $filters['other']['whereIn'][] = ['country_id', $countryIds];
         $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
 
-        if (isset($input['status']) && $input['status'] >= 0) {
-            $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        if( isset($input['status_multiple']) ){
+            $filters['whereIn'][] = ['status', $input['status_multiple']];
         }
+
+        // if (isset($input['status']) && $input['status'] >= 0) {
+        //     $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        // }
 
         if (isset($input['required_email']) && $input['required_email'] > 0) {
             $filters['where'][] = ['email', '!=', ''];
         }
 
+        if (isset($input['email'])) {
+            $filters['where'][] = ['email', 'like', '%'.$input['email'].'%'];
+        }
+
         if (isset($input['domain']) && $input['domain'] != '') {
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
         }
-
+        
         $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
         $data = $this->extDomainRepository->paginate($page, $perPage, $filters,  $countryIds, $countryIdsInt, $countriesExceptIds, $findAllExt, $sort, $extDomainIds);
         return response()->json($this->addPaginationRaw($data));
@@ -339,6 +350,8 @@ class ExtDomainController extends Controller
     }
 
     public function update(Request $request) {
+        $id = Auth::user()->id;
+
         $input = $request->only(['id', 'status', 'email', 'domain',
             'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
 
@@ -391,6 +404,9 @@ class ExtDomainController extends Controller
             array_push($listStatusExclude, config('constant.EXT_STATUS_REFUSED'));
             array_push($listStatusExclude, config('constant.EXT_STATUS_IN_TOUCHED'));
         }
+
+        // array_push($listStatusExclude, config('constant.EXT_STATUS_QUALIFIED'));
+
         $arrayStatusListString = $this->implodeStatusList(",", $listStatusExclude);
         $validateRule['status'] = ['required', 'integer', 'in:'.$arrayStatusListString];
         if (!$this->startsWith($input['domain'], 'https://') && !$this->startsWith($input['domain'], 'http://')) {
@@ -405,6 +421,20 @@ class ExtDomainController extends Controller
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
+
+        if( $input['status'] === '100'){
+            Publisher::create([
+                'user_id' => $id,
+                'url' => $input['domain'],
+                'ur' => $input['url_rating'],
+                'dr' => $input['domain_rating'],
+                'backlinks' => $input['no_backlinks'],
+                'ref_domain' => $input['ref_domains'],
+                'org_keywords' => $input['organic_keywords'],
+                'org_traffic' => $input['organic_traffic'],
+                'price' => null,
+            ]);
+        }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];

@@ -7,6 +7,8 @@ import Toasted from 'vue-toasted';
 import JsonExcel from 'vue-json-excel'
 import Pagination from 'laravel-vue-pagination'
 import Cookies from 'js-cookie'
+import 'vue-select/dist/vue-select.css';
+import Select2 from 'vue-select';
 
 require('./bootstrap');
 
@@ -14,8 +16,9 @@ Vue.use(VueRouter);
 Vue.use(Toasted);
 Vue.use(Cookies);
  
-Vue.component('downloadExcel', JsonExcel)
+Vue.component('downloadExcel', JsonExcel)   
 Vue.component('pagination', Pagination)
+Vue.component('v-select', Select2)
 
 
 const router = new VueRouter({
@@ -23,7 +26,7 @@ const router = new VueRouter({
     routes,
 });
 // Auto logout
-var idleMax = 30; // Logout after 30 minutes of IDLE
+var idleMax = 60; // Logout after 30 minutes of IDLE
 var idleTime = 0;
 
 var idleInterval = setInterval(timerIncrement, 60000);  // 1 minute interval    

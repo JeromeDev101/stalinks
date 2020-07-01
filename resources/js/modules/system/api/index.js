@@ -39,6 +39,17 @@ export default class SystemService {
     }
 
     /**
+     * Return list of payment types
+     * 
+     * @param {AxiosPromise} params 
+     */
+    static getPaymentList(params) {
+        return axios.get('api/admin/payments', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    /**
      * Return new Country
      *
      * @returns {AxiosPromise}
@@ -51,6 +62,18 @@ export default class SystemService {
     }
 
     /**
+     * Return new Payment
+     *
+     * @returns {AxiosPromise}
+     *
+     */
+    static addPaymentType(params) {
+        return axios.post('/api/admin/payments', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    /**
      * Return status success
      *
      * @returns {AxiosPromise}
@@ -58,6 +81,18 @@ export default class SystemService {
      */
     static updateCountry(params) {
         return axios.put('/api/admin/countries', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    /**
+     * Return status success
+     *
+     * @returns {AxiosPromise}
+     *
+     */
+    static updatePayment(params) {
+        return axios.put('/api/admin/payments', params)
             .then(response => response)
             .catch(error => error);
     }

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Models\Log;
+use App\Models\PaymentType;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\IntDomainRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Faker\Provider\ar_SA\Payment;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -72,6 +74,9 @@ class UserController extends Controller
         if (isset($input['name']) && $input['name'] != '') {
             $filters['where'][] = ['name', 'like', '%'.$input['name'].'%'];
         }
+
+        //it doesnt show the seller/buyer
+        $filters['where'][] = ['isOurs',0];
 
         $isFullList = false;
         if (isset($request->full_data)) {
@@ -257,6 +262,15 @@ class UserController extends Controller
             'action' => $action,
             'user_id' => Auth::id(),
             'payload' => json_encode($payload)
+        ]);
+    }
+
+    public function getPaymentList()
+    {
+        $list = PaymentType::all();
+
+        return response()->json([
+            'data' => $list
         ]);
     }
 

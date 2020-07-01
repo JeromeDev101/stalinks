@@ -9,6 +9,7 @@ const EXT_DOMAIN_SET_LIST_COUNTRY_EXT = 'EXT_DOMAIN_SET_LIST_COUNTRY_EXT';
 const EXT_DOMAIN_SET_LIST_AHERFS = 'EXT_DOMAIN_SET_LIST_AHERFS';
 const EXT_DOMAIN_SET_LIST_MAIL = 'EXT_DOMAIN_SET_LIST_MAIL';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
+const TOTAL_TOPSITES = "TOTAL_TOPSITES";
 
 //status external domain
 const EXT_STATUS_NEW = "New";
@@ -19,7 +20,8 @@ const EXT_STATUS_AHREAFED = "Ahrefed";
 const EXT_STATUS_CONTACTED = "Contacted";
 const EXT_STATUS_REFUSED = "Refused";
 const EXT_STATUS_IN_TOUCHED = "InTouched";
-const UNQUALIFIED = "Unqualified"
+const UNQUALIFIED = "Unqualified";
+const EXT_STATUS_QUALIFIED = "Qualified";
 
 const state = {
     totalExtDomain: 0,
@@ -40,22 +42,24 @@ const state = {
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
         60: { text: EXT_STATUS_REFUSED, label: "warning" },
         70: { text: EXT_STATUS_IN_TOUCHED, label: "success" },
-        90: { text: UNQUALIFIED, label: "success" }
+        90: { text: UNQUALIFIED, label: "success" },
+        100: { text: EXT_STATUS_QUALIFIED, label: "success" }
     },
+    totalTopSites: 0,
     tableExtShowOptions: {
         id: true,
         country: true,
         domain: true,
         email: true,
-        facebook: true,
+        facebook: false,
         phone: true,
         rank: true,
         status: true,
-        total_spent: true,
+        total_spent: false,
         ahrefs_rank: true,
-        no_backlinks: true,
-        url_rating: true,
-        domain_rating: true,
+        no_backlinks: false,
+        url_rating: false,
+        domain_rating: false,
         ref_domains: true,
         organic_keywords: true,
         organic_traffic: true,
@@ -107,16 +111,15 @@ const mutations = {
         } else {
             state.listAlexa = [];
         }
-
-        console.log("listAlexa", state.listAlexa);
     }
+
 };
 
 const actions = {
     async filterExtDomain({ commit }, {vue, params}) {
         try {
             let response = await ExtDomainService.getTotalExt(params);
-            commit(EXT_DOMAIN_SET_TOTAL, response.data)
+            commit(EXT_DOMAIN_SET_TOTAL, response.data);
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

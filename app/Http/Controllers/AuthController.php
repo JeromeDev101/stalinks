@@ -40,13 +40,25 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        $email = $this->getStatus($request->input('email'));
         $data = Config::get('services.passport') + [
-            'username' => $request->input('email'),
+            'username' => $email,
             'password' => $request->input('password'),
         ];
         $request = Request::create('/oauth/token', 'POST', $data);
 
         return App::handle($request);
+    }
+
+    private function getStatus($email)
+    {
+        $user = User::where('email', $email)->select('status')->first();
+        if($user->status === 'active'){
+            $email = $email;
+        }else{
+            $email = 'invalid@email.address';
+        }
+        return $email;
     }
 
     public function register(RegisterRequest $request)
@@ -63,6 +75,7 @@ class AuthController extends Controller
     public function edit(UpdateUserRequest $request) {
         $response = ['success' => false];
         $input = $request->all();
+
         unset($input['c_password']);
         unset($input['role']);
 
@@ -78,6 +91,14 @@ class AuthController extends Controller
 
         if (!isset($input['work_mail_pass'])) {
             $input['work_mail_pass'] = '';
+        }
+
+        if (!isset($input['host_work_mail'])) {
+            $input['host_work_mail'] = '';
+        }
+
+        if (!isset($input['id_payment_type'])) {
+            $input['id_payment_type'] = '';
         }
 
         $user = $this->userRepository->findById($input['id']);

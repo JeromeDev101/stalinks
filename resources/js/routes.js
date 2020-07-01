@@ -15,12 +15,33 @@ import DetailDomain from '@/modules/domain/views/DetailDomain.vue'
 import Domain from '@/modules/domain/views/Domain.vue'
 import System from '@/modules/system/views/List.vue'
 import MailTemplate from '@/modules/template_email/views/List.vue'
-import MailLog from '@/modules/logs/views/MailLog.vue'
+import MailLog from '@/modules/logs/views/MailLog.vue';
+import Publisher from '@/modules/publisher/views/List.vue';
+import FollowupSales from '@/modules/followup_sales/views/List.vue';
+import Purchase from '@/modules/purchase/views/List.vue';
+import Incomes from '@/modules/incomes/views/List.vue';
+import BillingBuyer from '@/modules/billing/buyer/views/List.vue';
+import BillingSeller from '@/modules/billing/seller/views/List.vue';
+import Registration from '@/modules/registration/views/List.vue';
+import RegistrationPage from '@/modules/registration/views/Registration.vue';
+import Verification from '@/modules/registration/views/Verification.vue';
+import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
+import Buy from '@/modules/buy/views/List.vue';
 
 const routes = [{
     path: '/login',
     name: 'login',
     component: Login,
+},
+{
+    path: '/registration',
+    name: 'registration',
+    component: RegistrationPage,
+},
+{
+    path: '/verification/:code',
+    name: 'verification',
+    component: Verification,
 },
 {
     path: '/',
@@ -38,6 +59,36 @@ const routes = [{
         component: ListUser,
     },
     {
+        path: '/followup-sales',
+        name: 'followup-sales',
+        component: FollowupSales,
+    },
+    {
+        path: '/wallet-transaction',
+        name: 'wallet-transaction',
+        component: WalletTransaction,
+    },
+    {
+        path: '/buyer-billing',
+        name: 'buyer-billing',
+        component: BillingBuyer,
+    },
+    {
+        path: '/publisher',
+        name: 'publisher',
+        component: Publisher,
+    },
+    {
+        path: '/seller-billing',
+        name: 'seller-billing',
+        component: BillingSeller,
+    },
+    {
+        path: '/purchase',
+        name: 'purchase',
+        component: Purchase,
+    },
+    {
         path: '/profile/:id',
         name: 'Profile',
         component: Profile,
@@ -53,9 +104,24 @@ const routes = [{
         component: AlexaDomain,
     },
     {
-        path: '/backlinks',
+        path: '/followup-backlinks',
         name: 'BackLink',
         component: BackLink,
+    },
+    {
+        path: '/list-backlinks',
+        name: 'list-backlinks',
+        component: Buy,
+    },
+    {
+        path: '/incomes',
+        name: 'incomes',
+        component: Incomes,
+    },
+    {
+        path: '/accounts',
+        name: 'Registration',
+        component: Registration,
     },
     {
         path: 'intdomains',

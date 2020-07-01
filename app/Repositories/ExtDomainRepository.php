@@ -96,7 +96,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
     }
 
-    public function importAlexaSites($data, $countryCode, $start, $count)
+    public function importAlexaSites($data, $total, $countryCode, $start, $count)
     {
         $dataReturn = [
             'extDomains' => [],
@@ -114,48 +114,52 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         $listIdNeedCrawlContact = [];
-        foreach($data as $domain) {
-            $extDomain = ExtDomain::where('domain', $domain['DataUrl'])->first();
 
-            if ($extDomain) {
-                $extDomain->alexa_rank = $domain['Country']['Rank'];
-                $extDomain->save();
-                $existedCount++;
-                $extDomain->country = $country;
-                $dataReturn['extDomains'][] = $extDomain;
-                $listIdNeedCrawlContact[] = $extDomain->id;
-                continue;
+        if( is_array($data) ){
+            foreach($data as $domain) {
+                $extDomain = ExtDomain::where('domain', $domain['DataUrl'])->first();
+
+                if ($extDomain) {
+                    $extDomain->alexa_rank = $domain['Country']['Rank'];
+                    $extDomain->save();
+                    $existedCount++;
+                    $extDomain->country = $country;
+                    $dataReturn['extDomains'][] = $extDomain;
+                    $listIdNeedCrawlContact[] = $extDomain->id;
+                    continue;
+                }
+
+                $newExt = ExtDomain::firstOrCreate([
+                    'domain' => $domain['DataUrl'],
+                    'alexa_rank' => $domain['Country']['Rank'],
+                    'country_id' => $country->id,
+                    'ahrefs_rank' => 0,
+                    'no_backlinks' => 0,
+                    'url_rating' => 0,
+                    'domain_rating' => 0,
+                    'ref_domains' => 0,
+                    'organic_keywords' => '',
+                    'organic_traffic' => '',
+                    'email' => '',
+                    'phone' => '',
+                    'facebook' => '',
+                    'status' => config('constant.EXT_STATUS_NEW'),
+                ]);
+
+                $newExt->country = $country;
+                $listIdNeedCrawlContact[] = $newExt->id;
+
+
+                $newCount++;
+                $dataReturn['extDomains'][] = $newExt;
             }
-
-            $newExt = ExtDomain::firstOrCreate([
-                'domain' => $domain['DataUrl'],
-                'alexa_rank' => $domain['Country']['Rank'],
-                'country_id' => $country->id,
-                'ahrefs_rank' => 0,
-                'no_backlinks' => 0,
-                'url_rating' => 0,
-                'domain_rating' => 0,
-                'ref_domains' => 0,
-                'organic_keywords' => '',
-                'organic_traffic' => '',
-                'email' => '',
-                'phone' => '',
-                'facebook' => '',
-                'status' => config('constant.EXT_STATUS_NEW'),
-            ]);
-
-            $newExt->country = $country;
-            $listIdNeedCrawlContact[] = $newExt->id;
-
-
-            $newCount++;
-            $dataReturn['extDomains'][] = $newExt;
         }
 
         $this->addLog(config('constant.ACTION_ALEXA'), ['country_code' => $countryCode, 'start' => $start, 'count' => $count]);
 
         $dataReturn['new'] = $newCount;
         $dataReturn['existed'] = $existedCount;
+        $dataReturn['total'] = $total;
         $this->crawlContact($listIdNeedCrawlContact, true);
         return $dataReturn;
     }

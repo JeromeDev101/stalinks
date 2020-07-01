@@ -1,66 +1,82 @@
 <template>
     <div class="row">
-        <section class="content-header col-sm-12">
-        <h1>Backlinks</h1>
-        </section>
         <div class="col-sm-12">
+
             <div class="box">
                 <div class="box-header">
-                    <div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <div class="form-row">
-                                <div class="col-md-8 mb-8">
-                                <label class="int-domain">Search</label>
-                                <div class="input-group">
-                                    <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
-                                    <div class="input-group-btn">
-                                        <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                                <div v-if="Object.keys(listBackLink).length !== 0" class="col-md-3 mb-3">
-                                    <label class="int-domain">Download CSV</label>
-                                    <br>
-                                    <download-csv
-                                        :data = "listBackLink.data"
-                                        :fileds = "data_filed"
-                                        :nameFile = "file_csv">
-                                    </download-csv>
-                                </div>
+                    <h3 class="box-title">Filter</h3>
+                </div>
+
+                <div class="box-body m-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search</label>
+                                <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
                             </div>
                         </div>
-                        <!-- /.box-body -->
-                        <!-- /.box-footer-->
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select class="form-control" name="" id="">
+                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default">Clear</button>
+                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default">Search</button>
+                        </div>
                     </div>
                 </div>
-                <!-- /.box-header -->
+            </div>
+
+            <div class="box">
+
+                <div class="box-header">
+                    <h3 class="box-title">Follow up Backlinks</h3>
+                    
+                    <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
+                        <download-csv
+                            :data = "listBackLink.data"
+                            :fileds = "data_filed"
+                            :nameFile = "file_csv">
+                        </download-csv>
+                    </div>
+                </div>
+
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover table-bordered table-striped rlink-table">
                         <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>External Domain</th>
-                                <th>Internal Domain</th>
-                                <th>Link</th>
+                                <th>URL Publisher</th>
+                                <th>URL Advertiser</th>
+                                <th>Link From</th>
+                                <th>Link To</th>
                                 <th>Price</th>
                                 <th>Anchor Text</th>
-                                <th>Live Date</th>
+                                <th>Date for Proccessing</th>
+                                <th>Date Completed</th>
                                 <th>Status</th>
-                                <th>Employee</th>
                                 <th>Action</th>
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ backLink.ext_domain.domain }}</td>
-                                <td>{{ backLink.int_domain.domain }}</td>
+                                <td>{{ backLink.publisher.url}}</td>
+                                <td>{{ backLink.url_advertiser }}</td>
+                                <td>{{ backLink.link_from }}</td>
                                 <td><a href="backLink.link">{{ backLink.link }}</a></td>
-                                <td>{{ convertPrice(backLink.price) }}$</td>
+                                <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td>{{ backLink.anchor_text }}</td>
+                                <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
                                 <td>{{ backLink.status }}</td>
-                                <td>{{ backLink.user.name }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
@@ -80,7 +96,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add BackLink Domain</h4>
+                        <h4 class="modal-title">Follow up Backlinks Information</h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
                             <span v-if="messageBacklinkForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageBacklinkForms.errors).length > 0) ? 'danger' : 'success')">
@@ -90,16 +106,33 @@
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Seller name</label>
+                                    <input type="text" v-model="modelBaclink.seller" :disabled="true" class="form-control" required="required" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Date Processed</label>
+                                        <input type="date" :disabled="isBuyer" v-model="modelBaclink.date_process" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
-                                    <label style="color: #333">Ext Domain</label>
+                                    <label style="color: #333">URL Publisher</label>
                                     <input type="text" v-model="modelBaclink.ext_domain.domain" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
-                                    <label style="color: #333">Internal Domain</label>
-                                    <input type="text" v-model="modelBaclink.int_domain.domain" :disabled="true"  class="form-control" required="required" >
+                                <div class="form-group">
+                                    <label style="color: #333">URL Advertiser</label>
+                                    <input type="text" v-model="modelBaclink.url_advertiser" class="form-control" required="required" >
                                 </div>
                             </div>
 
@@ -107,16 +140,9 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label style="color: #333">Price</label>
-                                        <input type="number" v-model="modelBaclink.price" class="form-control" value="" required="required" >
+                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}" class="form-group">
-                                    <label style="color: #333">User</label>
-                                    <input type="text" v-model="modelBaclink.user.name" :disabled="true"  class="form-control" required="required" >
                                 </div>
                             </div>
 
@@ -126,6 +152,18 @@
                                         <label style="color: #333">Anchor text</label>
                                         <input type="text" v-model="modelBaclink.anchor_text" class="form-control" required="required" >
                                         <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Status</label>
+                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer">
+                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        </select>
+                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -141,27 +179,25 @@
                                 </div>
                             </div>
 
-                              <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Live date</label>
-                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" >
+                                        <label style="color: #333">Date Completed</label>
+                                        <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer">
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
+                                <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Status</label>
-                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;">
-                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                        </select>
-                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                        <label style="color: #333">Article ID</label>
+                                        <input type="text" class="form-control" :disabled="isBuyer">
                                     </div>
                                 </div>
                             </div>
+                            
 
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -222,11 +258,13 @@
           },
           loadIntDomain: false,
           isPopupLoading: false,
+          isBuyer: false,
         }
       },
       async created() {
           await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
           await this.getBackLinkList();
+          this.checkAccountType()
       },
     
       computed: {
@@ -278,10 +316,35 @@
         checkArray(array) {
           return Hepler.arrayNotEmpty(array);
         },
+
+        checkAccountType() {
+            let that = this.user
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
+        },
     
         editBackLink(baclink) {
             this.modalAddBackLink = true
-            this.modelBaclink = Object.assign({}, baclink)
+            let that = Object.assign({}, baclink)
+
+            this.modelBaclink.id = that.id
+            this.modelBaclink.publisher_id = that.publisher.id
+            this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
+            this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
+            this.modelBaclink.anchor_text = that.anchor_text
+            this.modelBaclink.price = that.price
+            this.modelBaclink.link = that.link
+            this.modelBaclink.live_date = that.live_date
+            this.modelBaclink.status = that.status
+            this.modelBaclink.user_id = that.user_id
+            this.modelBaclink.date_process = that.date_process
+            this.modelBaclink.url_advertiser = that.url_advertiser
+
+            this.modelBaclink.seller = that.publisher.user.name
+
             let element = this.$refs.modalEditBacklink
             $(element).modal('show')          
         },

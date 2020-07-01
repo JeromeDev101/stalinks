@@ -6,7 +6,6 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Avatar</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <ul class="users-list avatar clearfix">
                         <li>
@@ -14,50 +13,64 @@
                             <span class="users-list-date"><strong>{{ user.name }}</strong></span>
                         </li>
                     </ul>
-                    <!-- /.users-list -->
                 </div>
             </div>
-            <!--/.box -->
         </div>
+
         <div class="col-sm-9">
             <div class="box box-primary table-user">
                 <div class="box-header">
                     <h3 class="box-title">Information</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body no-padding">
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
-                                    <td><i class="fa fa-user"></i><b> Name</b></td>
+                                    <td><b>Name</b></td>
                                     <td>{{ user.name }}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-envelope-o"></i><b> Email</b></td>
+                                    <td><b>Email</b></td>
                                     <td>{{ user.email }}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-phone"></i><b> Phone</b></td>
+                                    <td><b>Phone</b></td>
                                     <td>{{ user.phone }}</td>
                                 </tr>
-                                <tr>
-                                    <td><i class="fa fa-gavel"></i><b> Role</b></td>
+                                <tr v-if="currentUser.isAdmin">
+                                    <td><b>Role</b></td>
                                     <td>{{ user.role ? user.role.name : null }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Type</b></td>
+                                    <td>{{ user.user_type ? user.user_type.type: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Company Name</b></td>
+                                    <td>{{ user.user_type ? user.user_type.company_name: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Status</b></td>
+                                    <td>{{ user.user_type ? user.user_type.status: '' }}</td>
+                                </tr>
+                                <tr v-if="!currentUser.isAdmin">
+                                    <td><b>Skype</b></td>
+                                    <td>{{ user.user_type ? user.user_type.skype: '' }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <!-- /.table-responsive -->
+                    </div> 
                 </div>
             </div>
         </div>
-                <div class="col-lg-8">
+
+        <div class="col-lg-8">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total External Domain: {{ totalExt.total}}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -86,12 +99,13 @@
                 </div>
             </div>
         </div>
-    <div class="col-lg-4">
+
+        <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Internals Domain: {{ totalInt.total }}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -115,13 +129,14 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
+
         <div class="col-lg-8">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Backlink: {{ totalBackLink.total}} </h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -152,12 +167,13 @@
                 </div>
             </div>
         </div>
-            <div class="col-lg-4">
+
+        <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Total Price: {{ price.total }}</h3>
                 </div>
-                <!-- /.box-header -->
+                
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -182,6 +198,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -225,7 +242,9 @@ export default {
                 { text: 'New', value: 'new' },
                 { text: 'Crawl Failed', value: 'crawlfail' },
                 { text: 'Contacts Null', value: 'contactnull' },
-            ]
+            ],
+            isBuyer: false,
+            isSeller: false,
         };
     },
 
@@ -242,11 +261,10 @@ export default {
 
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-        if (!this.currentUser.isAdmin) {
-            window.location.href = '/';
-            return;
-        }
-
+        // if (!this.currentUser.isAdmin) {
+        //     window.location.href = '/';
+        //     return;
+        // }
         let userId = this.$route.params.id || null;
         await this.$store.dispatch('actionGetUserInformation', {
             vue: this,
@@ -257,6 +275,7 @@ export default {
         this.filterIntDomain();
         this.filterBacklink();
         this.filterPrice();
+        this.checkAccountType();
     },
 
     methods: {
@@ -277,6 +296,15 @@ export default {
                 vue: this,
                 params: this.extDomain,
             });
+        },
+
+        checkAccountType() {
+            let that = this.currentUser
+            if( that.user_type ){
+                if( that.user_type.type == 'Buyer' ){
+                    this.isBuyer = true;
+                }
+            }
         },
 
         async filterIntDomain() {

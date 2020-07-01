@@ -24,12 +24,11 @@ class UpdateBacklinkRequest extends FormRequest
     public function rules()
     {
         return [
-            'ext_domain_id' => 'required',
-            'int_domain_id' => 'required',
+            'publisher_id' => 'required',
             'link' => 'required|url',
             'price' => 'required',
             'anchor_text' => 'required',
-            'live_date' => 'required',
+            // 'live_date' => 'required',
             'status' => 'required',
             'user_id' => 'required',
         ];

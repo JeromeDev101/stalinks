@@ -62,6 +62,7 @@ class BackLinkController extends Controller
         $countryIds = $this->userService->findAccessByCountryByUserId($userId);
         $intDomains = $this->userService->findAccessByIntDomainEmployee($userId);
         $backLinks = $this->backLinkRepository->getBackLink($countryIds, $intDomains, $filters);
+
         return response()->json($backLinks);
     }
 
@@ -134,7 +135,7 @@ class BackLinkController extends Controller
     public function update(UpdateBacklinkRequest $request, $id)
     {
         $response = ['update_success' => false];
-        $input = $request->only('ext_domain_id', 'int_domain_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id');
+        $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser');
         $backlink = $this->backLinkRepository->findById($id);
 
         if (!$backlink) {

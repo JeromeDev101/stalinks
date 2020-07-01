@@ -34,6 +34,7 @@ class MailController extends Controller
     }
 
     public function getList(Request $request) {
+        
         $input = $request->all();
         $countryId = 0;
         $page = 0;

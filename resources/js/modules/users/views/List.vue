@@ -22,6 +22,7 @@
                                 <th>Work mail</th>
                                 <th>Phone</th>
                                 <th>Role</th>
+                                <th>Status</th>
                                 <th>Type</th>
                                 <th>Action</th>
                             </tr>
@@ -54,6 +55,7 @@
                                 </td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                                 <td>
                                     <div class="btn-group">
                                         <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
@@ -69,6 +71,7 @@
                                 <td>{{ user.work_mail }}</td>
                                 <td>{{ user.phone }}</td>
                                 <td>{{ user.role ? user.role.name : '' }}</td>
+                                <td>{{ user.status }}</td>
                                 <td>{{ userTypeList[user.type] }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -305,6 +308,14 @@
                                 </div>
                             </div>
 
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Work Host mail</label>
+                                    <input type="text" v-model="userUpdate.host_mail" class="form-control" required placeholder="Enter SMTP mail">
+                                </div>
+                            </div>
+
                             <hr>
                             <div class="col-md-12" style="margin-top: 15px">
                                 <div class="row">
@@ -323,6 +334,29 @@
                                             <span v-if="messageForms.errors.work_mail_pass" v-for="err in messageForms.errors.work_mail_pass" class="text-danger">{{ err }}</span>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="color: #333">Payment Type</label>
+                                            <select v-model="userUpdate.id_payment_type" class="form-control pull-right">
+                                                <option value="">-- Select Payment Type --</option>
+                                                <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                                    {{ option.type }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="color: #333">Status</label>
+                                            <select name="" id="" class="form-control" v-model="userUpdate.status">
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -627,7 +661,10 @@ export default {
                 role_id: '',
                 type: 0,
                 work_mail_pass: '',
-                work_mail: ''
+                work_mail: '',
+                host_mail: '',
+                status: '',
+                id_payment_type: ''
             },
 
             userCountryUpdate: { id: 0 },
@@ -653,12 +690,16 @@ export default {
         this.getCountryList();
         this.getRoleList();
         this.getUserTypeList();
+        this.getPaymentList();
+
+        console.log(this.listPayment)
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
             listUser: state => state.storeUser.listUser,
+            listPayment: state => state.storeUser.listPayment,
             messageForms: state => state.storeUser.messageForms,
             filter: state => state.storeUser.filter,
             countryList: state => state.storeUser.countryList,
@@ -677,6 +718,10 @@ export default {
 
         async getRoleList() {
             await this.$store.dispatch('actionGetListRole', { vue: this });
+        },
+
+        async getPaymentList() {
+            await this.$store.dispatch('actionGetListPayment', { vue: this });
         },
 
         async getUserTypeList() {
