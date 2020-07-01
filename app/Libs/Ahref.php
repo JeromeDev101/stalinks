@@ -26,8 +26,8 @@ class Ahref {
         return json_decode($response, true);
     }
 
-    public function getApiUrl($domain) {
-        return $this->baseUrl.$domain."&output=".$this->outputFormat."&token=".$this->token;
+    public function getApiUrl($domain, $from) {
+        return $this->baseUrl.$domain."&output=".$this->outputFormat."&token=".$this->token."&from=".$from;
     }
 
     public function getClient() {
@@ -46,28 +46,51 @@ class Ahref {
      * @return array
      */
     public function getAhrefsAsync(Collection $extDomains) {
+
+        $getFrom = [
+            'ahrefs_rank',
+            'domain_rating',
+            'metrics',
+            'positions_metrics'
+        ];
+
+        $mapDataExt = [];
         $guzzleClient = new GuzzleClient();
-        $promises = (function () use ($extDomains, $guzzleClient) {
+
+
+        $promises = (function () use ($extDomains, $guzzleClient, $getFrom) {
             foreach ($extDomains as $extDomain) {
-                yield $guzzleClient->requestAsync('GET', $this->getApiUrl($extDomain->domain))
-                    ->then(function(ResponseInterface $response) use ($extDomain) {
-                        $result = json_decode($response->getBody()->getContents(), true);
+                foreach($getFrom as $from) {
+                    yield $guzzleClient->requestAsync('GET', $this->getApiUrl($extDomain->domain, $from))
+                        ->then(function(ResponseInterface $response) use ($extDomain) {
+                            $result = json_decode($response->getBody()->getContents(), true);
 
-                        if (isset($result['status']) && $result['status'] == "success") {
-                            $extDomain->ahrefs_rank = $result['data']['ahrefs_rank'];
-                            $extDomain->no_backlinks = $result['data']['backlinks'];
-                            $extDomain->url_rating = $result['data']['url_rating'];
-                            $extDomain->domain_rating = $result['data']['domain_rating'];
-                            $extDomain->ref_domains = $result['data']['ref_domains'];
-                            $extDomain->organic_keywords = $result['data']['organic_keywords'];
-                            $extDomain->organic_traffic = $result['data']['organic_traffic'];
-                            $extDomain->status = config('constant.EXT_STATUS_AHREAFED');
-                            $extDomain->save();
-                        }
+                            if (isset($result['metrics']) && isset($result['metrics']['backlinks'])) {
+                                $extDomain->no_backlinks = $result['metrics']['backlinks'];
+                                $extDomain->save();
+                            }
 
-                        return $extDomain;
-                    });
-            }
+                            if(isset($result['metrics']) && isset($result['metrics']['positions']) ){
+                                $extDomain->organic_keywords = $result['metrics']['positions'];
+                                $extDomain->organic_traffic = $result['metrics']['traffic'];
+                                $extDomain->save();
+                            }
+
+                            if(isset($result['domain'])){
+                                $extDomain->ahrefs_rank = $result['domain']['ahrefs_top'];
+                                $extDomain->domain_rating = $result['domain']['domain_rating'];
+                                $extDomain->save();
+                            }
+
+                            if(isset($result['pages'])){
+                                $extDomain->url_rating = $result['pages'][0]['ahrefs_rank'];
+                                $extDomain->save();
+                            }
+
+                            return $extDomain;
+                        });
+                    }
+                }
         })();
 
         $dataExt = [];
