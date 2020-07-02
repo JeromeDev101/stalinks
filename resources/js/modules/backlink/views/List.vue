@@ -40,7 +40,7 @@
 
                 <div class="box-header">
                     <h3 class="box-title">Follow up Backlinks</h3>
-                    
+
                     <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
                         <download-csv
                             :data = "listBackLink.data"
@@ -171,8 +171,8 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Link</label>
-                                        
+                                        <label style="color: #333">Link To</label>
+
                                         <input type="text" v-model="modelBaclink.link" class="form-control"  required="required" >
                                         <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
                                     </div>
@@ -197,7 +197,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -220,7 +220,7 @@
     import { Domain } from 'domain';
     import DownloadCsv from '@/components/export-csv/Csv.vue'
     import _ from 'lodash'
-    
+
     export default {
       name: 'BackLinkList',
       data() {
@@ -266,36 +266,36 @@
           await this.getBackLinkList();
           this.checkAccountType()
       },
-    
+
       computed: {
         ...mapState({
           listBackLink: state => state.storeBackLink.listBackLink,
           fillter: state => state.storeBackLink.fillter,
           user: state => state.storeAuth.currentUser,
           messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
-          
+
         }),
         openModalBackLink() {
           if (this.modalAddBackLink = true) {
               return true
           }
-    
+
           return false
         },
-    
+
         checkSelectIntDomain () {
           if (this.modelBaclink.int_domain_id == 0) {
               return true
           }
-    
+
           return false
         },
       },
-    
+
       mounted() {
         $(this.$refs.modalEditBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
       },
-    
+
       methods: {
         getBackLinkList: _.debounce(async function(page) {
           if (page) {
@@ -312,7 +312,7 @@
             params: this.fillter
           });
         }, 200),
-    
+
         checkArray(array) {
           return Hepler.arrayNotEmpty(array);
         },
@@ -325,7 +325,7 @@
                 }
             }
         },
-    
+
         editBackLink(baclink) {
             this.modalAddBackLink = true
             let that = Object.assign({}, baclink)
@@ -346,7 +346,7 @@
             this.modelBaclink.seller = that.publisher.user.name
 
             let element = this.$refs.modalEditBacklink
-            $(element).modal('show')          
+            $(element).modal('show')
         },
 
         closeModalBacklink() {
@@ -359,7 +359,7 @@
             await this.$store.dispatch('actionSaveBacklink', {
                 params: this.modelBaclink
             })
-            
+
             if (this.messageBacklinkForms.action === 'saved_backlink') {
                 this.closeModalBacklink()
                 this.getBackLinkList()

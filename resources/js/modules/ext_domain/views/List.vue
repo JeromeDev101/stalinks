@@ -956,7 +956,7 @@
         methods: {
 
             formatPrice(value) {
-                let val = (value/1).toFixed(2)
+                let val = (value/1).toFixed(0)
                 return val;
             },
 
