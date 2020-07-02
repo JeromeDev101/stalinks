@@ -200,8 +200,6 @@ export default {
     },
     created() {
         this.checkAccountType()
-
-        console.log( this.user )
     },
     computed: {
         ...mapState({

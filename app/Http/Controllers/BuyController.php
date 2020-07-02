@@ -24,36 +24,45 @@ class BuyController extends Controller
             'buyer_purchased.status as status_purchased'
         ];
 
-        $list = Publisher::query()
-                        ->select($columns)
-                        ->join('users', 'publisher.user_id', '=', 'users.id')
-                        ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                        ->leftJoin('buyer_purchased', function($q) use ($user_id){
-                            $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                                ->where('buyer_purchased.user_id_buyer', $user_id);
-                        })
-                        ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-                        ->where(function($q) use ($filter) {
-                            return $q->when(isset($filter['search']) && !empty($filter['search']), function ($subquery) use ($filter)  {
-                                        $subquery->where('users.name', 'like', '%'. $filter['search'] . '%')
-                                                 ->orWhere('registration.company_name', 'like', '%'.$filter['search'].'%');
-                                    })
-                                    ->when(isset($filter['status_purchase']) && !empty($filter['status_purchase']), function ($subquery) use ($filter)  {
-                                        if( is_array($filter['status_purchase']) ){
+        $list = Publisher::select($columns)
+                ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                ->leftJoin('buyer_purchased', function($q) use ($user_id){
+                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+                        ->where('buyer_purchased.user_id_buyer', $user_id);
+                });
 
-                                            $subquery->whereIn('buyer_purchased.status', $filter['status_purchase']);
+        if( isset($filter['search']) && !empty($filter['search']) ){
+            $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
+                    ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+        }
 
-                                            if( in_array('New', $filter['status_purchase']) ){
-                                                $subquery->orWhereNull('buyer_purchased.publisher_id');
-                                            }
-                                        }
-                                    })
-                                    ->when(isset($filter['language_id']) && !empty($filter['language_id']), function ($subquery) use ($filter)  {
-                                        $subquery->where('publisher.language_id', $filter['language_id']);
-                                    });
-                        });
+        if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
+            if( $filter['status_purchase'] == 'New' ){
+                $list->whereNull('buyer_purchased.publisher_id');
+            }else{
+                $list->where('buyer_purchased.status', $filter['status_purchase']);
+            }
+        }
 
-        $list = $list->orderBy('publisher.created_at', 'desc');
+        // if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
+        //     if( is_array($filter['status_purchase']) ){
+        //         $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
+
+        //         if( in_array('New', $filter['status_purchase']) ){
+        //             $list->orWhereNull('buyer_purchased.publisher_id');
+        //         }
+        //     }else{
+        //         $list->where('buyer_purchased.status', $filter['status_purchase']);
+        //     }
+        // }
+
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            $list->where('publisher.language_id', $filter['language_id']);
+        }
+
+        $list->orderBy('publisher.id', 'desc');
 
         return [
             'data' => $list->get()

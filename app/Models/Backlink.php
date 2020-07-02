@@ -18,4 +18,8 @@ class Backlink extends Model
     {
         return $this->belongsTo('App\Models\Publisher', 'publisher_id', 'id');
     }
+    
+    public function billing() {
+        return $this->hasMany('App\Models\Billing', 'id_backlink');
+    }
 }
