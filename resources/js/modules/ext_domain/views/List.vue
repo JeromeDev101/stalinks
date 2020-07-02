@@ -172,8 +172,8 @@
                             <td v-if="tableShow.url_rating" title="URL Rating">{{ ext.url_rating }}</td>
                             <td v-if="tableShow.domain_rating" title="Domain Rating">{{ ext.domain_rating }}</td>
                             <td v-if="tableShow.ref_domains" title="Ref domains">{{ ext.ref_domains }}</td>
-                            <td v-if="tableShow.organic_keywords" title="Organic keywords">{{ ext.organic_keywords }}</td>
-                            <td v-if="tableShow.organic_traffic" title="Organic traffic">{{ ext.organic_traffic }}</td>
+                            <td v-if="tableShow.organic_keywords" title="Organic keywords">{{ formatPrice(ext.organic_keywords) }}</td>
+                            <td v-if="tableShow.organic_traffic" title="Organic traffic">{{ formatPrice(ext.organic_traffic) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -954,6 +954,11 @@
             });
         },
         methods: {
+
+            formatPrice(value) {
+                let val = (value/1).toFixed(2)
+                return val;
+            },
 
             checkSelected() {
                 this.isDisabled = true;
