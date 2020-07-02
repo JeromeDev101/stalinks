@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');
     Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');
+    Route::name('publisher-get-ahrefs')->get('/publisher/ahrefs', 'PublisherController@getAhrefs');
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
 
     //External Page

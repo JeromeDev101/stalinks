@@ -4,6 +4,7 @@ const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
 const LIST_COUNTRY = 'LIST_COUNTRY';
+const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 
 const state = {
     listPublish: { data:[], total: 0 },
@@ -32,6 +33,10 @@ const mutations = {
 
     [LIST_COUNTRY](state, listCountries) {
         state.listCountries = listCountries;
+    },
+
+    [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
+        state.listAhrefsPublisher = listAhrefsPublisher;
     },
 }
 
@@ -120,6 +125,20 @@ const actions = {
                 commit(PUBLISHER_ERROR, errors);
             } else {
                 commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async getListAhrefsPublisher({ commit }, params) {
+        try {
+            let response = await PublisherService.getListAhrefsPublisher(params);
+            commit(PUBLISHER_DOMAIN_SET_LIST_AHERFS, response.data);
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
             }
         }
     },
