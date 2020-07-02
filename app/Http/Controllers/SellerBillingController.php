@@ -18,4 +18,8 @@ class SellerBillingController extends Controller
             'data' => $list->get(),
         ];
     }
+
+    public function payBilling(Request $request) {
+        dd($request->all());
+    }
 }

@@ -165,7 +165,7 @@
 <style>
     #custom .vs__dropdown-toggle
     {
-        height: 37px;
+        min-height: 37px;
     }
 </style>
 

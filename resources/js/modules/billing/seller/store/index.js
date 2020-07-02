@@ -3,10 +3,12 @@ import SellerBillingService from '@/modules/billing/seller/api';
 const SELLER_BILLING_LIST = 'SELLER_BILLING_LIST';
 const SET_ERROR = 'SELLER_BILLING_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
+const LIST_PAYMENT = 'LIST_PAYMENT';
 
 const state = {
     listSellerBilling: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
+    listPayment: { data: [] },
 }
 
 const mutations = {
@@ -21,6 +23,10 @@ const mutations = {
     [SET_ERROR](state, error) {
         state.error = error;
     },
+
+    [LIST_PAYMENT] (state, list) {
+        state.listPayment = list.listPayment;
+    },
 }
 
 const actions = {
@@ -29,6 +35,40 @@ const actions = {
             let response = await SellerBillingService.getList(params);
             commit(SELLER_BILLING_LIST, { listSellerBilling: response.data });
         }catch( e ) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListPayentType({ commit }, params) {
+        try {
+            let response = await SellerBillingService.getPaymentType(params);
+            commit(LIST_PAYMENT, { listPayment: response.data });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionPay({ commit }, params) {
+        try {
+            let response = await SellerBillingService.payBilling(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'success', message: 'Sucessfully Payed', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(SET_ERROR, errors);

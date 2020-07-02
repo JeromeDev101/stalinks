@@ -109,7 +109,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Proof of Documents</label>
-                                    <input type="file" class="form-control" name="" placeholder="">
+                                    <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
                                     <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small>
                                 </div>
                             </div>
@@ -117,8 +117,10 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Payment Type</label>
-                                    <select name="" class="form-control">
-                                        <option value=""></option>
+                                    <select name="" class="form-control" v-model="updateModel.payment_type">
+                                        <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                            {{ option.type }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -127,7 +129,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Pay</button>
+                        <button type="button" @click="doPay" class="btn btn-primary">Pay</button>
                     </div>
                 </div>
             </div>
@@ -145,18 +147,22 @@
             return {
                 checkIds: [],
                 isDisabled: true,
-                updateModel: {},
+                updateModel: {
+                    payment_type: ''
+                },
             }
         },
 
         async created() {
             this.getSellerBilling();
+            this.getPaymentTypeList();
         },
 
         computed: {
             ...mapState({
                 listSellerBilling: state => state.storeBillingSeller.listSellerBilling,
                 messageForms: state => state.storeBillingSeller.messageForms,
+                listPayment: state => state.storeBillingSeller.listPayment,
             }),
         },
 
@@ -170,6 +176,20 @@
                 if( this.checkIds.length > 0 ){
                     this.isDisabled = false;
                 }
+            },
+
+            async doPay() {
+                this.formData = new FormData();
+                this.formData.append('file', this.$refs.proof.files[0]);
+                this.formData.append('payment_type', this.updateModel.payment_type);
+                this.formData.append('ids[]', this.checkIds);
+
+
+                await this.$store.dispatch('actionPay', this.formData)
+            },
+
+            async getPaymentTypeList(params) {
+                await this.$store.dispatch('actionGetListPayentType', params);
             },
         },
     }

@@ -67,6 +67,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Registration', 'email', 'email');
     }
 
+    public function registration(){
+        return $this->belongsTo('App\Models\Registration', 'email', 'email');
+    }
+
     public function internalDomainsAccessable()
     {
         return $this->belongsToMany('App\Models\IntDomain', 'user_int_domain');

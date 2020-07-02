@@ -17,7 +17,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-2">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -27,7 +27,18 @@
                                     </option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Include Article</label>
+                                <select name="" class="form-control" v-model="filterModel.inc_article">
+                                    <option value="">All</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -307,6 +318,8 @@
                 isPopupLoading: false,
                 filterModel: {
                     search: this.$route.query.search || '',
+                    language_id: this.$route.query.language_id || '',
+                    inc_article: this.$route.query.inc_article || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -348,6 +361,8 @@
                 await this.$store.dispatch('getListPublisher', {
                     params: {
                         search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        inc_article: this.filterModel.inc_article,
                     }
                 });
                 this.searchLoading = false;
@@ -407,6 +422,8 @@
             clearSearch() {
                 this.filterModel = {
                     search: '',
+                    language_id: '',
+                    inc_article: '',
                 }
 
                 this.getPublisherList({
@@ -475,6 +492,8 @@
                 this.getPublisherList({
                     params: {
                         search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        inc_article: this.filterModel.inc_article,
                     }
                 });
             },

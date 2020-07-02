@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Publisher extends Model
 {
+    use SoftDeletes;
+    
     protected $guarded = [];
     protected $table = 'publisher';
 
@@ -18,6 +21,6 @@ class Publisher extends Model
     }
 
     public function buyer_purchased() {
-        return $this->belongsToMany('App\Models\BuyerPurchased', 'publisher_id');
+        return $this->hasMany('App\Models\BuyerPurchased', 'publisher_id', 'id');
     }
 }

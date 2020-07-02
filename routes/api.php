@@ -29,6 +29,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Billing
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
+    Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');
 
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');

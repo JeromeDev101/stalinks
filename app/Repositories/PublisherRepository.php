@@ -22,13 +22,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function getList($filter)
     {
         $user = Auth::user();
-        $list = DB::table('publisher')
-                ->select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
+        $list = Publisher::select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-                ->where('deleted_at', '=', '')
-                ->orWhereNull('deleted_at')
                 ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
@@ -44,6 +41,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
                     ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+        }
+
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            $list = $list->where('publisher.language_id', $filter['language_id']);
+        }
+
+        if( isset($filter['inc_article']) && !empty($filter['inc_article']) ){
+            $list = $list->where('publisher.inc_article', $filter['inc_article']);
         }
 
         // return $list->paginate(5);
