@@ -76,7 +76,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default">
-                                            <input type="checkbox" v-on:change="checkSelected" :id="seller.id" :value="seller.id" v-model="checkIds">
+                                            <input type="checkbox" :disabled="seller.proof_doc_path != null" v-on:change="checkSelected" :id="seller.id" :value="seller.id + '-' + seller.publisher.user.id + '-' + seller.publisher.price" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
@@ -84,11 +84,11 @@
                                 <td>{{ seller.publisher.user.name }}</td>
                                 <td>$ {{ seller.publisher.price }}</td>
                                 <td>{{ seller.live_date }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
+                                <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Yes' }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -109,8 +109,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-12">
-
+                            <div class="col-md-12 text-center">
+                                <img class="img-fluid" :src="proof_doc" atl="Proof of Billing" >
                             </div>
                         </div>
                     </div>
@@ -128,6 +128,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Payment</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -176,6 +181,8 @@
                 updateModel: {
                     payment_type: ''
                 },
+                proof_doc: '',
+                isPopupLoading: false,
             }
         },
 
@@ -197,6 +204,10 @@
                 await this.$store.dispatch('actionGetSellerBilling', params);
             },
 
+            doShow(src) {
+                this.proof_doc = src;
+            },
+
             checkSelected() {
                 this.isDisabled = true;
                 if( this.checkIds.length > 0 ){
@@ -205,13 +216,21 @@
             },
 
             async doPay() {
+                let ids = this.checkIds
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.proof.files[0]);
                 this.formData.append('payment_type', this.updateModel.payment_type);
-                this.formData.append('ids[]', this.checkIds);
+                this.formData.append('ids', ids );
 
-
+                this.isPopupLoading = true;
                 await this.$store.dispatch('actionPay', this.formData)
+                this.isPopupLoading = false;
+
+                if( this.messageForms.action == 'success' ){
+                    this.getSellerBilling();
+                    this.$ref.proof.value = '';
+                    this.updateModel.payment_type = '';
+                }
             },
 
             async getPaymentTypeList(params) {

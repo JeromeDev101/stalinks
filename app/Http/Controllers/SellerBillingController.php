@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Backlink;
+use App\Models\Billing;
 
 class SellerBillingController extends Controller
 {
@@ -29,6 +30,36 @@ class SellerBillingController extends Controller
     }
 
     public function payBilling(Request $request) {
-        dd($request->all());
+        $request->validate([
+            'payment_type' => 'required',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $ids = explode("," , $request->ids);
+
+        $image = $request->file;
+        $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/billing'), $new_name);
+
+        foreach( $ids as $id ){
+            $backlink_id = explode('-',$id)[0];
+            $user_id_seller = explode('-',$id)[1];
+            $seller_price = explode('-',$id)[2];
+
+            $backlink = Backlink::find($backlink_id);
+            $backlink->update(['payment_status' => 'Paid']);
+
+            Billing::create([
+                'id_backlink' => $backlink_id,
+                'id_user' => $user_id_seller,
+                'seller_price' => $seller_price,
+                'id_payment_via' => $request->payment_type,
+                'date_billing' => date('Y-m-d'),
+                'proof_doc_path' => '/images/billing/'.$new_name,
+                'admin_confirmation' => 1
+            ]);
+        }
+
+        return response()->json(['success' => true], 200);
     }
 }

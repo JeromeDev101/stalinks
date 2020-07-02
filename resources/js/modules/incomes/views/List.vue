@@ -72,7 +72,7 @@
                                 <td>{{ incomes.payment_status }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(incomes)" data-target="#modal-update-incomes" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        <button data-toggle="modal" @click="doUpdate(incomes)" data-target="#modal-update-incomes" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -101,22 +101,34 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label style="color: #333">User Seller</label>
-                                    <input type="text" v-model="updateModel.seller" :disabled="true" class="form-control" required="required" >
+                                    <input type="text" v-model="updateModel.seller" :disabled="true" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label style="color: #333">User Buyer</label>
-                                    <input type="text" v-model="updateModel.buyer" :disabled="true" class="form-control" required="required" >
+                                    <input type="text" v-model="updateModel.buyer" :disabled="true" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label style="color: #333">Price</label>
-                                    <input type="text" v-model="updateModel.price" :disabled="true" class="form-control" required="required" >
+                                    <input type="text" v-model="updateModel.price" :disabled="true" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Payment Status</label>
+                                    <input type="text" v-model="updateModel.payment_status" :disabled="true" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Proof of Documents</label>
+                                    <img :src="updateModel.proof_doc_path" class="img-fluid" alt="Proof of Document">
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-6">
                                 <div class="form-group">
                                     <label style="color: #333">Payment Status</label>
                                     <select name="" id="" v-model="updateModel.payment_status" class="form-control">
@@ -124,12 +136,12 @@
                                         <option value="Not Paid">Not Paid</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <!-- <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button> -->
                     </div>
                 </div>
             </div>
@@ -151,6 +163,7 @@
                     buyer: '',
                     price: '',
                     payment_status: '',
+                    proof_doc_path: '',
                 },
                 isPopupLoading: false,
                 filterModel: {
