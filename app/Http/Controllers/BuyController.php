@@ -33,28 +33,36 @@ class BuyController extends Controller
                         ->where('buyer_purchased.user_id_buyer', $user_id);
                 });
 
-        if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
-            if( is_array($filter['status_purchase']) ){
-                $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
-
-                if( in_array('New', $filter['status_purchase']) ){
-                    $list->orWhereNull('buyer_purchased.publisher_id');
-                }
-            }else{
-                $list->where('buyer_purchased.status', $filter['status_purchase']);
-            }
-        }
-
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
                     ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
         }
 
+        if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
+            if( $filter['status_purchase'] == 'New' ){
+                $list->whereNull('buyer_purchased.publisher_id');
+            }else{
+                $list->where('buyer_purchased.status', $filter['status_purchase']);
+            }
+        }
+
+        // if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
+        //     if( is_array($filter['status_purchase']) ){
+        //         $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
+
+        //         if( in_array('New', $filter['status_purchase']) ){
+        //             $list->orWhereNull('buyer_purchased.publisher_id');
+        //         }
+        //     }else{
+        //         $list->where('buyer_purchased.status', $filter['status_purchase']);
+        //     }
+        // }
+
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
             $list->where('publisher.language_id', $filter['language_id']);
         }
 
-        $list->orderBy('publisher.created_at', 'desc');
+        $list->orderBy('publisher.id', 'desc');
 
         return [
             'data' => $list->get()

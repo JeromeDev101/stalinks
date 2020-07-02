@@ -20,7 +20,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status of Purchased</label>
-                                <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select>
+                                <select name="" v-model="filterModel.status_purchase" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="New">New</option>
+                                    <option value="Interested">Interested</option>
+                                    <option value="Not interested">Not interested</option>
+                                    <option value="Purchased">Purchased</option>
+                                </select>
+                                <!-- <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select> -->
                             </div>
                         </div>
 
@@ -90,9 +97,9 @@
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button v-if="buy.status_purchased != 'Purchased'" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
-                                        <button v-if="buy.status_purchased != 'Purchased'" :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
-                                        <button v-if="buy.status_purchased != 'Purchased'" :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
+                                        <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                        <button :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
+                                        <button :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -177,7 +184,7 @@
                 filterModel: {
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
-                    status_purchase: this.$route.query.status_purchase || ['New'],
+                    status_purchase: this.$route.query.status_purchase || '',
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -230,7 +237,7 @@
                 this.filterModel = {
                     search: '',
                     language_id: '',
-                    status_purchase: ['New'],
+                    status_purchase: '',
                 }
 
                 this.getBuyList({
@@ -245,7 +252,7 @@
                 $('#tbl_buy_backlink').DataTable().destroy();
 
                 this.$router.replace({'query': null});
-                
+
                 this.$router.push({
                     query: this.filterModel,
                 });
