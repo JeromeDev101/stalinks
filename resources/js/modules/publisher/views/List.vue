@@ -150,8 +150,8 @@
                                 <td>{{ publish.dr }}</td>
                                 <td>{{ publish.backlinks }}</td>
                                 <td>{{ publish.ref_domain }}</td>
-                                <td>{{ publish.org_keywords }}</td>
-                                <td>{{ publish.org_traffic }}</td>
+                                <td>{{ formatPrice(publish.org_keywords) }}</td>
+                                <td>{{ formatPrice(publish.org_traffic) }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -356,6 +356,11 @@
             //     });
             //     this.searchLoading = false;
             // },
+
+            formatPrice(value) {
+                let val = (value/1).toFixed(2)
+                return val;
+            },
 
             async getPublisherList(params) {
                 this.searchLoading = true;
