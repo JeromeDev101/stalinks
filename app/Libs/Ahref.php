@@ -116,4 +116,80 @@ class Ahref {
 
         return $dataReturn;
     }
+
+    /**
+     * Get ahrefs with promise for request async concurrency
+     * @param Collection $publisher
+     * @return array
+     */
+    public function getAhrefsPublisherAsync(Collection $publishers) {
+
+        $getFrom = [
+            'ahrefs_rank',
+            'domain_rating',
+            'metrics',
+            'positions_metrics',
+            'refdomains'
+        ];
+
+        $guzzleClient = new GuzzleClient();
+        $promises = (function () use ($publishers, $guzzleClient, $getFrom) {
+            foreach ($publishers as $publisher) {
+                foreach($getFrom as $from) {
+                    yield $guzzleClient->requestAsync('GET', $this->getApiUrl($publisher->url, $from))
+                        ->then(function(ResponseInterface $response) use ($publisher) {
+                            $result = json_decode($response->getBody()->getContents(), true);
+
+                            if (isset($result['metrics']) && isset($result['metrics']['backlinks'])) {
+                                $publisher->backlinks = $result['metrics']['backlinks'];
+                            }
+
+                            if(isset($result['metrics']) && isset($result['metrics']['positions']) ){
+                                $publisher->org_keywords = $result['metrics']['positions'];
+                                $publisher->org_traffic = $result['metrics']['traffic'];
+                            }
+
+                            if(isset($result['domain'])){
+                                $publisher->dr = $result['domain']['domain_rating'];
+                            }
+
+                            if(isset($result['pages'])){
+                                $publisher->ur = $result['pages'][0]['ahrefs_rank'];
+                            }
+
+                            if(isset($result['stats'])){
+                                $publisher->ref_domain = $result['stats']['refdomains'];
+                            }
+
+                            $publisher->save();
+
+                            return $publisher;
+                        });
+                    }
+                }
+        })();
+
+        $dataExt = [];
+        $maxProcess = config('crawler.max_process_ahrefs');
+        $totalCount = 0;
+        $eachPromise = new EachPromise($promises, [
+            'concurrency' => $maxProcess,
+            'fulfilled' => function ($publisher) use(&$dataExt, &$totalCount) {
+                $dataExt[] = $publisher;
+                $totalCount++;
+            },
+            'rejected' => function ($reason) {
+                Log::error('reject ', ['error' => $reason]);
+            }
+        ]);
+
+        $eachPromise->promise()->wait();
+        $dataReturn = [];
+
+        foreach($dataExt as $item) {
+            $dataReturn[$item->id] = $item;
+        }
+
+        return $dataReturn;
+    }
 }

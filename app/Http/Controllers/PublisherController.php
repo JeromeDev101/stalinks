@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
+use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 
 class PublisherController extends Controller
 {
     private $publisherRepository;
 
-    public function __construct(PublisherRepositoryInterface $publisherRepository)
+    /**
+     * @var ConfigRepositoryInterface
+     */
+    private $configRepository;
+
+    public function __construct(PublisherRepositoryInterface $publisherRepository,
+                                ConfigRepositoryInterface $configRepository)
     {
         $this->publisherRepository = $publisherRepository;
+        $this->configRepository = $configRepository;
     }
 
     public function getList(Request $request)
@@ -30,14 +38,14 @@ class PublisherController extends Controller
 
         $file = $request->all();
         $this->publisherRepository->importExcel($file);
-        
+
         return response()->json(['success' => true], 200);
-        
+
     }
 
     public function update(Request $request){
         $input = $request->except('name', 'company_name', 'url');
-       
+
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
 
@@ -59,5 +67,18 @@ class PublisherController extends Controller
         $publisher->update($input);
 
         return response()->json(['success' => true], 200);
+    }
+
+    public function getAhrefs(Request $request) {
+        $input = $request->all();
+
+        if (!isset($input['domain_ids'])) {
+            return response()->json(['success' => false, 'message' => 'id domains is empty']);
+        }
+
+        $listId = explode(",", $input['domain_ids']);
+        $configs = $this->configRepository->getConfigs('ahrefs');
+        $data = $this->publisherRepository->getAhrefs($listId, $configs);
+        return response()->json($data);
     }
 }
