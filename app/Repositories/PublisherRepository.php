@@ -7,6 +7,7 @@ use App\Repositories\BaseRepository;
 use App\Models\ExtDomain;
 use App\Models\Publisher;
 use App\Models\Registration;
+use App\Libs\Ahref;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
 
-    public function __construct(ExtDomain $model)
+    public function __construct(Publisher $model)
     {
         parent::__construct($model);
     }
@@ -94,14 +95,33 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                         'inc_article' => ucwords( strtolower( trim($article, " ") ) )
                     ]);
                 }
-                    
+
             }
-                
+
             $ctr++;
         }
 
         fclose($csv);
 
         return true;
+    }
+
+    /**
+     * Get ahrefs with promise for request async concurrency
+     * @param array $listIds
+     * @param array $configs
+     * @return array
+     */
+    public function getAhrefs($listIds, $configs)
+    {
+        $publishers = Publisher::whereIn('id', $listIds)->get();
+
+        if ($publishers->count() == 0) {
+            return [];
+        }
+
+        $ahrefsInstant = new Ahref($configs);
+        $data = $ahrefsInstant->getAhrefsPublisherAsync($publishers);
+        return $data;
     }
 }

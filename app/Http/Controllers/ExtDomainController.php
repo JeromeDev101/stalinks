@@ -167,8 +167,9 @@ class ExtDomainController extends Controller
     }
 
     public function getList(Request $request) {
-        $input = $request->except('status');
+       // $input = $request->except('status');
 
+        $input = $request->all();
         $page = 0;
         $perPage =  10;
         $userId = Auth::id();
@@ -244,7 +245,11 @@ class ExtDomainController extends Controller
         if (isset($input['domain']) && $input['domain'] != '') {
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
         }
-        
+
+        if (isset($input['status']) && $input['status'] > 0 ) {
+            $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        }
+
         $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
         $data = $this->extDomainRepository->paginate($page, $perPage, $filters,  $countryIds, $countryIdsInt, $countriesExceptIds, $findAllExt, $sort, $extDomainIds);
         return response()->json($this->addPaginationRaw($data));
@@ -358,7 +363,7 @@ class ExtDomainController extends Controller
         foreach($input as $key => $value) {
             if (!isset($input[$key])) $input[$key] = '';
         }
-        
+
         $countryIds = $this->countryRepository->getListCountriesAccess(Auth::id(), true);
         $validateRule = ['id' => ['required', 'integer']];
         $listStatusExclude = [config('constant.EXT_STATUS_CRAWL_FAILED'),

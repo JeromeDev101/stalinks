@@ -81,7 +81,7 @@
                                         </option>
                                     </select>
                                 </div>
-                            </div>     
+                            </div>
                         </div>
 
                         <div class="col-md-2 my-3">
@@ -92,7 +92,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                        <a class="dropdown-item" href="#">Get Ahref</a>
+                                        <a class="dropdown-item " @click="getAhrefs()">Get Ahref</a>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="box-body table-responsive no-padding relative">
                     <table class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
@@ -165,7 +165,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal Update Publisher-->
         <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -341,6 +341,7 @@
                 messageForms: state => state.storePublisher.messageForms,
                 listCountries: state => state.storePublisher.listCountries,
                 user: state => state.storeAuth.currentUser,
+                listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
             })
         },
 
@@ -355,7 +356,7 @@
             //     });
             //     this.searchLoading = false;
             // },
-            
+
             async getPublisherList(params) {
                 this.searchLoading = true;
                 await this.$store.dispatch('getListPublisher', {
@@ -447,6 +448,21 @@
                 await this.$store.dispatch('actionGetListCountries', params);
             },
 
+            async getAhrefs() {
+                /*var listInvalid = this.checkIds.some(ext => ext.status != 30);
+                if (listInvalid === true) {
+                    alert('List invalid: status diff with GotContacts');
+                    return;
+                }*/
+                console.log(this.checkIds);
+                var listIds = (this.checkIds).join(',');
+                this.isLoadingTable = true;
+                await this.$store.dispatch('getListAhrefsPublisher', { params: { domain_ids: listIds } });
+                this.isLoadingTable = false;
+
+                this.getPublisherList();
+            },
+
             doUpdate(publish) {
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
@@ -467,7 +483,7 @@
                     link: that.link,
                     inc_article: that.inc_article,
                 }
-                
+
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
             },
 
