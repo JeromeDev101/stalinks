@@ -8,9 +8,18 @@ use App\Models\Backlink;
 class SellerBillingController extends Controller
 {
     public function getList(Request $request) {
-        $list = Backlink::with(['publisher' => function($query){
-            $query->with('user:id,name');
-        }, 'user'])
+        $columns = [
+            'backlinks.*',
+            'billing.proof_doc_path',
+            'billing.admin_confirmation',
+        ];
+
+        $list = Backlink::select($columns)
+                    ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
+                    ->with(['publisher' => function($q){
+                        $q->with('user:id,name');
+                    }])
+                    ->with('user:id,name')
                     ->where('status', 'Live')
                     ->orderBy('created_at', 'desc');
 

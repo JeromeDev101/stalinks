@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl_buy_backlink" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -74,20 +74,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listBuy.data.length == 0">
-                                <td colspan="14" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
-
                                 <td>{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.name }}</td>
                                 <td>{{ buy.country_name }}</td>
-
-                                <!-- <td>{{ buy.user.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
-                                <td>{{ buy.user.name }}</td>
-                                <td>{{ buy.country.name }}</td> -->
-
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>
                                 <td>{{ buy.dr }}</td>
@@ -189,6 +180,7 @@
                     status_purchase: this.$route.query.status_purchase || ['New'],
                 },
                 searchLoading: false,
+                dataTable: null,
             }
         },
 
@@ -216,7 +208,55 @@
                         status_purchase: this.filterModel.status_purchase,
                     }
                 });
+                
+                $('#tbl_buy_backlink').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
                 this.searchLoading = false;
+            },
+
+            clearSearch() {
+                $('#tbl_buy_backlink').DataTable().destroy();
+                
+                this.filterModel = {
+                    search: '',
+                    language_id: '',
+                    status_purchase: ['New'],
+                }
+
+                this.getBuyList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+            
+            },
+
+            doSearch() {
+                $('#tbl_buy_backlink').DataTable().destroy();
+
+                this.$router.replace({'query': null});
+                
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getBuyList({
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        status_purchase: this.filterModel.status_purchase,
+                    }
+                });
             },
 
             doUpdate(buy) {
@@ -229,6 +269,8 @@
 
             async doDislike(id) {
                 if( confirm("Are you sure you're Not Interested in these backlink?") ){
+                    $('#tbl_buy_backlink').DataTable().destroy();
+                    
                     this.searchLoading = true;
                     await this.$store.dispatch('actionDislike', { id:id })
                     this.searchLoading = false;
@@ -238,6 +280,8 @@
             },
 
             async doLike(id) {
+                $('#tbl_buy_backlink').DataTable().destroy();
+
                 this.searchLoading = true;
                 await this.$store.dispatch('actionLike', { id:id })
                 this.searchLoading = false;
@@ -295,41 +339,13 @@
                 return ((percent/ 100) * total).toFixed(2)
             },
 
-            clearSearch() {
-                
-                this.filterModel = {
-                    search: '',
-                    language_id: '',
-                    status_purchase: ['New'],
-                }
-
-                this.getBuyList({
-                    params: this.filterModel
-                });
-
-                this.$router.replace({'query': null});
-            
-            },
-
-            doSearch() {
-                this.$router.push({
-                    query: this.filterModel,
-                });
-
-                this.getBuyList({
-                    params: {
-                        search: this.filterModel.search,
-                        language_id: this.filterModel.language_id,
-                        status_purchase: this.filterModel.status_purchase,
-                    }
-                });
-            },
-
             async getListCountries(params) {
                 await this.$store.dispatch('actionGetListCountries', params);
             },
 
             async submitBuy(params) {
+                $('#tbl_buy_backlink').DataTable().destroy();
+
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateBuy', this.updateModel);
                 this.isPopupLoading = false;

@@ -82,11 +82,15 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher.user.name }}</td>
-                                <td>{{ seller.publisher.price }}</td>
+                                <td>$ {{ seller.publisher.price }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -95,6 +99,28 @@
             </div>
 
         </div>
+        
+        <!-- Modal View Docs -->
+        <div class="modal fade" id="modal-view-docs" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Proof of Document</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View Docs -->
         
         <!-- Modal Payment -->
         <div class="modal fade" id="modal-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
