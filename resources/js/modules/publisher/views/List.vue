@@ -112,8 +112,8 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>Select</th>
-                                <th>Company</th>
-                                <th>User</th>
+                                <th v-if="user.isAdmin">Company</th>
+                                <th>Username</th>
                                 <th>Language</th>
                                 <th>URL</th>
                                 <th>Price</th>
@@ -140,8 +140,8 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td>{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
-                                <td>{{ publish.name }}</td>
+                                <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
+                                <td>{{ publish.username ? publish.username : 'N/A'   }}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
