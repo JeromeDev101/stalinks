@@ -19,6 +19,8 @@ use App\Services\UserService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 use App\Models\Publisher;
+use App\Models\User;
+use App\Models\Country;
 
 class ExtDomainController extends Controller
 {
@@ -219,7 +221,14 @@ class ExtDomainController extends Controller
             $countryIds = $this->countryRepository->getListCountriesAccess($userId, true);
         }
 
+        // to display the list of extdomain to non employee (jerome) - 7/3/20
+        $non_employee = $this->giveAccessToNonEmployees($userId);
+        if( $non_employee ){
+            $countryIds = $non_employee;
+        }
+
         $countryIdsInt = $this->countryRepository->getListCountriesAccess($userId);
+
 
         $filters['whereIn'][] = ['country_id', $countryIds];
 
@@ -255,6 +264,17 @@ class ExtDomainController extends Controller
         return response()->json($this->addPaginationRaw($data));
     }
 
+    private function giveAccessToNonEmployees($userId) {
+        $user = User::find($userId);
+        $result = false;
+        if( isset( $user->isOurs ) ){
+            if( $user->isOurs == 1 ){
+                $result = Country::pluck('id')->toArray();
+            }
+        }
+        return $result;
+    }
+
     public function store(Request $request) {
         $input = $request->only(['domain', 'country_id', 'alexa_rank',
             'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic', 'email',
@@ -267,7 +287,7 @@ class ExtDomainController extends Controller
         $newStatus = 0;
 
         Validator::make($input, [
-            'domain' => 'required|url|max:255',
+            'domain' => 'required|max:255',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',

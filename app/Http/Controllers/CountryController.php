@@ -7,6 +7,7 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class CountryController extends Controller
 {
@@ -36,6 +37,18 @@ class CountryController extends Controller
         $input = $request->all();
         $forExt = false;
         $forAssign = false;
+
+        // this code will allow the non-employee to have a dropdown of Country [temporary] (3/7/20) - jerome
+        $user = User::find($request->user_id);
+        if( isset( $user->isOurs ) ){
+            if( $user->isOurs == 1 ){
+                $input['paginate'] = 1;
+                $input['page'] = 1;
+                $input['per_page'] = 50;
+            }
+        }
+            
+        // ================
 
         if (isset($input['for_ext'])) {
             $forExt = $input['for_ext'];

@@ -80,15 +80,53 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add Wallet Transaction</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">User Buyer</label>
+                                    <select name="" class="form-control" v-model="updateModel.user_id_buyer">
+                                        <option value="">Select Buyer</option>
+                                        <option v-for="option in listBuyer.data" v-bind:value="option.id">
+                                            {{ 'ID: ' + option.id + ' - Name: ' + option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Amount USD</label>
+                                    <input type="number" class="form-control" name="" placeholder="0.00" v-model="updateModel.amount_usd">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Payment Via</label>
+                                    <select name="" class="form-control" v-model="updateModel.payment_type">
+                                        <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                            {{ option.type }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Proof of Documents</label>
+                                    <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
+                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -125,24 +163,66 @@
     export default {
         data() {
             return {
-                //
+                updateModel: {
+                    user_id_buyer: '',
+                    payment_type: '',
+                    amount_usd: '',
+                },
+                isPopupLoading: false,
             }
         },
 
         async created() {
             this.getWalletTransactionList()
+            this.getListBuyer();
+            this.getListPaymentType();
         },
 
         computed: {
             ...mapState({
                 listWallet: state => state.storeWalletTransaction.listWallet,
+                listBuyer: state => state.storeWalletTransaction.listBuyer,
                 messageForms: state => state.storeWalletTransaction.messageForms,
+                listPayment: state => state.storeWalletTransaction.listPayment,
             }),
         },
 
         methods: {
             async getWalletTransactionList(params) {
                 await this.$store.dispatch('actionGetWalletList', params);
+            },
+
+            async getListBuyer(params) {
+                await this.$store.dispatch('actionGetListBuyer', params);
+            },
+
+            async getListPaymentType(params) {
+                await this.$store.dispatch('actionGetListPaymentType', params);
+            },
+
+            async submitPay() {
+                this.formData = new FormData();
+                this.formData.append('file', this.$refs.proof.files[0]);
+                this.formData.append('payment_type', this.updateModel.payment_type);
+                this.formData.append('amount_usd', this.updateModel.amount_usd);
+                this.formData.append('user_id_buyer', this.updateModel.user_id_buyer);
+
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionAddWallet', this.formData)
+                this.isPopupLoading = false;
+
+                if( this.messageForms.action == 'success' ){
+
+                    this.updateModel = {
+                        user_id_buyer: '',
+                        payment_type: '',
+                        amount_usd: '',
+                    }
+
+                    this.$refs.proof.value = '';
+                    this.getWalletTransactionList();
+
+                }
             },
         },
 
