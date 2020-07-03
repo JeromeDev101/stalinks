@@ -91,8 +91,8 @@
                                 <td>{{ buy.dr }}</td>
                                 <td>{{ buy.backlinks }}</td>
                                 <td>{{ buy.ref_domain }}</td>
-                                <td>{{ buy.org_keywords }}</td>
-                                <td>{{ buy.org_traffic }}</td>
+                                <td>{{ formatPrice(buy.org_keywords) }}</td>
+                                <td>{{ formatPrice(buy.org_traffic) }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td>
@@ -109,7 +109,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal Update -->
         <div class="modal fade" id="modal-buy-update" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -206,6 +206,11 @@
         },
 
         methods: {
+            formatPrice(value) {
+                let val = (value/1).toFixed(0)
+                return val;
+            },
+
             async getBuyList(params) {
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetBuyList', {
@@ -215,7 +220,7 @@
                         status_purchase: this.filterModel.status_purchase,
                     }
                 });
-                
+
                 $('#tbl_buy_backlink').DataTable({
                     paging: false,
                     searching: false,
@@ -233,7 +238,7 @@
 
             clearSearch() {
                 $('#tbl_buy_backlink').DataTable().destroy();
-                
+
                 this.filterModel = {
                     search: '',
                     language_id: '',
@@ -245,7 +250,7 @@
                 });
 
                 this.$router.replace({'query': null});
-            
+
             },
 
             doSearch() {
@@ -277,7 +282,7 @@
             async doDislike(id) {
                 if( confirm("Are you sure you're Not Interested in these backlink?") ){
                     $('#tbl_buy_backlink').DataTable().destroy();
-                    
+
                     this.searchLoading = true;
                     await this.$store.dispatch('actionDislike', { id:id })
                     this.searchLoading = false;
@@ -305,7 +310,7 @@
 
                     let type = activeUser.user_type.type
                     let commission = activeUser.user_type.commission
-                    
+
                     if( price != '' && price != null ){ // check if price has a value
 
                         if( type == 'Buyer' ){ // check if the user_type is a 'Buyer'
