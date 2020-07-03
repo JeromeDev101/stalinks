@@ -23,7 +23,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function getList($filter)
     {
         $user = Auth::user();
-        $list = Publisher::select('publisher.*','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
+        $list = Publisher::select('publisher.*','registration.username','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')

@@ -56,7 +56,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>URL Publisher</th>
-                                <th>URL Advertiser</th>
+                                <th v-if="user.isAdmin">URL Advertiser</th>
                                 <th>Link From</th>
                                 <th>Link To</th>
                                 <th>Price</th>
@@ -69,7 +69,7 @@
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ backLink.publisher.url}}</td>
-                                <td>{{ backLink.url_advertiser }}</td>
+                                <td v-if="user.isAdmin">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
                                 <td><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>

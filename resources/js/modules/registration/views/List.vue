@@ -116,6 +116,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label for="">Username</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.username" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label for="">Name</label>
                                     <input type="text" class="form-control" v-model="accountUpdate.name" name="" id="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
@@ -241,7 +248,7 @@
             </div>
         </div>
         <!-- End of Modal Update Registration -->
-        
+
         <!-- Modal Registration -->
         <div class="modal fade" id="modal-registration" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -256,6 +263,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Username</label>
+                                    <input type="text" class="form-control" v-model="accountModel.username" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Name</label>
@@ -422,6 +437,7 @@
                     payment_account: '',
                     commission: '',
                     status: '',
+                    username:'',
                 },
 
                 isPopupLoading: false,

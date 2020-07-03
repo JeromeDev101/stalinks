@@ -17,10 +17,11 @@ class BuyController extends Controller
 
         $columns = [
             'publisher.*',
-            'users.name', 
-            'users.isOurs', 
-            'registration.company_name', 
-            'countries.name AS country_name', 
+            'registration.username',
+            'users.name',
+            'users.isOurs',
+            'registration.company_name',
+            'countries.name AS country_name',
             'buyer_purchased.status as status_purchased'
         ];
 
@@ -74,7 +75,7 @@ class BuyController extends Controller
         $user = Auth::user();
 
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
-        
+
         Backlink::create([
             'price' => $request->price,
             'anchor_text' => $request->anchor_text,

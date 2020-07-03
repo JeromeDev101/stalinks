@@ -65,8 +65,8 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Company</th>
-                                <th>User</th>
+                                <th v-if="user.isAdmin">Company</th>
+                                <th>Username</th>
                                 <th>Language</th>
                                 <th>URL</th>
                                 <th>UR</th>
@@ -83,8 +83,8 @@
                         <tbody>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td>{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
-                                <td>{{ buy.name }}</td>
+                                <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
+                                <td>{{ buy.username ? buy.username : 'N/A'}}</td>
                                 <td>{{ buy.country_name }}</td>
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>
