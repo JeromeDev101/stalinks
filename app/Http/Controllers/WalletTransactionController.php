@@ -66,6 +66,7 @@ class WalletTransactionController extends Controller
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
             'proof_doc' => '/images/wallet_transaction/'.$new_name,
+            'admin_confirmation' => 'Not Paid',
         ]);
 
         return response()->json(['success' => true], 200);
@@ -79,6 +80,7 @@ class WalletTransactionController extends Controller
             'payment_type' => 'required',
             'amount_usd' => 'required',
             'user_id_buyer' => 'required',
+            'admin_confirmation' => 'required',
         ]);
 
         if( $request->file != "undefined"){
@@ -106,6 +108,7 @@ class WalletTransactionController extends Controller
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
             'proof_doc' => $proof_doc,
+            'admin_confirmation' => $request->admin_confirmation
         ]);
 
         return response()->json(['success'=>true],200);

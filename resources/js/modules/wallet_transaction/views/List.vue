@@ -46,12 +46,13 @@
                                 <th>Amount USD</th>
                                 <th>Date</th>
                                 <th>Proof of Doc</th>
+                                <th>Confirmation</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="listWallet.data.length == 0">
-                                <td colspan="7" class="text-center">No record</td>
+                                <td colspan="8" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(wallet, index) in listWallet.data" :key="index">
                                 <td>{{ index + 1 }}</td>
@@ -64,6 +65,7 @@
                                         <button title="Proof of Documents" @click="doShow(wallet.proof_doc)" data-target="#modal-wallet-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
+                                <td>{{ wallet.admin_confirmation }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button title="Edit" @click="doUpdate(wallet)" data-target="#modal-wallet-transaction-update" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
@@ -180,6 +182,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
+
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">
                                     <label for="">User Buyer</label>
@@ -192,6 +195,7 @@
                                     <span v-if="messageForms.errors.user_id_buyer" v-for="err in messageForms.errors.user_id_buyer" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
                                     <label for="">Amount USD</label>
@@ -199,6 +203,7 @@
                                     <span v-if="messageForms.errors.amount_usd" v-for="err in messageForms.errors.amount_usd" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
                                     <label for="">Payment Via</label>
@@ -210,6 +215,7 @@
                                     <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
@@ -218,6 +224,19 @@
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.admin_confirmation}">
+                                    <label for="">Confirmation</label>
+                                    <select name="" class="form-control" v-model="editModel.admin_confirmation">
+                                        <option value="">Select Confirmation</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Not Paid">Not Paid</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.admin_confirmation" v-for="err in messageForms.errors.admin_confirmation" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -248,6 +267,7 @@
                     user_id_buyer: '',
                     payment_type: '',
                     amount_usd: '',
+                    admin_confirmation: '',
                 },
                 isPopupLoading: false,
                 proof_doc: '',
@@ -289,6 +309,7 @@
                 this.editModel.user_id_buyer = that.user_id
                 this.editModel.payment_type = that.payment_via_id
                 this.editModel.amount_usd = that.amount_usd
+                this.editModel.admin_confirmation = that.admin_confirmation
             },
 
             doShow(doc) {
@@ -302,6 +323,7 @@
                 this.formDataEdit.append('payment_type', this.editModel.payment_type);
                 this.formDataEdit.append('amount_usd', this.editModel.amount_usd);
                 this.formDataEdit.append('user_id_buyer', this.editModel.user_id_buyer);
+                this.formDataEdit.append('admin_confirmation', this.editModel.admin_confirmation);
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateWallet', this.formDataEdit)
