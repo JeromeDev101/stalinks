@@ -25,4 +25,10 @@ export default class WalletTransactionService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static updateWallet(params){
+        return axios.post('api/update-wallet', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 }

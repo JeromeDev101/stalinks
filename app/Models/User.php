@@ -104,4 +104,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(DomainProvider::class);
     }
+
+    public function wallet_transaction() {
+        return $this->hasOne('App\Models\WalletTransaction', 'user_id', 'id');
+    }
 }

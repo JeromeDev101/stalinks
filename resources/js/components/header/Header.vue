@@ -15,7 +15,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li v-if="isBuyer" style="margin-left:-105px;margin-bottom:-55px;">
-                        <a href="#">Wallet: <strong>$0</strong></a>
+                        <a href="#">Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong></a>
                     </li>
 
                     <!-- User Account: style can be found in dropdown.less -->
@@ -56,7 +56,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import axios from 'axios';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import Cookies from 'js-cookie';
 export default {
     name: 'AppHeader',
@@ -64,11 +65,14 @@ export default {
     data() {
         return {
             isBuyer: false,
+            amount_usd: null,
+            error: null,
         }
     },
 
     created() {
         this.checkAccountType();
+        this.liveGetWallet();
     },
 
     computed: {
@@ -87,6 +91,12 @@ export default {
             localStorage.clear();
             Cookies.remove('vuex');
             this.$router.push({ name: 'login' });
+        },
+
+        liveGetWallet() {
+            axios.get('api/current-user')
+                .then(response => (this.amount_usd = response))
+                .catch(error => (this.error = error))
         },
 
         checkAccountType() {
