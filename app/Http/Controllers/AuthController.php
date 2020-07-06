@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Registration;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -74,7 +75,18 @@ class AuthController extends Controller
 
     public function edit(UpdateUserRequest $request) {
         $response = ['success' => false];
-        $input = $request->all();
+        $input = $request->except(
+            'avatar',
+            'countries_accessable',
+            'created_at',
+            'email_verified_at',
+            'role',
+            'security_work_mail',
+            'user_type',
+            'isAdmin',
+            'id_payment_type'
+
+        );
 
         unset($input['c_password']);
         unset($input['role']);
@@ -97,9 +109,9 @@ class AuthController extends Controller
             $input['host_work_mail'] = '';
         }
 
-        if (!isset($input['id_payment_type'])) {
-            $input['id_payment_type'] = '';
-        }
+        //if (!isset($input['id_payment_type'])) {
+       //     $input['id_payment_type'] = '';
+       // }
 
         $user = $this->userRepository->findById($input['id']);
         if (!$user) {
@@ -107,6 +119,18 @@ class AuthController extends Controller
         }
 
         $this->userRepository->update($user, $input);
+
+        if(isset($request->user_type)) {
+            $registered = Registration::where('email', $input['email'])->first();
+
+            $dataRegistered = [
+                'skype' => $request->user_type['skype'],
+                'company_name' => $request->user_type['company_name']
+            ];
+
+            $registered->update($dataRegistered);
+        }
+
         $response['success'] = true;
         return response()->json($response);
     }

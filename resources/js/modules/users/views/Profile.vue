@@ -28,15 +28,36 @@
                             <tbody>
                                 <tr>
                                     <td><b>Name</b></td>
-                                    <td>{{ user.name }}</td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
+                                            <input type="text" v-model="user.name" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Username</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
+                                            <input type="text" v-model="user.username" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><b>Email</b></td>
-                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {{ user.email }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><b>Phone</b></td>
-                                    <td>{{ user.phone }}</td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">
+                                            <input type="text" v-model="user.phone" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr v-if="currentUser.isAdmin">
                                     <td><b>Role</b></td>
@@ -48,7 +69,12 @@
                                 </tr>
                                 <tr v-if="!currentUser.isAdmin">
                                     <td><b>Company Name</b></td>
-                                    <td>{{ user.user_type ? user.user_type.company_name: '' }}</td>
+                                    <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
+                                            <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr v-if="!currentUser.isAdmin">
                                     <td><b>Status</b></td>
@@ -56,11 +82,19 @@
                                 </tr>
                                 <tr v-if="!currentUser.isAdmin">
                                     <td><b>Skype</b></td>
-                                    <td>{{ user.user_type ? user.user_type.skype: '' }}</td>
+                                    <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
+                                            <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
+                    <div class="col-lg-8">
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,7 +104,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Total External Domain: {{ totalExt.total}}</h3>
                 </div>
-                
+
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -105,7 +139,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Total Internals Domain: {{ totalInt.total }}</h3>
                 </div>
-                
+
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -136,7 +170,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Total Backlink: {{ totalBackLink.total}} </h3>
                 </div>
-                
+
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -173,7 +207,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Total Price: {{ price.total }}</h3>
                 </div>
-                
+
                 <div class="box-body">
                     <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                         <div class="row">
@@ -243,6 +277,7 @@ export default {
                 { text: 'Crawl Failed', value: 'crawlfail' },
                 { text: 'Contacts Null', value: 'contactnull' },
             ],
+
             isBuyer: false,
             isSeller: false,
         };
@@ -256,6 +291,8 @@ export default {
             totalInt: state => state.storeIntDomain.totalIntDomain,
             totalBackLink: state => state.storeBackLink.totalBackLink,
             totalPrice: state => state.storeBackLink.totalPrice,
+            messageForms: state => state.storeUser.messageForms,
+            listUser: state => state.storeUser.listUser,
         }),
     },
 
@@ -279,6 +316,22 @@ export default {
     },
 
     methods: {
+        async submitUpdate() {
+            this.isPopupLoading = true;
+
+            await this.$store.dispatch('actionUpdateUser', this.user);
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action === 'updated_user') {
+                for (var index in this.listUser.data) {
+                    if (this.listUser.data[index].id === this.user.id) {
+                        this.listUser.data[index] = this.user;
+                        break;
+                    }
+                }
+            }
+        },
+
         async filterExtDomain() {
             let that = this;
             that.extDomain.country_id_of_user = [],

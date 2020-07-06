@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('check-admin-user')->get('/is_admin', 'UserController@checkUserAdmin');
     Route::name('get-type')->get('/user/type', 'UserController@getTypes');
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
+    Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
 
     //Billing
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
@@ -113,7 +114,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware(['check_admin'])->prefix('admin')->group(function() {
         Route::name('add-user')->post('/add-user', 'AuthController@register');
-        Route::name('update-user')->put('/update-user', 'AuthController@edit');
+        //Route::name('update-user')->put('/update-user', 'AuthController@edit');
         Route::name('update-user-permission')->put('/update-user-permission', 'UserController@editPermissions');
         Route::name('update-user-int-permission')->put('/update-user-int-permission', 'UserController@editIntPermissions');
         Route::name('get-logs')->get('/logs', 'LogController@getList');
