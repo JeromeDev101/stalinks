@@ -128,12 +128,19 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
     {
         if (!empty($filters->querySearch)) {
             $query = $this->model
-            ->whereHas('extDomain', function ($query) use ($filters) {
-                $query->where('domain', 'like', '%' . $filters->querySearch . '%');
-            })
-            ->orWhereHas('intDomain', function ($query) use ($filters) {
-                $query->where('domain', 'like', '%' . $filters->querySearch . '%');
+            ->whereHas('publisher', function ($query) use ($filters) {
+                $query->where('url', 'like', '%' . $filters->querySearch . '%');
             });
+            // ->whereHas('extDomain', function ($query) use ($filters) {
+            //     $query->where('domain', 'like', '%' . $filters->querySearch . '%');
+            // })
+            // ->orWhereHas('intDomain', function ($query) use ($filters) {
+            //     $query->where('domain', 'like', '%' . $filters->querySearch . '%');
+            // });
+        }
+
+        if( !empty($filters->status) ){
+            $query = $query->where('status', $filters->status);
         }
 
         return $query;

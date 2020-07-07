@@ -14,8 +14,12 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li v-if="isBuyer" style="margin-left:-105px;margin-bottom:-55px;">
-                        <a href="#">Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong></a>
+                    <li v-if="isBuyer" style="margin-left:-300px;margin-bottom:-55px;">
+                        <a href="#">
+                            Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong> 
+                            &nbsp;
+                            Credit: <strong>$ {{ user.wallet_transaction == null ? '0':computeCredit(user.wallet_transaction.amount_usd) }}</strong> 
+                        </a>
                     </li>
 
                     <!-- User Account: style can be found in dropdown.less -->
@@ -85,6 +89,33 @@ export default {
         ...mapActions({
             logout: 'auth/logout',
         }),
+
+        computeCredit(wallet) {
+            let buyer_purchased = this.user.purchased
+            let price_list = [];
+            let total_purchased = 0;
+            let credit = 0;
+
+            if( buyer_purchased != null ){
+
+                buyer_purchased.forEach( function(item, index) {
+                    if( typeof item.publisher !== 'undefined' ){
+                        price_list.push( parseFloat(item.publisher[0].price) )
+                    }
+                })
+            }
+
+            if( price_list.length > 0 ){
+                total_purchased = price_list.reduce(this.calcSum);
+                credit = parseFloat(wallet) - total_purchased;
+            }
+
+            return credit.toFixed(2);
+        },
+
+        calcSum(total, num) {
+            return total + num
+        }, 
 
         async logoutAndRedirect() {
             await this.$store.dispatch('logout')

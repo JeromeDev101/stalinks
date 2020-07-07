@@ -15,7 +15,8 @@ const state = {
         page: 0,
         querySearch: '',
         full_data: false,
-        int_id: 0
+        int_id: 0,
+        status: '',
     },
     messageBacklinkForms: { obj: {}, action: '', message: '', errors: {} },
 };

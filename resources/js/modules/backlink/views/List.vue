@@ -11,15 +11,17 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search</label>
-                                <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder="Search by external domains or internal domain">
+                                <label for="">Search URL Publisher</label>
+                                <!-- <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder=""> -->
+                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" v-model="fillter.status">
+                                    <option value="">All</option>
                                     <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                 </select>
                             </div>
@@ -29,8 +31,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default">Search</button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
                 </div>
@@ -65,6 +67,9 @@
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                            </tr>
+                            <tr v-if="listBackLink.data.length == 0">
+                                <td colspan="11" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
@@ -228,14 +233,14 @@
           file_csv: 'baclink.xls',
           statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
           data_filed: {
-            'Ext Domain': 'ext_domain.domain',
-            'Int Domain': 'int_domain.domain',
-            'Link': 'link',
+            'URL Publisher': 'publisher.url',
+            'URL Advertiser': 'url_advertiser',
+            'Link From': 'link_from',
+            'Link To': 'link',
             'Price': 'price',
             'Anchor Text': 'anchor_text',
-            'Live Date': 'live_date',
-            'Status': 'status',
-            'User': 'user.name'
+            'Date Completed': 'live_date',
+            'Status': 'status'
           },
           json_meta: [
             [{
@@ -259,6 +264,7 @@
           loadIntDomain: false,
           isPopupLoading: false,
           isBuyer: false,
+          searchLoading: false,
         }
       },
       async created() {
@@ -306,12 +312,33 @@
               page: this.page,
             },
           })
+          this.searchLoading = true;
           await this.$store.dispatch('actionGetBackLink', {
             vue: this,
             page: this.page,
-            params: this.fillter
+            params: this.fillter,
           });
+          this.searchLoading = false;
         }, 200),
+
+
+        clearSearch() {
+            // this.fillter = {
+            //     page: 0,
+            //     querySearch: '',
+            //     full_data: false,
+            //     int_id: 0,
+            //     status: '',
+            // }
+
+            // this.$router.push('backlinks')
+
+            // this.getBackLinkList({
+            //     vue: this,
+            //     page: this.page,
+            //     params: this.fillter,
+            // });
+        },
 
         checkArray(array) {
           return Hepler.arrayNotEmpty(array);

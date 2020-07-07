@@ -47,7 +47,7 @@
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Status Payment</th>
-                                <th>Action</th>
+                                <!-- <th>Action</th> -->
                             </tr>
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
@@ -59,11 +59,11 @@
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
                                 <td>{{ purchase.payment_status }}</td>
-                                <td>
+                                <!-- <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(purchase)" data-target="#modal-update-purchase" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
