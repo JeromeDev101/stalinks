@@ -12,15 +12,15 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search URL Publisher and User</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search URL Publisher</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select name="" class="form-control">
+                                <select name="" class="form-control" v-model="filterModel.status">
                                     <option value="">All</option>
                                     <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                 </select>
@@ -31,8 +31,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" >Clear</button>
-                            <button class="btn btn-default" >Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -59,6 +59,9 @@
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                            </tr>
+                            <tr v-if="listSales.data.length == 0">
+                                <td colspan="11" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
@@ -239,6 +242,11 @@
                     url_from: '',
                 },
                 isPopupLoading: false,
+                filterModel: {
+                    search: this.$route.query.search || '',
+                    status: this.$route.query.status || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -255,7 +263,40 @@
 
         methods: {
             async getListSales(params){
-                await this.$store.dispatch('actionGetListSales', params);
+                this.searchLoading = true;
+                await this.$store.dispatch('actionGetListSales', {
+                    params: {
+                        search: this.filterModel.search,
+                        status: this.filterModel.status,
+                    }
+                });
+                this.searchLoading = false;
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getListSales({
+                    params: {
+                        search: this.filterModel.search,
+                        status: this.filterModel.status,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    search: '',
+                    status: '',
+                }
+
+                this.getListSales({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             doUpdate(sales) {

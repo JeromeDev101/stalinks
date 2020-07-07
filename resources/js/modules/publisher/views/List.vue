@@ -160,7 +160,12 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination> -->
+
+                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination>
+                    <span v-if="listPublish.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
+                    </span> -->
+
                 </div>
             </div>
 
@@ -290,6 +295,13 @@
     </div>
 </template>
 
+<style>
+    .pagination-custom-footer-text {
+        margin: 20px;
+        margin-top: -40px;
+    }
+</style>
+
 <script>
 
     import { mapState } from 'vuex';
@@ -351,6 +363,8 @@
             //     await this.$store.dispatch('getListPublisher', {
             //         params: {
             //             search: this.filterModel.search,
+            //             language_id: this.filterModel.language_id,
+            //             inc_article: this.filterModel.inc_article,
             //             page: page
             //         }
             //     });

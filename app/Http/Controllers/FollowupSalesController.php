@@ -10,18 +10,30 @@ use App\Models\Publisher;
 
 class FollowupSalesController extends Controller
 {
-    public function getList(){
+    public function getList(Request $request){
+        $filter = $request->all();
         $user = Auth::user();
-        $list = Backlink::with(['publisher' => function($query) {
-            $query->with('user:id,name');
-        }, 'user'])
-                    ->orderBy('created_at', 'desc');
+        $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url')
+                        ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
+                        ->with(['publisher' => function($query) {
+                            $query->with('user:id,name');
+                        }])
+                        ->with('user:id,name')
+                        ->orderBy('created_at', 'desc');
         
         $registered = Registration::where('email', $user->email)->first();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
         if( $user->type != 10 && $registered->type == 'Seller' ){
             $list->whereIn('publisher_id', $publisher_ids);
+        }
+
+        if( isset($filter['status']) && !empty($filter['status']) ){
+            $list->where('status', $filter['status'] );
+        }
+
+        if( isset($filter['search']) && !empty($filter['search']) ){
+            $list->where('publisher.url', 'like','%'.$filter['search'].'%' );
         }
 
         return [

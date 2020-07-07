@@ -52,7 +52,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.inc_article', $filter['inc_article']);
         }
 
-        // return $list->paginate(5);
+        // return $list->paginate(10);
 
         return [
             "data" => $list->get(),
