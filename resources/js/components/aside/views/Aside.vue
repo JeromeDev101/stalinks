@@ -50,7 +50,15 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' , 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing' }" >
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'articles-list' }">
+                    <router-link :to="{ path: '/articles-list' }">
+                        <i class="fa fa-file-text-o"></i>
+                        <span>Article</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' || $route.name == 'writer-billing', 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing'  || $route.name == 'writer-billing'}" >
                     <a href="#">
                         <i class="fa fa-btc"></i>
                         <span>Billing</span>
@@ -70,6 +78,13 @@
                             <router-link :to="{ path: '/buyer-billing' }">
                                 <i class="fa fa-fw fa-money"></i> 
                                 <span>Buyer Billing</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'writer-billing' }">
+                            <router-link :to="{ path: '/writer-billing' }">
+                                <i class="fa fa-fw fa-newspaper-o"></i> 
+                                <span>Writer Billing</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
@@ -112,6 +127,14 @@
                             </router-link>
                         </li>
                     </ul>
+                </li>
+
+                <li :class="{ active: $route.name == 'articles' }">
+                    <router-link :to="{ path: '/articles' }">
+                        <i class="fa fa-file-text-o"></i>
+                        <span>Article</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
                 </li>
 
                 <li v-if="isSeller || user.isAdmin" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">

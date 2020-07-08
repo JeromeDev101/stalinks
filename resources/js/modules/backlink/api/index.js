@@ -49,4 +49,10 @@ export default class BackLinkService {
             .catch(error => error);
     }
 
+    static deleteBacklink(params) {
+        return axios.post('/api/delete-backlinks', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

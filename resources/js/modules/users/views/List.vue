@@ -636,7 +636,7 @@ export default {
                 phone: this.$route.query.phone || '',
                 phone_temp: this.$route.query.phone_temp || '',
                 page: this.$route.query.page || 0,
-                per_page: this.$route.query.per_page || 5,
+                per_page: this.$route.query.per_page || 10,
             },
 
             userModel: {
@@ -672,7 +672,7 @@ export default {
             countryListAddId: 0,
             intListAddId: 0,
             countryIdForInt: 0,
-            listPageOptions: [5, 10, 25, 50, 100],
+            listPageOptions: [10, 25, 50, 100],
             isLoadingTable: false,
             isPopupLoading: false
         };

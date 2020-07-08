@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Backlink extends Model
 {
     protected $table = 'backlinks';
     protected $guarded = [];
+
+    use SoftDeletes;
 
     public function user()
     {
@@ -22,4 +25,5 @@ class Backlink extends Model
     public function billing() {
         return $this->hasMany('App\Models\Billing', 'id_backlink');
     }
+
 }

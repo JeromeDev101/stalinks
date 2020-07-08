@@ -22,10 +22,13 @@ import Purchase from '@/modules/purchase/views/List.vue';
 import Incomes from '@/modules/incomes/views/List.vue';
 import BillingBuyer from '@/modules/billing/buyer/views/List.vue';
 import BillingSeller from '@/modules/billing/seller/views/List.vue';
+import BillingWriter from '@/modules/billing/writer/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
+import ArticleList from '@/modules/article/views/List.vue';
+import Article from '@/modules/article/views/Article.vue';
 import Buy from '@/modules/buy/views/List.vue';
 
 const routes = [{
@@ -59,6 +62,16 @@ const routes = [{
         component: ListUser,
     },
     {
+        path: '/articles-list',
+        name: 'articles-list',
+        component: ArticleList,
+    },
+    {
+        path: '/articles',
+        name: 'articles',
+        component: Article,
+    },
+    {
         path: '/followup-sales',
         name: 'followup-sales',
         component: FollowupSales,
@@ -72,6 +85,11 @@ const routes = [{
         path: '/buyer-billing',
         name: 'buyer-billing',
         component: BillingBuyer,
+    },
+    {
+        path: '/writer-billing',
+        name: 'writer-billing',
+        component: BillingWriter,
     },
     {
         path: '/publisher',

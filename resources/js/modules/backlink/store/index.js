@@ -90,6 +90,27 @@ const actions = {
             }
         }
     },
+
+    async actionDeleteBacklink({ commit }, {params}) {
+        try {
+            let response = await BackLinkService.deleteBacklink(params);
+
+            if (response.status === 200) {
+                commit(MESSAGE_FORMS, { action: 'deleted_backlink', message: '# Saved !' + response.data, errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(BACKLINK_SET_ERROR, errors);
+            } else {
+                commit(BACKLINK_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionSaveBacklink({ commit }, {params}) {
         try {
             let response = await BackLinkService.actionSaveBacklink(params);

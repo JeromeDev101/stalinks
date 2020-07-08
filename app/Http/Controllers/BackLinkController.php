@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Requests\BacklinkRequest;
 use App\Http\Requests\UpdateBacklinkRequest;
+use App\Models\Backlink;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 
@@ -146,5 +147,14 @@ class BackLinkController extends Controller
         $response['update_success'] = true;
 
         return response()->json($response);
+    }
+
+    public function deleteBacklinks(Request $request) {
+        $backlink = Backlink::find($request->id);
+        $backlink->update([
+            'deleted_at' => date('Y-m-d')
+        ]);
+        
+        return response()->json(['success' => true, 'data' => $backlink], 200);
     }
 }

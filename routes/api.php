@@ -28,6 +28,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
     Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
 
+    //Article
+    Route::name('get-article')->get('articles', 'ArticlesController@getList');
+
     //Billing
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
     Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');
@@ -89,6 +92,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');
+    Route::name('delete-backlinks')->post('delete-backlinks', 'BackLinkController@deleteBacklinks');
 
     //Intdomain
     Route::resource('intdomains', 'IntDomainController')->only(['index', 'show']);

@@ -68,9 +68,9 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            <tr v-if="listBackLink.data.length == 0">
+                            <!-- <tr v-if="listBackLink.data.length == 0">
                                 <td colspan="11" class="text-center">No record</td>
-                            </tr>
+                            </tr> -->
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ backLink.publisher.url}}</td>
@@ -85,6 +85,9 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                                    </div>
+                                    <div v-if="user.isAdmin" class="btn-group">
+                                        <button class="btn btn-default" @click="deleteBackLink(backLink.id)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -321,6 +324,18 @@
           this.searchLoading = false;
         }, 200),
 
+        async deleteBackLink(id) {
+            if( confirm('Are you you want to delete these record?') ){
+                await this.$store.dispatch('actionDeleteBacklink', {
+                    params: {
+                        id:id
+                    }
+                }) 
+
+                this.getBackLinkList();
+            }
+            
+        },
 
         clearSearch() {
             // this.fillter = {

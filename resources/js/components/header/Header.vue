@@ -71,12 +71,18 @@ export default {
             isBuyer: false,
             amount_usd: null,
             error: null,
+
         }
     },
 
     created() {
         this.checkAccountType();
         this.liveGetWallet();
+
+        let storage = JSON.parse(localStorage.getItem('vuex'))
+        let purchased = storage.storeAuth.currentUser.purchased
+
+        console.log(purchased)
     },
 
     computed: {
