@@ -4,7 +4,7 @@
         <section class="sidebar" style="height: auto;">
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu tree" data-widget="tree">
-                <li v-if="user.isAdmin" class="header">Admin</li>
+                <li v-if="user.isAdmin || isManager || isSeller || isBuyer" class="header">ADMIN</li>
 
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'system' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/system' }">
@@ -26,7 +26,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'AlexaDomain' }">
+                <li v-if="user.isAdmin || isManager || isSeller" :class="{ active: $route.name == 'AlexaDomain' }">
                     <router-link :to="{ path: '/ext/alexa' }">
                         <i class="fa fa-circle-o"></i>
                         <span>Get Alexa</span>
@@ -42,7 +42,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'wallet-transaction' }">
+                <li v-if="user.isAdmin || isBuyer" :class="{ active: $route.name == 'wallet-transaction' }">
                     <router-link :to="{ path: '/wallet-transaction' }">
                         <i class="fa fa-money"></i>
                         <span>Wallet Transaction</span>
@@ -50,7 +50,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'articles-list' }">
+                <li v-if="user.isAdmin || isManager || isSeller || isBuyer" :class="{ active: $route.name == 'articles-list' }">
                     <router-link :to="{ path: '/articles-list' }">
                         <i class="fa fa-file-text-o"></i>
                         <span>Article</span>
@@ -98,7 +98,7 @@
                     </router-link>
                 </li>
 
-                <li :class="{ active: $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
+                <li v-if="user.isAdmin || isManager || isSeller" :class="{ active: $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -137,7 +137,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="isSeller || user.isAdmin" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
+                <li v-if="isSeller || user.isAdmin || isManager" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
                     <a href="#">
                         <i class="fa fa-fw fa-user-o"></i>
                         <span>Seller</span>
@@ -171,7 +171,7 @@
                             
                 </li>
 
-                <li v-if="isBuyer || user.isAdmin" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
+                <li v-if="isBuyer || user.isAdmin || isManager" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
                     <a href="#">
                         <i class="fa fa-fw fa-money"></i>
                         <span>Buyer</span>

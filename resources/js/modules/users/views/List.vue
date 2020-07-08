@@ -804,12 +804,14 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated_user') {
-                for (var index in this.listUser.data) {
-                    if (this.listUser.data[index].id === this.userUpdate.id) {
-                        this.listUser.data[index] = this.userUpdate;
-                        break;
-                    }
-                }
+                // for (var index in this.listUser.data) {
+                //     if (this.listUser.data[index].id === this.userUpdate.id) {
+                //         this.listUser.data[index] = this.userUpdate;
+                //         break;
+                //     }
+                // }
+
+                this.getUserList()
             }
         },
 
