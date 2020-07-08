@@ -224,7 +224,7 @@
 </template>
 <script>
     import Hepler from '@/library/Helper';
-    import { mapState } from 'vuex';
+    import { mapState, mapSetter } from 'vuex';
     import { Domain } from 'domain';
     import DownloadCsv from '@/components/export-csv/Csv.vue'
     import _ from 'lodash'
@@ -337,22 +337,10 @@
             
         },
 
-        clearSearch() {
-            // this.fillter = {
-            //     page: 0,
-            //     querySearch: '',
-            //     full_data: false,
-            //     int_id: 0,
-            //     status: '',
-            // }
-
-            // this.$router.push('backlinks')
-
-            // this.getBackLinkList({
-            //     vue: this,
-            //     page: this.page,
-            //     params: this.fillter,
-            // });
+        async clearSearch() {
+            await this.$store.dispatch('actionResetFillterBacklink');
+            this.fillter.status = ''
+            this.getBackLinkList();
         },
 
         checkArray(array) {

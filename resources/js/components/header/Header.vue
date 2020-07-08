@@ -82,7 +82,7 @@ export default {
         let storage = JSON.parse(localStorage.getItem('vuex'))
         let purchased = storage.storeAuth.currentUser.purchased
 
-        console.log(purchased)
+        // console.log(purchased)
     },
 
     computed: {
