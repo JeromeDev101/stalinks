@@ -54,7 +54,7 @@
                                     <td><b>Phone</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">
-                                            <input type="text" v-model="user.phone" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <input type="text" v-model="user.phone" class="form-control" value="" required="required" placeholder="Enter Phone">
                                             <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
@@ -71,7 +71,7 @@
                                     <td><b>Company Name</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
-                                            <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Company Name">
                                             <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
@@ -84,8 +84,46 @@
                                     <td><b>Skype</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                            <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
                                             <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="box-header"  v-if="!currentUser.isAdmin">
+                    <h3 class="box-title">Billing</h3>
+                </div>
+                <div class="box-body no-padding"  v-if="!currentUser.isAdmin">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <tbody>
+                                <tr>
+                                    <td><b>Paypal Account</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.paypal_account}" class="form-group">
+                                            <input type="text" v-model="user.user_type.paypal_account" class="form-control" value="" required="required" placeholder="Enter Paypal Account">
+                                            <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Skrill Account</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.skrill_account}" class="form-group">
+                                            <input type="text" v-model="user.user_type.skrill_account" class="form-control" value="" required="required" placeholder="Enter Skrill Account">
+                                            <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>BTC Account</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.btc_account}" class="form-group">
+                                            <input type="text" v-model="user.user_type.btc_account" class="form-control" value="" required="required" placeholder="Enter BTC Account">
+                                            <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -96,6 +134,7 @@
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -112,7 +151,7 @@
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
-                                            <th>Country</th>
+                                            <th>Language</th>
                                             <th>New</th>
                                             <th>Crawl Failed</th>
                                             <th>Contact Null</th>
@@ -137,7 +176,7 @@
         <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Total Internals Domain: {{ totalInt.total }}</h3>
+                    <h3 class="box-title">Total Publisher List: {{ summaryPublish.total }}</h3>
                 </div>
 
                 <div class="box-body">
@@ -147,12 +186,12 @@
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
-                                            <th>Country</th>
+                                            <th>Language</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(int, index) in totalInt.data" :key="index" role="row" class="odd">
+                                        <tr v-for="(int, index) in summaryPublish.data" :key="index" role="row" class="odd">
                                             <td>{{ int.country.name }}</td>
                                             <td>{{ int.total }}</td>
                                         </tr>
@@ -178,7 +217,7 @@
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
-                                            <th>Country</th>
+                                            <th>Language</th>
                                             <th>Processing</th>
                                             <th>Live</th>
                                             <th>Content Writing</th>
@@ -205,7 +244,8 @@
         <div class="col-lg-4">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Total Price: {{ price.total }}</h3>
+                    <h3 class="box-title">In purchase: {{ price.total }}</h3> <br>
+                    <h3 class="box-title">Paid: {{ price.total }}</h3>
                 </div>
 
                 <div class="box-body">
@@ -215,7 +255,7 @@
                                 <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                                     <thead>
                                         <tr role="row">
-                                            <th>Country</th>
+                                            <th>Language</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
@@ -277,7 +317,10 @@ export default {
                 { text: 'Crawl Failed', value: 'crawlfail' },
                 { text: 'Contacts Null', value: 'contactnull' },
             ],
-
+            publisher:{
+                country_id: 0,
+                country_id_of_user: [],
+            },
             isBuyer: false,
             isSeller: false,
         };
@@ -293,6 +336,7 @@ export default {
             totalPrice: state => state.storeBackLink.totalPrice,
             messageForms: state => state.storeUser.messageForms,
             listUser: state => state.storeUser.listUser,
+            summaryPublish: state => state.storePublisher.summaryPublish,
         }),
     },
 
@@ -313,9 +357,22 @@ export default {
         this.filterBacklink();
         this.filterPrice();
         this.checkAccountType();
+        this.getPublisherSummaryCountry();
     },
 
     methods: {
+
+        async getPublisherSummaryCountry() {
+            let that = this;
+            that.publisher.country_id_of_user = [],
+
+            that.publisher.country_id = that.user.id;
+            await this.$store.dispatch('getSummaryPublisher', {
+                vue: this,
+                params: this.publisher,
+            });
+        },
+
         async submitUpdate() {
             this.isPopupLoading = true;
 

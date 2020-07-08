@@ -124,4 +124,40 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $data = $ahrefsInstant->getAhrefsPublisherAsync($publishers);
         return $data;
     }
+
+    /**
+     * get summary publisher list
+     *
+     */
+
+     public function getPublisherSummary($user_id)
+     {
+         $publishers = $this->model->selectRaw('language_id, count(DISTINCT(id)) as total')
+                            ->where('user_id', $user_id)
+                            ->with(['country' => function($query) {
+                                $query->select('id', 'name', 'code');
+                            }])
+                            ->groupBy('language_id')
+                            ->distinct()
+                            ->get();
+
+        $dataReturn = [];
+        $sumTotal = 0;
+
+        foreach($publishers as $item) {
+            $sumTotal += $item->total;
+        }
+
+        return [
+            'total' => $sumTotal,
+            'data' => $publishers
+        ];
+     }
+
+     private function initArrayReport(&$dataReturn, $key, $country) {
+        $dataReturn[$key] = ['country' => $country];
+        foreach($this->statusList as $value) {
+            $dataReturn[$key][$value] = 0;
+        }
+    }
 }

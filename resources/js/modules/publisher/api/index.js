@@ -8,6 +8,12 @@ export default class PublisherService {
     //         .catch(error => error);
     // }
 
+    static getPublisherSummary() {
+        return axios.get('/api/publisher/summary')
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static getList(params) {
         return axios.get('/api/publisher', params)
             .then(response => response)
