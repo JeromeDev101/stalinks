@@ -84,8 +84,8 @@ class AuthController extends Controller
             'security_work_mail',
             'user_type',
             'isAdmin',
-            'id_payment_type'
-
+            'id_payment_type',
+            'wallet_transaction'
         );
 
         unset($input['c_password']);
@@ -109,9 +109,9 @@ class AuthController extends Controller
             $input['host_work_mail'] = '';
         }
 
-        //if (!isset($input['id_payment_type'])) {
-       //     $input['id_payment_type'] = '';
-       // }
+        ////if (!isset($input['id_payment_type']) && ( isset($input['id_payment_type']) || is_null($input['id_payment_type']) )) {
+       //    $input['id_payment_type'] = '';
+      //  }
 
         $user = $this->userRepository->findById($input['id']);
         if (!$user) {
@@ -125,7 +125,11 @@ class AuthController extends Controller
 
             $dataRegistered = [
                 'skype' => $request->user_type['skype'],
-                'company_name' => $request->user_type['company_name']
+                'company_name' => $request->user_type['company_name'],
+                'username' => $request->username,
+                'paypal_account' => $request->user_type['paypal_account'],
+                'btc_account' => $request->user_type['btc_account'],
+                'skrill_account' => $request->user_type['skrill_account'],
             ];
 
             $registered->update($dataRegistered);

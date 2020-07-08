@@ -1,5 +1,6 @@
 import PublisherService from '@/modules/publisher/api';
 
+const PUBLISHER_SUMMARY_LIST = 'PUBLISHER_SUMMARY_LIST';
 const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
@@ -7,12 +8,25 @@ const LIST_COUNTRY = 'LIST_COUNTRY';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 
 const state = {
+    totalPublish: 0,
     listPublish: { data:[], total: 0 },
+    summaryPublish:{ total: 0, data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
 }
 
 const mutations = {
+    [PUBLISHER_SUMMARY_LIST](state, totalExtDomain) {
+        state.totalExtDomain = totalExtDomain;
+    },
+    [PUBLISHER_SUMMARY_LIST](state, dataSet) {
+        if (dataSet.isOnlyData) {
+            state.summaryPublish.data = dataSet.summaryPublish;
+            return;
+        }
+
+        state.summaryPublish = dataSet.summaryPublish;
+    },
 
     [PUBLISHER_ERROR](state, error) {
         state.error = error;
@@ -41,6 +55,20 @@ const mutations = {
 }
 
 const actions = {
+    async getSummaryPublisher({ commit }) {
+        try {
+            let response = await PublisherService.getPublisherSummary();
+            commit(PUBLISHER_SUMMARY_LIST, { summaryPublish: response.data });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
     async getListPublisher({ commit }, params) {
         try {
             let response = await PublisherService.getList(params);

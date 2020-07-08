@@ -11,4 +11,5 @@ interface PublisherRepositoryInterface extends RepositoryInterface
     public function importExcel($file);
 
     public function getAhrefs($listIds, $configs);
+    public function getPublisherSummary($user_id);
 }

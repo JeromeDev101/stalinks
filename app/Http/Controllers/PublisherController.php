@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\Auth;
 
 class PublisherController extends Controller
 {
@@ -79,6 +80,15 @@ class PublisherController extends Controller
         $listId = explode(",", $input['domain_ids']);
         $configs = $this->configRepository->getConfigs('ahrefs');
         $data = $this->publisherRepository->getAhrefs($listId, $configs);
+        return response()->json($data);
+    }
+
+    public function getSummary()
+    {
+        $user = Auth::user();
+
+        $data = $this->publisherRepository->getPublisherSummary($user->id);
+
         return response()->json($data);
     }
 }
