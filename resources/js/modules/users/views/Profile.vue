@@ -21,6 +21,8 @@
             <div class="box box-primary table-user">
                 <div class="box-header">
                     <h3 class="box-title">Information</h3>
+                    <h3 class="box-title"  v-if="currentUser.isAdmin">[Employee]</h3>
+                    <h3 class="box-title"  v-if="!currentUser.isAdmin">[Registration Account]</h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="table-responsive">
@@ -358,6 +360,8 @@ export default {
         this.filterPrice();
         this.checkAccountType();
         this.getPublisherSummaryCountry();
+
+        console.log(this.currentUser);
     },
 
     methods: {
