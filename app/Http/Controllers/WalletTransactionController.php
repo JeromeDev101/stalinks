@@ -24,6 +24,7 @@ class WalletTransactionController extends Controller
             'users.name',
             'users.email',
             'users.role_id',
+            'users.credit_auth',
             'registration.name as reg_name',
         ];
 

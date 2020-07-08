@@ -71,7 +71,7 @@ class AccountController extends Controller
             unset($input['password']);
         }
 
-        $account = Registration::findOrFail($input['id']);
+        $account = Registration::find($input['id']);
         if (!$account) {
             return response()->json($response);
         }
@@ -80,6 +80,11 @@ class AccountController extends Controller
             $user_data['password'] = $input['password'];
             $user = User::where('email', $account->email);
             $user->update($user_data);
+        }
+
+        if (isset($input['credit_auth']) && $input['credit_auth'] != '') {
+            $user = User::where('email', $account->email);
+            $user->update(['credit_auth' => $input['credit_auth']]);
         }
             
         $account->update($input);

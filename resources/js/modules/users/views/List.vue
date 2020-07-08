@@ -357,6 +357,18 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-6">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.credit_auth}" class="form-group">
+                                            <label style="color: #333">Credit Authorization</label>
+                                            <select name="" class="form-control" v-model="userUpdate.credit_auth">
+                                                <option value=""></option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                            <span v-if="messageForms.errors.credit_auth" v-for="err in messageForms.errors.credit_auth" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -664,7 +676,8 @@ export default {
                 work_mail: '',
                 host_mail: '',
                 status: '',
-                id_payment_type: ''
+                id_payment_type: '',
+                credit_auth: '',
             },
 
             userCountryUpdate: { id: 0 },

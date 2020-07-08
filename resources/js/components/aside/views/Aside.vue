@@ -219,6 +219,7 @@ export default {
         return {
             isSeller: false,
             isBuyer: false,
+            isManager: false,
         }
     },
     created() {
@@ -253,6 +254,10 @@ export default {
 
             if( that.role.description == 'Seller' ){
                 this.isSeller = true;
+            }
+
+            if( that.role.description == 'Manager' ){
+                this.isManager = true;
             }
         },
     },

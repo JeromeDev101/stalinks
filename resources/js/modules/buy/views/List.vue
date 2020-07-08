@@ -97,7 +97,7 @@
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                        <button :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
                                         <button :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
                                         <button :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                     </div>
@@ -188,6 +188,7 @@
                 },
                 searchLoading: false,
                 dataTable: null,
+                isCreditAuth: false,
             }
         },
 
@@ -203,12 +204,19 @@
         async created() {
             this.getBuyList();
             this.getListCountries();
+            this.checkCreditAuth();
         },
 
         methods: {
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
                 return val;
+            },
+
+            checkCreditAuth() {
+                let user = this.user
+
+                // await this.$store.dispatch
             },
 
             async getBuyList(params) {

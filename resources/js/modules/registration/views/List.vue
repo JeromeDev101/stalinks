@@ -16,14 +16,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search Name and Email</label>
-                                <input type="text" class="form-control" v-model="filterModel.search" name="" id="" aria-describedby="helpId" placeholder="Type here">
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" id="" v-model="filterModel.status">
+                                <select class="form-control" name="" v-model="filterModel.status">
                                     <option value="">Select Status</option>
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
@@ -34,7 +34,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Account type</label>
-                                <select class="form-control" name="" id="" v-model="filterModel.type">
+                                <select class="form-control" name="" v-model="filterModel.type">
                                     <option value="">Select Type</option>
                                     <option value="seller">Seller</option>
                                     <option value="buyer">Buyer</option>
@@ -117,14 +117,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.username" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.name" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.email" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Phone</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.phone" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Password</label>
-                                    <input type="password" class="form-control" v-model="accountUpdate.password" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Confirm Password</label>
-                                    <input type="password" class="form-control" v-model="accountUpdate.c_password" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Account Type</label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" id="">
+                                    <select class="form-control" name="" v-model="accountUpdate.type">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -192,7 +192,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Payment Type</label>
-                                    <select class="form-control" name="" id="" v-model="accountUpdate.id_payment_type">
+                                    <select class="form-control" name="" v-model="accountUpdate.id_payment_type">
                                         <option value="">Select Type</option>
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
@@ -221,7 +221,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Commission</label>
-                                    <select class="form-control" name="" id="" v-model="accountUpdate.commission">
+                                    <select class="form-control" name="" v-model="accountUpdate.commission">
                                         <option value="">Select Commission</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
@@ -232,9 +232,18 @@
 
                             <div class="col-md-6">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" id="" v-model="accountUpdate.status">
+                                <select class="form-control" name="" v-model="accountUpdate.status">
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="">Credit Authorization</label>
+                                <select class="form-control" name="" v-model="accountUpdate.credit_auth">
+                                    <option value=""></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
                                 </select>
                             </div>
 
@@ -266,7 +275,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" class="form-control" v-model="accountModel.username" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -274,7 +283,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input type="text" class="form-control" v-model="accountModel.name" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountModel.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -282,7 +291,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input type="text" class="form-control" v-model="accountModel.email" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountModel.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -290,7 +299,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Phone</label>
-                                    <input type="text" class="form-control" v-model="accountModel.phone" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" v-model="accountModel.phone" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -298,7 +307,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Password</label>
-                                    <input type="password" class="form-control" v-model="accountModel.password" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" v-model="accountModel.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -306,7 +315,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Confirm Password</label>
-                                    <input type="password" class="form-control" v-model="accountModel.c_password" name="" id="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -314,7 +323,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Account Type</label>
-                                    <select class="form-control" name="" v-model="accountModel.type" id="">
+                                    <select class="form-control" name="" v-model="accountModel.type">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -342,7 +351,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Payment Type</label>
-                                    <select class="form-control" name="" id="" v-model="accountModel.id_payment_type">
+                                    <select class="form-control" name="" v-model="accountModel.id_payment_type">
                                         <option value="">Select Type</option>
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
@@ -371,7 +380,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Commission</label>
-                                    <select class="form-control" name="" id="" v-model="accountModel.commission">
+                                    <select class="form-control" name="" v-model="accountModel.commission">
                                         <option value="">Select Commission</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
