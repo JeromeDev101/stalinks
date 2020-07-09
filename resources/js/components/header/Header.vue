@@ -33,7 +33,7 @@
                             <li class="user-header">
                                 <img :src="user.avatar" class="img-circle" alt="User Image">
                                 <p>{{ user.username }}</p>
-                                <p style="margin-top:-5%">{{ user.role ? user.role.name : null }}</p>
+
                             </li>
                             <!-- Menu Body -->
                             <li class="user-footer">

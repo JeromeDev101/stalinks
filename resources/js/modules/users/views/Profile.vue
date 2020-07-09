@@ -39,9 +39,9 @@
                                 </tr>
                                 <tr>
                                     <td><b>Username</b></td>
-                                    <td v-if="user.user_type">
+                                    <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
-                                            <input type="text" v-model="user.user_type.username" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <input type="text" v-model="user.username" class="form-control" value="" required="required" placeholder="Enter Name">
                                             <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
@@ -132,10 +132,12 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
                     <div class="col-lg-8">
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
-                </div>
+
 
             </div>
         </div>
