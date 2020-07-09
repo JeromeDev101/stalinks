@@ -165,13 +165,12 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.title}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Status</label>
-                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer">
-                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                        </select>
-                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                        <label style="color: #333">Title</label>
+
+                                        <input type="text" v-model="modelBaclink.title" class="form-control"  required="required" >
+                                        <span v-if="messageBacklinkForms.errors.title" v-for="err in messageBacklinkForms.errors.title" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -188,11 +187,34 @@
                             </div>
 
                             <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Link From</label>
+
+                                        <input type="text" v-model="modelBaclink.link_from" class="form-control"  required="required" >
+                                        <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
                                         <label style="color: #333">Date Completed</label>
                                         <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer">
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
+                                    <div>
+                                        <label style="color: #333">Status</label>
+                                        <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer">
+                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        </select>
+                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -330,11 +352,11 @@
                     params: {
                         id:id
                     }
-                }) 
+                })
 
                 this.getBackLinkList();
             }
-            
+
         },
 
         async clearSearch() {
