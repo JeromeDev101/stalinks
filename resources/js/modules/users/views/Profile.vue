@@ -392,6 +392,12 @@ export default {
                         break;
                     }
                 }
+
+                swal.fire(
+                        'Updated!',
+                        'Information has been updated.',
+                        'success'
+                        )
             }
         },
 
