@@ -15,7 +15,7 @@
 
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'List User' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/users' }">
-                        <i class="fa fa-fw fa-users"></i> <span>Employees</span>
+                        <i class="fa fa-fw fa-users"></i> <span>Teams</span>
                     </router-link>
                 </li>
 
