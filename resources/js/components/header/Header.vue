@@ -27,12 +27,17 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <img :src="user.avatar" class="user-image" alt="User Image">
                         <span class="hidden-xs">{{ user.username }}</span>
+                        <span class="hidden-xs" v-if="user.isAdmin">({{ user.role ? user.role.name : null }})</span>
+                        <span class="hidden-xs" v-if="!user.isAdmin">({{ user.user_type ? user.user_type.type: ''}})</span>
+
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img :src="user.avatar" class="img-circle" alt="User Image">
                                 <p>{{ user.username }}</p>
+                                <p style="margin-top:-5%" v-if="user.isAdmin">{{ user.role ? user.role.name : null }}</p>
+                                <p style="margin-top:-5%" v-if="!user.isAdmin">{{  user.user_type ? user.user_type.type: '' }}</p>
 
                             </li>
                             <!-- Menu Body -->
