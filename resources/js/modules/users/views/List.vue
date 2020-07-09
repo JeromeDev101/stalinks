@@ -783,6 +783,7 @@ export default {
         },
 
         doUpdateUser(user) {
+            console.log(user)
             this.$store.dispatch('clearMessageFormUser');
             this.userUpdate = JSON.parse(JSON.stringify(user))
             this.userUpdate.password = '';

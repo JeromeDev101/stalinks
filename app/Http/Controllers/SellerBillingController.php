@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
+use App\Models\WalletTransaction;
 
 class SellerBillingController extends Controller
 {
@@ -59,6 +60,11 @@ class SellerBillingController extends Controller
                 'admin_confirmation' => 1
             ]);
         }
+
+        // update wallet transaction
+        // foreach( $ids as $id ) {
+        //     $backlink_id = explode('-',$id)[0];
+        // }
 
         return response()->json(['success' => true], 200);
     }

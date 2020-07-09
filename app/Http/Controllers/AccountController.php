@@ -76,16 +76,35 @@ class AccountController extends Controller
             return response()->json($response);
         }
 
+        // ---------------------------------------------------
+
+        $user = User::where('email', $account->email);
+
         if (isset($input['password']) && $input['password'] != '') {
-            $user_data['password'] = $input['password'];
-            $user = User::where('email', $account->email);
-            $user->update($user_data);
+            $user->update(['password' => $input['password']]);
         }
 
         if (isset($input['credit_auth']) && $input['credit_auth'] != '') {
-            $user = User::where('email', $account->email);
             $user->update(['credit_auth' => $input['credit_auth']]);
         }
+
+        if (isset($input['email']) && $input['email'] != '') {
+            $user->update(['email' => $input['email']]);
+        }
+
+        if (isset($input['username']) && $input['username'] != '') {
+            $user->update(['username' => $input['username']]);
+        }
+
+        if (isset($input['status']) && $input['status'] != '') {
+            $user->update(['status' => $input['status']]);
+        }
+
+        if (isset($input['name']) && $input['name'] != '') {
+            $user->update(['name' => $input['name']]);
+        }
+
+        // ---------------------------------------------------
 
         $account->update($input);
 

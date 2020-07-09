@@ -43,7 +43,7 @@
                                         Selected Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-payment">Pay</a>
+                                        <a class="dropdown-item" @click="clearMessageform()" href="#" data-toggle="modal" data-target="#modal-payment">Pay</a>
                                     </div>
                                 </div>
                             </div>
@@ -138,21 +138,23 @@
                         <div class="row">
 
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small>
+                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small><br/>
+                                    <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
                                     <label for="">Payment Type</label>
                                     <select name="" class="form-control" v-model="updateModel.payment_type">
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
                                         </option>
                                     </select>
+                                    <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                                 
@@ -235,6 +237,10 @@
 
             async getPaymentTypeList(params) {
                 await this.$store.dispatch('actionGetListPayentType', params);
+            },
+
+            clearMessageform() {
+                this.$store.dispatch('clearMessageform');
             },
         },
     }

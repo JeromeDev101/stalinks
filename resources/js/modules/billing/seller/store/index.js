@@ -77,6 +77,10 @@ const actions = {
             }
         }
     },
+
+    clearMessageForm({commit}) {
+        commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
+    },
 }
 
 const storeBillingSeller = {
