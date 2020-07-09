@@ -193,8 +193,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Name</label>
-                                    <input type="text" v-model="updateModel.name" class="form-control" name="" placeholder="" disabled>
+                                    <label for="">Username</label>
+                                    <input type="text" v-model="updateModel.username" class="form-control" name="" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -314,6 +314,7 @@
                     id: '',
                     company_name: '',
                     name: '',
+                    username:'',
                     url: '',
                     ur: '',
                     dr: '',
@@ -489,6 +490,7 @@
                 this.updateModel = {
                     id: that.id,
                     name: that.name,
+                    username: that.username,
                     url: that.url,
                     language_id: that.language_id,
                     ur: that.ur,
@@ -552,6 +554,7 @@
                     id: '',
                     company_name: '',
                     name: '',
+                    username:'',
                     url: '',
                     ur: '',
                     dr: '',

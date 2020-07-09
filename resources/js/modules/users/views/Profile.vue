@@ -21,8 +21,8 @@
             <div class="box box-primary table-user">
                 <div class="box-header">
                     <h3 class="box-title">Information</h3>
-                    <h3 class="box-title"  v-if="currentUser.isAdmin">[Employee]</h3>
-                    <h3 class="box-title"  v-if="!currentUser.isAdmin">[Registration Account]</h3>
+                    <h3 class="box-title"  v-if="currentUser.isOurs == 0">[Team]</h3>
+                    <h3 class="box-title"  v-if="currentUser.isOurs == 1">[Registration Account]</h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="table-responsive">
@@ -61,15 +61,15 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isAdmin">
+                                <tr v-if="currentUser.isOurs == 0">
                                     <td><b>Role</b></td>
                                     <td>{{ user.role ? user.role.name : null }}</td>
                                 </tr>
-                                <tr v-if="!currentUser.isAdmin">
+                                <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Type</b></td>
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
-                                <tr v-if="!currentUser.isAdmin">
+                                <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Company Name</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
@@ -78,11 +78,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="!currentUser.isAdmin">
+                                <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Status</b></td>
                                     <td>{{ user.user_type ? user.user_type.status: '' }}</td>
                                 </tr>
-                                <tr v-if="!currentUser.isAdmin">
+                                <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Skype</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
@@ -95,10 +95,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="box-header"  v-if="!currentUser.isAdmin">
+                <div class="box-header"  v-if="currentUser.isOurs == 1">
                     <h3 class="box-title">Billing</h3>
                 </div>
-                <div class="box-body no-padding"  v-if="!currentUser.isAdmin">
+                <div class="box-body no-padding"  v-if="currentUser.isOurs == 1">
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tbody>
