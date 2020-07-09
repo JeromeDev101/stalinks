@@ -98,6 +98,26 @@ const actions = {
         }
     },
 
+    async actionCheckCreditAuth({ commit }, params) { 
+        try{
+            let response = await BuyService.checkCreditAuth(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'success', message: response.data.data, errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        }catch( e ) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionUpdateBuy({ commit }, params) { 
         try{
             let response = await BuyService.updateBuy(params);

@@ -68,9 +68,6 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            <!-- <tr v-if="listBackLink.data.length == 0">
-                                <td colspan="11" class="text-center">No record</td>
-                            </tr> -->
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ backLink.publisher.url}}</td>

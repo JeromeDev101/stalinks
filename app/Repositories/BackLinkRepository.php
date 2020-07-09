@@ -104,7 +104,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
         $registered = Registration::where('email', $user->email)->first();
 
-        if( $user->type != 10 && $registered->type == 'Buyer' ){
+        if( (isset($registered->type) && $registered->type == 'Buyer') || $user->role_id == 5){
             $query->where('user_id', $user->id);
         }
         

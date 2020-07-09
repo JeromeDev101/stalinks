@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
 use App\Models\Backlink;
 use App\Models\BuyerPurchased;
+use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
 
 class BuyController extends Controller
@@ -118,6 +119,11 @@ class BuyController extends Controller
         }else{
             $buyer_purchased->update(['status' => $status]);
         }
+    }
+
+    public function checkCreditAuth() {
+        $data = Auth::user()->credit_auth;
+        return response()->json(['success' => true, 'data' => $data], 200);
     }
 
 }

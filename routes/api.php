@@ -43,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');
+    Route::name('get-check-credit-auth')->get('check-credit-auth','BuyController@checkCreditAuth');
     Route::name('update-buy')->put('buy','BuyController@update');
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');

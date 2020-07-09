@@ -58,6 +58,13 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Buy Backlinks</h3>
+
+                    <div v-if="isCreditAuth" class="alert alert-warning my-3">
+                        Sorry you cannot Purchase backlinks due to lack of Wallet. Click 
+                        <button class="btn btn-link" @click="checkCreditAuth">
+                            Retry
+                        </button> if you have given permission to purchased
+                    </div>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -213,10 +220,12 @@
                 return val;
             },
 
-            checkCreditAuth() {
-                let user = this.user
-
-                // await this.$store.dispatch
+            async checkCreditAuth(params) {
+                // this.isCreditAuth = false;
+                // await this.$store.dispatch('actionCheckCreditAuth', params)
+                // if( this.messageForms.message == "No"){
+                //     this.isCreditAuth = true;
+                // }
             },
 
             async getBuyList(params) {
