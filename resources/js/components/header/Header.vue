@@ -16,9 +16,9 @@
                 <ul class="nav navbar-nav">
                     <li v-if="isBuyer" style="margin-left:-300px;margin-bottom:-55px;">
                         <a href="#">
-                            Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong> 
+                            Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong>
                             &nbsp;
-                            Credit: <strong>$ {{ user.wallet_transaction == null ? '0':computeCredit(user.wallet_transaction.amount_usd) }}</strong> 
+                            Credit: <strong>$ {{ user.wallet_transaction == null ? '0':computeCredit(user.wallet_transaction.amount_usd) }}</strong>
                         </a>
                     </li>
 
@@ -26,13 +26,14 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <img :src="user.avatar" class="user-image" alt="User Image">
-                        <span class="hidden-xs">{{ user.name }}</span>
+                        <span class="hidden-xs">{{ user.username }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img :src="user.avatar" class="img-circle" alt="User Image">
-                                <p>{{ user.name }}</p>
+                                <p>{{ user.username }}</p>
+                                <p style="margin-top:-5%">{{ user.role ? user.role.name : null }}</p>
                             </li>
                             <!-- Menu Body -->
                             <li class="user-footer">
@@ -121,7 +122,7 @@ export default {
 
         calcSum(total, num) {
             return total + num
-        }, 
+        },
 
         async logoutAndRedirect() {
             await this.$store.dispatch('logout')

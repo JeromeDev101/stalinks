@@ -52,7 +52,7 @@ class AccountController extends Controller
             return $query->where( 'name', 'LIKE', '%'.$search.'%' )
                 ->orWhere( 'email', 'LIKE', '%'.$search.'%' );
         })->get();
-        
+
 
         return response()->json([
             'data' => $list
@@ -75,7 +75,7 @@ class AccountController extends Controller
         if (!$account) {
             return response()->json($response);
         }
-        
+
         if (isset($input['password']) && $input['password'] != '') {
             $user_data['password'] = $input['password'];
             $user = User::where('email', $account->email);
@@ -86,8 +86,19 @@ class AccountController extends Controller
             $user = User::where('email', $account->email);
             $user->update(['credit_auth' => $input['credit_auth']]);
         }
-            
+
         $account->update($input);
+
+        $user = User::where('email', $input['email'])->first();
+
+        $dataUser = [
+            'username' => $request->username
+        ];
+
+        if(!is_null($user)) {
+            $user->update($dataUser);
+        }
+
         $response['success'] = true;
         return response()->json($response);
     }
@@ -142,5 +153,5 @@ class AccountController extends Controller
 
         return response()->json(['success'=> true, 'data' => $user, 'credentials' => $credentials], 200);
 
-    } 
+    }
 }
