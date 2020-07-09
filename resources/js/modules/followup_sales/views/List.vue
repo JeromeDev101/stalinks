@@ -87,7 +87,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="modal-update-sales" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -153,8 +153,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Link From</label>
-                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
+                                        <label style="color: #333">Title</label>
+                                        <input type="text" class="form-control" v-model="updateModel.title" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -164,6 +164,15 @@
                                     <div>
                                         <label style="color: #333">Link To</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Link From</label>
+                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +205,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
