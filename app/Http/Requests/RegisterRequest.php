@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\ValidateEmailRule;
 use App\Rules\SecurePasswordRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -28,6 +29,9 @@ class RegisterRequest extends FormRequest
         return [
             'name' => [
                 'required'
+            ],
+            'username' => [
+                Rule::unique('users')->ignore($this->id),
             ],
             'work_mail' => [
                 'nullable',
