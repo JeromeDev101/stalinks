@@ -85,7 +85,8 @@ class AuthController extends Controller
             'user_type',
             'isAdmin',
             'id_payment_type',
-            'wallet_transaction'
+            'wallet_transaction',
+            'purchased'
         );
 
         unset($input['c_password']);
@@ -109,8 +110,8 @@ class AuthController extends Controller
             $input['host_work_mail'] = '';
         }
 
-        ////if (!isset($input['id_payment_type']) && ( isset($input['id_payment_type']) || is_null($input['id_payment_type']) )) {
-       //    $input['id_payment_type'] = '';
+        //if (!isset($input['id_payment_type']) && ( isset($input['id_payment_type']) || is_null($input['id_payment_type']) )) {
+        //   $input['id_payment_type'] = '';
       //  }
 
         $user = $this->userRepository->findById($input['id']);

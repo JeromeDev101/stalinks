@@ -132,10 +132,12 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
                     <div class="col-lg-8">
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
-                </div>
+
 
             </div>
         </div>
