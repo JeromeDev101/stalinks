@@ -118,6 +118,14 @@
                         <form class="row" action="" autocomplete="off">
                             <input autocomplete="off" name="hidden" type="text" style="display:none;">
                             <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
+                                    <label style="color: #333">Username</label>
+                                    <input type="text" v-model="userModel.username" class="form-control" value="" required="required" placeholder="Enter Username">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
                                     <label style="color: #333">Name</label>
                                     <input type="text" v-model="userModel.name" class="form-control" value="" required="required" placeholder="Enter Name">
@@ -239,6 +247,14 @@
                     <div class="modal-body relative">
                         <form class="row" action="" autocomplete="off" >
                             <input autocomplete="off" name="hidden" type="text" style="display:none;">
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
+                                    <label style="color: #333">Username</label>
+                                    <input type="text" v-model="userUpdate.username" class="form-control" value="" required="required" placeholder="Enter Username">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
                                     <label style="color: #333">Name</label>
@@ -665,6 +681,7 @@ export default {
 
             userUpdate: {
                 id: '',
+                username: '',
                 name: '',
                 email: '',
                 phone: '',
@@ -704,8 +721,6 @@ export default {
         this.getRoleList();
         this.getUserTypeList();
         this.getPaymentList();
-
-        console.log(this.listPayment)
     },
 
     computed: {
@@ -795,6 +810,12 @@ export default {
             if (this.messageForms.action === 'saved_user') {
                 this.clearUserModel();
                 this.getUserList({ params: this.filterModel });
+
+                swal.fire(
+                    'Success!',
+                    'Employee has been added.',
+                    'success'
+                )
             }
         },
 
@@ -812,6 +833,13 @@ export default {
                 // }
 
                 this.getUserList()
+
+                swal.fire(
+                    'Updated!',
+                    'Information has been updated.',
+                    'success'
+                )
+
             }
         },
 

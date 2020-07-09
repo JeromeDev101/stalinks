@@ -184,12 +184,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
+                                <div class="form-group">
                                     <div>
                                         <label style="color: #333">Link From</label>
 
-                                        <input type="text" v-model="modelBaclink.link_from" class="form-control"  required="required" >
-                                        <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
+                                        <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
                                     </div>
                                 </div>
                             </div>

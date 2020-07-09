@@ -15,7 +15,7 @@
 
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'List User' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/users' }">
-                        <i class="fa fa-fw fa-users"></i> <span>Teams</span>
+                        <i class="fa fa-fw fa-users"></i> <span>Team</span>
                     </router-link>
                 </li>
 
@@ -69,21 +69,21 @@
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'seller-billing' }">
                             <router-link :to="{ path: '/seller-billing' }">
-                                <i class="fa fa-fw fa-user-o"></i> 
+                                <i class="fa fa-fw fa-user-o"></i>
                                 <span>Seller Billing</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
                         <li :class="{ active: $route.name == 'buyer-billing' }">
                             <router-link :to="{ path: '/buyer-billing' }">
-                                <i class="fa fa-fw fa-money"></i> 
+                                <i class="fa fa-fw fa-money"></i>
                                 <span>Buyer Billing</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
                         <li :class="{ active: $route.name == 'writer-billing' }">
                             <router-link :to="{ path: '/writer-billing' }">
-                                <i class="fa fa-fw fa-newspaper-o"></i> 
+                                <i class="fa fa-fw fa-newspaper-o"></i>
                                 <span>Writer Billing</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
@@ -109,7 +109,7 @@
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'ExtDomain' }">
                             <router-link :to="{ path: '/ext' }">
-                                <i class="fa fa-fw fa-reorder"></i> 
+                                <i class="fa fa-fw fa-reorder"></i>
                                 <span>Summary</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
@@ -168,7 +168,7 @@
                             </router-link>
                         </li>
                     </ul>
-                            
+
                 </li>
 
                 <li v-if="isBuyer || user.isAdmin || isManager" :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
@@ -202,7 +202,7 @@
                             </router-link>
                         </li>
                     </ul>
-                        
+
                 </li>
             </ul>
         </section>
