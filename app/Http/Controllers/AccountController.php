@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendEmailVerification;
 use Illuminate\Support\Facades\App;
+use App\Models\Publisher;
 use Illuminate\Support\Facades\Config;
 
 class AccountController extends Controller
@@ -178,9 +179,12 @@ class AccountController extends Controller
     {
         $userRole = 'Seller';
 
+        $arrUserId = Publisher::select('user_id')->groupBy('user_id')->get()->toArray();
+
         $getUsers = Registration::select('users.id', 'registration.username')
                                 ->where('registration.type',$userRole)
                                 ->where('registration.status', 'active')
+                                ->whereIn('users.id', $arrUserId)
                                 ->leftJoin('users', 'users.email', '=', 'registration.email')
                                 //->pluck('users.username','users.id')
                                 ->get();
