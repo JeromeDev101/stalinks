@@ -90,7 +90,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
             $dataReturn[$key]['total'] = $item->total;
         }
-        
+
         return [
             'total' => $sumTotal,
             'data' => Arr::divide($dataReturn)[1]
@@ -107,7 +107,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         if( (isset($registered->type) && $registered->type == 'Buyer') || $user->role_id == 5){
             $query->where('user_id', $user->id);
         }
-        
+
         $backlink = $this->fillter($query, $filters);
 
         if ($filters->full_data === true) {
@@ -121,7 +121,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        return $backlink->with(['publisher' => function($query){ $query->with('user:id,name'); }, 'user'])->paginate(config('common.paginate.default'));
+        return $backlink->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate(config('common.paginate.default'));
     }
 
     protected function fillter($query, $filters)
@@ -141,6 +141,12 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
         if( !empty($filters->status) ){
             $query = $query->where('status', $filters->status);
+        }
+
+        if(!empty($filters->seller)) {
+            $query = $query->whereHas('publisher', function ($query) use ($filters) {
+                $query->where('user_id', $filters->seller );
+            });
         }
 
         return $query;
