@@ -32,6 +32,8 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Purchase</h3>
+
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -141,6 +143,7 @@
                     payment_status: '',
                 },
                 isPopupLoading: false,
+                totalAmount: 0,
             }
         },
 
@@ -158,6 +161,25 @@
         methods: {
             async getPurchaseList(params){
                 await this.$store.dispatch('actionGetPurchaseList', params)
+                this.getTotalAmount();
+            },
+
+            getTotalAmount() {
+                let incomes = this.listPurchase.data
+                let total_price = [];
+                let total = 0;
+                incomes.forEach(function(item, index){
+                    total_price.push( parseFloat(item.price))
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total;
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
 
             doUpdate(purchase) {

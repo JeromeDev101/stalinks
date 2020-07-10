@@ -181,7 +181,7 @@
         async created() {
             this.getListIncomes();
             this.checkAccountType();
-            this.getTotalAmount()
+            
         },
 
         computed: {
@@ -202,12 +202,25 @@
                     }
                 });
                 this.isSearching = false;
+                this.getTotalAmount()
             },
 
             getTotalAmount() {
-                let incomes = this.listIncomes
+                let incomes = this.listIncomes.data
+                let total_price = [];
+                let total = 0;
+                incomes.forEach(function(item, index){
+                    total_price.push( parseFloat(item.price))
+                })
 
-                console.log(incomes)
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total;
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
 
             checkAccountType() {
