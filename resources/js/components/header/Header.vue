@@ -84,11 +84,6 @@ export default {
     created() {
         this.checkAccountType();
         this.liveGetWallet();
-
-        let storage = JSON.parse(localStorage.getItem('vuex'))
-        let purchased = storage.storeAuth.currentUser.purchased
-
-        // console.log(this.amount_usd)
     },
 
     computed: {
@@ -137,8 +132,8 @@ export default {
         },
 
         liveGetWallet() {
-            // axios.get('api/current-user')
-            //     .then(response => console.log( response.data) )
+            axios.get('api/current-user')
+                .then(response => console.log( response.data) )
                 // .catch(error => (this.error = error))
         },
 
