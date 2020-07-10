@@ -173,4 +173,20 @@ class AccountController extends Controller
         return response()->json(['success'=> true, 'data' => $user, 'credentials' => $credentials], 200);
 
     }
+
+    public function getUserRole()
+    {
+        $userRole = 'Seller';
+
+        $getUsers = Registration::select('users.id', 'registration.username')
+                                ->where('registration.type',$userRole)
+                                ->where('registration.status', 'active')
+                                ->leftJoin('users', 'users.email', '=', 'registration.email')
+                                //->pluck('users.username','users.id')
+                                ->get();
+
+        return response()->json([
+            'data' => $getUsers
+        ], 200);
+    }
 }

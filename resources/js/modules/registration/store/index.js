@@ -64,6 +64,20 @@ const actions= {
         }
     },
 
+    async actionGetSeller({ commit }) {
+        try {
+            let response = await AccountService.getSellers();
+            commit(LIST_ACCOUNTS, { listAccount: response.data });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetListPayentType({ commit }, params) {
         try {
             let response = await AccountService.getPaymentType(params);

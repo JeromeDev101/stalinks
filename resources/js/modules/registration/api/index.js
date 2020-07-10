@@ -45,4 +45,9 @@ export default class AccountService {
             .catch(error => error);
     }
 
+    static getSellers(){
+        return axios.get('api/accounts/get-sellers')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

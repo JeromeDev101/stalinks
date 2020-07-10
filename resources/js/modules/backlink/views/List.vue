@@ -27,6 +27,15 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select class="form-control" name="" v-model="fillter.seller">
+                                    <option value="">All</option>
+                                    <option v-for="seller in listSeller.data" v-bind:value="seller.id">{{ seller.username }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -57,12 +66,13 @@
                         <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
                                 <th>URL Publisher</th>
                                 <th v-if="user.isAdmin">URL Advertiser</th>
                                 <th>Link From</th>
-                                <th>Link To</th>
+                                <th v-if="user.isOurs == 1 && !user.isAdmin">Link To</th>
                                 <th>Price</th>
-                                <th>Anchor Text</th>
+                                <th  v-if="user.isOurs == 1 && !user.isAdmin">Anchor Text</th>
                                 <th>Date for Proccessing</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
@@ -70,12 +80,13 @@
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
+                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username}}</td>
                                 <td>{{ backLink.publisher.url}}</td>
                                 <td v-if="user.isAdmin">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
-                                <td><a href="backLink.link">{{ backLink.link }}</a></td>
+                                <td v-if="user.isOurs == 0 && !user.isAdmin"><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
-                                <td>{{ backLink.anchor_text }}</td>
+                                <td v-if="user.isOurs == 0 && !user.isAdmin">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
                                 <td>{{ backLink.status }}</td>
@@ -291,7 +302,8 @@
       async created() {
           await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
           await this.getBackLinkList();
-          this.checkAccountType()
+          this.checkAccountType();
+          this.getSellerList();
       },
 
       computed: {
@@ -300,8 +312,9 @@
           fillter: state => state.storeBackLink.fillter,
           user: state => state.storeAuth.currentUser,
           messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
-
+          listSeller: state => state.storeAccount.listAccount,
         }),
+
         openModalBackLink() {
           if (this.modalAddBackLink = true) {
               return true
@@ -353,6 +366,10 @@
                 this.getBackLinkList();
             }
 
+        },
+
+        async getSellerList(params) {
+            await this.$store.dispatch('actionGetSeller');
         },
 
         async clearSearch() {

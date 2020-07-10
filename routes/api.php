@@ -52,6 +52,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('add-accounts')->post('accounts', 'AccountController@store');
     Route::name('get-accounts')->get('accounts', 'AccountController@getList');
     Route::name('update-accounts')->put('accounts', 'AccountController@edit');
+    Route::name('get-seller')->get('accounts/get-sellers', 'AccountController@getUserRole');
+
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');

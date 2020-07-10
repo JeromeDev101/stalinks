@@ -111,7 +111,10 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Select</th>
+                                <th>
+                                    <input type="checkbox" @click="selectAll" v-model="allSelected">
+                                    Select
+                                </th>
                                 <th v-if="user.isAdmin">Company</th>
                                 <th>Username</th>
                                 <th>Language</th>
@@ -339,6 +342,7 @@
                 isDisabled: true,
                 showLang: false,
                 isSeller: false,
+                allSelected: false,
             }
         },
 
@@ -371,6 +375,19 @@
             //     });
             //     this.searchLoading = false;
             // },
+
+            selectAll: function() {
+                this.checkIds = [];
+
+                if (!this.allSelected) {
+                    for (user in this.publisher) {
+                        this.checkIds.push(this.publisher[user].id);
+                    }
+                }
+            },
+            select: function() {
+                this.allSelected = false;
+            },
 
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
@@ -570,5 +587,6 @@
                 this.$store.dispatch('clearMessageform');
             },
         }
+
     }
 </script>
