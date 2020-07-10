@@ -72,7 +72,7 @@
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th>Price</th>
-                                <th  v-if="(user.isOurs == 1 && !user.isAdmin)">Anchor Text</th>
+                                <th  v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
                                 <th>Date for Proccessing</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
@@ -402,7 +402,9 @@
             this.modelBaclink.anchor_text = that.anchor_text
             this.modelBaclink.price = that.price
             this.modelBaclink.link = that.link
+            this.modelBaclink.link_from = that.link_from
             this.modelBaclink.live_date = that.live_date
+            this.modelBaclink.title = that.title
             this.modelBaclink.status = that.status
             this.modelBaclink.user_id = that.user_id
             this.modelBaclink.date_process = that.date_process

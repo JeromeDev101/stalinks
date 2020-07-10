@@ -136,7 +136,7 @@ class BackLinkController extends Controller
     public function update(UpdateBacklinkRequest $request, $id)
     {
         $response = ['update_success' => false];
-        $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser');
+        $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser', 'title');
         $backlink = $this->backLinkRepository->findById($id);
 
         if (!$backlink) {
@@ -154,7 +154,7 @@ class BackLinkController extends Controller
         $backlink->update([
             'deleted_at' => date('Y-m-d')
         ]);
-        
+
         return response()->json(['success' => true, 'data' => $backlink], 200);
     }
 }
