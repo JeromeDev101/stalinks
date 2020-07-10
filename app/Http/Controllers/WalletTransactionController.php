@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\WalletTransaction;
 use App\Models\User;
+use App\Models\TotalWallet;
 
 class WalletTransactionController extends Controller
 {
@@ -67,8 +68,20 @@ class WalletTransactionController extends Controller
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
             'proof_doc' => '/images/wallet_transaction/'.$new_name,
-            'admin_confirmation' => 'Not Paid',
+            'admin_confirmation' => 'Paid',
         ]);
+
+        $total_wallet = TotalWallet::where('user_id', $request->user_id_buyer)->first();
+
+        if( $total_wallet['user_id'] == ""){
+            TotalWallet::create([
+                'user_id' => $request->user_id_buyer,
+                'total_wallet' => $request->amount_usd,
+            ]);
+        }else{
+            $amount = floatVal($total_wallet['total_wallet']) + floatVal($request->amount_usd);
+            $total_wallet->update(['total_wallet' => $amount]);
+        }
 
         return response()->json(['success' => true], 200);
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
-use App\Models\WalletTransaction;
+use App\Models\TotalWallet;
 
 class SellerBillingController extends Controller
 {
@@ -41,11 +41,12 @@ class SellerBillingController extends Controller
         $image = $request->file;
         $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/billing'), $new_name);
-
+        $backlink_ids = [];
         foreach( $ids as $id ){
             $backlink_id = explode('-',$id)[0];
             $user_id_seller = explode('-',$id)[1];
             $seller_price = explode('-',$id)[2];
+            $backlink_ids[] = $backlink_id;
 
             $backlink = Backlink::find($backlink_id);
             $backlink->update(['payment_status' => 'Paid']);
@@ -61,11 +62,28 @@ class SellerBillingController extends Controller
             ]);
         }
 
-        // update wallet transaction
-        // foreach( $ids as $id ) {
-        //     $backlink_id = explode('-',$id)[0];
-        // }
+        // update the total wallet of a buyer
+        $total = TotalWallet::select('user_id')->get();
+        foreach( $total as $buyer ) {
+            $amount_paid = $this->getTotal($backlink_ids, $buyer->user_id);
+
+            if($amount_paid != ""){
+                $wallet = TotalWallet::where('user_id',$buyer->user_id)->first();
+                $total_amount = floatval($wallet['total_wallet']) - floatval($amount_paid);
+                $wallet->update(['total_wallet' => $total_amount]);
+            }
+        }
 
         return response()->json(['success' => true], 200);
+    }
+
+    private function getTotal($backlink_ids = [], $buyer_id){
+        $backlink = Backlink::selectRaw('SUM(price) as total_amount')
+                            ->whereIn('id', $backlink_ids)
+                            ->where('status', 'Live')
+                            ->where('payment_status', 'Paid')
+                            ->where('user_id', $buyer_id)
+                            ->get();
+        return $backlink[0]->total_amount;
     }
 }

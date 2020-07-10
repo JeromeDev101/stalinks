@@ -116,4 +116,8 @@ class User extends Authenticatable
     public function purchased() {
         return $this->buyer_purchased()->where('status', 'Purchased');
     }
+
+    public function total_wallet() {
+        return $this->hasOne('App\Models\TotalWallet', 'user_id', 'id');
+    }
 }

@@ -43,6 +43,8 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Incomes</h3>
+
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -172,12 +174,14 @@
                 },
                 isSearching: false,
                 isSeller: true,
+                totalAmount: 0,
             }
         },
 
         async created() {
             this.getListIncomes();
             this.checkAccountType();
+            this.getTotalAmount()
         },
 
         computed: {
@@ -198,6 +202,12 @@
                     }
                 });
                 this.isSearching = false;
+            },
+
+            getTotalAmount() {
+                let incomes = this.listIncomes
+
+                console.log(incomes)
             },
 
             checkAccountType() {

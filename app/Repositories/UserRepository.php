@@ -50,7 +50,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                             ->with(['purchased' => function($query){
                                 $query->with('publisher:id,price');
                             }])
-                            // ->with('buyer_purchased')
+                            ->with('total_wallet')
                             ->with('wallet_transaction','UserType','role', 'countriesAccessable')->findOrFail($id);
 
         $user->isAdmin = $user->isAdmin();

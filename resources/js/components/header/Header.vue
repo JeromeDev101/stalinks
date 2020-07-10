@@ -16,7 +16,7 @@
                 <ul class="nav navbar-nav">
                     <li v-if="isBuyer" style="margin-left:-300px;margin-bottom:-55px;">
                         <a href="#">
-                            Wallet: <strong>$ {{ user.wallet_transaction == null ? '0':user.wallet_transaction.amount_usd }}</strong>
+                            Wallet: <strong>$ {{ user.total_wallet == null ? '0':user.total_wallet.total_wallet }}</strong>
                             &nbsp;
                             Credit: <strong>$ {{ user.wallet_transaction == null ? '0':computeCredit(user.wallet_transaction.amount_usd) }}</strong>
                         </a>
@@ -137,8 +137,8 @@ export default {
         },
 
         liveGetWallet() {
-            axios.get('api/current-user')
-                .then(response => console.log( response.data) )
+            // axios.get('api/current-user')
+            //     .then(response => console.log( response.data) )
                 // .catch(error => (this.error = error))
         },
 
