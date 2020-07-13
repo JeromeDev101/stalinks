@@ -62,7 +62,7 @@
                                 <td>{{ article.date_completed }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="Add Content" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
+                                        <a title="Add Content" class="btn btn-default" :href="'articles/'+article.id"><i class="fa fa-fw fa-pencil"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -221,6 +221,7 @@
 
                 if( this.messageForms.action == 'success' ){
                     this.clearModels();
+                    this.getListArticles();
                 }
             },
 

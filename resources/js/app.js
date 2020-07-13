@@ -10,6 +10,7 @@ import Cookies from 'js-cookie'
 import 'vue-select/dist/vue-select.css';
 import Select2 from 'vue-select';
 import swal from 'sweetalert2'
+import tinymce from 'vue-tinymce-editor';
 
 require('./bootstrap');
 
@@ -20,6 +21,7 @@ Vue.use(Cookies);
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
 Vue.component('v-select', Select2)
+Vue.component('tinymce', tinymce)
 
 
 const router = new VueRouter({
