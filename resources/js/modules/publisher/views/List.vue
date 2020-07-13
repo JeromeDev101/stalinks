@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl-publisher" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -116,7 +116,8 @@
                                     Select
                                 </th>
                                 <th v-if="user.isAdmin">Company</th>
-                                <th>Username</th>
+                                <th v-if="user.isAdmin">Username</th>
+                                <th v-if="!user.isAdmin">Date Uploaded</th>
                                 <th>Language</th>
                                 <th>URL</th>
                                 <th>Price</th>
@@ -144,7 +145,8 @@
                                     </div>
                                 </td>
                                 <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
-                                <td>{{ publish.username ? publish.username : 'N/A'   }}</td>
+                                <td v-if="user.isAdmin">{{ publish.username ? publish.username : 'N/A'   }}</td>
+                                <td v-if="!user.isAdmin">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
@@ -403,6 +405,20 @@
                         inc_article: this.filterModel.inc_article,
                     }
                 });
+
+                $('#tbl-publisher').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
                 this.searchLoading = false;
             },
 
