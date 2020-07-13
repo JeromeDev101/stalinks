@@ -41,12 +41,12 @@
 
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Follow up Sales</h3>
+                    <h3 class="box-title">Follow ss up Sales</h3>
                 </div>
 
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
-                        <tbody>
+                    <table id="tbl-followupsales" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
@@ -60,6 +60,8 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <tr v-if="listSales.data.length == 0">
                                 <td colspan="11" class="text-center">No record</td>
                             </tr>
@@ -272,6 +274,7 @@
 
         methods: {
             async getListSales(params){
+
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListSales', {
                     params: {
@@ -279,10 +282,27 @@
                         status: this.filterModel.status,
                     }
                 });
+
+                $('#tbl-followupsales').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
                 this.searchLoading = false;
             },
 
             doSearch() {
+                $('#tbl-followupsales').DataTable().destroy();
+
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -296,6 +316,8 @@
             },
 
             clearSearch() {
+                $('#tbl-followupsales').DataTable().destroy();
+
                 this.filterModel = {
                     search: '',
                     status: '',
@@ -317,6 +339,7 @@
             },
 
             async submitUpdate(params) {
+                $('#tbl-followupsales').DataTable().destroy();
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateSales', this.updateModel)
                 this.isPopupLoading = false;
