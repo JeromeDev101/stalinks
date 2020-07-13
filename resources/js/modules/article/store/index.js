@@ -2,11 +2,13 @@ import ArticleService from '@/modules/article/api';
 
 const LIST_BACKLINKS = 'LIST_BACKLINKS';
 const LIST_ARTICLES = 'LIST_ARTICLES';
+const INFO_ARTICLE = 'INFO_ARTICLE';
 const LIST_WRITER = 'LIST_WRITER';
 const SET_ERROR = 'SELLER_BILLING_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 
 const state = {
+    infoArticles: { data: [] },
     listArticles: { data: [] },
     listBacklinks: { data: [] },
     listWriter: { data: [] },
@@ -14,6 +16,10 @@ const state = {
 }
 
 const mutations = {
+    [INFO_ARTICLE] (state, data) {
+        state.infoArticles = data.infoArticles
+    },
+
     [LIST_ARTICLES] (state, data) {
         state.listArticles = data.listArticles
     },
@@ -55,6 +61,20 @@ const actions = {
         try {
             let response = await ArticleService.getListArticle(params)
             commit(LIST_ARTICLES, { listArticles: response.data });
+        }catch(e){
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetInfoArticle({commit}, params){
+        try {
+            let response = await ArticleService.getInfoArticle(params)
+            commit(INFO_ARTICLE, { infoArticles: response.data });
         }catch(e){
             let errors = e.response.data.errors;
             if (errors) {

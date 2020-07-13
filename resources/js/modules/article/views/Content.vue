@@ -14,7 +14,7 @@
                 <div class="box-body m-3 pb-5">
                     <div class="row">
                         <div class="col-md-9 col-sm-12">
-                            <tinymce id="d1" v-model="data"></tinymce>
+                            <tinymce id="d1" v-model="data" :other_options="options"></tinymce>
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <div class="row">
@@ -70,11 +70,14 @@
         data() {
             return {
                 data: '',
+                options: {
+                    height: 500
+                },
             }
         },
 
         async created() {
-            
+            this.getInfoArticle()
         },
 
         computed: {
@@ -82,7 +85,12 @@
         },
 
         methods: {
-            
+            async getInfoArticle(params) {
+
+                await this.$store.dispatch('actionGetInfoArticle',{
+                    id: this.$route.params.id
+                });
+            },
         },
     }
 </script>

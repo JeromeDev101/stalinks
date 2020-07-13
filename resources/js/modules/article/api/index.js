@@ -26,4 +26,10 @@ export default class ArticleService {
             .catch(error => error)
     }
 
+    static getInfoArticle(params) {
+        return axios.get('api/article-info', params)
+            .then(response => response)
+            .catch(error => error)
+    }
+
 }
