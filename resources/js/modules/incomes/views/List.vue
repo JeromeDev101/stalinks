@@ -48,8 +48,8 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
-                        <tbody>
+                    <table  id="tbl-income" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
@@ -62,6 +62,8 @@
                                 <th>Status Payment</th>
                                 <th>Action</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
@@ -85,7 +87,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="modal-update-incomes" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -181,7 +183,7 @@
         async created() {
             this.getListIncomes();
             this.checkAccountType();
-            
+
         },
 
         computed: {
@@ -201,6 +203,20 @@
                         payment_status: this.filterModel.payment_status,
                     }
                 });
+
+                $('#tbl-income').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
                 this.isSearching = false;
                 this.getTotalAmount()
             },
@@ -237,6 +253,8 @@
             },
 
             doSearch() {
+                $('#tbl-income').DataTable().destroy();
+
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -250,6 +268,8 @@
             },
 
             clearSearch() {
+                $('#tbl-income').DataTable().destroy();
+
                 this.filterModel = {
                     user: '',
                     payment_status: '',
@@ -263,6 +283,8 @@
             },
 
             async submitUpdate(params) {
+                $('#tbl-income').DataTable().destroy();
+
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateIncomes', this.updateModel);
                 this.isPopupLoading = false;
