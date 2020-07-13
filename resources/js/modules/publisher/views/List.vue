@@ -430,6 +430,8 @@
             },
 
             async doMultipleDelete(){
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.clearMessageform()
                 if( confirm("Are you sure you want to delete selected records?") ){
                     await this.$store.dispatch('actionDeletePublisher', {
@@ -449,6 +451,8 @@
             },
 
             async submitUpload() {
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
                 this.formData.append('language', this.$refs.language.value);
@@ -474,6 +478,8 @@
             },
 
             clearSearch() {
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.filterModel = {
                     search: '',
                     language_id: '',
@@ -488,6 +494,8 @@
             },
 
             async submitUpdate(params) {
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdatePublisher', this.updateModel);
                 this.isPopupLoading = false;
@@ -542,6 +550,8 @@
             },
 
             async doDelete(id){
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.clearMessageform()
                 if( confirm("Do you want to delete these record?") ){
                     await this.$store.dispatch('actionDeletePublisher', {
@@ -555,6 +565,8 @@
             },
 
             doSearch() {
+                $('#tbl-publisher').DataTable().destroy();
+
                 this.$router.push({
                     query: this.filterModel,
                 });
