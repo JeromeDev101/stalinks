@@ -126,7 +126,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">Seller name</label>
-                                    <input type="text" v-model="modelBaclink.seller" :disabled="true" class="form-control" required="required" >
+                                    <input type="text" v-model="modelBaclink.username" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
 
@@ -399,6 +399,7 @@
             this.modelBaclink.publisher_id = that.publisher.id
             this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
             this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
+            this.modelBaclink.username = that.publisher.user.username
             this.modelBaclink.anchor_text = that.anchor_text
             this.modelBaclink.price = that.price
             this.modelBaclink.link = that.link
