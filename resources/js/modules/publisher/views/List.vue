@@ -146,7 +146,7 @@
                                 </td>
                                 <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
                                 <td v-if="user.isAdmin">{{ publish.username ? publish.username : 'N/A'   }}</td>
-                                <td v-if="!user.isAdmin">{{publish.created_at}}</td>
+                                <td v-if="!user.isAdmin">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
