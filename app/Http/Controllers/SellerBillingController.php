@@ -10,6 +10,8 @@ use App\Models\TotalWallet;
 class SellerBillingController extends Controller
 {
     public function getList(Request $request) {
+        $filter = $request->all();
+
         $columns = [
             'backlinks.*',
             'billing.proof_doc_path',
@@ -22,9 +24,21 @@ class SellerBillingController extends Controller
                         $q->with('user:id,name');
                     }])
                     ->with('user:id,name')
-                    ->where('status', 'Live')
-                    ->orderBy('created_at', 'desc');
+                    ->where('status', 'Live');
 
+        if( isset($filter['status_billing']) && !empty($filter['status_billing']) ){
+            if( $filter['status_billing'] == 'Done'){
+                $list = $list->where('admin_confirmation', '=', '1');
+            }else{
+                $list = $list->where('admin_confirmation', '!=','1');
+            }    
+        }
+
+        if( isset($filter['search']) && !empty($filter['search']) ){
+            $list = $list->where('backlinks.id', $filter['search']);
+        }
+                    
+        $list->orderBy('created_at', 'desc');
         return [
             'data' => $list->get(),
         ];

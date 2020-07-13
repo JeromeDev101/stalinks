@@ -5,6 +5,7 @@ import storeLoading from '@/modules/loading/store';
 import storeAccount from '@/modules/registration/store';
 import storeAuth from '@/modules/auth/store';
 import storeUser from '@/modules/users/store';
+import storeArticles from '@/modules/article/store';
 import storeExtDomain from '@/modules/ext_domain/store';
 import storePublisher from '@/modules/publisher/store';
 import storeIncomes from '@/modules/incomes/store';
@@ -33,6 +34,7 @@ export default new Vuex.Store({
         storeLoading,
         storePublisher,
         storeBuy,
+        storeArticles,
         storeWalletTransaction,
         storeBillingBuyer,
         storeBillingSeller,

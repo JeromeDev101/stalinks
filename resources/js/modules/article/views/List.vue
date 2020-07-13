@@ -51,6 +51,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="listArticles.data.length == 0">
+                                <td colspan="9" class="text-center">No record</td>
+                            </tr>
+                            <tr v-for="(article, index) in listArticles.data" :key="index">
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ article.id }}</td>
+                                <td>{{ article.id_backlink }}</td>
+                                <td>{{ article.id_writer }}</td>
+                                <td>{{ article.country.name }}</td>
+                                <td>{{ article.date_start }}</td>
+                                <td>{{ article.date_completed }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button title="View Content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>{{ article.id_writer_price }}</td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -69,8 +87,20 @@
             }
         },
 
-        methods: {
+        async created() {
+            this.getListArticles();
+        },
 
+        computed: {
+            ...mapState({
+                listArticles: state => state.storeArticles.listArticles,
+            })
+        },
+
+        methods: {
+            async getListArticles(params){
+                await this.$store.dispatch('actionGetListArticle',params);
+            },
         },
     }
 </script>

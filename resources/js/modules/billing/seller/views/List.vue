@@ -10,10 +10,22 @@
                 <div class="box-body m-3">
 
                     <div class="row">
+
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search </label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status Billing </label>
+                                <select name="" class="form-control" v-model="filterModel.status_billing">
+                                    <option value="">All</option>
+                                    <option value="Done">Done</option>
+                                    <option value="Not Yet">Not Yet</option>
+                                </select>
                             </div>
                         </div>
 
@@ -21,8 +33,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -185,6 +197,11 @@
                 },
                 proof_doc: '',
                 isPopupLoading: false,
+                filterModel: {
+                    search: this.$route.query.search || '',
+                    status_billing: this.$route.query.status_billing || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -203,11 +220,26 @@
 
         methods: {
             async getSellerBilling(params){
+                this.searchLoading = true;
                 await this.$store.dispatch('actionGetSellerBilling', params);
+                this.searchLoading = false;
             },
 
             doShow(src) {
                 this.proof_doc = src;
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getSellerBilling({
+                    params: {
+                        search: this.filterModel.search,
+                        status_billing: this.filterModel.status_billing,
+                    }
+                });
             },
 
             checkSelected() {
@@ -215,6 +247,20 @@
                 if( this.checkIds.length > 0 ){
                     this.isDisabled = false;
                 }
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    search: '',
+                    status_billing: '',
+                }
+
+                this.getSellerBilling({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+
             },
 
             async doPay() {

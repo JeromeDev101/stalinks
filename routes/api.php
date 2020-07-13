@@ -29,7 +29,10 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
 
     //Article
-    Route::name('get-article')->get('articles', 'ArticlesController@getList');
+    Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');
+    Route::name('get-article-list')->get('article-list', 'ArticlesController@getArticleList');
+    Route::name('get-writer-list')->get('writer-list', 'ArticlesController@getWriterList');
+    Route::name('add-articles')->post('articles', 'ArticlesController@store');
 
     //Billing
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
