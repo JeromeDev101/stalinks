@@ -16,9 +16,9 @@
                 <ul class="nav navbar-nav">
                     <li v-if="isBuyer" style="margin-left:-300px;margin-bottom:-55px;">
                         <a href="#">
-                            Wallet: <strong>$ {{ user.total_wallet == null ? '0':user.total_wallet.total_wallet }}</strong>
+                            Wallet: <strong>$ {{ money.wallet }}</strong>
                             &nbsp;
-                            Credit: <strong>$ {{ user.wallet_transaction == null ? '0':computeCredit(user.wallet_transaction.amount_usd) }}</strong>
+                            Credit: <strong>$ {{ money.credit }}</strong>
                         </a>
                     </li>
 
@@ -77,11 +77,18 @@ export default {
             isBuyer: false,
             userInfo: {},
             error: null,
+            money: {
+                wallet: '',
+                total_purchased: '',
+                total_paid: '',
+                credit: '',
+            },
 
         }
     },
 
     created() {
+        this.$root.$refs.AppHeader = this;
         this.checkAccountType();
         this.liveGetWallet();
     },
@@ -97,29 +104,6 @@ export default {
             logout: 'auth/logout',
         }),
 
-        computeCredit(wallet) {
-            let buyer_purchased = this.user.purchased
-            let price_list = [];
-            let total_purchased = 0;
-            let credit = 0;
-
-            if( buyer_purchased != null ){
-
-                buyer_purchased.forEach( function(item, index) {
-                    if( typeof item.publisher !== 'undefined' ){
-                        price_list.push( parseFloat(item.publisher[0].price) )
-                    }
-                })
-            }
-
-            if( price_list.length > 0 ){
-                total_purchased = price_list.reduce(this.calcSum);
-                credit = parseFloat(wallet) - total_purchased;
-            }
-
-            return credit.toFixed(2);
-        },
-
         calcSum(total, num) {
             return total + num
         },
@@ -132,9 +116,8 @@ export default {
         },
 
         liveGetWallet() {
-            axios.get('api/current-user')
-                .then(response => console.log( response.data) )
-                // .catch(error => (this.error = error))
+            axios.get('api/wallet-credit')
+                .then(response => (this.money = response.data) )
         },
 
         checkAccountType() {

@@ -86,7 +86,6 @@
 
         methods: {
             async getInfoArticle(params) {
-
                 await this.$store.dispatch('actionGetInfoArticle',{
                     id: this.$route.params.id
                 });

@@ -47,11 +47,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         // $user = $this->model->with('UserType','role', 'countriesAccessable', 'internalDomainsAccessable.country', 'backlinks.intDomain.country')->findOrFail($id);
 
         $user = $this->model
-                            ->with(['purchased' => function($query){
-                                $query->with('publisher:id,price');
-                            }])
                             ->with('total_wallet')
-                            ->with('wallet_transaction','UserType','role', 'countriesAccessable')->findOrFail($id);
+                            ->with('UserType','role', 'countriesAccessable')->findOrFail($id);
 
         $user->isAdmin = $user->isAdmin();
         return $user;

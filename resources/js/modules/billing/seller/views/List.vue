@@ -276,9 +276,11 @@
 
                 if( this.messageForms.action == 'success' ){
                     this.getSellerBilling();
-                    this.$ref.proof.value = '';
+                    this.$refs.proof.value = '';
                     this.updateModel.payment_type = '';
                 }
+
+                this.$root.$refs.AppHeader.liveGetWallet()
             },
 
             async getPaymentTypeList(params) {

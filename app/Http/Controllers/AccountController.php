@@ -11,9 +11,12 @@ use App\Models\Registration;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendEmailVerification;
+use App\Models\BuyerPurchased;
 use Illuminate\Support\Facades\App;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Backlink;
 
 class AccountController extends Controller
 {
@@ -192,5 +195,40 @@ class AccountController extends Controller
         return response()->json([
             'data' => $getUsers
         ], 200);
+    }
+
+    public function getWalletCredit() {
+        $user_id = Auth::user()->id;
+
+        $publisher_ids = BuyerPurchased::select('publisher_id')
+                                        ->where('user_id_buyer', $user_id)
+                                        ->where('status', 'Purchased')
+                                        ->get()
+                                        ->toArray();
+
+        $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
+                                ->where('status', 'Live')
+                                ->where('payment_status', 'Paid')
+                                ->where('user_id', $user_id)
+                                ->get();
+
+        $total_purchased = Publisher::selectRaw('SUM(price) as total_purchased')
+                                ->whereIn('id', $publisher_ids)
+                                ->get();
+
+        $user = User::select('id','name')
+                    ->with('total_wallet')
+                    ->where('id', $user_id)
+                    ->get();
+
+        $credit = floatval($user[0]['total_wallet']['total_wallet']) - floatval($total_purchased[0]['total_purchased']);
+
+
+        return [
+            'wallet' => $user[0]['total_wallet']['total_wallet'],
+            'total_purchased' => $total_purchased[0]['total_purchased'],
+            'total_paid' => $total_paid[0]['total_paid'],
+            'credit' => number_format($credit,2)
+        ];
     }
 }

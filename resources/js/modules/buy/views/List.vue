@@ -103,7 +103,7 @@
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td>
-                                    <div class="btn-group">
+                                    <div class="btn-group" ref="text">
                                         <button :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
                                         <button :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
                                         <button :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
@@ -381,6 +381,7 @@
 
                 if (this.messageForms.action === 'updated') {
                     this.getBuyList();
+                    this.$root.$refs.AppHeader.liveGetWallet()
                 }
             },
 

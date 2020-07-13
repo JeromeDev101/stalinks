@@ -8,6 +8,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Publisher;
 
 class User extends Authenticatable
 {
@@ -105,16 +106,12 @@ class User extends Authenticatable
         return $this->hasMany(DomainProvider::class);
     }
 
-    public function wallet_transaction() {
-        return $this->hasOne('App\Models\WalletTransaction', 'user_id', 'id');
-    }
+    // public function wallet_transaction() {
+    //     return $this->hasOne('App\Models\WalletTransaction', 'user_id', 'id');
+    // }
 
     public function buyer_purchased() {
         return $this->hasMany('App\Models\BuyerPurchased', 'user_id_buyer', 'id');
-    }
-
-    public function purchased() {
-        return $this->buyer_purchased()->where('status', 'Purchased');
     }
 
     public function total_wallet() {

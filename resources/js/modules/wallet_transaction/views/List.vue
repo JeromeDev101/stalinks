@@ -357,8 +357,9 @@
 
                     this.$refs.proof.value = '';
                     this.getWalletTransactionList();
-
                 }
+
+                this.$root.$refs.AppHeader.liveGetWallet()
             },
 
             clearMessageform() {
