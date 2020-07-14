@@ -26,7 +26,7 @@ class ArticlesController extends Controller
 
     public function getArticleList(Request $request) {
         $list = Article::with('country:id,name')
-                        ->with('backlinks:id,title,anchor_text')
+                        ->with('backlinks:id,title,anchor_text,status')
                         ->get();
 
         return [
@@ -63,7 +63,7 @@ class ArticlesController extends Controller
         $article = Article::find($request->content['id']);
         $article->update([
             'content' => $request->data,
-            'price' => $request->content['price'],
+            'date_complete' => $request->content['status'] == 'Writing Done' ? date('Y-m-d'):null,
         ]);
 
         return response()->json(['success'=>true], 200);

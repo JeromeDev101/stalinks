@@ -59,7 +59,7 @@
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
-                                <td>{{ article.date_completed }}</td>
+                                <td>{{ article.date_complete }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
@@ -114,7 +114,10 @@
                                 <div class="form-group">
                                     <label for="">Status</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
-                                        <option value=""></option>
+                                        <option value="">Select Status</option>
+                                        <option v-for="option in writer_status" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -222,12 +225,11 @@
     export default {
         data() {
             return {
+                writer_status: ['Writing Done', 'In Writing'],
                 viewModel: {
                     backlink: '',
                 },
-
                 data: '',
-
                 addModel: {
                     backlink: '',
                     title: '',
@@ -296,6 +298,8 @@
                     content: this.contentModel
                 });
                 this.isPopupLoading = false;
+
+                this.getListArticles();
             },
 
             displayInfo() {
