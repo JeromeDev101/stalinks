@@ -134,7 +134,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Processed</label>
-                                        <input type="date" :disabled="isBuyer" v-model="modelBaclink.date_process" class="form-control">
+                                        <input type="date" :disabled="isBuyer || isPostingWriter" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">URL Advertiser</label>
-                                    <input type="text" v-model="modelBaclink.url_advertiser" class="form-control" required="required" >
+                                    <input type="text" v-model="modelBaclink.url_advertiser"  :disabled="isPostingWriter" class="form-control" required="required" >
                                 </div>
                             </div>
 
@@ -156,7 +156,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label style="color: #333">Price</label>
-                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer" class="form-control" value="" required="required" >
+                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                                     <div>
                                         <label style="color: #333">Link To</label>
 
-                                        <input type="text" v-model="modelBaclink.link" class="form-control"  required="required" >
+                                        <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter" required="required" >
                                         <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control" :disabled="isBuyer">
+                                        <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter">
                                     </div>
                                 </div>
                             </div>
@@ -296,6 +296,7 @@
           loadIntDomain: false,
           isPopupLoading: false,
           isBuyer: false,
+          isPostingWriter: false,
           searchLoading: false,
         }
       },
@@ -384,10 +385,15 @@
 
         checkAccountType() {
             let that = this.user
+
             if( that.user_type ){
                 if( that.user_type.type == 'Buyer' ){
                     this.isBuyer = true;
                 }
+            }
+
+            if( that.role.id == 4 ){
+                this.isPostingWriter = true;
             }
         },
 

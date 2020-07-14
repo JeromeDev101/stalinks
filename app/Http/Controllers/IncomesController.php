@@ -26,7 +26,7 @@ class IncomesController extends Controller
         $registered = Registration::where('email', $user->email)->first();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
-        if( $user->type != 10 && $registered->type == 'Seller' ){
+        if( ($user->type != 10 && $user->role->description != 'Manager')&& $registered->type == 'Seller' ){
             $list->whereIn('publisher_id', $publisher_ids);
         }
 

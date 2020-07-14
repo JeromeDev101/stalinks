@@ -23,7 +23,7 @@ class PurchaseController extends Controller
                     ->where('status', 'Live')
                     ->orderBy('created_at', 'desc');
 
-        if( !$user->isAdmin() ){
+        if( !$user->isAdmin() && $user->role->description != 'Manager' ){
             $list->where('user_id', $user->id);
         }
 
