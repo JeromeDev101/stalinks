@@ -517,10 +517,27 @@
                     return;
                 }*/
 
+                swal.fire({
+                    title: "Getting Ahrefs...",
+                    text: "Please wait",
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        swal.showLoading()
+                    },
+                });
+
                 var listIds = (this.checkIds).join(',');
                 this.isLoadingTable = true;
                 await this.$store.dispatch('getListAhrefsPublisher', { params: { domain_ids: listIds } });
                 this.isLoadingTable = false;
+
+                swal.fire(
+                        'Updated!',
+                        'Ahrefs has been updated.',
+                        'success'
+                        )
 
                 this.getPublisherList();
             },
