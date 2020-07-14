@@ -380,11 +380,11 @@
 
             selectAll: function() {
                 this.checkIds = [];
-
                 if (!this.allSelected) {
-                    for (user in this.publisher) {
-                        this.checkIds.push(this.publisher[user].id);
+                    for (var publisher in this.listPublish.data) {
+                        this.checkIds.push(this.listPublish.data[publisher].id);
                     }
+                    this.isDisabled = false;
                 }
             },
             select: function() {
@@ -510,12 +510,13 @@
             },
 
             async getAhrefs() {
+                $('#tbl-publisher').DataTable().destroy();
                 /*var listInvalid = this.checkIds.some(ext => ext.status != 30);
                 if (listInvalid === true) {
                     alert('List invalid: status diff with GotContacts');
                     return;
                 }*/
-                console.log(this.checkIds);
+
                 var listIds = (this.checkIds).join(',');
                 this.isLoadingTable = true;
                 await this.$store.dispatch('getListAhrefsPublisher', { params: { domain_ids: listIds } });

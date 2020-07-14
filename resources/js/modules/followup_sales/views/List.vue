@@ -41,7 +41,7 @@
 
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Follow ss up Sales</h3>
+                    <h3 class="box-title">Follow up Sales</h3>
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -288,7 +288,9 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },

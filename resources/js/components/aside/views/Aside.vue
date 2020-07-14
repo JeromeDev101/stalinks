@@ -4,7 +4,7 @@
         <section class="sidebar" style="height: auto;">
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu tree" data-widget="tree">
-                <li v-if="user.isAdmin || isManager || isSeller || isBuyer" class="header">ADMIN</li>
+                <li v-if="user.isAdmin || isManager || isBuyer" class="header">ADMIN</li>
 
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'system' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/system' }">
@@ -26,7 +26,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || isManager || isSeller" :class="{ active: $route.name == 'AlexaDomain' }">
+                <li v-if="user.isAdmin || isManager " :class="{ active: $route.name == 'AlexaDomain' }">
                     <router-link :to="{ path: '/ext/alexa' }">
                         <i class="fa fa-circle-o"></i>
                         <span>Get Alexa</span>
@@ -50,7 +50,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || isManager || isSeller || isBuyer" :class="{ active: $route.name == 'articles-list' }">
+                <li v-if="user.isAdmin || isManager  || isBuyer" :class="{ active: $route.name == 'articles-list' }">
                     <router-link :to="{ path: '/articles-list' }">
                         <i class="fa fa-file-text-o"></i>
                         <span>Article</span>
@@ -98,7 +98,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || isManager || isSeller" :class="{ active: $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
+                <li v-if="user.isAdmin || isManager " :class="{ active: $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
