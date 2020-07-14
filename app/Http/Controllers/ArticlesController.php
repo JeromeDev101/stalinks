@@ -25,7 +25,9 @@ class ArticlesController extends Controller
     }
 
     public function getArticleList(Request $request) {
-        $list = Article::with('country:id,name')->get();
+        $list = Article::with('country:id,name')
+                        ->with('backlinks:id,title,anchor_text')
+                        ->get();
 
         return [
             'data' => $list
@@ -57,7 +59,13 @@ class ArticlesController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function getArticleInfo(Request $request) {
-        dd($request->all());
+    public function updateContent(Request $request){
+        $article = Article::find($request->content['id']);
+        $article->update([
+            'content' => $request->data,
+            'price' => $request->content['price'],
+        ]);
+
+        return response()->json(['success'=>true], 200);
     }
 }

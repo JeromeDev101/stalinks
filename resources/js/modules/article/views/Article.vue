@@ -62,7 +62,8 @@
                                 <td>{{ article.date_completed }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a title="Add Content" class="btn btn-default" :href="'articles/'+article.id"><i class="fa fa-fw fa-pencil"></i></a>
+                                        <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
+                                        <button @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -72,6 +73,68 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Modal Content -->
+        <div class="modal fade" id="modal-content-edit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Content</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Title</label>
+                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Anchor Text</label>
+                                    <input type="text" v-model="contentModel.anchor_text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Writer Price</label>
+                                    <input type="number" v-model="contentModel.price" class="form-control" name="" aria-describedby="helpId" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Status</label>
+                                    <select name="" class="form-control" v-model="contentModel.status">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-sm-12">
+                                <tinymce id="d1" v-model="data" :other_options="options"></tinymce>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="text-primary float-left">Press 'Ctrl + Shift + F' for full screen</span>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button @click="submitSave"  type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Content -->
         
         <!-- Modal Add Article -->
         <div class="modal fade" id="modal-add-article" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -163,6 +226,8 @@
                     backlink: '',
                 },
 
+                data: '',
+
                 addModel: {
                     backlink: '',
                     title: '',
@@ -173,6 +238,17 @@
                     language_id: '',
                 },
                 isPopupLoading: false,
+                options: {
+                    height: 500
+                },
+
+                contentModel: {
+                    id: '',
+                    title: '',
+                    anchor_text: '',
+                    price: '',
+                    status: '',
+                },
             }
         },
 
@@ -202,6 +278,24 @@
 
             async getListWriter(params){
                 await this.$store.dispatch('actionGetListWriter', params);
+            },
+
+            doUpdate(backlink, article){
+                this.clearMessageform()
+                this.data = article.content;
+                this.contentModel.price = article.price;
+                this.contentModel.id = article.id;
+                this.contentModel.title = backlink.title;
+                this.contentModel.anchor_text = backlink.anchor_text;
+            },
+
+            async submitSave() {
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionSaveContent', {
+                    data: this.data,
+                    content: this.contentModel
+                });
+                this.isPopupLoading = false;
             },
 
             displayInfo() {

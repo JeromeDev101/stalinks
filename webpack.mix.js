@@ -38,6 +38,7 @@ mix.styles([
   'node_modules/font-awesome/css/font-awesome.css',
   'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
   'node_modules/datatables.net-dt/css/jquery.dataTables.css',
+  'node_modules/tinymce/skins/content.mobile.min.css',
 ], 'public/build/css/vendor.css');
 
 
@@ -49,6 +50,7 @@ mix.scripts([
   'node_modules/jquery-freeze-table/dist/js/freeze-table.js',
   'node_modules/datatables.net/js/jquery.dataTables.js',
   'node_modules/datatables.net-dt/js/dataTables.dataTables.js',
+  'node_modules/tinymce/tinymce.min.js',
 ], 'public/build/js/vendor.js');
 
 mix.styles(['public/build/css/vendor.css', 'public/build/css/app.css'], 'public/css/app.css');

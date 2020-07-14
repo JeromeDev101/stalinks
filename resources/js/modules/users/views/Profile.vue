@@ -363,7 +363,7 @@ export default {
         this.checkAccountType();
         this.getPublisherSummaryCountry();
 
-        console.log(this.currentUser);
+        this.$root.$refs.AppHeader.liveGetWallet()
     },
 
     methods: {

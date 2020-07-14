@@ -12,4 +12,8 @@ class Article extends Model
     public function country() {
         return $this->belongsTo('App\Models\Country', 'id_language', 'id');
     }
+
+    public function backlinks() {
+        return $this->belongsTo('App\Models\Backlink', 'id_backlink', 'id');
+    }
 }

@@ -26,8 +26,8 @@ export default class ArticleService {
             .catch(error => error)
     }
 
-    static getInfoArticle(params) {
-        return axios.get(`api/article-info?id=${params.id}`, params)
+    static updateContent(params) {
+        return axios.post('api/articles-content', params)
             .then(response => response)
             .catch(error => error)
     }

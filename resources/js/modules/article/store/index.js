@@ -71,20 +71,6 @@ const actions = {
         }
     },
 
-    async actionGetInfoArticle({commit}, params){
-        try {
-            let response = await ArticleService.getInfoArticle(params)
-            commit(INFO_ARTICLE, { infoArticles: response.data });
-        }catch(e){
-            let errors = e.response.data.errors;
-            if (errors) {
-                commit(SET_ERROR, errors);
-            } else {
-                commit(SET_ERROR, e.response.data);
-            }
-        }
-    },
-
     async actionGetListWriter({commit}, params){
         try {
             let response = await ArticleService.getListWriter(params)
@@ -102,9 +88,27 @@ const actions = {
     async actionAddArticle({commit}, params){
         try {
             let response = await ArticleService.addArticle(params)
-            console.log(response)
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'success', message: 'Sucessfully Added', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        }catch(e){
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionSaveContent({commit}, params){
+        try {
+            let response = await ArticleService.updateContent(params)
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'success', message: 'Sucessfully Updated', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

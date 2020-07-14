@@ -225,7 +225,7 @@ class AccountController extends Controller
 
 
         return [
-            'wallet' => $user[0]['total_wallet']['total_wallet'],
+            'wallet' => number_format($user[0]['total_wallet']['total_wallet'],2),
             'total_purchased' => $total_purchased[0]['total_purchased'],
             'total_paid' => $total_paid[0]['total_paid'],
             'credit' => number_format($credit,2)
