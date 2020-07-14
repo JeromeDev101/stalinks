@@ -37,8 +37,8 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
-                        <tbody>
+                    <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
@@ -51,6 +51,8 @@
                                 <th>Status Payment</th>
                                 <!-- <th>Action</th> -->
                             </tr>
+                        </thead>
+                        <tbody>
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ purchase.id }}</td>
@@ -70,11 +72,11 @@
                         </tbody>
                     </table>
                 </div>
-                
+
             </div>
 
         </div>
-        
+
         <!-- Modal Update -->
         <div class="modal fade" id="modal-update-purchase" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -161,6 +163,21 @@
         methods: {
             async getPurchaseList(params){
                 await this.$store.dispatch('actionGetPurchaseList', params)
+
+                $('#tbl-purchase').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5},
+                        { orderable: true, targets: 6},
+                        { orderable: true, targets: 7},
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
                 this.getTotalAmount();
             },
 
