@@ -242,17 +242,33 @@
                     }
                 });
 
-                $('#tbl_buy_backlink').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: false, targets: '_all' }
-                    ],
-                });
+                console.log(this.user.isOurs);
+                if(this.user.isAdmin) {
+                    $('#tbl_buy_backlink').DataTable({
+                        paging: false,
+                        searching: false,
+                        columnDefs: [
+                            { orderable: true, targets: 0 },
+                            { orderable: true, targets: 4 },
+                            { orderable: true, targets: 5 },
+                            { orderable: true, targets: 6 },
+                            { orderable: false, targets: '_all' }
+                        ],
+                    });
+                } else {
+                    $('#tbl_buy_backlink').DataTable({
+                        paging: false,
+                        searching: false,
+                        columnDefs: [
+                            { orderable: true, targets: 0 },
+                            { orderable: true, targets: 3 },
+                            { orderable: true, targets: 4 },
+                            { orderable: true, targets: 5 },
+                            { orderable: false, targets: '_all' }
+                        ],
+                    });
+                }
+
 
                 this.searchLoading = false;
             },
