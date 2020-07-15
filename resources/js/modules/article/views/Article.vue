@@ -43,7 +43,7 @@
                                 <th>#</th>
                                 <th>ID Article</th>
                                 <th>ID Backlink</th>
-                                <th>ID language</th>
+                                <th>Language</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
                                 <th>Content</th>
@@ -59,7 +59,7 @@
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
-                                <td>{{ article.date_completed }}</td>
+                                <td>{{ article.date_complete }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
@@ -92,14 +92,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Title</label>
-                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.title" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Anchor Text</label>
-                                    <input type="text" v-model="contentModel.anchor_text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.anchor_text" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
@@ -114,7 +114,10 @@
                                 <div class="form-group">
                                     <label for="">Status</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
-                                        <option value=""></option>
+                                        <option value="">Select Status</option>
+                                        <option v-for="option in writer_status" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -222,12 +225,11 @@
     export default {
         data() {
             return {
+                writer_status: ['Content writing', 'Content sent'],
                 viewModel: {
                     backlink: '',
                 },
-
                 data: '',
-
                 addModel: {
                     backlink: '',
                     title: '',
@@ -282,11 +284,12 @@
 
             doUpdate(backlink, article){
                 this.clearMessageform()
-                this.data = article.content;
+                this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price;
                 this.contentModel.id = article.id;
                 this.contentModel.title = backlink.title;
                 this.contentModel.anchor_text = backlink.anchor_text;
+                this.contentModel.status = backlink.status;
             },
 
             async submitSave() {
@@ -296,6 +299,8 @@
                     content: this.contentModel
                 });
                 this.isPopupLoading = false;
+
+                this.getListArticles();
             },
 
             displayInfo() {

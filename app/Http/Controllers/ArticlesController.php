@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\User;
 use App\Models\Article;
+use Illuminate\Support\Facades\Auth;
 
 class ArticlesController extends Controller
 {
@@ -15,6 +16,7 @@ class ArticlesController extends Controller
                             $join->on('backlinks.publisher_id', '=', 'publisher.id');
                         })
                         ->where('publisher.inc_article', 'Yes')
+                        ->where('backlinks.status', 'Content writing')
                         ->with('publisher:id,url,inc_article,language_id')
                         ->with('user:id,name');
 
@@ -25,12 +27,18 @@ class ArticlesController extends Controller
     }
 
     public function getArticleList(Request $request) {
+        $user = Auth::user();
+
         $list = Article::with('country:id,name')
-                        ->with('backlinks:id,title,anchor_text')
-                        ->get();
+                        ->with('backlinks:id,title,anchor_text,status');
+        
+                        
+        if($user->isOurs == 0 && $user->role_id == 4){
+            $list = $list->where('id_writer', $user->id);
+        }
 
         return [
-            'data' => $list
+            'data' => $list->get()
         ];
     }
 
@@ -63,7 +71,7 @@ class ArticlesController extends Controller
         $article = Article::find($request->content['id']);
         $article->update([
             'content' => $request->data,
-            'price' => $request->content['price'],
+            'date_complete' => $request->content['status'] == 'Content sent' ? date('Y-m-d'):null,
         ]);
 
         return response()->json(['success'=>true], 200);

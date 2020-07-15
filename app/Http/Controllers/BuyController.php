@@ -21,6 +21,7 @@ class BuyController extends Controller
             'publisher.*',
             'registration.username',
             'users.name',
+            'users.username as user_name',
             'users.isOurs',
             'registration.company_name',
             'countries.name AS country_name',

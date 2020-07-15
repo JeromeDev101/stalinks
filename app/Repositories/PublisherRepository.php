@@ -23,7 +23,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function getList($filter)
     {
         $user = Auth::user();
-        $list = Publisher::select('publisher.*','registration.username','users.name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
+        $list = Publisher::select('publisher.*','registration.username','users.name', 'users.username as user_name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
@@ -31,8 +31,12 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $registered = Registration::where('email', $user->email)->first();
 
-        if( $user->type != 10 && $registered->type == 'Seller' ){
-            $list->where('user_id', $user->id);
+        if( $user->type != 10 && isset($registered->type) && $registered->type == 'Seller' ){
+            $list->where('publisher.user_id', $user->id);
+        }
+
+        if( $user->role_id == 6 ){
+            $list->where('publisher.user_id', $user->id);
         }
 
         if( $user->isOurs != 0 && $user->type != 10 ){

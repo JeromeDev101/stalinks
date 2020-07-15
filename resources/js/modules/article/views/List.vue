@@ -63,8 +63,8 @@
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_completed }}</td>
                                 <td>
-                                    <div class="btn-group">
-                                        <button title="View Content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                    <div :disabled="article.content == null" class="btn-group">
+                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
                                 <td>{{ article.id_writer_price }}</td>
@@ -75,6 +75,42 @@
                 </div>
             </div>
         </div>
+  
+        <!-- Modal View Content -->
+        <div class="modal fade" id="modal-view-content" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Content</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Title</label>
+                                    <input type="text" class="form-control" v-model="viewModel.title" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Anchor Text</label>
+                                    <input type="text" class="form-control" v-model="viewModel.anchor_text" :disabled="true">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <tinymce id="content" v-model="data" :other_options="options"></tinymce>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View Content -->
+
     </div>
 </template>
 
@@ -83,7 +119,16 @@
     export default {
         data() {
             return {
-                //
+                data: '',
+                options: {
+                    height: 500,
+                    toolbar: false,
+                    menubar: false,
+                },
+                viewModel: {
+                    title: '',
+                    anchor_text: '',
+                },
             }
         },
 
@@ -100,6 +145,11 @@
         methods: {
             async getListArticles(params){
                 await this.$store.dispatch('actionGetListArticle',params);
+            },
+
+            viewContent(backlinks, content) {
+                this.data = content == null ? '':content;
+                this.viewModel = backlinks
             },
         },
     }
