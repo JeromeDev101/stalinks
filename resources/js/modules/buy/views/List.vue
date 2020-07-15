@@ -242,32 +242,48 @@
                     }
                 });
 
-                console.log(this.user.isOurs);
+
+                var columnsOrder = [];
+
                 if(this.user.isAdmin) {
-                    $('#tbl_buy_backlink').DataTable({
-                        paging: false,
-                        searching: false,
-                        columnDefs: [
-                            { orderable: true, targets: 0 },
-                            { orderable: true, targets: 4 },
-                            { orderable: true, targets: 5 },
-                            { orderable: true, targets: 6 },
-                            { orderable: false, targets: '_all' }
-                        ],
-                    });
+                    columnsOrder = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 14 },
+                        { orderable: false, targets: '_all' }
+                    ];
+                } else if(this.user.isOurs == 0) {
+                    columnsOrder = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 13 },
+                        { orderable: false, targets: '_all' }
+                    ];
                 } else {
-                    $('#tbl_buy_backlink').DataTable({
-                        paging: false,
-                        searching: false,
-                        columnDefs: [
-                            { orderable: true, targets: 0 },
-                            { orderable: true, targets: 3 },
-                            { orderable: true, targets: 4 },
-                            { orderable: true, targets: 5 },
-                            { orderable: false, targets: '_all' }
-                        ],
-                    });
+                    columnsOrder = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: false, targets: '_all' }
+                    ];
                 }
+
+                $('#tbl_buy_backlink').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: columnsOrder,
+                });
 
 
                 this.searchLoading = false;
