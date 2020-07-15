@@ -104,8 +104,8 @@
                                 <td>{{ formatPrice(buy.org_traffic) }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-if="user.isOurs == 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
-                                <td v-if="user.isOurs == 0"> $ {{ buy.code_price}}</td>
+                                <td v-if="user.isOurs==0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
