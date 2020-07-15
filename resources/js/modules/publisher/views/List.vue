@@ -132,9 +132,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listPublish.data.length == 0">
-                                <td colspan="15" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(publish, index) in listPublish.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td>
