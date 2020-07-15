@@ -60,7 +60,7 @@
                     <h3 class="box-title">Buy Backlinks</h3>
 
                     <div v-if="isCreditAuth" class="alert alert-warning my-3">
-                        Sorry you cannot Purchase backlinks due to lack of Wallet. Click 
+                        Sorry you cannot Purchase backlinks due to lack of Wallet. Click
                         <button class="btn btn-link" @click="checkCreditAuth">
                             Retry
                         </button> if you have given permission to purchased
@@ -84,6 +84,8 @@
                                 <th>Organic Traffic</th>
                                 <th>Price</th>
                                 <th>Status</th>
+                                <th>Code Combination</th>
+                                <th>Code Price</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -102,6 +104,8 @@
                                 <td>{{ formatPrice(buy.org_traffic) }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
+                                <td class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td> $ {{ buy.code_price}}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>

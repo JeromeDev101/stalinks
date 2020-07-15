@@ -6,13 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\WalletTransaction;
 use App\Models\User;
 use App\Models\TotalWallet;
+use Illuminate\Support\Facades\Auth;
 
 class WalletTransactionController extends Controller
 {
     public function getList(Request $request) {
+        $user = Auth::user();
+
         $list = WalletTransaction::with('user:id,name')
                         ->with('payment_type:id,type')
                         ->orderBy('id', 'desc');
+
+        if( !$user->isAdmin() && $user->role->id != 7 ){
+            $list->where('user_id', $user->id);
+        }
 
         return [
             'data' => $list->get()
@@ -101,19 +108,19 @@ class WalletTransactionController extends Controller
             $request->validate([
                 'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
-    
+
             $image = $request->file;
             $new_name = date('Ymd').time() . '-transaction.' . $image->getClientOriginalExtension();
             $image->move(public_path('images/wallet_transaction'), $new_name);
 
             $proof_doc = '/images/wallet_transaction/'.$new_name;
-            
+
             $file_name = str_replace('/images/wallet_transaction/','',$wallet_transaction->proof_doc);
             $path = public_path()."/images/wallet_transaction/".$file_name;
 
             if( file_exists($path) ){
                 unlink($path);
-            }   
+            }
         }
 
         $wallet_transaction->update([
@@ -126,6 +133,6 @@ class WalletTransactionController extends Controller
         ]);
 
         return response()->json(['success'=>true],200);
-            
+
     }
 }
