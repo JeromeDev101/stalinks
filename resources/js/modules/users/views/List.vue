@@ -76,9 +76,9 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default" @click="doUpdateUser(user)" data-toggle="modal" data-target="#modal-update" title="Edit User Information"><i class="fa fa-fw fa-edit"></i></button>
-                                        <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button>
+                                        <!-- <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button> -->
                                         <button class="btn btn-default" @click="doUpdatePermissionExt(user)" data-toggle="modal" data-target="#modal-permission-ext" title="Edit Country ExtDomain"><i class="fa fa-fw fa-eyedropper"></i></button>
-                                        <button class="btn btn-default" @click="doUpdateInternalPermission(user)" data-toggle="modal" data-target="#modal-int-permission" title="Edit Permission IntDomain"><i class="fa fa-fw fa-anchor"></i></button>
+                                        <!-- <button class="btn btn-default" @click="doUpdateInternalPermission(user)" data-toggle="modal" data-target="#modal-int-permission" title="Edit Permission IntDomain"><i class="fa fa-fw fa-anchor"></i></button> -->
                                         <router-link class="btn btn-default" title="View detail" :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i></router-link>
                                     </div>
                                 </td>

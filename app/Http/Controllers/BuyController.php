@@ -39,7 +39,7 @@ class BuyController extends Controller
 
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
-                    ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+                    ->orWhere('users.username', 'like', '%'.$filter['search'].'%');
         }
 
         if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
@@ -163,6 +163,9 @@ class BuyController extends Controller
                 else if( $score >= 8 || $score <= -8){ $val = 'E'; }
                 return $val;
             case "value2":
+                if($a == 0){
+                    return '';
+                }
                 $score = number_format( floatVal($a / $b) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
