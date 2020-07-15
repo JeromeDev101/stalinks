@@ -43,7 +43,7 @@
                                 <th>#</th>
                                 <th>ID Article</th>
                                 <th>ID Backlink</th>
-                                <th>ID language</th>
+                                <th>Language</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
                                 <th>Content</th>
@@ -92,14 +92,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Title</label>
-                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.title" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Anchor Text</label>
-                                    <input type="text" v-model="contentModel.anchor_text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.anchor_text" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
@@ -225,7 +225,7 @@
     export default {
         data() {
             return {
-                writer_status: ['Writing Done', 'In Writing'],
+                writer_status: ['Content writing', 'Content sent'],
                 viewModel: {
                     backlink: '',
                 },
@@ -284,11 +284,12 @@
 
             doUpdate(backlink, article){
                 this.clearMessageform()
-                this.data = article.content;
+                this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price;
                 this.contentModel.id = article.id;
                 this.contentModel.title = backlink.title;
                 this.contentModel.anchor_text = backlink.anchor_text;
+                this.contentModel.status = backlink.status;
             },
 
             async submitSave() {

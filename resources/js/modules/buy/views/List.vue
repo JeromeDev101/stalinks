@@ -91,7 +91,7 @@
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
-                                <td>{{ buy.username ? buy.username : 'N/A'}}</td>
+                                <td>{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td>{{ buy.country_name }}</td>
                                 <td>{{ buy.url }}</td>
                                 <td>{{ buy.ur }}</td>

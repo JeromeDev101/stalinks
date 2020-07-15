@@ -376,7 +376,6 @@ class ExtDomainController extends Controller
 
     public function update(Request $request) {
         $id = Auth::user()->id;
-
         $input = $request->only(['id', 'status', 'email', 'domain',
             'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
 
@@ -458,6 +457,8 @@ class ExtDomainController extends Controller
                 'org_keywords' => $input['organic_keywords'],
                 'org_traffic' => $input['organic_traffic'],
                 'price' => null,
+                'language_id' => $request->country['id'],
+                'inc_article' => 'No',
             ]);
         }
 

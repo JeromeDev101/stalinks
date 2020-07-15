@@ -145,7 +145,7 @@
                                     </div>
                                 </td>
                                 <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
-                                <td v-if="user.isAdmin">{{ publish.username ? publish.username : 'N/A'   }}</td>
+                                <td v-if="user.isAdmin">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="!user.isAdmin">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>

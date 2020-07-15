@@ -18,6 +18,7 @@ import storeFollowupSales from '@/modules/followup_sales/store';
 import storeWalletTransaction from '@/modules/wallet_transaction/store';
 import storeBillingBuyer from '@/modules/billing/buyer/store';
 import storeBillingSeller from '@/modules/billing/seller/store';
+import storeBillingWriter from '@/modules/billing/writer/store';
 import storeLog from '@/modules/logs/store';
 import storeDomain from '@/modules/domain/store';
 import storeSystem from '@/modules/system/store';
@@ -38,6 +39,7 @@ export default new Vuex.Store({
         storeWalletTransaction,
         storeBillingBuyer,
         storeBillingSeller,
+        storeBillingWriter,
         storePurchase,
         storeExtDomain,
         storeIncomes,

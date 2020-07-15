@@ -148,7 +148,7 @@
             },
 
             viewContent(backlinks, content) {
-                this.data = content;
+                this.data = content == null ? '':content;
                 this.viewModel = backlinks
             },
         },
