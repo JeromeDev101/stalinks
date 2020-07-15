@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
 use App\Models\Backlink;
+use App\Models\Pricelist;
 use App\Models\BuyerPurchased;
 use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
@@ -64,11 +65,24 @@ class BuyController extends Controller
             $list->where('publisher.language_id', $filter['language_id']);
         }
 
-        $list->orderBy('publisher.id', 'desc');
+        $result = $list->orderBy('publisher.id', 'desc')->get();
 
-        return [
-            'data' => $list->get()
-        ];
+        foreach($result as $buy) {
+            $codeCombiURDR = $this->getCodeCombination($buy->ur, $buy->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($buy->backlinks, $buy->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($buy->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($buy->org_traffic, 0, 'value4');
+            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+
+            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
+
+            $buy['code_combination'] = $combineALl;
+            $buy['code_price'] = $price_list['price'];
+        }
+
+        return response()->json([
+            'data' => $result
+        ],200);
     }
 
     public function update(Request $request) {
@@ -124,6 +138,56 @@ class BuyController extends Controller
     public function checkCreditAuth() {
         $data = Auth::user()->credit_auth;
         return response()->json(['success' => true, 'data' => $data], 200);
+    }
+
+    /**
+     *
+     * get code combination of list backlinks
+     *
+     * @param integer $a
+     * @param integer $b
+     * @param string $type
+     *
+     * @return string
+     */
+    private function getCodeCombination($a, $b, $type)
+    {
+        switch ( $type ) {
+            case "value1":
+                $score = $b - $a;
+                $val = '';
+                if( $score < 5 && $score >= -3){  $val = 'A'; }
+                else if( $score <= 8 && $score >= 5){ $val = 'C'; }
+                else if( $score <= -4 && $score >= -8){ $val = 'D'; }
+                else if( $score >= 8 || $score <= -8){ $val = 'E'; }
+                return $val;
+            case "value2":
+                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $val = '';
+                if( $score >= 1 && $score < 3){  $val = 'A'; }
+                else if( $score >= 3 && $score < 8){ $val = 'C'; }
+                else if( $score >= 8 && $score < 16){ $val = 'D'; }
+                else if( $score >= 16 ){ $val = 'E'; }
+                return $val;
+            case "value3":
+                $val = '';
+                if( $a >= 1000){ $val = 'A'; }
+                else if( $a >= 500 && $a < 1000){ $val = 'B'; }
+                else if( $a >= 100 && $a < 500){ $val = 'C'; }
+                else if( $a >= 50 && $a < 100){ $val = 'D'; }
+                else if( $a < 50 ){ $val = 'E'; }
+                return $val;
+            case "value4":
+                $val = '';
+                if( $a >= 10000){ $val = 'A'; }
+                else if( $a >= 5000 && $a < 10000){ $val = 'B'; }
+                else if( $a >= 1000 && $a < 5000){ $val = 'C'; }
+                else if( $a >= 500 && $a < 1000){ $val = 'D'; }
+                else if( $a < 500 ){ $val = 'E'; }
+                return $val;
+            default:
+                return '';
+        }
     }
 
 }
