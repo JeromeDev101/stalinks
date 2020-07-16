@@ -141,7 +141,7 @@
                 if(this.listAlexa.status == false) {
                     swal.fire({
                         icon: 'error',
-                        title: 'The limit number of Top site in these country is only '+this.listAlexa.total+'.',
+                        title: 'The limit number of Top site in this country is '+this.listAlexa.total+'.',
                         showConfirmButton: true,
                     })
                 } else if(this.listAlexa.status == true){
