@@ -157,6 +157,14 @@ class ExtDomainController extends Controller
          // Comment for save money :D
         $alexaLib = $this->getAlexaInstance($countryCode, $start, $count);
         $newData = $alexaLib->getTopSites($this->extDomainRepository);
+
+        $status = true;
+        if($newData['total'] < $start) {
+            $status = false;
+        }
+
+        $newData['status'] = $status;
+
         return response()->json($newData);
     }
 

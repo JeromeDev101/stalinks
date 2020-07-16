@@ -107,7 +107,7 @@ const mutations = {
 
     [EXT_DOMAIN_SET_LIST_ALEXA](state, response) {
         if (response.hasOwnProperty('extDomains')) {
-            state.listAlexa = response.extDomains;
+            state.listAlexa = response;
         } else {
             state.listAlexa = [];
         }
