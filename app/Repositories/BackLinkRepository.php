@@ -112,8 +112,10 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
         if ($filters->full_data === true) {
             $data = $backlink->with(['publisher' => function($query) {
-                $query->with('user:id,name');
-            }, 'user'])->get();
+                                $query->with('user:id,name');
+                            }, 'user'])
+                            ->with('article')
+                            ->get();
 
             return [
                 'data' => $data,
@@ -121,7 +123,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        return $backlink->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate(config('common.paginate.default'));
+        return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate(config('common.paginate.default'));
     }
 
     protected function fillter($query, $filters)

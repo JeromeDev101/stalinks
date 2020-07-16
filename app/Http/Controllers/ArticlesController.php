@@ -16,7 +16,6 @@ class ArticlesController extends Controller
                             $join->on('backlinks.publisher_id', '=', 'publisher.id');
                         })
                         ->where('publisher.inc_article', 'Yes')
-                        ->where('backlinks.status', 'Content writing')
                         ->with('publisher:id,url,inc_article,language_id')
                         ->with('user:id,name');
 

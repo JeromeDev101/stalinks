@@ -10,6 +10,7 @@ use App\Models\Pricelist;
 use App\Models\BuyerPurchased;
 use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Article;
 
 class BuyController extends Controller
 {
@@ -86,13 +87,19 @@ class BuyController extends Controller
         ],200);
     }
 
+    /**
+     * Buy function
+     *
+     * @param Request $request
+     * @return response
+     */
     public function update(Request $request) {
         $publisher = Publisher::find($request->id);
         $user = Auth::user();
 
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
 
-        Backlink::create([
+        $backlink = Backlink::create([
             'price' => $request->price,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
@@ -103,6 +110,13 @@ class BuyController extends Controller
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
         ]);
+
+        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "Yes"){
+            Article::create([
+                'id_backlink' => $backlink->id,
+                'id_language' => $backlink->publisher->language_id,
+            ]);
+        }
 
         return response()->json(['success'=> true], 200);
     }

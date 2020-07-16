@@ -226,11 +226,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-if="withArticle">
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter">
+                                        <input type="text" class="form-control" v-model="modelBaclink.id_article" :disabled="true">
+                                        <!-- <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter"> -->
                                     </div>
                                 </div>
                             </div>
@@ -298,6 +299,7 @@
           isBuyer: false,
           isPostingWriter: false,
           searchLoading: false,
+          withArticle: false,
         }
       },
       async created() {
@@ -400,6 +402,8 @@
         editBackLink(baclink) {
             this.modalAddBackLink = true
             let that = Object.assign({}, baclink)
+
+            this.withArticle = that.publisher.inc_article == "Yes" ? false:true; 
 
             this.modelBaclink.id = that.id
             this.modelBaclink.publisher_id = that.publisher.id

@@ -23,4 +23,8 @@ class Publisher extends Model
     public function buyer_purchased() {
         return $this->hasMany('App\Models\BuyerPurchased', 'publisher_id', 'id');
     }
+
+    public function backlinks() {
+        return $this->hasMany('App\Models\Backlink', 'publisher_id', 'id');
+    }
 }
