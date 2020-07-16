@@ -85,7 +85,7 @@
                                 <th>#</th>
                                 <th>ID</th>
                                 <th v-if="isSeller">User Seller</th>
-                                <th>User Buyer</th>
+                                <th v-if="user.isOurs == 0">User Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
                                 <th>Date Completed</th>
@@ -99,7 +99,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
                                 <td v-if="isSeller">{{ incomes.publisher.user.name }}</td>
-                                <td>{{ incomes.user.name }}</td>
+                                <td v-if="user.isOurs == 0">{{ incomes.user.name }}</td>
                                 <td>{{ incomes.publisher.url }}</td>
                                 <td>$ {{ incomes.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
@@ -241,17 +241,34 @@
                     }
                 });
 
-                $('#tbl-income').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
+                var columnSort = [];
+
+                if(this.user.isOurs == 0) {
+                    columnSort = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
+                        { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
                         { orderable: false, targets: '_all' }
-                    ],
+                    ];
+                } else {
+                    columnSort = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: false, targets: '_all' }
+                    ];
+                }
+
+                $('#tbl-income').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: columnSort
                 });
 
                 this.isSearching = false;
