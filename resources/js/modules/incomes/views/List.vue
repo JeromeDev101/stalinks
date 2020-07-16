@@ -204,6 +204,9 @@
                 filterModel: {
                     user: this.$route.query.user || '',
                     payment_status: this.$route.query.payment_status || '',
+                    status: this.$route.query.status || '',
+                    buyer: this.$route.query.buyer || '',
+                    seller: this.$route.query.seller || '',
                 },
                 isSearching: false,
                 isSeller: true,
@@ -310,6 +313,9 @@
                 this.filterModel = {
                     user: '',
                     payment_status: '',
+                    status: '',
+                    buyer: '',
+                    seller: '',
                 }
 
                 this.getListIncomes({

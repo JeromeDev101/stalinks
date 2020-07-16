@@ -17,12 +17,53 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Payment Status</label>
+                                <select name="" id="" class="form-control" v-model="filterModel.payment_status">
+                                    <option value="">All</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Not paid">Not paid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="" id="" class="form-control" v-model="filterModel.status">
+                                    <option value="" selected>All</option>
+                                    <option value="Live">Live</option>
+                                    <option value="Processing">Processing</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isAdmin">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select class="form-control" name="" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isAdmin">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select class="form-control" name="" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default" >Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -144,8 +185,16 @@
                     price: '',
                     payment_status: '',
                 },
+                filterModel: {
+                    user: this.$route.query.user || '',
+                    payment_status: this.$route.query.payment_status || '',
+                    status: this.$route.query.status || '',
+                    buyer: this.$route.query.buyer || '',
+                    seller: this.$route.query.seller || '',
+                },
                 isPopupLoading: false,
                 totalAmount: 0,
+                isSearching: false,
             }
         },
 
@@ -157,12 +206,23 @@
              ...mapState({
                 listPurchase: state => state.storePurchase.listPurchase,
                 messageForms: state => state.storePurchase.messageForms,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
         methods: {
             async getPurchaseList(params){
-                await this.$store.dispatch('actionGetPurchaseList', params)
+                this.isSearching = true;
+
+                await this.$store.dispatch('actionGetPurchaseList', {
+                    params: {
+                        user: this.filterModel.user,
+                        payment_status: this.filterModel.payment_status,
+                        status: this.filterModel.status,
+                        buyer: this.filterModel.buyer,
+                        seller: this.filterModel.seller,
+                    }
+                });
 
                 $('#tbl-purchase').DataTable({
                     paging: false,
@@ -178,7 +238,45 @@
                     ],
                 });
 
+                this.isSearching = false;
+
                 this.getTotalAmount();
+            },
+
+            clearSearch() {
+                $('#tbl-purchase').DataTable().destroy();
+
+                this.filterModel = {
+                    user: '',
+                    payment_status: '',
+                    status: '',
+                    buyer: '',
+                    seller: '',
+                }
+
+                this.getPurchaseList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+            },
+
+            doSearch() {
+                $('#tbl-purchase').DataTable().destroy();
+
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getPurchaseList({
+                    params: {
+                        user: this.filterModel.user,
+                        payment_status: this.filterModel.payment_status,
+                        status: this.filterModel.status,
+                        buyer: this.filterModel.buyer,
+                        seller: this.filterModel.seller,
+                    }
+                });
             },
 
             getTotalAmount() {
