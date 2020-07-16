@@ -52,7 +52,7 @@
                                 <th>Rank</th>
                                 <th>Status</th>
                             </tr>
-                            <tr v-for="(ext, index) in listAlexa" :key="index">
+                            <tr v-for="(ext, index) in listAlexa.extDomains" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ ext.country.name }}</td>
                                 <td><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
@@ -113,9 +113,43 @@
             },
 
             async getAlexaRank(params) {
-                this.isLoadingTable = true;
+                swal.fire({
+                    title: "Getting Alexa...",
+                    text: "Please wait",
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        swal.showLoading()
+                    },
+                });
+
+                //this.isLoadingTable = true;
                 await this.$store.dispatch('getAlexaList', params);
-                this.isLoadingTable = false;
+
+                if (this.messageForms.errors.country_id) {
+
+                    swal.fire({
+                        icon: 'error',
+                        title: this.messageForms.errors.country_id,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        height: 100,
+                    })
+                }
+
+                if(this.listAlexa.status == false) {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'The limit number of Top site in this country is '+this.listAlexa.total+'.',
+                        showConfirmButton: true,
+                    })
+                } else if(this.listAlexa.status == true){
+                    swal.close()
+                }
+
+
+                //this.isLoadingTable = false;
             },
 
             async doGetAlexaRank() {
@@ -127,7 +161,7 @@
                         count: that.filterModel2.count
                     });
 
-                console.log(this.listAlexa)
+                console.log(this.listAlexa.status)
             },
 
             initFilter() {
