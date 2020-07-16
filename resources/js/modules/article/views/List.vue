@@ -11,10 +11,29 @@
 
                     <div class="row">
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID article</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search ID backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Language</label>
+                                <select name="" class="form-control" v-model="filterModel.language_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -22,8 +41,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -51,17 +70,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listArticles.data.length == 0">
+                            <tr v-if="listArticlesAdmin.data.length == 0">
                                 <td colspan="9" class="text-center">No record</td>
                             </tr>
-                            <tr v-for="(article, index) in listArticles.data" :key="index">
+                            <tr v-for="(article, index) in listArticlesAdmin.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.id_writer }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
-                                <td>{{ article.date_completed }}</td>
+                                <td>{{ article.date_complete }}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
                                         <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
@@ -129,27 +148,69 @@
                     title: '',
                     anchor_text: '',
                 },
+                searchLoading: false,
+                filterModel: {
+                    search_article: this.$route.query.search_article || '',
+                    search_backlink: this.$route.query.search_backlink || '',
+                    language_id: this.$route.query.language_id || '',
+                },
             }
         },
 
         async created() {
             this.getListArticles();
+            this.getListCountries();
         },
 
         computed: {
             ...mapState({
-                listArticles: state => state.storeArticles.listArticles,
+                listArticlesAdmin: state => state.storeArticles.listArticlesAdmin,
+                listCountries: state => state.storeArticles.listCountries,
             })
         },
 
         methods: {
             async getListArticles(params){
-                await this.$store.dispatch('actionGetListArticle',params);
+                this.searchLoading = true;
+                await this.$store.dispatch('actionGetListArticleAdmin',params);
+                this.searchLoading = false;
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getListArticles({
+                    params: {
+                        search_backlink: this.filterModel.search_backlink,
+                        search_article: this.filterModel.search_article,
+                        language_id: this.filterModel.language_id,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    search_article: '',
+                    search_backlink: '',
+                    language_id: '',
+                }
+
+                this.getListArticles({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             viewContent(backlinks, content) {
                 this.data = content == null ? '':content;
                 this.viewModel = backlinks
+            },
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
             },
         },
     }

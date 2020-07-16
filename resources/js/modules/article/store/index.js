@@ -2,17 +2,21 @@ import ArticleService from '@/modules/article/api';
 
 const LIST_BACKLINKS = 'LIST_BACKLINKS';
 const LIST_ARTICLES = 'LIST_ARTICLES';
+const LIST_ARTICLES_ADMIN = 'LIST_ARTICLES_ADMIN';
 const INFO_ARTICLE = 'INFO_ARTICLE';
 const LIST_WRITER = 'LIST_WRITER';
 const SET_ERROR = 'SELLER_BILLING_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
+const LIST_COUNTRY = 'LIST_COUNTRY';
 
 const state = {
     infoArticles: { data: [] },
     listArticles: { data: [] },
+    listArticlesAdmin: { data: [] },
     listBacklinks: { data: [] },
     listWriter: { data: [] },
     messageForms: { action: '', message: '', errors: {} },
+    listCountries: { data: [], total: 0 },
 }
 
 const mutations = {
@@ -22,6 +26,10 @@ const mutations = {
 
     [LIST_ARTICLES] (state, data) {
         state.listArticles = data.listArticles
+    },
+
+    [LIST_ARTICLES_ADMIN] (state, data) {
+        state.listArticlesAdmin = data.listArticlesAdmin
     },
 
     [LIST_BACKLINKS] (state, data) {
@@ -38,7 +46,11 @@ const mutations = {
 
     [SET_ERROR](state, error) {
         state.error = error;
-    }
+    },
+
+    [LIST_COUNTRY](state, listCountries) {
+        state.listCountries = listCountries;
+    },
 }
 
 const actions = {
@@ -62,6 +74,34 @@ const actions = {
             let response = await ArticleService.getListArticle(params)
             commit(LIST_ARTICLES, { listArticles: response.data });
         }catch(e){
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListArticleAdmin({commit}, params){
+        try {
+            let response = await ArticleService.getListArticleAdmin(params)
+            commit(LIST_ARTICLES_ADMIN, { listArticlesAdmin: response.data });
+        }catch(e){
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListCountries({ commit }, params) {
+        try {
+            let response = await ArticleService.getListCountries(params);
+            commit(LIST_COUNTRY, response.data );
+        } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(SET_ERROR, errors);

@@ -10,6 +10,8 @@ class WriterBillingController extends Controller
     public function getList(Request $request){
         $list = Article::with('backlinks:id,title,status')
                         ->with('country:id,name')
+                        ->whereNotNull('date_complete')
+                        ->orderBy('id', 'desc')
                         ->get();
 
         return [

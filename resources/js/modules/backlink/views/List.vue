@@ -230,7 +230,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control" v-model="modelBaclink.id_article" :disabled="true">
+                                        <input type="text" class="form-control" v-model="modelBaclink.id_article" :disabled="true ">
                                         <!-- <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter"> -->
                                     </div>
                                 </div>
@@ -299,7 +299,7 @@
           isBuyer: false,
           isPostingWriter: false,
           searchLoading: false,
-          withArticle: false,
+          withArticle: true,
         }
       },
       async created() {
@@ -402,9 +402,7 @@
         editBackLink(baclink) {
             this.modalAddBackLink = true
             let that = Object.assign({}, baclink)
-
-            this.withArticle = that.publisher.inc_article == "Yes" ? false:true; 
-
+            this.withArticle = that.publisher.inc_article == "Yes" ? true:false; 
             this.modelBaclink.id = that.id
             this.modelBaclink.publisher_id = that.publisher.id
             this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
@@ -422,6 +420,7 @@
             this.modelBaclink.url_advertiser = that.url_advertiser
 
             this.modelBaclink.seller = that.publisher.user.name
+            this.modelBaclink.id_article = that.article == null ? '':that.article.id
 
             let element = this.$refs.modalEditBacklink
             $(element).modal('show')

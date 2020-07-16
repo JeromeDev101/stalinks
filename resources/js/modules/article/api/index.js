@@ -8,6 +8,12 @@ export default class ArticleService {
             .catch(error => error)
     }
 
+    static getListArticleAdmin(params) {
+        return axios.get('api/article-list-admin', params)
+            .then(response => response)
+            .catch(error => error)
+    }
+
     static getListArticle(params) {
         return axios.get('api/article-list', params)
             .then(response => response)
@@ -30,6 +36,12 @@ export default class ArticleService {
         return axios.post('api/articles-content', params)
             .then(response => response)
             .catch(error => error)
+    }
+
+    static getListCountries(params) {
+        return axios.get('/api/countries', params)
+            .then(response => response)
+            .catch(error => error);
     }
 
 }

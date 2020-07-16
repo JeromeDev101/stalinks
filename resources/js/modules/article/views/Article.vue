@@ -11,10 +11,29 @@
 
                     <div class="row">
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID article</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search ID backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Language</label>
+                                <select name="" class="form-control" v-model="filterModel.language_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -22,8 +41,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -58,8 +77,8 @@
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.country.name }}</td>
-                                <td>{{ article.date_start }}</td>
-                                <td>{{ article.date_complete }}</td>
+                                <td>{{ article.date_start == null ? '-':article.date_start }}</td>
+                                <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
                                 <td>
                                     <div class="btn-group">
                                         <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
@@ -251,6 +270,13 @@
                     price: '',
                     status: '',
                 },
+                filterModel: {
+                    search_article: this.$route.query.search_article || '',
+                    search_backlink: this.$route.query.search_backlink || '',
+                    language_id: this.$route.query.language_id || '',
+                },
+
+                searchLoading: false,
             }
         },
 
@@ -258,6 +284,7 @@
             this.getListArticles();
             this.getListBacklinks();
             this.getListWriter();
+            this.getListCountries();
         },
 
         computed: {
@@ -266,12 +293,15 @@
                 listBacklinks: state => state.storeArticles.listBacklinks,
                 listWriter: state => state.storeArticles.listWriter,
                 messageForms: state => state.storeArticles.messageForms,
+                listCountries: state => state.storeArticles.listCountries,
             })
         },
 
         methods: {
             async getListArticles(params){
+                this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticle', params);
+                this.searchLoading = false;
             },
 
             async getListBacklinks(params){
@@ -287,9 +317,41 @@
                 this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price;
                 this.contentModel.id = article.id;
-                this.contentModel.title = backlink.title;
-                this.contentModel.anchor_text = backlink.anchor_text;
-                this.contentModel.status = backlink.status;
+                this.contentModel.title = backlink == null ? '':backlink.title;
+                this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;
+                this.contentModel.status = backlink == null ? '':backlink.status;
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getListArticles({
+                    params: {
+                        search_backlink: this.filterModel.search_backlink,
+                        search_article: this.filterModel.search_article,
+                        language_id: this.filterModel.language_id,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    search_article: '',
+                    search_backlink: '',
+                    language_id: '',
+                }
+
+                this.getListArticles({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+            },
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
             },
 
             async submitSave() {

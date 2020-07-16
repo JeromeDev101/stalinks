@@ -25,12 +25,49 @@ class ArticlesController extends Controller
         ];
     }
 
+    public function getArticleListAdmin(Request $request) {
+        $filter = $request->all();
+        $list = Article::with('country:id,name')
+                        ->with('backlinks:id,title,anchor_text,status')
+                        // ->whereNotNull('date_complete')
+                        ->orderBy('id', 'desc');
+        
+        if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
+            $list->where('id_backlink', 'like', '%'.$filter['search_backlink'].'%');
+        }
+
+        if( isset($filter['search_article']) && $filter['search_article'] ){
+            $list->where('id', 'like', '%'.$filter['search_article'].'%');
+        }
+
+        if( isset($filter['language_id']) && $filter['language_id'] ){
+            $list->where('id_language', $filter['language_id']);
+        }
+
+        return [
+            'data' => $list->get(),
+        ];
+    }
+
     public function getArticleList(Request $request) {
+        $filter = $request->all();
         $user = Auth::user();
 
         $list = Article::with('country:id,name')
-                        ->with('backlinks:id,title,anchor_text,status');
-        
+                        ->with('backlinks:id,title,anchor_text,status')
+                        ->orderBy('id', 'desc');
+
+        if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
+            $list->where('id_backlink', 'like', '%'.$filter['search_backlink'].'%');
+        }
+
+        if( isset($filter['search_article']) && $filter['search_article'] ){
+            $list->where('id', 'like', '%'.$filter['search_article'].'%');
+        }
+
+        if( isset($filter['language_id']) && $filter['language_id'] ){
+            $list->where('id_language', $filter['language_id']);
+        }
                         
         if($user->isOurs == 0 && $user->role_id == 4){
             $list = $list->where('id_writer', $user->id);
@@ -67,8 +104,11 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
+        dd($request->all());
+
         $article = Article::find($request->content['id']);
         $article->update([
+            'date_start' => $request->data == null ? null:date('Y-m-d'),
             'content' => $request->data,
             'date_complete' => $request->content['status'] == 'Content sent' ? date('Y-m-d'):null,
         ]);
