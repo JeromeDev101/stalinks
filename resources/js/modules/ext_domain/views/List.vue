@@ -98,7 +98,7 @@
                         </select>
                     </div>
 
-                    <div v-if="user.isAdmin" class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 300px;">
+                    <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 300px;">
                        <div class="input-group">
                             <label style="color: #333;margin: 5%;">Selected Action</label>
                             <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>

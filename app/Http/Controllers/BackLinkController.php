@@ -157,4 +157,11 @@ class BackLinkController extends Controller
 
         return response()->json(['success' => true, 'data' => $backlink], 200);
     }
+
+    public function getStatus()
+    {
+        $status = $this->backlinkRepository->getStatus();
+
+        return response()->json(['data' => $status], 200);
+    }
 }

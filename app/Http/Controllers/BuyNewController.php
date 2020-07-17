@@ -17,10 +17,10 @@ class BuyNewController extends Controller
 
         $columns = [
             'publisher.*',
-            'users.name', 
-            'users.isOurs', 
-            'registration.company_name', 
-            'countries.name AS country_name', 
+            'users.name',
+            'users.isOurs',
+            'registration.company_name',
+            'countries.name AS country_name',
             'buyer_purchased.status as status_purchased'
         ];
 
@@ -55,7 +55,7 @@ class BuyNewController extends Controller
                     // ->leftJoin('buyer_purchased', function($query){
                     //     $query->where('publisher.id', '=', 'buyer_purchased.publisher_id');
                     // })
-                    
+
 
         // $list = Publisher::with('user:id,name,isOurs')
         //         ->whereHas('user', function($query) use ($filter){
@@ -92,7 +92,7 @@ class BuyNewController extends Controller
                                     })
                                     ->when(isset($filter['language_id']) && !empty($filter['language_id']), function ($subquery) use ($filter)  {
                                         $subquery->where('language_id', $filter['language_id']);
-                                    })
+                                    });
                         });
 
         // ->with('country:id,name')
@@ -105,8 +105,8 @@ class BuyNewController extends Controller
         //             $list = $list->orWhereNull('buyer_purchased.publisher_id');
         //         }
         //     }
-        // } 
-        
+        // }
+
         // if( isset($filter['search']) && !empty($filter['search']) ){
         //     $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
         //             ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
@@ -127,7 +127,7 @@ class BuyNewController extends Controller
         $user = Auth::user();
 
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
-        
+
         Backlink::create([
             'price' => $request->price,
             'anchor_text' => $request->anchor_text,
@@ -169,6 +169,30 @@ class BuyNewController extends Controller
         }else{
             $buyer_purchased->update(['status' => $status]);
         }
+    }
+
+    public function getBuyerSummary()
+    {
+        $user = Auth::user();
+
+        $buyer = BuyerPurchased::selectRaw('publisher.language_id, count(DISTINCT(buyer_purchased.id)) as total')
+                        ->leftJoin('publisher','buyer_purchased.publisher_id', '=', 'publisher.id')
+                        ->where('user_id_buyer',$user->id)
+                        ->where('status', 'Purchased')
+                        ->groupBy('publisher.language_id')
+                        ->distinct()
+                        ->get();
+
+        $sumTotal = 0;
+
+        foreach($buyer as $item) {
+            $sumTotal += $item->total;
+        }
+
+        return [
+            'total' => $sumTotal,
+            'data' => $buyer
+        ];
     }
 
 }
