@@ -159,7 +159,7 @@ class ExtDomainController extends Controller
         $newData = $alexaLib->getTopSites($this->extDomainRepository);
 
         $status = true;
-        if($newData['total'] < $start) {
+        if($newData['total'] < $start || !isset($newData['total'])) {
             $status = false;
         }
 

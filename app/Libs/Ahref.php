@@ -136,7 +136,9 @@ class Ahref {
         $promises = (function () use ($publishers, $guzzleClient, $getFrom) {
             foreach ($publishers as $publisher) {
                 foreach($getFrom as $from) {
-                    yield $guzzleClient->requestAsync('GET', $this->getApiUrl($publisher->url, $from))
+                    $url =preg_replace('/\s+/', '', $publisher->url);
+
+                    yield $guzzleClient->requestAsync('GET', $this->getApiUrl($url, $from))
                         ->then(function(ResponseInterface $response) use ($publisher) {
                             $result = json_decode($response->getBody()->getContents(), true);
 

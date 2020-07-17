@@ -20,7 +20,7 @@ class FollowupSalesController extends Controller
                         }])
                         ->with('user:id,name')
                         ->orderBy('created_at', 'desc');
-        
+
         $registered = Registration::where('email', $user->email)->first();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
@@ -42,7 +42,7 @@ class FollowupSalesController extends Controller
     }
 
     public function update( Request $request ){
-        $input = $request->only('status', 'url_from', 'link_from');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
