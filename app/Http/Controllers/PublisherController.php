@@ -38,7 +38,13 @@ class PublisherController extends Controller
         ]);
 
         $file = $request->all();
-        $this->publisherRepository->importExcel($file);
+        $data = $this->publisherRepository->importExcel($file);
+
+        
+        if($data['success'] === false){
+            unset($data['success']);
+            return response()->json($data, 422);
+        }
 
         return response()->json(['success' => true], 200);
 

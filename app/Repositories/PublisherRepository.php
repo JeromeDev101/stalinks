@@ -68,38 +68,41 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $language = $file['language'];
         $csv_file = $file['file'];
 
+        $result = true;
+        $message = '';
+        $file_message = '';
+
         $id = Auth::user()->id;
         $csv = fopen($csv_file, 'r');
         $ctr = 0;
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
+            if(count($line) > 3 || count($line) < 3){
+                $message = "Please check the header: Url, Price and Inc Article only.";
+                $file_message = "Invalid Header format. ".$message;
+                $result = false;
+                break;
+            }
 
             if( $ctr > 0 ){
                 $url = $line[0];
                 $price = $line[1];
                 $article = $line[2];
-                $ur = $line[3];
-                $dr = $line[4];
-                $backlinks = $line[5];
-                $ref_domain = $line[6];
-                $org_keywords = $line[7];
-                $org_traffic = $line[8];
 
                 if( trim($url, " ") != '' ){
                     Publisher::create([
                         'user_id' => $id,
                         'language_id' => $language,
-                        'url' => $url,
-                        'ur' => $ur,
-                        'dr' => $dr,
-                        'backlinks' => $backlinks,
-                        'ref_domain' => $ref_domain,
-                        'org_keywords' => $org_keywords,
-                        'org_traffic' => $org_traffic,
+                        'url' => 0,
+                        'ur' => 0,
+                        'dr' => 0,
+                        'backlinks' => 0,
+                        'ref_domain' => 0,
+                        'org_keywords' => 0,
+                        'org_traffic' => 0,
                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
                         'inc_article' => ucwords( strtolower( trim($article, " ") ) )
                     ]);
                 }
-
             }
 
             $ctr++;
@@ -107,7 +110,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         fclose($csv);
 
-        return true;
+        return [
+            "success" => $result,
+            "message" => $message,
+            "errors" => [
+                "file" => $file_message,
+            ],
+        ];
     }
 
     /**

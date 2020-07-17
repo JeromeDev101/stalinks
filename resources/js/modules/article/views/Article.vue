@@ -52,7 +52,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Articles</h3>
-                    <button data-toggle="modal" @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i class="fa fa-plus"></i> Create Article</button>
+                    <button v-if="isTeam" data-toggle="modal" @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i class="fa fa-plus"></i> Create Article</button>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -277,6 +277,7 @@
                 },
 
                 searchLoading: false,
+                isTeam: false,
             }
         },
 
@@ -285,6 +286,7 @@
             this.getListBacklinks();
             this.getListWriter();
             this.getListCountries();
+            this.checkTeam();
         },
 
         computed: {
@@ -294,6 +296,7 @@
                 listWriter: state => state.storeArticles.listWriter,
                 messageForms: state => state.storeArticles.messageForms,
                 listCountries: state => state.storeArticles.listCountries,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
@@ -310,6 +313,12 @@
 
             async getListWriter(params){
                 await this.$store.dispatch('actionGetListWriter', params);
+            },
+
+            checkTeam() {
+                if( this.user.isOurs == 0 ){
+                    this.isTeam = true;
+                }
             },
 
             doUpdate(backlink, article){
