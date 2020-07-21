@@ -9,6 +9,7 @@ use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
+use App\Models\Price;
 
 class ArticlesController extends Controller
 {
@@ -30,6 +31,7 @@ class ArticlesController extends Controller
     public function getArticleListAdmin(Request $request) {
         $filter = $request->all();
         $list = Article::with('country:id,name')
+                        ->with('price')
                         ->with(['backlinks' => function($q){
                             $q->with(['publisher' => function($sub){
                                 $sub->with('user:id,name');
@@ -63,6 +65,7 @@ class ArticlesController extends Controller
 
         $list = Article::select('article.*')
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
+                        ->with('price')
                         ->with('country:id,name')
                         ->with(['backlinks' => function($q){
                             $q->with(['publisher' => function($sub){
@@ -133,8 +136,31 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
+        $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
+        $price_id = null;
+
+        $price_list = Price::where('id_article', $article->id)->first();
+        if( isset($price_list->id) ){
+            $price_list->update([
+                'price' => $request->content['price']
+            ]);
+
+            $price_id = $price_list->id;
+        }else{
+            $price = Price::create([
+                'price' => $request->content['price'],
+                'id_user' => $user_id,
+                'id_language' => $article->id_language,
+                'id_article' => $article->id,
+                'type' => 'writer',
+            ]);
+
+            $price_id = $price->id;
+        }
+
         $article->update([
+            'id_writer_price' => $price_id,
             'date_start' => $request->data == null ? null:date('Y-m-d'),
             'content' => $request->data,
             'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,

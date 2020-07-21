@@ -86,7 +86,7 @@
                                         <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
-                                <td>{{ article.id_writer_price }}</td>
+                                <td>{{ article.price == null ? '':'$ ' + article.price.price}}</td>
                             </tr>
                         </tbody>
                     </table>

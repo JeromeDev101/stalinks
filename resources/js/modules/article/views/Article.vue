@@ -340,7 +340,7 @@
             doUpdate(backlink, article){
                 this.clearMessageform()
                 this.data = article.content == null ? '':article.content;
-                this.contentModel.price = article.price;
+                this.contentModel.price = article.price == null ? '':article.price.price;
                 this.contentModel.id = article.id;
                 this.contentModel.title = backlink == null ? '':backlink.title;
                 this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;

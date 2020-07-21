@@ -127,28 +127,22 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
     }
 
     protected function fillter($query, $filters)
-    {
+    {        
         if (!empty($filters->querySearch)) {
             $query = $this->model
             ->whereHas('publisher', function ($query) use ($filters) {
                 $query->where('url', 'like', '%' . $filters->querySearch . '%');
             });
-            // ->whereHas('extDomain', function ($query) use ($filters) {
-            //     $query->where('domain', 'like', '%' . $filters->querySearch . '%');
-            // })
-            // ->orWhereHas('intDomain', function ($query) use ($filters) {
-            //     $query->where('domain', 'like', '%' . $filters->querySearch . '%');
-            // });
-        }
-
-        if( !empty($filters->status) ){
-            $query = $query->where('status', $filters->status);
         }
 
         if(!empty($filters->seller)) {
             $query = $query->whereHas('publisher', function ($query) use ($filters) {
                 $query->where('user_id', $filters->seller );
             });
+        }
+
+        if( !empty($filters->status) ){
+            $query = $query->where('status', $filters->status);
         }
 
         return $query;

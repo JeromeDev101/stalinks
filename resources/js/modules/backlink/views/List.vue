@@ -354,6 +354,8 @@
                     },
                 })
 
+                $("#tbl_backlink").DataTable().destroy();
+
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetBackLink', {
                     vue: this,
@@ -361,7 +363,6 @@
                     params: this.fillter,
                 });
                 this.searchLoading = false;
-                $("#tbl_backlink").DataTable().destroy();
 
                 $("#tbl_backlink").DataTable({
                     paging: false,
