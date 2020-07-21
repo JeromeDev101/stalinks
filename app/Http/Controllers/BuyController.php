@@ -111,7 +111,9 @@ class BuyController extends Controller
             'int_domain_id' => 0,
         ]);
 
-        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "Yes"){
+        
+
+        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
             Article::create([
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,

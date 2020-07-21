@@ -1089,7 +1089,6 @@
                 this.isCrawling = true;
                 var arrayIds = [];
                 if (this.listExt.data) {
-                    console.log(this.listExt.data);
                     for (let key in this.listExt.data) {
                         arrayIds.push(this.listExt.data[key].id);
                     }

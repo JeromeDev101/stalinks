@@ -124,14 +124,28 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Writer Price</label>
-                                    <input type="number" v-model="contentModel.price" class="form-control" name="" aria-describedby="helpId" placeholder="0.00">
+                                    <label for="">URL Publisher</label>
+                                    <input type="text" v-model="contentModel.url_publisher" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label for="">Link To</label>
+                                    <input type="text" v-model="contentModel.link" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label for="">Writer Price</label>
+                                    <input type="number" v-model="contentModel.price" class="form-control" name="" aria-describedby="helpId" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label for="">Status Writer</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
                                         <option value="">Select Status</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
@@ -149,7 +163,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <span class="text-primary float-left">Press 'Ctrl + Shift + F' for full screen</span>
+                        <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button @click="submitSave"  type="button" class="btn btn-primary">Save</button>
                     </div>
@@ -202,7 +216,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Link To</label>
-                                    <input type="text" class="form-control" v-model="addModel.link_to" :disabled="true">
+                                    <input type="text" class="form-control" v-model="addModel.link" :disabled="true">
                                 </div>
                             </div>
 
@@ -244,7 +258,7 @@
     export default {
         data() {
             return {
-                writer_status: ['Content writing', 'Content sent'],
+                writer_status: ['In Writing', 'Done'],
                 viewModel: {
                     backlink: '',
                 },
@@ -269,6 +283,8 @@
                     anchor_text: '',
                     price: '',
                     status: '',
+                    url_publisher: '',
+                    link: '',
                 },
                 filterModel: {
                     search_article: this.$route.query.search_article || '',
@@ -328,7 +344,9 @@
                 this.contentModel.id = article.id;
                 this.contentModel.title = backlink == null ? '':backlink.title;
                 this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;
-                this.contentModel.status = backlink == null ? '':backlink.status;
+                this.contentModel.status = article.status_writer;
+                this.contentModel.link = backlink == null ? '':backlink.link;
+                this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
             },
 
             doSearch() {

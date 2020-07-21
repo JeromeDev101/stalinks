@@ -50,6 +50,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
+                                <th>ID Article</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
                                 <th>Link From</th>
@@ -62,12 +63,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listSales.data.length == 0">
-                                <td colspan="11" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
+                                <td>{{ sales.article == null ? 'N/A':sales.article.id }}</td>
                                 <td>{{ sales.publisher.url }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>
@@ -156,7 +155,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Title</label>
-                                        <input type="text" class="form-control" v-model="updateModel.title" required="required" >
+                                        <input type="text" class="form-control" v-model="updateModel.title" required="required" :disabled="isLive">
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +173,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Link From</label>
-                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" >
+                                        <input type="text" class="form-control" v-model="updateModel.link_from" required="required" :disabled="isLive">
                                     </div>
                                 </div>
                             </div>
@@ -192,18 +191,30 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;">
+                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive">
                                             <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6" v-if="updateModel.article_id != ''">
+                                <div class="form-group">
+                                    <label for="">Status Writer</label>
+                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive">
+                                        <option value="">Select Status</option>
+                                        <option v-for="option in writer_status" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Article ID</label>
-                                        <input type="text" class="form-control" v-model="updateModel.article_id">
+                                        <input type="text" class="form-control" v-model="updateModel.article_id" :disabled="true">
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +223,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Completed</label>
-                                        <input type="date" class="form-control" v-model="updateModel.live_date">
+                                        <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive">
                                     </div>
                                 </div>
                             </div>
@@ -236,6 +247,7 @@
         data() {
             return {
                 statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
+                writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
                     url_publisher: '',
@@ -246,6 +258,7 @@
                     status: '',
                     article_id: '',
                     date_process: '',
+                    status_writer: '',
                     user: {
                         name: ''
                     },
@@ -258,6 +271,7 @@
                     status: this.$route.query.status || '',
                 },
                 searchLoading: false,
+                isLive: false,
             }
         },
 
@@ -269,6 +283,7 @@
             ...mapState({
                 listSales: state => state.storeFollowupSales.listSales,
                 messageForms: state => state.storeFollowupSales.messageForms,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
@@ -338,6 +353,13 @@
 
                 this.updateModel = that
                 this.updateModel.url_publisher = that.publisher == null ? that.ext_domain.domain:that.publisher.url
+                this.updateModel.article_id = that.article == null ? '':that.article.id
+                this.updateModel.status_writer = that.article == null ? '':that.article.status_writer; 
+
+                this.isLive = false;
+                if( that.status == 'Live' && !this.user.isAdmin){
+                    this.isLive = true;
+                }
             },
 
             async submitUpdate(params) {

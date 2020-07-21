@@ -18,14 +18,15 @@ class FollowupSalesController extends Controller
                         ->with(['publisher' => function($query) {
                             $query->with('user:id,name');
                         }])
+                        ->with('article')
                         ->with('user:id,name')
                         ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
-        if( $user->type != 10 && $registered->type == 'Seller' ){
-            $list->whereIn('publisher_id', $publisher_ids);
+        if( $user->type != 10 && isset($registered->type) && $registered->type == 'Seller' ){
+            $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
         if( isset($filter['status']) && !empty($filter['status']) ){

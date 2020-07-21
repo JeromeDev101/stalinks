@@ -7,6 +7,8 @@ use App\Models\Backlink;
 use App\Models\User;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Registration;
+use App\Models\Publisher;
 
 class ArticlesController extends Controller
 {
@@ -28,8 +30,12 @@ class ArticlesController extends Controller
     public function getArticleListAdmin(Request $request) {
         $filter = $request->all();
         $list = Article::with('country:id,name')
-                        ->with('backlinks:id,title,anchor_text,status')
-                        // ->whereNotNull('date_complete')
+                        ->with(['backlinks' => function($q){
+                            $q->with(['publisher' => function($sub){
+                                $sub->with('user:id,name');
+                            }])
+                            ->with('user:id,name');
+                        }])
                         ->orderBy('id', 'desc');
         
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
@@ -52,9 +58,18 @@ class ArticlesController extends Controller
     public function getArticleList(Request $request) {
         $filter = $request->all();
         $user = Auth::user();
+        $registration = Registration::where('email', $user->email)->first();
 
-        $list = Article::with('country:id,name')
-                        ->with('backlinks:id,title,anchor_text,status')
+
+        $list = Article::select('article.*')
+                        ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
+                        ->with('country:id,name')
+                        ->with(['backlinks' => function($q){
+                            $q->with(['publisher' => function($sub){
+                                $sub->with('user:id,name');
+                            }])
+                            ->with('user:id,name');
+                        }])
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
@@ -70,12 +85,26 @@ class ArticlesController extends Controller
         }
                         
         if($user->isOurs == 0 && $user->role_id == 4){
-            $list = $list->where('id_writer', $user->id);
+            $list->where('id_writer', $user->id);
+        }
+
+        if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Seller' ){
+            $backlinks_ids = $this->getBacklinksForSeller();
+
+            $list->whereIn('id_backlink', $backlinks_ids);
         }
 
         return [
             'data' => $list->get()
         ];
+    }
+
+    private function getBacklinksForSeller() {
+        $user = Auth::user();
+        $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
+        $backlinks_ids = Backlink::whereIn('publisher_id', $publisher_ids)->pluck('id')->toArray();
+
+        return $backlinks_ids;
     }
 
     public function getWriterList() {
@@ -104,13 +133,12 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
-        dd($request->all());
-
         $article = Article::find($request->content['id']);
         $article->update([
             'date_start' => $request->data == null ? null:date('Y-m-d'),
             'content' => $request->data,
-            'date_complete' => $request->content['status'] == 'Content sent' ? date('Y-m-d'):null,
+            'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
+            'status_writer' => $request->content['status'],
         ]);
 
         return response()->json(['success'=>true], 200);

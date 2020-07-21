@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateBacklinkRequest;
 use App\Models\Backlink;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
+use App\Models\Article;
 
 class BackLinkController extends Controller
 {
@@ -151,6 +152,13 @@ class BackLinkController extends Controller
 
     public function deleteBacklinks(Request $request) {
         $backlink = Backlink::find($request->id);
+
+        $article = Article::where('id_backlink', $request->id)->first();
+
+        if( isset($article->id) ){
+            $article->delete();
+        }
+        
         $backlink->update([
             'deleted_at' => date('Y-m-d')
         ]);

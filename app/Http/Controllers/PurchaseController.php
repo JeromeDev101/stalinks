@@ -20,22 +20,29 @@ class PurchaseController extends Controller
         $user = Auth::user();
         $filter = $request->all();
 
-        $list = Backlink::with(['publisher' => function($query){
-            $query->with('user:id,name');
-        }, 'user'])
+        $list = Backlink::select('backlinks.*')
+                    ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
+                    ->with(['publisher' => function($query){
+                        $query->with('user:id,name');
+                    }])
+                    ->with('user:id,name')
                     ->where('status', 'Live')
-                    ->orderBy('created_at', 'desc');
+                    ->orderBy('id', 'desc');
 
         if( !$user->isAdmin() && $user->role->id != 7 ){
-            $list->where('user_id', $user->id);
+            $list->where('backlinks.user_id', $user->id);
+        }
+
+        if( isset($filter['search_id']) && $filter['search_id'] != ''){
+            $list->where('backlinks.id', $filter['search_id']);
+        }
+
+        if( isset($filter['search_url_publisher']) && $filter['search_url_publisher'] != ''){
+            $list->where('publisher.url', 'like', '%'.$filter['search_url_publisher'].'%');
         }
 
         if( isset($filter['payment_status']) && $filter['payment_status'] != ''){
-            $list->where('payment_status', $filter['payment_status']);
-        }
-
-        if(isset($filter['status']) && !is_null($filter['status'])) {
-            $list->where('status', $filter['status']);
+            $list->where('backlinks.payment_status', $filter['payment_status']);
         }
 
         if( isset($filter['buyer']) && $filter['buyer'] != ''){

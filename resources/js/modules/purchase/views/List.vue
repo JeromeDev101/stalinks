@@ -10,10 +10,17 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search Company and User</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
@@ -28,18 +35,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select name="" id="" class="form-control" v-model="filterModel.status">
-                                    <option value="" selected>All</option>
-                                    <option value="Live">Live</option>
-                                    <option value="Processing">Processing</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2" v-if="user.isAdmin">
+                        <div class="col-md-2" v-if="user.isOurs != 1">
                             <div class="form-group">
                                 <label for="">Seller</label>
                                 <select class="form-control" name="" v-model="filterModel.seller">
@@ -49,7 +45,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin">
+                        <div class="col-md-2" v-if="user.isOurs != 1">
                             <div class="form-group">
                                 <label for="">Buyer</label>
                                 <select class="form-control" name="" v-model="filterModel.buyer">
@@ -188,9 +184,10 @@
                 filterModel: {
                     user: this.$route.query.user || '',
                     payment_status: this.$route.query.payment_status || '',
-                    status: this.$route.query.status || '',
                     buyer: this.$route.query.buyer || '',
                     seller: this.$route.query.seller || '',
+                    search_id: this.$route.query.search_id || '',
+                    search_url_publisher: this.$route.query.search_url_publisher || '',
                 },
                 isPopupLoading: false,
                 totalAmount: 0,
@@ -218,9 +215,10 @@
                     params: {
                         user: this.filterModel.user,
                         payment_status: this.filterModel.payment_status,
-                        status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
+                        search_id: this.filterModel.search_id,
+                        search_url_publisher: this.filterModel.search_url_publisher,
                     }
                 });
 
@@ -249,9 +247,10 @@
                 this.filterModel = {
                     user: '',
                     payment_status: '',
-                    status: '',
                     buyer: '',
                     seller: '',
+                    search_id: '',
+                    search_url_publisher: '',
                 }
 
                 this.getPurchaseList({
@@ -272,9 +271,10 @@
                     params: {
                         user: this.filterModel.user,
                         payment_status: this.filterModel.payment_status,
-                        status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
+                        search_id: this.filterModel.search_id,
+                        search_url_publisher: this.filterModel.search_url_publisher,
                     }
                 });
             },

@@ -62,8 +62,8 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
-                        <tbody>
+                    <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
@@ -78,6 +78,8 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username}}</td>
@@ -258,202 +260,238 @@
     import { Domain } from 'domain';
     import DownloadCsv from '@/components/export-csv/Csv.vue'
     import _ from 'lodash'
+    import axios from 'axios';
 
     export default {
-      name: 'BackLinkList',
-      data() {
-        return {
-          file_csv: 'baclink.xls',
-          statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
-          data_filed: {
-            'URL Publisher': 'publisher.url',
-            'URL Advertiser': 'url_advertiser',
-            'Link From': 'link_from',
-            'Link To': 'link',
-            'Price': 'price',
-            'Anchor Text': 'anchor_text',
-            'Date Completed': 'live_date',
-            'Status': 'status'
-          },
-          json_meta: [
-            [{
-              'key': 'charset',
-              'value': 'utf-8'
-            }]
-          ],
-          page: this.$route.query.page || 1,
-          modalAddBackLink: false,
-          modelBaclink: {
-            ext_domain: {
-              domain: ''
-            },
-            int_domain: {
-              domain: ''
-            },
-            user: {
-              name: ''
-            }
-          },
-          loadIntDomain: false,
-          isPopupLoading: false,
-          isBuyer: false,
-          isPostingWriter: false,
-          searchLoading: false,
-          withArticle: true,
-        }
-      },
-      async created() {
-          await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-          await this.getBackLinkList();
-          this.checkAccountType();
-          this.getSellerList();
-      },
-
-      computed: {
-        ...mapState({
-          listBackLink: state => state.storeBackLink.listBackLink,
-          fillter: state => state.storeBackLink.fillter,
-          user: state => state.storeAuth.currentUser,
-          messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
-          listSeller: state => state.storeAccount.listAccount,
-        }),
-
-        openModalBackLink() {
-          if (this.modalAddBackLink = true) {
-              return true
-          }
-
-          return false
-        },
-
-        checkSelectIntDomain () {
-          if (this.modelBaclink.int_domain_id == 0) {
-              return true
-          }
-
-          return false
-        },
-      },
-
-      mounted() {
-        $(this.$refs.modalEditBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
-      },
-
-      methods: {
-        getBackLinkList: _.debounce(async function(page) {
-          if (page) {
-            this.page = page
-          }
-          this.$router.push({
-            query: {
-              page: this.page,
-            },
-          })
-          this.searchLoading = true;
-          await this.$store.dispatch('actionGetBackLink', {
-            vue: this,
-            page: this.page,
-            params: this.fillter,
-          });
-          this.searchLoading = false;
-        }, 200),
-
-        async deleteBackLink(id) {
-            if( confirm('Are you you want to delete these record?') ){
-                await this.$store.dispatch('actionDeleteBacklink', {
-                    params: {
-                        id:id
+        name: 'BackLinkList',
+        data() {
+            return {
+                file_csv: 'baclink.xls',
+                statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
+                data_filed: {
+                    'URL Publisher': 'publisher.url',
+                    'URL Advertiser': 'url_advertiser',
+                    'Link From': 'link_from',
+                    'Link To': 'link',
+                    'Price': 'price',
+                    'Anchor Text': 'anchor_text',
+                    'Date Completed': 'live_date',
+                    'Status': 'status'
+                },
+                json_meta: [
+                    [{
+                    'key': 'charset',
+                    'value': 'utf-8'
+                    }]
+                ],
+                page: this.$route.query.page || 1,
+                modalAddBackLink: false,
+                modelBaclink: {
+                    ext_domain: {
+                        domain: ''
+                    },
+                    int_domain: {
+                        domain: ''
+                    },
+                    user: {
+                        name: ''
                     }
+                },
+                loadIntDomain: false,
+                isPopupLoading: false,
+                isBuyer: false,
+                isPostingWriter: false,
+                searchLoading: false,
+                withArticle: true,
+            }
+        },
+        async created() {
+            await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
+            await this.getBackLinkList();
+            this.checkAccountType();
+            this.getSellerList();
+        },
+
+        computed: {
+
+            ...mapState({
+                listBackLink: state => state.storeBackLink.listBackLink,
+                fillter: state => state.storeBackLink.fillter,
+                user: state => state.storeAuth.currentUser,
+                messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
+                listSeller: state => state.storeAccount.listAccount,
+            }),
+
+            openModalBackLink() {
+            if (this.modalAddBackLink = true) {
+                return true
+            }
+
+            return false
+            },
+
+            checkSelectIntDomain () {
+            if (this.modelBaclink.int_domain_id == 0) {
+                return true
+            }
+
+            return false
+            },
+        },
+
+        mounted() {
+            $(this.$refs.modalEditBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
+        },
+
+        methods: {
+            getBackLinkList: _.debounce(async function(page) {
+                if (page) {
+                    this.page = page
+                }
+                this.$router.push({
+                        query: {
+                        page: this.page,
+                    },
                 })
 
+                this.searchLoading = true;
+                await this.$store.dispatch('actionGetBackLink', {
+                    vue: this,
+                    page: this.page,
+                    params: this.fillter,
+                });
+                this.searchLoading = false;
+                $("#tbl_backlink").DataTable().destroy();
+
+                $("#tbl_backlink").DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
+            }, 200),
+
+            deleteBackLink(id) {
+                swal.fire({
+                    title: "Are you sure?",
+                    text: "Articles is also included to delete, Do you want to continue?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.post('/api/delete-backlinks', {
+                            id:id
+                        })
+                        .then(response => response)
+                        .catch(error => error);
+
+                        this.getBackLinkList();
+
+                        swal.fire(
+                            'Deleted!',
+                            'Backlinks is already deleted.',
+                            'success'
+                        )
+                    }
+                });
+
+            },
+
+            async getSellerList(params) {
+                await this.$store.dispatch('actionGetSeller');
+            },
+
+            async clearSearch() {
+                await this.$store.dispatch('actionResetFillterBacklink');
+                this.fillter.status = ''
                 this.getBackLinkList();
-            }
+            },
 
-        },
+            checkArray(array) {
+                return Hepler.arrayNotEmpty(array);
+            },
 
-        async getSellerList(params) {
-            await this.$store.dispatch('actionGetSeller');
-        },
+            checkAccountType() {
+                let that = this.user
 
-        async clearSearch() {
-            await this.$store.dispatch('actionResetFillterBacklink');
-            this.fillter.status = ''
-            this.getBackLinkList();
-        },
-
-        checkArray(array) {
-          return Hepler.arrayNotEmpty(array);
-        },
-
-        checkAccountType() {
-            let that = this.user
-
-            if( that.user_type ){
-                if( that.user_type.type == 'Buyer' ){
-                    this.isBuyer = true;
+                if( that.user_type ){
+                    if( that.user_type.type == 'Buyer' ){
+                        this.isBuyer = true;
+                    }
                 }
+
+                if( that.role.id == 4 ){
+                    this.isPostingWriter = true;
+                }
+            },
+
+            editBackLink(baclink) {
+                this.modalAddBackLink = true
+                let that = Object.assign({}, baclink)
+                this.withArticle = that.publisher.inc_article == "No" ? true:false; 
+                this.modelBaclink.id = that.id
+                this.modelBaclink.publisher_id = that.publisher.id
+                this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
+                this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
+                this.modelBaclink.username = that.publisher.user.username
+                this.modelBaclink.anchor_text = that.anchor_text
+                this.modelBaclink.price = that.price
+                this.modelBaclink.link = that.link
+                this.modelBaclink.link_from = that.link_from
+                this.modelBaclink.live_date = that.live_date
+                this.modelBaclink.title = that.title
+                this.modelBaclink.status = that.status
+                this.modelBaclink.user_id = that.user_id
+                this.modelBaclink.date_process = that.date_process
+                this.modelBaclink.url_advertiser = that.url_advertiser
+
+                this.modelBaclink.seller = that.publisher.user.name
+                this.modelBaclink.id_article = that.article == null ? '':that.article.id
+
+                let element = this.$refs.modalEditBacklink
+                $(element).modal('show')
+            },
+
+            closeModalBacklink() {
+                this.modalAddBackLink = false
+                let element = this.$refs.modalEditBacklink
+                $(element).modal('hide')
+            },
+
+            async submitEditBacklink () {
+                await this.$store.dispatch('actionSaveBacklink', {
+                    params: this.modelBaclink
+                })
+
+                if (this.messageBacklinkForms.action === 'saved_backlink') {
+                    this.closeModalBacklink()
+                    this.getBackLinkList()
+                }
+            },
+
+            handleCloseBacklinkModal () {
+                this.modalAddBackLink =  false
+                this.$store.dispatch('clearMessageBacklinkForm')
+            },
+
+            convertPrice(price) {
+                return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
             }
-
-            if( that.role.id == 4 ){
-                this.isPostingWriter = true;
-            }
         },
 
-        editBackLink(baclink) {
-            this.modalAddBackLink = true
-            let that = Object.assign({}, baclink)
-            this.withArticle = that.publisher.inc_article == "Yes" ? true:false; 
-            this.modelBaclink.id = that.id
-            this.modelBaclink.publisher_id = that.publisher.id
-            this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
-            this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
-            this.modelBaclink.username = that.publisher.user.username
-            this.modelBaclink.anchor_text = that.anchor_text
-            this.modelBaclink.price = that.price
-            this.modelBaclink.link = that.link
-            this.modelBaclink.link_from = that.link_from
-            this.modelBaclink.live_date = that.live_date
-            this.modelBaclink.title = that.title
-            this.modelBaclink.status = that.status
-            this.modelBaclink.user_id = that.user_id
-            this.modelBaclink.date_process = that.date_process
-            this.modelBaclink.url_advertiser = that.url_advertiser
-
-            this.modelBaclink.seller = that.publisher.user.name
-            this.modelBaclink.id_article = that.article == null ? '':that.article.id
-
-            let element = this.$refs.modalEditBacklink
-            $(element).modal('show')
-        },
-
-        closeModalBacklink() {
-          this.modalAddBackLink = false
-          let element = this.$refs.modalEditBacklink
-          $(element).modal('hide')
-        },
-
-        async submitEditBacklink () {
-            await this.$store.dispatch('actionSaveBacklink', {
-                params: this.modelBaclink
-            })
-
-            if (this.messageBacklinkForms.action === 'saved_backlink') {
-                this.closeModalBacklink()
-                this.getBackLinkList()
-            }
-        },
-
-        handleCloseBacklinkModal () {
-            this.modalAddBackLink =  false
-            this.$store.dispatch('clearMessageBacklinkForm')
-        },
-
-        convertPrice(price) {
-            return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        components: {
+            DownloadCsv
         }
-      },
-       components: {
-          DownloadCsv
-        }
-    }
+}
 </script>

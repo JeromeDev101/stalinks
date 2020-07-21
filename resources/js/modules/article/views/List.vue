@@ -117,6 +117,21 @@
                                     <input type="text" class="form-control" v-model="viewModel.anchor_text" :disabled="true">
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">URL Publisher</label>
+                                    <input type="text" class="form-control" v-model="viewModel.url_publisher" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Link to</label>
+                                    <input type="text" class="form-control" v-model="viewModel.link" :disabled="true">
+                                </div>
+                            </div>
+
                             <div class="col-sm-12">
                                 <tinymce id="content" v-model="data" :other_options="options"></tinymce>
                             </div>
@@ -207,6 +222,7 @@
             viewContent(backlinks, content) {
                 this.data = content == null ? '':content;
                 this.viewModel = backlinks
+                this.viewModel.url_publisher = backlinks == null ? '':backlinks.publisher.url;
             },
 
             async getListCountries(params) {
