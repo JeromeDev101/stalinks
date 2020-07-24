@@ -96,7 +96,7 @@
                                 <td>{{ purchase.publisher.user.name }}</td>
                                 <td>{{ purchase.user.name }}</td>
                                 <td>{{ purchase.publisher.url }}</td>
-                                <td>$ {{ purchase.price }}</td>
+                                <td>$ {{ formatPrice(purchase.price) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
                                 <td>{{ purchase.payment_status }}</td>
@@ -277,6 +277,11 @@
                         search_url_publisher: this.filterModel.search_url_publisher,
                     }
                 });
+            },
+
+            formatPrice(value) {
+                let val = (value/1).toFixed(0)
+                return val;
             },
 
             getTotalAmount() {

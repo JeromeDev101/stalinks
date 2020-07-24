@@ -38,4 +38,10 @@ export default class BuyService {
             .catch(error => error);
     }
 
+    static getListSeller(params) {
+        return axios.get('api/wallet-user-seller', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

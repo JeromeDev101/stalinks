@@ -38,6 +38,7 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
+                        ->where('status_writer', 'Done')
                         ->orderBy('id', 'desc');
         
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
@@ -76,25 +77,29 @@ class ArticlesController extends Controller
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
-            $list->where('id_backlink', 'like', '%'.$filter['search_backlink'].'%');
+            $list->where('article.id_backlink', 'like', '%'.$filter['search_backlink'].'%');
         }
 
         if( isset($filter['search_article']) && $filter['search_article'] ){
-            $list->where('id', 'like', '%'.$filter['search_article'].'%');
+            $list->where('article.id', 'like', '%'.$filter['search_article'].'%');
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] ){
-            $list->where('id_language', $filter['language_id']);
+            $list->where('article.id_language', $filter['language_id']);
         }
-                        
-        if($user->isOurs == 0 && $user->role_id == 4){
-            $list->where('id_writer', $user->id);
+
+        if( isset($filter['status']) && $filter['status'] ){
+            if( $filter['status'] == 'No Status' ){
+                $list->whereNull('article.status_writer');
+            }else{
+                $list->where('article.status_writer', $filter['status']);
+            }
         }
 
         if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Seller' ){
             $backlinks_ids = $this->getBacklinksForSeller();
 
-            $list->whereIn('id_backlink', $backlinks_ids);
+            $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
         return [
@@ -159,14 +164,31 @@ class ArticlesController extends Controller
             $price_id = $price->id;
         }
 
+        $backlink = Backlink::find($article->id_backlink);
+        if( $request->content['status'] == 'Done' ){
+            $backlink->update(['status' => 'Content Done']);
+        }
+
+        if( $request->content['status'] == 'In Writing' ){
+            $backlink->update(['status' => 'Content In Writing']);
+        }
+
         $article->update([
             'id_writer_price' => $price_id,
             'date_start' => $request->data == null ? null:date('Y-m-d'),
             'content' => $request->data,
             'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
             'status_writer' => $request->content['status'],
+            'id_writer' => $user_id,
         ]);
 
         return response()->json(['success'=>true], 200);
+    }
+
+    public function deleteArticle(Request $request) {
+        $article = Article::find($request->id);
+        $article->delete();
+
+        return response()->json(['success' => true], 200);
     }
 }

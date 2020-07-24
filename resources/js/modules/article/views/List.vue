@@ -65,8 +65,8 @@
                                 <th>ID language</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
-                                <th>Content</th>
                                 <th>Writer Price</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,12 +81,15 @@
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>
+                                <td>{{ article.price == null  ? '':article.price.price == null ? '':'$ ' + article.price.price}}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
                                         <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
+                                    <div class="btn-group" v-if="user.isAdmin">
+                                        <button title="Delete" @click="deleteArticle(article.id)" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
+                                    </div>
                                 </td>
-                                <td>{{ article.price == null ? '':'$ ' + article.price.price}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -115,6 +118,20 @@
                                 <div class="form-group">
                                     <label for="">Anchor Text</label>
                                     <input type="text" class="form-control" v-model="viewModel.anchor_text" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Seller</label>
+                                    <input type="text" class="form-control" v-model="viewModel.seller" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Buyer</label>
+                                    <input type="text" class="form-control" v-model="viewModel.buyer" :disabled="true">
                                 </div>
                             </div>
 
@@ -162,6 +179,8 @@
                 viewModel: {
                     title: '',
                     anchor_text: '',
+                    seller: '',
+                    buyer: '',
                 },
                 searchLoading: false,
                 filterModel: {
@@ -175,12 +194,19 @@
         async created() {
             this.getListArticles();
             this.getListCountries();
+
+            $.widget("ui.dialog", $.ui.dialog, {
+                _allowInteraction: function(event) {
+                    return !!$(event.target).closest(".mce-container").length || this._super( event );
+                }
+            });
         },
 
         computed: {
             ...mapState({
                 listArticlesAdmin: state => state.storeArticles.listArticlesAdmin,
                 listCountries: state => state.storeArticles.listCountries,
+                user: state => state.storeAuth.currentUser,
             })
         },
 
@@ -205,6 +231,35 @@
                 });
             },
 
+            deleteArticle(id) {
+                swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you want to delete these Article?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.post('/api/delete-article', {
+                            id:id
+                        })
+                        .then(response => {
+                            this.getListArticles();
+
+                            swal.fire(
+                                'Deleted!',
+                                'Article is already deleted.',
+                                'success'
+                            )
+                        })
+                        
+                    }
+                });
+            },
+
             clearSearch() {
                 this.filterModel = {
                     search_article: '',
@@ -223,6 +278,8 @@
                 this.data = content == null ? '':content;
                 this.viewModel = backlinks
                 this.viewModel.url_publisher = backlinks == null ? '':backlinks.publisher.url;
+                this.viewModel.seller = backlinks == null ? '':backlinks.publisher.user.name;
+                this.viewModel.buyer = backlinks == null ? '':backlinks.user.name;
             },
 
             async getListCountries(params) {

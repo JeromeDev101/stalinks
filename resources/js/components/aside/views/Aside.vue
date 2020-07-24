@@ -34,7 +34,9 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'Registration' }">
+                <li v-if="user.isAdmin || (user.role_id == 3 && user.isOurs == 0) || (user.role_id == 5 && user.isOurs == 0) || (user.role_id == 6 && user.isOurs == 0) || (user.role_id == 7 && user.isOurs == 0)" 
+                    :class="{ active: $route.name == 'Registration' }">
+
                     <router-link :to="{ path: '/accounts' }">
                         <i class="fa fa-user"></i>
                         <span>Registration Accounts</span>

@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Search Company and User</label>
+                                <label for="">Search URL</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
@@ -38,6 +38,30 @@
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
                                         {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5)">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select name="" class="form-control" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5) ">
+                            <div class="form-group">
+                                <label for="">Code</label>
+                                <select name="" class="form-control" v-model="filterModel.code">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCode" v-bind:value="option">
+                                        {{ option }}
                                     </option>
                                 </select>
                             </div>
@@ -196,10 +220,13 @@
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     status_purchase: this.$route.query.status_purchase || '',
+                    seller: this.$route.query.seller || '',
+                    code: this.$route.query.code || '',
                 },
                 searchLoading: false,
                 dataTable: null,
                 isCreditAuth: false,
+                listCode: ['4A', '3A', '2A', '1A', '0A'],
             }
         },
 
@@ -209,6 +236,7 @@
                 listCountries: state => state.storeBuy.listCountries,
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
+                listSeller: state => state.storeBuy.listSeller,
             }),
         },
 
@@ -216,6 +244,7 @@
             this.getBuyList();
             this.getListCountries();
             this.checkCreditAuth();
+            this.getListSeller();
         },
 
         methods: {
@@ -232,6 +261,10 @@
                 // }
             },
 
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            }, 
+
             async getBuyList(params) {
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetBuyList', {
@@ -239,6 +272,8 @@
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         status_purchase: this.filterModel.status_purchase,
+                        seller: this.filterModel.seller,
+                        code: this.filterModel.code,
                     }
                 });
 
@@ -296,6 +331,8 @@
                     search: '',
                     language_id: '',
                     status_purchase: '',
+                    seller: '',
+                    code: '',
                 }
 
                 this.getBuyList({
@@ -320,6 +357,8 @@
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         status_purchase: this.filterModel.status_purchase,
+                        seller: this.filterModel.seller,
+                        code: this.filterModel.code,
                     }
                 });
             },

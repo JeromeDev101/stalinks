@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search URL Publisher</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
@@ -23,6 +23,30 @@
                                 <select name="" class="form-control" v-model="filterModel.status">
                                     <option value="">All</option>
                                     <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select name="" class="form-control" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select name="" class="form-control" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listBuyer.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -51,6 +75,8 @@
                                 <th>#</th>
                                 <th>ID</th>
                                 <th>ID Article</th>
+                                <th v-if="user.isOurs != 1">Seller</th>
+                                <th v-if="user.isOurs != 1">Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
                                 <th>Link From</th>
@@ -67,6 +93,8 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.article == null ? 'N/A':sales.article.id }}</td>
+                                <td v-if="user.isOurs != 1">{{ sales.publisher.user.name }}</td>
+                                <td v-if="user.isOurs != 1">{{ sales.user.name }}</td>
                                 <td>{{ sales.publisher.url }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>
@@ -246,7 +274,7 @@
     export default {
         data() {
             return {
-                statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
@@ -269,6 +297,8 @@
                 filterModel: {
                     search: this.$route.query.search || '',
                     status: this.$route.query.status || '',
+                    seller: this.$route.query.seller || '',
+                    buyer: this.$route.query.buyer || '',
                 },
                 searchLoading: false,
                 isLive: false,
@@ -277,11 +307,15 @@
 
         async created() {
             this.getListSales();
+            this.getListSeller();
+            this.getListBuyer();
         },
 
         computed: {
             ...mapState({
                 listSales: state => state.storeFollowupSales.listSales,
+                listBuyer: state => state.storeFollowupSales.listBuyer,
+                listSeller: state => state.storeFollowupSales.listSeller,
                 messageForms: state => state.storeFollowupSales.messageForms,
                 user: state => state.storeAuth.currentUser,
             })
@@ -289,12 +323,16 @@
 
         methods: {
             async getListSales(params){
+                
+                $('#tbl-followupsales').DataTable().destroy();
 
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListSales', {
                     params: {
                         search: this.filterModel.search,
                         status: this.filterModel.status,
+                        seller: this.filterModel.seller,
+                        buyer: this.filterModel.buyer,
                     }
                 });
 
@@ -317,6 +355,14 @@
                 this.searchLoading = false;
             },
 
+            async getListBuyer(params) {
+                await this.$store.dispatch('actionGetListBuyer', params);
+            }, 
+
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            }, 
+
             doSearch() {
                 $('#tbl-followupsales').DataTable().destroy();
 
@@ -328,6 +374,8 @@
                     params: {
                         search: this.filterModel.search,
                         status: this.filterModel.status,
+                        seller: this.filterModel.seller,
+                        buyer: this.filterModel.buyer,
                     }
                 });
             },
@@ -338,6 +386,8 @@
                 this.filterModel = {
                     search: '',
                     status: '',
+                    seller: '',
+                    buyer: '',
                 }
 
                 this.getListSales({

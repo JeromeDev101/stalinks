@@ -4,11 +4,13 @@ const SELLER_BILLING_LIST = 'SELLER_BILLING_LIST';
 const SET_ERROR = 'SELLER_BILLING_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const LIST_PAYMENT = 'LIST_PAYMENT';
+const LIST_SELLER = 'LIST_SELLER_ARTICLE_FILTER';
 
 const state = {
     listSellerBilling: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listPayment: { data: [] },
+    listSeller: { data: [] },
 }
 
 const mutations = {
@@ -26,6 +28,10 @@ const mutations = {
 
     [LIST_PAYMENT] (state, list) {
         state.listPayment = list.listPayment;
+    },
+
+    [LIST_SELLER] (state, list) {
+        state.listSeller = list.listSeller;
     },
 }
 
@@ -49,6 +55,20 @@ const actions = {
             let response = await SellerBillingService.getPaymentType(params);
             commit(LIST_PAYMENT, { listPayment: response.data });
         } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListSeller({ commit }, params){
+        try {
+            let response = await SellerBillingService.getListSeller(params)
+            commit(LIST_SELLER , { listSeller: response.data });
+        }catch(e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(SET_ERROR, errors);

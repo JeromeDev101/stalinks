@@ -56,7 +56,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Accounts</h3>
-                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#modal-registration">Register</button>
+                    <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -117,14 +117,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Password</label>
-                                    <input type="password" class="form-control" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Confirm Password</label>
-                                    <input type="password" class="form-control" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Account Type</label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type">
+                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -227,7 +227,7 @@
 
                             <div class="col-md-6">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" v-model="accountUpdate.status">
+                                <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
@@ -235,7 +235,7 @@
 
                             <div class="col-md-6">
                                 <label for="">Credit Authorization</label>
-                                <select class="form-control" name="" v-model="accountUpdate.credit_auth">
+                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
                                     <option value=""></option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -447,13 +447,14 @@
 
                 isPopupLoading: false,
                 isSearchLoading: false,
-
+                isDisabled: true,
             }
         },
 
         async created() {
             this.getAccountList();
             this.getPaymentTypeList();
+            this.checkAccessRole();
         },
 
         computed: {
@@ -461,6 +462,7 @@
                 messageForms: state => state.storeAccount.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
+                user: state => state.storeAuth.currentUser,
             }),
         },
 
@@ -491,6 +493,13 @@
                             break;
                         }
                     }
+                }
+            },
+
+            checkAccessRole() {
+                this.isDisabled = true;
+                if( this.user.isAdmin || (this.user.role_id == 7 && this.user.isOurs == 0)){
+                    this.isDisabled = false;
                 }
             },
 

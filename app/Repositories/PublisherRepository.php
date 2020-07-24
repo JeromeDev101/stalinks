@@ -35,8 +35,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list->where('publisher.user_id', $user->id);
         }
 
-        if( $user->role_id == 6 ){
-            $list->where('publisher.user_id', $user->id);
+        if( isset($filter['seller']) && !empty($filter['seller']) ){
+            $list->where('publisher.user_id', $filter['seller']);
         }
 
         if( $user->isOurs != 0 && $user->type != 10 ){
@@ -92,7 +92,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     Publisher::create([
                         'user_id' => $id,
                         'language_id' => $language,
-                        'url' => 0,
+                        'url' => $url,
                         'ur' => 0,
                         'dr' => 0,
                         'backlinks' => 0,

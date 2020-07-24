@@ -30,6 +30,7 @@ class WalletTransactionController extends Controller
         $columns = [
             'users.id',
             'users.name',
+            'users.username',
             'users.email',
             'users.role_id',
             'users.credit_auth',
@@ -41,6 +42,7 @@ class WalletTransactionController extends Controller
                         $join->on('users.email' , '=', 'registration.email')
                             ->where('registration.type', 'Buyer');
                     })
+                    ->where('users.status', 'active')
                     ->whereNotNull('registration.name');
 
         $list = User::select($columns)
@@ -48,7 +50,41 @@ class WalletTransactionController extends Controller
                         $join->on('users.email' , '=', 'registration.email')
                             ->where('registration.type', 'Buyer');
                     })
+                    ->where('users.status', 'active')
                     ->where('role_id', 5)
+                    ->union($list_registration);
+
+        return [
+            'data' => $list->get()
+        ];
+    }
+
+    public function getListSeller() {
+        $columns = [
+            'users.id',
+            'users.name',
+            'users.username',
+            'users.email',
+            'users.role_id',
+            'users.credit_auth',
+            'registration.name as reg_name',
+        ];
+
+        $list_registration = User::select($columns)
+                    ->leftJoin('registration', function($join){
+                        $join->on('users.email' , '=', 'registration.email')
+                            ->where('registration.type', 'Seller');
+                    })
+                    ->where('users.status', 'active')
+                    ->whereNotNull('registration.name');
+
+        $list = User::select($columns)
+                    ->leftJoin('registration', function($join){
+                        $join->on('users.email' , '=', 'registration.email')
+                            ->where('registration.type', 'Seller');
+                    })
+                    ->where('role_id', 6)
+                    ->where('users.status', 'active')
                     ->union($list_registration);
 
         return [

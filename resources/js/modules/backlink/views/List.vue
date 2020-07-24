@@ -66,9 +66,10 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th v-if="user.isOurs == 0">ID Backlinks</th>
                                 <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
                                 <th>URL Publisher</th>
-                                <th v-if="user.isAdmin">URL Advertiser</th>
+                                <th v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th>Price</th>
@@ -82,9 +83,10 @@
                         <tbody>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
+                                <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username}}</td>
                                 <td>{{ backLink.publisher.url}}</td>
-                                <td v-if="user.isAdmin">{{ backLink.url_advertiser }}</td>
+                                <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin) "><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
@@ -267,7 +269,7 @@
         data() {
             return {
                 file_csv: 'baclink.xls',
-                statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
@@ -345,6 +347,8 @@
 
         methods: {
             getBackLinkList: _.debounce(async function(page) {
+                $("#tbl_backlink").DataTable().destroy();
+                
                 if (page) {
                     this.page = page
                 }
@@ -353,8 +357,6 @@
                         page: this.page,
                     },
                 })
-
-                $("#tbl_backlink").DataTable().destroy();
 
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetBackLink', {

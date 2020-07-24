@@ -4,9 +4,11 @@ const BUY_LIST = 'BUY_LIST';
 const SET_ERROR = 'BUY_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const LIST_COUNTRY = 'LIST_COUNTRY';
+const LIST_SELLER = 'LIST_SELLER';
 
 const state = {
     listBuy: { data:[] },
+    listSeller: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
 }
@@ -18,6 +20,10 @@ const mutations = {
 
     [BUY_LIST] (state , data) {
         state.listBuy = data.listBuy;
+    },
+    
+    [LIST_SELLER] (state , data) {
+        state.listSeller = data.listSeller;
     },
 
     [SET_ERROR](state, error) {
@@ -35,6 +41,20 @@ const actions = {
             let response = await BuyService.getBuyList(params);
             commit(BUY_LIST, { listBuy: response.data });
         }catch( e ) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListSeller({ commit }, params){
+        try {
+            let response = await BuyService.getListSeller(params)
+            commit(LIST_SELLER , { listSeller: response.data });
+        }catch(e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(SET_ERROR, errors);

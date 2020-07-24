@@ -38,9 +38,16 @@ class BuyController extends Controller
                         ->where('buyer_purchased.user_id_buyer', $user_id);
                 });
 
+        if( isset($filter['seller']) && !empty($filter['seller']) ){
+            $list->where('publisher.user_id', $filter['seller']);
+        }
+
         if( isset($filter['search']) && !empty($filter['search']) ){
-            $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
-                    ->orWhere('users.username', 'like', '%'.$filter['search'].'%');
+            $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
+        }
+
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            $list->where('publisher.language_id', $filter['language_id']);
         }
 
         if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
@@ -63,23 +70,33 @@ class BuyController extends Controller
         //     }
         // }
 
-        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
-            $list->where('publisher.language_id', $filter['language_id']);
-        }
-
         $result = $list->orderBy('publisher.id', 'desc')->get();
+        foreach($result as $key => $value) {
 
-        foreach($result as $buy) {
-            $codeCombiURDR = $this->getCodeCombination($buy->ur, $buy->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($buy->backlinks, $buy->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($buy->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($buy->org_traffic, 0, 'value4');
+            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
             $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
 
             $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
 
-            $buy['code_combination'] = $combineALl;
-            $buy['code_price'] = $price_list['price'];
+            $count_letter_a = substr_count($combineALl, 'A');
+
+            if( isset($filter['code']) && !empty($filter['code']) ){
+                $code = substr($filter['code'],0,1);
+
+                if( $code == $count_letter_a ){
+                    $value['code_combination'] = $combineALl;
+                    $value['code_price'] = $price_list['price'];
+                }else{
+                    $result->forget($key);
+                }
+                
+            }else{
+                $value['code_combination'] = $combineALl;
+                $value['code_price'] = $price_list['price'];
+            } 
         }
 
         return response()->json([
@@ -110,8 +127,6 @@ class BuyController extends Controller
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
         ]);
-
-        
 
         if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
             Article::create([

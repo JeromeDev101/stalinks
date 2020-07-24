@@ -35,6 +35,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('add-articles')->post('articles', 'ArticlesController@store');
     Route::name('update-article-content')->post('articles-content', 'ArticlesController@updateContent');
     Route::name('get-article-list-admin')->get('article-list-admin', 'ArticlesController@getArticleListAdmin');
+    Route::name('delete-article')->post('delete-article', 'ArticlesController@deleteArticle');
 
     //Billing
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
@@ -45,6 +46,7 @@ Route::middleware('auth:api')->group(function () {
     //Wallet Transaction
     Route::name('get-wallet-transaction')->get('wallet-transaction', 'WalletTransactionController@getList');
     Route::name('get-user-buyer')->get('wallet-user-buyer', 'WalletTransactionController@getListBuyer');
+    Route::name('get-user-seller')->get('wallet-user-seller', 'WalletTransactionController@getListSeller');
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
 

@@ -29,6 +29,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Seller </label>
+                                <select name="" class="form-control" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -65,7 +77,7 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl_seller_billing" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -80,9 +92,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listSellerBilling.data.length == 0">
-                                <td colspan="9" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(seller, index) in listSellerBilling.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>
@@ -97,7 +106,7 @@
                                 <td>$ {{ seller.publisher.price }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
-                                <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Yes' }}</td>
+                                <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
@@ -200,6 +209,7 @@
                 filterModel: {
                     search: this.$route.query.search || '',
                     status_billing: this.$route.query.status_billing || '',
+                    seller: this.$route.query.seller || '',
                 },
                 searchLoading: false,
             }
@@ -208,6 +218,7 @@
         async created() {
             this.getSellerBilling();
             this.getPaymentTypeList();
+            this.getListSeller();
         },
 
         computed: {
@@ -215,6 +226,7 @@
                 listSellerBilling: state => state.storeBillingSeller.listSellerBilling,
                 messageForms: state => state.storeBillingSeller.messageForms,
                 listPayment: state => state.storeBillingSeller.listPayment,
+                listSeller: state => state.storeBillingSeller.listSeller,
             }),
         },
 
@@ -223,13 +235,33 @@
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetSellerBilling', params);
                 this.searchLoading = false;
+
+                $('#tbl_seller_billing').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
             },
 
             doShow(src) {
                 this.proof_doc = src;
             },
 
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            },
+
             doSearch() {
+
+                $('#tbl_seller_billing').DataTable().destroy();
+
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -238,6 +270,7 @@
                     params: {
                         search: this.filterModel.search,
                         status_billing: this.filterModel.status_billing,
+                        seller: this.filterModel.seller,
                     }
                 });
             },
@@ -250,9 +283,12 @@
             },
 
             clearSearch() {
+                $('#tbl_seller_billing').DataTable().destroy();
+
                 this.filterModel = {
                     search: '',
                     status_billing: '',
+                    seller: '',
                 }
 
                 this.getSellerBilling({
@@ -264,6 +300,9 @@
             },
 
             async doPay() {
+
+                $('#tbl_seller_billing').DataTable().destroy();
+
                 let ids = this.checkIds
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.proof.files[0]);

@@ -29,6 +29,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2" v-if="user.isAdmin || user.isOurs == 0">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select name="" class="form-control" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Include Article</label>
@@ -116,7 +128,7 @@
                                     Select
                                 </th>
                                 <th v-if="user.isAdmin">Company</th>
-                                <th v-if="user.isAdmin">Username</th>
+                                <th v-if="user.isAdmin || user.isOurs == 0">Username</th>
                                 <th v-if="!user.isAdmin">Date Uploaded</th>
                                 <th>Language</th>
                                 <th>URL</th>
@@ -142,7 +154,7 @@
                                     </div>
                                 </td>
                                 <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
-                                <td v-if="user.isAdmin">{{ publish.username ? publish.username : publish.user_name   }}</td>
+                                <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="!user.isAdmin">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
@@ -335,6 +347,7 @@
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
+                    seller: this.$route.query.seller || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -349,6 +362,7 @@
             this.getPublisherList();
             this.getListCountries();
             this.checkAccountType();
+            this.getListSeller();
         },
 
         computed:{
@@ -357,6 +371,7 @@
                 messageForms: state => state.storePublisher.messageForms,
                 listCountries: state => state.storePublisher.listCountries,
                 user: state => state.storeAuth.currentUser,
+                listSeller: state => state.storePublisher.listSeller,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
             })
         },
@@ -369,11 +384,16 @@
             //             search: this.filterModel.search,
             //             language_id: this.filterModel.language_id,
             //             inc_article: this.filterModel.inc_article,
+            //             seller: this.filterModel.seller,
             //             page: page
             //         }
             //     });
             //     this.searchLoading = false;
             // },
+
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            },
 
             selectAll: function() {
                 this.checkIds = [];
@@ -400,6 +420,7 @@
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         inc_article: this.filterModel.inc_article,
+                        seller: this.filterModel.seller,
                     }
                 });
 
@@ -410,6 +431,7 @@
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
                         { orderable: false, targets: '_all' }
@@ -481,6 +503,7 @@
                     search: '',
                     language_id: '',
                     inc_article: '',
+                    seller: '',
                 }
 
                 this.getPublisherList({
@@ -591,6 +614,7 @@
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         inc_article: this.filterModel.inc_article,
+                        seller: this.filterModel.seller,
                     }
                 });
             },

@@ -37,6 +37,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="" class="form-control" v-model="filterModel.status">
+                                    <option value="">All</option>
+                                    <option value="No Status">No Status</option>
+                                    <option value="In Writing">In Writing</option>
+                                    <option value="Done">Done</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -61,24 +73,28 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID Article</th>
+                                <th v-show="user.isOurs == 0">Seller</th>
                                 <th>ID Backlink</th>
                                 <th>Language</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
+                                <th>Status</th>
                                 <th>Content</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="listArticles.data.length == 0">
-                                <td colspan="7" class="text-center">No record</td>
+                                <td colspan="9" class="text-center">No record</td>
                             </tr>
                             <tr v-for="(article, index) in listArticles.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
+                                <td v-show="user.isOurs == 0">{{ article.backlinks == null ? '':article.backlinks.publisher.user.name }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start == null ? '-':article.date_start }}</td>
                                 <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
+                                <td>{{ article.status_writer }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
@@ -119,6 +135,20 @@
                                 <div class="form-group">
                                     <label for="">Anchor Text</label>
                                     <input type="text" v-model="contentModel.anchor_text" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label for="">Seller</label>
+                                    <input type="text" v-model="contentModel.seller" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label for="">Buyer</label>
+                                    <input type="text" v-model="contentModel.buyer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
@@ -255,14 +285,20 @@
 
 <script>
     import { mapState } from 'vuex';
+    import 'tinymce/skins/lightgray/skin.min.css';
+
     export default {
         data() {
             return {
+                data: '',
+                options: {
+                    height: 500,
+                },
+
                 writer_status: ['In Writing', 'Done'],
                 viewModel: {
                     backlink: '',
                 },
-                data: '',
                 addModel: {
                     backlink: '',
                     title: '',
@@ -273,10 +309,6 @@
                     language_id: '',
                 },
                 isPopupLoading: false,
-                options: {
-                    height: 500
-                },
-
                 contentModel: {
                     id: '',
                     title: '',
@@ -285,11 +317,14 @@
                     status: '',
                     url_publisher: '',
                     link: '',
+                    seller: '',
+                    buyer: '',
                 },
                 filterModel: {
                     search_article: this.$route.query.search_article || '',
                     search_backlink: this.$route.query.search_backlink || '',
                     language_id: this.$route.query.language_id || '',
+                    status: this.$route.query.status || '',
                 },
 
                 searchLoading: false,
@@ -344,9 +379,11 @@
                 this.contentModel.id = article.id;
                 this.contentModel.title = backlink == null ? '':backlink.title;
                 this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;
-                this.contentModel.status = article.status_writer;
+                this.contentModel.status = article.status_writer == null ? '':article.status_writer;
                 this.contentModel.link = backlink == null ? '':backlink.link;
                 this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
+                this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
+                this.contentModel.buyer = backlink == null ? '':backlink.user.name;
             },
 
             doSearch() {
@@ -359,6 +396,7 @@
                         search_backlink: this.filterModel.search_backlink,
                         search_article: this.filterModel.search_article,
                         language_id: this.filterModel.language_id,
+                        status: this.filterModel.status,
                     }
                 });
             },
@@ -368,6 +406,7 @@
                     search_article: '',
                     search_backlink: '',
                     language_id: '',
+                    status: '',
                 }
 
                 this.getListArticles({

@@ -20,6 +20,7 @@ class SellerBillingController extends Controller
 
         $list = Backlink::select($columns)
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
+                    ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->with(['publisher' => function($q){
                         $q->with('user:id,name');
                     }])
@@ -32,6 +33,10 @@ class SellerBillingController extends Controller
             }else{
                 $list = $list->where('admin_confirmation', '!=','1');
             }    
+        }
+
+        if( isset($filter['seller']) && !empty($filter['seller']) ){
+            $list = $list->where('publisher.user_id', $filter['seller']);
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){

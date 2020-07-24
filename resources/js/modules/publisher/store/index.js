@@ -5,6 +5,7 @@ const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
 const LIST_COUNTRY = 'LIST_COUNTRY';
+const LIST_SELLER = 'LIST_SELLER';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 
 const state = {
@@ -13,6 +14,7 @@ const state = {
     summaryPublish:{ total: 0, data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
+    listSeller: { data:[] },
 }
 
 const mutations = {
@@ -47,6 +49,10 @@ const mutations = {
 
     [LIST_COUNTRY](state, listCountries) {
         state.listCountries = listCountries;
+    },
+
+    [LIST_SELLER](state, dataSet) {
+        state.listSeller = dataSet.listSeller;
     },
 
     [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
@@ -113,6 +119,20 @@ const actions = {
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);
             }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListSeller({ commit }, params) {
+        try {
+            let response = await PublisherService.getListSeller(params);
+            commit(LIST_SELLER, { listSeller: response.data } );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

@@ -29,8 +29,16 @@ class FollowupSalesController extends Controller
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
+        if( isset($filter['seller']) && !empty($filter['seller']) ){
+            $list->where('publisher.user_id', $filter['seller']);
+        }
+
+        if( isset($filter['buyer']) && !empty($filter['buyer']) ){
+            $list->where('backlinks.user_id', $filter['buyer']);
+        }
+
         if( isset($filter['status']) && !empty($filter['status']) ){
-            $list->where('status', $filter['status'] );
+            $list->where('backlinks.status', $filter['status'] );
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
