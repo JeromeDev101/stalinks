@@ -73,7 +73,7 @@
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th>Price</th>
-                                <th  v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
+                                <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
                                 <th>Date for Proccessing</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
@@ -88,7 +88,7 @@
                                 <td>{{ backLink.publisher.url}}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
-                                <td v-if="(user.isOurs == 1 && !user.isAdmin) "><a href="backLink.link">{{ backLink.link }}</a></td>
+                                <td v-if="(user.isOurs == 1 && !user.isAdmin)"><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
