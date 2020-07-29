@@ -340,10 +340,7 @@
                     }
                 });
 
-                $('#tbl-followupsales').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
+                let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
@@ -358,7 +355,29 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
-                    ],
+                    ];
+
+                if( this.user.isOurs == 1 ){
+                    columnDefs = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: false, targets: '_all' }
+                    ]
+                }
+
+                $('#tbl-followupsales').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: columnDefs,
                 });
 
                 this.searchLoading = false;
