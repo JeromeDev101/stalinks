@@ -58,6 +58,8 @@
                 <div class="box-header">
                     <h3 class="box-title">Seller Billing</h3>
 
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+
                     <div class="row">
                         <div class="col-md-2 my-3">
 
@@ -212,6 +214,7 @@
                     seller: this.$route.query.seller || '',
                 },
                 searchLoading: false,
+                totalAmount: 0,
             }
         },
 
@@ -248,6 +251,8 @@
                         { orderable: false, targets: '_all' }
                     ],
                 });
+
+                this.getTotalAmount()
             },
 
             doShow(src) {
@@ -256,6 +261,27 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            getTotalAmount() {
+                let seller_billing = this.listSellerBilling.data
+                let total_price = [];
+                let total = 0;
+                
+                seller_billing.forEach(function(item, index){
+                    if (typeof item.publisher.price !== 'undefined') {
+                        total_price.push( parseFloat(item.publisher.price))
+                    } 
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total;
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
 
             doSearch() {

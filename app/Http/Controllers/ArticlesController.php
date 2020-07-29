@@ -38,15 +38,30 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
+                        ->with('user:id,name')
                         ->where('status_writer', 'Done')
                         ->orderBy('id', 'desc');
+
+        if( isset($filter['date']) && $filter['date'] ){
+            if( $filter['date_type'] == 'Started'){
+                $list->where('date_start', $filter['date']);
+            }
+
+            if( $filter['date_type'] == 'Completed'){
+                $list->where('date_complete', $filter['date']);
+            }
+        }
+
+        if( isset($filter['writer']) && $filter['writer'] ){
+            $list->where('id_writer', $filter['writer']);
+        }
         
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
-            $list->where('id_backlink', 'like', '%'.$filter['search_backlink'].'%');
+            $list->where('id_backlink', $filter['search_backlink']);
         }
 
         if( isset($filter['search_article']) && $filter['search_article'] ){
-            $list->where('id', 'like', '%'.$filter['search_article'].'%');
+            $list->where('id', $filter['search_article']);
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] ){
@@ -77,11 +92,11 @@ class ArticlesController extends Controller
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
-            $list->where('article.id_backlink', 'like', '%'.$filter['search_backlink'].'%');
+            $list->where('article.id_backlink', $filter['search_backlink']);
         }
 
         if( isset($filter['search_article']) && $filter['search_article'] ){
-            $list->where('article.id', 'like', '%'.$filter['search_article'].'%');
+            $list->where('article.id', $filter['search_article']);
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] ){
@@ -166,7 +181,9 @@ class ArticlesController extends Controller
 
         $backlink = Backlink::find($article->id_backlink);
         if( $request->content['status'] == 'Done' ){
-            $backlink->update(['status' => 'Content Done']);
+            if( $backlink->status != 'Live' ){
+                $backlink->update(['status' => 'Content Done']);
+            }
         }
 
         if( $request->content['status'] == 'In Writing' ){

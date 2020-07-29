@@ -138,20 +138,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6" v-if="user.isOurs != '1'">
-                                <div class="form-group">
-                                    <label for="">Seller</label>
-                                    <input type="text" v-model="contentModel.seller" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6" v-if="user.isOurs != '1'">
-                                <div class="form-group">
-                                    <label for="">Buyer</label>
-                                    <input type="text" v-model="contentModel.buyer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
-                                </div>
-                            </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">URL Publisher</label>
@@ -168,10 +154,24 @@
 
                             <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">
+                                    <label for="">Seller</label>
+                                    <input type="text" v-model="contentModel.seller" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label for="">Buyer</label>
+                                    <input type="text" v-model="contentModel.buyer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
                                     <label for="">Writer Price</label>
                                     <input type="number" v-model="contentModel.price" class="form-control" name="" aria-describedby="helpId" placeholder="0.00">
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">

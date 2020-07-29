@@ -111,7 +111,8 @@
             </div>
             <!-- /.box -->
         </div>
-        <!--    Modal Add Backlink-->
+
+        <!--   Modal Edit Followup Backlink -->
         <div v-if="openModalBackLink" class="modal fade"  ref="modalEditBacklink" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -160,7 +161,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label style="color: #333">Price</label>
-                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter" class="form-control" value="" required="required" >
+                                        <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live'" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
@@ -199,11 +200,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link_from}" class="form-group">
                                     <div>
                                         <label style="color: #333">Link From</label>
-
                                         <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
+                                        <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>

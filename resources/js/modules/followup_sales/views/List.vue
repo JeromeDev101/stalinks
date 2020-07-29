@@ -180,10 +180,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <div>
                                         <label style="color: #333">Title</label>
                                         <input type="text" class="form-control" v-model="updateModel.title" required="required" :disabled="isLive">
+                                        <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -198,10 +199,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.link_from}" class="form-group">
                                     <div>
                                         <label style="color: #333">Link From</label>
                                         <input type="text" class="form-control" v-model="updateModel.link_from" required="required" :disabled="isLive">
+                                        <span v-if="messageForms.errors.link_from" v-for="err in messageForms.errors.link_from" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -215,21 +217,10 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">Status</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive">
-                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="col-sm-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>
-                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive">
+                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || user.role_id == 6" >
                                         <option value="">Select Status</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
                                             {{ option }}
@@ -237,6 +228,19 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Status Sales</label>
+                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive">
+                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
 
                             <div class="col-md-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
@@ -345,9 +349,14 @@
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ],
                 });

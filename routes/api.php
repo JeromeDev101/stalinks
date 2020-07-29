@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('delete-article')->post('delete-article', 'ArticlesController@deleteArticle');
 
     //Billing
+    Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
     Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');
     Route::name('get-writer-billing')->get('writer-billing', 'WriterBillingController@getList');

@@ -8,14 +8,22 @@ use App\Models\Article;
 class WriterBillingController extends Controller
 {
     public function getList(Request $request){
-        $list = Article::with('backlinks:id,title,status')
+        $filter = $request->all();
+        $list = Article::select('article.*')
+                        ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
+                        ->leftJoin('price', 'article.id_writer_price', '=', 'price.id')
+                        ->with('price')
+                        ->with('backlinks:id,title,status')
                         ->with('country:id,name')
-                        ->whereNotNull('date_complete')
-                        ->orderBy('id', 'desc')
-                        ->get();
+                        ->where('status_writer', 'Done')
+                        ->orderBy('id', 'desc');
+
+        if( isset($filter['search_backlink'] ) && $filter['search_backlink'] ){
+            $list->where('article.id_backlink', $filter['search_backlink']);
+        }
 
         return [
-            'data' => $list,
+            'data' => $list->get(),
         ];
     }
 

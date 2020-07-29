@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search </label>
                                 <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
@@ -33,7 +33,7 @@
 
                 <div class="box-header">
                     <h3 class="box-title">Wallet Transaction</h3>
-                    <button data-toggle="modal" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
+                    <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">

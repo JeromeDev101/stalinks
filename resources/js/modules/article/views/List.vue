@@ -37,6 +37,32 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Writer</label>
+                                <select name="" class="form-control" v-model="filterModel.writer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listWriter.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date</label>
+                                <div class="input-group">
+                                    <select name="" class="form-control" v-model="filterModel.date_type">
+                                        <option value="Started">Started</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                    <input type="date" class="form-control" v-model="filterModel.date" name="" aria-describedby="helpId">
+                                </div>
+                                
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -55,14 +81,14 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl_article_admin" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID Article</th>
                                 <th>ID Backlink</th>
-                                <th>ID Writer</th>
-                                <th>ID language</th>
+                                <th>Writer</th>
+                                <th>Language</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
                                 <th>Writer Price</th>
@@ -70,14 +96,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listArticlesAdmin.data.length == 0">
-                                <td colspan="9" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(article, index) in listArticlesAdmin.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.id_writer }}</td>
+                                <td>{{ article.user.name }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>
@@ -123,6 +146,20 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="">URL Publisher</label>
+                                    <input type="text" class="form-control" v-model="viewModel.url_publisher" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Link to</label>
+                                    <input type="text" class="form-control" v-model="viewModel.link" :disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="">Seller</label>
                                     <input type="text" class="form-control" v-model="viewModel.seller" :disabled="true">
                                 </div>
@@ -137,15 +174,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL Publisher</label>
-                                    <input type="text" class="form-control" v-model="viewModel.url_publisher" :disabled="true">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Link to</label>
-                                    <input type="text" class="form-control" v-model="viewModel.link" :disabled="true">
+                                    <label for="">Writer Price</label>
+                                    <input type="text" class="form-control" v-model="editModel.price" placeholder="0.00">
                                 </div>
                             </div>
 
@@ -187,6 +217,12 @@
                     search_article: this.$route.query.search_article || '',
                     search_backlink: this.$route.query.search_backlink || '',
                     language_id: this.$route.query.language_id || '',
+                    writer: this.$route.query.writer || '',
+                    date: this.$route.query.date || '',
+                    date_type: this.$route.query.date_type || 'Started',
+                },
+                editModel:{
+                    price: '',
                 },
             }
         },
@@ -194,18 +230,14 @@
         async created() {
             this.getListArticles();
             this.getListCountries();
-
-            $.widget("ui.dialog", $.ui.dialog, {
-                _allowInteraction: function(event) {
-                    return !!$(event.target).closest(".mce-container").length || this._super( event );
-                }
-            });
+            this.getListWriter();
         },
 
         computed: {
             ...mapState({
                 listArticlesAdmin: state => state.storeArticles.listArticlesAdmin,
                 listCountries: state => state.storeArticles.listCountries,
+                listWriter: state => state.storeArticles.listWriter,
                 user: state => state.storeAuth.currentUser,
             })
         },
@@ -215,9 +247,29 @@
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticleAdmin',params);
                 this.searchLoading = false;
+
+                $('#tbl_article_admin').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
+            },
+
+            async getListWriter(params) {
+                await this.$store.dispatch('actionGetListWriter', params);
             },
 
             doSearch() {
+                $('#tbl_article_admin').DataTable().destroy();
+
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -227,11 +279,16 @@
                         search_backlink: this.filterModel.search_backlink,
                         search_article: this.filterModel.search_article,
                         language_id: this.filterModel.language_id,
+                        writer: this.filterModel.writer,
+                        date: this.filterModel.date,
+                        date_type: this.filterModel.date_type,
                     }
                 });
             },
 
             deleteArticle(id) {
+                $('#tbl_article_admin').DataTable().destroy();
+
                 swal.fire({
                     title: "Are you sure?",
                     text: "Do you want to delete these Article?",
@@ -261,10 +318,15 @@
             },
 
             clearSearch() {
+                $('#tbl_article_admin').DataTable().destroy();
+
                 this.filterModel = {
                     search_article: '',
                     search_backlink: '',
                     language_id: '',
+                    writer: '',
+                    date: '',
+                    date_type: 'Started',
                 }
 
                 this.getListArticles({

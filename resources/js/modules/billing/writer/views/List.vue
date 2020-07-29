@@ -11,10 +11,10 @@
 
                     <div class="row">
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search</label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" name="" v-model="filterModel.search_backlink" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
@@ -22,8 +22,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -80,7 +80,7 @@
                                 </td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.id_writer }}</td>
-                                <td></td>
+                                <td>{{ article.price == null ? '-':article.price.price == null ? '-': '$ ' + article.price.price }}</td>
                                 <td></td>
                                 <td>
                                     <div class="btn-group">
@@ -176,6 +176,10 @@
                 updateModel: {
                     payment_type: '',
                 },
+                filterModel: {
+                    search_backlink: this.$route.query.search_backlink || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -194,7 +198,9 @@
 
         methods: {
             async getListArticles(params) {
+                this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticle', params);
+                this.searchLoading = false;
             },
 
             async doPay() {
@@ -215,6 +221,30 @@
                 }
 
                 this.$root.$refs.AppHeader.liveGetWallet()
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getListArticles({
+                    params: {
+                        search_backlink: this.filterModel.search_backlink,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    search_backlink: '',
+                }
+
+                this.getListArticles({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             async getPaymentTypeList(params) {

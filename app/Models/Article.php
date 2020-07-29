@@ -9,6 +9,10 @@ class Article extends Model
     protected $table = 'article';
     protected $guarded = [];
 
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'id_writer');
+    }
+
     public function country() {
         return $this->belongsTo('App\Models\Country', 'id_language', 'id');
     }

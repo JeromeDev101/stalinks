@@ -29,9 +29,9 @@ class SellerBillingController extends Controller
 
         if( isset($filter['status_billing']) && !empty($filter['status_billing']) ){
             if( $filter['status_billing'] == 'Done'){
-                $list = $list->where('admin_confirmation', '=', '1');
+                $list = $list->where('billing.admin_confirmation', '=', '1');
             }else{
-                $list = $list->where('admin_confirmation', '!=','1');
+                $list = $list->whereNull('billing.admin_confirmation');
             }    
         }
 

@@ -140,6 +140,18 @@ class BackLinkController extends Controller
         $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser', 'title');
         $backlink = $this->backLinkRepository->findById($id);
 
+        if( isset($input['status']) && !empty($input['status']) && $input['status'] == 'Live'){
+            if( empty($input['title']) && empty($request->link_from) ){
+                return response()->json([
+                    "message" => 'Incomplete input',
+                    "errors" => [
+                        "title" => 'Please add title',
+                        "link_from" => 'Please add Link From'
+                    ],
+                ],422);
+            }
+        }
+
         if (!$backlink) {
             return response()->json($response);
         }

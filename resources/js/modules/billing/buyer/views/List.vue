@@ -10,10 +10,10 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search </label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" name="" v-model="filterModel.search_backlink" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
@@ -39,10 +39,10 @@
                     <table class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>ID Backlink</th>
                                 <th>User Buyer</th>
-                                <th>Byer Price</th>
+                                <th>Buyer Price</th>
                                 <th>Date Completed</th>
                                 <th>Status Billing</th>
                                 <th>Status Payment</th>
@@ -50,6 +50,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-for="(buyer, index) in listBuyerBilling.data" :key="index">
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ buyer.id }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -66,10 +76,27 @@
     export default {
         data() {
             return {
-
+                filterModel: {
+                    search_backlink: this.$route.query.search_backlink || '',
+                }
             }
         },
 
+        async created() {
+            this.getListBuyerBilling();
+        },
 
+        computed: {
+            ...mapState({
+                listBuyerBilling: state => state.storeBillingBuyer.listBuyerBilling,
+            }),
+        }, 
+
+        methods: {
+            async getListBuyerBilling(params){
+                await this.$store.dispatch('actionGetBuyerBilling', params);
+            }
+        },
+        
     }
 </script>
