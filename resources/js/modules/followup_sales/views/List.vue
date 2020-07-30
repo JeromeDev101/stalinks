@@ -66,6 +66,8 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Follow up Sales</h3>
+
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -92,7 +94,7 @@
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
-                                <td>{{ sales.article == null ? 'N/A':sales.article.id }}</td>
+                                <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
                                 <td v-if="user.isOurs != 1">{{ sales.publisher.user.name }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.user.name }}</td>
                                 <td>{{ sales.publisher.url }}</td>
@@ -306,6 +308,7 @@
                 },
                 searchLoading: false,
                 isLive: false,
+                totalAmount: 0,
             }
         },
 
@@ -381,6 +384,28 @@
                 });
 
                 this.searchLoading = false;
+
+                this.getTotalAmount();
+            },
+
+            getTotalAmount() {
+                let sales = this.listSales.data
+                let total_price = [];
+                let total = 0;
+                sales.forEach(function(item, index){
+                    if (typeof item.publisher.price !== 'undefined') {
+                        total_price.push( parseFloat(item.publisher.price))
+                    }
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total;
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
 
             async getListBuyer(params) {
@@ -390,6 +415,16 @@
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
             }, 
+
+            redirectToArticle(id) {
+                this.$router.push({
+                    mode: 'history',
+                    name: 'articles',
+                    query: {
+                        id: id,
+                    },
+                });
+            },
 
             doSearch() {
                 $('#tbl-followupsales').DataTable().destroy();

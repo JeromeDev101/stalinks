@@ -29,7 +29,7 @@ import Verification from '@/modules/registration/views/Verification.vue';
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
 import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
-import ArticleContent from '@/modules/article/views/Content.vue';
+// import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
 
 const routes = [{
@@ -71,11 +71,6 @@ const routes = [{
         path: '/articles',
         name: 'articles',
         component: Article,
-    },
-    {
-        path: '/articles/:id',
-        name: 'articles-edit',
-        component: ArticleContent,
     },
     {
         path: '/followup-sales',

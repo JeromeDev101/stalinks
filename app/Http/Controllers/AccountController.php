@@ -199,6 +199,8 @@ class AccountController extends Controller
 
     public function getWalletCredit() {
         $user_id = Auth::user()->id;
+        $credit = 0;
+        $wallet = 0;
 
         $publisher_ids = BuyerPurchased::select('publisher_id')
                                         ->where('user_id_buyer', $user_id)
@@ -221,11 +223,13 @@ class AccountController extends Controller
                     ->where('id', $user_id)
                     ->get();
 
-        $credit = floatval($user[0]['total_wallet']['total_wallet']) - floatval($total_purchased[0]['total_purchased']);
-
-
+        if( isset($user[0]['total_wallet']['total_wallet']) && isset($total_purchased[0]['total_purchased']) ){
+            $credit = floatval($user[0]['total_wallet']['total_wallet']) - floatval($total_purchased[0]['total_purchased']);
+            $wallet = number_format($user[0]['total_wallet']['total_wallet'],2);
+        }
+            
         return [
-            'wallet' => number_format($user[0]['total_wallet']['total_wallet'],2),
+            'wallet' => $wallet,
             'total_purchased' => $total_purchased[0]['total_purchased'],
             'total_paid' => $total_paid[0]['total_paid'],
             'credit' => number_format($credit,2)

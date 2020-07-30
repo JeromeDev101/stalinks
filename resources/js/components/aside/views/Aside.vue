@@ -131,7 +131,7 @@
                     </ul>
                 </li>
 
-                <li :class="{ active: $route.name == 'articles' || $route.name == 'articles-edit'}">
+                <li :class="{ active: $route.name == 'articles' }">
                     <router-link :to="{ path: '/articles' }">
                         <i class="fa fa-file-text-o"></i>
                         <span>Article</span>

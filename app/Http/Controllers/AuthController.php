@@ -54,7 +54,7 @@ class AuthController extends Controller
     private function getStatus($email)
     {
         $user = User::where('email', $email)->select('status')->first();
-        if($user->status === 'active'){
+        if( isset($user->status) && $user->status === 'active'){
             $email = $email;
         }else{
             $email = 'invalid@email.address';

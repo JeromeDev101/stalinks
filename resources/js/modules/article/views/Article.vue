@@ -98,7 +98,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
-                                        <button @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
+                                        <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -114,7 +114,7 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Content</h5>
+                        <h5 class="modal-title">Edit Content | Article ID: <b class="text-primary">{{ contentModel.id }}</b></h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -194,7 +194,7 @@
                     </div>
                     <div class="modal-footer">
                         <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button @click="clearQuery" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button @click="submitSave"  type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
@@ -329,6 +329,7 @@
 
                 searchLoading: false,
                 isTeam: false,
+                id_article: this.$route.query.id || '',
             }
         },
 
@@ -356,6 +357,7 @@
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticle', params);
                 this.searchLoading = false;
+                this.viewArticle();
             },
 
             async getListBacklinks(params){
@@ -369,6 +371,28 @@
             checkTeam() {
                 if( this.user.isOurs == 0 ){
                     this.isTeam = true;
+                }
+            },
+
+            viewArticle() {
+                let id = this.id_article;
+                let articles = this.listArticles.data;
+                let article = '';
+
+                articles.forEach(function(item, index){
+                    if( item.id == id){
+                        article = item;
+                    }
+                })
+
+                this.doUpdate(article.backlinks, article);
+                $("#modal-content-edit").modal('show')
+            },
+
+            clearQuery() {
+                let id = this.id_article;
+                if( id != '' ){
+                    this.$router.replace({'query': null});
                 }
             },
 

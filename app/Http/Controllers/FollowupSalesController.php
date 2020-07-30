@@ -51,7 +51,7 @@ class FollowupSalesController extends Controller
     }
 
     public function update( Request $request ){
-        $input = $request->only('status', 'url_from', 'link_from', 'sales');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
