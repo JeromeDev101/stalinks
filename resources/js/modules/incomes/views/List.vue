@@ -157,7 +157,7 @@
                                     <input type="text" v-model="updateModel.payment_status" :disabled="true" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-sm-12">
+                            <div class="col-sm-12" v-show="updateModel.proof_doc_path != null">
                                 <div class="form-group">
                                     <label style="color: #333">Proof of Documents</label>
                                     <img :src="updateModel.proof_doc_path" class="img-fluid" alt="Proof of Document">

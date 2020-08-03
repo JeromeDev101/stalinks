@@ -149,7 +149,7 @@
                         </tbody>
                     </table>
 
-                    <pagination :data="listBuy" @pagination-change-page="getBuyList"></pagination>
+                    <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination>
                     <span v-if="listBuy.total > 10" class="pagination-custom-footer-text float-right">
                         <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
                     </span>

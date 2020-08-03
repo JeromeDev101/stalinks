@@ -184,7 +184,7 @@
                         </tbody>
                     </table>
 
-                    <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination>
+                    <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
                     <span v-if="listPublish.total > 10" class="pagination-custom-footer-text float-right">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
