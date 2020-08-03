@@ -44,14 +44,6 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || isManager || isBuyer" :class="{ active: $route.name == 'wallet-transaction' }">
-                    <router-link :to="{ path: '/wallet-transaction' }">
-                        <i class="fa fa-money"></i>
-                        <span>Wallet Transaction</span>
-                        <span class="pull-right-container"></span>
-                    </router-link>
-                </li>
-
                 <li v-if="user.isAdmin || isBuyer || (user.isOurs == 0 && (isManager || isSeller  || isPostingWriter))" :class="{ active: $route.name == 'articles-list' }">
                     <router-link :to="{ path: '/articles-list' }">
                         <i class="fa fa-file-text-o"></i>
@@ -76,13 +68,7 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'buyer-billing' }">
-                            <router-link :to="{ path: '/buyer-billing' }">
-                                <i class="fa fa-fw fa-money"></i>
-                                <span>Buyer Billing</span>
-                                <span class="pull-right-container"></span>
-                            </router-link>
-                        </li>
+
                         <li :class="{ active: $route.name == 'writer-billing' }">
                             <router-link :to="{ path: '/writer-billing' }">
                                 <i class="fa fa-fw fa-newspaper-o"></i>
@@ -90,6 +76,23 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
+
+                        <li v-if="user.isAdmin || isManager || isBuyer" :class="{ active: $route.name == 'wallet-transaction' }">
+                            <router-link :to="{ path: '/wallet-transaction' }">
+                                <i class="fa fa-money"></i>
+                                <span>Wallet Transaction</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        
+                        <!-- <li :class="{ active: $route.name == 'buyer-billing' }">
+                            <router-link :to="{ path: '/buyer-billing' }">
+                                <i class="fa fa-fw fa-money"></i>
+                                <span>Buyer Billing</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li> -->
+                        
                     </ul>
                 </li>
 

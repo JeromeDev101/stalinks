@@ -83,6 +83,14 @@
                 <div class="box-header">
                     <h3 class="box-title">Buy Backlinks</h3>
 
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="getBuyList" v-model="filterModel.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
                     <div v-if="isCreditAuth" class="alert alert-warning my-3">
                         Sorry you cannot Purchase backlinks due to lack of Wallet. Click
                         <button class="btn btn-link" @click="checkCreditAuth">
@@ -140,6 +148,12 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <pagination :data="listBuy" @pagination-change-page="getBuyList"></pagination>
+                    <span v-if="listBuy.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
+                    </span>
+
                 </div>
             </div>
 
@@ -208,6 +222,7 @@
     export default {
         data() {
             return {
+                paginate: [15,50,100,200],
                 updateModel: {
                     id: '',
                     url: '',
@@ -222,6 +237,7 @@
                     status_purchase: this.$route.query.status_purchase || '',
                     seller: this.$route.query.seller || '',
                     code: this.$route.query.code || '',
+                    paginate: this.$route.query.paginate || 15,
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -261,11 +277,10 @@
                 // }
             },
 
-            async getListSeller(params) {
-                await this.$store.dispatch('actionGetListSeller', params);
-            }, 
+            async getBuyList(page = 1) {
 
-            async getBuyList(params) {
+                $('#tbl_buy_backlink').DataTable().destroy();
+
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
@@ -274,6 +289,8 @@
                         status_purchase: this.filterModel.status_purchase,
                         seller: this.filterModel.seller,
                         code: this.filterModel.code,
+                        paginate: this.filterModel.paginate,
+                        page: page,
                     }
                 });
 
@@ -324,6 +341,69 @@
                 this.searchLoading = false;
             },
 
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            }, 
+
+            // async getBuyList(params) {
+            //     this.searchLoading = true;
+            //     await this.$store.dispatch('actionGetBuyList', {
+            //         params: {
+            //             search: this.filterModel.search,
+            //             language_id: this.filterModel.language_id,
+            //             status_purchase: this.filterModel.status_purchase,
+            //             seller: this.filterModel.seller,
+            //             code: this.filterModel.code,
+            //         }
+            //     });
+
+
+            //     var columnsOrder = [];
+
+            //     if(this.user.isAdmin) {
+            //         columnsOrder = [
+            //             { orderable: true, targets: 0 },
+            //             { orderable: true, targets: 4 },
+            //             { orderable: true, targets: 5 },
+            //             { orderable: true, targets: 6 },
+            //             { orderable: true, targets: 10 },
+            //             { orderable: true, targets: 11 },
+            //             { orderable: true, targets: 14 },
+            //             { orderable: false, targets: '_all' }
+            //         ];
+            //     } else if(this.user.isOurs == 0) {
+            //         columnsOrder = [
+            //             { orderable: true, targets: 0 },
+            //             { orderable: true, targets: 3 },
+            //             { orderable: true, targets: 4 },
+            //             { orderable: true, targets: 5 },
+            //             { orderable: true, targets: 9 },
+            //             { orderable: true, targets: 10 },
+            //             { orderable: true, targets: 13 },
+            //             { orderable: false, targets: '_all' }
+            //         ];
+            //     } else {
+            //         columnsOrder = [
+            //             { orderable: true, targets: 0 },
+            //             { orderable: true, targets: 3 },
+            //             { orderable: true, targets: 4 },
+            //             { orderable: true, targets: 5 },
+            //             { orderable: true, targets: 9 },
+            //             { orderable: true, targets: 10 },
+            //             { orderable: false, targets: '_all' }
+            //         ];
+            //     }
+
+            //     $('#tbl_buy_backlink').DataTable({
+            //         paging: false,
+            //         searching: false,
+            //         columnDefs: columnsOrder,
+            //     });
+
+
+            //     this.searchLoading = false;
+            // },
+
             clearSearch() {
                 $('#tbl_buy_backlink').DataTable().destroy();
 
@@ -333,6 +413,7 @@
                     status_purchase: '',
                     seller: '',
                     code: '',
+                    paginate: 15,
                 }
 
                 this.getBuyList({
@@ -359,6 +440,7 @@
                         status_purchase: this.filterModel.status_purchase,
                         seller: this.filterModel.seller,
                         code: this.filterModel.code,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },

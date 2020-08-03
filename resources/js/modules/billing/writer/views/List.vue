@@ -18,6 +18,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Writer</label>
+                                <select name="" class="form-control" v-model="filterModel.writer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listWriter.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -59,7 +71,7 @@
                                 <th>#</th>
                                 <th>Select</th>
                                 <th>ID Backlink</th>
-                                <th>ID User</th>
+                                <th>Writer</th>
                                 <th>Price for writer</th>
                                 <th>Payment Status</th>
                                 <th>Proof Documents</th>
@@ -79,7 +91,7 @@
                                     </div>
                                 </td>
                                 <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.id_writer }}</td>
+                                <td>{{ article.user.name }}</td>
                                 <td>{{ article.price == null ? '-':article.price.price == null ? '-': '$ ' + article.price.price }}</td>
                                 <td></td>
                                 <td>
@@ -178,6 +190,7 @@
                 },
                 filterModel: {
                     search_backlink: this.$route.query.search_backlink || '',
+                    writer: this.$route.query.writer || '',
                 },
                 searchLoading: false,
             }
@@ -186,6 +199,7 @@
         async created() {
             this.getListArticles();
             this.getPaymentTypeList();
+            this.getListWriter();
         },
 
         computed: {
@@ -193,6 +207,7 @@
                 listArticle: state => state.storeBillingWriter.listArticle,
                 messageForms: state => state.storeBillingWriter.messageForms,
                 listPayment: state => state.storeBillingWriter.listPayment,
+                listWriter: state => state.storeArticles.listWriter,
             }),
         },
 
@@ -201,6 +216,10 @@
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticle', params);
                 this.searchLoading = false;
+            },
+
+            async getListWriter(params){
+                await this.$store.dispatch('actionGetListWriter');
             },
 
             async doPay() {
@@ -231,6 +250,7 @@
                 this.getListArticles({
                     params: {
                         search_backlink: this.filterModel.search_backlink,
+                        writer: this.filterModel.writer,
                     }
                 });
             },
@@ -238,6 +258,7 @@
             clearSearch() {
                 this.filterModel = {
                     search_backlink: '',
+                    writer: '',
                 }
 
                 this.getListArticles({

@@ -17,6 +17,8 @@ const state = {
         full_data: false,
         int_id: 0,
         status: '',
+        seller: '',
+        buyer: '',
     },
     messageBacklinkForms: { obj: {}, action: '', message: '', errors: {} },
 };

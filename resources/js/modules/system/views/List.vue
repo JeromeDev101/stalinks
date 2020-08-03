@@ -85,7 +85,7 @@
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title">Payment Method</h3>
-                            <button data-toggle="modal" data-target="#modal-add-payment" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                            <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-payment" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                         </div>
 
                         <div class="box-body table-responsive no-padding relative">
@@ -164,9 +164,10 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
                             <label for="">Payment Type</label>
                             <input type="text" v-model="paymentUpdate.type" class="form-control" placeholder="Enter Payment Type" required>
+                            <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -192,9 +193,10 @@
                         </div>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
                             <label for="">Payment Type</label>
                             <input type="text" v-model="paymentModel.type" class="form-control" placeholder="Enter Payment Type" required>
+                            <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -381,8 +383,6 @@
                 for (let configType in this.configList.data) {
                     this.isLoadingConfig[configType] = false;
                 }
-
-                console.log(this.isLoadingConfig);
             },
 
             async getCountryList(params) {
@@ -447,6 +447,7 @@
             },
 
             doEditPayment(item) {
+                this.clearMessageform();
                 this.$store.dispatch('clearMessageFormSystem');
                 this.paymentUpdate = JSON.parse(JSON.stringify(item))
             },
@@ -527,7 +528,11 @@
 
             async saveConfig(config) {
                 await this.$store.dispatch('actionUpdateConfig', config);
-            }
+            },
+
+            clearMessageform() {
+                this.$store.dispatch('clearMessageFormSystem');
+            },
         },
     }
 </script>

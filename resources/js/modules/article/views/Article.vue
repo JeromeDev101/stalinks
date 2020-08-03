@@ -385,8 +385,10 @@
                     }
                 })
 
-                this.doUpdate(article.backlinks, article);
-                $("#modal-content-edit").modal('show')
+                if( id ){
+                    this.doUpdate(article.backlinks, article);
+                    $("#modal-content-edit").modal('show')
+                }
             },
 
             clearQuery() {

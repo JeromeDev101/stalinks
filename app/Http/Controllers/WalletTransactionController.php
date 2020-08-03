@@ -11,14 +11,28 @@ use Illuminate\Support\Facades\Auth;
 class WalletTransactionController extends Controller
 {
     public function getList(Request $request) {
+        $filter = $request->all();
         $user = Auth::user();
 
-        $list = WalletTransaction::with('user:id,name')
+        $list = WalletTransaction::select('wallet_transactions.*')
+                        ->with('user:id,name')
                         ->with('payment_type:id,type')
                         ->orderBy('id', 'desc');
 
         if( !$user->isAdmin() && $user->role->id != 7 ){
             $list->where('user_id', $user->id);
+        }
+
+        if( isset($filter['buyer']) && !empty($filter['buyer']) ){
+            $list->where('wallet_transactions.user_id', $filter['buyer']);
+        }
+
+        if( isset($filter['payment_type']) && !empty($filter['payment_type']) ){
+            $list->where('wallet_transactions.payment_via_id', $filter['payment_type']);
+        }
+
+        if( isset($filter['date']) && !empty($filter['date']) ){
+            $list->where('wallet_transactions.date', $filter['date']);
         }
 
         return [

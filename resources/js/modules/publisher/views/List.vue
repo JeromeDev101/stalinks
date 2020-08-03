@@ -69,6 +69,14 @@
                 <div class="box-header">
                     <h3 class="box-title">Publisher URL List</h3>
 
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="getPublisherList" v-model="filterModel.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
                     <div class="form-row">
                         <div class="col-md-4 my-3">
                             <div class="row">
@@ -116,6 +124,7 @@
                             <small class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -175,10 +184,10 @@
                         </tbody>
                     </table>
 
-                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination>
+                    <pagination :data="listPublish" @pagination-change-page="getPublisherList"></pagination>
                     <span v-if="listPublish.total > 10" class="pagination-custom-footer-text float-right">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
-                    </span> -->
+                    </span>
 
                 </div>
             </div>
@@ -324,6 +333,7 @@
         name: '',
         data(){
             return {
+                paginate: [15,50,100,200],
                 updateModel: {
                     id: '',
                     company_name: '',
@@ -348,6 +358,7 @@
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
                     seller: this.$route.query.seller || '',
+                    paginate: this.$route.query.paginate || 15,
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -377,19 +388,38 @@
         },
 
         methods: {
-            // async getPublisherList(page = 1) {
-            //     this.searchLoading = true;
-            //     await this.$store.dispatch('getListPublisher', {
-            //         params: {
-            //             search: this.filterModel.search,
-            //             language_id: this.filterModel.language_id,
-            //             inc_article: this.filterModel.inc_article,
-            //             seller: this.filterModel.seller,
-            //             page: page
-            //         }
-            //     });
-            //     this.searchLoading = false;
-            // },
+            async getPublisherList(page = 1) {
+
+                $('#tbl-publisher').DataTable().destroy();
+
+                this.searchLoading = true;
+                await this.$store.dispatch('getListPublisher', {
+                    params: {
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        inc_article: this.filterModel.inc_article,
+                        seller: this.filterModel.seller,
+                        paginate: this.filterModel.paginate,
+                        page: page
+                    }
+                });
+
+                $('#tbl-publisher').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+
+                this.searchLoading = false;
+            },
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
@@ -413,33 +443,33 @@
                 return val;
             },
 
-            async getPublisherList(params) {
-                this.searchLoading = true;
-                await this.$store.dispatch('getListPublisher', {
-                    params: {
-                        search: this.filterModel.search,
-                        language_id: this.filterModel.language_id,
-                        inc_article: this.filterModel.inc_article,
-                        seller: this.filterModel.seller,
-                    }
-                });
+            // async getPublisherList(params) {
+            //     this.searchLoading = true;
+            //     await this.$store.dispatch('getListPublisher', {
+            //         params: {
+            //             search: this.filterModel.search,
+            //             language_id: this.filterModel.language_id,
+            //             inc_article: this.filterModel.inc_article,
+            //             seller: this.filterModel.seller,
+            //         }
+            //     });
 
-                $('#tbl-publisher').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: false, targets: '_all' }
-                    ],
-                });
+            //     $('#tbl-publisher').DataTable({
+            //         paging: false,
+            //         searching: false,
+            //         columnDefs: [
+            //             { orderable: true, targets: 0 },
+            //             { orderable: true, targets: 2 },
+            //             { orderable: true, targets: 4 },
+            //             { orderable: true, targets: 5 },
+            //             { orderable: true, targets: 7 },
+            //             { orderable: true, targets: 8 },
+            //             { orderable: false, targets: '_all' }
+            //         ],
+            //     });
 
-                this.searchLoading = false;
-            },
+            //     this.searchLoading = false;
+            // },
 
             checkSelected() {
                 this.isDisabled = true;
@@ -504,6 +534,7 @@
                     language_id: '',
                     inc_article: '',
                     seller: '',
+                    paginate: 15,
                 }
 
                 this.getPublisherList({
@@ -615,6 +646,7 @@
                         language_id: this.filterModel.language_id,
                         inc_article: this.filterModel.inc_article,
                         seller: this.filterModel.seller,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },

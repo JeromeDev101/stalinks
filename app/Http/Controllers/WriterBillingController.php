@@ -16,10 +16,15 @@ class WriterBillingController extends Controller
                         ->with('backlinks:id,title,status')
                         ->with('country:id,name')
                         ->where('status_writer', 'Done')
+                        ->with('user:id,name')
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink'] ) && $filter['search_backlink'] ){
             $list->where('article.id_backlink', $filter['search_backlink']);
+        }
+
+        if( isset($filter['writer'] ) && $filter['writer'] ){
+            $list->where('article.id_writer', $filter['writer']);
         }
 
         return [

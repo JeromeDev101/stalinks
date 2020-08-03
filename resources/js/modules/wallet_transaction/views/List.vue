@@ -12,8 +12,32 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search </label>
-                                <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="Type here">
+                                <label for="">Buyer</label>
+                                <select name="" class="form-control" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listBuyer.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Payment Type</label>
+                                <select name="" class="form-control" v-model="filterModel.payment_type">
+                                    <option value="">All</option>
+                                    <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                        {{ option.type }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date</label>
+                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
@@ -21,8 +45,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default">Clear</button>
-                            <button class="btn btn-default">Search <i v-if="false" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" >Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -37,11 +61,12 @@
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl_wallet_transaction" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Id User Buyer</th>
+                                <th>Id Buyer</th>
+                                <th>Buyer</th>
                                 <th>Payment Via</th>
                                 <th>Amount USD</th>
                                 <th>Date</th>
@@ -51,12 +76,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listWallet.data.length == 0">
-                                <td colspan="8" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(wallet, index) in listWallet.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ wallet.user_id }}</td>
+                                <td>{{ wallet.user.name}}</td>
                                 <td>{{ wallet.payment_type.type }}</td>
                                 <td>$ {{ wallet.amount_usd }}</td>
                                 <td>{{ wallet.date }}</td>
@@ -271,6 +294,12 @@
                 },
                 isPopupLoading: false,
                 proof_doc: '',
+                filterModel: {
+                    buyer: this.$route.query.buyer || '',
+                    payment_type: this.$route.query.payment_type || '',
+                    date: this.$route.query.date || '',
+                },
+                searchLoading: false,
             }
         },
 
@@ -291,7 +320,24 @@
 
         methods: {
             async getWalletTransactionList(params) {
+
+                $('#tbl_wallet_transaction').DataTable().destroy();
+
+                this.searchLoading = true;
                 await this.$store.dispatch('actionGetWalletList', params);
+                this.searchLoading = false;
+
+                $('#tbl_wallet_transaction').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 7 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
             },
 
             async getListBuyer(params) {
@@ -300,6 +346,34 @@
 
             async getListPaymentType(params) {
                 await this.$store.dispatch('actionGetListPaymentType', params);
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getWalletTransactionList({
+                    params: {
+                        buyer: this.filterModel.buyer,
+                        payment_type: this.filterModel.payment_type,
+                        date: this.filterModel.date,
+                    }
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    buyer: '',
+                    payment_type: '',
+                    date: '',
+                }
+
+                this.getWalletTransactionList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
             },
 
             doUpdate(wallet) {

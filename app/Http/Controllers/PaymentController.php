@@ -26,6 +26,7 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
         PaymentType::create($input);
         $payment = PaymentType::latest()->first();
@@ -35,6 +36,7 @@ class PaymentController extends Controller
     
     public function edit(Request $request)
     {
+        $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
         $payment = PaymentType::findOrFail($request->id);
         $payment->update($input);

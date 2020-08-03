@@ -16,6 +16,7 @@ class BuyController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
+        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:15;
         $user_id = Auth::user()->id;
 
         $columns = [
@@ -70,7 +71,7 @@ class BuyController extends Controller
         //     }
         // }
 
-        $result = $list->orderBy('publisher.id', 'desc')->get();
+        $result = $list->paginate($paginate);
         foreach($result as $key => $value) {
 
             $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
@@ -95,13 +96,15 @@ class BuyController extends Controller
                 
             }else{
                 $value['code_combination'] = $combineALl;
-                $value['code_price'] = $price_list['price'];
+                $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
             } 
         }
+        
+        return $result;
 
-        return response()->json([
-            'data' => $result
-        ],200);
+        // return response()->json([
+        //     'data' => $result
+        // ],200);
     }
 
     /**
