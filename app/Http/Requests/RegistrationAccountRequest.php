@@ -27,6 +27,7 @@ class RegistrationAccountRequest extends FormRequest
     {
         return [
             'name' => [ 'required' ],
+            'username' => [ 'required' ],
             'email' => [
                 'unique:users,email',
                 'required',

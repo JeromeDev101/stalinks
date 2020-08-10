@@ -112,7 +112,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                        <a class="dropdown-item " @click="getAhrefs()">Get Ahref</a>
+                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin">Get Ahref</a>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                 </th>
                                 <th v-if="user.isAdmin">Company</th>
                                 <th v-if="user.isAdmin || user.isOurs == 0">Username</th>
-                                <th v-if="!user.isAdmin">Date Uploaded</th>
+                                <th v-if="user.isAdmin || user.isOurs == 0">Date Uploaded</th>
                                 <th>Language</th>
                                 <th>URL</th>
                                 <th>Price</th>
@@ -164,7 +164,7 @@
                                 </td>
                                 <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
-                                <td v-if="!user.isAdmin">{{publish.updated_at}}</td>
+                                <td v-if="user.isAdmin || user.isOurs == 0">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
                                 <td>{{ publish.url }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>

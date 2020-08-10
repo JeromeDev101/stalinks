@@ -72,6 +72,7 @@ class BuyController extends Controller
         // }
 
         $result = $list->paginate($paginate);
+        $num_rec = 0;
         foreach($result as $key => $value) {
 
             $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
@@ -92,6 +93,7 @@ class BuyController extends Controller
                     $value['code_price'] = $price_list['price'];
                 }else{
                     $result->forget($key);
+                    $num_rec++;
                 }
                 
             }else{
@@ -99,8 +101,13 @@ class BuyController extends Controller
                 $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
             } 
         }
+
         
-        return $result;
+
+        $total = collect(['total_records' => $num_rec ]);
+        $data = $total->merge($result);
+        
+        return $data;
 
         // return response()->json([
         //     'data' => $result

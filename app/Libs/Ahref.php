@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 class Ahref {
-    private $token;// = "929b05bb1165cddd3fe562f240cedc83";
+    private $token;
     private $outputFormat = 'json';
-    private $baseUrl;// = "http://apiv2.dexuat.com/?mode=ahrefs.com&target=";
+    private $limit = 1;
+    private $baseUrl;
 
     public function __construct($config) {
         $this->token = $config['token'];
@@ -27,7 +28,7 @@ class Ahref {
     }
 
     public function getApiUrl($domain, $from) {
-        return $this->baseUrl.$domain."&output=".$this->outputFormat."&token=".$this->token."&from=".$from;
+        return $this->baseUrl.$domain."&output=".$this->outputFormat."&limit=".$this->limit."&token=".$this->token."&from=".$from;
     }
 
     public function getClient() {

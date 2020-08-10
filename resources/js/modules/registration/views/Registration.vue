@@ -14,24 +14,31 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
                                     <label for="">Name</label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.name" name="" id="" aria-describedby="helpId" placeholder="Enter your name">
+                                    <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" placeholder="Enter your name">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.username}">
+                                    <label for="">Username</label>
+                                    <input type="text" class="form-control" v-model="RegisterModel.username" name="" aria-describedby="helpId" placeholder="Enter your username">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}">
                                     <label for="">Email</label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.email" name="" id="" aria-describedby="helpId" placeholder="Enter your email">
+                                    <input type="text" class="form-control" v-model="RegisterModel.email" name="" aria-describedby="helpId" placeholder="Enter your email">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
                                     <label for="">Phone</label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.phone" name="" id="" aria-describedby="helpId" placeholder="Enter your Phone">
+                                    <input type="text" class="form-control" v-model="RegisterModel.phone" name="" aria-describedby="helpId" placeholder="Enter your Phone">
                                     <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -39,7 +46,7 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}">
                                     <label for="">Company Name</label>
-                                    <input type="text" class="form-control" name="" v-model="RegisterModel.company_name" id="" aria-describedby="helpId" placeholder="Enter your Company Name">
+                                    <input type="text" class="form-control" name="" v-model="RegisterModel.company_name" aria-describedby="helpId" placeholder="Enter your Company Name">
                                     <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -47,7 +54,7 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
                                     <label for="">Account Type</label>
-                                    <select name="" id="" class="form-control" v-model="RegisterModel.type">
+                                    <select name="" class="form-control" v-model="RegisterModel.type">
                                         <option value="">Select Account type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -80,6 +87,7 @@
         data() {
             return {
                 RegisterModel: {
+                    username: '',
                     name: '',
                     email: '',
                     phone: '',
@@ -116,6 +124,7 @@
 
             clearRegistrationModel() {
                 this.RegisterModel = {
+                    username: '',
                     name: '',
                     email: '',
                     phone: '',
