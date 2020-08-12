@@ -75,16 +75,17 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>ID</th>
+                                <th>ID URL publisher</th>
+                                <th>ID Backlink</th>
                                 <th>ID Article</th>
                                 <th v-if="user.isOurs != 1">Seller</th>
                                 <th v-if="user.isOurs != 1">Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
-                                <th>Link From</th>
+                                <th width="106">Link From</th>
                                 <th>Link To</th>
                                 <th>Anchor Text</th>
-                                <th>Date for Proccessing</th>
+                                <th>Date for Proccess</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -94,6 +95,7 @@
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
+                                <td>{{ sales.id }}</td>
                                 <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
                                 <td v-if="user.isOurs != 1">{{ sales.publisher.user.name }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.user.name }}</td>
@@ -357,6 +359,7 @@
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -373,6 +376,7 @@
                         { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
                         { orderable: false, targets: '_all' }
                     ]
                 }

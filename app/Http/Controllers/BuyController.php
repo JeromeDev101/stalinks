@@ -16,7 +16,7 @@ class BuyController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:15;
+        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:25;
         $user_id = Auth::user()->id;
 
         $columns = [
@@ -71,8 +71,19 @@ class BuyController extends Controller
         //     }
         // }
 
-        $result = $list->paginate($paginate);
-        $num_rec = 0;
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            $result = $list->orderBy('id', 'desc')->get();
+        }else{
+            // if( isset($filter['code']) && !empty($filter['code']) ){
+            //     $result = $list->orderBy('id', 'desc')->get();
+            // }else{
+            //     $result = $list->paginate($paginate);
+            // }
+
+            $result = $list->paginate($paginate);
+        }
+
+        
         foreach($result as $key => $value) {
 
             $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
@@ -93,7 +104,6 @@ class BuyController extends Controller
                     $value['code_price'] = $price_list['price'];
                 }else{
                     $result->forget($key);
-                    $num_rec++;
                 }
                 
             }else{
@@ -102,16 +112,15 @@ class BuyController extends Controller
             } 
         }
 
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return response()->json([
+                'data' => $result,
+                'total' => $result->count(),
+            ],200);
+        }else{
+            return $result;
+        }
         
-
-        $total = collect(['total_records' => $num_rec ]);
-        $data = $total->merge($result);
-        
-        return $data;
-
-        // return response()->json([
-        //     'data' => $result
-        // ],200);
     }
 
     /**
@@ -128,6 +137,7 @@ class BuyController extends Controller
 
         $backlink = Backlink::create([
             'price' => $request->price,
+            'url_advertiser' => $request->url_advertiser,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
             'publisher_id' => $publisher->id,

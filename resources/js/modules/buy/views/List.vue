@@ -136,7 +136,7 @@
                                 <td>{{ formatPrice(buy.org_traffic) }}</td>
                                 <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-if="user.isOurs==0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td v-if="user.isOurs== 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
                                 <td v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
@@ -149,7 +149,8 @@
                         </tbody>
                     </table>
 
-                    <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination>
+                    <!-- <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination> -->
+                    <div style="height:50px;"></div>
                     <span v-if="listBuy.total > 10" class="pagination-custom-footer-text float-right">
                         <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
                     </span>
@@ -159,7 +160,7 @@
 
         </div>
 
-        <!-- Modal Update -->
+        <!-- Modal Buy -->
         <div class="modal fade" id="modal-buy-update" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -193,8 +194,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Link</label>
+                                    <label for="">Link To</label>
                                     <input type="text" class="form-control" v-model="updateModel.link" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">URL Advertiser</label>
+                                    <input type="text" class="form-control" v-model="updateModel.url_advertiser" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -206,6 +213,7 @@
                 </div>
             </div>
         </div>
+        <!-- End of Modal Buy -->
     </div>
 </template>
 
@@ -222,13 +230,14 @@
     export default {
         data() {
             return {
-                paginate: [15,50,100,200],
+                paginate: [25,50,100,200,250, 'All'],
                 updateModel: {
                     id: '',
                     url: '',
                     price: '',
                     anchor_text: '',
                     link: '',
+                    url_advertiser: '',
                 },
                 isPopupLoading: false,
                 filterModel: {
@@ -237,7 +246,7 @@
                     status_purchase: this.$route.query.status_purchase || '',
                     seller: this.$route.query.seller || '',
                     code: this.$route.query.code || '',
-                    paginate: this.$route.query.paginate || 15,
+                    paginate: this.$route.query.paginate || 25,
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -300,33 +309,55 @@
                 if(this.user.isAdmin) {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else if(this.user.isOurs == 0) {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
@@ -345,65 +376,6 @@
                 await this.$store.dispatch('actionGetListSeller', params);
             }, 
 
-            // async getBuyList(params) {
-            //     this.searchLoading = true;
-            //     await this.$store.dispatch('actionGetBuyList', {
-            //         params: {
-            //             search: this.filterModel.search,
-            //             language_id: this.filterModel.language_id,
-            //             status_purchase: this.filterModel.status_purchase,
-            //             seller: this.filterModel.seller,
-            //             code: this.filterModel.code,
-            //         }
-            //     });
-
-
-            //     var columnsOrder = [];
-
-            //     if(this.user.isAdmin) {
-            //         columnsOrder = [
-            //             { orderable: true, targets: 0 },
-            //             { orderable: true, targets: 4 },
-            //             { orderable: true, targets: 5 },
-            //             { orderable: true, targets: 6 },
-            //             { orderable: true, targets: 10 },
-            //             { orderable: true, targets: 11 },
-            //             { orderable: true, targets: 14 },
-            //             { orderable: false, targets: '_all' }
-            //         ];
-            //     } else if(this.user.isOurs == 0) {
-            //         columnsOrder = [
-            //             { orderable: true, targets: 0 },
-            //             { orderable: true, targets: 3 },
-            //             { orderable: true, targets: 4 },
-            //             { orderable: true, targets: 5 },
-            //             { orderable: true, targets: 9 },
-            //             { orderable: true, targets: 10 },
-            //             { orderable: true, targets: 13 },
-            //             { orderable: false, targets: '_all' }
-            //         ];
-            //     } else {
-            //         columnsOrder = [
-            //             { orderable: true, targets: 0 },
-            //             { orderable: true, targets: 3 },
-            //             { orderable: true, targets: 4 },
-            //             { orderable: true, targets: 5 },
-            //             { orderable: true, targets: 9 },
-            //             { orderable: true, targets: 10 },
-            //             { orderable: false, targets: '_all' }
-            //         ];
-            //     }
-
-            //     $('#tbl_buy_backlink').DataTable({
-            //         paging: false,
-            //         searching: false,
-            //         columnDefs: columnsOrder,
-            //     });
-
-
-            //     this.searchLoading = false;
-            // },
-
             clearSearch() {
                 $('#tbl_buy_backlink').DataTable().destroy();
 
@@ -413,7 +385,7 @@
                     status_purchase: '',
                     seller: '',
                     code: '',
-                    paginate: 15,
+                    paginate: 25,
                 }
 
                 this.getBuyList({

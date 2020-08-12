@@ -19,6 +19,7 @@ const state = {
         status: '',
         seller: '',
         buyer: '',
+        paginate: '15',
     },
     messageBacklinkForms: { obj: {}, action: '', message: '', errors: {} },
 };

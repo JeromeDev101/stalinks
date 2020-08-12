@@ -184,7 +184,8 @@
                         </tbody>
                     </table>
 
-                    <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
+                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination> -->
+                    <div style="height:50px;"></div>
                     <span v-if="listPublish.total > 10" class="pagination-custom-footer-text float-right">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
@@ -263,18 +264,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Language</label>
-                                    <select name="" v-model="updateModel.language_id" class="form-control">
-                                        <option value=""></option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div> -->
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Language</label>
@@ -333,7 +322,7 @@
         name: '',
         data(){
             return {
-                paginate: [15,50,100,200],
+                paginate: [25,50,100,200,250, 'All'],
                 updateModel: {
                     id: '',
                     company_name: '',
@@ -358,7 +347,7 @@
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
                     seller: this.$route.query.seller || '',
-                    paginate: this.$route.query.paginate || 15,
+                    paginate: this.$route.query.paginate || 25,
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -404,18 +393,67 @@
                     }
                 });
 
+                let columnDefs = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: false, targets: '_all' }
+                    ];
+
+                if( this.user.isOurs == 0 && !this.user.isAdmin){
+                    columnDefs = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
+                        { orderable: false, targets: '_all' }
+                    ]
+                }
+
+                if( this.user.isOurs == 1 ){
+                    columnDefs = [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: false, targets: '_all' }
+                    ]
+                }
+
                 $('#tbl-publisher').DataTable({
                     paging: false,
                     searching: false,
-                    columnDefs: [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: false, targets: '_all' }
-                    ],
+                    columnDefs: columnDefs,
                 });
 
                 this.searchLoading = false;
@@ -442,34 +480,6 @@
                 let val = (value/1).toFixed(0)
                 return val;
             },
-
-            // async getPublisherList(params) {
-            //     this.searchLoading = true;
-            //     await this.$store.dispatch('getListPublisher', {
-            //         params: {
-            //             search: this.filterModel.search,
-            //             language_id: this.filterModel.language_id,
-            //             inc_article: this.filterModel.inc_article,
-            //             seller: this.filterModel.seller,
-            //         }
-            //     });
-
-            //     $('#tbl-publisher').DataTable({
-            //         paging: false,
-            //         searching: false,
-            //         columnDefs: [
-            //             { orderable: true, targets: 0 },
-            //             { orderable: true, targets: 2 },
-            //             { orderable: true, targets: 4 },
-            //             { orderable: true, targets: 5 },
-            //             { orderable: true, targets: 7 },
-            //             { orderable: true, targets: 8 },
-            //             { orderable: false, targets: '_all' }
-            //         ],
-            //     });
-
-            //     this.searchLoading = false;
-            // },
 
             checkSelected() {
                 this.isDisabled = true;
@@ -534,7 +544,7 @@
                     language_id: '',
                     inc_article: '',
                     seller: '',
-                    paginate: 15,
+                    paginate: 25,
                 }
 
                 this.getPublisherList({

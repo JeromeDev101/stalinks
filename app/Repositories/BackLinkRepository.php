@@ -99,6 +99,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
     public function getBackLink($countryIds, $intDomains, $filters)
     {
+        $paginate = $filters->paginate == '' ? 15:$filters->paginate;
         $user = Auth::user();
         $query = $this->model->orderBy('id', 'desc');
 
@@ -123,7 +124,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate(config('common.paginate.default'));
+        return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate($paginate);
     }
 
     protected function fillter($query, $filters)

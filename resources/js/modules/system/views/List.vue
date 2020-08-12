@@ -118,6 +118,26 @@
 
                 <div class="col-sm-6">
                     <div class="row">
+                        
+                        <div class="col-sm-12">
+                            <div class="box p-4">
+                                <div class="box-body">
+                                    <div class="progress-group">
+                                        <span class="progress-text">Ahref API rows consume</span>
+                                        <span class="progress-number"><b>{{ rows_consume }}</b>/500,000</span>
+
+                                        <div class="progress sm my-3">
+                                            <div class="progress-bar progress-bar-aqua" :style="'width:'+ consume_percentage + '%'"></div>
+                                        </div>
+
+                                        <b>Used: </b> {{ rows_consume }} <br/>
+                                        <b>Remaining: </b> {{ rows_remaining }} <br/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col-sm-12" v-for="(configs, typeConfig) in configList.data">
                             <div class="box">
                                 <div class="box-header">
@@ -303,6 +323,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: 'System',
@@ -347,7 +368,10 @@
                 isLoadingConfig: {
                     alexa: false,
                     ahrefs: false
-                }
+                },
+                rows_consume: '',
+                consume_percentage: 0,
+                rows_remaining: 0,
             };
         },
 
@@ -363,6 +387,8 @@
             this.getCountryList({
                 params: this.filterModel
             });
+
+            this.getSubscriptionInfo();
         },
 
         computed: {
@@ -372,6 +398,7 @@
                 paymentList: state => state.storeSystem.paymentList,
                 messageForms: state => state.storeSystem.messageForms,
                 configList: state => state.storeSystem.configList,
+                Info: state => state.storeSystem.Info,
             }),
         },
 
@@ -383,6 +410,20 @@
                 for (let configType in this.configList.data) {
                     this.isLoadingConfig[configType] = false;
                 }
+            },
+
+            async getSubscriptionInfo() {
+                await this.$store.dispatch('actionGetSubscriptionInfo');
+
+                let rows_left = this.Info.info.rows_left
+                let rows_limit = this.Info.info.rows_limit
+                let consume_rows = parseFloat(rows_limit) - parseFloat(rows_left);
+
+                this.rows_remaining = rows_left;
+                this.rows_consume = consume_rows;
+                this.consume_percentage = ( parseFloat(consume_rows)/parseFloat(rows_limit) )*100;
+
+                console.log(this.consume_percentage)
             },
 
             async getCountryList(params) {

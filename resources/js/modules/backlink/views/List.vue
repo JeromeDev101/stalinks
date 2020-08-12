@@ -65,6 +65,14 @@
                 <div class="box-header">
                     <h3 class="box-title">Follow up Backlinks</h3>
 
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
                     <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
                         <download-csv
                             :data = "listBackLink.data"
@@ -72,6 +80,7 @@
                             :nameFile = "file_csv">
                         </download-csv>
                     </div>
+
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -121,10 +130,14 @@
                         </tbody>
                     </table>
                 </div>
-                <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination>
-                <!-- /.box-body -->
+
+                <!-- <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination> -->
+                <div style="height:50px;"></div>
+                <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text float-right">
+                    <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.</b>
+                </span>
+
             </div>
-            <!-- /.box -->
         </div>
 
         <!--   Modal Edit Followup Backlink -->
@@ -284,6 +297,7 @@
         name: 'BackLinkList',
         data() {
             return {
+                paginate: [15,25,50,100,200,250],
                 file_csv: 'baclink.xls',
                 statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 data_filed: {
@@ -442,6 +456,7 @@
             async clearSearch() {
                 await this.$store.dispatch('actionResetFillterBacklink');
                 this.fillter.status = ''
+                this.fillter.paginate = '15'
                 this.getBackLinkList();
             },
 

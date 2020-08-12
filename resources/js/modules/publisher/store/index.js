@@ -18,6 +18,7 @@ const state = {
 }
 
 const mutations = {
+
     [PUBLISHER_SUMMARY_LIST](state, totalExtDomain) {
         state.totalExtDomain = totalExtDomain;
     },

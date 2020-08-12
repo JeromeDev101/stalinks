@@ -5,6 +5,7 @@ const COUNTRY_SET_LIST = 'COUNTRY_SET_LIST'
 const CONFIG_SET_LIST = 'CONFIG_SET_LIST'
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const PAYMENT_LIST = 'PAYMENT_LIST';
+const SUBSCRIPTION_LIST = 'SUBSCRIPTION_LIST';
 
 const state = {
     totalCountry: 0,
@@ -13,9 +14,13 @@ const state = {
     countryList: { data: [], total: 0 },
     configList: { data: [], total: 0 },
     messageForms: { action: '', message: '', errors: {} },
+    Info: {},
 };
 
 const mutations = {
+    [SUBSCRIPTION_LIST](state, dataSet) {
+        state.Info = dataSet;
+    },
 
     [SYSTEM_SET_ERROR](state, error) {
         state.error = error;
@@ -147,6 +152,20 @@ const actions = {
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);
             }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetSubscriptionInfo({ commit }, params) {
+        try {
+            let response = await SystemService.getSubscriptionInfo(params);
+            commit(SUBSCRIPTION_LIST, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

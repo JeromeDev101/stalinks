@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client as GuzzleClient;
 
 class ConfigController extends Controller
 {
@@ -60,5 +61,14 @@ class ConfigController extends Controller
         $this->configRepository->update($config, $input);
         $response['success'] = true;
         return response()->json($response);
+    }
+
+    public function getSubscriptionInfo() {
+        $client = new GuzzleClient();
+        $subscription_url = 'https://apiv2.ahrefs.com/?token=1221d525cb70af4ee61e2561ced8985935920451&limit=1000&output=json&from=subscription_info';
+        $response = $client->get($subscription_url);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        return $result;
     }
 }

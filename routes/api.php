@@ -148,6 +148,9 @@ Route::middleware('auth:api')->group(function () {
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
     });
 
+    // Ahref Subscription
+    Route::name('subscription-info')->get('subscription-info', 'ConfigController@getSubscriptionInfo');
+
     // Auth routes.
     Route::name('logout')->post('/logout', 'AuthController@logout');
 });

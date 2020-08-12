@@ -2,6 +2,12 @@ import axios from 'axios';
 
 export default class SystemService {
 
+    static getSubscriptionInfo(params) {
+        return axios.get('/api/subscription-info', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     /**
      * Return config total list
      *

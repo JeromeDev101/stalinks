@@ -23,7 +23,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function getList($filter)
     {
         $user = Auth::user();
-        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:15;
+        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:25;
         $list = Publisher::select('publisher.*','registration.username','users.name', 'users.username as user_name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
@@ -57,12 +57,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.inc_article', $filter['inc_article']);
         }
 
-        return $list->paginate($paginate);
 
-        // return [
-        //     "data" => $list->get(),
-        //     "total" => $list->count()
-        // ];
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return [
+                "data" => $list->get(),
+                "total" => $list->count()
+            ];
+        }else{
+            return $list->paginate($paginate);
+        }
+            
     }
 
     public function importExcel($file){
