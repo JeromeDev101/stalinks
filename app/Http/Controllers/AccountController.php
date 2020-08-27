@@ -17,6 +17,7 @@ use App\Models\Publisher;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Backlink;
+use App\Models\WalletTransaction;
 
 class AccountController extends Controller
 {
@@ -48,6 +49,7 @@ class AccountController extends Controller
         $status = $request->status;
         $type = $request->type;
         $search = $request->search;
+        $paginate = $request->paginate;
 
         $list = Registration::when( $status, function($query) use ($status){
             return $query->where( 'status', $status );
@@ -56,12 +58,12 @@ class AccountController extends Controller
         })->when( $search, function($query) use ($search){
             return $query->where( 'name', 'LIKE', '%'.$search.'%' )
                 ->orWhere( 'email', 'LIKE', '%'.$search.'%' );
-        })->get();
+        })
+        ->orderBy('id', 'desc')
+        ->paginate($paginate);
 
+        return $list;
 
-        return response()->json([
-            'data' => $list
-        ],200);
     }
 
     public function edit(UpdateAccountRequest $request)
@@ -203,12 +205,14 @@ class AccountController extends Controller
         $user_id = Auth::user()->id;
         $credit = 0;
         $wallet = 0;
+        $deposit = 0;
 
-        $publisher_ids = BuyerPurchased::select('publisher_id')
-                                        ->where('user_id_buyer', $user_id)
-                                        ->where('status', 'Purchased')
-                                        ->get()
-                                        ->toArray();
+        // $publisher_ids = BuyerPurchased::select('publisher_id')
+        //                                 ->where('user_id_buyer', $user_id)
+        //                                 ->where('status', 'Purchased')
+        //                                 ->get()
+        //                                 ->toArray();
+
 
         $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
                                 ->where('status', 'Live')
@@ -216,8 +220,13 @@ class AccountController extends Controller
                                 ->where('user_id', $user_id)
                                 ->get();
 
-        $total_purchased = Publisher::selectRaw('SUM(price) as total_purchased')
-                                ->whereIn('id', $publisher_ids)
+        $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
+                                ->where('user_id', $user_id)
+                                ->get();
+
+        $total_purchased_paid = Backlink::selectRaw('SUM(price) as total_purchased_paid')
+                                ->where('status', 'Live')
+                                ->where('user_id', $user_id)
                                 ->get();
 
         $user = User::select('id','name')
@@ -225,16 +234,29 @@ class AccountController extends Controller
                     ->where('id', $user_id)
                     ->get();
 
-        if( isset($user[0]['total_wallet']['total_wallet']) && isset($total_purchased[0]['total_purchased']) ){
-            $credit = floatval($user[0]['total_wallet']['total_wallet']) - floatval($total_purchased[0]['total_purchased']);
-            $wallet = number_format($user[0]['total_wallet']['total_wallet'],2);
+        $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+                    ->where('user_id', $user_id)
+                    ->get();
+        
+        if( isset($wallet_transaction[0]['amount_usd']) ){
+            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
         }
-            
+
+        if( isset($wallet_transaction[0]['amount_usd']) && isset($total_purchased[0]['total_purchased']) ){
+            $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+        }
+
+        if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
+            $wallet = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_paid[0]['total_paid']);
+        }
+    
         return [
             'wallet' => $wallet,
             'total_purchased' => $total_purchased[0]['total_purchased'],
+            'total_purchased_paid' => $total_purchased_paid[0]['total_purchased_paid'],
             'total_paid' => $total_paid[0]['total_paid'],
-            'credit' => number_format($credit,2)
+            'credit' => number_format($credit,2),
+            'deposit' => $deposit,
         ];
     }
 }

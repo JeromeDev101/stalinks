@@ -107,8 +107,12 @@
                     </div>
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
-                    <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;">
+
+                <!-- <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
+                    <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
+
+                <div class="box-body no-padding">
+                    <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
                         <thead>
                         <tr class="label-primary">
                             <th>Action</th>
@@ -177,19 +181,27 @@
                         </tr>
                         </tbody>
                     </table>
+
                     <div class="overlay" v-if="isLoadingTable">
                         <i class="fa fa-refresh fa-spin"></i>
                     </div>
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listExt.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+                    </span>
+
                 </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
+
+                <!-- <div class="box-footer clearfix">
                     <component :is="pagination" :callMethod="goToPage"></component>
-                </div>
+                </div> -->
+
             </div>
-            <!-- /.box -->
         </div>
 
-        <!--    Modal Add-->
+
+        <!-- Modal Add -->
         <div class="modal fade" id="modal-add" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -210,6 +222,16 @@
                                     <label style="color: #333">Domain</label>
                                     <input type="text" v-model="extModel.domain" class="form-control" value="" required="required" placeholder="Enter domain">
                                     <span v-if="messageForms.errors.domain" v-for="err in messageForms.errors.domain" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Status</label>
+                                    <select class="form-control" v-model="extModel.status">
+                                        <option value=""></option>
+                                        <option value="100">Qualified</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -252,7 +274,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.alexa_rank}" class="form-group">
                                     <label style="color: #333">Alexa Rank</label>
                                     <input type="text" v-model="extModel.alexa_rank" class="form-control" value=""  placeholder="Enter Alexa Rank">
@@ -314,7 +336,39 @@
                                     <input type="text" v-model="extModel.organic_traffic" class="form-control" value=""  placeholder="Enter Organic Traffic">
                                     <span v-if="messageForms.errors.organic_traffic" v-for="err in messageForms.errors.organic_traffic" class="text-danger">{{ err }}</span>
                                 </div>
+                            </div> -->
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Skype</label>
+                                    <textarea type="text" v-model="extModel.skype" class="form-control" value="" placeholder="Enter Skype"></textarea>
+                                </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Info</label>
+                                    <textarea type="text" v-model="extModel.info" class="form-control" value="" placeholder="Enter Info"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Price</label>
+                                    <input type="number" v-model="extModel.price" class="form-control" value="" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Include Article</label>
+                                    <select class="form-control" v-model="extModel.inc_article">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
@@ -323,13 +377,12 @@
                         <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Modal Add-->
+        <!-- End Modal Add-->
 
-        <!--    Modal Backlink-->
+
+        <!-- Modal Backlink -->
         <div class="modal fade" id="modal-backlink" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -382,13 +435,12 @@
                         </download-csv>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Modal Backlink-->
+        <!-- End Modal Backlink -->
 
-        <!--    Modal Update-->
+
+        <!-- Modal Update -->
         <div class="modal fade" id="modal-update" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -456,7 +508,7 @@
                             </div>
 
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.ahrefs_rank}" class="form-group">
                                     <label style="color: #333">Ahrefs Rank</label>
                                     <input type="number" v-model="extUpdate.ahrefs_rank" class="form-control" value=""  placeholder="Enter Ahrefs Rank">
@@ -509,6 +561,37 @@
                                     <label style="color: #333">Organic Traffic</label>
                                     <input type="text" v-model="extUpdate.organic_traffic" class="form-control" value=""  placeholder="Enter Organic Traffic">
                                     <span v-if="messageForms.errors.organic_traffic" v-for="err in messageForms.errors.organic_traffic" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Skype</label>
+                                    <textarea type="text" v-model="extUpdate.skype" class="form-control" value="" placeholder="Enter Skype"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Info</label>
+                                    <textarea type="text" v-model="extUpdate.info" class="form-control" value="" placeholder="Enter Info"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Price</label>
+                                    <input type="number" v-model="extUpdate.price" class="form-control" value="" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Include Article</label>
+                                    <select class="form-control" v-model="extUpdate.inc_article">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -819,7 +902,7 @@
                     sort_key: this.$route.query.sort_key || 'id',
                     sort_value: this.$route.query.sort_value || 'desc'
                 },
-                listPageOptions: [5, 10, 25, 50, 100],
+                listPageOptions: [5, 10, 25, 50, 100, 200, 250, 500, 1000, 2000],
                 extModel: {
                     id: 0,
                     domain: '',
@@ -835,7 +918,11 @@
                     facebook: '',
                     email: '',
                     phone: '',
-                    status: 0
+                    skype: '',
+                    info: '',
+                    price: '',
+                    status: '',
+                    inc_article: 'Yes',
                 },
                 mailInfo: {
                     tpl: 0,

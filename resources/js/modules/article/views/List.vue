@@ -78,6 +78,14 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Articles</h3>
+
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="doSearch" v-model="filterModel.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -116,6 +124,11 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listArticlesAdmin.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listArticlesAdmin.from }} to {{ listArticlesAdmin.to }} of {{ listArticlesAdmin.total }} entries.</b>
+                    </span>
 
                 </div>
             </div>
@@ -200,6 +213,7 @@
     export default {
         data() {
             return {
+                paginate: [15,25,50,100,200,250],
                 data: '',
                 options: {
                     height: 500,
@@ -220,6 +234,7 @@
                     writer: this.$route.query.writer || '',
                     date: this.$route.query.date || '',
                     date_type: this.$route.query.date_type || 'Started',
+                    paginate: this.$route.query.paginate || '15',
                 },
                 editModel:{
                     price: '',
@@ -244,6 +259,8 @@
 
         methods: {
             async getListArticles(params){
+                $('#tbl_article_admin').DataTable().destroy();
+
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticleAdmin',params);
                 this.searchLoading = false;
@@ -255,8 +272,11 @@
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -268,7 +288,6 @@
             },
 
             doSearch() {
-                $('#tbl_article_admin').DataTable().destroy();
 
                 this.$router.push({
                     query: this.filterModel,
@@ -282,13 +301,12 @@
                         writer: this.filterModel.writer,
                         date: this.filterModel.date,
                         date_type: this.filterModel.date_type,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },
 
             deleteArticle(id) {
-                $('#tbl_article_admin').DataTable().destroy();
-
                 swal.fire({
                     title: "Are you sure?",
                     text: "Do you want to delete these Article?",
@@ -318,8 +336,6 @@
             },
 
             clearSearch() {
-                $('#tbl_article_admin').DataTable().destroy();
-
                 this.filterModel = {
                     search_article: '',
                     search_backlink: '',
@@ -327,6 +343,7 @@
                     writer: '',
                     date: '',
                     date_type: 'Started',
+                    paginate: '15',
                 }
 
                 this.getListArticles({

@@ -49,6 +49,28 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
         }
 
+        if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){
+            if( $filter['got_ahref'] == 'Without' ){
+                $list = $list->where('publisher.ur', 0)
+                ->where('publisher.dr', 0)
+                ->where('publisher.backlinks', 0)
+                ->where('publisher.ref_domain', 0)
+                ->where('publisher.org_keywords', 0)
+                ->where('publisher.org_traffic', 0);
+            }
+
+            if( $filter['got_ahref'] == 'With' ){
+                $list = $list->where('publisher.ur', '!=', '0')
+                ->where('publisher.dr', '!=', '0')
+                ->where('publisher.backlinks', '!=', '0')
+                ->where('publisher.ref_domain', '!=', '0');
+            }
+        }
+
+        if( isset($filter['date']) && !empty($filter['date']) ){
+            $list = $list->where('publisher.updated_at', 'like', '%'.$filter['date'].'%');
+        }
+
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
             $list = $list->where('publisher.language_id', $filter['language_id']);
         }

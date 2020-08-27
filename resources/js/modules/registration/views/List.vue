@@ -56,11 +56,20 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Accounts</h3>
+
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="getAccountList" v-model="filterModel.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
                     <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-striped table-bordered">
+                    <table id="tbl_account" class="table table-striped table-bordered">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -94,6 +103,12 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
+                    </span>
+
                 </div>
 
             </div>
@@ -399,6 +414,7 @@
     export default {
         data() {
             return {
+                paginate: [15,25,50,100,200,250],
                 accountModel: {
                     name: '',
                     email: '',
@@ -417,11 +433,11 @@
                     commission: '',
                 },
 
-
                 filterModel: {
                     type: this.$route.query.type || '',
                     search: this.$route.query.search || '',
-                    status: this.$route.query.status || ''
+                    status: this.$route.query.status || '',
+                    paginate: this.$route.query.paginate || '15',
                 },
 
                 accountUpdate: {
@@ -519,6 +535,8 @@
             },
 
             async getAccountList(params) {
+
+                $("#tbl_account").DataTable().destroy();
                 this.isLoadingTable = true;
                 this.isSearchLoading = true;
                 await this.$store.dispatch('actionGetAccount', {
@@ -526,10 +544,27 @@
                         type: this.filterModel.type,
                         status: this.filterModel.status,
                         search: this.filterModel.search,
+                        paginate: this.filterModel.paginate,
                     }
                 });
                 this.isLoadingTable = false;
                 this.isSearchLoading = false;
+
+                $("#tbl_account").DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
             },
 
             clearSearch() {
@@ -537,6 +572,7 @@
                     type: '',
                     status: '',
                     search: '',
+                    paginate: '15',
                 }
 
                 this.getAccountList({
@@ -555,7 +591,8 @@
                     params: {
                         status: this.filterModel.status,
                         search: this.filterModel.search,
-                        type: this.filterModel.type
+                        type: this.filterModel.type,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },

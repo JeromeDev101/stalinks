@@ -124,6 +124,8 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
+        // dd($backlink);
+
         return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate($paginate);
     }
 

@@ -99,7 +99,7 @@
                                 <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
                                 <td v-if="user.isOurs != 1">{{ sales.publisher.user.name }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.user.name }}</td>
-                                <td>{{ sales.publisher.url }}</td>
+                                <td>{{ replaceCharacters(sales.publisher.url) }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>
                                 <td><a href="sales.link">{{ sales.link }}</a></td>
@@ -390,6 +390,14 @@
                 this.searchLoading = false;
 
                 this.getTotalAmount();
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
             },
 
             getTotalAmount() {

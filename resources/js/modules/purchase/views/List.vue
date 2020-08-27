@@ -71,6 +71,21 @@
                     <h3 class="box-title">Purchase</h3>
 
                     <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getPurchaseList" v-model="filterModel.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>  
+
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -86,7 +101,6 @@
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Status Payment</th>
-                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -95,19 +109,20 @@
                                 <td>{{ purchase.id }}</td>
                                 <td>{{ purchase.publisher.user.name }}</td>
                                 <td>{{ purchase.user.name }}</td>
-                                <td>{{ purchase.publisher.url }}</td>
+                                <td>{{ replaceCharacters(purchase.publisher.url) }}</td>
                                 <td>$ {{ formatPrice(purchase.price) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
                                 <td>{{ purchase.payment_status }}</td>
-                                <!-- <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(purchase)" data-target="#modal-update-purchase" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listPurchase.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{ listPurchase.total }} entries.</b>
+                    </span>
+
                 </div>
 
             </div>
@@ -175,6 +190,7 @@
     export default {
         data() {
             return {
+                paginate: [15,25,50,100,200,250],
                 updateModel: {
                     seller: '',
                     buyer: '',
@@ -188,6 +204,7 @@
                     seller: this.$route.query.seller || '',
                     search_id: this.$route.query.search_id || '',
                     search_url_publisher: this.$route.query.search_url_publisher || '',
+                    paginate: this.$route.query.paginate || '15',
                 },
                 isPopupLoading: false,
                 totalAmount: 0,
@@ -209,6 +226,8 @@
 
         methods: {
             async getPurchaseList(params){
+                $('#tbl-purchase').DataTable().destroy();
+
                 this.isSearching = true;
 
                 await this.$store.dispatch('actionGetPurchaseList', {
@@ -219,6 +238,7 @@
                         seller: this.filterModel.seller,
                         search_id: this.filterModel.search_id,
                         search_url_publisher: this.filterModel.search_url_publisher,
+                        paginate: this.filterModel.paginate,
                     }
                 });
 
@@ -226,12 +246,15 @@
                     paging: false,
                     searching: false,
                     columnDefs: [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
-                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 0},
+                        { orderable: true, targets: 1},
+                        { orderable: true, targets: 2},
+                        { orderable: true, targets: 3},
+                        { orderable: true, targets: 4},
                         { orderable: true, targets: 5},
                         { orderable: true, targets: 6},
                         { orderable: true, targets: 7},
+                        { orderable: true, targets: 8},
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -251,6 +274,7 @@
                     seller: '',
                     search_id: '',
                     search_url_publisher: '',
+                    paginate: '15',
                 }
 
                 this.getPurchaseList({
@@ -275,6 +299,7 @@
                         seller: this.filterModel.seller,
                         search_id: this.filterModel.search_id,
                         search_url_publisher: this.filterModel.search_url_publisher,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },
@@ -282,6 +307,14 @@
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
                 return val;
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
             },
 
             getTotalAmount() {

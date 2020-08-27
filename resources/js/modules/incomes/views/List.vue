@@ -10,16 +10,10 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <!-- <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Search User</label>
-                                <input type="text" class="form-control" v-model="filterModel.user" name="" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div> -->
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Payment Status</label>
+                                <label for="">Status Payment</label>
                                 <select name="" id="" class="form-control" v-model="filterModel.payment_status">
                                     <option value="">All</option>
                                     <option value="Paid">Paid</option>
@@ -59,6 +53,13 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date Completed</label>
+                                <input type="date" class="form-control" v-model="filterModel.date">
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -76,6 +77,21 @@
                     <h3 class="box-title">Incomes</h3>
 
                     <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getListIncomes" v-model="filterModel.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>     
+
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -100,7 +116,7 @@
                                 <td>{{ incomes.id }}</td>
                                 <td v-if="isSeller">{{ incomes.publisher.user.name }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user.name }}</td>
-                                <td>{{ incomes.publisher.url }}</td>
+                                <td>{{ replaceCharacters(incomes.publisher.url) }}</td>
                                 <td>$ {{ incomes.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>
@@ -113,6 +129,12 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listIncomes.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listIncomes.from }} to {{ listIncomes.to }} of {{ listIncomes.total }} entries.</b>
+                    </span>
+
                 </div>
 
             </div>
@@ -192,6 +214,7 @@
     export default {
         data() {
             return {
+                paginate: [25,50,100,200,250],
                 statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
                 updateModel: {
                     seller: '',
@@ -207,6 +230,8 @@
                     status: this.$route.query.status || '',
                     buyer: this.$route.query.buyer || '',
                     seller: this.$route.query.seller || '',
+                    paginate: this.$route.query.paginate || '25',
+                    date: this.$route.query.date || '',
                 },
                 isSearching: false,
                 isSeller: true,
@@ -230,6 +255,8 @@
 
         methods: {
             async getListIncomes(params){
+                $('#tbl-income').DataTable().destroy();
+
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetListIncomes', {
                     params: {
@@ -238,6 +265,8 @@
                         status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
+                        paginate: this.filterModel.paginate,
+                        date: this.filterModel.date,
                     }
                 });
 
@@ -247,6 +276,9 @@
                     columnSort = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
@@ -273,6 +305,14 @@
 
                 this.isSearching = false;
                 this.getTotalAmount()
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
             },
 
             getTotalAmount() {
@@ -320,6 +360,8 @@
                         status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
+                        paginate: this.filterModel.paginate,
+                        date: this.filterModel.date,
                     }
                 });
             },
@@ -333,6 +375,8 @@
                     status: '',
                     buyer: '',
                     seller: '',
+                    date: '',
+                    paginate: '25',
                 }
 
                 this.getListIncomes({

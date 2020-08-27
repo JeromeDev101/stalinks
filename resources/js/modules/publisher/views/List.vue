@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search Company and User</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
@@ -49,6 +49,24 @@
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Got Ahref</label>
+                                <select name="" class="form-control" v-model="filterModel.got_ahref">
+                                    <option value="">All</option>
+                                    <option value="With">With</option>
+                                    <option value="Without">Without</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date</label>
+                                <input type="date" class="form-control" v-model="filterModel.date">
                             </div>
                         </div>
 
@@ -112,7 +130,7 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin">Get Ahref</a>
+                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +176,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default">
-                                            <input type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
+                                            <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
@@ -166,7 +184,7 @@
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
-                                <td>{{ publish.url }}</td>
+                                <td>{{ replaceCharacters(publish.url) }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
                                 <td>{{ publish.inc_article }}</td>
                                 <td>{{ publish.ur }}</td>
@@ -227,7 +245,9 @@
                                     <input type="text" v-model="updateModel.url" class="form-control" name="" placeholder="" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+
+
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Ref Domains</label>
                                     <input type="number" v-model="updateModel.ref_domain" :disabled="isSeller" class="form-control" name="" placeholder="">
@@ -262,7 +282,8 @@
                                     <label for="">Organic traffic</label>
                                     <input type="text" v-model="updateModel.org_traffic" :disabled="isSeller" class="form-control" name="" placeholder="">
                                 </div>
-                            </div>
+                            </div> -->
+
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -348,6 +369,8 @@
                     inc_article: this.$route.query.inc_article || '',
                     seller: this.$route.query.seller || '',
                     paginate: this.$route.query.paginate || 25,
+                    got_ahref: this.$route.query.got_ahref || '',
+                    date: this.$route.query.date || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -389,6 +412,8 @@
                         inc_article: this.filterModel.inc_article,
                         seller: this.filterModel.seller,
                         paginate: this.filterModel.paginate,
+                        got_ahref: this.filterModel.got_ahref,
+                        date: this.filterModel.date,
                         page: page
                     }
                 });
@@ -463,11 +488,25 @@
                 await this.$store.dispatch('actionGetListSeller', params);
             },
 
+            checkAhref( publish ) {
+                let check = false;
+
+                if( publish.ur != 0 ){
+                    check = true;
+                }
+
+                return check;
+            },
+
             selectAll: function() {
                 this.checkIds = [];
                 if (!this.allSelected) {
                     for (var publisher in this.listPublish.data) {
-                        this.checkIds.push(this.listPublish.data[publisher].id);
+                        let ahref = this.checkAhref(this.listPublish.data[publisher])
+                        if( !ahref ){
+                            this.checkIds.push(this.listPublish.data[publisher].id);
+                        }
+                        
                     }
                     this.isDisabled = false;
                 }
@@ -479,6 +518,14 @@
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
                 return val;
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
             },
 
             checkSelected() {
@@ -545,6 +592,8 @@
                     inc_article: '',
                     seller: '',
                     paginate: 25,
+                    got_ahref: '',
+                    date: '',
                 }
 
                 this.getPublisherList({
@@ -657,6 +706,8 @@
                         inc_article: this.filterModel.inc_article,
                         seller: this.filterModel.seller,
                         paginate: this.filterModel.paginate,
+                        got_ahref: this.filterModel.got_ahref,
+                        date: this.filterModel.date,
                     }
                 });
             },

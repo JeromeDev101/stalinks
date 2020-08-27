@@ -133,6 +133,8 @@
                                         <b>Used: </b> {{ rows_consume }} <br/>
                                         <b>Remaining: </b> {{ rows_remaining }} <br/>
                                     </div>
+
+                                    <button class="btn btn-link pull-right" @click="getSubscriptionInfo">Check update <i v-if="loadingUpdate" class="fa fa-refresh fa-spin"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -369,9 +371,10 @@
                     alexa: false,
                     ahrefs: false
                 },
-                rows_consume: '',
+                rows_consume: 0,
                 consume_percentage: 0,
                 rows_remaining: 0,
+                loadingUpdate: false,
             };
         },
 
@@ -413,6 +416,7 @@
             },
 
             async getSubscriptionInfo() {
+                this.loadingUpdate = true;
                 await this.$store.dispatch('actionGetSubscriptionInfo');
 
                 let rows_left = this.Info.info.rows_left
@@ -423,7 +427,7 @@
                 this.rows_consume = consume_rows;
                 this.consume_percentage = ( parseFloat(consume_rows)/parseFloat(rows_limit) )*100;
 
-                console.log(this.consume_percentage)
+                this.loadingUpdate = false;
             },
 
             async getCountryList(params) {

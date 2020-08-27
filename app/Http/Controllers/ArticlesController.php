@@ -30,6 +30,7 @@ class ArticlesController extends Controller
 
     public function getArticleListAdmin(Request $request) {
         $filter = $request->all();
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:15;
         $list = Article::with('country:id,name')
                         ->with('price')
                         ->with(['backlinks' => function($q){
@@ -68,9 +69,7 @@ class ArticlesController extends Controller
             $list->where('id_language', $filter['language_id']);
         }
 
-        return [
-            'data' => $list->get(),
-        ];
+        return $list->paginate($paginate);
     }
 
     public function getArticleList(Request $request) {

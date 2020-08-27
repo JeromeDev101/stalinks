@@ -14,8 +14,10 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li v-if="isBuyer" style="margin-left:-300px;margin-bottom:-55px;">
+                    <li v-if="isBuyer" style="margin-left:-450px;margin-bottom:-55px;">
                         <a href="#">
+                            Deposit: <strong>$ {{ money.deposit }}</strong>
+                            &nbsp;
                             Wallet: <strong>$ {{ money.wallet }}</strong>
                             &nbsp;
                             Credit: <strong>$ {{ money.credit }}</strong>
@@ -82,6 +84,7 @@ export default {
                 total_purchased: '',
                 total_paid: '',
                 credit: '',
+                deposit: '',
             },
 
         }

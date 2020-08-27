@@ -284,7 +284,8 @@ class ExtDomainController extends Controller
     }
 
     public function store(Request $request) {
-        $input = $request->only(['domain', 'country_id', 'alexa_rank',
+        $id = Auth::user()->id;
+        $input = $request->only(['inc_article', 'price', 'info','skype','domain', 'country_id', 'alexa_rank',
             'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic', 'email',
             'facebook', 'phone']);
 
@@ -305,6 +306,22 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0'
         ])->validate();
 
+        if( $request->status === '100'){
+            Publisher::create([
+                'user_id' => $id,
+                'url' => $input['domain'],
+                'ur' => $input['url_rating'],
+                'dr' => $input['domain_rating'],
+                'backlinks' => $input['no_backlinks'],
+                'ref_domain' => $input['ref_domains'],
+                'org_keywords' => $input['organic_keywords'],
+                'org_traffic' => $input['organic_traffic'],
+                'price' => $input['price'],
+                'language_id' => $input['country_id'],
+                'inc_article' => $input['inc_article'],
+            ]);
+        }
+
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];
         }
@@ -316,7 +333,7 @@ class ExtDomainController extends Controller
             'domain' => 'unique:ext_domains'
         ])->validate();
 
-        $input['status'] = config('constant.EXT_STATUS_NEW');
+        $input['status'] = $request->status == "" ? config('constant.EXT_STATUS_NEW'):intval($request->status);
         $hasContactInfo = $this->isInputContactInfo($input);
         $validateRule = [];
         if ($input['email'] != '') {
@@ -332,7 +349,7 @@ class ExtDomainController extends Controller
         }
 
         Validator::make($input, $validateRule)->validate();
-        if ($hasContactInfo) {
+        if ($hasContactInfo && empty($request->status)) {
             $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
         }
 
@@ -384,7 +401,7 @@ class ExtDomainController extends Controller
 
     public function update(Request $request) {
         $id = Auth::user()->id;
-        $input = $request->only(['id', 'status', 'email', 'domain',
+        $input = $request->only(['inc_article', 'price', 'info','skype','id', 'status', 'email', 'domain',
             'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
 
         foreach($input as $key => $value) {
@@ -464,9 +481,9 @@ class ExtDomainController extends Controller
                 'ref_domain' => $input['ref_domains'],
                 'org_keywords' => $input['organic_keywords'],
                 'org_traffic' => $input['organic_traffic'],
-                'price' => null,
+                'price' => $input['price'],
                 'language_id' => $request->country['id'],
-                'inc_article' => 'No',
+                'inc_article' => $input['inc_article'],
             ]);
         }
 

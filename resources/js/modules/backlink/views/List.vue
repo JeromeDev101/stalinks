@@ -65,22 +65,30 @@
                 <div class="box-header">
                     <h3 class="box-title">Follow up Backlinks</h3>
 
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
+                    <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
 
-                    <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
-                        <download-csv
-                            :data = "listBackLink.data"
-                            :fileds = "data_filed"
-                            :nameFile = "file_csv">
-                        </download-csv>
-                    </div>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
 
+                                <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
+                                    <download-csv
+                                        :data = "listBackLink.data"
+                                        :fileds = "data_filed"
+                                        :nameFile = "file_csv">
+                                    </download-csv>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>    
+                        
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -109,7 +117,7 @@
                                 <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username}}</td>
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.user.username}}</td>
-                                <td>{{ backLink.publisher.url}}</td>
+                                <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)"><a href="backLink.link">{{ backLink.link }}</a></td>
@@ -335,6 +343,7 @@
                 isPostingWriter: false,
                 searchLoading: false,
                 withArticle: true,
+                totalAmount: 0,
             }
         },
         async created() {
@@ -413,6 +422,8 @@
                     ],
                 });
 
+                this.getTotalAmount()
+
             }, 200),
 
             deleteBackLink(id) {
@@ -462,6 +473,32 @@
 
             checkArray(array) {
                 return Hepler.arrayNotEmpty(array);
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
+            },
+
+            getTotalAmount() {
+                let incomes = this.listBackLink.data
+                let total_price = [];
+                let total = 0;
+                incomes.forEach(function(item, index){
+                    total_price.push( parseFloat(item.price))
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total.toFixed(2);
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
 
             checkAccountType() {

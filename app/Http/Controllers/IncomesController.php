@@ -13,6 +13,7 @@ class IncomesController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
         $user = Auth::user();
         $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation')
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
@@ -27,7 +28,7 @@ class IncomesController extends Controller
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
         if( ($user->type != 10 && $user->role->description != 'Manager') && (isset($registered->type) && $registered->type) == 'Seller' ){
-            $list->whereIn('publisher_id', $publisher_ids);
+            $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
         if( isset($filter['user']) && $filter['user'] != ''){
@@ -38,11 +39,15 @@ class IncomesController extends Controller
         }
 
         if( isset($filter['payment_status']) && $filter['payment_status'] != ''){
-            $list->where('payment_status', $filter['payment_status']);
+            $list->where('backlinks.payment_status', $filter['payment_status']);
+        }
+
+        if( isset($filter['date']) && $filter['date'] != ''){
+            $list->where('backlinks.live_date', $filter['date']);
         }
 
         if(isset($filter['status']) && !is_null($filter['status'])) {
-            $list->where('status', $filter['status']);
+            $list->where('backlinks.status', $filter['status']);
         }
 
         if( isset($filter['buyer']) && $filter['buyer'] != ''){
@@ -69,12 +74,22 @@ class IncomesController extends Controller
                             ->leftJoin('users', 'users.id', '=', 'publisher.user_id')
                             ->groupBy('publisher.user_id', 'users.username')
                             ->get();
+        
+        $list = $list->paginate($paginate);
 
-        return [
-            'data' => $list->get(),
-            'buyers' => $getBuyer,
-            'sellers' => $getSeller
-        ];
+        $buyers = collect(['buyers' => $getBuyer]);
+        $sellers = collect(['sellers' => $getSeller]);
+
+        $data = $buyers->merge($list);
+        $data = $sellers->merge($data);
+
+        return response()->json($data);
+
+        // return [
+        //     'data' => $list->get(),
+        //     'buyers' => $getBuyer,
+        //     'sellers' => $getSeller
+        // ];
     }
 
     public function update(Request $request){

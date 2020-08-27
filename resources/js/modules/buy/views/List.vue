@@ -127,7 +127,7 @@
                                 <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td>{{ buy.country_name }}</td>
-                                <td>{{ buy.url }}</td>
+                                <td>{{ replaceCharacters(buy.url) }}</td>
                                 <td>{{ buy.ur }}</td>
                                 <td>{{ buy.dr }}</td>
                                 <td>{{ buy.backlinks }}</td>
@@ -491,6 +491,14 @@
                 }
 
                 return selling_price;
+            },
+
+            replaceCharacters(str) {
+                let char1 = str.replace("http://", "");
+                let char2 = char1.replace("https://", "");
+                let char3 = char2.replace("www.", "");
+
+                return char3;
             },
 
             percentage(percent, total) {
