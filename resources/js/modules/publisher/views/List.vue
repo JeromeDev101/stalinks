@@ -176,7 +176,8 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default">
-                                            <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
+                                            <!-- <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds"> -->
+                                            <input type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
@@ -502,10 +503,10 @@
                 this.checkIds = [];
                 if (!this.allSelected) {
                     for (var publisher in this.listPublish.data) {
-                        let ahref = this.checkAhref(this.listPublish.data[publisher])
-                        if( !ahref ){
+                        // let ahref = this.checkAhref(this.listPublish.data[publisher])
+                        // if( !ahref ){
                             this.checkIds.push(this.listPublish.data[publisher].id);
-                        }
+                        // }
                         
                     }
                     this.isDisabled = false;

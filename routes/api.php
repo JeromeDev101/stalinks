@@ -64,6 +64,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-accounts')->put('accounts', 'AccountController@edit');
     Route::name('get-seller')->get('accounts/get-sellers', 'AccountController@getUserRole');
     Route::name('get-user-wallet-credit')->get('wallet-credit', 'AccountController@getWalletCredit');
+    Route::name('get-team-in-charge')->get('team-in-charge', 'AccountController@getTeamInCharge');
 
 
     //Purchase

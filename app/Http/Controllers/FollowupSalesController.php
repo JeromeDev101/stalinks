@@ -12,6 +12,7 @@ class FollowupSalesController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
         $user = Auth::user();
         $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url')
                         ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
@@ -45,9 +46,10 @@ class FollowupSalesController extends Controller
             $list->where('publisher.url', 'like','%'.$filter['search'].'%' );
         }
 
-        return [
-            'data' => $list->get()
-        ];
+        $data = $list->paginate($paginate);
+
+        return $data;
+
     }
 
     public function update( Request $request ){

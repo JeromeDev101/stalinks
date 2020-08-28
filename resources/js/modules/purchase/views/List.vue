@@ -328,7 +328,7 @@
                 if( total_price.length > 0 ){
                     total = total_price.reduce(this.calcSum)
                 }
-                this.totalAmount = total;
+                this.totalAmount = total.toFixed(2);
             },
 
             calcSum(total, num) {

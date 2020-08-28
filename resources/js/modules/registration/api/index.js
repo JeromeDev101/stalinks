@@ -50,4 +50,10 @@ export default class AccountService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static getTeamInCharge(){
+        return axios.get('api/team-in-charge')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

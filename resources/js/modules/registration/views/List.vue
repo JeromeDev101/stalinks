@@ -42,6 +42,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Team In-charge</label>
+                                <select class="form-control" name="" v-model="filterModel.in_charge">
+                                    <option value="">All</option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -257,6 +269,16 @@
                                 </select>
                             </div>
 
+                            <div class="col-md-6">
+                                <label for="">Team In-charge</label>
+                                <select class="form-control" name="" v-model="accountUpdate.in_charge">
+                                    <option value=""></option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -394,6 +416,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Team In-charge</label>
+                                    <select class="form-control" v-model="accountModel.in_charge">
+                                        <option value=""></option>
+                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -431,6 +465,7 @@
                     paypal_account:'',
                     btc_account:'',
                     commission: '',
+                    in_charge: '',
                 },
 
                 filterModel: {
@@ -438,6 +473,7 @@
                     search: this.$route.query.search || '',
                     status: this.$route.query.status || '',
                     paginate: this.$route.query.paginate || '15',
+                    in_charge: this.$route.query.in_charge || '',
                 },
 
                 accountUpdate: {
@@ -459,6 +495,7 @@
                     paypal_account:'',
                     btc_account:'',
                     username:'',
+                    in_charge:'',
                 },
 
                 isPopupLoading: false,
@@ -471,6 +508,7 @@
             this.getAccountList();
             this.getPaymentTypeList();
             this.checkAccessRole();
+            this.getTeamInCharge();
         },
 
         computed: {
@@ -478,6 +516,7 @@
                 messageForms: state => state.storeAccount.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
+                listIncharge: state => state.storeAccount.listIncharge,
                 user: state => state.storeAuth.currentUser,
             }),
         },
@@ -510,6 +549,10 @@
                         }
                     }
                 }
+            },
+
+            async getTeamInCharge(){
+                await this.$store.dispatch('actionGetTeamInCharge');
             },
 
             checkAccessRole() {
@@ -545,6 +588,7 @@
                         status: this.filterModel.status,
                         search: this.filterModel.search,
                         paginate: this.filterModel.paginate,
+                        in_charge: this.filterModel.in_charge,
                     }
                 });
                 this.isLoadingTable = false;
@@ -573,6 +617,7 @@
                     status: '',
                     search: '',
                     paginate: '15',
+                    in_charge: '15',
                 }
 
                 this.getAccountList({
@@ -593,6 +638,7 @@
                         search: this.filterModel.search,
                         type: this.filterModel.type,
                         paginate: this.filterModel.paginate,
+                        in_charge: this.filterModel.in_charge,
                     }
                 });
             },
@@ -611,6 +657,7 @@
                     payment_email: '',
                     payment_account: '',
                     commission: '',
+                    in_charge: '',
                 };
             },
         }

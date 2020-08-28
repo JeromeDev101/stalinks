@@ -114,9 +114,9 @@
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
-                                <td v-if="isSeller">{{ incomes.publisher.user.name }}</td>
+                                <td v-if="isSeller">{{ incomes.publisher == null ? '':incomes.publisher.user.name }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user.name }}</td>
-                                <td>{{ replaceCharacters(incomes.publisher.url) }}</td>
+                                <td>{{ incomes.publisher == null ? '':replaceCharacters(incomes.publisher.url) }}</td>
                                 <td>$ {{ incomes.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>
@@ -225,7 +225,6 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
-                    user: this.$route.query.user || '',
                     payment_status: this.$route.query.payment_status || '',
                     status: this.$route.query.status || '',
                     buyer: this.$route.query.buyer || '',
@@ -242,7 +241,6 @@
         async created() {
             this.getListIncomes();
             this.checkAccountType();
-
         },
 
         computed: {
@@ -260,7 +258,6 @@
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetListIncomes', {
                     params: {
-                        user: this.filterModel.user,
                         payment_status: this.filterModel.payment_status,
                         status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
@@ -326,7 +323,7 @@
                 if( total_price.length > 0 ){
                     total = total_price.reduce(this.calcSum)
                 }
-                this.totalAmount = total;
+                this.totalAmount = total.toFixed(2);
             },
 
             calcSum(total, num) {
@@ -355,7 +352,6 @@
 
                 this.getListIncomes({
                     params: {
-                        user: this.filterModel.user,
                         payment_status: this.filterModel.payment_status,
                         status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
@@ -370,7 +366,6 @@
                 $('#tbl-income').DataTable().destroy();
 
                 this.filterModel = {
-                    user: '',
                     payment_status: '',
                     status: '',
                     buyer: '',

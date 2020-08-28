@@ -5,7 +5,7 @@ const MESSAGE_FORMS = 'INCOMES_MESSAGE_FORMS';
 const INCOMES_ERROR = 'INCOMES_ERROR';
 
 const state = {
-    listIncomes: { data:[] },
+    listIncomes: {},
     messageForms: { action: '', message: '', errors: {} },
 }
 
@@ -28,6 +28,7 @@ const actions = {
     async actionGetListIncomes({ commit }, params){
         try {
             let response = await IncomeService.getList(params)
+
             commit(LIST_INCOMES , { listIncomes: response.data });
         }catch(e) {
             let errors = e.response.data.errors;

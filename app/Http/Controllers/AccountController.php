@@ -40,7 +40,7 @@ class AccountController extends Controller
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];
         User::create($data);
-
+        
         return response()->json(['success' => true, 'data' => $registration], 200);
     }
 
@@ -258,5 +258,10 @@ class AccountController extends Controller
             'credit' => number_format($credit,2),
             'deposit' => $deposit,
         ];
+    }
+
+    public function getTeamInCharge() {
+        $team = User::select('id','name', 'username')->where('isOurs',0)->get();
+        return response()->json(['data'=> $team], 200);
     }
 }

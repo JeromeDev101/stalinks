@@ -68,6 +68,20 @@
                     <h3 class="box-title">Follow up Sales</h3>
 
                     <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getListSales" v-model="filterModel.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>  
                 </div>
 
                 <div class="box-body table-responsive no-padding">
@@ -115,6 +129,13 @@
                             </tr>
                         </tbody>
                     </table>
+
+
+                    <div style="height:50px;"></div>
+                    <span v-if="listSales.total > 10" class="pagination-custom-footer-text float-right">
+                        <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
+                    </span>
+
                 </div>
 
             </div>
@@ -282,6 +303,7 @@
     export default {
         data() {
             return {
+                paginate: [25,50,100,200,250],
                 statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
@@ -307,6 +329,7 @@
                     status: this.$route.query.status || '',
                     seller: this.$route.query.seller || '',
                     buyer: this.$route.query.buyer || '',
+                    paginate: this.$route.query.paginate || '25',
                 },
                 searchLoading: false,
                 isLive: false,
@@ -342,6 +365,7 @@
                         status: this.filterModel.status,
                         seller: this.filterModel.seller,
                         buyer: this.filterModel.buyer,
+                        paginate: this.filterModel.paginate,
                     }
                 });
 
@@ -413,7 +437,7 @@
                 if( total_price.length > 0 ){
                     total = total_price.reduce(this.calcSum)
                 }
-                this.totalAmount = total;
+                this.totalAmount = total.toFixed(2);
             },
 
             calcSum(total, num) {
@@ -451,6 +475,7 @@
                         status: this.filterModel.status,
                         seller: this.filterModel.seller,
                         buyer: this.filterModel.buyer,
+                        paginate: this.filterModel.paginate,
                     }
                 });
             },
@@ -463,6 +488,7 @@
                     status: '',
                     seller: '',
                     buyer: '',
+                    paginate: '25',
                 }
 
                 this.getListSales({

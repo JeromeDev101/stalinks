@@ -4,11 +4,13 @@ const MESSAGE_FORMS = 'ACCOUNT_MESSAGE_FORMS';
 const SET_ERROR = 'ACCOUNT_SET_ERROR';
 const LIST_ACCOUNTS = 'LIST_ACCOUNTS';
 const LIST_PAYMENT_TYPE = 'LIST_PAYMENT_TYPE';
+const LIST_IN_CHARGE = 'LIST_IN_CHARGE';
 
 const state = {
     messageForms: { action: '', message: '', errors: {} },
     listAccount: { data: [] },
     listPayment: { data: [] },
+    listIncharge: { data: [] },
 }
 
 const mutations = {
@@ -18,6 +20,10 @@ const mutations = {
 
     [LIST_ACCOUNTS] (state, dataSet) {
         state.listAccount = dataSet.listAccount;
+    },
+
+    [LIST_IN_CHARGE] (state, dataSet) {
+        state.listIncharge = dataSet.listIncharge;
     },
 
     [LIST_PAYMENT_TYPE] (state, list) {
@@ -68,6 +74,20 @@ const actions= {
         try {
             let response = await AccountService.getSellers();
             commit(LIST_ACCOUNTS, { listAccount: response.data });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetTeamInCharge({ commit }) {
+        try {
+            let response = await AccountService.getTeamInCharge();
+            commit(LIST_IN_CHARGE, { listIncharge: response.data });
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
