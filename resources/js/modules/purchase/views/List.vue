@@ -107,9 +107,9 @@
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ purchase.id }}</td>
-                                <td>{{ purchase.publisher.user.name }}</td>
+                                <td>{{ purchase.publisher == null ? 'N/A':purchase.publisher.user.name }}</td>
                                 <td>{{ purchase.user.name }}</td>
-                                <td>{{ replaceCharacters(purchase.publisher.url) }}</td>
+                                <td>{{ purchase.publisher == null ? 'N/A':replaceCharacters(purchase.publisher.url) }}</td>
                                 <td>$ {{ formatPrice(purchase.price) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
@@ -190,7 +190,7 @@
     export default {
         data() {
             return {
-                paginate: [15,25,50,100,200,250],
+                paginate: [15,25,50,100,200,250, 'All'],
                 updateModel: {
                     seller: '',
                     buyer: '',

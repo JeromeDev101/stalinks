@@ -114,9 +114,9 @@
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
-                                <td v-if="isSeller">{{ incomes.publisher == null ? '':incomes.publisher.user.name }}</td>
+                                <td v-if="isSeller">{{ incomes.publisher == null ? 'N/A':incomes.publisher.user.name }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user.name }}</td>
-                                <td>{{ incomes.publisher == null ? '':replaceCharacters(incomes.publisher.url) }}</td>
+                                <td>{{ incomes.publisher == null ? 'N/A':replaceCharacters(incomes.publisher.url) }}</td>
                                 <td>$ {{ incomes.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>

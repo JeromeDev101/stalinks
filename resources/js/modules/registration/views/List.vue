@@ -45,10 +45,10 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Team In-charge</label>
-                                <select class="form-control" name="" v-model="filterModel.in_charge">
+                                <select class="form-control" name="" v-model="filterModel.team_in_charge">
                                     <option value="">All</option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                        {{ option.name }}
+                                        {{ option.username == null ? option.name:option.username}}
                                     </option>
                                 </select>
                             </div>
@@ -91,6 +91,7 @@
                                 <th>Company Name</th>
                                 <th>Type</th>
                                 <th>Skype</th>
+                                <th>Team In-charge</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -104,6 +105,7 @@
                                 <td>{{ account.company_name }}</td>
                                 <td>{{ account.type }}</td>
                                 <td>{{ account.skype }}</td>
+                                <td>{{ account.team_in_charge == null ?  '':account.team_in_charge.name }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -271,10 +273,10 @@
 
                             <div class="col-md-6">
                                 <label for="">Team In-charge</label>
-                                <select class="form-control" name="" v-model="accountUpdate.in_charge">
+                                <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
                                     <option value=""></option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                        {{ option.name }}
+                                        {{ option.username == null ? option.name:option.username}}
                                     </option>
                                 </select>
                             </div>
@@ -419,10 +421,10 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Team In-charge</label>
-                                    <select class="form-control" v-model="accountModel.in_charge">
+                                    <select class="form-control" v-model="accountModel.team_in_charge">
                                         <option value=""></option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.name }}
+                                            {{ option.username == null ? option.name:option.username}}
                                         </option>
                                     </select>
                                 </div>
@@ -465,7 +467,7 @@
                     paypal_account:'',
                     btc_account:'',
                     commission: '',
-                    in_charge: '',
+                    team_in_charge: '',
                 },
 
                 filterModel: {
@@ -473,7 +475,7 @@
                     search: this.$route.query.search || '',
                     status: this.$route.query.status || '',
                     paginate: this.$route.query.paginate || '15',
-                    in_charge: this.$route.query.in_charge || '',
+                    team_in_charge: this.$route.query.team_in_charge || '',
                 },
 
                 accountUpdate: {
@@ -495,7 +497,7 @@
                     paypal_account:'',
                     btc_account:'',
                     username:'',
-                    in_charge:'',
+                    team_in_charge:'',
                 },
 
                 isPopupLoading: false,
@@ -542,12 +544,14 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_account') {
-                    for (var index in this.listAccount.data) {
-                        if (this.listAccount.data[index].id === this.accountUpdate.id) {
-                            this.listAccount.data[index] = this.accountUpdate;
-                            break;
-                        }
-                    }
+                    this.getAccountList();
+
+                    // for (var index in this.listAccount.data) {
+                    //     if (this.listAccount.data[index].id === this.accountUpdate.id) {
+                    //         this.listAccount.data[index] = this.accountUpdate;
+                    //         break;
+                    //     }
+                    // }
                 }
             },
 
@@ -588,7 +592,7 @@
                         status: this.filterModel.status,
                         search: this.filterModel.search,
                         paginate: this.filterModel.paginate,
-                        in_charge: this.filterModel.in_charge,
+                        team_in_charge: this.filterModel.team_in_charge,
                     }
                 });
                 this.isLoadingTable = false;
@@ -606,6 +610,7 @@
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -617,7 +622,7 @@
                     status: '',
                     search: '',
                     paginate: '15',
-                    in_charge: '15',
+                    team_in_charge: '',
                 }
 
                 this.getAccountList({
@@ -638,7 +643,7 @@
                         search: this.filterModel.search,
                         type: this.filterModel.type,
                         paginate: this.filterModel.paginate,
-                        in_charge: this.filterModel.in_charge,
+                        team_in_charge: this.filterModel.team_in_charge,
                     }
                 });
             },
@@ -657,7 +662,7 @@
                     payment_email: '',
                     payment_account: '',
                     commission: '',
-                    in_charge: '',
+                    team_in_charge: '',
                 };
             },
         }

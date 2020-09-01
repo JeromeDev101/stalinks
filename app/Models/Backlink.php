@@ -19,7 +19,7 @@ class Backlink extends Model
 
     public function publisher()
     {
-        return $this->belongsTo('App\Models\Publisher', 'publisher_id');
+        return $this->belongsTo('App\Models\Publisher', 'publisher_id')->withTrashed();
     }
     
     public function billing() {

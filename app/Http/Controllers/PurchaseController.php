@@ -70,7 +70,10 @@ class PurchaseController extends Controller
                             ->groupBy('publisher.user_id', 'users.username')
                             ->get();
 
-        $list = $list->paginate($paginate);
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+        }else{
+            $list = $list->paginate($paginate);
+        }
 
         $buyers = collect(['buyers' => $getBuyer]);
         $sellers = collect(['sellers' => $getSeller]);
@@ -78,7 +81,18 @@ class PurchaseController extends Controller
         $data = $buyers->merge($list);
         $data = $sellers->merge($data);
 
-        return response()->json($data);
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return [
+                "data" => $list->get(),
+                "total" => $list->count(),
+                "buyers" => $getBuyer,
+                "sellers" => $getSeller,
+            ];
+        }else{
+            return response()->json($data);
+        }
+
+
 
         // return [
         //     'data' => $list->get(),

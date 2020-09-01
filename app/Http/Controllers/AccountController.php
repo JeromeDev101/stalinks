@@ -50,6 +50,7 @@ class AccountController extends Controller
         $type = $request->type;
         $search = $request->search;
         $paginate = $request->paginate;
+        $team_in_charge = $request->team_in_charge;
 
         $list = Registration::when( $status, function($query) use ($status){
             return $query->where( 'status', $status );
@@ -59,6 +60,12 @@ class AccountController extends Controller
             return $query->where( 'name', 'LIKE', '%'.$search.'%' )
                 ->orWhere( 'email', 'LIKE', '%'.$search.'%' );
         })
+        ->when( $team_in_charge, function($query) use ($team_in_charge){
+            return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {
+                $subquery->where('team_in_charge', $team_in_charge);
+            });
+        })
+        ->with('team_in_charge:id,name,username')
         ->orderBy('id', 'desc')
         ->paginate($paginate);
 
@@ -261,7 +268,8 @@ class AccountController extends Controller
     }
 
     public function getTeamInCharge() {
-        $team = User::select('id','name', 'username')->where('isOurs',0)->get();
+        $team_in_charge = [5,6,7,1];
+        $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->get();
         return response()->json(['data'=> $team], 200);
     }
 }
