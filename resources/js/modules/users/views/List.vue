@@ -13,11 +13,11 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body table-responsive no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
-                        <tbody>
+                    <table id="tbl-users" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Name</th>
+                                <th>Username</th>
                                 <th>Email</th>
                                 <th>Work mail</th>
                                 <th>Phone</th>
@@ -26,6 +26,8 @@
                                 <th>Type</th>
                                 <th>Action</th>
                             </tr>
+                            
+                            <!-- <tr>
                                 <td style="max-width: 30px;">
                                     Filter
                                 </td>
@@ -61,12 +63,15 @@
                                         <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
                                     </div>
                                 </td>
-                            <tr>
+            
 
-                            </tr>
+                            </tr> -->
+                        </thead>
+                        
+                        <tbody>
                             <tr v-for="(user, index) in listUser.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ user.name }}</td>
+                                <td>{{ user.username == null ? user.name:user.username }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.work_mail }}</td>
                                 <td>{{ user.phone }}</td>
@@ -332,8 +337,8 @@
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="col-md-12" style="margin-top: 15px">
+                        
+                            <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.work_mail}" class="form-group">
@@ -603,7 +608,7 @@
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered table-striped rlink-table">
-                                        <tbody>
+                                        <thead>
                                             <tr class="label-primary">
                                                 <th>#</th>
                                                 <th>Country</th>
@@ -613,7 +618,8 @@
                                                 <th>User</th>
                                                 <th>Action</th>
                                             </tr>
-
+                                        </thead>
+                                        <tbody>
                                             <tr v-for="(item, index) in listIntUpdate.data" :key="index">
                                                 <td class="center-content">{{ index + 1 }}</td>
                                                 <td>{{ item.country.name }}</td>
@@ -757,6 +763,8 @@ export default {
         },
 
         async getUserList(filterParams) {
+            $('#tbl-users').DataTable().destroy();
+
             this.isLoadingTable = true;
             await this.$store.dispatch('actionGetUser', {
                 vue: this,
@@ -764,6 +772,22 @@ export default {
                 showMainLoading: false
             });
             this.isLoadingTable = false;
+
+
+            $('#tbl-users').DataTable({
+                paging: false,
+                searching: false,
+                columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: false, targets: '_all' }
+                    ]
+            });
         },
 
         async goToPage(pageNum) {

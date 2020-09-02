@@ -130,6 +130,26 @@ const actions = {
         }
     },
 
+    async actionValidData({ commit }, params) {
+        try {
+            let response = await PublisherService.validData(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: {} });
+            }
+            // else if (response.response.status === 422) {
+            //     commit(MESSAGE_FORMS, response.response.data);
+            // }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetListSeller({ commit }, params) {
         try {
             let response = await PublisherService.getListSeller(params);

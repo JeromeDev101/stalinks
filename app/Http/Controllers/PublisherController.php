@@ -7,6 +7,7 @@ use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Auth;
+use League\OAuth2\Server\RequestEvent;
 
 class PublisherController extends Controller
 {
@@ -96,5 +97,16 @@ class PublisherController extends Controller
         $data = $this->publisherRepository->getPublisherSummary($user->id);
 
         return response()->json($data);
+    }
+
+    public function validData(Request $request){
+        $result = [];
+        foreach( $request->ids AS $id ){
+            $publisher = Publisher::findOrfail($id);
+            $result[] = $publisher->update([
+                'valid' => $request->valid,
+            ]);
+        }
+        return response()->json(['success'=> true, 'data' => $result],200);
     }
 }

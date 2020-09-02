@@ -79,6 +79,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.inc_article', $filter['inc_article']);
         }
 
+        if( isset($filter['valid']) && !empty($filter['valid']) ){
+            $list = $list->where('publisher.valid', $filter['valid']);
+        }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return [
@@ -127,7 +131,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                         'org_keywords' => 0,
                         'org_traffic' => 0,
                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                        'inc_article' => ucwords( strtolower( trim($article, " ") ) )
+                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                        'valid' => 'invalid',
                     ]);
                 }
             }

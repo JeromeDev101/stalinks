@@ -97,6 +97,21 @@
                             Retry
                         </button> if you have given permission to purchased
                     </div>
+
+                    <div class="col-md-2 my-3">
+                        <div class="input-group">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Selected Action
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <!-- <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a> -->
+                                    <a class="dropdown-item " @click="interestedSelected">Interested</a>
+                                    <a class="dropdown-item " @click="notInterestedSelected">Not Interested</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="box-body table-responsive no-padding relative">
@@ -104,6 +119,10 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>
+                                    <input type="checkbox" @click="selectAll" v-model="allSelected">
+                                    Select
+                                </th>
                                 <th v-if="user.isAdmin">Company</th>
                                 <th>Username</th>
                                 <th>Language</th>
@@ -124,6 +143,13 @@
                         <tbody>
                             <tr v-for="(buy, index) in listBuy.data" :key="index">
                                 <td>{{ index + 1}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <input type="checkbox" v-on:change="checkSelected" :id="buy.id" :value="buy.id" v-model="checkIds">
+                                        </button>
+                                    </div>
+                                </td>
                                 <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
                                 <td>{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td>{{ buy.country_name }}</td>
@@ -214,6 +240,74 @@
             </div>
         </div>
         <!-- End of Modal Buy -->
+
+        <!-- Modal Buy Selected -->
+        <div class="modal fade" id="modal-buy-selected" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Buy Selected Backlink</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" v-for="(buy, index) in buyData" :key="index">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">URL</label>
+                                    <input type="text" class="form-control" :value="buy.url" aria-describedby="helpId" placeholder="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Price</label>
+                                    <input type="number" class="form-control" :value="buy.price" aria-describedby="helpId" placeholder="" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-2 my-auto">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" :data-target="'#collapseExample'+index">View more</button>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="collapse" :id="'collapseExample'+index">
+                                    <div class="card card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">Anchor Text</label>
+                                                    <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">Link To</label>
+                                                    <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">URL Advertiser</label>
+                                                    <input type="text" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Buy All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Buy Selected -->
+
     </div>
 </template>
 
@@ -252,6 +346,10 @@
                 dataTable: null,
                 isCreditAuth: false,
                 listCode: ['4A', '3A', '2A', '1A', '0A'],
+                checkIds: [],
+                isDisabled: true,
+                allSelected: false,
+                buyData: [],
             }
         },
 
@@ -309,7 +407,25 @@
                 if(this.user.isAdmin) {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
+                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: false, targets: '_all' }
+                    ];
+                } else if(this.user.isOurs == 0) {
+                    columnsOrder = [
+                        { orderable: true, targets: 0 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
@@ -325,10 +441,9 @@
                         { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
-                } else if(this.user.isOurs == 0) {
+                } else {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
@@ -341,23 +456,6 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
-                        { orderable: false, targets: '_all' }
-                    ];
-                } else {
-                    columnsOrder = [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
-                        { orderable: true, targets: 10 },
-                        { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
@@ -375,6 +473,27 @@
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
             }, 
+
+            checkSelected() {
+                this.isDisabled = true;
+                if( this.checkIds.length > 0 ){
+                    this.isDisabled = false;
+                }
+            },
+
+            select: function() {
+                this.allSelected = false;
+            },
+
+            selectAll: function() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (var buy in this.listBuy.data) {
+                        this.checkIds.push(this.listBuy.data[buy].id);
+                    }
+                    this.isDisabled = false;
+                }
+            },
 
             clearSearch() {
                 $('#tbl_buy_backlink').DataTable().destroy();
@@ -394,6 +513,30 @@
 
                 this.$router.replace({'query': null});
 
+            },
+
+            buySelected() {
+                let ids = this.checkIds;
+                this.buyData = [];
+                for( var id in ids){
+                    for (var buy in this.listBuy.data) {
+                        if( this.listBuy.data[buy].id == ids[id] ){
+                            this.buyData.push({
+                                "id": this.listBuy.data[buy].id,
+                                "url": this.listBuy.data[buy].url,
+                                "price": this.listBuy.data[buy].price,
+                            })
+                        }
+                    }
+                }
+            },
+
+            interestedSelected() {
+                this.doLike(this.checkIds)
+            },
+
+            notInterestedSelected() {
+                this.doDislike(this.checkIds)
             },
 
             doSearch() {

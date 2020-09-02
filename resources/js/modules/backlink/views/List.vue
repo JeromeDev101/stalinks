@@ -305,7 +305,7 @@
         name: 'BackLinkList',
         data() {
             return {
-                paginate: [15,25,50,100,200,250],
+                paginate: [15,25,50,100,200,250, 'All'],
                 file_csv: 'baclink.xls',
                 statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 data_filed: {

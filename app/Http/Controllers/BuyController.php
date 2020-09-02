@@ -11,6 +11,7 @@ use App\Models\BuyerPurchased;
 use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
+use App\Models\Registration;
 
 class BuyController extends Controller
 {
@@ -39,6 +40,12 @@ class BuyController extends Controller
                         ->where('buyer_purchased.user_id_buyer', $user_id);
                 });
 
+        $registered = Registration::where('email', Auth::user()->email)->first();
+
+        if( Auth::user()->role_id == 5 && isset($registered->type) && $registered->type == 'Buyer' ){
+            $list->where('valid', 'valid');
+        }
+
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);
         }
@@ -59,27 +66,9 @@ class BuyController extends Controller
             }
         }
 
-        // if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
-        //     if( is_array($filter['status_purchase']) ){
-        //         $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
-
-        //         if( in_array('New', $filter['status_purchase']) ){
-        //             $list->orWhereNull('buyer_purchased.publisher_id');
-        //         }
-        //     }else{
-        //         $list->where('buyer_purchased.status', $filter['status_purchase']);
-        //     }
-        // }
-
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             $result = $list->orderBy('id', 'desc')->get();
         }else{
-            // if( isset($filter['code']) && !empty($filter['code']) ){
-            //     $result = $list->orderBy('id', 'desc')->get();
-            // }else{
-            //     $result = $list->paginate($paginate);
-            // }
-
             $result = $list->paginate($paginate);
         }
 
@@ -159,15 +148,30 @@ class BuyController extends Controller
     }
 
     public function updateDislike(Request $request) {
-        $publisher = Publisher::find($request->id);
-        $this->updateStatus($request->id, 'Not interested', $publisher->id);
+        if( is_array($request->id) ){
+            foreach( $request->id as $id ){
+                $publisher = Publisher::find($id);
+                $this->updateStatus($id, 'Not interested', $publisher->id);
+            }
+        }else{
+            $publisher = Publisher::find($request->id);
+            $this->updateStatus($request->id, 'Not interested', $publisher->id);
+        }
 
         return response()->json(['success'=> true], 200);
     }
 
     public function updateLike(Request $request) {
-        $publisher = Publisher::find($request->id);
-        $this->updateStatus($request->id, 'Interested', $publisher->id);
+
+        if( is_array($request->id) ){
+            foreach( $request->id as $id ){
+                $publisher = Publisher::find($id);
+                $this->updateStatus($id, 'Interested', $publisher->id);
+            }
+        }else{
+            $publisher = Publisher::find($request->id);
+            $this->updateStatus($request->id, 'Interested', $publisher->id);
+        }
 
         return response()->json(['success'=> true], 200);
     }

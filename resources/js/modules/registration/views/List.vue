@@ -105,7 +105,7 @@
                                 <td>{{ account.company_name }}</td>
                                 <td>{{ account.type }}</td>
                                 <td>{{ account.skype }}</td>
-                                <td>{{ account.team_in_charge == null ?  '':account.team_in_charge.name }}</td>
+                                <td>{{ account.team_in_charge == null ?  '': account.team_in_charge.username }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -572,7 +572,9 @@
 
             doUpdateAccount(account){
                 this.clearMessageform();
-                this.accountUpdate = JSON.parse(JSON.stringify(account))
+                let that = JSON.parse(JSON.stringify(account))
+                this.accountUpdate = that
+                this.accountUpdate.team_in_charge = that.team_in_charge.id;
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
             },

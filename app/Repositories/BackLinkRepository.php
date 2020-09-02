@@ -124,9 +124,16 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             ];
         }
 
-        // dd($backlink);
-
-        return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate($paginate);
+        if( $paginate == 'All' ){
+            $data = $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->get();
+            return [
+                'data' => $data,
+                'total' => $data->count(),
+            ];
+        }else{
+            return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,username'); }, 'user'])->paginate($paginate);
+        }
+            
     }
 
     protected function fillter($query, $filters)

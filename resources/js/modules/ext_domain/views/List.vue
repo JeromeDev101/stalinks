@@ -229,7 +229,10 @@
                                 <div class="form-group">
                                     <label style="color: #333">Status</label>
                                     <select class="form-control" v-model="extModel.status">
-                                        <option value=""></option>
+                                        <option value="50">Contacted</option>
+                                        <option value="60">Refused</option>
+                                        <option value="70">InTouched</option>
+                                        <option value="90">Unqualified</option>
                                         <option value="100">Qualified</option>
                                     </select>
                                 </div>

@@ -70,6 +70,17 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Valid</label>
+                                <select name="" class="form-control" v-model="filterModel.valid">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -131,6 +142,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
                                         <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                        <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.isOurs == 0">Valid</a>
+                                        <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.isOurs == 0">Invalid</a>
                                     </div>
                                 </div>
                             </div>
@@ -372,6 +385,7 @@
                     paginate: this.$route.query.paginate || 25,
                     got_ahref: this.$route.query.got_ahref || '',
                     date: this.$route.query.date || '',
+                    valid: this.$route.query.valid || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -415,6 +429,7 @@
                         paginate: this.filterModel.paginate,
                         got_ahref: this.filterModel.got_ahref,
                         date: this.filterModel.date,
+                        valid: this.filterModel.valid,
                         page: page
                     }
                 });
@@ -512,6 +527,25 @@
                     this.isDisabled = false;
                 }
             },
+
+            async validData(valid) {
+                await this.$store.dispatch('actionValidData', {
+                    valid: valid,
+                    ids: this.checkIds,
+                });
+
+
+                if( this.messageForms.action === 'saved' ){
+                    swal.fire(
+                        'Saved!',
+                        'Successfully Updated.',
+                        'success'
+                        )
+
+                    this.getPublisherList();
+                }
+            },
+            
             select: function() {
                 this.allSelected = false;
             },
@@ -595,6 +629,7 @@
                     paginate: 25,
                     got_ahref: '',
                     date: '',
+                    valid: '',
                 }
 
                 this.getPublisherList({
@@ -709,6 +744,7 @@
                         paginate: this.filterModel.paginate,
                         got_ahref: this.filterModel.got_ahref,
                         date: this.filterModel.date,
+                        valid: this.filterModel.valid,
                     }
                 });
             },
