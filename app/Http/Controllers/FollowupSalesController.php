@@ -17,10 +17,10 @@ class FollowupSalesController extends Controller
         $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url')
                         ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
                         ->with(['publisher' => function($query) {
-                            $query->with('user:id,name');
+                            $query->with('user:id,name,username');
                         }])
                         ->with('article')
-                        ->with('user:id,name')
+                        ->with('user:id,name,username')
                         ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();

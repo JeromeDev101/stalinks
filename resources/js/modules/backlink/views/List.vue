@@ -115,8 +115,8 @@
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
-                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username}}</td>
-                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.user.username}}</td>
+                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username }}</td>
+                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
                                 <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>{{ backLink.link_from }}</td>
@@ -412,12 +412,16 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
+                        { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
                         { orderable: false, targets: '_all' }
                     ],
                 });

@@ -123,7 +123,7 @@
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                     Select
                                 </th>
-                                <th v-if="user.isAdmin">Company</th>
+                                <!-- <th v-if="user.isAdmin">Company</th> -->
                                 <th>Username</th>
                                 <th>Language</th>
                                 <th>URL</th>
@@ -150,7 +150,7 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td>
+                                <!-- <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td> -->
                                 <td>{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td>{{ buy.country_name }}</td>
                                 <td>{{ replaceCharacters(buy.url) }}</td>
@@ -403,27 +403,8 @@
 
 
                 var columnsOrder = [];
-
-                if(this.user.isAdmin) {
-                    columnsOrder = [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
-                        { orderable: true, targets: 10 },
-                        { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
-                        { orderable: true, targets: 13 },
-                        { orderable: true, targets: 14 },
-                        { orderable: true, targets: 15 },
-                        { orderable: false, targets: '_all' }
-                    ];
-                } else if(this.user.isOurs == 0) {
+                
+                if(this.user.isOurs == 0 || this.user.isAdmin) {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 2 },
@@ -533,10 +514,12 @@
 
             interestedSelected() {
                 this.doLike(this.checkIds)
+                this.checkIds = [];
             },
 
             notInterestedSelected() {
                 this.doDislike(this.checkIds)
+                this.checkIds = [];
             },
 
             doSearch() {

@@ -23,9 +23,9 @@ class PurchaseController extends Controller
         $list = Backlink::select('backlinks.*')
                     ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
                     ->with(['publisher' => function($query){
-                        $query->with('user:id,name');
+                        $query->with('user:id,name,username');
                     }])
-                    ->with('user:id,name')
+                    ->with('user:id,name,username')
                     ->where('status', 'Live')
                     ->orderBy('id', 'desc');
 

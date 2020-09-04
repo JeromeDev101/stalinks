@@ -319,6 +319,7 @@ class ExtDomainController extends Controller
                 'price' => $input['price'],
                 'language_id' => $input['country_id'],
                 'inc_article' => $input['inc_article'],
+                'valid' => 'unchecked',
             ]);
         }
 

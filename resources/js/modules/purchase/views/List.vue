@@ -107,9 +107,9 @@
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ purchase.id }}</td>
-                                <td>{{ purchase.publisher == null ? 'N/A':purchase.publisher.user.name }}</td>
-                                <td>{{ purchase.user.name }}</td>
-                                <td>{{ purchase.publisher == null ? 'N/A':replaceCharacters(purchase.publisher.url) }}</td>
+                                <td>{{ purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
+                                <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
+                                <td>{{ replaceCharacters(purchase.publisher.url) }}</td>
                                 <td>$ {{ formatPrice(purchase.price) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>

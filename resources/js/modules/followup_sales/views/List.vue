@@ -111,8 +111,8 @@
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.id }}</td>
                                 <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
-                                <td v-if="user.isOurs != 1">{{ sales.publisher.user.name }}</td>
-                                <td v-if="user.isOurs != 1">{{ sales.user.name }}</td>
+                                <td v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
+                                <td v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
                                 <td>{{ replaceCharacters(sales.publisher.url) }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
                                 <td>{{ sales.link_from }}</td>

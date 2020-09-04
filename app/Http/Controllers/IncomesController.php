@@ -18,9 +18,9 @@ class IncomesController extends Controller
         $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation')
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
                     ->with(['publisher' => function($query){
-                        $query->with('user:id,name');
+                        $query->with('user:id,name,username');
                     }])
-                    ->with('user:id,name')
+                    ->with('user:id,name,username')
                     ->where('status', 'Live')
                     ->orderBy('created_at', 'desc');
 

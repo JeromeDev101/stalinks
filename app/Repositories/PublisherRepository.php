@@ -80,7 +80,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['valid']) && !empty($filter['valid']) ){
-            $list = $list->where('publisher.valid', $filter['valid']);
+            if( is_array($filter['valid']) ){
+                $list = $list->whereIn('publisher.valid', $filter['valid']);
+            }else{
+                $list = $list->where('publisher.valid', $filter['valid']);
+            }
         }
 
 
@@ -132,7 +136,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                         'org_traffic' => 0,
                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
                         'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                        'valid' => 'invalid',
+                        'valid' => 'unchecked',
                     ]);
                 }
             }

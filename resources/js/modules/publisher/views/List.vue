@@ -73,11 +73,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Valid</label>
-                                <select name="" class="form-control" v-model="filterModel.valid">
-                                    <option value="">All</option>
-                                    <option value="valid">Valid</option>
-                                    <option value="invalid">Invalid</option>
-                                </select>
+                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" />
                             </div>
                         </div>
 
@@ -144,6 +140,7 @@
                                         <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
                                         <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.isOurs == 0">Valid</a>
                                         <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.isOurs == 0">Invalid</a>
+                                        <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +164,7 @@
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                     Select
                                 </th>
-                                <th v-if="user.isAdmin">Company</th>
+                                <!-- <th v-if="user.isAdmin">Company</th> -->
                                 <th v-if="user.isAdmin || user.isOurs == 0">Username</th>
                                 <th v-if="user.isAdmin || user.isOurs == 0">Date Uploaded</th>
                                 <th>Language</th>
@@ -194,7 +191,7 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td>
+                                <!-- <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td> -->
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{publish.updated_at}}</td>
                                 <td>{{ publish.country_name }}</td>
@@ -347,6 +344,9 @@
         margin: 20px;
         margin-top: -40px;
     }
+    #vs1__combobox {
+        height: 38px;
+    }
 </style>
 
 <script>
@@ -449,7 +449,6 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
-                        { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -543,6 +542,8 @@
                         )
 
                     this.getPublisherList();
+
+                    this.checkIds = [];
                 }
             },
             
