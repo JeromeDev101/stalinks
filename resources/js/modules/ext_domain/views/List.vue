@@ -1,7 +1,7 @@
 <template>
     <div class="row">
+
         <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
             <div class="small-box bg-green">
                 <div class="inner">
                     <h3>{{ listExt.total }}</h3>
@@ -12,6 +12,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
@@ -89,9 +90,13 @@
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
+
                     <h3 class="box-title">External Domain List</h3>
+
                     <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                    
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
+                    
                     <div class="input-group input-group-sm float-right" style="width: 65px">
                         <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
                             <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
@@ -105,8 +110,57 @@
                             <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                         </div>
                     </div>
+
+                    <div class="form-row">
+
+                        <div class="col-md-4 my-3">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
+                                        <div class="input-group-btn">
+                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                        </div>
+                                    </div>
+                                    <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
+                                    <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
+                                </div>
+                            </div>
+
+                            <div class="row my-3" v-show="showLang">
+                                <div class="col-sm-12">
+                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">
+                                        <option value="">Select language</option>
+                                        <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row" v-show="showLang">
+                                <div class="col-sm-12">
+                                    <select class="form-control" name="status" ref="status" v-on:change="checkData">
+                                        <option value="">Select Status</option>
+                                        <option value="50">Contacted</option>
+                                        <option value="60">Refused</option>
+                                        <option value="70">InTouched</option>
+                                        <option value="90">Unqualified</option>
+                                        <option value="100">Qualified</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Email, Price and Inc Article. The columns should be separated using comma(,). Inc Article value is Yes /No . Do not forget to select the language and status of the site.</small>
+                        </div>
+                    </div>
+
                 </div>
-                <!-- /.box-header -->
 
                 <!-- <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
@@ -400,7 +454,7 @@
                         </div>
                     </div>
                     <div class="modal-body relative">
-                        <table class="table table-responsive table-hover table-bordered table-striped rlink-table">
+                        <table class="table table-hover table-bordered table-striped rlink-table">
                             <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -958,6 +1012,8 @@
                 listSortKey: [],
                 listSortValue: [],
                 checkIds: [],
+                showLang: false,
+                isEnableBtn: true,
              };
         },
         async created() {
@@ -1044,6 +1100,39 @@
             });
         },
         methods: {
+
+            checkData() {
+                this.isEnableBtn = true;
+                if( this.$refs.language.value && this.$refs.status.value){
+                    this.isEnableBtn = false;
+                }
+            },
+
+            checkDataExcel() {
+                this.showLang = false;
+                if( this.$refs.excel.value ){
+                    this.showLang = true;
+                }
+            },
+
+            async submitUpload() {
+
+                this.formData = new FormData();
+                this.formData.append('file', this.$refs.excel.files[0]);
+                this.formData.append('language', this.$refs.language.value);
+                this.formData.append('status', this.$refs.status.value);
+
+                await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
+
+                if (this.messageForms.action === 'uploaded') {
+                    this.getExtList();
+                    this.$refs.excel.value = '';
+                    this.$refs.language.value = '';
+                    this.$refs.status.value = '';
+                    this.isEnableBtn = true;
+                    this.showLang = false;
+                }
+            },
 
             formatPrice(value) {
                 let val = (value/1).toFixed(0)

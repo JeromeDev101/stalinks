@@ -40,7 +40,7 @@
                         <h3 class="box-title">Get Alexa External Domain</h3>
                     </div>
                     <!-- /.box-header -->
-                    <div class="box-body table-responsive no-padding">
+                    <div class="box-body no-padding">
                         <table class="table table-hover table-bordered table-striped rlink-table">
                             <tbody>
                             <tr class="label-primary">

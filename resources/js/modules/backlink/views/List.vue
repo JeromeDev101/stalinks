@@ -91,7 +91,7 @@
                         
                 </div>
 
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body no-padding">
                     <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">

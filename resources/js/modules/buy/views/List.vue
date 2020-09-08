@@ -114,7 +114,7 @@
                     </div>
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding relative">
                     <table id="tbl_buy_backlink" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">

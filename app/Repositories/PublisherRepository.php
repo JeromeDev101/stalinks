@@ -45,8 +45,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
-            $list = $list->where('registration.company_name', 'like', '%'.$filter['search'].'%')
-                    ->orWhere('users.name', 'like', '%'.$filter['search'].'%');
+            $list = $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
         }
 
         if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){

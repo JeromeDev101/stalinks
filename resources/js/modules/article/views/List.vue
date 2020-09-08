@@ -88,7 +88,7 @@
                     </div>
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding relative">
                     <table id="tbl_article_admin" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -108,7 +108,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.user.name }}</td>
+                                <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>

@@ -67,7 +67,7 @@
                     <button v-if="isTeam" data-toggle="modal" @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i class="fa fa-plus"></i> Create Article</button>
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding relative">
                     <table class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">

@@ -84,19 +84,19 @@
                     </table>  
                 </div>
 
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body no-padding">
                     <table id="tbl-followupsales" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>ID URL publisher</th>
-                                <th>ID Backlink</th>
-                                <th>ID Article</th>
+                                <th>Url Pub</th>
+                                <th>Blink</th>
+                                <th>Artc</th>
                                 <th v-if="user.isOurs != 1">Seller</th>
                                 <th v-if="user.isOurs != 1">Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
-                                <th width="106">Link From</th>
+                                <th>Link From</th>
                                 <th>Link To</th>
                                 <th>Anchor Text</th>
                                 <th>Date for Proccess</th>
@@ -115,8 +115,16 @@
                                 <td v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
                                 <td>{{ replaceCharacters(sales.publisher.url) }}</td>
                                 <td>$ {{ sales.publisher.price }}</td>
-                                <td>{{ sales.link_from }}</td>
-                                <td><a href="sales.link">{{ sales.link }}</a></td>
+                                <td >
+                                    <div class="dont-break-out">
+                                        {{ sales.link_from }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dont-break-out">
+                                        {{ sales.link }}
+                                    </div>
+                                </td>
                                 <td>{{ sales.anchor_text }}</td>
                                 <td>{{ sales.date_process }}</td>
                                 <td>{{ sales.live_date }}</td>
@@ -297,6 +305,26 @@
     </div>
 </template>
 
+<style scoped>
+.dont-break-out {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+</style>
+
 <script>
     import { mapState } from 'vuex';
 
@@ -378,8 +406,8 @@
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 8, width: "200px" },
+                        { orderable: true, targets: 9, width: "200px" },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
@@ -395,8 +423,8 @@
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 6, width: "200px" },
+                        { orderable: true, targets: 7, width: "200px" },
                         { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
@@ -406,6 +434,7 @@
                 }
 
                 $('#tbl-followupsales').DataTable({
+                    autoWidth: false,
                     paging: false,
                     searching: false,
                     columnDefs: columnDefs,

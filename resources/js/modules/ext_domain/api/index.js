@@ -44,6 +44,16 @@ export default class ExtDomainService {
             .catch(error => error);
     }
 
+    static uploadCsv(params) {
+        return axios.post('/api/ext/upload-csv', params, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response => response)
+        .catch(error => error);
+    }
+
     static getListCountriesInt() {
         return axios.get('/api/countries-int')
             .then(response => response)

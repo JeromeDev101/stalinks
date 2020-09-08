@@ -63,6 +63,18 @@ class UserController extends Controller
             $filters['where'][] = ['email', 'like', '%'.$input['email'].'%'];
         }
 
+        if (isset($input['type']) && $input['type'] != '') {
+            $filters['where'][] = ['type', $input['type']];
+        }
+
+        if (isset($input['status']) && $input['status'] != '') {
+            $filters['where'][] = ['status', $input['status']];
+        }
+
+        if (isset($input['role']) && $input['role'] != '') {
+            $filters['where'][] = ['role_id', $input['role']];
+        }
+
         if (isset($input['work_mail']) && $input['work_mail'] != '') {
             $filters['where'][] = ['work_mail', 'like', '%'.$input['work_mail'].'%'];
         }

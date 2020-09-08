@@ -1,18 +1,93 @@
 <template>
     <div class="row">
         <div class="col-sm-12">
+
+
             <div class="box">
                 <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                </div>
+
+                <div class="box-body m-3">
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search Name</label>
+                                <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Name">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="text" v-model="filterModel.email_temp"  class="form-control pull-right" placeholder="Search Email">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Role</label>
+                                <select name="" class="form-control" v-model="filterModel.role">
+                                    <option value="">All</option>
+                                    <option v-for="option in roleList" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="" class="form-control" v-model="filterModel.status">
+                                    <option value="">All</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Type</label>
+                                <select name="" class="form-control" v-model="filterModel.type">
+                                    <option value="">All</option>
+                                    <option v-for="(option, key) in userTypeList" v-bind:value="key">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="row my-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearchList">Search <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            
+            <div class="box">
+                <div class="box-header">
+
                     <h3 class="box-title">Team</h3>
+
                     <button @click="doAddUser" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                     <div class="input-group input-group-sm float-right" style="width: 65px">
                         <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
                             <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
                         </select>
                     </div>
+
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body table-responsive no-padding relative">
+
+                <div class="box-body no-padding relative">
                     <table id="tbl-users" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -661,6 +736,9 @@ export default {
     data() {
         return {
             filterModel: {
+                type: this.$route.query.type || '',
+                role: this.$route.query.role || '',
+                status: this.$route.query.status || '',
                 email: this.$route.query.email || '',
                 email_temp: this.$route.query.email_temp || '',
                 work_mail_temp: this.$route.query.work_mail_temp || '',
@@ -746,6 +824,24 @@ export default {
     },
 
     methods: {
+
+        clearSearch() {
+            this.filterModel = {
+                status: '',
+                role: '',
+                type: '',
+                name_temp: '',
+                email_temp: '',
+                per_page: '10',
+            }
+
+            this.getUserList({
+                params: this.filterModel
+            });
+
+            this.$router.replace({'query': null});
+        },
+
         async getCountryList() {
             await this.$store.dispatch('actionGetListCountry', { vue: this });
         },

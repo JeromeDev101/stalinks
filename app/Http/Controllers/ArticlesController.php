@@ -39,7 +39,7 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
-                        ->with('user:id,name')
+                        ->with('user:id,name,username')
                         ->where('status_writer', 'Done')
                         ->orderBy('id', 'desc');
 

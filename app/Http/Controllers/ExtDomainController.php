@@ -375,6 +375,26 @@ class ExtDomainController extends Controller
         return response()->json(['success' => true, 'data' => $newExtDomain]);
     }
 
+    public function importExcel(Request $request) {
+        $request->validate([
+            'file' => 'bail|required|mimes:csv,txt',
+            'language' => 'required',
+            'status' => 'required',
+        ]);
+
+        $file = $request->all();
+        $data = $this->extDomainRepository->importExcel($file);
+
+        
+        if($data['success'] === false){
+            unset($data['success']);
+            return response()->json($data, 422);
+        }
+
+        return response()->json(['success' => true], 200);
+
+    }
+
     private function isInputAfrefInfo($input) {
         if ($input['ahrefs_rank'] > 0 ||
             $input['no_backlinks'] > 0 ||

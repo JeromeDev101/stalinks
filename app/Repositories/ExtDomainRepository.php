@@ -50,6 +50,68 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         );
     }
 
+    public function importExcel($file)
+    {
+        $status = $file['status'];
+        $language = $file['language'];
+        $csv_file = $file['file'];
+
+        $result = true;
+        $message = '';
+        $file_message = '';
+
+        $id = Auth::user()->id;
+        $csv = fopen($csv_file, 'r');
+        $ctr = 0;
+        while ( ($line = fgetcsv($csv) ) !== FALSE) {
+            if(count($line) > 4 || count($line) < 4){
+                $message = "Please check the header: Domain, Email, Price and Inc Article only.";
+                $file_message = "Invalid Header format. ".$message;
+                $result = false;
+                break;
+            }
+
+            if( $ctr > 0 ){
+                $url = $line[0];
+                $email = $line[1];
+                $price = $line[2];
+                $article = $line[3];
+
+                if( trim($url, " ") != '' ){
+
+                    ExtDomain::create([
+                        'domain' => $url,
+                        'country_id' => $language,
+                        'ahrefs_rank' => 0,
+                        'no_backlinks' => 0,
+                        'url_rating' => 0,
+                        'domain_rating' => 0,
+                        'organic_keywords' => '',
+                        'organic_traffic' => '',
+                        'alexa_rank' => 0,
+                        'ref_domains' => 0,
+                        'status' => $status,
+                        'email' => $email,
+                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                    ]);
+                }
+            }
+
+            $ctr++;
+        }
+
+        fclose($csv);
+
+        return [
+            "success" => $result,
+            "message" => $message,
+            "errors" => [
+                "file" => $file_message,
+            ],
+        ];
+    }
+
     public function fillterExtDomain($status, $countryIds, $countryIdsInt, $extDomainAdditionIds = [])
     {
         $data = $this->model->selectRaw('ext_domains.country_id, ext_domains.status, count(DISTINCT(ext_domains.id)) as total')

@@ -80,7 +80,7 @@
                     <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding relative">
                     <table id="tbl_account" class="table table-striped table-bordered">
                         <thead>
                             <tr class="label-primary">

@@ -10,6 +10,8 @@ interface ExtDomainRepositoryInterface extends RepositoryInterface
 
     public function importAlexaSites($data, $total, $countryCode, $start, $count);
 
+    public function importExcel($file);
+
     public function getContacts($listIdExtDomains);
 
     public function paginate($page, $perPage, $filter, $countriesId, $countriesIdInt, $countriesExceptIds, $allExtFilter, $sort, $extDomainAdditionIds = []);

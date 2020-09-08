@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search Company and User</label>
+                                <label for="">Search URL</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
@@ -155,7 +155,7 @@
 
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding">
                     <table id="tbl-publisher" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -168,6 +168,7 @@
                                 <th v-if="user.isAdmin || user.isOurs == 0">Username</th>
                                 <th v-if="user.isAdmin || user.isOurs == 0">Date Uploaded</th>
                                 <th>Language</th>
+                                <th>Valid</th>
                                 <th>URL</th>
                                 <th>Price</th>
                                 <th>Inc Article</th>
@@ -193,8 +194,9 @@
                                 </td>
                                 <!-- <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td> -->
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
-                                <td v-if="user.isAdmin || user.isOurs == 0">{{publish.updated_at}}</td>
+                                <td v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td>{{ publish.country_name }}</td>
+                                <td>{{ publish.valid }}</td>
                                 <td>{{ replaceCharacters(publish.url) }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
                                 <td>{{ publish.inc_article }}</td>
@@ -449,6 +451,7 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -468,6 +471,7 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -486,6 +490,7 @@
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -562,6 +567,10 @@
                 let char3 = char2.replace("www.", "");
 
                 return char3;
+            },
+
+            displayDate(date) {
+                return date.split(" ")[0];
             },
 
             checkSelected() {

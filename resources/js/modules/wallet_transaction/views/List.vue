@@ -60,7 +60,7 @@
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
-                <div class="box-body table-responsive no-padding relative">
+                <div class="box-body no-padding relative">
                     <table id="tbl_wallet_transaction" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">

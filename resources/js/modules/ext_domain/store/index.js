@@ -130,6 +130,26 @@ const actions = {
         }
     },
 
+    async actionUploadCsvExtDomain({ commit }, params) {
+        try {
+            let response = await ExtDomainService.uploadCsv(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'uploaded', message: 'Sucessfully Uploaded', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async getListExt({ commit }, params) {
         try {
             let response = await ExtDomainService.getListExt(params);

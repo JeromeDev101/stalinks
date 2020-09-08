@@ -93,6 +93,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
     Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
     Route::name('ext-get-contacts')->get('/ext/get-contacts', 'ExtDomainController@crawlContact');
+    Route::name('ext-upload-csv')->post('/ext/upload-csv', 'ExtDomainController@importExcel');
 
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');
