@@ -85,12 +85,10 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>Username</th>
                                 <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
                                 <th>Company Name</th>
                                 <th>Type</th>
-                                <th>Skype</th>
                                 <th>Team In-charge</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -99,12 +97,10 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
-                                <td>{{ account.email }}</td>
-                                <td>{{ account.phone }}</td>
-                                <td>{{ account.company_name }}</td>
+                                <td>{{ account.company_name == null ? 'N/A':account.company_name }}</td>
                                 <td>{{ account.type }}</td>
-                                <td>{{ account.skype }}</td>
                                 <td>{{ account.team_in_charge == null ?  '': account.team_in_charge.username }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
@@ -611,8 +607,6 @@
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
