@@ -15,13 +15,17 @@ class IncomesController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
         $user = Auth::user();
-        $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation')
+        $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation','B.username as in_charge')
+                    ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
+                    ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+                    ->leftJoin('registration', 'A.email', '=', 'registration.email')
+                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
                     ->with(['publisher' => function($query){
                         $query->with('user:id,name,username');
                     }])
                     ->with('user:id,name,username')
-                    ->where('status', 'Live')
+                    ->where('backlinks.status', 'Live')
                     ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
@@ -68,11 +72,13 @@ class IncomesController extends Controller
                                 ->leftJoin('users', 'users.id', '=', 'buyer_purchased.user_id_buyer')
                                 ->where('buyer_purchased.status', 'Purchased')
                                 ->groupBy('buyer_purchased.user_id_buyer', 'users.username')
+                                ->orderBy('users.username', 'asc')
                                 ->get();
 
         $getSeller = Publisher::select('publisher.user_id', 'users.username')
                             ->leftJoin('users', 'users.id', '=', 'publisher.user_id')
                             ->groupBy('publisher.user_id', 'users.username')
+                            ->orderBy('users.username', 'asc')
                             ->get();
         
         $list = $list->paginate($paginate);

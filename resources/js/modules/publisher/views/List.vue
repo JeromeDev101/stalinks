@@ -162,11 +162,11 @@
                                 <th>#</th>
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
-                                    Select
                                 </th>
                                 <!-- <th v-if="user.isAdmin">Company</th> -->
-                                <th v-if="user.isAdmin || user.isOurs == 0">Username</th>
-                                <th v-if="user.isAdmin || user.isOurs == 0">Date Uploaded</th>
+                                <th>In-charge</th>
+                                <th v-if="user.isAdmin || user.isOurs == 0">Seller</th>
+                                <th v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
                                 <th>Language</th>
                                 <th>Valid</th>
                                 <th>URL</th>
@@ -192,6 +192,7 @@
                                         </button>
                                     </div>
                                 </td>
+                                <td>{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
                                 <!-- <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td> -->
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
@@ -452,6 +453,7 @@
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -472,6 +474,7 @@
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -491,6 +494,7 @@
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ]
                 }

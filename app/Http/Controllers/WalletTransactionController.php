@@ -49,25 +49,32 @@ class WalletTransactionController extends Controller
             'users.email',
             'users.role_id',
             'users.credit_auth',
-            'registration.name as reg_name',
         ];
 
-        $list_registration = User::select($columns)
-                    ->leftJoin('registration', function($join){
-                        $join->on('users.email' , '=', 'registration.email')
-                            ->where('registration.type', 'Buyer');
-                    })
-                    ->where('users.status', 'active')
-                    ->whereNotNull('registration.name');
+        // $list_registration = User::select($columns)
+        //             ->leftJoin('registration', function($join){
+        //                 $join->on('users.email' , '=', 'registration.email')
+        //                     ->where('registration.type', 'Buyer');
+        //             })
+        //             ->where('users.status', 'active')
+        //             ->orderBy('users.username', 'asc')
+        //             ->whereNotNull('registration.name');
+
+        // $list = User::select($columns)
+        //             ->leftJoin('registration', function($join){
+        //                 $join->on('users.email' , '=', 'registration.email')
+        //                     ->where('registration.type', 'Buyer');
+        //             })
+        //             ->where('users.status', 'active')
+        //             ->where('role_id', 5)
+        //             ->orderBy('users.username', 'asc')
+        //             ->union($list_registration);
 
         $list = User::select($columns)
-                    ->leftJoin('registration', function($join){
-                        $join->on('users.email' , '=', 'registration.email')
-                            ->where('registration.type', 'Buyer');
-                    })
                     ->where('users.status', 'active')
                     ->where('role_id', 5)
-                    ->union($list_registration);
+                    ->orderBy('users.username', 'asc');
+                    
 
         return [
             'data' => $list->get()
@@ -107,7 +114,7 @@ class WalletTransactionController extends Controller
         foreach( $list as $id ){
             $ids[] = $id['user_id'];
         }   
-        $list = User::whereIn('id', $ids);
+        $list = User::whereIn('id', $ids)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];

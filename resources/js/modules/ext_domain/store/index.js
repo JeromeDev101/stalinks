@@ -10,6 +10,7 @@ const EXT_DOMAIN_SET_LIST_AHERFS = 'EXT_DOMAIN_SET_LIST_AHERFS';
 const EXT_DOMAIN_SET_LIST_MAIL = 'EXT_DOMAIN_SET_LIST_MAIL';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const TOTAL_TOPSITES = "TOTAL_TOPSITES";
+const EXT_EXT_SELLER = "EXT_EXT_SELLER";
 
 //status external domain
 const EXT_STATUS_NEW = "New";
@@ -28,6 +29,7 @@ const state = {
     error: {},
     listExt: { data: [], total: 0, pagination: '' },
     listAlexa: {},
+    listExtSeller: {},
     listCountriesInt: { data: [], total: 0 },
     listCountriesExt: { data: [], total: 0 },
     listAhrefs: [],
@@ -50,17 +52,17 @@ const state = {
         id: true,
         country: true,
         domain: true,
-        email: true,
+        email: false,
         facebook: false,
-        phone: true,
+        phone: false,
         rank: true,
         status: true,
         total_spent: false,
-        ahrefs_rank: true,
+        ahrefs_rank: false,
         no_backlinks: false,
         url_rating: false,
         domain_rating: false,
-        ref_domains: true,
+        ref_domains: false,
         organic_keywords: true,
         organic_traffic: true,
     },
@@ -82,6 +84,10 @@ const mutations = {
 
     [EXT_DOMAIN_SET_LIST_COUNTRY_INT](state, listCountriesInt) {
         state.listCountriesInt = listCountriesInt;
+    },
+
+    [EXT_EXT_SELLER](state, listExtSeller) {
+        state.listExtSeller = listExtSeller;
     },
 
     [EXT_DOMAIN_SET_LIST_COUNTRY_EXT](state, listCountriesExt) {
@@ -130,6 +136,46 @@ const actions = {
         }
     },
 
+    async actionUpdateMultipleStatus({ commit }, params) {
+        try {
+            let response = await ExtDomainService.updateMultipleStatus(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'updated', message: 'Sucessfully Updated!', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionDeleteExtDomain({ commit }, params) {
+        try {
+            let response = await ExtDomainService.deleteExtDomain(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'uploaded', message: 'Sucessfully Deleted!', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionUploadCsvExtDomain({ commit }, params) {
         try {
             let response = await ExtDomainService.uploadCsv(params);
@@ -154,6 +200,20 @@ const actions = {
         try {
             let response = await ExtDomainService.getListExt(params);
             commit(EXT_DOMAIN_SET_LIST_EXT, { listExt: response.data, isOnlyData: false });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListExtSeller({ commit }, params) {
+        try {
+            let response = await ExtDomainService.getExtListSeller(params);
+            commit(EXT_EXT_SELLER, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

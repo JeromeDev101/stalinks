@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" v-if="isTeamSeller">
                             <div class="form-group">
                                 <label for="">Team In-charge</label>
                                 <select class="form-control" name="" v-model="filterModel.team_in_charge">
@@ -89,7 +89,7 @@
                                 <th>Name</th>
                                 <th>Company Name</th>
                                 <th>Type</th>
-                                <th>Team In-charge</th>
+                                <th>In-charge</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -414,7 +414,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-if="isTeamSeller">
                                 <div class="form-group">
                                     <label for="">Team In-charge</label>
                                     <select class="form-control" v-model="accountModel.team_in_charge">
@@ -499,6 +499,7 @@
                 isPopupLoading: false,
                 isSearchLoading: false,
                 isDisabled: true,
+                isTeamSeller: true,
             }
         },
 
@@ -507,6 +508,7 @@
             this.getPaymentTypeList();
             this.checkAccessRole();
             this.getTeamInCharge();
+            this.checkTeamSeller();
         },
 
         computed: {
@@ -553,6 +555,12 @@
 
             async getTeamInCharge(){
                 await this.$store.dispatch('actionGetTeamInCharge');
+            },
+
+            checkTeamSeller() {
+                if( this.user.isOurs == 0 && this.user.role_id == 6 ){
+                    this.isTeamSeller = false;
+                }
             },
 
             checkAccessRole() {

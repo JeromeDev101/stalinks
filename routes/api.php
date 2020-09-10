@@ -85,7 +85,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-get-summary')->get('/publisher/summary', 'PublisherController@getSummary');
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
 
-    //External Page
+    //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
     Route::name('ext-get-ahrefs')->get('/ext/ahrefs', 'ExtDomainController@getAhrefs');
     Route::name('ext-get')->get('/ext', 'ExtDomainController@getList');
@@ -94,6 +94,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
     Route::name('ext-get-contacts')->get('/ext/get-contacts', 'ExtDomainController@crawlContact');
     Route::name('ext-upload-csv')->post('/ext/upload-csv', 'ExtDomainController@importExcel');
+    Route::name('ext-delete')->delete('/ext', 'ExtDomainController@delete');
+    Route::name('ext-update-multiple-status')->put('/ext/update-multiple-status', 'ExtDomainController@updateMultipleStatus');
+    Route::name('ext-get-ext-seller')->get('ext/ext-seller','ExtDomainController@getListExtSeller');
 
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');

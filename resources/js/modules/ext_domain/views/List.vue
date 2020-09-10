@@ -103,11 +103,13 @@
                         </select>
                     </div>
 
-                    <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 300px;">
-                       <div class="input-group">
-                            <label style="color: #333;margin: 5%;">Selected Action</label>
+                    <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 400px;">
+                        <label style="color: #333;margin: 5%;">Selected Action</label>
+                        <div class="btn-group">
                             <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
                             <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
+                            <button type="submit" title="Status" @click="doMultipleStatus" class="btn btn-default"><i class="fa fa-fw fa-tag"></i></button>
+                            <button type="submit" title="Delete" @click="deleteAll" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
                         </div>
                     </div>
 
@@ -165,7 +167,7 @@
                 <!-- <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
 
-                <div class="box-body no-padding">
+                <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }">
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
                         <thead>
                         <tr class="label-primary">
@@ -660,18 +662,16 @@
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Modal Update-->
+        <!-- End Modal Update -->
 
-        <!--    Modal Setting -->
+        <!-- Modal Setting -->
         <div class="modal fade" id="modal-setting" style="display: none;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting</h4>
+                        <h4 class="modal-title">Setting Default</h4>
                         <div class="modal-load overlay float-right">
                         </div>
                     </div>
@@ -736,6 +736,10 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tableShow.organic_traffic ? 'checked':''" v-model="tableShow.organic_traffic">Organic Traffic</label>
                             </div>
+
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
+                            </div>
                         </div>
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
@@ -744,13 +748,12 @@
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Modal Setting-->
+        <!-- End Modal Setting -->
 
-        <!--    Modal Add Backlink-->
+
+        <!-- Modal Add Backlink -->
         <div v-if="openModalBackLink" class="modal fade"  ref="modalBacklink" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -821,13 +824,11 @@
                         <button type="button" :disabled="checkSelectIntDomain" @click="submitAddBacklink" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Modal Add-->
+        <!-- End Modal Add -->
 
-        <!--    Modal Send Email -->
+        <!-- Modal Send Email -->
         <div id="modal-email" class="modal fade" ref="modalEmail" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -904,11 +905,55 @@
                         <button type="button" :disabled="!allowSending" @click="submitSendMail" class="btn btn-primary">Send</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!--    End Send Email -->
+        <!-- End Send Email -->
+
+        <!-- Modal Change multiple Status -->
+        <div id="modal-multiple-status" class="modal fade" ref="modalMultipleStatus">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Change Multiple Status</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" >
+                                    <label style="color: #333">Status</label>
+                                    <select type="text"  class="form-control" v-on:change="checkQualified" v-model="updateStatus.status" required="required">
+                                        <option value="">Select Status</option>
+                                        <option v-for="(option, key) in listStatusText" v-bind:value="key">
+                                            {{ option.text }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-if="isQualified">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.seller}" >
+                                    <label style="color: #333">Seller</label>
+                                    <select type="text" v-model="updateStatus.seller" class="form-control" required="required">
+                                        <option value="">Select Seller</option>
+                                        <option  v-for="option in listExtSeller" v-bind:value="option.id">
+                                            {{ option.username }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageBacklinkForms.errors.seller" v-for="err in messageBacklinkForms.errors.seller" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Change Multiple Status -->
 
     </div>
 </template>
@@ -1014,6 +1059,11 @@
                 checkIds: [],
                 showLang: false,
                 isEnableBtn: true,
+                updateStatus: {
+                    seller: '',
+                    status: '',
+                },
+                isQualified: false,
              };
         },
         async created() {
@@ -1024,7 +1074,9 @@
             this.getExtList({
                 params: this.filterModel
             });
-            this.fillterIntByCountry()
+            this.fillterIntByCountry();
+            this.checkQualified();
+            this.getListExtSeller();
         },
         computed: {
             ...mapState({
@@ -1041,6 +1093,7 @@
                 listCountriesInt: state => state.storeExtDomain.listCountriesInt,
                 listAhrefs: state => state.storeExtDomain.listAhrefs,
                 listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+                listExtSeller: state => state.storeExtDomain.listExtSeller,
             }),
             pagination() {
                 return {
@@ -1101,6 +1154,19 @@
         },
         methods: {
 
+            async getListExtSeller() {
+                await this.$store.dispatch('actionGetListExtSeller');
+            },
+
+            checkQualified() {
+                let check = this.updateStatus.status
+                if( check == 100 ){
+                    this.isQualified = true;
+                }else{
+                    this.isQualified = false;
+                }
+            },
+    
             checkData() {
                 this.isEnableBtn = true;
                 if( this.$refs.language.value && this.$refs.status.value){
@@ -1113,6 +1179,70 @@
                 if( this.$refs.excel.value ){
                     this.showLang = true;
                 }
+            },
+
+            async doUpdateMultipleStatus() {
+                await this.$store.dispatch('actionUpdateMultipleStatus', {
+                    id: this.checkIds,
+                    seller: this.updateStatus.seller,
+                    status: this.updateStatus.status,
+                });
+
+                if( this.messageForms.action == 'updated' ){
+                    let element = this.$refs.modalMultipleStatus
+                    $(element).modal('hide')
+
+                    this.updateStatus.seller = '';
+                    this.updateStatus.status = '';
+                    
+                    this.getExtList();
+                    this.checkIds = []
+                    swal.fire(
+                        'Saved!',
+                        'Successfully Updated.',
+                        'success'
+                    )
+                }
+            },
+
+            doMultipleStatus() {
+                if( this.checkIds.length > 0 ){
+                    let element = this.$refs.modalMultipleStatus
+                    $(element).modal('show')
+                }else{
+                    swal.fire(
+                        'No item',
+                        'No selected item',
+                        'error'
+                    )
+                }
+            },
+
+            async deleteAll() {
+                if( this.checkIds.length > 0 ){
+                    if( confirm("Are you sure you want to delete selected records?") ){
+                        await this.$store.dispatch('actionDeleteExtDomain', {
+                            params: {
+                                id: this.checkIds,
+                            }
+                        });
+
+                        this.getExtList();
+                        this.checkIds = []
+                        swal.fire(
+                            'Saved!',
+                            'Successfully Updated.',
+                            'success'
+                        )
+                    }
+                }else{
+                    swal.fire(
+                        'No item',
+                        'No selected item',
+                        'error'
+                        )
+                }
+                    
             },
 
             async submitUpload() {

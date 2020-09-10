@@ -24,9 +24,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     {
         $user = Auth::user();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:25;
-        $list = Publisher::select('publisher.*','registration.username','users.name', 'users.username as user_name', 'users.isOurs', 'registration.company_name', 'countries.name AS country_name')
-                ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-                ->leftJoin('registration', 'users.email', '=', 'registration.email')
+        $columns = [
+            'publisher.*',
+            'registration.username',
+            'A.name',
+            'A.username as user_name',
+            'A.isOurs',
+            'registration.company_name',
+            'countries.name AS country_name',
+            'B.username as in_charge'
+        ];
+        $list = Publisher::select($columns)
+                ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+                ->leftJoin('registration', 'A.email', '=', 'registration.email')
+                ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                 ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
                 ->orderBy('created_at', 'desc');
 
@@ -41,7 +52,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( $user->isOurs != 0 && $user->type != 10 ){
-            $list = $list->where('users.id', $user->id);
+            $list = $list->where('A.id', $user->id);
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){

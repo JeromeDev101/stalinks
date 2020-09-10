@@ -21,6 +21,8 @@ use Illuminate\Validation\Rule;
 use App\Models\Publisher;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\ExtDomain;
+use League\OAuth2\Server\RequestEvent;
 
 class ExtDomainController extends Controller
 {
@@ -505,6 +507,7 @@ class ExtDomainController extends Controller
                 'price' => $input['price'],
                 'language_id' => $request->country['id'],
                 'inc_article' => $input['inc_article'],
+                'valid' => 'unchecked',
             ]);
         }
 
@@ -585,6 +588,20 @@ class ExtDomainController extends Controller
         return $data;
     }
 
+    public function delete(Request $request) {
+        $input['deleted_at'] = date('Y-m-d h:i:s');
+
+        if( is_array($request->id) ){
+            foreach( $request->id as $ids ){
+                $data = json_decode($ids);
+                $extDomain = ExtDomain::findOrFail($data->id);
+                $extDomain->update($input);
+            }
+        }
+
+        return response()->json(['success' => true], 200);
+    }
+
     private function isValidExtDomainStatus($checkStatus) {
         foreach($this->validStatus as $status) {
             if ($checkStatus == $status) {
@@ -606,5 +623,55 @@ class ExtDomainController extends Controller
         $configs = $this->configRepository->getConfigs('ahrefs');
         $data = $this->extDomainRepository->getAhrefs($listId, $configs);
         return response()->json($data);
+    }
+
+    public function updateMultipleStatus(Request $request) {
+        $request->validate([
+            'status' => 'required'
+        ]);
+
+        // $test = [];
+        if( $request->status == 100 ){
+            $request->validate([
+                'seller' => 'required',
+            ]);
+
+            foreach( $request->id as $domain ){
+                $id = $domain['id'];
+                $extDomain = ExtDomain::findOrFail($id);
+                $extDomain->update(['status' => $request->status]);
+
+                Publisher::create([
+                    'user_id' => $request->seller,
+                    'url' => $domain['domain'],
+                    'ur' => $domain['url_rating'],
+                    'dr' => $domain['domain_rating'],
+                    'backlinks' => $domain['no_backlinks'],
+                    'ref_domain' => $domain['ref_domains'],
+                    'org_keywords' => $domain['organic_keywords'],
+                    'org_traffic' => $domain['organic_traffic'],
+                    'price' => $domain['price'],
+                    'language_id' => $domain['country']['id'],
+                    'inc_article' => $domain['inc_article'],
+                    'valid' => 'unchecked',
+                ]);
+            }
+
+        }else{
+            foreach( $request->id as $domain ){
+                $id = $domain['id'];
+                $extDomain = ExtDomain::findOrFail($id);
+                $extDomain->update(['status' => $request->status]);
+            }
+        }
+        // dd($test);
+
+        return response()->json(['success' => true], 200);
+   
+    }
+
+    public function getListExtSeller() {
+        $ext_seller = User::select('id', 'name', 'username')->where('role_id', 6)->where('isOurs', 1)->get();
+        return response()->json($ext_seller);
     }
 }

@@ -92,6 +92,7 @@
                                 <th>Url Pub</th>
                                 <th>Blink</th>
                                 <th>Artc</th>
+                                <th>In-charge</th>
                                 <th v-if="user.isOurs != 1">Seller</th>
                                 <th v-if="user.isOurs != 1">Buyer</th>
                                 <th>URL Publisher</th>
@@ -111,6 +112,7 @@
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.id }}</td>
                                 <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
+                                <td>{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
                                 <td>{{ replaceCharacters(sales.publisher.url) }}</td>

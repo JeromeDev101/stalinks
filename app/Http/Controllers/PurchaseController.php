@@ -63,11 +63,13 @@ class PurchaseController extends Controller
                                 ->leftJoin('users', 'users.id', '=', 'buyer_purchased.user_id_buyer')
                                 ->where('buyer_purchased.status', 'Purchased')
                                 ->groupBy('buyer_purchased.user_id_buyer', 'users.username')
+                                ->orderBy('users.username', 'asc')
                                 ->get();
 
         $getSeller = Publisher::select('publisher.user_id', 'users.username')
                             ->leftJoin('users', 'users.id', '=', 'publisher.user_id')
                             ->groupBy('publisher.user_id', 'users.username')
+                            ->orderBy('users.username', 'asc')
                             ->get();
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){

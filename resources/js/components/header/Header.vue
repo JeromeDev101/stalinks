@@ -1,7 +1,7 @@
 <template>
     <header class="main-header">
         <!-- Logo -->
-        <a href="#" class="logo">
+        <a href="#" class="logo" style="position:fixed;">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">STA</span>
             <!-- logo for regular state and mobile devices -->

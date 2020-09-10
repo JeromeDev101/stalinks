@@ -25,7 +25,11 @@ class AccountController extends Controller
     public function store(AccountRequest $request)
     {
         $input = $request->all();
+        $isTeamSeller = $this->checkTeamSeller();
         unset($input['c_password']);
+        if( $isTeamSeller ){
+            $input['team_in_charge'] = Auth::user()->id;
+        }
         $input['password'] = Hash::make($input['password']);
         $registration = Registration::create($input);
 
@@ -46,11 +50,13 @@ class AccountController extends Controller
 
     public function getList(Request $request)
     {
+        $user_id = Auth::user()->id;
         $status = $request->status;
         $type = $request->type;
         $search = $request->search;
         $paginate = $request->paginate;
         $team_in_charge = $request->team_in_charge;
+        $isTeamSeller = $this->checkTeamSeller();
 
         $list = Registration::when( $status, function($query) use ($status){
             return $query->where( 'status', $status );
@@ -65,12 +71,27 @@ class AccountController extends Controller
                 $subquery->where('team_in_charge', $team_in_charge);
             });
         })
+        ->when( $isTeamSeller, function($query) use ($user_id){
+            return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
+                $subquery->where('team_in_charge', $user_id);
+            });
+        })
         ->with('team_in_charge:id,name,username')
         ->orderBy('id', 'desc')
         ->paginate($paginate);
 
         return $list;
 
+    }
+
+    private function checkTeamSeller() {
+        $result = false;
+        $user = Auth::user();
+
+        if( $user->role_id == 6 && $user->isOurs == 0 ){
+            $result = true;
+        }
+        return $result;
     }
 
     public function edit(UpdateAccountRequest $request)
@@ -199,6 +220,7 @@ class AccountController extends Controller
                                 ->where('registration.type',$userRole)
                                 ->where('registration.status', 'active')
                                 ->whereIn('users.id', $arrUserId)
+                                ->orderBy('users.username', 'asc')
                                 ->leftJoin('users', 'users.email', '=', 'registration.email')
                                 //->pluck('users.username','users.id')
                                 ->get();
@@ -269,7 +291,7 @@ class AccountController extends Controller
 
     public function getTeamInCharge() {
         $team_in_charge = [5,6,7,1];
-        $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->get();
+        $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
         return response()->json(['data'=> $team], 200);
     }
 }

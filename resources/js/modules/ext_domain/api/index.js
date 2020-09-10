@@ -32,8 +32,26 @@ export default class ExtDomainService {
             .catch(error => error);
     }
 
+    static getExtListSeller(params) {
+        return axios.get('/api/ext/ext-seller', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static deleteExtDomain(params) {
+        return axios.delete('/api/ext', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static addExt(params) {
         return axios.post('/api/ext', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static updateMultipleStatus(params) {
+        return axios.put('/api/ext/update-multiple-status', params)
             .then(response => response)
             .catch(error => error);
     }

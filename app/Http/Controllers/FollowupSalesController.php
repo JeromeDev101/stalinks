@@ -14,8 +14,11 @@ class FollowupSalesController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
         $user = Auth::user();
-        $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url')
+        $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url','B.username as in_charge')
                         ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
+                        ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+                        ->leftJoin('registration', 'A.email', '=', 'registration.email')
+                        ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                         ->with(['publisher' => function($query) {
                             $query->with('user:id,name,username');
                         }])

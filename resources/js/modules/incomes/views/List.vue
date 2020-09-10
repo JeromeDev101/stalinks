@@ -100,8 +100,9 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID</th>
-                                <th v-if="isSeller">User Seller</th>
-                                <th v-if="user.isOurs == 0">User Buyer</th>
+                                <th>In-charge</th>
+                                <th v-if="isSeller">Seller</th>
+                                <th v-if="user.isOurs == 0">Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
                                 <th>Date Completed</th>
@@ -114,6 +115,7 @@
                             <tr v-for="(incomes, index) in listIncomes.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ incomes.id }}</td>
+                                <td>{{ incomes.in_charge == null ? 'N/A':incomes.in_charge }}</td>
                                 <td v-if="isSeller">{{ incomes.publisher.user.username == null ? incomes.publisher.user.name : incomes.publisher.user.username }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user.username == null ? incomes.user.name : incomes.user.username }}</td>
                                 <td>{{ replaceCharacters(incomes.publisher.url) }}</td>

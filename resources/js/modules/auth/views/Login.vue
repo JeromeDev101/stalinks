@@ -1,7 +1,9 @@
 <template>
     <div class="homepage-login">
         <div class="col-md-4 col-md-offset-4 homepage-login__login custom-card">
-            <h2 class="homepage-login__title">Stalink Management Tool</h2>
+            <h2 class="homepage-login__title">
+                <img src="images/banner.png" alt="User Image">
+            </h2>
             <form class="homepage-login__login-form">
                 <div class="form-group">
                     <label for="user-email">Email</label>
