@@ -38,6 +38,7 @@
                                     <option value="">Select Type</option>
                                     <option value="seller">Seller</option>
                                     <option value="buyer">Buyer</option>
+                                    <option value="writer">Writer</option>
                                 </select>
                             </div>
                         </div>
@@ -193,6 +194,7 @@
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -357,6 +359,7 @@
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>

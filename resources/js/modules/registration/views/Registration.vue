@@ -58,6 +58,7 @@
                                         <option value="">Select Account type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>

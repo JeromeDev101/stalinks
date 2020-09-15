@@ -1,139 +1,235 @@
 <template>
     <div class="row">
-    <section class="content-header col-sm-12">
-      <h1>Dashboard</h1>
-      <br>
-    </section>
-        <div class="col-lg-8">
-            <div class="box">
+        <section class="content-header col-sm-12">
+            <h1>Dashboard</h1>
+            <br>
+        </section>
+
+        <div class="col-lg-6" v-if="user.isAdmin">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
                 <div class="box-header">
-                    <h3 class="box-title">Total External Domain: {{ totalExt.total}}</h3>
+                    <h3 class="box-title text-primary">Total External Domain</h3>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Country</th>
-                                            <th>GotContacts</th>
-                                            <th>Ahrefed</th>
-                                            <th>InTouched</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr role="row" class="odd" v-for="(ext, index) in totalExt.data" :key="index">
-                                            <td>{{ ext.country.name }}</td>
-                                            <td>{{ ext.GotContacts }}</td>
-                                            <td>{{ ext.Ahreafed }}</td>
-                                            <td>{{ ext.InTouched }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
+                <div class="box-body custom-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr class="white">
+                                        <th>Team In-charge</th>
+                                        <th>InTouched</th>
+                                        <th>Qualified</th>
+                                        <th>Unqualified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
+                                        <td>{{ upperCase(ext_domain.username) }}</td>
+                                        <td>{{ ext_domain.num_in_touched }}</td>
+                                        <td>{{ ext_domain.num_qualified }}</td>
+                                        <td>{{ ext_domain.num_unqualified }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Total Seller</h3>
+                </div>
+                
+                <div class="box-body custom-box">
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr class="white">
+                                        <th>Seller</th>
+                                        <th>No. Sites</th>
+                                        <th>No. Unchecked</th>
+                                        <th>No. Valid</th>
+                                        <th>No. Invalid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(seller, index) in listData.total_seller" :key="index">
+                                        <td>{{ upperCase(seller.username) }}</td>
+                                        <td>{{ seller.num_sites }}</td>
+                                        <td>{{ seller.num_unchecked }}</td>
+                                        <td>{{ seller.num_valid }}</td>
+                                        <td>{{ seller.num_invalid }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Total Backlink (Seller)</h3>
+                </div>
+
+                <div class="box-body custom-box">
+                   
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Seller</th>
+                                        <th>Processing</th>
+                                        <th>Content Writing</th>
+                                        <th>Content Done</th>
+                                        <th>Content Sent</th>
+                                        <th>Live</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
+                                        <td>{{ upperCase(seller.username) }}</td>
+                                        <td>{{ seller.num_processing }}</td>
+                                        <td>{{ seller.writing }}</td>
+                                        <td>{{ seller.num_done }}</td>
+                                        <td>{{ seller.num_sent }}</td>
+                                        <td>{{ seller.num_live }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 5">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Total Backlink (Buyer)</h3>
+                </div>
+
+                <div class="box-body custom-box">
+                   
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Buyer</th>
+                                        <th>Processing</th>
+                                        <th>Content Writing</th>
+                                        <th>Content Done</th>
+                                        <th>Content Sent</th>
+                                        <th>Live</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
+                                        <td>{{ upperCase(buyer.username) }}</td>
+                                        <td>{{ buyer.num_processing }}</td>
+                                        <td>{{ buyer.writing }}</td>
+                                        <td>{{ buyer.num_done }}</td>
+                                        <td>{{ buyer.num_sent }}</td>
+                                        <td>{{ buyer.num_live }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <div class="col-lg-4">
-            <div class="box">
+
+
+        <div class="col-lg-6">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
                 <div class="box-header">
-                    <h3 class="box-title">Total Internals Domain: {{ totalInt.total }}</h3>
+                    <h3 class="box-title text-primary">Incomes</h3>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Country</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(int, index) in totalInt.data" :key="index" role="row" class="odd">
-                                            <td>{{ int.country.name }}</td>
-                                            <td>{{ int.total }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
-        <div class="col-lg-8">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Total Backlink: {{ totalBackLink.total}} </h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Country</th>
-                                            <th>Processing</th>
-                                            <th>Live</th>
-                                            <th>Content Writing</th>
-                                            <th>Content sent</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(backlink, index) in totalBackLink.data" :key="index" role="row" class="odd">
-                                            <td>{{ backlink.country.name}}</td>
-                                            <td>{{ backlink['Processing'] }}</td>
-                                            <td>{{ backlink['Live'] }}</td>
-                                            <td>{{ backlink['Content Writing'] }}</td>
-                                            <td>{{ backlink['Content sent'] }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
+                <div class="box-body custom-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Seller</th>
+                                        <th>No. Backlinks</th>
+                                        <th>Unpaid</th>
+                                        <th>Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(incomes, index) in listData.incomes" :key="index">
+                                        <td>{{ upperCase(incomes.username) }}</td>
+                                        <td>{{ incomes.num_backlink }}</td>
+                                        <td>{{ incomes.num_unpaid }}</td>
+                                        <td>{{ incomes.num_paid }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-            <div class="col-lg-4">
-            <div class="box">
+
+
+        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 5">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
                 <div class="box-header">
-                    <h3 class="box-title">Total Price: {{ price.total }}</h3>
+                    <h3 class="box-title text-primary">Purchase</h3>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Country</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(price, index) in totalPrice.data" :key="index" role="row" class="odd">
-                                            <td>{{ price.country.name }}</td>
-                                            <td>{{ convertPrice(price.total) }}$</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
+                <div class="box-body custom-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Buyer</th>
+                                        <th>No. Backlinks</th>
+                                        <th>Unpaid</th>
+                                        <th>Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(purchase, index) in listData.purchase" :key="index">
+                                        <td>{{ upperCase(purchase.username) }}</td>
+                                        <td>{{ purchase.num_backlink }}</td>
+                                        <td>{{ purchase.num_unpaid }}</td>
+                                        <td>{{ purchase.num_paid }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -147,120 +243,38 @@ export default {
 
     data() {
         return {
-            defaultAvatar: config.avatar_url,
-            extDomain:{
-                status: 0,
-                country_id: 0,
-                country_id_of_user: [],
-                status_of_user: [],
-                employee_id: 0,
-            },
-            intDomain:{
-                country_id: 0,
-                country_id_of_user: [],
-                employee_id: 0,
-            },
-            backLink:{
-                country_id: 0,
-                country_id_of_user: [],
-                status: 0,
-                status_of_backlink: [],
-                employee_id: 0,
-            },
-            price:{
-                country_id: 0,
-                country_id_of_user: [],
-                employee_id: 0,
-            },
-            optionStatus: [
-                { text: 'Please select', value: 0 },
-                { text: 'New', value: 'new' },
-                { text: 'Crawl Failed', value: 'crawlfail' },
-                { text: 'Contacts Null', value: 'contactnull' },
-            ]
+            //
         };
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
-            totalExt: state => state.storeExtDomain.totalExtDomain,
-            totalInt: state => state.storeIntDomain.totalIntDomain,
-            totalBackLink: state => state.storeBackLink.totalBackLink,
-            totalPrice: state => state.storeBackLink.totalPrice,
+            listData: state => state.storeDashboard.listData,
         }),
     },
 
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
         let userId = this.$route.params.id || '';
-        this.filterExtDomain();
-        this.filterIntDomain();
-        this.filterBacklink();
-        this.filterPrice();
+        this.getData();
     },
 
-methods: {
-        async filterExtDomain() {
-            let that = this;
-            that.extDomain.country_id_of_user = [],
-            that.extDomain.status_of_user = [],
-            this.user.countries_accessable.forEach(function(country) {
-                that.extDomain.country_id_of_user.push(country.id)
-            });
-            that.extDomain.employee_id = that.user.id;
-            await this.$store.dispatch('filterExtDomain', {
-                vue: this,
-                params: this.extDomain,
-            });
+    methods: {
+        upperCase(string) {
+            return string.toUpperCase();
         },
 
-        async filterIntDomain() {
-            let that = this;
-            that.intDomain.country_id_of_user = [],
+        async getData() {
+            await this.$store.dispatch('actionGetData');
 
-            this.user.internal_domains_accessable.forEach(function(internal_domain) {
-                that.intDomain.country_id_of_user.push(internal_domain.country.id)
-            });
-            that.intDomain.employee_id = that.user.id;
-            await this.$store.dispatch('filterIntDomain', {
-                vue: this,
-                params: this.intDomain,
-            });
-        },
-
-        async filterBacklink() {
-            let that = this;
-            that.backLink.country_id_of_user = [],
-            that.backLink.status_of_backlink = [],
-
-            this.user.backlinks.forEach(function(backlink) {
-                that.backLink.status_of_backlink.push(backlink.status)
-                that.backLink.country_id_of_user.push(backlink.int_domain.country.id)
-            });
-            that.backLink.employee_id = that.user.id;
-            await this.$store.dispatch('filterBackLink', {
-                vue: this,
-                params: this.backLink,
-            });
-        },
-
-        async filterPrice() {
-            let that = this;
-            that.price.country_id_of_user = [],
-
-            this.user.backlinks.forEach(function(backlink) {
-                that.price.country_id_of_user.push(backlink.int_domain.country.id)
-            });
-            that.price.employee_id = that.user.id;
-            await this.$store.dispatch('filterPrice', {
-                vue: this,
-                params: this.price,
-            });
-        },
-
-        checkArray(array) {
-            return Hepler.arrayNotEmpty(array);
+            $(".tbl-custom").DataTable({
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+            })
         },
 
         convertPrice(price) {
@@ -270,11 +284,30 @@ methods: {
 }
 </script>
 
-<style>
+<style scoped>
     .avatar li{
         width: 100%;
     }
-    .table-user {
-        padding-bottom: 73px;
+    .custom-box {
+        height: 330px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 0px;
+        margin-bottom: 0.5em;
     }
+    .tbl-custom {
+        text-align: left;
+        position: relative;
+        border-collapse: collapse; 
+    }
+    .tbl-custom thead tr th, .tbl-custom tbody tr td {
+        padding: 0.8rem;
+    }
+    .tbl-custom thead tr th {
+        background: white;
+        position: sticky;
+        top: 0; 
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+    }
+
 </style>

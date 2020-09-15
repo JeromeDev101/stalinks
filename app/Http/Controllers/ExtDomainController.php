@@ -323,6 +323,8 @@ class ExtDomainController extends Controller
                 'inc_article' => $input['inc_article'],
                 'valid' => 'unchecked',
             ]);
+
+            $input['user_id'] = $id;
         }
 
         if ($this->startsWith($input['domain'], 'https://')) {
@@ -509,6 +511,8 @@ class ExtDomainController extends Controller
                 'inc_article' => $input['inc_article'],
                 'valid' => 'unchecked',
             ]);
+
+            $input['user_id'] = $id;
         }
 
         if ($this->startsWith($input['domain'], 'https://')) {
@@ -661,7 +665,10 @@ class ExtDomainController extends Controller
             foreach( $request->id as $domain ){
                 $id = $domain['id'];
                 $extDomain = ExtDomain::findOrFail($id);
-                $extDomain->update(['status' => $request->status]);
+                $extDomain->update([
+                    'status' => $request->status,
+                    'user_id' => $request->seller,
+                ]);
             }
         }
         // dd($test);

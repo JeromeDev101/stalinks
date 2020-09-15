@@ -12,6 +12,10 @@ class ExtDomain extends Model
     protected $table = 'ext_domains';
     protected $guarded = [];
 
+    public function users() {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
     public function country()
     {
         return $this->belongsTo('App\Models\Country', 'country_id');

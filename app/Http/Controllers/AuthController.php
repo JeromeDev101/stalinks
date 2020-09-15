@@ -84,9 +84,9 @@ class AuthController extends Controller
             'security_work_mail',
             'user_type',
             'isAdmin',
-            'id_payment_type',
             'wallet_transaction',
-            'purchased'
+            'purchased',
+            'total_wallet'
         );
 
         unset($input['c_password']);

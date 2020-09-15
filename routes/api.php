@@ -75,6 +75,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('int-reports')->post('/int/reports', 'IntDomainController@reports');
     Route::name('baclink-reports')->post('/backlink/reports', 'BackLinkController@reports');
     Route::name('baclink-reports-price')->post('/backlink/reports-price', 'BackLinkController@reportsPrice');
+    Route::name('dashboard')->get('/dashboard', 'DashboardController@index');
 
     //Publisher URL list page
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');

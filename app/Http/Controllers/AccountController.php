@@ -33,13 +33,26 @@ class AccountController extends Controller
         $input['password'] = Hash::make($input['password']);
         $registration = Registration::create($input);
 
+        $role_id = 6; //default seller
+        if( $registration['type'] == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $registration['type'] == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $registration['type'] == 'Writer' ){
+            $role_id = 4;
+        }
+
         // duplicate the record in Users Table
         $data['username'] = $registration['username'];
         $data['name'] = $registration['name'];
         $data['email'] = $registration['email'];
         $data['phone'] = $registration['phone'];
         $data['avatar'] = '/images/noavatar.jpg';
-        $data['role_id'] = $registration['type'] == 'Seller' ? 6:5;
+        $data['role_id'] = $role_id;
         $data['type'] = 0;
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];
@@ -187,13 +200,26 @@ class AccountController extends Controller
         $input['verification_code'] = null;
         $input['password'] = Hash::make($input['password']);
 
+        $role_id = 6; //default seller
+        if( $registration['type'] == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $registration['type'] == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $registration['type'] == 'Writer' ){
+            $role_id = 4;
+        }
+
         // duplicate the record in Users Table
         $data['username'] = $registration['username'];
         $data['name'] = $registration['name'];
         $data['email'] = $registration['email'];
         $data['phone'] = $registration['phone'];
         $data['avatar'] = '/images/noavatar.jpg';
-        $data['role_id'] = $registration['type'] == 'Seller' ? 6:5;
+        $data['role_id'] = $role_id;
         $data['type'] = 0;
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];

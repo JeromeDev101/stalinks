@@ -10,9 +10,16 @@
                     <ul class="users-list avatar clearfix">
                         <li>
                             <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image">
-                            <span class="users-list-date"><strong>{{ user.name }}</strong></span>
+                        </li>
+                        <li>
+                            <label>Username</label>
+                            <h3>{{ user.username }}</h3>
+                        </li>
+                        <li>
+                            <button class="btn btn-block btn-default btn-sm">Upload photo</button>
                         </li>
                     </ul>
+                    
                 </div>
             </div>
         </div>
@@ -38,18 +45,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Username</b></td>
-                                    <td>
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
-                                            <input type="text" v-model="user.username" class="form-control" value="" required="required" placeholder="Enter Name">
-                                            <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td><b>Email</b></td>
                                     <td>
-                                        {{ user.email }}
+                                        <input type="text" class="form-control" v-model="user.email" :disabled="true">
                                     </td>
                                 </tr>
                                 <tr>
@@ -79,10 +77,6 @@
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1">
-                                    <td><b>Status</b></td>
-                                    <td>{{ user.user_type ? user.user_type.status: '' }}</td>
-                                </tr>
-                                <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Skype</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
@@ -91,41 +85,61 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr v-if="currentUser.isOurs == 0">
+                                    <td colspan="2">
+                                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="box-header"  v-if="currentUser.isOurs == 1">
+            </div>
+        </div>
+
+        <div class="col-sm-12" v-if="currentUser.isOurs == 1">
+            <div class="box box-primary table-user">
+                <div class="box-header"  >
                     <h3 class="box-title">Billing</h3>
                 </div>
-                <div class="box-body no-padding"  v-if="currentUser.isOurs == 1">
+
+                <div class="box-body no-padding" >
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
                                     <td><b>Paypal Account</b></td>
+                                    <td style="width: 50px;padding-top:20px;">
+                                        <input name="payment_default" v-bind:value="1" v-model="billing.payment_default" type="radio">
+                                    </td>
                                     <td>
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.paypal_account}" class="form-group">
-                                            <input type="text" v-model="user.user_type.paypal_account" class="form-control" value="" required="required" placeholder="Enter Paypal Account">
-                                            <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                        <div class="form-group">
+                                            <input type="text" v-model="billing.paypal_account" class="form-control" value="" required="required" placeholder="Enter Paypal Account">
+                                            <!-- <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span> -->
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>Skrill Account</b></td>
+                                    <td style="width: 50px;padding-top:20px;">
+                                        <input name="payment_default" v-bind:value="2" v-model="billing.payment_default" type="radio">
+                                    </td>
                                     <td>
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.skrill_account}" class="form-group">
-                                            <input type="text" v-model="user.user_type.skrill_account" class="form-control" value="" required="required" placeholder="Enter Skrill Account">
-                                            <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
+                                        <div class="form-group">
+                                            <input type="text" v-model="billing.skrill_account" class="form-control" value="" required="required" placeholder="Enter Skrill Account">
+                                            <!-- <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span> -->
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>BTC Account</b></td>
+                                    <td style="width: 50px;padding-top:20px;">
+                                        <input name="payment_default" v-bind:value="3" v-model="billing.payment_default" type="radio">
+                                    </td>
                                     <td>
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.btc_account}" class="form-group">
-                                            <input type="text" v-model="user.user_type.btc_account" class="form-control" value="" required="required" placeholder="Enter BTC Account">
-                                            <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
+                                        <div class="form-group">
+                                            <input type="text" v-model="billing.btc_account" class="form-control" value="" required="required" placeholder="Enter BTC Account">
+                                            <!-- <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -134,146 +148,11 @@
                     </div>
                 </div>
 
-                    <div class="col-lg-8">
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
-                    </div>
-
-
-            </div>
-        </div>
-
-        <div class="col-lg-8">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Total External Domain: {{ totalExt.total}}</h3>
+                <div class="col-lg-8">
+                    <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                 </div>
 
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Language</th>
-                                            <th>New</th>
-                                            <th>Crawl Failed</th>
-                                            <th>Contact Null</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr role="row" class="odd" v-for="(ext, index) in totalExt.data" :key="index">
-                                            <td>{{ ext.country.name }}</td>
-                                            <td>{{ ext.New }}</td>
-                                            <td>{{ ext.CrawlFailed }}</td>
-                                            <td>{{ ext.ContactsNull }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-4">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Total Publisher List: {{ summaryPublish.total }}</h3>
-                </div>
-
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Language</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(int, index) in summaryPublish.data" :key="index" role="row" class="odd">
-                                            <td>{{ int.country.name }}</td>
-                                            <td>{{ int.total }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-8">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Total Backlink: {{ totalBackLink.total}} </h3>
-                </div>
-
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Language</th>
-                                            <th>Processing</th>
-                                            <th>Live</th>
-                                            <th>Content Writing</th>
-                                            <th>Content sent</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(backlink, index) in totalBackLink.data" :key="index" role="row" class="odd">
-                                            <td>{{ backlink.country.name}}</td>
-                                            <td>{{ backlink['Processing'] }}</td>
-                                            <td>{{ backlink['Live'] }}</td>
-                                            <td>{{ backlink['Content Writing'] }}</td>
-                                            <td>{{ backlink['Content sent'] }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">In purchase: {{ price.total }}</h3> <br>
-                    <h3 class="box-title">Paid: {{ price.total }}</h3>
-                </div>
-
-                <div class="box-body">
-                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th>Language</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(price, index) in totalPrice.data" :key="index" role="row" class="odd">
-                                            <td>{{ price.country.name }}</td>
-                                            <td>{{ convertPrice(price.total) }}$</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -327,6 +206,12 @@ export default {
             },
             isBuyer: false,
             isSeller: false,
+            billing: {
+                btc_account: '',
+                paypal_account: '',
+                skrill_account: '',
+                payment_default: '',
+            },
         };
     },
 
@@ -356,17 +241,27 @@ export default {
             id: userId,
         });
 
-        this.filterExtDomain();
-        this.filterIntDomain();
-        this.filterBacklink();
-        this.filterPrice();
+        // this.filterExtDomain();
+        // this.filterIntDomain();
+        // this.filterBacklink();
+        // this.filterPrice();
         this.checkAccountType();
         this.getPublisherSummaryCountry();
+        this.bindPayment();
 
         this.$root.$refs.AppHeader.liveGetWallet()
     },
 
     methods: {
+        bindPayment() {
+            let that = this.user.user_type
+            if( this.currentUser.isOurs == 1 ) {
+                this.billing.paypal_account = that.paypal_account;
+                this.billing.skrill_account = that.skrill_account;
+                this.billing.btc_account = that.btc_account;
+                this.billing.payment_default = this.user.id_payment_type;
+            }
+        },
 
         async getPublisherSummaryCountry() {
             let that = this;
@@ -382,6 +277,13 @@ export default {
         async submitUpdate() {
             this.isPopupLoading = true;
 
+            if( this.currentUser.isOurs == 1 ) {
+                this.user.user_type.paypal_account = this.billing.paypal_account;
+                this.user.user_type.skrill_account = this.billing.skrill_account;
+                this.user.user_type.btc_account = this.billing.btc_account;
+                this.user.id_payment_type = this.billing.payment_default;
+            }
+            
             await this.$store.dispatch('actionUpdateUser', this.user);
             this.isPopupLoading = false;
 
@@ -401,24 +303,24 @@ export default {
             }
         },
 
-        async filterExtDomain() {
-            let that = this;
-            that.extDomain.country_id_of_user = [],
-            that.extDomain.status_of_user = [],
-            this.user.countries_accessable.forEach(function(country) {
-                that.extDomain.country_id_of_user.push(country.id)
-                if (country.external_domains) {
-                    country.external_domains.forEach(function(ext) {
-                        that.extDomain.status_of_user.push(ext.status)
-                    })
-                }
-            });
-            that.extDomain.employee_id = that.user.id;
-            await this.$store.dispatch('filterExtDomain', {
-                vue: this,
-                params: this.extDomain,
-            });
-        },
+        // async filterExtDomain() {
+        //     let that = this;
+        //     that.extDomain.country_id_of_user = [],
+        //     that.extDomain.status_of_user = [],
+        //     this.user.countries_accessable.forEach(function(country) {
+        //         that.extDomain.country_id_of_user.push(country.id)
+        //         if (country.external_domains) {
+        //             country.external_domains.forEach(function(ext) {
+        //                 that.extDomain.status_of_user.push(ext.status)
+        //             })
+        //         }
+        //     });
+        //     that.extDomain.employee_id = that.user.id;
+        //     await this.$store.dispatch('filterExtDomain', {
+        //         vue: this,
+        //         params: this.extDomain,
+        //     });
+        // },
 
         checkAccountType() {
             let that = this.currentUser
@@ -429,49 +331,49 @@ export default {
             }
         },
 
-        async filterIntDomain() {
-            let that = this;
-            that.intDomain.country_id_of_user = [],
+        // async filterIntDomain() {
+        //     let that = this;
+        //     that.intDomain.country_id_of_user = [],
 
-            this.user.internal_domains_accessable.forEach(function(internal_domain) {
-                that.intDomain.country_id_of_user.push(internal_domain.country.id)
-            });
-            that.intDomain.employee_id = that.user.id;
-            await this.$store.dispatch('filterIntDomain', {
-                vue: this,
-                params: this.intDomain,
-            });
-        },
+        //     this.user.internal_domains_accessable.forEach(function(internal_domain) {
+        //         that.intDomain.country_id_of_user.push(internal_domain.country.id)
+        //     });
+        //     that.intDomain.employee_id = that.user.id;
+        //     await this.$store.dispatch('filterIntDomain', {
+        //         vue: this,
+        //         params: this.intDomain,
+        //     });
+        // },
 
-        async filterBacklink() {
-            let that = this;
-            that.backLink.country_id_of_user = [],
-            that.backLink.status_of_backlink = [],
+        // async filterBacklink() {
+        //     let that = this;
+        //     that.backLink.country_id_of_user = [],
+        //     that.backLink.status_of_backlink = [],
 
-            this.user.backlinks.forEach(function(backlink) {
-                that.backLink.status_of_backlink.push(backlink.status)
-                that.backLink.country_id_of_user.push(backlink.int_domain.country.id)
-            });
-            that.backLink.employee_id = that.user.id;
-            await this.$store.dispatch('filterBackLink', {
-                vue: this,
-                params: this.backLink,
-            });
-        },
+        //     this.user.backlinks.forEach(function(backlink) {
+        //         that.backLink.status_of_backlink.push(backlink.status)
+        //         that.backLink.country_id_of_user.push(backlink.int_domain.country.id)
+        //     });
+        //     that.backLink.employee_id = that.user.id;
+        //     await this.$store.dispatch('filterBackLink', {
+        //         vue: this,
+        //         params: this.backLink,
+        //     });
+        // },
 
-        async filterPrice() {
-            let that = this;
-            that.price.country_id_of_user = [],
+        // async filterPrice() {
+        //     let that = this;
+        //     that.price.country_id_of_user = [],
 
-            this.user.backlinks.forEach(function(backlink) {
-                that.price.country_id_of_user.push(backlink.int_domain.country.id)
-            });
-            that.price.employee_id = that.user.id;
-            await this.$store.dispatch('filterPrice', {
-                vue: this,
-                params: this.price,
-            });
-        },
+        //     this.user.backlinks.forEach(function(backlink) {
+        //         that.price.country_id_of_user.push(backlink.int_domain.country.id)
+        //     });
+        //     that.price.employee_id = that.user.id;
+        //     await this.$store.dispatch('filterPrice', {
+        //         vue: this,
+        //         params: this.price,
+        //     });
+        // },
 
         checkArray(array) {
             return Hepler.arrayNotEmpty(array);
