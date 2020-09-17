@@ -27,4 +27,10 @@ export default class SellerBillingService {
             .catch(error => error);
     }
 
+    static getSellerInfo(params) {
+        return axios.post('api/get-seller-info', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

@@ -69,7 +69,7 @@
                                         Selected Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" @click="clearMessageform()" href="#" data-toggle="modal" data-target="#modal-payment">Pay</a>
+                                        <a class="dropdown-item" @click="doUpdatePayment" href="#" >Pay</a>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 <th>#</th>
                                 <th>Select</th>
                                 <th>ID Backlink</th>
-                                <th>User Seller</th>
+                                <th>Seller</th>
                                 <th>Seller Price</th>
                                 <th>Date Completed</th>
                                 <th>Status Billing</th>
@@ -99,12 +99,12 @@
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default">
-                                            <input type="checkbox" :disabled="seller.proof_doc_path != null" v-on:change="checkSelected" :id="seller.id" :value="seller.id + '-' + seller.publisher.user.id + '-' + seller.publisher.price" v-model="checkIds">
+                                            <input type="checkbox" :disabled="seller.proof_doc_path != null" v-on:change="checkSelected" :id="seller.id" :value="seller" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
                                 <td>{{ seller.id }}</td>
-                                <td>{{ seller.publisher.user.name }}</td>
+                                <td>{{ seller.publisher.user.username == null ? seller.publisher.user.name : seller.publisher.user.username }}</td>
                                 <td>$ {{ seller.publisher.price }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
@@ -159,6 +159,25 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-md-12 mb-4">
+                                <table class="table">
+                                    <tr>
+                                        <td style="border-top: 0px;">Seller: <b>{{ info.seller }}</b></td>
+                                        <td style="border-top: 0px;">Amount to Pay: <b>$ {{ info.amount }}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            Payment Type: <b :class="{ 'text-danger' : info.payment_type == 'Not yet setup' }">{{ info.payment_type }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            Account: <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">{{ info.account }}</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
@@ -169,7 +188,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <!-- <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
                                     <label for="">Payment Type</label>
                                     <select name="" class="form-control" v-model="updateModel.payment_type">
@@ -179,13 +198,13 @@
                                     </select>
                                     <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                 </div>
-                            </div>
+                            </div> -->
                                 
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="doPay" class="btn btn-primary">Pay</button>
+                        <button type="button" @click="doPay" class="btn btn-primary" :disabled="isDisabledPay">Pay</button>
                     </div>
                 </div>
             </div>
@@ -215,6 +234,14 @@
                 },
                 searchLoading: false,
                 totalAmount: 0,
+                info: {
+                    seller: '',
+                    payment_type: '',
+                    payment_type_id: '',
+                    account: '',
+                    amount: '',
+                },
+                isDisabledPay: true,
             }
         },
 
@@ -230,6 +257,7 @@
                 messageForms: state => state.storeBillingSeller.messageForms,
                 listPayment: state => state.storeBillingSeller.listPayment,
                 listSeller: state => state.storeBillingSeller.listSeller,
+                sellerInfo: state => state.storeBillingSeller.sellerInfo,
             }),
         },
 
@@ -253,6 +281,57 @@
                 });
 
                 this.getTotalAmount()
+            },
+
+            async doUpdatePayment() {
+                await this.$store.dispatch('actionGetSellerInfo', { ids: this.checkIds });
+
+                if(this.sellerInfo.success){
+                    let data = this.sellerInfo.data[0]
+                    let account = 'Not yet setup';
+                    let total = 0;
+                    $("#modal-payment").modal('show');
+
+                    this.info.seller = data.username;
+                    this.info.payment_type = data.payment_type == null ? 'Not yet setup':data.payment_type.type;
+                    this.info.payment_type_id = data.payment_type == null ? null:data.payment_type.id;
+
+                    if( data.payment_type != null && data.registration != null ){
+                        this.isDisabledPay = false;
+
+                        switch ( data.payment_type.id ) {
+                        case 1:
+                            account = data.registration.paypal_account == null ? 'Not yet setup':data.registration.paypal_account;
+                            break;
+                        case 2:
+                            account = data.registration.skrill_account == null ? 'Not yet setup':data.registration.skrill_account;
+                            break;
+                        case 3:
+                            account = data.registration.btc_account  == null ? 'Not yet setup':data.registration.btc_account;
+                            break;
+                        default:
+                            account = "Not yet setup";
+                        }
+                    }
+
+                    for( var index in this.checkIds ){
+                        if( this.checkIds[index].publisher != null ){
+                            total += parseInt(this.checkIds[index].publisher.price);
+                        }
+                    }
+
+                    this.info.account = account;
+                    this.info.amount = total
+
+                }else{
+                    swal.fire(
+                        'Invalid',
+                        'Multiple Payment in different seller is invalid.',
+                        'error'
+                    )
+                }
+                    
+                this.clearMessageform();
             },
 
             doShow(src) {
@@ -333,7 +412,8 @@
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.proof.files[0]);
                 this.formData.append('payment_type', this.updateModel.payment_type);
-                this.formData.append('ids', ids );
+                this.formData.append('ids', JSON.stringify(ids) );
+                this.formData.append('payment_id', this.info.payment_type_id );
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionPay', this.formData)

@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Log', 'user_id');
     }
 
+    public function paymentType()
+    {
+        return $this->belongsTo('App\Models\PaymentType', 'id_payment_type');
+    }
+
     public function internalDomains()
     {
         return $this->hasMany('App\Models\IntDomain', 'user_id');

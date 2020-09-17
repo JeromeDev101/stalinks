@@ -5,12 +5,14 @@ const SET_ERROR = 'SELLER_BILLING_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const LIST_PAYMENT = 'LIST_PAYMENT';
 const LIST_SELLER = 'LIST_SELLER_ARTICLE_FILTER';
+const SELLER_INFO = 'SELLER_INFO';
 
 const state = {
     listSellerBilling: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listPayment: { data: [] },
     listSeller: { data: [] },
+    sellerInfo: {},
 }
 
 const mutations = {
@@ -32,6 +34,10 @@ const mutations = {
 
     [LIST_SELLER] (state, list) {
         state.listSeller = list.listSeller;
+    },
+
+    [SELLER_INFO] (state, data) {
+        state.sellerInfo = data.sellerInfo;
     },
 }
 
@@ -68,6 +74,20 @@ const actions = {
         try {
             let response = await SellerBillingService.getListSeller(params)
             commit(LIST_SELLER , { listSeller: response.data });
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetSellerInfo({ commit }, params){
+        try {
+            let response = await SellerBillingService.getSellerInfo(params)
+            commit(SELLER_INFO , { sellerInfo: response.data });
         }catch(e) {
             let errors = e.response.data.errors;
             if (errors) {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
 use App\Models\TotalWallet;
+use App\Models\User;
 
 class SellerBillingController extends Controller
 {
@@ -22,9 +23,9 @@ class SellerBillingController extends Controller
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->with(['publisher' => function($q){
-                        $q->with('user:id,name');
+                        $q->with('user:id,name,username');
                     }])
-                    ->with('user:id,name')
+                    ->with('user:id,name,username')
                     ->where('status', 'Live');
 
         if( isset($filter['status_billing']) && !empty($filter['status_billing']) ){
@@ -51,20 +52,26 @@ class SellerBillingController extends Controller
 
     public function payBilling(Request $request) {
         $request->validate([
-            'payment_type' => 'required',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $ids = explode("," , $request->ids);
+        $ids = json_decode($request->ids);
+
+        // dd( intVal($request->payment_id) );
+
+        // $test = [];
+        // foreach($ids as $data) {
+        //     $test[] = $data;
+        // }
 
         $image = $request->file;
         $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/billing'), $new_name);
         $backlink_ids = [];
-        foreach( $ids as $id ){
-            $backlink_id = explode('-',$id)[0];
-            $user_id_seller = explode('-',$id)[1];
-            $seller_price = explode('-',$id)[2];
+        foreach( $ids as $data ){
+            $backlink_id = $data->id;
+            $user_id_seller = $data->publisher->user->id;
+            $seller_price = $data->publisher->price;
             $backlink_ids[] = $backlink_id;
 
             $backlink = Backlink::find($backlink_id);
@@ -74,7 +81,7 @@ class SellerBillingController extends Controller
                 'id_backlink' => $backlink_id,
                 'id_user' => $user_id_seller,
                 'seller_price' => $seller_price,
-                'id_payment_via' => $request->payment_type,
+                'id_payment_via' => intVal($request->payment_id),
                 'date_billing' => date('Y-m-d'),
                 'proof_doc_path' => '/images/billing/'.$new_name,
                 'admin_confirmation' => 1
@@ -104,5 +111,35 @@ class SellerBillingController extends Controller
                             ->where('user_id', $buyer_id)
                             ->get();
         return $backlink[0]->total_amount;
+    }
+
+    public function getSellerInfo(Request $request) {
+        $seller_id = [];
+        $result = [
+            'data' => [],
+            'success' => false
+        ];
+        foreach($request->ids as $data){
+            if( isset($data['publisher']) && isset($data['publisher']['user'])){
+                $seller_id[] = $data['publisher']['user']['id'];
+            }
+        }
+
+        $check = array_unique($seller_id);
+
+        if( count($check) > 1){
+            return $result;
+        }
+
+        if( isset($check[0]) ){
+            $seller_info = User::where('id', $check[0])->with(['paymentType', 'registration'])->get();
+
+            $result = [
+                'data' => $seller_info,
+                'success' => true
+            ];
+        }
+
+        return $result;
     }
 }
