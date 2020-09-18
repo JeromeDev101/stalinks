@@ -4,11 +4,13 @@ const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const SET_ERROR = 'WRITER_BILLING_SET_ERROR';
 const LIST_ARTICLE = 'LIST_ARTICLE';
 const LIST_PAYMENT = 'LIST_PAYMENT_ARTICLE';
+const WRITER_INFO = 'WRITER_INFO';
 
 const state = {
     messageForms: { action: '', message: '', errors: {} },
     listArticle: { data: [] },
     listPayment: { data: [] },
+    writerInfo: {},
 }
 
 const mutations = {
@@ -27,9 +29,27 @@ const mutations = {
     [LIST_PAYMENT] (state, list) {
         state.listPayment = list.listPayment;
     },
+
+    [WRITER_INFO] (state, data) {
+        state.writerInfo = data.writerInfo;
+    },
 }
 
 const actions = {
+
+    async actionGetWriterInfo({ commit }, params){
+        try {
+            let response = await WriterBillingService.getWriterInfo(params)
+            commit(WRITER_INFO , { writerInfo: response.data });
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
 
     async actionGetListArticle({ commit }, params) {
         try {
@@ -45,7 +65,7 @@ const actions = {
         }
     },
 
-    async actionPay({ commit }, params) {
+    async actionPayWriter({ commit }, params) {
         try {
             let response = await WriterBillingService.payBilling(params);
 

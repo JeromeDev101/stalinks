@@ -173,7 +173,7 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                            <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>
                                     <select name="" class="form-control" v-model="contentModel.status">

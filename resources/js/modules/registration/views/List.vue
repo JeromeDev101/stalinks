@@ -216,29 +216,53 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Paypal Account</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.paypal_account">
-                                    <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+                        </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">BTC Account</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.btc_account">
-                                    <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+                        <hr/>
+                        <h4 class="text-primary">Payment Information</h4>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Skril Account</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.skrill_account">
-                                    <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">Paypal Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.paypal_account">
+                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">BTC Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.btc_account">
+                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">Skril Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.skrill_account">
+                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr/>
+
+                        <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -380,30 +404,55 @@
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+                        </div>
 
-                           <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Paypal Account</label>
-                                    <input type="text" class="form-control" v-model="accountModel.paypal_account">
-                                    <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">BTC Account</label>
-                                    <input type="text" class="form-control" v-model="accountModel.btc_account">
-                                    <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Skril Account</label>
-                                    <input type="text" class="form-control" v-model="accountModel.skrill_account">
-                                    <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+                        <hr/>
+                        <h4 class="text-primary">Payment Information</h4>
+
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">Paypal Account</label>
+                                        <input type="text" class="form-control" v-model="accountModel.paypal_account">
+                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountModel.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">BTC Account</label>
+                                        <input type="text" class="form-control" v-model="accountModel.btc_account">
+                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountModel.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="">Skril Account</label>
+                                        <input type="text" class="form-control" v-model="accountModel.skrill_account">
+                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountModel.id_payment_type">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr/>
+
+                        <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -546,13 +595,6 @@
 
                 if (this.messageForms.action === 'updated_account') {
                     this.getAccountList();
-
-                    // for (var index in this.listAccount.data) {
-                    //     if (this.listAccount.data[index].id === this.accountUpdate.id) {
-                    //         this.listAccount.data[index] = this.accountUpdate;
-                    //         break;
-                    //     }
-                    // }
                 }
             },
 

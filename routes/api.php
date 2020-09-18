@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-writer-billing')->get('writer-billing', 'WriterBillingController@getList');
     Route::name('pay-writer-billing')->post('writer-billing', 'WriterBillingController@payBilling');
     Route::name('get-seller-info')->post('get-seller-info', 'SellerBillingController@getSellerInfo');
+    Route::name('get-writer-info')->post('get-writer-info', 'WriterBillingController@getWriterInfo');
 
     //Wallet Transaction
     Route::name('get-wallet-transaction')->get('wallet-transaction', 'WalletTransactionController@getList');

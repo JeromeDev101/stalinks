@@ -131,6 +131,7 @@ class AuthController extends Controller
                 'paypal_account' => $request->user_type['paypal_account'],
                 'btc_account' => $request->user_type['btc_account'],
                 'skrill_account' => $request->user_type['skrill_account'],
+                'id_payment_type' => $request->id_payment_type,
             ];
 
             $registered->update($dataRegistered);

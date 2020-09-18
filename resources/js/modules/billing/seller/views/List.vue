@@ -178,7 +178,6 @@
                                 </table>
                             </div>
 
-
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
@@ -187,18 +186,6 @@
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-
-                            <!-- <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
-                                    <label for="">Payment Type</label>
-                                    <select name="" class="form-control" v-model="updateModel.payment_type">
-                                        <option v-for="option in listPayment.data" v-bind:value="option.id">
-                                            {{ option.type }}
-                                        </option>
-                                    </select>
-                                    <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div> -->
                                 
                         </div>
                     </div>
@@ -276,6 +263,8 @@
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -318,6 +307,10 @@
                         if( this.checkIds[index].publisher != null ){
                             total += parseInt(this.checkIds[index].publisher.price);
                         }
+                    }
+
+                    if( account == 'Not yet setup' ){
+                        this.isDisabledPay = true;
                     }
 
                     this.info.account = account;

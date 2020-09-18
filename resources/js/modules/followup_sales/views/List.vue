@@ -243,15 +243,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <div>
-                                        <label style="color: #333">URL From</label>
-                                        <input type="text" class="form-control" v-model="updateModel.url_from" required="required" >
-                                    </div>
-                                </div>
-                            </div> -->
-
                             <div class="col-sm-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>

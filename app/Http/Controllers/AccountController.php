@@ -56,6 +56,7 @@ class AccountController extends Controller
         $data['type'] = 0;
         $data['isOurs'] = 1;
         $data['password'] = $input['password'];
+        $data['id_payment_type'] = $registration['id_payment_type'];
         User::create($data);
         
         return response()->json(['success' => true, 'data' => $registration], 200);
@@ -150,6 +151,10 @@ class AccountController extends Controller
 
         if (isset($input['name']) && $input['name'] != '') {
             $user->update(['name' => $input['name']]);
+        }
+
+        if (isset($input['id_payment_type']) && $input['id_payment_type'] != '') {
+            $user->update(['id_payment_type' => $input['id_payment_type']]);
         }
 
         // ---------------------------------------------------

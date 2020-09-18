@@ -56,14 +56,7 @@ class SellerBillingController extends Controller
         ]);
 
         $ids = json_decode($request->ids);
-
-        // dd( intVal($request->payment_id) );
-
-        // $test = [];
-        // foreach($ids as $data) {
-        //     $test[] = $data;
-        // }
-
+        
         $image = $request->file;
         $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/billing'), $new_name);

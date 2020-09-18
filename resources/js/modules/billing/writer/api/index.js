@@ -19,4 +19,10 @@ export default class WriterBillingService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static getWriterInfo(params) {
+        return axios.post('api/get-writer-info', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 }

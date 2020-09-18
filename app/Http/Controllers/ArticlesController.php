@@ -130,7 +130,7 @@ class ArticlesController extends Controller
     }
 
     public function getWriterList() {
-        $writers = User::select('id', 'name')->where('role_id', 4)->where('isOUrs', 0)->get();
+        $writers = User::select('id', 'name', 'username')->where('role_id', 4)->where('isOurs', 1)->orderBy('username', 'asc')->get();
 
         return [
             'total' => $writers->count(),
