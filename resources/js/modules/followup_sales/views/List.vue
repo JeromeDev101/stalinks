@@ -51,12 +51,47 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <select name="" class="form-control" v-model="filterModel.country_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Article</label>
+                                <select name="" class="form-control" v-model="filterModel.article">
+                                    <option value="">All</option>
+                                    <option value="With">With</option>
+                                    <option value="Without">Without</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">In charge</label>
+                                <select name="" class="form-control" v-model="filterModel.in_charge">
+                                    <option value="">All</option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -85,6 +120,10 @@
                 </div>
 
                 <div class="box-body no-padding">
+                    <span v-if="listSales.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
+                    </span>
+
                     <table id="tbl-followupsales" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -92,6 +131,7 @@
                                 <th>Url Pub</th>
                                 <th>Blink</th>
                                 <th>Artc</th>
+                                <th>Country</th>
                                 <th>In-charge</th>
                                 <th v-if="user.isOurs != 1">Seller</th>
                                 <th v-if="user.isOurs != 1">Buyer</th>
@@ -111,7 +151,8 @@
                                 <td>{{ index + 1}}</td>
                                 <td>{{ sales.publisher.id }}</td>
                                 <td>{{ sales.id }}</td>
-                                <td>{{ sales.article == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article.id)" v-if="sales.article != null" title="Go to Article">{{ sales.article.id }}</a></td>
+                                <td>{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
+                                <td>{{ sales.publisher.country.name == null ? 'N/A' : sales.publisher.country.name }}</td>
                                 <td>{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
                                 <td v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
@@ -139,12 +180,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-
-                    <div style="height:50px;"></div>
-                    <span v-if="listSales.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
-                    </span>
 
                 </div>
 
@@ -351,10 +386,14 @@
                     seller: this.$route.query.seller || '',
                     buyer: this.$route.query.buyer || '',
                     paginate: this.$route.query.paginate || '25',
+                    article: this.$route.query.article || '',
+                    in_charge: this.$route.query.in_charge || '',
+                    country_id: this.$route.query.country_id || '',
                 },
                 searchLoading: false,
                 isLive: false,
                 totalAmount: 0,
+                isSearching: false,
             }
         },
 
@@ -362,6 +401,16 @@
             this.getListSales();
             this.getListSeller();
             this.getListBuyer();
+
+            let countries = this.listCountries.data;
+            if( countries.length === 0 ){
+                this.getListCountries();
+            }
+
+            let in_charge = this.listIncharge.data;
+            if( in_charge.length === 0 ){
+                this.getTeamInCharge();
+            }
         },
 
         computed: {
@@ -371,15 +420,27 @@
                 listSeller: state => state.storeFollowupSales.listSeller,
                 messageForms: state => state.storeFollowupSales.messageForms,
                 user: state => state.storeAuth.currentUser,
+                listCountries: state => state.storePublisher.listCountries,
+                listIncharge: state => state.storeAccount.listIncharge,
             })
         },
 
         methods: {
+
+            async getTeamInCharge(){
+                await this.$store.dispatch('actionGetTeamInCharge');
+            },
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
             async getListSales(params){
                 
                 $('#tbl-followupsales').DataTable().destroy();
 
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetListSales', {
                     params: {
                         search: this.filterModel.search,
@@ -387,6 +448,9 @@
                         seller: this.filterModel.seller,
                         buyer: this.filterModel.buyer,
                         paginate: this.filterModel.paginate,
+                        article: this.filterModel.article,
+                        in_charge: this.filterModel.in_charge,
+                        country_id: this.filterModel.country_id,
                     }
                 });
 
@@ -399,12 +463,13 @@
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8, width: "200px" },
+                        { orderable: true, targets: 8 },
                         { orderable: true, targets: 9, width: "200px" },
-                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 10, width: "200px" },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -416,12 +481,13 @@
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6, width: "200px" },
+                        { orderable: true, targets: 6 },
                         { orderable: true, targets: 7, width: "200px" },
-                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 8, width: "200px"},
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -434,6 +500,7 @@
                 });
 
                 this.searchLoading = false;
+                this.isSearching = false;
 
                 this.getTotalAmount();
             },
@@ -498,6 +565,9 @@
                         seller: this.filterModel.seller,
                         buyer: this.filterModel.buyer,
                         paginate: this.filterModel.paginate,
+                        article: this.filterModel.article,
+                        country_id: this.filterModel.country_id,
+                        in_charge: this.filterModel.in_charge,
                     }
                 });
             },
@@ -511,6 +581,9 @@
                     seller: '',
                     buyer: '',
                     paginate: '25',
+                    article: '',
+                    in_charge: '',
+                    country_id: '',
                 }
 
                 this.getListSales({

@@ -53,8 +53,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
                 </div>
@@ -92,6 +92,11 @@
                 </div>
 
                 <div class="box-body no-padding">
+
+                    <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text">
+                        <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.</b>
+                    </span>
+
                     <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -140,11 +145,6 @@
                 </div>
 
                 <!-- <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination> -->
-                <div style="height:50px;"></div>
-                <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text float-right">
-                    <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.</b>
-                </span>
-
             </div>
         </div>
 
@@ -344,6 +344,7 @@
                 searchLoading: false,
                 withArticle: true,
                 totalAmount: 0,
+                isSearching: false,
             }
         },
         async created() {
@@ -400,12 +401,14 @@
                 })
 
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetBackLink', {
                     vue: this,
                     page: this.page,
                     params: this.fillter,
                 });
                 this.searchLoading = false;
+                this.isSearching = false;
 
                 $("#tbl_backlink").DataTable({
                     paging: false,

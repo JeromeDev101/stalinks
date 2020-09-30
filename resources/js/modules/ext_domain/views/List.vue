@@ -168,6 +168,11 @@
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
 
                 <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }">
+
+                    <span v-if="listExt.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+                    </span>
+
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
                         <thead>
                         <tr class="label-primary">
@@ -241,11 +246,6 @@
                     <div class="overlay" v-if="isLoadingTable">
                         <i class="fa fa-refresh fa-spin"></i>
                     </div>
-
-                    <div style="height:50px;"></div>
-                    <span v-if="listExt.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
-                    </span>
 
                 </div>
 

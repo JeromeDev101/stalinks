@@ -71,8 +71,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -115,6 +115,11 @@
                 </div>
 
                 <div class="box-body no-padding relative">
+
+                    <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
+                    </span>
+
                     <table id="tbl_buy_backlink" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -176,11 +181,6 @@
                     </table>
 
                     <!-- <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination> -->
-                    <div style="height:50px;"></div>
-                    <span v-if="listBuy.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
-                    </span>
-
                 </div>
             </div>
 
@@ -350,6 +350,7 @@
                 isDisabled: true,
                 allSelected: false,
                 buyData: [],
+                isSearching: false,
             }
         },
 
@@ -389,6 +390,7 @@
                 $('#tbl_buy_backlink').DataTable().destroy();
 
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
                         search: this.filterModel.search,
@@ -449,6 +451,7 @@
 
 
                 this.searchLoading = false;
+                this.isSearching = false;
             },
 
             async getListSeller(params) {

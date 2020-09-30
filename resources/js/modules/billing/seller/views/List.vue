@@ -45,8 +45,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -229,6 +229,7 @@
                     amount: '',
                 },
                 isDisabledPay: true,
+                isSearching: false,
             }
         },
 
@@ -251,8 +252,10 @@
         methods: {
             async getSellerBilling(params){
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetSellerBilling', params);
                 this.searchLoading = false;
+                this.isSearching = false;
 
                 $('#tbl_seller_billing').DataTable({
                     paging: false,

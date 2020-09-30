@@ -91,7 +91,7 @@
                                 <td>{{ article.id }}</td>
                                 <td v-show="user.isOurs == 0">{{ article.backlinks == null ? '':article.backlinks.publisher.user.name }}</td>
                                 <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.country.name }}</td>
+                                <td>{{ article.backlinks == null ? article.country.name : article.backlinks.publisher.country.name }}</td>
                                 <td>{{ article.date_start == null ? '-':article.date_start }}</td>
                                 <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
                                 <td>{{ article.status_writer }}</td>

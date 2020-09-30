@@ -34,8 +34,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -222,6 +222,7 @@
                 },
                 isDisabledPay: true,
                 proof_doc: '',
+                isSearching: false,
             }
         },
 
@@ -299,8 +300,10 @@
                $("#tbl_writer_billing").DataTable().destroy();
                
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetListArticle', params);
                 this.searchLoading = false;
+                this.isSearching = false;
 
                 $("#tbl_writer_billing").DataTable({
                     paging: false,

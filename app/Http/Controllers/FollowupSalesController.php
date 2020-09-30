@@ -14,15 +14,17 @@ class FollowupSalesController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
         $user = Auth::user();
-        $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url','B.username as in_charge')
+        $article = $filter['article'];
+        $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url','B.username as in_charge', 'article.id as article_id')
                         ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')
+                        ->leftJoin('countries', 'publisher.language_id', '=','countries.id')
                         ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
                         ->leftJoin('registration', 'A.email', '=', 'registration.email')
                         ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+                        ->leftJoin('article', 'backlinks.id' , '=', 'article.id_backlink')
                         ->with(['publisher' => function($query) {
-                            $query->with('user:id,name,username');
+                            $query->with('user:id,name,username')->with('country:id,name');
                         }])
-                        ->with('article')
                         ->with('user:id,name,username')
                         ->orderBy('created_at', 'desc');
 
@@ -33,11 +35,28 @@ class FollowupSalesController extends Controller
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
+        if( isset($filter['article']) && !empty($filter['article']) ){
+            if( $filter['article'] == 'With'){
+                $list->whereNotNull('article.id_backlink');
+            }
+            if( $filter['article'] == 'Without'){
+                $list->whereNull('article.id_backlink');
+            }
+        }
+
+        if( isset($filter['country_id']) && !empty($filter['country_id']) ){
+            $list->where('countries.id', $filter['country_id']);
+        }
+
+        if( isset($filter['in_charge']) && !empty($filter['in_charge']) ){
+            $list->where('B.id', $filter['in_charge']);
+        }
+
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);
         }
 
-        if( isset($filter['buyer']) && !empty($filter['buyer']) ){
+        if(isset($filter['buyer']) && !empty($filter['buyer']) ){
             $list->where('backlinks.user_id', $filter['buyer']);
         }
 

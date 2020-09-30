@@ -81,8 +81,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch" >Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -156,6 +156,10 @@
                 </div>
 
                 <div class="box-body no-padding">
+                    <span v-if="listPublish.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
+                    </span>
+
                     <table id="tbl-publisher" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -217,10 +221,6 @@
                     </table>
 
                     <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination> -->
-                    <div style="height:50px;"></div>
-                    <span v-if="listPublish.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
-                    </span>
 
                 </div>
             </div>
@@ -396,14 +396,19 @@
                 showLang: false,
                 isSeller: false,
                 allSelected: false,
+                isSearching: false,
             }
         },
 
         async created() {
             this.getPublisherList();
-            this.getListCountries();
             this.checkAccountType();
             this.getListSeller();
+
+            let countries = this.listCountries.data;
+            if( countries.length === 0 ){
+                this.getListCountries();
+            }
         },
 
         computed:{
@@ -423,6 +428,7 @@
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('getListPublisher', {
                     params: {
                         search: this.filterModel.search,
@@ -506,6 +512,7 @@
                 });
 
                 this.searchLoading = false;
+                this.isSearching = false;
             },
 
             async getListSeller(params) {

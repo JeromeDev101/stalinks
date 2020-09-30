@@ -35,7 +35,7 @@ class ArticlesController extends Controller
                         ->with('price')
                         ->with(['backlinks' => function($q){
                             $q->with(['publisher' => function($sub){
-                                $sub->with('user:id,name');
+                                $sub->with('user:id,name')->with('country:id,name');
                             }])
                             ->with('user:id,name');
                         }])
@@ -84,7 +84,7 @@ class ArticlesController extends Controller
                         ->with('country:id,name')
                         ->with(['backlinks' => function($q){
                             $q->with(['publisher' => function($sub){
-                                $sub->with('user:id,name');
+                                $sub->with('user:id,name')->with('country:id,name');
                             }])
                             ->with('user:id,name');
                         }])

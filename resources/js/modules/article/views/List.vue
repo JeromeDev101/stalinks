@@ -67,8 +67,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -89,6 +89,10 @@
                 </div>
 
                 <div class="box-body no-padding relative">
+                    <span v-if="listArticlesAdmin.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listArticlesAdmin.from }} to {{ listArticlesAdmin.to }} of {{ listArticlesAdmin.total }} entries.</b>
+                    </span>
+
                     <table id="tbl_article_admin" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -124,11 +128,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <div style="height:50px;"></div>
-                    <span v-if="listArticlesAdmin.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listArticlesAdmin.from }} to {{ listArticlesAdmin.to }} of {{ listArticlesAdmin.total }} entries.</b>
-                    </span>
 
                 </div>
             </div>
@@ -239,6 +238,7 @@
                 editModel:{
                     price: '',
                 },
+                isSearching: false,
             }
         },
 
@@ -261,9 +261,11 @@
             async getListArticles(params){
                 $('#tbl_article_admin').DataTable().destroy();
 
+                this.isSearching = true;
                 this.searchLoading = true;
                 await this.$store.dispatch('actionGetListArticleAdmin',params);
                 this.searchLoading = false;
+                this.isSearching = false;
 
                 $('#tbl_article_admin').DataTable({
                     paging: false,

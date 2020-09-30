@@ -85,6 +85,12 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr v-if="currentUser.isOurs == 1">
+                                    <td><b>New Password</b></td>
+                                    <td>
+                                        <input type="password" class="form-control" v-model="new_password">
+                                    </td>
+                                </tr>
                                 <tr v-if="currentUser.isOurs == 0">
                                     <td colspan="2">
                                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
@@ -212,6 +218,7 @@ export default {
                 skrill_account: '',
                 payment_default: '',
             },
+            new_password: '',
         };
     },
 
@@ -283,6 +290,8 @@ export default {
                 this.user.user_type.btc_account = this.billing.btc_account;
                 this.user.id_payment_type = this.billing.payment_default;
             }
+
+            this.user.new_password = this.new_password;
             
             await this.$store.dispatch('actionUpdateUser', this.user);
             this.isPopupLoading = false;

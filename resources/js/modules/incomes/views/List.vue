@@ -64,8 +64,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -95,6 +95,11 @@
                 </div>
 
                 <div class="box-body no-padding">
+
+                    <span v-if="listIncomes.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listIncomes.from }} to {{ listIncomes.to }} of {{ listIncomes.total }} entries.</b>
+                    </span>
+
                     <table  id="tbl-income" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
@@ -131,12 +136,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <div style="height:50px;"></div>
-                    <span v-if="listIncomes.total > 10" class="pagination-custom-footer-text float-right">
-                        <b>Showing {{ listIncomes.from }} to {{ listIncomes.to }} of {{ listIncomes.total }} entries.</b>
-                    </span>
-
                 </div>
 
             </div>
@@ -237,6 +236,7 @@
                 isSearching: false,
                 isSeller: true,
                 totalAmount: 0,
+                isSearchingLoading: false,
             }
         },
 
@@ -258,6 +258,7 @@
                 $('#tbl-income').DataTable().destroy();
 
                 this.isSearching = true;
+                this.isSearchingLoading = true;
                 await this.$store.dispatch('actionGetListIncomes', {
                     params: {
                         payment_status: this.filterModel.payment_status,
@@ -303,6 +304,7 @@
                 });
 
                 this.isSearching = false;
+                this.isSearchingLoading = false;
                 this.getTotalAmount()
             },
 
