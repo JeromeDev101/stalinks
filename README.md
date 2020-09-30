@@ -1,38 +1,15 @@
-## Installation
+Stalinks Setup in Local Development
 
-Install PHP dependencies via Composer.
-
-```bash
-composer install
-```
-
-> After running the command "`composer install`", the .env file is automatically copied from the .env.example file and the application key is also generated. You needn't to initialize them manually.
-
-Run docker in project
-
-```bash
-docker-compose up -d
-```
-
-Set these environment variables (see .env file).
-
-```txt
-DB_CONNECTION=mysql
-DB_HOST=rlink_mysql
-DB_PORT=3306
-DB_DATABASE=rlink
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-Bash to container docker
-
-```bash
-docker exec -it rlink_workspace bash
-```
-
-Migrate and run the default seeder.
-
-```bash
-php artisan migrate --seed
-```
+1. Clone the repository to your local
+2. Run 'npm install'
+3. Run 'composer install'
+4. Create a virtual hosting in your local (ex: http://stalinks.local).
+5. Import the dump DB in your local web server like XAMPP or Laragon etc.
+6. Extract the '.env' file and paste it to your project.
+7. Run 'npm run watch'
+8. Run 'php artisan passport:keys'
+9. Open your browser then type your vhost development (ex: http://stalinks.local).
+10. Login credential
+	username: jeselle.marketingcrossmedia@gmail.com
+	password: Jess@1234
+>>>>>>> origin
