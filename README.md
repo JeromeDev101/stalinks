@@ -12,4 +12,3 @@ Stalinks Setup in Local Development
 10. Login credential
 	username: jeselle.marketingcrossmedia@gmail.com
 	password: Jess@1234
->>>>>>> origin
