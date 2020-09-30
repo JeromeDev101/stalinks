@@ -142,14 +142,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input type="text" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
