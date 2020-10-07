@@ -86,13 +86,8 @@ class AuthController extends Controller
             'isAdmin',
             'wallet_transaction',
             'purchased',
-            'total_wallet',
-            'new_password'
+            'total_wallet'
         );
-
-        if( isset($request->new_password) && $request->new_password != "" ){
-            $input['password'] = $request->new_password;
-        }
 
         unset($input['c_password']);
         unset($input['role']);

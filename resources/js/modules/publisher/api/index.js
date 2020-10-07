@@ -26,6 +26,12 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static addUrl(params) {
+        return axios.post('/api/publisher', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static uploadCsv(params) {
         return axios.post('/api/publisher/upload-csv', params, {
             headers: {

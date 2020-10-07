@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Backlink;
 use App\Models\ExtDomain;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BuyerPurchased;
 
 class DashboardController extends Controller
 {
@@ -18,6 +19,7 @@ class DashboardController extends Controller
         $backlink_seller = $this->backlinkSeller();
         $backlink_buyer = $this->backlinkBuyer();
         $ext_domain = $this->extDomain();
+        $backlink_to_buy = $this->backlinkToBuy();
 
         $data = [
             'total_seller' => $total_seller,
@@ -26,6 +28,7 @@ class DashboardController extends Controller
             'backlink_seller' => $backlink_seller,
             'backlink_buyer' => $backlink_buyer,
             'ext_domain' => $ext_domain,
+            'backlink_to_buy' => $backlink_to_buy,
         ];
 
         return response()->json($data);
@@ -40,11 +43,16 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN publisher.valid = "invalid" THEN 1 ELSE 0 END) AS num_invalid'),
         ];
         $list = Publisher::select($columns)
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id');
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
                     
   
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
             $list = $list->where('users.id', Auth::user()->id);
+        }
+
+        if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 0 ){
+            $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
         return $list->groupBy('publisher.user_id', 'users.username')
@@ -62,10 +70,15 @@ class DashboardController extends Controller
 
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id');
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
             $list = $list->where('users.id', Auth::user()->id);
+        }
+
+        if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 0 ){
+            $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
         return $list->groupBy('publisher.user_id', 'users.username')
@@ -84,12 +97,15 @@ class DashboardController extends Controller
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->leftJoin('users', 'backlinks.user_id', '=', 'users.id')
-                    ->where('backlinks.status', 'Live')
-                    ->groupBy('backlinks.user_id', 'users.username')
+                    ->where('backlinks.status', 'Live');
+
+        if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
+            $list = $list->where('backlinks.user_id', Auth::user()->id);
+        }
+            
+        return $list->groupBy('backlinks.user_id', 'users.username')
                     ->orderBy('users.username', 'asc')
                     ->get();
-
-        return $list;
     }
 
     private function backlinkSeller() {
@@ -104,11 +120,15 @@ class DashboardController extends Controller
 
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id');
-
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
             $list = $list->where('users.id', Auth::user()->id);
+        }
+
+        if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 0 ){
+            $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
         return $list->groupBy('publisher.user_id', 'users.username')
@@ -128,12 +148,15 @@ class DashboardController extends Controller
 
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
-                    ->leftJoin('users', 'backlinks.user_id', '=', 'users.id')
-                    ->groupBy('backlinks.user_id', 'users.username')
+                    ->leftJoin('users', 'backlinks.user_id', '=', 'users.id');
+
+        if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
+            $list = $list->where('backlinks.user_id', Auth::user()->id);
+        }
+                    
+        return $list->groupBy('backlinks.user_id', 'users.username')
                     ->orderBy('users.username', 'asc')
                     ->get();
-
-        return $list;
     }
 
     private function extDomain() {
@@ -154,5 +177,50 @@ class DashboardController extends Controller
         return $list;
     }
 
+
+    private function backlinkToBuy() {
+
+        $publisher = Publisher::count();
+
+        $columns = [
+            'users.username',
+            DB::raw('SUM(CASE WHEN buyer_purchased.status = "Not interested" THEN 1 ELSE 0 END) AS num_not_interested'),
+            DB::raw('SUM(CASE WHEN buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_interested'),
+            DB::raw('SUM(CASE WHEN buyer_purchased.status = "Purchased" THEN 1 ELSE 0 END) AS num_purchased'),
+            DB::raw('
+                SUM(CASE WHEN buyer_purchased.status = "Purchased" 
+                OR buyer_purchased.status = "Not interested" 
+                OR buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_total
+            '),
+        ];
+
+        $buyer_purchased = BuyerPurchased::select($columns)
+                ->leftJoin('users', 'buyer_purchased.user_id_buyer', '=', 'users.id')
+                ->leftJoin('publisher', 'buyer_purchased.publisher_id', '=', 'publisher.id')
+                ->where('publisher.valid', '=' ,'valid');
+                
+        if( Auth::user()->role_id == 5 ){
+            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id);
+        }
+
+        $buyer_purchased = $buyer_purchased->groupBy('users.username')
+                ->orderBy('users.username', 'asc')
+                ->get();
+
+        $list = [];
+        foreach ($buyer_purchased as $purchased){
+            $new = intval($publisher) - intval($purchased['num_total']);
+            array_push($list, [
+                'username' => $purchased['username'],
+                'num_new' => $new,
+                'num_not_interested' => $purchased['num_not_interested'],
+                'num_interested' => $purchased['num_interested'],
+                'num_purchased' => $purchased['num_purchased'],
+                'num_total' => intval($purchased['num_total']) + intval($new)
+            ]);
+        }
+
+        return $list;
+    }
 
 }

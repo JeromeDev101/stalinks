@@ -12,18 +12,23 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search URL</label>
-                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
                                         {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">In charge</label>
+                                <select name="" class="form-control" v-model="filterModel.in_charge">
+                                    <option value="">All</option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username}}
                                     </option>
                                 </select>
                             </div>
@@ -38,6 +43,13 @@
                                         {{ option.username == null ? option.name:option.username }}
                                     </option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Valid</label>
+                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" />
                             </div>
                         </div>
 
@@ -72,8 +84,8 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Valid</label>
-                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" />
+                                <label for="">Search URL</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
@@ -101,6 +113,8 @@
                             </option>
                         </select>
                     </div>
+
+                    <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
 
                     <div class="form-row">
                         <div class="col-md-4 my-3">
@@ -167,11 +181,10 @@
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
-                                <!-- <th v-if="user.isAdmin">Company</th> -->
-                                <th>In-charge</th>
-                                <th v-if="user.isAdmin || user.isOurs == 0">Seller</th>
                                 <th v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
                                 <th>Language</th>
+                                <th>In-charge</th>
+                                <th v-if="user.isAdmin || user.isOurs == 0">Seller</th>
                                 <th>Valid</th>
                                 <th>URL</th>
                                 <th>Price</th>
@@ -196,11 +209,10 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td>{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
-                                <!-- <td v-if="user.isAdmin">{{ publish.isOurs == '0' ? 'Stalinks':publish.company_name}}</td> -->
-                                <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td>{{ publish.country_name }}</td>
+                                <td>{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
+                                <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td>{{ publish.valid }}</td>
                                 <td>{{ replaceCharacters(publish.url) }}</td>
                                 <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
@@ -227,7 +239,7 @@
 
         </div>
 
-        <!-- Modal Update Publisher-->
+        <!-- Modal Update Publisher -->
         <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -256,48 +268,9 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">URL</label>
-                                    <input type="text" v-model="updateModel.url" class="form-control" name="" placeholder="" disabled>
+                                    <input type="text" v-model="updateModel.url" class="form-control" name="" placeholder="" :disabled="user.isOurs != 0">
                                 </div>
                             </div>
-
-
-                            <!-- <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Ref Domains</label>
-                                    <input type="number" v-model="updateModel.ref_domain" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">No Backlinks</label>
-                                    <input type="text" v-model="updateModel.backlinks" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">URL Rating</label>
-                                    <input type="number" v-model="updateModel.ur" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Domain Rating</label>
-                                    <input type="number" v-model="updateModel.dr" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Organic Keywords</label>
-                                    <input type="text" v-model="updateModel.org_keywords" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Organic traffic</label>
-                                    <input type="text" v-model="updateModel.org_traffic" :disabled="isSeller" class="form-control" name="" placeholder="">
-                                </div>
-                            </div> -->
-
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -333,6 +306,82 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal update publisher -->
+
+        <!-- Modal Add Publisher-->
+        <div class="modal fade" id="modal-add-url" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add URL</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
+                                    <label for="">Seller</label>
+                                    <select name="" class="form-control" v-model="addModel.seller">
+                                        <option value="">All</option>
+                                        <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name:option.username }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.seller" v-for="err in messageForms.errors.seller" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.inc_article}" class="form-group">
+                                    <label for="">Include Article</label>
+                                    <select name="" id="" class="form-control" v-model="addModel.inc_article">
+                                        <option value=""></option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.inc_article" v-for="err in messageForms.errors.inc_article" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.url}" class="form-group">
+                                    <label for="">URL</label>
+                                    <input type="text" v-model="addModel.url" class="form-control" name="" placeholder="" :disabled="!user.isAdmin">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.language_id}" class="form-group">
+                                    <label for="">Language</label>
+                                    <select name="" class="form-control" v-model="addModel.language_id">
+                                        <option value="">Select Language</option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.price}" class="form-group">
+                                    <label for="">Price</label>
+                                    <input type="number" v-model="addModel.price" class="form-control" name="" placeholder="">
+                                    <span v-if="messageForms.errors.price" v-for="err in messageForms.errors.price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </div>
@@ -389,6 +438,7 @@
                     got_ahref: this.$route.query.got_ahref || '',
                     date: this.$route.query.date || '',
                     valid: this.$route.query.valid || '',
+                    in_charge: this.$route.query.in_charge || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -397,6 +447,13 @@
                 isSeller: false,
                 allSelected: false,
                 isSearching: false,
+                addModel: {
+                    seller: '',
+                    url: '',
+                    language_id: '',
+                    price: '',
+                    inc_article: '',
+                },
             }
         },
 
@@ -409,6 +466,11 @@
             if( countries.length === 0 ){
                 this.getListCountries();
             }
+
+            let in_charge = this.listIncharge.data;
+            if( in_charge.length === 0 ){
+                this.getTeamInCharge();
+            }
         },
 
         computed:{
@@ -419,10 +481,16 @@
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
+                listIncharge: state => state.storeAccount.listIncharge,
             })
         },
 
         methods: {
+
+            async getTeamInCharge(){
+                await this.$store.dispatch('actionGetTeamInCharge');
+            },
+
             async getPublisherList(page = 1) {
 
                 $('#tbl-publisher').DataTable().destroy();
@@ -439,6 +507,7 @@
                         got_ahref: this.filterModel.got_ahref,
                         date: this.filterModel.date,
                         valid: this.filterModel.valid,
+                        in_charge: this.filterModel.in_charge,
                         page: page
                     }
                 });
@@ -612,6 +681,30 @@
                 return price;
             },
 
+            async submitAdd() {
+                await this.$store.dispatch('actionAddUrl', this.addModel);
+
+                if (this.messageForms.action === 'saved'){
+                    $("#modal-add-url").modal('hide')
+                    this.getPublisherList();
+                    
+                    swal.fire(
+                        'Saved!',
+                        'URL has been saved.',
+                        'success'
+                        )
+
+
+                    this.addModel = {
+                        seller: '',
+                        inc_article: '',
+                        url: '',
+                        language_id: '',
+                        price: '',
+                    }
+                }
+            },
+
             async submitUpload() {
                 $('#tbl-publisher').DataTable().destroy();
 
@@ -651,6 +744,7 @@
                     got_ahref: '',
                     date: '',
                     valid: '',
+                    in_charge: '',
                 }
 
                 this.getPublisherList({
@@ -678,12 +772,7 @@
 
             async getAhrefs() {
                 $('#tbl-publisher').DataTable().destroy();
-                /*var listInvalid = this.checkIds.some(ext => ext.status != 30);
-                if (listInvalid === true) {
-                    alert('List invalid: status diff with GotContacts');
-                    return;
-                }*/
-
+        
                 swal.fire({
                     title: "Getting Ahrefs...",
                     text: "Please wait",
@@ -766,6 +855,7 @@
                         got_ahref: this.filterModel.got_ahref,
                         date: this.filterModel.date,
                         valid: this.filterModel.valid,
+                        in_charge: this.filterModel.in_charge,
                     }
                 });
             },

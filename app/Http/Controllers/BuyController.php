@@ -43,7 +43,7 @@ class BuyController extends Controller
         $registered = Registration::where('email', Auth::user()->email)->first();
 
         if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
-            $list->where('valid', 'valid');
+            $list->where('publisher.valid', 'valid');
         }
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){

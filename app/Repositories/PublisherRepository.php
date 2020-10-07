@@ -54,6 +54,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if( $user->isOurs != 0 && $user->type != 10 ){
             $list = $list->where('A.id', $user->id);
         }
+        
+        if( isset($filter['in_charge']) && !empty($filter['in_charge']) ){
+            $list = $list->where('B.id', $filter['in_charge']);
+        }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list = $list->where('publisher.url', 'like', '%'.$filter['search'].'%');

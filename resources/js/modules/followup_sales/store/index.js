@@ -11,6 +11,23 @@ const state = {
     listBuyer: { data:[] },
     listSeller: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
+    tblFollowupSalesOpt: {
+        pub_id: true,
+        blink_id: true,
+        arc_id: true,
+        country: true,
+        in_charge: true,
+        seller: true,
+        buyer: true,
+        url: true,
+        price: true,
+        link_from: true,
+        link_to: true,
+        anchor_text: true,
+        date_process: true,
+        date_complete: true,
+        status: true,
+    },
 }
 
 const mutations = {

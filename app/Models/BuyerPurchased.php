@@ -12,4 +12,5 @@ class BuyerPurchased extends Model
     public function publisher() {
         return $this->hasMany('App\Models\Publisher', 'id', 'publisher_id');
     }
+
 }

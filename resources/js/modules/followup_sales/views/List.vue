@@ -114,6 +114,7 @@
                                         </option>
                                     </select>
                                 </div>
+                                <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                             </td>
                         </tr>
                     </table>  
@@ -128,50 +129,50 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Url Pub</th>
-                                <th>Blink</th>
-                                <th>Artc</th>
-                                <th>Country</th>
-                                <th>In-charge</th>
-                                <th v-if="user.isOurs != 1">Seller</th>
-                                <th v-if="user.isOurs != 1">Buyer</th>
-                                <th>URL Publisher</th>
-                                <th>Price</th>
-                                <th>Link From</th>
-                                <th>Link To</th>
-                                <th>Anchor Text</th>
-                                <th>Date for Proccess</th>
-                                <th>Date Completed</th>
-                                <th>Status</th>
+                                <th v-show="tblOptions.pub_id">Url Pub</th>
+                                <th v-show="tblOptions.blink_id">Blink</th>
+                                <th v-show="tblOptions.arc_id">Artc</th>
+                                <th v-show="tblOptions.country">Country</th>
+                                <th v-show="tblOptions.in_charge">In-charge</th>
+                                <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
+                                <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
+                                <th v-show="tblOptions.url">URL Publisher</th>
+                                <th v-show="tblOptions.price">Price</th>
+                                <th v-show="tblOptions.link_from">Link From</th>
+                                <th v-show="tblOptions.link_to">Link To</th>
+                                <th v-show="tblOptions.anchor_text">Anchor Text</th>
+                                <th v-show="tblOptions.date_process">Date for Proccess</th>
+                                <th v-show="tblOptions.date_complete">Date Completed</th>
+                                <th v-show="tblOptions.status">Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td>{{ sales.publisher.id }}</td>
-                                <td>{{ sales.id }}</td>
-                                <td>{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td>{{ sales.publisher.country.name == null ? 'N/A' : sales.publisher.country.name }}</td>
-                                <td>{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
-                                <td v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
-                                <td>{{ replaceCharacters(sales.publisher.url) }}</td>
-                                <td>$ {{ sales.publisher.price }}</td>
-                                <td >
+                                <td v-show="tblOptions.pub_id">{{ sales.publisher.id }}</td>
+                                <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
+                                <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
+                                <td v-show="tblOptions.country">{{ sales.publisher.country.name == null ? 'N/A' : sales.publisher.country.name }}</td>
+                                <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
+                                <td v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
+                                <td v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
+                                <td v-show="tblOptions.url">{{ replaceCharacters(sales.publisher.url) }}</td>
+                                <td v-show="tblOptions.price">$ {{ sales.publisher.price }}</td>
+                                <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
                                         {{ sales.link_from }}
                                     </div>
                                 </td>
-                                <td>
+                                <td v-show="tblOptions.link_to">
                                     <div class="dont-break-out">
                                         {{ sales.link }}
                                     </div>
                                 </td>
-                                <td>{{ sales.anchor_text }}</td>
-                                <td>{{ sales.date_process }}</td>
-                                <td>{{ sales.live_date }}</td>
-                                <td>{{ sales.status }}</td>
+                                <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
+                                <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
+                                <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
+                                <td v-show="tblOptions.status">{{ sales.status }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -187,7 +188,7 @@
 
         </div>
 
-        <!-- Modal -->
+        <!-- Modal Update Sales -->
         <div class="modal fade" id="modal-update-sales" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -330,6 +331,75 @@
                 </div>
             </div>
         </div>
+        <!-- End of Modal Update Sales -->
+
+        <!-- Modal Settings -->
+        <div class="modal fade" id="modal-setting" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-model="tblOptions.pub_id">URL Publisher ID</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.blink_id ? 'checked':''" v-model="tblOptions.blink_id">Backlink ID</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.arc_id ? 'checked':''" v-model="tblOptions.arc_id">Article ID</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.country ? 'checked':''" v-model="tblOptions.country">Country</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.in_charge ? 'checked':''" v-model="tblOptions.in_charge">In-charge</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.seller ? 'checked':''" v-model="tblOptions.seller">Seller</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.buyer ? 'checked':''" v-model="tblOptions.buyer">Buyer</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">URL Publisher</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">Price</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.link_from ? 'checked':''" v-model="tblOptions.link_from">Link From</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.link_to ? 'checked':''" v-model="tblOptions.link_to">Link To</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.anchor_text ? 'checked':''" v-model="tblOptions.anchor_text">Anchor Text</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.date_process ? 'checked':''" v-model="tblOptions.date_process">Date process</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.date_complete ? 'checked':''" v-model="tblOptions.date_complete">Date Completed</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.status ? 'checked':''" v-model="tblOptions.status">Status</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Settings -->
+
     </div>
 </template>
 
@@ -415,6 +485,7 @@
 
         computed: {
             ...mapState({
+                tblOptions: state => state.storeFollowupSales.tblFollowupSalesOpt,
                 listSales: state => state.storeFollowupSales.listSales,
                 listBuyer: state => state.storeFollowupSales.listBuyer,
                 listSeller: state => state.storeFollowupSales.listSeller,
@@ -422,6 +493,7 @@
                 user: state => state.storeAuth.currentUser,
                 listCountries: state => state.storePublisher.listCountries,
                 listIncharge: state => state.storeAccount.listIncharge,
+
             })
         },
 
@@ -464,9 +536,9 @@
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9, width: "200px" },
+                        { orderable: true, targets: 9 },
                         { orderable: true, targets: 10, width: "200px" },
-                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 11, width: "200px" },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
@@ -482,9 +554,9 @@
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7, width: "200px" },
+                        { orderable: true, targets: 7 },
                         { orderable: true, targets: 8, width: "200px"},
-                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 9, width: "200px" },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },

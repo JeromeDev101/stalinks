@@ -80,6 +80,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('dashboard')->get('/dashboard', 'DashboardController@index');
 
     //Publisher URL list page
+    Route::name('publisher-create')->post('/publisher', 'PublisherController@store');
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');
     Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');

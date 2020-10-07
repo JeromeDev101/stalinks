@@ -51,8 +51,25 @@ class PublisherController extends Controller
 
     }
 
+    public function store(Request $request){
+        $request->validate([
+            'seller' => 'required',
+            'inc_article' => 'required',
+            'url' => 'required',
+            'language_id' => 'required',
+            'price' => 'required',
+        ]);
+        
+        $input = $request->except('seller');
+        $input['user_id'] = $request->seller;
+        $input['valid'] = 'unchecked';
+
+        Publisher::create($input);
+        return response()->json(['success' => true], 200);
+    }
+
     public function update(Request $request){
-        $input = $request->except('name', 'company_name', 'url', 'username');
+        $input = $request->except('name', 'company_name', 'username');
 
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);

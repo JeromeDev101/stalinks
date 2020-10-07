@@ -85,10 +85,22 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1">
+                                <tr>
                                     <td><b>New Password</b></td>
                                     <td>
-                                        <input type="password" class="form-control" v-model="new_password">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
+                                            <input type="password" class="form-control" v-model="new_password" placeholder="Type New Password">
+                                            <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Confirm Password</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}" class="form-group">
+                                            <input type="password" class="form-control" v-model="c_password" placeholder="Type Confirm Password">
+                                            <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 0">
@@ -219,6 +231,7 @@ export default {
                 payment_default: '',
             },
             new_password: '',
+            c_password: '',
         };
     },
 
@@ -291,7 +304,8 @@ export default {
                 this.user.id_payment_type = this.billing.payment_default;
             }
 
-            this.user.new_password = this.new_password;
+            this.user.password = this.new_password;
+            this.user.c_password = this.c_password;
             
             await this.$store.dispatch('actionUpdateUser', this.user);
             this.isPopupLoading = false;
@@ -309,6 +323,9 @@ export default {
                         'Information has been updated.',
                         'success'
                         )
+
+                this.new_password = '';
+                this.c_password = '';
             }
         },
 
