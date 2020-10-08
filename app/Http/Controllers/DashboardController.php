@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $incomes = $this->incomes();
         $purchase = $this->purchase();
         $backlink_seller = $this->backlinkSeller();
-        $backlink_buyer = $this->backlinkBuyer();
+        $backlink_buyer = $this->backlinkBuyer('');
         $ext_domain = $this->extDomain();
         $backlink_to_buy = $this->backlinkToBuy();
 
@@ -136,19 +136,31 @@ class DashboardController extends Controller
                     ->get();
     }
 
-    private function backlinkBuyer() {
+    private function backlinkBuyer($buyer) {
         $columns = [
             'users.username',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
-            DB::raw('SUM(CASE WHEN backlinks.status = "Content Writing" THEN 1 ELSE 0 END) AS writing'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Content In Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Sent" THEN 1 ELSE 0 END) AS num_sent'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Live" THEN 1 ELSE 0 END) AS num_live'),
+            DB::raw('
+                SUM(CASE WHEN backlinks.status = "Live" 
+                OR backlinks.status = "Processing" 
+                OR backlinks.status = "Content In Writing" 
+                OR backlinks.status = "Content Done" 
+                OR backlinks.status = "Content Sent" 
+                THEN 1 ELSE 0 END) AS num_total
+            '),
         ];
 
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->leftJoin('users', 'backlinks.user_id', '=', 'users.id');
+
+        if( $buyer != "" ){
+            $list = $list->where('backlinks.user_id', $buyer);
+        }
 
         if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
             $list = $list->where('backlinks.user_id', Auth::user()->id);
@@ -183,13 +195,12 @@ class DashboardController extends Controller
         $publisher = Publisher::count();
 
         $columns = [
+            'users.id as id_user',
             'users.username',
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Not interested" THEN 1 ELSE 0 END) AS num_not_interested'),
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_interested'),
-            DB::raw('SUM(CASE WHEN buyer_purchased.status = "Purchased" THEN 1 ELSE 0 END) AS num_purchased'),
             DB::raw('
-                SUM(CASE WHEN buyer_purchased.status = "Purchased" 
-                OR buyer_purchased.status = "Not interested" 
+                SUM(CASE WHEN buyer_purchased.status = "Not interested" 
                 OR buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -197,25 +208,29 @@ class DashboardController extends Controller
         $buyer_purchased = BuyerPurchased::select($columns)
                 ->leftJoin('users', 'buyer_purchased.user_id_buyer', '=', 'users.id')
                 ->leftJoin('publisher', 'buyer_purchased.publisher_id', '=', 'publisher.id')
+                ->leftJoin('backlinks', 'publisher.id', '=', 'backlinks.publisher_id')
+                ->whereNull('backlinks.deleted_at')
                 ->where('publisher.valid', '=' ,'valid');
                 
         if( Auth::user()->role_id == 5 ){
             $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id);
         }
 
-        $buyer_purchased = $buyer_purchased->groupBy('users.username')
+        $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')
                 ->orderBy('users.username', 'asc')
                 ->get();
 
         $list = [];
         foreach ($buyer_purchased as $purchased){
             $new = intval($publisher) - intval($purchased['num_total']);
+            $purchase = $this->backlinkBuyer($purchased['id_user']);
+
             array_push($list, [
                 'username' => $purchased['username'],
                 'num_new' => $new,
                 'num_not_interested' => $purchased['num_not_interested'],
                 'num_interested' => $purchased['num_interested'],
-                'num_purchased' => $purchased['num_purchased'],
+                'num_purchased' => isset($purchase[0]->num_total) ? $purchase[0]->num_total : 0,
                 'num_total' => intval($purchased['num_total']) + intval($new)
             ]);
         }

@@ -269,7 +269,7 @@ export default {
         this.getPublisherSummaryCountry();
         this.bindPayment();
 
-        this.$root.$refs.AppHeader.liveGetWallet()
+        // this.$root.$refs.AppHeader.liveGetWallet()
     },
 
     methods: {

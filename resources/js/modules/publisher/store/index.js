@@ -15,6 +15,24 @@ const state = {
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
     listSeller: { data:[] },
+    tblPublisherOpt: {
+        uploaded: true,
+        language: true,
+        topic: true,
+        casino_sites: true,
+        in_charge: true,
+        seller: true,
+        valid: true,
+        url: true,
+        price: true,
+        inc_article: true,
+        ur: true,
+        dr: true,
+        backlinks: true,
+        ref_domain: true,
+        org_keywords: true,
+        org_traffic: true,
+    },
 }
 
 const mutations = {

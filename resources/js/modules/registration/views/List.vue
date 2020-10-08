@@ -15,7 +15,7 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search Name and Email</label>
+                                <label for="">Search Name, Email & Username</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>

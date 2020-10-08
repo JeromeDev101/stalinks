@@ -78,7 +78,8 @@ class AccountController extends Controller
             return $query->where( 'type', $type );
         })->when( $search, function($query) use ($search){
             return $query->where( 'name', 'LIKE', '%'.$search.'%' )
-                ->orWhere( 'email', 'LIKE', '%'.$search.'%' );
+                ->orWhere( 'email', 'LIKE', '%'.$search.'%' )
+                ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
         })
         ->when( $team_in_charge, function($query) use ($team_in_charge){
             return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {

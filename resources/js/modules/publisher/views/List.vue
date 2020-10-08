@@ -49,7 +49,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Valid</label>
-                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" />
+                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -89,6 +89,29 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Accept Casino & Betting Sites</label>
+                                <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Topic</label>
+                                <select name="" class="form-control" v-model="filterModel.topic">
+                                    <option value="">All</option>
+                                    <option v-for="option in topic" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -114,6 +137,7 @@
                         </select>
                     </div>
 
+                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
 
                     <div class="form-row">
@@ -181,20 +205,22 @@
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
-                                <th v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
-                                <th>Language</th>
-                                <th>In-charge</th>
-                                <th v-if="user.isAdmin || user.isOurs == 0">Seller</th>
-                                <th>Valid</th>
-                                <th>URL</th>
-                                <th>Price</th>
-                                <th>Inc Article</th>
-                                <th>UR</th>
-                                <th>DR</th>
-                                <th>Backlinks</th>
-                                <th>Ref Domains</th>
-                                <th>Organic Keywords</th>
-                                <th>Organic Traffic</th>
+                                <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
+                                <th v-show="tblPublisherOpt.language">Language</th>
+                                <th v-show="tblPublisherOpt.topic">Topic</th>
+                                <th v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
+                                <th v-show="tblPublisherOpt.in_charge">In-charge</th>
+                                <th v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>
+                                <th v-show="tblPublisherOpt.valid">Valid</th>
+                                <th v-show="tblPublisherOpt.url">URL</th>
+                                <th v-show="tblPublisherOpt.price">Price</th>
+                                <th v-show="tblPublisherOpt.inc_article">Inc Article</th>
+                                <th v-show="tblPublisherOpt.ur">UR</th>
+                                <th v-show="tblPublisherOpt.dr">DR</th>
+                                <th v-show="tblPublisherOpt.backlinks">Backlinks</th>
+                                <th v-show="tblPublisherOpt.ref_domain">Ref Domains</th>
+                                <th v-show="tblPublisherOpt.org_keywords">Organic Keywords</th>
+                                <th v-show="tblPublisherOpt.org_traffic">Organic Traffic</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -209,20 +235,22 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
-                                <td>{{ publish.country_name }}</td>
-                                <td>{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
-                                <td v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
-                                <td>{{ publish.valid }}</td>
-                                <td>{{ replaceCharacters(publish.url) }}</td>
-                                <td>{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
-                                <td>{{ publish.inc_article }}</td>
-                                <td>{{ publish.ur }}</td>
-                                <td>{{ publish.dr }}</td>
-                                <td>{{ publish.backlinks }}</td>
-                                <td>{{ publish.ref_domain }}</td>
-                                <td>{{ formatPrice(publish.org_keywords) }}</td>
-                                <td>{{ formatPrice(publish.org_traffic) }}</td>
+                                <td v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
+                                <td v-show="tblPublisherOpt.language">{{ publish.country_name }}</td>
+                                <td v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
+                                <td v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
+                                <td v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
+                                <td v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
+                                <td v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
+                                <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>
+                                <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
+                                <td v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
+                                <td v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
+                                <td v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
+                                <td v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>
+                                <td v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>
+                                <td v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>
+                                <td v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -301,6 +329,33 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
+                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <select name="" class="form-control" v-model="updateModel.casino_sites">
+                                        <option value="">Select Casino & Bettings Sites</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.casino_sites" v-for="err in messageForms.errors.casino_sites" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
+                                    <label for="">Topic</label>
+                                    <select name="" class="form-control" v-model="updateModel.topic">
+                                        <option value="">Select Topic</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -330,7 +385,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
                                     <select name="" class="form-control" v-model="addModel.seller">
-                                        <option value="">All</option>
+                                        <option value="">Select Seller</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
@@ -342,7 +397,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.inc_article}" class="form-group">
                                     <label for="">Include Article</label>
                                     <select name="" id="" class="form-control" v-model="addModel.inc_article">
-                                        <option value=""></option>
+                                        <option value="">Select Include Article</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </select>
@@ -377,6 +432,31 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
+                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <select name="" class="form-control" v-model="addModel.casino_sites">
+                                        <option value="">Select Casino & Bettings Sites</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.casino_sites" v-for="err in messageForms.errors.casino_sites" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
+                                    <label for="">Topic</label>
+                                    <select name="" class="form-control" v-model="addModel.topic">
+                                        <option value="">Select Topic</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -386,7 +466,77 @@
                 </div>
             </div>
         </div>
+        <!-- End of Modal Publisher -->
 
+        <!-- Modal Settings -->
+        <div class="modal fade" id="modal-setting" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Uploaded</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites">Casino & Betting Sites</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">In-charge</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">Seller</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid">Valid</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr">DR</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Settings -->
 
     </div>
 </template>
@@ -426,6 +576,8 @@
                     language: '',
                     inc_article: '',
                     language_id: '',
+                    casino_sites: '',
+                    topic: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -439,6 +591,8 @@
                     date: this.$route.query.date || '',
                     valid: this.$route.query.valid || '',
                     in_charge: this.$route.query.in_charge || '',
+                    casino_sites: this.$route.query.casino_sites || '',
+                    topic: this.$route.query.topic || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -453,7 +607,31 @@
                     language_id: '',
                     price: '',
                     inc_article: '',
+                    casino_sites: '',
+                    topic: '',
                 },
+                topic: [
+                    'Movies & Music',
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real State',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Unlisted',
+                ],
             }
         },
 
@@ -475,6 +653,7 @@
 
         computed:{
             ...mapState({
+                tblPublisherOpt: state => state.storePublisher.tblPublisherOpt,
                 listPublish: state => state.storePublisher.listPublish,
                 messageForms: state => state.storePublisher.messageForms,
                 listCountries: state => state.storePublisher.listCountries,
@@ -508,6 +687,8 @@
                         date: this.filterModel.date,
                         valid: this.filterModel.valid,
                         in_charge: this.filterModel.in_charge,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
                         page: page
                     }
                 });
@@ -529,6 +710,8 @@
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -550,6 +733,8 @@
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -570,6 +755,8 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -701,6 +888,8 @@
                         url: '',
                         language_id: '',
                         price: '',
+                        casino_sites: '',
+                        topic: '',
                     }
                 }
             },
@@ -745,6 +934,8 @@
                     date: '',
                     valid: '',
                     in_charge: '',
+                    casino_sites: '',
+                    topic: '',
                 }
 
                 this.getPublisherList({
@@ -815,9 +1006,11 @@
                     org_keywords: that.org_keywords,
                     org_traffic: that.org_traffic,
                     price: that.price,
-                    anchor_text: that.anchor_text,
+                    anchor_text: that.anchor_text, 
                     link: that.link,
                     inc_article: that.inc_article,
+                    topic: that.topic == null ? '':that.topic,
+                    casino_sites: that.casino_sites,
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
@@ -856,6 +1049,8 @@
                         date: this.filterModel.date,
                         valid: this.filterModel.valid,
                         in_charge: this.filterModel.in_charge,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
                     }
                 });
             },

@@ -58,6 +58,8 @@ class PublisherController extends Controller
             'url' => 'required',
             'language_id' => 'required',
             'price' => 'required',
+            'casino_sites' => 'required',
+            'topic' => 'required',
         ]);
         
         $input = $request->except('seller');

@@ -120,47 +120,6 @@
             </div>
         </div>
 
-        
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 5">
-            <div class="box box-primary" style="padding-bottom:0.5em;">
-
-                <div class="box-header">
-                    <h3 class="box-title text-primary">Total Backlink (Buyer)</h3>
-                </div>
-
-                <div class="box-body custom-box">
-                   
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-hover tbl-custom">
-                                <thead>
-                                    <tr>
-                                        <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
-                                        <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
-                                        <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
-                                        <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
-                                        <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
-                                        <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
-                                        <td>{{ upperCase(buyer.username) }}</td>
-                                        <td>{{ buyer.num_processing }}</td>
-                                        <td>{{ buyer.writing }}</td>
-                                        <td>{{ buyer.num_done }}</td>
-                                        <td>{{ buyer.num_sent }}</td>
-                                        <td>{{ buyer.num_live }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
@@ -196,41 +155,7 @@
         </div>
 
 
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 5">
-            <div class="box box-primary" style="padding-bottom:0.5em;">
-
-                <div class="box-header">
-                    <h3 class="box-title text-primary">Purchase</h3>
-                </div>
-
-                <div class="box-body custom-box">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-hover tbl-custom">
-                                <thead>
-                                    <tr>
-                                        <th>Buyer <span class="text-primary">( {{ purchase.total }} )</span></th>
-                                        <th>No. Backlinks <span class="text-primary">( {{ purchase.num_backlink }} )</span></th>
-                                        <th>Unpaid <span class="text-primary">( {{ purchase.num_unpaid }} )</span></th>
-                                        <th>Paid <span class="text-primary">( {{ purchase.num_paid }} )</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(purchase, index) in listData.purchase" :key="index">
-                                        <td>{{ upperCase(purchase.username) }}</td>
-                                        <td>{{ purchase.num_backlink }}</td>
-                                        <td>{{ purchase.num_unpaid }}</td>
-                                        <td>{{ purchase.num_paid }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 5">
+        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -259,6 +184,81 @@
                                         <td>{{ buy.num_purchased }}</td>
                                         <td>{{ buy.num_not_interested }}</td>
                                         <td>{{ buy.num_total }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Total Backlink (Buyer)</h3>
+                </div>
+
+                <div class="box-body custom-box">
+                   
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
+                                        <th>Total <span class="text-primary">( {{ backlink_buyer.num_total }} )</span></th>
+                                        <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
+                                        <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
+                                        <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
+                                        <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
+                                        <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
+                                        <td>{{ upperCase(buyer.username) }}</td>
+                                        <td>{{ buyer.num_total }}</td>
+                                        <td>{{ buyer.num_processing }}</td>
+                                        <td>{{ buyer.writing }}</td>
+                                        <td>{{ buyer.num_done }}</td>
+                                        <td>{{ buyer.num_sent }}</td>
+                                        <td>{{ buyer.num_live }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Purchase</h3>
+                </div>
+
+                <div class="box-body custom-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Buyer <span class="text-primary">( {{ purchase.total }} )</span></th>
+                                        <th>No. Backlinks <span class="text-primary">( {{ purchase.num_backlink }} )</span></th>
+                                        <th>Unpaid <span class="text-primary">( {{ purchase.num_unpaid }} )</span></th>
+                                        <th>Paid <span class="text-primary">( {{ purchase.num_paid }} )</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(purchase, index) in listData.purchase" :key="index">
+                                        <td>{{ upperCase(purchase.username) }}</td>
+                                        <td>{{ purchase.num_backlink }}</td>
+                                        <td>{{ purchase.num_unpaid }}</td>
+                                        <td>{{ purchase.num_paid }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -319,6 +319,7 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_total: 0,
             },
 
             ext_domain:{
@@ -421,6 +422,7 @@ export default {
                 this.backlink_buyer.num_done += parseInt(backlink_buyer[index].num_done);
                 this.backlink_buyer.num_sent += parseInt(backlink_buyer[index].num_sent);
                 this.backlink_buyer.num_live += parseInt(backlink_buyer[index].num_live);
+                this.backlink_buyer.num_total += parseInt(backlink_buyer[index].num_total);
             }
             this.backlink_buyer.total = backlink_buyer.length;
 

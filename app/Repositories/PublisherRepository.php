@@ -89,6 +89,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.language_id', $filter['language_id']);
         }
 
+        if( isset($filter['casino_sites']) && !empty($filter['casino_sites']) ){
+            $list = $list->where('publisher.casino_sites', $filter['casino_sites']);
+        }
+
+        if( isset($filter['topic']) && !empty($filter['topic']) ){
+            $list = $list->where('publisher.topic', $filter['topic']);
+        }
+
         if( isset($filter['inc_article']) && !empty($filter['inc_article']) ){
             $list = $list->where('publisher.inc_article', $filter['inc_article']);
         }
