@@ -22,17 +22,6 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select name="" id="" class="form-control" v-model="filterModel.status">
-                                    <option value="" selected>All</option>
-                                    <option value="Live">Live</option>
-                                    <option value="Processing">Processing</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="col-md-2" v-if="user.isAdmin">
                             <div class="form-group">
                                 <label for="">Seller</label>
@@ -227,7 +216,6 @@
                 isPopupLoading: false,
                 filterModel: {
                     payment_status: this.$route.query.payment_status || '',
-                    status: this.$route.query.status || '',
                     buyer: this.$route.query.buyer || '',
                     seller: this.$route.query.seller || '',
                     paginate: this.$route.query.paginate || '25',
@@ -262,7 +250,6 @@
                 await this.$store.dispatch('actionGetListIncomes', {
                     params: {
                         payment_status: this.filterModel.payment_status,
-                        status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
                         paginate: this.filterModel.paginate,
@@ -357,7 +344,6 @@
                 this.getListIncomes({
                     params: {
                         payment_status: this.filterModel.payment_status,
-                        status: this.filterModel.status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
                         paginate: this.filterModel.paginate,
@@ -371,7 +357,6 @@
 
                 this.filterModel = {
                     payment_status: '',
-                    status: '',
                     buyer: '',
                     seller: '',
                     date: '',

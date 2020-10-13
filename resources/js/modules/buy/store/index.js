@@ -11,6 +11,23 @@ const state = {
     listSeller: { data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
+    tblBuyOptions: {
+        seller: true,
+        topic: true,
+        casino_sites: true,
+        language: true,
+        url: true,
+        ur: true,
+        dr: true,
+        backlinks: true,
+        ref_domains: true,
+        org_keywords: true,
+        org_traffic: true,
+        price: true,
+        status: true,
+        code_comb: true,
+        code_price: true,
+    },
 }
 
 const mutations = {

@@ -157,7 +157,7 @@
 
                             <div class="row mt-3" v-show="showLang">
                                 <div class="col-sm-12">
-                                    <select class="form-control" name="language" ref="language" v-on:change="checkDataLanguage">
+                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">
                                         <option value="">Select language</option>
                                         <option v-for="option in listCountries.data" v-bind:value="option.id">
                                             {{ option.name }}
@@ -165,6 +165,7 @@
                                     </select>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="col-md-2 my-3">
@@ -183,11 +184,13 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <small class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
                         </div>
                     </div>
 
@@ -407,7 +410,7 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.url}" class="form-group">
                                     <label for="">URL</label>
-                                    <input type="text" v-model="addModel.url" class="form-control" name="" placeholder="" :disabled="!user.isAdmin">
+                                    <input type="text" v-model="addModel.url" class="form-control" name="" placeholder="" >
                                 </div>
                             </div>
 
@@ -611,7 +614,6 @@
                     topic: '',
                 },
                 topic: [
-                    'Movies & Music',
                     'Beauty',
                     'Charity',
                     'Cooking',
@@ -622,6 +624,7 @@
                     'Health',
                     'History',
                     'Job',
+                    'Movies & Music',
                     'News',
                     'Pet',
                     'Photograph',
@@ -649,6 +652,8 @@
             if( in_charge.length === 0 ){
                 this.getTeamInCharge();
             }
+
+            this.setDefaultSettings();
         },
 
         computed:{
@@ -665,6 +670,22 @@
         },
 
         methods: {
+
+            setDefaultSettings() {
+                if( this.user.isOurs == 0 ){
+                    this.tblPublisherOpt.casino_sites = false;
+                    this.tblPublisherOpt.topic = false;
+                    this.tblPublisherOpt.in_charge = false;
+                }
+
+                if (this.user.role_id == 6){
+                    this.tblPublisherOpt.uploaded = false;
+                    this.tblPublisherOpt.topic = false;
+                    this.tblPublisherOpt.casino_sites = false;
+                    this.tblPublisherOpt.seller = false;
+                }
+                    
+            },
 
             async getTeamInCharge(){
                 await this.$store.dispatch('actionGetTeamInCharge');
@@ -909,6 +930,12 @@
                     this.$refs.language.value = '';
                     this.isEnableBtn = true;
                     this.showLang = false;
+
+                    swal.fire(
+                        'Uploaded!',
+                        'Successfully Uploaded.',
+                        'success'
+                        )
                 }
             },
 
@@ -1055,17 +1082,26 @@
                 });
             },
 
-            checkDataLanguage() {
+            checkData() {
                 this.isEnableBtn = true;
-                if( this.$refs.language.value ){
+                if (this.$refs.language.value){
                     this.isEnableBtn = false;
                 }
             },
 
             checkDataExcel() {
-                this.showLang = false;
-                if( this.$refs.excel.value ){
-                    this.showLang = true;
+                if( this.user.isOurs == 1 ){
+                    this.showLang = false;
+                    if (this.$refs.excel.value){
+                        this.showLang = true;
+                    }
+                }
+
+                if( this.user.isOurs == 0 ){
+                    this.isEnableBtn = true;
+                    if (this.$refs.excel.value){
+                        this.isEnableBtn = false;
+                    }
                 }
             },
 

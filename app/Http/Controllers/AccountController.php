@@ -313,9 +313,9 @@ class AccountController extends Controller
     
         return [
             'wallet' => $wallet,
-            'total_purchased' => $total_purchased[0]['total_purchased'],
-            'total_purchased_paid' => $total_purchased_paid[0]['total_purchased_paid'],
-            'total_paid' => $total_paid[0]['total_paid'],
+            'total_purchased' => floatVal($total_purchased[0]['total_purchased']),
+            'total_purchased_paid' => floatVal($total_purchased_paid[0]['total_purchased_paid']),
+            'total_paid' => floatVal($total_paid[0]['total_paid']),
             'credit' => number_format($credit,2),
             'deposit' => $deposit,
         ];

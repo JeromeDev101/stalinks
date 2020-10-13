@@ -49,6 +49,29 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Accept Casino & Betting Sites</label>
+                                <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Topic</label>
+                                <select name="" class="form-control" v-model="filterModel.topic">
+                                    <option value="">All</option>
+                                    <option v-for="option in topic" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -73,9 +96,11 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID Article</th>
-                                <th v-show="user.isOurs == 0">Seller</th>
+                                <!-- <th v-show="user.isOurs == 0">Seller</th> -->
                                 <th>ID Backlink</th>
                                 <th>Language</th>
+                                <th>Topic</th>
+                                <th>Accept Casino & Betting Sites</th>
                                 <th>Date Start</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
@@ -89,9 +114,11 @@
                             <tr v-for="(article, index) in listArticles.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
-                                <td v-show="user.isOurs == 0">{{ article.backlinks == null ? '':article.backlinks.publisher.user.name }}</td>
+                                <!-- <td v-show="user.isOurs == 0">{{ article.backlinks == null ? '':article.backlinks.publisher.user.name }}</td> -->
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.backlinks == null ? article.country.name : article.backlinks.publisher.country.name }}</td>
+                                <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>
+                                <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>
                                 <td>{{ article.date_start == null ? '-':article.date_start }}</td>
                                 <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
                                 <td>{{ article.status_writer }}</td>
@@ -325,11 +352,35 @@
                     search_backlink: this.$route.query.search_backlink || '',
                     language_id: this.$route.query.language_id || '',
                     status: this.$route.query.status || '',
+                    casino_sites: this.$route.query.casino_sites || '',
+                    topic: this.$route.query.topic || '',
                 },
 
                 searchLoading: false,
                 isTeam: false,
                 id_article: this.$route.query.id || '',
+                topic: [
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'Movies & Music',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real State',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Unlisted',
+                ],
             }
         },
 
@@ -423,6 +474,8 @@
                         search_article: this.filterModel.search_article,
                         language_id: this.filterModel.language_id,
                         status: this.filterModel.status,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
                     }
                 });
             },
@@ -433,6 +486,8 @@
                     search_backlink: '',
                     language_id: '',
                     status: '',
+                    casino_sites: '',
+                    topic: '',
                 }
 
                 this.getListArticles({

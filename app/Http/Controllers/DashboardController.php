@@ -36,27 +36,29 @@ class DashboardController extends Controller
 
     private function TotalSeller() {
         $columns = [
-            'users.username',
+            'A.username as username',
+            'B.username as in_charge',
             DB::raw('COUNT(publisher.url) as num_sites'),
             DB::raw('SUM(CASE WHEN publisher.valid = "unchecked" THEN 1 ELSE 0 END) AS num_unchecked'),
             DB::raw('SUM(CASE WHEN publisher.valid = "valid" THEN 1 ELSE 0 END) AS num_valid'),
             DB::raw('SUM(CASE WHEN publisher.valid = "invalid" THEN 1 ELSE 0 END) AS num_invalid'),
         ];
         $list = Publisher::select($columns)
-                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
+                    ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+                    ->leftJoin('registration', 'A.email', '=', 'registration.email')
+                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id');
                     
   
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
-            $list = $list->where('users.id', Auth::user()->id);
+            $list = $list->where('A.id', Auth::user()->id);
         }
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 0 ){
             $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
-        return $list->groupBy('publisher.user_id', 'users.username')
-                    ->orderBy('users.username', 'asc')
+        return $list->groupBy('publisher.user_id', 'A.username', 'B.username')
+                    ->orderBy('A.username', 'asc')
                     ->get();
     }
 

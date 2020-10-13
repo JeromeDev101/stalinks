@@ -78,8 +78,9 @@ class ArticlesController extends Controller
         $registration = Registration::where('email', $user->email)->first();
 
 
-        $list = Article::select('article.*')
+        $list = Article::select('article.*', 'publisher.topic', 'publisher.casino_sites')
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
+                        ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                         ->with('price')
                         ->with('country:id,name')
                         ->with(['backlinks' => function($q){
@@ -96,6 +97,14 @@ class ArticlesController extends Controller
 
         if( isset($filter['search_article']) && $filter['search_article'] ){
             $list->where('article.id', $filter['search_article']);
+        }
+
+        if( isset($filter['casino_sites']) && $filter['casino_sites'] ){
+            $list->where('publisher.casino_sites', $filter['casino_sites']);
+        }
+
+        if( isset($filter['topic']) && $filter['topic'] ){
+            $list->where('publisher.topic', $filter['topic']);
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] ){

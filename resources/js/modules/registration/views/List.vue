@@ -90,6 +90,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>User ID</th>
                                 <th>Username</th>
                                 <th>Name</th>
                                 <th>Company Name</th>
@@ -102,6 +103,7 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>{{ account.id }}</td>
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.company_name == null ? 'N/A':account.company_name }}</td>
@@ -662,6 +664,7 @@
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
                         { orderable: false, targets: '_all' }
                     ],
                 });

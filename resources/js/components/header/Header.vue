@@ -120,7 +120,26 @@ export default {
 
         liveGetWallet() {
             axios.get('api/wallet-credit')
-                .then(response => (this.money = response.data) )
+                // .then(response => (this.money = response.data) )
+                // .then(response => 
+                //     localStorage.setItem("wallet", JSON.stringify(response.data) ) 
+                // )
+                .then(function (res){
+                    var result = res.data
+                    if (typeof result === "object"){
+                        localStorage.setItem("wallet", JSON.stringify(res.data) ) 
+                    }
+                })
+                .catch(error => console.log(error))
+
+            let wallet = JSON.parse(localStorage.getItem("wallet"))
+            
+            console.log(wallet)
+
+            if ( Number.isInteger(wallet.wallet) ){
+                this.money = wallet;
+            }
+            
         },
 
         checkAccountType() {

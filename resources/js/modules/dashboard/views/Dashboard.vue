@@ -5,7 +5,7 @@
             <br>
         </section>
 
-        <div class="col-lg-6" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6)">
+        <div class="col-lg-12" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6)">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -41,7 +41,7 @@
         </div>
 
 
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -55,6 +55,7 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr class="white">
+                                        <th>In-charge</th>
                                         <th>Seller <span class="text-primary">( {{ total_seller.total }} )</span></th>
                                         <th>No. Sites <span class="text-primary">( {{ total_seller.num_sites }} )</span></th>
                                         <th>No. Valid <span class="text-primary">( {{ total_seller.num_valid }} )</span></th>
@@ -64,6 +65,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(seller, index) in listData.total_seller" :key="index">
+                                        <td>{{ seller.in_charge == null ? upperCase(seller.username) : upperCase(seller.in_charge) }}</td>
                                         <td>{{ upperCase(seller.username) }}</td>
                                         <td>{{ seller.num_sites }}</td>
                                         <td>{{ seller.num_valid }}</td>
@@ -80,7 +82,7 @@
         </div>
 
 
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -120,7 +122,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -155,45 +157,7 @@
         </div>
 
 
-        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
-            <div class="box box-primary" style="padding-bottom:0.5em;">
-
-                <div class="box-header">
-                    <h3 class="box-title text-primary">List backlinks to Buy</h3>
-                </div>
-
-                <div class="box-body custom-box">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-hover tbl-custom">
-                                <thead>
-                                    <tr>
-                                        <th v-if="user.isAdmin">Buyer <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.total }} )</span></th>
-                                        <th>New <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_new }} )</span></th>
-                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_interested }} )</span></th>
-                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_purchased }} )</span></th>
-                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_not_interested }} )</span></th>
-                                        <th>Total <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_total }} )</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
-                                        <td v-if="user.isAdmin">{{ upperCase(buy.username) }}</td>
-                                        <td>{{ buy.num_new }}</td>
-                                        <td>{{ buy.num_interested }}</td>
-                                        <td>{{ buy.num_purchased }}</td>
-                                        <td>{{ buy.num_not_interested }}</td>
-                                        <td>{{ buy.num_total }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -234,7 +198,46 @@
             </div>
         </div>
 
-        <div :class="{'col-lg-12': user.role_id == 5 && !user.isAdmin, 'col-lg-6': user.isAdmin }" v-if="user.isAdmin || user.role_id == 5">
+
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">List backlinks to Buy</h3>
+                </div>
+
+                <div class="box-body custom-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr>
+                                        <th v-if="user.isAdmin">Buyer <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.total }} )</span></th>
+                                        <th>New <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_new }} )</span></th>
+                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_interested }} )</span></th>
+                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_purchased }} )</span></th>
+                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_not_interested }} )</span></th>
+                                        <th>Total <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_total }} )</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
+                                        <td v-if="user.isAdmin">{{ upperCase(buy.username) }}</td>
+                                        <td>{{ buy.num_new }}</td>
+                                        <td>{{ buy.num_interested }}</td>
+                                        <td>{{ buy.num_purchased }}</td>
+                                        <td>{{ buy.num_not_interested }}</td>
+                                        <td>{{ buy.num_total }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -383,29 +386,38 @@ export default {
             let backlink_buyer = this.listData.backlink_buyer
             let ext_domain = this.listData.ext_domain
             let backlink_to_buy = this.listData.backlink_to_buy
+            let total_seller_ctr = 0;
+            let incomes_ctr = 0;
+            let purchase_ctr = 0;
+            let backlink_seller_ctr = 0;
+            let backlink_buyer_ctr = 0;
+            let ext_domain_ctr = 0;
+            let backlink_to_buy_ctr = 0;
 
             for( var index in total_seller ){
                 this.total_seller.num_sites += parseInt(total_seller[index].num_sites);
                 this.total_seller.num_unchecked += parseInt(total_seller[index].num_unchecked);
                 this.total_seller.num_valid += parseInt(total_seller[index].num_valid);
                 this.total_seller.num_invalid += parseInt(total_seller[index].num_invalid);
+                total_seller_ctr++;
             }
-            this.total_seller.total = total_seller.length;
-
+            this.total_seller.total = total_seller_ctr;
 
             for( var index in incomes ){
                 this.incomes.num_backlink += parseInt(incomes[index].num_backlink);
                 this.incomes.num_unpaid += parseInt(incomes[index].num_unpaid);
                 this.incomes.num_paid += parseInt(incomes[index].num_paid);
+                incomes_ctr++;
             }
-            this.incomes.total = incomes.length;
+            this.incomes.total = incomes_ctr;
 
             for( var index in purchase ){
                 this.purchase.num_backlink += parseInt(purchase[index].num_backlink);
                 this.purchase.num_unpaid += parseInt(purchase[index].num_unpaid);
                 this.purchase.num_paid += parseInt(purchase[index].num_paid);
+                purchase_ctr++;
             }
-            this.purchase.total = purchase.length;
+            this.purchase.total = purchase_ctr;
 
             for( var index in backlink_seller ){
                 this.backlink_seller.num_processing += parseInt(backlink_seller[index].num_processing);
@@ -413,8 +425,9 @@ export default {
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
                 this.backlink_seller.num_sent += parseInt(backlink_seller[index].num_sent);
                 this.backlink_seller.num_live += parseInt(backlink_seller[index].num_live);
+                backlink_seller_ctr++;
             }
-            this.backlink_seller.total = backlink_seller.length;
+            this.backlink_seller.total = backlink_seller_ctr;
 
             for( var index in backlink_buyer ){
                 this.backlink_buyer.num_processing += parseInt(backlink_buyer[index].num_processing);
@@ -423,15 +436,17 @@ export default {
                 this.backlink_buyer.num_sent += parseInt(backlink_buyer[index].num_sent);
                 this.backlink_buyer.num_live += parseInt(backlink_buyer[index].num_live);
                 this.backlink_buyer.num_total += parseInt(backlink_buyer[index].num_total);
+                backlink_buyer_ctr++;
             }
-            this.backlink_buyer.total = backlink_buyer.length;
+            this.backlink_buyer.total = backlink_buyer_ctr;
 
             for( var index in ext_domain ){
                 this.ext_domain.num_in_touched += parseInt(ext_domain[index].num_in_touched);
                 this.ext_domain.num_qualified += parseInt(ext_domain[index].num_qualified);
                 this.ext_domain.num_unqualified += parseInt(ext_domain[index].num_unqualified);
+                ext_domain_ctr++;
             }
-            this.ext_domain.total = ext_domain.length;
+            this.ext_domain.total = ext_domain_ctr;
 
             for( var index in backlink_to_buy ){
                 this.backlink_to_buy.num_new += parseInt(backlink_to_buy[index].num_new);
@@ -439,8 +454,9 @@ export default {
                 this.backlink_to_buy.num_interested += parseInt(backlink_to_buy[index].num_interested);
                 this.backlink_to_buy.num_purchased += parseInt(backlink_to_buy[index].num_purchased);
                 this.backlink_to_buy.num_total += parseInt(backlink_to_buy[index].num_total);
+                backlink_to_buy_ctr++;
             }
-            this.backlink_to_buy.total = backlink_to_buy.length;
+            this.backlink_to_buy.total = backlink_to_buy_ctr;
 
         },
 

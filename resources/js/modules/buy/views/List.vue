@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search URL</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
@@ -67,6 +67,29 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Accept Casino & Betting Sites</label>
+                                <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Topic</label>
+                                <select name="" class="form-control" v-model="filterModel.topic">
+                                    <option value="">All</option>
+                                    <option v-for="option in topic" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -90,6 +113,8 @@
                             </option>
                         </select>
                     </div>
+
+                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
 
                     <div v-if="isCreditAuth" class="alert alert-warning my-3">
                         Sorry you cannot Purchase backlinks due to lack of Wallet. Click
@@ -128,20 +153,21 @@
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                     Select
                                 </th>
-                                <!-- <th v-if="user.isAdmin">Company</th> -->
-                                <th>Username</th>
-                                <th>Language</th>
-                                <th>URL</th>
-                                <th>UR</th>
-                                <th>DR</th>
-                                <th>Backlinks</th>
-                                <th>Ref Domains</th>
-                                <th>Organic Keywords</th>
-                                <th>Organic Traffic</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th v-if="user.isOurs == 0">Code Combination</th>
-                                <th v-if="user.isOurs == 0">Code Price</th>
+                                <th v-show="tblBuyOptions.seller">Seller</th>
+                                <th v-show="tblBuyOptions.topic">Topic</th>
+                                <th v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
+                                <th v-show="tblBuyOptions.language">Language</th>
+                                <th v-show="tblBuyOptions.url">URL</th>
+                                <th v-show="tblBuyOptions.ur">UR</th>
+                                <th v-show="tblBuyOptions.dr">DR</th>
+                                <th v-show="tblBuyOptions.backlinks">Backlinks</th>
+                                <th v-show="tblBuyOptions.ref_domains">Ref Domains</th>
+                                <th v-show="tblBuyOptions.org_keywords">Organic Keywords</th>
+                                <th v-show="tblBuyOptions.org_traffic">Organic Traffic</th>
+                                <th v-show="tblBuyOptions.price">Price</th>
+                                <th v-show="tblBuyOptions.status">Status</th>
+                                <th v-show="tblBuyOptions.code_comb" v-if="user.isOurs == 0">Code Combination</th>
+                                <th v-show="tblBuyOptions.code_price" v-if="user.isOurs == 0">Code Price</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -155,20 +181,21 @@
                                         </button>
                                     </div>
                                 </td>
-                                <!-- <td v-if="user.isAdmin">{{ buy.isOurs == '0' ? 'Stalinks':buy.company_name}}</td> -->
-                                <td>{{ buy.username ? buy.username : buy.user_name}}</td>
-                                <td>{{ buy.country_name }}</td>
-                                <td>{{ replaceCharacters(buy.url) }}</td>
-                                <td>{{ buy.ur }}</td>
-                                <td>{{ buy.dr }}</td>
-                                <td>{{ buy.backlinks }}</td>
-                                <td>{{ buy.ref_domain }}</td>
-                                <td>{{ formatPrice(buy.org_keywords) }}</td>
-                                <td>{{ formatPrice(buy.org_traffic) }}</td>
-                                <td>{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
-                                <td>{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-if="user.isOurs== 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
-                                <td v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
+                                <td v-show="tblBuyOptions.seller">{{ buy.username ? buy.username : buy.user_name}}</td>
+                                <td v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
+                                <td v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
+                                <td v-show="tblBuyOptions.language">{{ buy.country_name }}</td>
+                                <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
+                                <td v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
+                                <td v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
+                                <td v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
+                                <td v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
+                                <td v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
+                                <td v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
+                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
+                                <td v-show="tblBuyOptions.code_comb" v-if="user.isOurs== 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td v-show="tblBuyOptions.code_price" v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -308,6 +335,73 @@
         </div>
         <!-- End of Modal Buy Selected -->
 
+        <!-- Modal Settings -->
+        <div class="modal fade" id="modal-setting" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.topic ? 'checked':''" v-model="tblBuyOptions.topic">Topic</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.casino_sites ? 'checked':''" v-model="tblBuyOptions.casino_sites">Casino & Betting Sites</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language">Language</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url">URL</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.ur ? 'checked':''" v-model="tblBuyOptions.ur">UR</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.dr ? 'checked':''" v-model="tblBuyOptions.dr">DR</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.backlinks ? 'checked':''" v-model="tblBuyOptions.backlinks">Backlinks</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.ref_domains ? 'checked':''" v-model="tblBuyOptions.ref_domains">Ref Domains</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">Price</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Settings -->
+
     </div>
 </template>
 
@@ -340,6 +434,8 @@
                     status_purchase: this.$route.query.status_purchase || '',
                     seller: this.$route.query.seller || '',
                     code: this.$route.query.code || '',
+                    casino_sites: this.$route.query.casino_sites || '',
+                    topic: this.$route.query.topic || '',
                     paginate: this.$route.query.paginate || 25,
                 },
                 searchLoading: false,
@@ -351,11 +447,34 @@
                 allSelected: false,
                 buyData: [],
                 isSearching: false,
+                topic: [
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'Movies & Music',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real State',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Unlisted',
+                ],
             }
         },
 
         computed: {
             ...mapState({
+                tblBuyOptions: state => state.storeBuy.tblBuyOptions,
                 listBuy: state => state.storeBuy.listBuy,
                 listCountries: state => state.storeBuy.listCountries,
                 messageForms: state => state.storeBuy.messageForms,
@@ -369,9 +488,17 @@
             this.getListCountries();
             this.checkCreditAuth();
             this.getListSeller();
+            this.columnShow();
         },
 
         methods: {
+            columnShow() {
+                if (this.user.role_id == 5){
+                    this.tblBuyOptions.casino_sites = false;
+                    this.tblBuyOptions.seller = false;
+                }
+            },
+
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
                 return val;
@@ -399,6 +526,8 @@
                         seller: this.filterModel.seller,
                         code: this.filterModel.code,
                         paginate: this.filterModel.paginate,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
                         page: page,
                     }
                 });
@@ -488,6 +617,8 @@
                     status_purchase: '',
                     seller: '',
                     code: '',
+                    casino_sites: '',
+                    topic: '',
                     paginate: 25,
                 }
 
@@ -542,6 +673,8 @@
                         seller: this.filterModel.seller,
                         code: this.filterModel.code,
                         paginate: this.filterModel.paginate,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
                     }
                 });
             },

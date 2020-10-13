@@ -33,10 +33,16 @@ class PublisherController extends Controller
     }
 
     public function importExcel(Request $request){
-        $request->validate([
-            'file' => 'bail|required|mimes:csv,txt',
-            'language' => 'required'
-        ]);
+        if (Auth::user()->isOurs == 1){
+            $request->validate([
+                'file' => 'bail|required|mimes:csv,txt',
+                'language' => 'required',
+            ]);
+        } else{
+            $request->validate([
+                'file' => 'bail|required|mimes:csv,txt',
+            ]);
+        }
 
         $file = $request->all();
         $data = $this->publisherRepository->importExcel($file);

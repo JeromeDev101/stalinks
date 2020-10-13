@@ -11,6 +11,8 @@ use App\Libs\Ahref;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Country;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
@@ -122,6 +124,9 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     }
 
     public function importExcel($file){
+        $user_id_list = User::pluck('id')->toArray();
+        $country_name_list = Country::pluck('name')->toArray();
+        $topic_list = ['Movies & Music','Beauty','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
         $language = $file['language'];
         $csv_file = $file['file'];
 
@@ -132,41 +137,139 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $id = Auth::user()->id;
         $csv = fopen($csv_file, 'r');
         $ctr = 0;
+
+        $datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
-            if(count($line) > 3 || count($line) < 3){
-                $message = "Please check the header: Url, Price and Inc Article only.";
-                $file_message = "Invalid Header format. ".$message;
-                $result = false;
-                break;
-            }
 
-            if( $ctr > 0 ){
-                $url = $line[0];
-                $price = $line[1];
-                $article = $line[2];
+            if (Auth::user()->isOurs == 1){
 
-                if( trim($url, " ") != '' ){
-                    Publisher::create([
-                        'user_id' => $id,
-                        'language_id' => $language,
-                        'url' => $url,
-                        'ur' => 0,
-                        'dr' => 0,
-                        'backlinks' => 0,
-                        'ref_domain' => 0,
-                        'org_keywords' => 0,
-                        'org_traffic' => 0,
-                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                        'valid' => 'unchecked',
-                    ]);
+                if(count($line) > 3 || count($line) < 3){
+                    $message = "Please check the header: Url, Price, Inc Article, Seller ID and Accept only.";
+                    $file_message = "Invalid Header format. ".$message;
+                    $result = false;
+                    break;
+                }
+
+                if( $ctr > 0 ){
+                    $url = $line[0];
+                    $price = $line[1];
+                    $article = $line[2];
+
+                    if( trim($url, " ") != '' ){
+                        Publisher::create([
+                            'user_id' => $id,
+                            'language_id' => $language,
+                            'url' => $url,
+                            'ur' => 0,
+                            'dr' => 0,
+                            'backlinks' => 0,
+                            'ref_domain' => 0,
+                            'org_keywords' => 0,
+                            'org_traffic' => 0,
+                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                            'valid' => 'unchecked',
+                            'casino_sites' => 'yes',
+                            'topic' => null
+                        ]);
+                    }
+                }
+
+            } else {
+
+                if(count($line) > 7 || count($line) < 7){
+                    $message = "Please check the header: Url, Price, Inc Article, Seller ID and Accept only.";
+                    $file_message = "Invalid Header format. ".$message;
+                    $result = false;
+                    break;
+                }
+
+                if( $ctr > 0 ){
+                    $url = $line[0];
+                    $price = $line[1];
+                    $article = $line[2];
+                    $seller_id = $line[3];
+                    $accept = $line[4];
+                    $language_excel = $line[5];
+                    $topic = $line[6];
+
+
+                    if (in_array($seller_id, $user_id_list)){
+                        
+                        if (preg_grep("/".$language_excel."/i", $country_name_list)){
+
+                            if (preg_grep("/".$topic."/i", $topic_list)){ 
+
+                                if( trim($url, " ") != '' ){
+                                    $lang = $this->getCountry($language_excel);
+                                    array_push($datas, [
+                                        'user_id' => $seller_id ,
+                                        'language_id' => $lang,
+                                        'url' => $url,
+                                        'ur' => 0,
+                                        'dr' => 0,
+                                        'backlinks' => 0,
+                                        'ref_domain' => 0,
+                                        'org_keywords' => 0,
+                                        'org_traffic' => 0,
+                                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                        'valid' => 'unchecked',
+                                        'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                        'topic' => $topic
+                                    ]);
+                                }
+
+                            } else{
+                                $message = ". Please check the Topic before uploading the CSV file";
+                                $file_message = "No Topic name of ". $topic . $message . ". Check in line ". (intval($ctr) + 1);
+                                $result = false;
+                                break;
+                            }
+
+                        } else {
+                            $message = ". Please check the Language before uploading the CSV file";
+                            $file_message = "No Language name of ". $language_excel . $message . ". Check in line ". (intval($ctr) + 1);
+                            $result = false;
+                            break;
+                        }
+
+                    } else{
+                        $message = ". Please check the seller ID before uploading the CSV file";
+                        $file_message = "No Seller ID of ". $seller_id . $message . ". Check in line ". (intval($ctr) + 1);
+                        $result = false;
+                        break;
+                    }
                 }
             }
+
+                
 
             $ctr++;
         }
 
         fclose($csv);
+
+        if (Auth::user()->isOurs == 0){
+            foreach( $datas as $data ){
+                Publisher::create([
+                    'user_id' => $data['user_id'],
+                    'language_id' => $data['language_id'],
+                    'url' => $data['url'],
+                    'ur' => $data['ur'],
+                    'dr' => $data['dr'],
+                    'backlinks' => $data['backlinks'],
+                    'ref_domain' => $data['ref_domain'],
+                    'org_keywords' => $data['org_keywords'],
+                    'org_traffic' => $data['org_traffic'],
+                    'price' => $data['price'],
+                    'inc_article' => $data['inc_article'],
+                    'valid' => $data['valid'],
+                    'casino_sites' => $data['casino_sites'],
+                    'topic' => $data['topic'],
+                ]);
+            }
+        }
 
         return [
             "success" => $result,
@@ -175,6 +278,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 "file" => $file_message,
             ],
         ];
+    }
+
+
+    private function getCountry($country){
+        $id = 5;
+        $country = Country::where('name', 'like', '%'.$country.'%')->first();
+        if( $country ){
+            $id = $country->id;
+        }
+        return $id;
     }
 
     /**
