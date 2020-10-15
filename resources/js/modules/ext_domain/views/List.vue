@@ -35,11 +35,12 @@
                         <div v-if="tableShow.country" class="col-md-2">
                             <div class="form-group">
                                 <label style="color: #333">Country</label>
-                                <select v-model="filterModel.country_id_temp" class="form-control pull-right">
+                                <!-- <select v-model="filterModel.country_id_temp" class="form-control pull-right">
                                     <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
-                                </select>
+                                </select> -->
+                                <v-select multiple v-model="filterModel.country_id_temp" :options="filterModel.countryList.data" :reduce="name => name.name" label="name" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -61,13 +62,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin">
+                        <div class="col-md-2" v-if="user.isAdmin || tableShow.employee">
                             <div class="form-group">
                                 <label style="color: #333">Employee</label>
-                                <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
+                                <!-- <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
                                     <option value="0">Select Employee</option>
-                                    <option v-for="user in listUser.data" :value="user.id">{{ user.name }}</option>
-                                </select>
+                                    <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
+                                </select> -->
+                                <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -175,31 +177,32 @@
 
                     <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
                         <thead>
-                        <tr class="label-primary">
-                            <th>Action</th>
-                            <th>Select</th>
-                            <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
-                            <th class="sorting" data-index="1" v-show="tableShow.country">Country</th>
-                            <th class="sorting" data-index="2" v-show="tableShow.domain">Domain</th>
-                            <th class="sorting" data-index="3" v-show="tableShow.email">Emails</th>
-                            <th class="sorting" data-index="4" v-show="tableShow.facebook">Facebook</th>
-                            <th class="sorting" data-index="5" v-show="tableShow.phone">Phone</th>
-                            <th class="sorting" data-index="6" v-show="tableShow.rank">Rank</th>
-                            <th class="sorting" data-index="7" v-show="tableShow.status">Status</th>
-                            <th class="sorting" data-index="8" v-show="tableShow.total_spent">Total Spent</th>
-                            <th class="sorting" data-index="9" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
-                            <th class="sorting" data-index="10" v-show="tableShow.no_backlinks">No Backlinks</th>
-                            <th class="sorting" data-index="11" v-show="tableShow.url_rating">UR</th>
-                            <th class="sorting" data-index="12" v-show="tableShow.domain_rating">DR</th>
-                            <th class="sorting" data-index="13" v-show="tableShow.ref_domains">Ref Domains</th>
-                            <th class="sorting" data-index="14" v-show="tableShow.organic_keywords">Organic Keywords</th>
-                            <th class="sorting" data-index="15" v-show="tableShow.organic_traffic">Organic Traffic</th>
-                        </tr>
+                            <tr class="label-primary">
+                                <th>Action</th>
+                                <th>Select</th>
+                                <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
+                                <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
+                                <th class="sorting" data-index="2" v-show="tableShow.country">Country</th>
+                                <th class="sorting" data-index="3" v-show="tableShow.domain">Domain</th>
+                                <th class="sorting" data-index="4" v-show="tableShow.email">Emails</th>
+                                <th class="sorting" data-index="5" v-show="tableShow.facebook">Facebook</th>
+                                <th class="sorting" data-index="6" v-show="tableShow.phone">Phone</th>
+                                <th class="sorting" data-index="7" v-show="tableShow.rank">Rank</th>
+                                <th class="sorting" data-index="8" v-show="tableShow.status">Status</th>
+                                <th class="sorting" data-index="9" v-show="tableShow.total_spent">Total Spent</th>
+                                <th class="sorting" data-index="10" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
+                                <th class="sorting" data-index="11" v-show="tableShow.no_backlinks">No Backlinks</th>
+                                <th class="sorting" data-index="12" v-show="tableShow.url_rating">UR</th>
+                                <th class="sorting" data-index="13" v-show="tableShow.domain_rating">DR</th>
+                                <th class="sorting" data-index="14" v-show="tableShow.ref_domains">Ref Domains</th>
+                                <th class="sorting" data-index="15" v-show="tableShow.organic_keywords">Organic Keywords</th>
+                                <th class="sorting" data-index="16" v-show="tableShow.organic_traffic">Organic Traffic</th>
+                            </tr>
                         </thead>
                         <tbody>
                         <tr v-for="(ext, index) in listExt.data" :key="index">
                             <td>
-                                <div class="btn-group">
+                                <div class="btn-group" v-if="checkSellerAccess(ext.users == null ? null:ext.users.id)">
                                     <button data-action="a1" :data-index="index" @click="doEditExt(ext)" data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
                                     <button data-action="a2" :data-index="index" v-if="hasBacklink(ext.status)" @click="doShowBackLink(ext)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
                                     <button data-action="a4" :data-index="index" @click="doSendEmail(ext, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
@@ -214,31 +217,32 @@
                                     </button>
                                 </div>
                             </td>
-                            <td v-if="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
-                            <td v-if="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
-                            <td v-if="tableShow.domain" title="Domain" ><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
-                            <td v-if="tableShow.email" title="Emails" style="max-width: 200px;">
+                            <td v-show="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
+                            <td v-show="tableShow.employee">{{ ext.users == null ? 'N/A':ext.users.username }}</td>
+                            <td v-show="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
+                            <td v-show="tableShow.domain" title="Domain" ><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
+                            <td v-show="tableShow.email" title="Emails" style="max-width: 200px;">
                                 <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.email"><img src="/images/row-loading.gif" alt="crawling"></div>
                                 <ol v-if="ext.email" class="pl-15"><li v-for="item in ext.email.split('|')">{{ item }}</li></ol>
                             </td>
-                            <td v-if="tableShow.facebook" title="Facebook" style="max-width: 200px;" >
+                            <td v-show="tableShow.facebook" title="Facebook" style="max-width: 200px;" >
                                 <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.facebook"><img src="/images/row-loading.gif" alt="crawling"></div>
                                 <ol v-if="ext.facebook" class="pl-15"><li v-for="item in ext.facebook.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li></ol>
                             </td>
-                            <td v-if="tableShow.phone" title="Phone" style="max-width: 200px;" >
+                            <td v-show="tableShow.phone" title="Phone" style="max-width: 200px;" >
                                 <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.phone"><img src="/images/row-loading.gif" alt="crawling"></div>
                                 <ol v-if="ext.phone" class="pl-15"><li v-for="item in ext.phone.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li></ol>
                             </td>
-                            <td v-if="tableShow.rank" title="Rank">{{ ext.alexa_rank }}</td>
-                            <td v-if="tableShow.status" title="Status"><span :class="['label', 'label-' + (listStatusText[ext.status] ? listStatusText[ext.status].label : 'warning')]">{{ listStatusText[ext.status] ? listStatusText[ext.status].text : 'undefined' }}</span></td>
-                            <td v-if="tableShow.total_spent" title="Total Spent">{{ convertPrice(ext.total_spent) }}$</td>
-                            <td v-if="tableShow.ahrefs_rank" title="Aherfs Rank">{{ ext.ahrefs_rank }}</td>
-                            <td v-if="tableShow.no_backlinks" title="No Backlinks">{{ ext.no_backlinks }}</td>
-                            <td v-if="tableShow.url_rating" title="URL Rating">{{ ext.url_rating }}</td>
-                            <td v-if="tableShow.domain_rating" title="Domain Rating">{{ ext.domain_rating }}</td>
-                            <td v-if="tableShow.ref_domains" title="Ref domains">{{ ext.ref_domains }}</td>
-                            <td v-if="tableShow.organic_keywords" title="Organic keywords">{{ formatPrice(ext.organic_keywords) }}</td>
-                            <td v-if="tableShow.organic_traffic" title="Organic traffic">{{ formatPrice(ext.organic_traffic) }}</td>
+                            <td v-show="tableShow.rank" title="Rank">{{ ext.alexa_rank }}</td>
+                            <td v-show="tableShow.status" title="Status"><span :class="['label', 'label-' + (listStatusText[ext.status] ? listStatusText[ext.status].label : 'warning')]">{{ listStatusText[ext.status] ? listStatusText[ext.status].text : 'undefined' }}</span></td>
+                            <td v-show="tableShow.total_spent" title="Total Spent">{{ convertPrice(ext.total_spent) }}$</td>
+                            <td v-show="tableShow.ahrefs_rank" title="Aherfs Rank">{{ ext.ahrefs_rank }}</td>
+                            <td v-show="tableShow.no_backlinks" title="No Backlinks">{{ ext.no_backlinks }}</td>
+                            <td v-show="tableShow.url_rating" title="URL Rating">{{ ext.url_rating }}</td>
+                            <td v-show="tableShow.domain_rating" title="Domain Rating">{{ ext.domain_rating }}</td>
+                            <td v-show="tableShow.ref_domains" title="Ref domains">{{ ext.ref_domains }}</td>
+                            <td v-show="tableShow.organic_keywords" title="Organic keywords">{{ formatPrice(ext.organic_keywords) }}</td>
+                            <td v-show="tableShow.organic_traffic" title="Organic traffic">{{ formatPrice(ext.organic_traffic) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -276,7 +280,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.domain}" class="form-group">
                                     <label style="color: #333">Domain</label>
-                                    <input type="text" v-model="extModel.domain" class="form-control" value="" required="required" placeholder="Enter domain">
+                                    <input type="text" v-model="extModel.domain" class="form-control" value="" required placeholder="Enter domain">
                                     <span v-if="messageForms.errors.domain" v-for="err in messageForms.errors.domain" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -411,7 +415,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">Price</label>
                                     <input type="number" v-model="extModel.price" class="form-control" value="" placeholder="0.00">
@@ -426,7 +430,7 @@
                                         <option value="No">No</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -533,7 +537,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.status}" class="form-group">
                                     <label style="color: #333">Status</label>
-                                    <select type="text" v-model="extUpdate.status" class="form-control" value="" required="required">
+                                    <select type="text" v-model="extUpdate.status" @change="showAddURL()" class="form-control" value="" required="required">
                                     <option v-for="(option, key) in listStatusText" v-bind:value="key" :selected="(key === extUpdate.status ? 'selected' : '')">
                                         {{ option.text }}
                                     </option>
@@ -637,7 +641,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label style="color: #333">Price</label>
                                     <input type="number" v-model="extUpdate.price" class="form-control" value="" placeholder="0.00">
@@ -652,11 +656,100 @@
                                         <option value="No">No</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </form>
-                        <div class="overlay" v-if="isPopupLoading"></div>
+
+                        <div class="row mt-3" v-show="formAddUrl">
+                            <div class="col-md-12">
+                                <h4>Publisher List</h4>
+                                <hr>
+                            </div>
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}" class="form-group">
+                                    <label style="color: #333">Seller</label>
+                                    <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">
+                                        <option value="">Select Seller</option>
+                                        <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name:option.username }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors['pub.seller']" v-for="err in messageForms.errors['pub.seller']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.inc_article']}" class="form-group">
+                                    <label style="color: #333">Inc Article</label>
+                                    <select name="" id="" class="form-control" v-model="publisherAdd.inc_article" :disabled="isEditable">
+                                        <option value="">Select Include Article</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors['pub.inc_article']" v-for="err in messageForms.errors['pub.inc_article']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.url']}" class="form-group">
+                                    <label style="color: #333">URL</label>
+                                    <input type="text" class="form-control" v-model="publisherAdd.url" :disabled="true">
+                                    <span v-if="messageForms.errors['pub.url']" v-for="err in messageForms.errors['pub.url']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.language_id']}" class="form-group">
+                                    <label style="color: #333">Language</label>
+                                    <select name="" class="form-control" v-model="publisherAdd.language_id" :disabled="isEditable">
+                                        <option value="">Select Language</option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors['pub.language_id']" v-for="err in messageForms.errors['pub.language_id']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.price']}" class="form-group">
+                                    <label style="color: #333">Price</label>
+                                    <input type="number" class="form-control" v-model="publisherAdd.price" :disabled="isEditable">
+                                    <span v-if="messageForms.errors['pub.price']" v-for="err in messageForms.errors['pub.price']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.casino_sites']}" class="form-group">
+                                    <label style="color: #333">Accept Casino & Betting Sites</label>
+                                    <select name="" class="form-control" v-model="publisherAdd.casino_sites" :disabled="isEditable">
+                                        <option value="">Select Casino & Bettings Sites</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors['pub.casino_sites']" v-for="err in messageForms.errors['pub.casino_sites']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.topic']}" class="form-group">
+                                    <label style="color: #333">Topic</label>
+                                    <select name="" class="form-control" v-model="publisherAdd.topic" :disabled="isEditable">
+                                        <option value="">Select Topic</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors['pub.topic']" v-for="err in messageForms.errors['pub.topic']" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
+
+                    <div class="overlay" v-if="isPopupLoading"></div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
@@ -679,6 +772,10 @@
                         <div class="form-group row">
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tableShow.id ? 'checked':''" v-model="tableShow.id">#</label>
+                            </div>
+                            
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
                             </div>
 
                             <div class="checkbox col-md-4">
@@ -960,6 +1057,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
     import DownloadCsv from '@/components/export-csv/Csv.vue'
     import { async } from 'q';
     export default {
@@ -990,7 +1088,7 @@
                     id: this.$route.query.id || 0,
                     id_temp: this.$route.query.id_temp || 0,
                     country_id: this.$route.query.country_id || 0,
-                    country_id_temp: this.$route.query.country_id || 1,
+                    country_id_temp: this.$route.query.country_id || '',
                     countryList: { data: [], total: 0},
                     domain: this.$route.query.domain || '',
                     domain_temp: this.$route.query.domain_temp || '',
@@ -998,7 +1096,7 @@
                     status_temp: this.$route.query.status_temp || 0,
                     page: this.$route.query.page || 0,
                     per_page: this.$route.query.per_page || 10,
-                    employee_id: this.$route.query.employee_id || 0,
+                    employee_id: this.$route.query.employee_id || '',
                     required_email_temp: this.$route.query.required_email_temp || 0,
                     required_email: this.$route.query.required_email || 0,
                     sort_key: this.$route.query.sort_key || 'id',
@@ -1022,9 +1120,9 @@
                     phone: '',
                     skype: '',
                     info: '',
-                    price: '',
+                    // price: '',
                     status: '',
-                    inc_article: 'Yes',
+                    // inc_article: 'Yes',
                 },
                 mailInfo: {
                     tpl: 0,
@@ -1043,6 +1141,15 @@
                 },
                 extBackLink: {},
                 extUpdate: {},
+                publisherAdd: {
+                    seller: '',
+                    language_id: '',
+                    inc_article: '',
+                    topic: '',
+                    casino_sites: '',
+                    url: '',
+                    price: '',
+                },
                 isUpdateMode: false,
                 isCrawling: false,
                 isLoadingTable: false,
@@ -1064,6 +1171,30 @@
                     status: '',
                 },
                 isQualified: false,
+                formAddUrl: false,
+                topic: [
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'Movies & Music',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real State',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Unlisted',
+                ],
+                isEditable: false,
              };
         },
         async created() {
@@ -1077,6 +1208,18 @@
             this.fillterIntByCountry();
             this.checkQualified();
             this.getListExtSeller();
+
+            let seller = this.listSeller.data;
+            if( seller.length === 0 ){
+                this.getListSeller();
+            }
+
+            let countries = this.listCountries.data;
+            if( countries.length === 0 ){
+                this.getListCountries();
+            }
+
+            this.getListSellerTeam();
         },
         computed: {
             ...mapState({
@@ -1094,6 +1237,9 @@
                 listAhrefs: state => state.storeExtDomain.listAhrefs,
                 listMailTemplate: state => state.storeExtDomain.listMailTemplate,
                 listExtSeller: state => state.storeExtDomain.listExtSeller,
+                listSeller: state => state.storePublisher.listSeller,
+                listCountries: state => state.storePublisher.listCountries,
+                listSellerTeam: state => state.storeExtDomain.listSellerTeam,
             }),
             pagination() {
                 return {
@@ -1153,6 +1299,37 @@
             });
         },
         methods: {
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
+            showAddURL() {
+                this.formAddUrl = false;
+                if ( this.extUpdate.status == 100 ){
+                    this.formAddUrl = true;
+                    this.extUpdate.url = this.extUpdate.domain;
+                }
+            },
+
+            checkSellerAccess(seller_id) {
+                if( this.user.role_id == 6 && this.user.isOurs == 0 ){
+                    let check = false;
+                    if( this.user.id == seller_id ){
+                        check = true;
+                    }
+                    return check;
+                }else{
+                    return true;
+                }
+            },
+
+            async getListSeller(params) {
+                await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            async getListSellerTeam(params) {
+                await this.$store.dispatch('actionGetListSellerTeam', params);
+            },
 
             async getListExtSeller() {
                 await this.$store.dispatch('actionGetListExtSeller');
@@ -1421,6 +1598,7 @@
                     //this.listExt.data.pop();
                     //this.listExt.data.unshift(this.messageForms.obj);
                     this.doSearchList();
+                    this.isEditable = true;
                 }
             },
             convertPrice(price) {
@@ -1428,7 +1606,10 @@
             },
             async submitUpdate() {
                 this.isPopupLoading = true;
-                await this.$store.dispatch('updateExt', this.extUpdate);
+                await this.$store.dispatch('updateExt', {
+                    ext: this.extUpdate,
+                    pub: this.publisherAdd,
+                });
                 this.isPopupLoading = false;
                 if (this.messageForms.action === 'updated_ext') {
                     for (var index in this.listExt.data) {
@@ -1450,21 +1631,72 @@
                 });
                 this.isPopupLoading = false;
             },
+
             async doShowBackLinkIndex(index) {
                 var extDomain = this.listExt.data[index];
                 this.doShowBackLinkIndex(extDomain);
             },
+
             doAddExt() {
                 this.$store.dispatch('clearMessageForm');
             },
+
             doEditExt(extDomain) {
+                this.formAddUrl = true;
+
                 this.$store.dispatch('clearMessageForm');
                 this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+                if (this.extUpdate.status != 100){
+                    this.formAddUrl = false;
+                }
+
+                this.getPublisherInfo(this.extUpdate.domain).then(res => {
+                    var result = res.data
+                    if (res.data.success == true){
+                        this.publisherAdd.seller = result.data.user_id
+                        this.publisherAdd.inc_article = result.data.inc_article
+                        this.publisherAdd.url = result.data.url
+                        this.publisherAdd.language_id = result.data.language_id
+                        this.publisherAdd.topic = result.data.topic
+                        this.publisherAdd.casino_sites = result.data.casino_sites
+                        this.publisherAdd.price = result.data.price
+
+                        this.isEditable = true;
+                    } else {
+                        this.publisherAdd.seller = ''
+                        this.publisherAdd.inc_article = ''
+                        this.publisherAdd.url = this.extUpdate.domain;
+                        this.publisherAdd.language_id = ''
+                        this.publisherAdd.topic = ''
+                        this.publisherAdd.casino_sites = ''
+                        this.publisherAdd.price = ''
+
+                        this.isEditable = false;
+                    }
+                    
+                });
+                
             },
+
+            async getPublisherInfo(domain) {
+                try {
+                    const response = await axios.get('api/get-publisher-info', {
+                                            params: {
+                                                url: domain,
+                                            }
+                                        });
+                    return response;
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+
             doEditExtIndex(index) {
                 let extDomain = this.listExt.data[index];
                 this.doEditExt(extDomain);
             },
+
             hasBacklink(status) {
                 if (status == 70) {
                     return true

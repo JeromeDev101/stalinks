@@ -134,4 +134,12 @@ class PublisherController extends Controller
         }
         return response()->json(['success'=> true, 'data' => $result],200);
     }
+
+    public function getInfo(Request $request) {
+        $publisher = Publisher::where('url', $request->url)->first();
+        if( !$publisher ){
+            return response()->json(['success' => false, 'data' => ''],200);
+        }
+        return response()->json(['success' => true, 'data' => $publisher],200);
+    }
 }

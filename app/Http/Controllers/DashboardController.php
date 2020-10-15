@@ -73,7 +73,8 @@ class DashboardController extends Controller
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
-                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email')
+                    ->where('backlinks.status', 'Live');
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
             $list = $list->where('users.id', Auth::user()->id);

@@ -50,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-wallet-transaction')->get('wallet-transaction', 'WalletTransactionController@getList');
     Route::name('get-user-buyer')->get('wallet-user-buyer', 'WalletTransactionController@getListBuyer');
     Route::name('get-user-seller')->get('wallet-user-seller', 'WalletTransactionController@getListSeller');
+    Route::name('get-user-seller-team')->get('wallet-user-seller-team', 'WalletTransactionController@getListSellerTeam');
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
 
@@ -80,6 +81,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('dashboard')->get('/dashboard', 'DashboardController@index');
 
     //Publisher URL list page
+    Route::name('get-publisher-info')->get('/get-publisher-info', 'PublisherController@getInfo');
     Route::name('publisher-create')->post('/publisher', 'PublisherController@store');
     Route::name('publisher-get')->get('/publisher', 'PublisherController@getList');
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');

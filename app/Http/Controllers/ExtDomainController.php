@@ -181,7 +181,7 @@ class ExtDomainController extends Controller
     public function getList(Request $request) {
        // $input = $request->except('status');
 
-        $input = $request->all();
+        $input = $request->except('employee_id', 'country_id');
         $page = 0;
         $perPage =  10;
         $userId = Auth::id();
@@ -192,9 +192,34 @@ class ExtDomainController extends Controller
             'id', 'desc'
         ];
 
-        if (isset($input['employee_id'])) {
-            $userId = $this->userService->checkUserId($input['employee_id']);
+        // dd($input);
+        
+        $emp_ids = [];
+        if( is_array($request->employee_id) && count($request->employee_id) > 0 ){
+            foreach( $request->employee_id as $name){
+                $user = User::where('username', 'like', '%'.$name.'%')->first();
+                $emp_ids[] = $user->id;
+            }
+        }    
+
+        $cntry_ids = [];
+        if( is_array($request->country_id) && count($request->country_id) > 0 ){
+            foreach( $request->country_id as $name){
+                $cntry = Country::where('name', 'like', '%'.$name.'%')->first();
+                $cntry_ids[] = $cntry->id;
+            }
+        } 
+        if (count($cntry_ids) > 0){
+            $input['country_id'] = $cntry_ids;
+        }else{
+            $input['country_id'] = null;
         }
+
+        // dd($input);
+
+        // if (isset($input['employee_id'])) {
+        //     $userId = $this->userService->checkUserId($input['employee_id']);
+        // }
 
         if (isset($input['sort'])) {
             $sortTemp = explode(",", $input['sort']);
@@ -223,7 +248,7 @@ class ExtDomainController extends Controller
         //init filter
         $countryIds = [];
         if (isset($input['country_id']) && $input['country_id'] > 0) {
-            $countryAll = explode(",", $input['country_id']);
+            $countryAll = $input['country_id'];
             $countryIds = $this->countryRepository->validCountryIdList($countryAll, $userId, true);
             $findAllExt = false;
             $countriesExceptIds = array_diff($countryAll, $countryIds);
@@ -241,6 +266,11 @@ class ExtDomainController extends Controller
 
 
         $filters['whereIn'][] = ['country_id', $countryIds];
+        
+        if (count($emp_ids) > 0){
+            $filters['whereIn'][] = ['user_id', $emp_ids];
+        }
+        
 
         $filters['other']['whereIn'][] = ['country_id', $countryIds];
         $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
@@ -287,7 +317,7 @@ class ExtDomainController extends Controller
 
     public function store(Request $request) {
         $id = Auth::user()->id;
-        $input = $request->only(['inc_article', 'price', 'info','skype','domain', 'country_id', 'alexa_rank',
+        $input = $request->only(['info','skype','domain', 'country_id', 'alexa_rank',
             'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic', 'email',
             'facebook', 'phone']);
 
@@ -308,21 +338,44 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0'
         ])->validate();
 
+        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$input['domain'].'%');
+        $checkPublisher = Publisher::where('url', 'like', '%'.$input['domain'].'%');
+        
+        if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
+            $inputted = '';
+            if( $checkExtDomain->count() > 0 ){
+                $extdomain = $checkExtDomain->first();
+                $inputted = isset($extdomain->users->name) ? $extdomain->users->name : 'Unknown User';
+            } 
+
+            if( $checkPublisher->count() > 0 ){
+                $publisher = $checkPublisher->first();
+                $inputted = isset($publisher->user->name) ? $publisher->user->name : 'Unknown User';
+            }
+
+            $message = [
+                'message' => 'It was inputted by '. $inputted,
+                'errors' => [
+                    'domain' => 'Domain is already exists'
+                ]
+            ];
+            return response()->json($message,422);
+        }
+
         if( $request->status === '100'){
-            Publisher::create([
-                'user_id' => $id,
-                'url' => $input['domain'],
-                'ur' => $input['url_rating'],
-                'dr' => $input['domain_rating'],
-                'backlinks' => $input['no_backlinks'],
-                'ref_domain' => $input['ref_domains'],
-                'org_keywords' => $input['organic_keywords'],
-                'org_traffic' => $input['organic_traffic'],
-                'price' => $input['price'],
-                'language_id' => $input['country_id'],
-                'inc_article' => $input['inc_article'],
-                'valid' => 'unchecked',
-            ]);
+            // Publisher::create([
+            //     'user_id' => $id,
+            //     'url' => $input['domain'],
+            //     'ur' => $input['url_rating'],
+            //     'dr' => $input['domain_rating'],
+            //     'backlinks' => $input['no_backlinks'],
+            //     'ref_domain' => $input['ref_domains'],
+            //     'org_keywords' => $input['organic_keywords'],
+            //     'org_traffic' => $input['organic_traffic'],
+            //     'language_id' => $input['country_id'],
+            //     'inc_article' => $input['inc_article'],
+            //     'valid' => 'unchecked',
+            // ]);
 
             $input['user_id'] = $id;
         }
@@ -334,9 +387,9 @@ class ExtDomainController extends Controller
             $input['domain'] = explode('http://', $input['domain'])[1];
         }
 
-        Validator::make($input, [
-            'domain' => 'unique:ext_domains'
-        ])->validate();
+        // Validator::make($input, [
+        //     'domain' => 'unique:ext_domains'
+        // ])->validate();
 
         $input['status'] = $request->status == "" ? config('constant.EXT_STATUS_NEW'):intval($request->status);
         $hasContactInfo = $this->isInputContactInfo($input);
@@ -425,9 +478,41 @@ class ExtDomainController extends Controller
     }
 
     public function update(Request $request) {
+        // dd($request->all());
         $id = Auth::user()->id;
-        $input = $request->only(['inc_article', 'price', 'info','skype','id', 'status', 'email', 'domain',
-            'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
+
+        // $input = $request->only(['info','skype','id', 'status', 'email', 'domain',
+        //     'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
+
+        $input['info']  = $request->ext['info'];
+        $input['skype']  = $request->ext['skype'];
+        $input['id']  = $request->ext['id'];
+        $input['status']  = $request->ext['status'];
+        $input['email']  = $request->ext['email'];
+        $input['domain']  = $request->ext['domain'];
+        $input['facebook']  = $request->ext['facebook'];
+        $input['phone']  = $request->ext['phone'];
+        $input['ahrefs_rank']  = $request->ext['ahrefs_rank'];
+        $input['no_backlinks']  = $request->ext['no_backlinks'];
+        $input['url_rating']  = $request->ext['url_rating'];
+        $input['domain_rating']  = $request->ext['domain_rating'];
+        $input['ref_domains']  = $request->ext['ref_domains'];
+        $input['organic_keywords']  = $request->ext['organic_keywords'];
+        $input['organic_traffic']  = $request->ext['organic_traffic'];
+
+        if ( $request->ext['status'] == 100){
+            $request->validate([
+                'pub.seller' => 'required',
+                'pub.language_id' => 'required',
+                'pub.inc_article' => 'required',
+                'pub.topic' => 'required',
+                'pub.casino_sites' => 'required',
+                'pub.url' => 'required',
+                'pub.price' => 'required',
+            ]);
+        }
+
+        // dd($input);
 
         foreach($input as $key => $value) {
             if (!isset($input[$key])) $input[$key] = '';
@@ -498,17 +583,19 @@ class ExtDomainController extends Controller
 
         if( $input['status'] === '100'){
             Publisher::create([
-                'user_id' => $id,
-                'url' => $input['domain'],
+                'user_id' => $request->pub['seller'],
+                'url' => $request->pub['url'],
                 'ur' => $input['url_rating'],
                 'dr' => $input['domain_rating'],
                 'backlinks' => $input['no_backlinks'],
                 'ref_domain' => $input['ref_domains'],
                 'org_keywords' => $input['organic_keywords'],
                 'org_traffic' => $input['organic_traffic'],
-                'price' => $input['price'],
-                'language_id' => $request->country['id'],
-                'inc_article' => $input['inc_article'],
+                'price' => $request->pub['price'],
+                'language_id' => $request->pub['language_id'],
+                'inc_article' => $request->pub['inc_article'],
+                'topic' => $request->pub['topic'],
+                'casino_sites' => $request->pub['casino_sites'],
                 'valid' => 'unchecked',
             ]);
 

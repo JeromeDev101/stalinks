@@ -197,7 +197,7 @@
                 </div>
 
                 <div class="box-body no-padding">
-                    <span v-if="listPublish.total > 10" class="pagination-custom-footer-text">
+                    <span class="pagination-custom-footer-text">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
 
@@ -497,7 +497,7 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">In-charge</label>
                             </div>
-                            <div class="checkbox col-md-6">
+                            <div class="checkbox col-md-6" v-if="user.isOurs != 1">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">

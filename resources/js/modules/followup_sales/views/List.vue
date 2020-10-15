@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="box-body no-padding">
-                    <span v-if="listSales.total > 10" class="pagination-custom-footer-text">
+                    <span class="pagination-custom-footer-text">
                         <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
                     </span>
 
@@ -359,10 +359,10 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.in_charge ? 'checked':''" v-model="tblOptions.in_charge">In-charge</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div class="checkbox col-md-4" v-if="user.isOurs != 1">
                                 <label><input type="checkbox" :checked="tblOptions.seller ? 'checked':''" v-model="tblOptions.seller">Seller</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div class="checkbox col-md-4" v-if="user.isOurs != 1">
                                 <label><input type="checkbox" :checked="tblOptions.buyer ? 'checked':''" v-model="tblOptions.buyer">Buyer</label>
                             </div>
                             <div class="checkbox col-md-4">
@@ -542,6 +542,7 @@
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -560,6 +561,7 @@
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ]
                 }

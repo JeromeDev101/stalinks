@@ -38,6 +38,12 @@ export default class ExtDomainService {
             .catch(error => error);
     }
 
+    static getListSellerTeam(params) {
+        return axios.get('/api/wallet-user-seller-team', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static deleteExtDomain(params) {
         return axios.delete('/api/ext', params)
             .then(response => response)

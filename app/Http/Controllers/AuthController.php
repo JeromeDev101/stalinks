@@ -132,11 +132,10 @@ class AuthController extends Controller
                 'btc_account' => $request->user_type['btc_account'],
                 'skrill_account' => $request->user_type['skrill_account'],
                 'id_payment_type' => $request->id_payment_type,
-                'password' => $input['password'],
             ];
 
-            if( $input['password'] == "" ){
-                unset($dataRegistered['password']);
+            if( isset($input['password']) ){
+                $dataRegistered['password'] = $input['password'];
             }
 
             $registered->update($dataRegistered);

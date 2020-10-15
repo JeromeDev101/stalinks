@@ -51,25 +51,6 @@ class WalletTransactionController extends Controller
             'users.credit_auth',
         ];
 
-        // $list_registration = User::select($columns)
-        //             ->leftJoin('registration', function($join){
-        //                 $join->on('users.email' , '=', 'registration.email')
-        //                     ->where('registration.type', 'Buyer');
-        //             })
-        //             ->where('users.status', 'active')
-        //             ->orderBy('users.username', 'asc')
-        //             ->whereNotNull('registration.name');
-
-        // $list = User::select($columns)
-        //             ->leftJoin('registration', function($join){
-        //                 $join->on('users.email' , '=', 'registration.email')
-        //                     ->where('registration.type', 'Buyer');
-        //             })
-        //             ->where('users.status', 'active')
-        //             ->where('role_id', 5)
-        //             ->orderBy('users.username', 'asc')
-        //             ->union($list_registration);
-
         $list = User::select($columns)
                     ->where('users.status', 'active')
                     ->where('role_id', 5)
@@ -81,40 +62,21 @@ class WalletTransactionController extends Controller
         ];
     }
 
+    public function getListSellerTeam() {
+        $list = User::select('id', 'username')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
+        return [
+            'data' => $list->get()
+        ];
+    }
+
     public function getListSeller() {
-        // $columns = [
-        //     'users.id',
-        //     'users.name',
-        //     'users.username',
-        //     'users.email',
-        //     'users.role_id',
-        //     'users.credit_auth',
-        //     'registration.name as reg_name',
-        // ];
-
-        // $list_registration = User::select($columns)
-        //             ->leftJoin('registration', function($join){
-        //                 $join->on('users.email' , '=', 'registration.email')
-        //                     ->where('registration.type', 'Seller');
-        //             })
-        //             ->where('users.status', 'active')
-        //             ->whereNotNull('registration.name');
-
-        // $list = User::select($columns)
-        //             ->leftJoin('registration', function($join){
-        //                 $join->on('users.email' , '=', 'registration.email')
-        //                     ->where('registration.type', 'Seller');
-        //             })
-        //             ->where('role_id', 6)
-        //             ->where('users.status', 'active')
-        //             ->union($list_registration);
-
         $list = Publisher::select('user_id')->distinct()->get()->toArray();
         $ids = [];
         foreach( $list as $id ){
             $ids[] = $id['user_id'];
         }   
-        $list = User::whereIn('id', $ids)->orderBy('username', 'asc');
+        // $list = User::whereIn('id', $ids)->orderBy('username', 'asc');
+        $list = User::where('role_id', 6)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];

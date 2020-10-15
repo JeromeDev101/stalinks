@@ -85,7 +85,7 @@
 
                 <div class="box-body no-padding">
 
-                    <span v-if="listIncomes.total > 10" class="pagination-custom-footer-text">
+                    <span class="pagination-custom-footer-text">
                         <b>Showing {{ listIncomes.from }} to {{ listIncomes.to }} of {{ listIncomes.total }} entries.</b>
                     </span>
 

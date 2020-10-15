@@ -254,6 +254,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             $query->select(['id', 'name', 'code']);
         }, 'backlinks' => function($query) {
             $query->select('ext_domain_id', 'price');
+        }, 'users' => function($query) {
+            $query->select('id','username');
         }]);
 
         if ($sort[0] === 'ext_domains.total_spent') {

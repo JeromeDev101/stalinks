@@ -11,6 +11,7 @@ const EXT_DOMAIN_SET_LIST_MAIL = 'EXT_DOMAIN_SET_LIST_MAIL';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const TOTAL_TOPSITES = "TOTAL_TOPSITES";
 const EXT_EXT_SELLER = "EXT_EXT_SELLER";
+const EXT_SELLER_TEAM = "EXT_SELLER_TEAM";
 
 //status external domain
 const EXT_STATUS_NEW = "New";
@@ -19,6 +20,7 @@ const EXT_STATUS_CONTACTS_NULL = "ContactNull";
 const EXT_STATUS_GOT_CONTACTS = "GotContacts";
 const EXT_STATUS_AHREAFED = "Ahrefed";
 const EXT_STATUS_CONTACTED = "Contacted";
+const EXT_STATUS_NO_ANSWER = "NoAnswer";
 const EXT_STATUS_REFUSED = "Refused";
 const EXT_STATUS_IN_TOUCHED = "InTouched";
 const UNQUALIFIED = "Unqualified";
@@ -30,6 +32,7 @@ const state = {
     listExt: { data: [], total: 0, pagination: '' },
     listAlexa: {},
     listExtSeller: {},
+    listSellerTeam: {},
     listCountriesInt: { data: [], total: 0 },
     listCountriesExt: { data: [], total: 0 },
     listAhrefs: [],
@@ -42,6 +45,7 @@ const state = {
         30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
         40: { text: EXT_STATUS_AHREAFED, label: "primary" },
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
+        55: { text: EXT_STATUS_NO_ANSWER, label: "warning" },
         60: { text: EXT_STATUS_REFUSED, label: "warning" },
         70: { text: EXT_STATUS_IN_TOUCHED, label: "success" },
         90: { text: UNQUALIFIED, label: "success" },
@@ -50,6 +54,7 @@ const state = {
     totalTopSites: 0,
     tableExtShowOptions: {
         id: true,
+        employee: true,
         country: true,
         domain: true,
         email: false,
@@ -88,6 +93,10 @@ const mutations = {
 
     [EXT_EXT_SELLER](state, listExtSeller) {
         state.listExtSeller = listExtSeller;
+    },
+
+    [EXT_SELLER_TEAM](state, listSellerTeam) {
+        state.listSellerTeam = listSellerTeam;
     },
 
     [EXT_DOMAIN_SET_LIST_COUNTRY_EXT](state, listCountriesExt) {
@@ -214,6 +223,20 @@ const actions = {
         try {
             let response = await ExtDomainService.getExtListSeller(params);
             commit(EXT_EXT_SELLER, response.data );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListSellerTeam({ commit }, params) {
+        try {
+            let response = await ExtDomainService.getListSellerTeam(params);
+            commit(EXT_SELLER_TEAM, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

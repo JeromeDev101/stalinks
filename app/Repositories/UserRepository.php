@@ -36,10 +36,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
         $queryBuilder = $queryBuilder->select('id', 'name', 'username', 'email', 'phone', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with(['role' => function($query) {
-            $query->select(['id', 'name']);
+            $query->select(['id', 'username']);
         }]);
 
-        return $queryBuilder->orderByDesc('id')->paginate($perPage);
+        return $queryBuilder->orderByAsc('username')->paginate($perPage);
     }
 
     public function showInfo($id)
