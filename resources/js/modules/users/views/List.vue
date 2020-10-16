@@ -788,7 +788,8 @@ export default {
             countryIdForInt: 0,
             listPageOptions: [10, 25, 50, 100],
             isLoadingTable: false,
-            isPopupLoading: false
+            isPopupLoading: false,
+            isSearchLoading: false,
         };
     },
 
@@ -862,12 +863,14 @@ export default {
             $('#tbl-users').DataTable().destroy();
 
             this.isLoadingTable = true;
+            this.isSearchLoading = true;
             await this.$store.dispatch('actionGetUser', {
                 vue: this,
                 params: filterParams,
                 showMainLoading: false
             });
             this.isLoadingTable = false;
+            this.isSearchLoading = false;
 
 
             $('#tbl-users').DataTable({
