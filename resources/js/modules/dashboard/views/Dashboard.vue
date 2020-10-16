@@ -19,17 +19,27 @@
                                 <thead>
                                     <tr class="white">
                                         <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
+                                        <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
                                         <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
                                         <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
                                         <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
+                                        <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
+                                        <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
+                                        <th>NoAnswer <span class="text-primary">( {{ ext_domain.num_no_answer }} )</span></th>
+                                        <th>Refused <span class="text-primary">( {{ ext_domain.num_refused }} )</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
                                         <td>{{ upperCase(ext_domain.username) }}</td>
+                                        <td>{{ ext_domain.num_total }}</td>
                                         <td>{{ ext_domain.num_in_touched }}</td>
                                         <td>{{ ext_domain.num_qualified }}</td>
                                         <td>{{ ext_domain.num_unqualified }}</td>
+                                        <td>{{ ext_domain.num_got_contact }}</td>
+                                        <td>{{ ext_domain.num_contacted }}</td>
+                                        <td>{{ ext_domain.num_no_answer }}</td>
+                                        <td>{{ ext_domain.num_refused }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,6 +107,7 @@
                                 <thead>
                                     <tr>
                                         <th>Seller <span class="text-primary">( {{ backlink_seller.total }} )</span></th>
+                                        <th>Total <span class="text-primary">( {{ backlink_seller.num_total }} )</span></th>
                                         <th>Processing <span class="text-primary">( {{ backlink_seller.num_processing }} )</span></th>
                                         <th>Content Writing <span class="text-primary">( {{ backlink_seller.writing }} )</span></th>
                                         <th>Content Done <span class="text-primary">( {{ backlink_seller.num_done }} )</span></th>
@@ -107,6 +118,7 @@
                                 <tbody>
                                     <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
                                         <td>{{ upperCase(seller.username) }}</td>
+                                        <td>{{ seller.num_total }}</td>
                                         <td>{{ seller.num_processing }}</td>
                                         <td>{{ seller.writing }}</td>
                                         <td>{{ seller.num_done }}</td>
@@ -308,6 +320,7 @@ export default {
 
             backlink_seller:{
                 total: 0,
+                num_total: 0,
                 num_processing: 0,
                 writing: 0,
                 num_done: 0,
@@ -327,9 +340,14 @@ export default {
 
             ext_domain:{
                 total: 0,
+                num_total: 0,
                 num_in_touched: 0,
                 num_qualified: 0,
                 num_unqualified: 0,
+                num_got_contact: 0,
+                num_contacted: 0,
+                num_no_answer: 0,
+                num_refused: 0,
             },
 
             backlink_to_buy: {
@@ -425,6 +443,7 @@ export default {
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
                 this.backlink_seller.num_sent += parseInt(backlink_seller[index].num_sent);
                 this.backlink_seller.num_live += parseInt(backlink_seller[index].num_live);
+                this.backlink_seller.num_total += parseInt(backlink_seller[index].num_total);
                 backlink_seller_ctr++;
             }
             this.backlink_seller.total = backlink_seller_ctr;
@@ -444,6 +463,11 @@ export default {
                 this.ext_domain.num_in_touched += parseInt(ext_domain[index].num_in_touched);
                 this.ext_domain.num_qualified += parseInt(ext_domain[index].num_qualified);
                 this.ext_domain.num_unqualified += parseInt(ext_domain[index].num_unqualified);
+                this.ext_domain.num_total += parseInt(ext_domain[index].num_total);
+                this.ext_domain.num_got_contact += parseInt(ext_domain[index].num_got_contact);
+                this.ext_domain.num_contacted += parseInt(ext_domain[index].num_contacted);
+                this.ext_domain.num_no_answer += parseInt(ext_domain[index].num_no_answer);
+                this.ext_domain.num_refused += parseInt(ext_domain[index].num_refused);
                 ext_domain_ctr++;
             }
             this.ext_domain.total = ext_domain_ctr;

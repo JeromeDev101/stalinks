@@ -435,8 +435,8 @@ class ExtDomainController extends Controller
     public function importExcel(Request $request) {
         $request->validate([
             'file' => 'bail|required|mimes:csv,txt',
-            'language' => 'required',
-            'status' => 'required',
+            // 'language' => 'required',
+            // 'status' => 'required',
         ]);
 
         $file = $request->all();

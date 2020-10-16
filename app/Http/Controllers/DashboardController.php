@@ -119,6 +119,14 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Sent" THEN 1 ELSE 0 END) AS num_sent'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Live" THEN 1 ELSE 0 END) AS num_live'),
+            DB::raw('
+                SUM(CASE WHEN backlinks.status = "Live" 
+                OR backlinks.status = "Content Sent" 
+                OR backlinks.status = "Content Done" 
+                OR backlinks.status = "Content Writing" 
+                OR backlinks.status = "Processing" 
+                THEN 1 ELSE 0 END) AS num_total
+            '),
         ];
 
         $list = Backlink::select($columns)
@@ -177,9 +185,30 @@ class DashboardController extends Controller
     private function extDomain() {
         $columns = [
             'users.username',
+            DB::raw('SUM(CASE WHEN ext_domains.status = "0" THEN 1 ELSE 0 END) AS num_new'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "10" THEN 1 ELSE 0 END) AS num_crawl_failed'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "20" THEN 1 ELSE 0 END) AS num_contack_null'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "30" THEN 1 ELSE 0 END) AS num_got_contact'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "40" THEN 1 ELSE 0 END) AS num_ahref'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "50" THEN 1 ELSE 0 END) AS num_contacted'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "55" THEN 1 ELSE 0 END) AS num_no_answer'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "60" THEN 1 ELSE 0 END) AS num_refused'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "70" THEN 1 ELSE 0 END) AS num_in_touched'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "100" THEN 1 ELSE 0 END) AS num_qualified'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "90" THEN 1 ELSE 0 END) AS num_unqualified'),
+            DB::raw('
+                SUM(CASE WHEN ext_domains.status = "90" 
+                OR ext_domains.status = "10" 
+                OR ext_domains.status = "20" 
+                OR ext_domains.status = "30" 
+                OR ext_domains.status = "40" 
+                OR ext_domains.status = "50" 
+                OR ext_domains.status = "55" 
+                OR ext_domains.status = "60" 
+                OR ext_domains.status = "70" 
+                OR ext_domains.status = "100" 
+                THEN 1 ELSE 0 END) AS num_total
+            '),
         ];
 
         $list = ExtDomain::select($columns)

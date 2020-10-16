@@ -7,6 +7,7 @@ use App\Jobs\SendEmailExtJob;
 use App\Libs\Ahref;
 use App\Models\Country;
 use App\Models\ExtDomain;
+use App\Models\Publisher;
 use App\Repositories\BaseRepository;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
@@ -52,9 +53,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function importExcel($file)
     {
-        $status = $file['status'];
-        $language = $file['language'];
+        // $status = $file['status'];
+        // $language = $file['language'];
         $csv_file = $file['file'];
+        $country_name_list = Country::pluck('name')->toArray();
+        $status_list = ['New', 'CrawlFailed', 'ContactNull', 'GotContacts', 'Ahrefed', 'Contacted', 'NoAnswer', 'Refused', 'InTouched', 'Unqualified', 'Qualified'];
 
         $result = true;
         $message = '';
@@ -63,6 +66,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $id = Auth::user()->id;
         $csv = fopen($csv_file, 'r');
         $ctr = 0;
+
+        $datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
             if(count($line) > 4 || count($line) < 4){
                 $message = "Please check the header: Domain, Email, Price and Inc Article only.";
@@ -73,28 +78,57 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
             if( $ctr > 0 ){
                 $url = $line[0];
-                $email = $line[1];
-                $price = $line[2];
-                $article = $line[3];
+                $status = $line[1];
+                $country = $line[2];
+                $email = $line[3];
+
+                $isExistDomain = $this->checkDomain($url);
 
                 if( trim($url, " ") != '' ){
 
-                    ExtDomain::create([
-                        'domain' => $url,
-                        'country_id' => $language,
-                        'ahrefs_rank' => 0,
-                        'no_backlinks' => 0,
-                        'url_rating' => 0,
-                        'domain_rating' => 0,
-                        'organic_keywords' => '',
-                        'organic_traffic' => '',
-                        'alexa_rank' => 0,
-                        'ref_domains' => 0,
-                        'status' => $status,
-                        'email' => $email,
-                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                    ]);
+
+                    if (preg_grep("/".$country."/i", $country_name_list)){
+
+                        if (preg_grep("/".$status."/i", $status_list)){
+
+                            if ($isExistDomain){
+
+                                $lang = $this->getCountry($language_excel);
+                                array_push($datas, [
+                                    'domain' => $url,
+                                    'country_id' => $lang,
+                                    'ahrefs_rank' => 0,
+                                    'no_backlinks' => 0,
+                                    'url_rating' => 0,
+                                    'domain_rating' => 0,
+                                    'organic_keywords' => '',
+                                    'organic_traffic' => '',
+                                    'alexa_rank' => 0,
+                                    'ref_domains' => 0,
+                                    'status' => $status,
+                                    'email' => $email,
+                                ]);
+
+                            }else{
+                                $message = ". Please check the Domain before uploading the CSV file";
+                                $file_message = "Domain is already ". $url . $message . ". Check in line ". (intval($ctr) + 1);
+                                $result = false;
+                                break;
+                            }
+
+                        }else{
+                            $message = ". Please check the Status before uploading the CSV file";
+                            $file_message = "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1);
+                            $result = false;
+                            break;
+                        }
+
+                    }else{
+                        $message = ". Please check the Country before uploading the CSV file";
+                        $file_message = "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1);
+                        $result = false;
+                        break;
+                    }
                 }
             }
 
@@ -103,6 +137,25 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         fclose($csv);
 
+        if( is_array($datas) && count($datas) > 0 ){
+            foreach( $datas as $data ){
+                ExtDomain::create([
+                    'domain' => $url,
+                    'country_id' => $country,
+                    'ahrefs_rank' => 0,
+                    'no_backlinks' => 0,
+                    'url_rating' => 0,
+                    'domain_rating' => 0,
+                    'organic_keywords' => '',
+                    'organic_traffic' => '',
+                    'alexa_rank' => 0,
+                    'ref_domains' => 0,
+                    'status' => $status,
+                    'email' => $email,
+                ]);
+            }
+        }
+            
         return [
             "success" => $result,
             "message" => $message,
@@ -110,6 +163,28 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                 "file" => $file_message,
             ],
         ];
+    }
+
+    private function checkDomain($domain) {
+        $result = true;
+
+        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$domain.'%');
+        $checkPublisher = Publisher::where('url', 'like', '%'.$domain.'%');
+
+        if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    private function getCountry($country){
+        $id = 5;
+        $country = Country::where('name', 'like', '%'.$country.'%')->first();
+        if( $country ){
+            $id = $country->id;
+        }
+        return $id;
     }
 
     public function fillterExtDomain($status, $countryIds, $countryIdsInt, $extDomainAdditionIds = [])

@@ -131,7 +131,7 @@
                                 </div>
                             </div>
 
-                            <div class="row my-3" v-show="showLang">
+                            <!-- <div class="row my-3" v-show="showLang">
                                 <div class="col-sm-12">
                                     <select class="form-control" name="language" ref="language" v-on:change="checkData">
                                         <option value="">Select language</option>
@@ -153,14 +153,15 @@
                                         <option value="100">Qualified</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
+
                         </div>
 
                     </div>
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Email, Price and Inc Article. The columns should be separated using comma(,). Inc Article value is Yes /No . Do not forget to select the language and status of the site.</small>
+                            <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status, Country and Email. The columns should be separated using comma(,).</small>
                         </div>
                     </div>
 
@@ -1344,17 +1345,17 @@
                 }
             },
     
-            checkData() {
-                this.isEnableBtn = true;
-                if( this.$refs.language.value && this.$refs.status.value){
-                    this.isEnableBtn = false;
-                }
-            },
+            // checkData() {
+            //     this.isEnableBtn = true;
+            //     if( this.$refs.language.value && this.$refs.status.value){
+            //         this.isEnableBtn = false;
+            //     }
+            // },
 
             checkDataExcel() {
-                this.showLang = false;
+                this.isEnableBtn = true;
                 if( this.$refs.excel.value ){
-                    this.showLang = true;
+                    this.isEnableBtn = false;
                 }
             },
 
@@ -1426,8 +1427,8 @@
 
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
-                this.formData.append('language', this.$refs.language.value);
-                this.formData.append('status', this.$refs.status.value);
+                // this.formData.append('language', this.$refs.language.value);
+                // this.formData.append('status', this.$refs.status.value);
 
                 await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
 
