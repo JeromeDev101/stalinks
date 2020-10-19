@@ -17,7 +17,7 @@ class BuyController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:25;
+        $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
         $user_id = Auth::user()->id;
 
         $columns = [

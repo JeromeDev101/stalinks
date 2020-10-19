@@ -423,7 +423,7 @@
     export default {
         data() {
             return {
-                paginate: [25,50,100,200,250, 'All'],
+                paginate: [50,150,250,350,500,'All'],
                 updateModel: {
                     id: '',
                     url: '',
@@ -441,7 +441,7 @@
                     code: this.$route.query.code || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
-                    paginate: this.$route.query.paginate || 25,
+                    paginate: this.$route.query.paginate || 50,
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -627,7 +627,7 @@
                     code: '',
                     casino_sites: '',
                     topic: '',
-                    paginate: 25,
+                    paginate: 50,
                 }
 
                 this.getBuyList({

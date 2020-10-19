@@ -99,7 +99,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
     public function getBackLink($countryIds, $intDomains, $filters)
     {
-        $paginate = $filters->paginate == '' ? 15:$filters->paginate;
+        $paginate = $filters->paginate == '' ? 50:$filters->paginate;
         $user = Auth::user();
         $query = $this->model->orderBy('id', 'desc');
 

@@ -190,7 +190,7 @@
     export default {
         data() {
             return {
-                paginate: [15,25,50,100,200,250, 'All'],
+                paginate: [50,150,250,350,500, 'All'],
                 updateModel: {
                     seller: '',
                     buyer: '',
@@ -204,7 +204,7 @@
                     seller: this.$route.query.seller || '',
                     search_id: this.$route.query.search_id || '',
                     search_url_publisher: this.$route.query.search_url_publisher || '',
-                    paginate: this.$route.query.paginate || '15',
+                    paginate: this.$route.query.paginate || '50',
                 },
                 isPopupLoading: false,
                 totalAmount: 0,
@@ -277,7 +277,7 @@
                     seller: '',
                     search_id: '',
                     search_url_publisher: '',
-                    paginate: '15',
+                    paginate: '50',
                 }
 
                 this.getPurchaseList({

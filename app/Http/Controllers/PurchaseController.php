@@ -19,7 +19,7 @@ class PurchaseController extends Controller
     public function getList(Request $request) {
         $user = Auth::user();
         $filter = $request->all();
-        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:15;
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $list = Backlink::select('backlinks.*')
                     ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
                     ->with(['publisher' => function($query){

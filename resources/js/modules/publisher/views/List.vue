@@ -248,7 +248,7 @@
                                 <td v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
                                 <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>
                                 <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
-                                <td v-show="tblPublisherOpt.price_basis">{{ publish.price_basis }}</td>
+                                <td v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>
                                 <td v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
                                 <td v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
                                 <td v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
@@ -675,6 +675,23 @@
         },
 
         methods: {
+
+            displayStar(price_basis) {
+                let star = '';
+                if( price_basis == 'Low'  ){
+                    star = '<i class="fa fa-star" style="color: green;"></i>';
+                }
+
+                if( price_basis == 'High'  ){
+                    star = '<i class="fa fa-star" style="color: red;"></i>';
+                }
+
+                if( price_basis == 'Good'  ){
+                    star = '<i class="fa fa-star" style="color: orange;"></i>';
+                }
+
+                return star;
+            },
 
             setDefaultSettings() {
                 if( this.user.isOurs == 0 ){
