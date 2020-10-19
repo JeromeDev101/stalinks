@@ -719,6 +719,11 @@
 
                 this.searchLoading = true;
                 this.isSearching = true;
+                if(this.filterModel.paginate == 'All')
+                {
+                    this.filterModel.paginate = 1000000;
+                }
+                
                 await this.$store.dispatch('getListPublisher', {
                     params: {
                         search: this.filterModel.search,

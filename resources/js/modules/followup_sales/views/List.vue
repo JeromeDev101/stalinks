@@ -513,6 +513,10 @@
 
                 this.searchLoading = true;
                 this.isSearching = true;
+                if(this.filterModel.paginate == 'All')
+                {
+                    this.filterModel.paginate = 1000000;
+                }
                 await this.$store.dispatch('actionGetListSales', {
                     params: {
                         search: this.filterModel.search,
@@ -524,8 +528,9 @@
                         in_charge: this.filterModel.in_charge,
                         country_id: this.filterModel.country_id,
                     }
+                    
                 });
-
+                    console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
