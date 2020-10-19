@@ -13,7 +13,7 @@ class IncomesController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $user = Auth::user();
         $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation','B.username as in_charge')
                     ->leftJoin('publisher', 'backlinks.publisher_id' , '=', 'publisher.id')

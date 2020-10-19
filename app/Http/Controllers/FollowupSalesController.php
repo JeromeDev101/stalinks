@@ -12,7 +12,7 @@ class FollowupSalesController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:25;
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $user = Auth::user();
         $article = $filter['article'];
         $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url','B.username as in_charge', 'article.id as article_id')
