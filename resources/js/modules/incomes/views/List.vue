@@ -247,6 +247,10 @@
 
                 this.isSearching = true;
                 this.isSearchingLoading = true;
+                if(this.filterModel.paginate == 'All')
+                {
+                    this.filterModel.paginate = 1000000;
+                }
                 await this.$store.dispatch('actionGetListIncomes', {
                     params: {
                         payment_status: this.filterModel.payment_status,
