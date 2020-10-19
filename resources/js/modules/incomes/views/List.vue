@@ -204,7 +204,7 @@
     export default {
         data() {
             return {
-                paginate: [25,50,100,200,250],
+                paginate: [50,150,250,350,'All'],
                 statusBaclink: ['Processing', 'Content writing', 'Content sent', 'Live'],
                 updateModel: {
                     seller: '',

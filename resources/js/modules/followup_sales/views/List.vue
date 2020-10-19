@@ -429,7 +429,7 @@
     export default {
         data() {
             return {
-                paginate: [50,150,250,350,500],
+                paginate: [50,150,250,350,'All'],
                 statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
