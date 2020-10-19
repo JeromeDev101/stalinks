@@ -183,7 +183,7 @@ class ExtDomainController extends Controller
 
         $input = $request->except('employee_id', 'country_id');
         $page = 0;
-        $perPage =  10;
+        $perPage =  50;
         $userId = Auth::id();
         $findAllExt = true;
         $countriesExceptIds = [];

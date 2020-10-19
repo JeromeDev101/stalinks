@@ -48,6 +48,10 @@ class FollowupSalesController extends Controller
             $list->where('countries.id', $filter['country_id']);
         }
 
+        if( isset($filter['backlink_id']) && !empty($filter['backlink_id']) ){
+            $list->where('backlinks.id', $filter['backlink_id']);
+        }
+
         if( isset($filter['in_charge']) && !empty($filter['in_charge']) ){
             $list->where('B.id', $filter['in_charge']);
         }

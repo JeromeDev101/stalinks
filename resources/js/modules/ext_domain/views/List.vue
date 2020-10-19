@@ -1096,14 +1096,14 @@
                     status: this.$route.query.status || -1,
                     status_temp: this.$route.query.status_temp || 0,
                     page: this.$route.query.page || 0,
-                    per_page: this.$route.query.per_page || 10,
+                    per_page: this.$route.query.per_page || 50,
                     employee_id: this.$route.query.employee_id || '',
                     required_email_temp: this.$route.query.required_email_temp || 0,
                     required_email: this.$route.query.required_email || 0,
                     sort_key: this.$route.query.sort_key || 'id',
                     sort_value: this.$route.query.sort_value || 'desc'
                 },
-                listPageOptions: [5, 10, 25, 50, 100, 200, 250, 500, 1000, 2000],
+                listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
                 extModel: {
                     id: 0,
                     domain: '',

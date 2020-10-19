@@ -207,6 +207,7 @@ class DashboardController extends Controller
                 OR ext_domains.status = "60" 
                 OR ext_domains.status = "70" 
                 OR ext_domains.status = "100" 
+                OR ext_domains.status = "0" 
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];

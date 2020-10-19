@@ -218,7 +218,7 @@
                     payment_status: this.$route.query.payment_status || '',
                     buyer: this.$route.query.buyer || '',
                     seller: this.$route.query.seller || '',
-                    paginate: this.$route.query.paginate || '25',
+                    paginate: this.$route.query.paginate || '50',
                     date: this.$route.query.date || '',
                 },
                 isSearching: false,
@@ -360,7 +360,7 @@
                     buyer: '',
                     seller: '',
                     date: '',
-                    paginate: '25',
+                    paginate: '50',
                 }
 
                 this.getListIncomes({

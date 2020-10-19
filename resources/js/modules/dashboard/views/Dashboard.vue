@@ -22,26 +22,28 @@
                                         <tr class="white">
                                             <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
                                             <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
-                                            <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
-                                            <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
-                                            <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
+                                            <th>New <span class="text-primary">( {{ ext_domain.num_new }} )</span></th>
                                             <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
                                             <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
+                                            <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
+                                            <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
                                             <th>NoAnswer <span class="text-primary">( {{ ext_domain.num_no_answer }} )</span></th>
                                             <th>Refused <span class="text-primary">( {{ ext_domain.num_refused }} )</span></th>
+                                            <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
                                             <td>{{ upperCase(ext_domain.username) }}</td>
                                             <td>{{ ext_domain.num_total }}</td>
-                                            <td>{{ ext_domain.num_in_touched }}</td>
-                                            <td>{{ ext_domain.num_qualified }}</td>
-                                            <td>{{ ext_domain.num_unqualified }}</td>
+                                            <td>{{ ext_domain.num_new }}</td>
                                             <td>{{ ext_domain.num_got_contact }}</td>
                                             <td>{{ ext_domain.num_contacted }}</td>
+                                            <td>{{ ext_domain.num_in_touched }}</td>
+                                            <td>{{ ext_domain.num_qualified }}</td>
                                             <td>{{ ext_domain.num_no_answer }}</td>
                                             <td>{{ ext_domain.num_refused }}</td>
+                                            <td>{{ ext_domain.num_unqualified }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -50,17 +52,17 @@
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-md-3" v-for="(ext_domain, index) in listData.ext_domain" :key="index" >
+                        <div class="col-md-1" v-for="(ext_domain, index) in listData.ext_domain" :key="index" >
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <p>Team In-charge</p>
-                                    <h3>{{ ext_domain.num_total }}</h3>
+                                    <p class="mb-0">Team In-charge</p>
                                     <p>{{ ext_domain.username }}</p>
+                                    <h3>{{ ext_domain.num_total }}</h3>
                                 </div>
 
-                                <div class="icon">
+                                <!-- <div class="icon">
                                     <i class="fa fa-user"></i>
-                                </div>
+                                </div> -->
 
                                 <!-- <a href="#" class="small-box-footer">
                                     More info <i class="fa fa-arrow-circle-right"></i>
@@ -369,6 +371,7 @@ export default {
             ext_domain:{
                 total: 0,
                 num_total: 0,
+                num_new: 0,
                 num_in_touched: 0,
                 num_qualified: 0,
                 num_unqualified: 0,
@@ -488,6 +491,7 @@ export default {
             this.backlink_buyer.total = backlink_buyer_ctr;
 
             for( var index in ext_domain ){
+                this.ext_domain.num_new += parseInt(ext_domain[index].num_new);
                 this.ext_domain.num_in_touched += parseInt(ext_domain[index].num_in_touched);
                 this.ext_domain.num_qualified += parseInt(ext_domain[index].num_qualified);
                 this.ext_domain.num_unqualified += parseInt(ext_domain[index].num_unqualified);

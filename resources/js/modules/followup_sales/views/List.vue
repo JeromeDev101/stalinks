@@ -19,6 +19,13 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.backlink_id" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Status</label>
                                 <select name="" class="form-control" v-model="filterModel.status">
                                     <option value="">All</option>
@@ -451,11 +458,12 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
+                    backlink_id: this.$route.query.backlink_id || '',
                     search: this.$route.query.search || '',
                     status: this.$route.query.status || '',
                     seller: this.$route.query.seller || '',
                     buyer: this.$route.query.buyer || '',
-                    paginate: this.$route.query.paginate || '25',
+                    paginate: this.$route.query.paginate || '50',
                     article: this.$route.query.article || '',
                     in_charge: this.$route.query.in_charge || '',
                     country_id: this.$route.query.country_id || '',
@@ -515,6 +523,7 @@
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetListSales', {
                     params: {
+                        backlink_id: this.filterModel.backlink_id,
                         search: this.filterModel.search,
                         status: this.filterModel.status,
                         seller: this.filterModel.seller,
@@ -634,6 +643,7 @@
 
                 this.getListSales({
                     params: {
+                        backlink_id: this.filterModel.backlink_id,
                         search: this.filterModel.search,
                         status: this.filterModel.status,
                         seller: this.filterModel.seller,
@@ -650,11 +660,12 @@
                 $('#tbl-followupsales').DataTable().destroy();
 
                 this.filterModel = {
+                    backlink_id: '',
                     search: '',
                     status: '',
                     seller: '',
                     buyer: '',
-                    paginate: '25',
+                    paginate: '50',
                     article: '',
                     in_charge: '',
                     country_id: '',
