@@ -25,6 +25,7 @@ const state = {
         valid: true,
         url: true,
         price: true,
+        price_basis: true,
         inc_article: true,
         ur: true,
         dr: true,

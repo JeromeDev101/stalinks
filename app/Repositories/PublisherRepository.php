@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Pricelist;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
@@ -113,14 +114,124 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-            return [
-                "data" => $list->get(),
-                "total" => $list->count()
-            ];
+            $result = $list->get();
         }else{
-            return $list->paginate($paginate);
+            $result = $list->paginate($paginate);
         }
+
+
+        foreach($result as $key => $value) {
+
+            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+
+            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
+
+            $count_letter_a = substr_count($combineALl, 'A');
+
+          
+            $value['code_combination'] = $combineALl;
+            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
             
+
+            // Price Basis
+            $result_1 = 0;
+            $result_2 = 0;
+
+            $price_basis = '-';
+            if( !empty($value['code_price']) ){
+                
+                $var_a = floatVal($value->price);
+                $var_b = floatVal($value['code_price']);
+
+                $result_1 = number_format($var_b * 0.7,2);
+                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+
+                if( $result_1 != 0 && $result_2 != 0 ){
+                    if( $var_a <= $result_1 ){
+                        $price_basis = 'Low';
+                    }
+
+                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+                        $price_basis = 'Good';
+                    }
+
+                    if( $var_a > $result_2 ){
+                        $price_basis = 'High';
+                    }
+                }
+            }
+
+            $value['price_basis'] = $price_basis;
+
+        }
+
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return response()->json([
+                'data' => $result,
+                'total' => $result->count(),
+            ],200);
+        }else{
+            return $result;
+        }
+
+            
+    }
+
+    /**
+     *
+     * get code combination of list publisher
+     *
+     * @param integer $a
+     * @param integer $b
+     * @param string $type
+     *
+     * @return string
+     */
+    private function getCodeCombination($a, $b, $type)
+    {
+        switch ( $type ) {
+            case "value1":
+                $score = $b - $a;
+                $val = '';
+                if( $score < 5 && $score >= -3){  $val = 'A'; }
+                else if( $score <= 8 && $score >= 5){ $val = 'C'; }
+                else if( $score <= -4 && $score >= -8){ $val = 'D'; }
+                else if( $score >= 8 || $score <= -8){ $val = 'E'; }
+                return $val;
+            case "value2":
+                if($a == 0){
+                    return '';
+                }
+                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $val = '';
+                if( $score >= 1 && $score < 3){  $val = 'A'; }
+                else if( $score >= 3 && $score < 8){ $val = 'C'; }
+                else if( $score >= 8 && $score < 16){ $val = 'D'; }
+                else if( $score >= 16 ){ $val = 'E'; }
+                return $val;
+            case "value3":
+                $val = '';
+                if( $a >= 1000){ $val = 'A'; }
+                else if( $a >= 500 && $a < 1000){ $val = 'B'; }
+                else if( $a >= 100 && $a < 500){ $val = 'C'; }
+                else if( $a >= 50 && $a < 100){ $val = 'D'; }
+                else if( $a < 50 ){ $val = 'E'; }
+                return $val;
+            case "value4":
+                $val = '';
+                if( $a >= 10000){ $val = 'A'; }
+                else if( $a >= 5000 && $a < 10000){ $val = 'B'; }
+                else if( $a >= 1000 && $a < 5000){ $val = 'C'; }
+                else if( $a >= 500 && $a < 1000){ $val = 'D'; }
+                else if( $a < 500 ){ $val = 'E'; }
+                return $val;
+            default:
+                return '';
+        }
     }
 
     public function importExcel($file){

@@ -419,6 +419,8 @@
                     this.getSellerBilling();
                     this.$refs.proof.value = '';
                     this.updateModel.payment_type = '';
+
+                    this.checkIds = [];
                 }
 
                 this.$root.$refs.AppHeader.liveGetWallet()

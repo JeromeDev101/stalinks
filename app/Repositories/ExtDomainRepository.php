@@ -93,7 +93,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                             if ($isExistDomain){
 
-                                $lang = $this->getCountry($language_excel);
+                                $lang = $this->getCountry($country);
+                                $status = $this->getStatusCode($status);
                                 array_push($datas, [
                                     'domain' => $url,
                                     'country_id' => $lang,
@@ -111,7 +112,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                             }else{
                                 $message = ". Please check the Domain before uploading the CSV file";
-                                $file_message = "Domain is already ". $url . $message . ". Check in line ". (intval($ctr) + 1);
+                                $file_message = "Domain is already exsit ". $url . $message . ". Check in line ". (intval($ctr) + 1);
                                 $result = false;
                                 break;
                             }
@@ -140,8 +141,9 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         if( is_array($datas) && count($datas) > 0 ){
             foreach( $datas as $data ){
                 ExtDomain::create([
-                    'domain' => $url,
-                    'country_id' => $country,
+                    'user_id' => $id,
+                    'domain' => $data['domain'],
+                    'country_id' => $data['country_id'],
                     'ahrefs_rank' => 0,
                     'no_backlinks' => 0,
                     'url_rating' => 0,
@@ -150,7 +152,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                     'organic_traffic' => '',
                     'alexa_rank' => 0,
                     'ref_domains' => 0,
-                    'status' => $status,
+                    'status' => $data['status'],
                     'email' => $email,
                 ]);
             }
@@ -163,6 +165,30 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                 "file" => $file_message,
             ],
         ];
+    }
+
+    private function getStatusCode($status){
+        $result = 0;
+
+        $status_list = [
+            0 => 'New',
+            10 => 'CrawlFailed',
+            20 => 'ContactNull',
+            30 => 'GotContacts',
+            40 => 'Ahrefed',
+            50 => 'Contacted',
+            55 => 'NoAnswer',
+            60 => 'Refused',
+            70 => 'InTouched',
+            90 => 'Unqualified',
+            100 => 'Qualified'
+        ];
+
+        if( array_search(strtolower($status), array_map('strtolower', $status_list)) ){
+            $result = array_search(strtolower($status), array_map('strtolower', $status_list));
+        }
+
+        return $result;
     }
 
     private function checkDomain($domain) {

@@ -217,6 +217,7 @@
                                 <th v-show="tblPublisherOpt.valid">Valid</th>
                                 <th v-show="tblPublisherOpt.url">URL</th>
                                 <th v-show="tblPublisherOpt.price">Price</th>
+                                <th v-show="tblPublisherOpt.price_basis">Price Basis</th>
                                 <th v-show="tblPublisherOpt.inc_article">Inc Article</th>
                                 <th v-show="tblPublisherOpt.ur">UR</th>
                                 <th v-show="tblPublisherOpt.dr">DR</th>
@@ -246,7 +247,8 @@
                                 <td v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
                                 <td v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
                                 <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>
-                                <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ computePrice(publish.price, publish.inc_article) }}</td>
+                                <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
+                                <td v-show="tblPublisherOpt.price_basis">{{ publish.price_basis }}</td>
                                 <td v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
                                 <td v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
                                 <td v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
@@ -508,6 +510,9 @@
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
@@ -883,10 +888,6 @@
                     this.checkIds = []
                     this.isDisabled = true;
                 }
-            },
-
-            computePrice( price, article ) {
-                return price;
             },
 
             async submitAdd() {

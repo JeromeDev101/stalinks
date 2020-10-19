@@ -27,6 +27,7 @@ const state = {
         status: true,
         code_comb: true,
         code_price: true,
+        price_basis: true,
     },
 }
 

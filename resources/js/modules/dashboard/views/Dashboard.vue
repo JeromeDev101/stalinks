@@ -12,42 +12,70 @@
                     <h3 class="box-title text-primary">Total External Domain</h3>
                 </div>
 
-                <div class="box-body custom-box">
+                <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="table table-hover tbl-custom">
-                                <thead>
-                                    <tr class="white">
-                                        <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
-                                        <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
-                                        <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
-                                        <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
-                                        <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
-                                        <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
-                                        <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
-                                        <th>NoAnswer <span class="text-primary">( {{ ext_domain.num_no_answer }} )</span></th>
-                                        <th>Refused <span class="text-primary">( {{ ext_domain.num_refused }} )</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
-                                        <td>{{ upperCase(ext_domain.username) }}</td>
-                                        <td>{{ ext_domain.num_total }}</td>
-                                        <td>{{ ext_domain.num_in_touched }}</td>
-                                        <td>{{ ext_domain.num_qualified }}</td>
-                                        <td>{{ ext_domain.num_unqualified }}</td>
-                                        <td>{{ ext_domain.num_got_contact }}</td>
-                                        <td>{{ ext_domain.num_contacted }}</td>
-                                        <td>{{ ext_domain.num_no_answer }}</td>
-                                        <td>{{ ext_domain.num_refused }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!-- <div class="custom-box"> -->
+                            <div>
+                                <table class="table table-hover tbl-custom">
+                                    <thead>
+                                        <tr class="white">
+                                            <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
+                                            <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
+                                            <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
+                                            <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
+                                            <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
+                                            <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
+                                            <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
+                                            <th>NoAnswer <span class="text-primary">( {{ ext_domain.num_no_answer }} )</span></th>
+                                            <th>Refused <span class="text-primary">( {{ ext_domain.num_refused }} )</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
+                                            <td>{{ upperCase(ext_domain.username) }}</td>
+                                            <td>{{ ext_domain.num_total }}</td>
+                                            <td>{{ ext_domain.num_in_touched }}</td>
+                                            <td>{{ ext_domain.num_qualified }}</td>
+                                            <td>{{ ext_domain.num_unqualified }}</td>
+                                            <td>{{ ext_domain.num_got_contact }}</td>
+                                            <td>{{ ext_domain.num_contacted }}</td>
+                                            <td>{{ ext_domain.num_no_answer }}</td>
+                                            <td>{{ ext_domain.num_refused }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3" v-for="(ext_domain, index) in listData.ext_domain" :key="index" >
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <p>Team In-charge</p>
+                                    <h3>{{ ext_domain.num_total }}</h3>
+                                    <p>{{ ext_domain.username }}</p>
+                                </div>
+
+                                <div class="icon">
+                                    <i class="fa fa-user"></i>
+                                </div>
+
+                                <!-- <a href="#" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
+
+            
+
         </div>
 
 

@@ -85,6 +85,7 @@ class BuyController extends Controller
 
             $count_letter_a = substr_count($combineALl, 'A');
 
+            // Filtering of Code A's 
             if( isset($filter['code']) && !empty($filter['code']) ){
                 $code = substr($filter['code'],0,1);
 
@@ -98,8 +99,40 @@ class BuyController extends Controller
             }else{
                 $value['code_combination'] = $combineALl;
                 $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-            } 
+            }
+
+            // Price Basis
+            $result_1 = 0;
+            $result_2 = 0;
+
+            $price_basis = '-';
+            if( !empty($value['code_price']) ){
+                
+                $var_a = floatVal($value->price);
+                $var_b = floatVal($value['code_price']);
+
+                $result_1 = number_format($var_b * 0.7,2);
+                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+
+                if( $result_1 != 0 && $result_2 != 0 ){
+                    if( $var_a <= $result_1 ){
+                        $price_basis = 'Low';
+                    }
+
+                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+                        $price_basis = 'Good';
+                    }
+
+                    if( $var_a > $result_2 ){
+                        $price_basis = 'High';
+                    }
+                }
+            }
+
+            $value['price_basis'] = $price_basis;
+
         }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([

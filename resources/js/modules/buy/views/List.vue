@@ -168,6 +168,7 @@
                                 <th v-show="tblBuyOptions.status">Status</th>
                                 <th v-show="tblBuyOptions.code_comb" v-if="user.isOurs == 0">Code Combination</th>
                                 <th v-show="tblBuyOptions.code_price" v-if="user.isOurs == 0">Code Price</th>
+                                <th v-show="tblBuyOptions.price_basis" v-if="user.isOurs == 0">Price Basis</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -196,6 +197,7 @@
                                 <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td v-show="tblBuyOptions.code_comb" v-if="user.isOurs== 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
                                 <td v-show="tblBuyOptions.code_price" v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
+                                <td v-show="tblBuyOptions.price_basis" v-if="user.isOurs== 0">{{ buy.price_basis }}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -391,6 +393,9 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
                             </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis">Price Basis</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -551,6 +556,9 @@
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
