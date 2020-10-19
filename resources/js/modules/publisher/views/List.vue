@@ -567,7 +567,7 @@
         name: '',
         data(){
             return {
-                paginate: [25,50,100,200,250, 'All'],
+                paginate: [50,150,250,350, 'All'],
                 updateModel: {
                     id: '',
                     company_name: '',
