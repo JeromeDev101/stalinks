@@ -165,6 +165,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
             }
 
+            if( $value['code_price'] == 0 && $value->price > 0){
+                $price_basis = 'High';
+            }
+
             $value['price_basis'] = $price_basis;
 
         }

@@ -190,7 +190,7 @@ const actions = {
             let response = await ExtDomainService.uploadCsv(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'uploaded', message: 'Sucessfully Uploaded', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'uploaded', message: 'Sucessfully Uploaded', errors: response.data.data });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

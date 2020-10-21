@@ -68,6 +68,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $ctr = 0;
 
         $datas = [];
+        $existing_datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
             if(count($line) > 4 || count($line) < 4){
                 $message = "Please check the header: Domain, Email, Price and Inc Article only.";
@@ -95,8 +96,24 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                                 $lang = $this->getCountry($country);
                                 $status = $this->getStatusCode($status);
-                                array_push($datas, [
-                                    'domain' => $url,
+                                // array_push($datas, [
+                                //     'domain' => $url,
+                                //     'country_id' => $lang,
+                                //     'ahrefs_rank' => 0,
+                                //     'no_backlinks' => 0,
+                                //     'url_rating' => 0,
+                                //     'domain_rating' => 0,
+                                //     'organic_keywords' => '',
+                                //     'organic_traffic' => '',
+                                //     'alexa_rank' => 0,
+                                //     'ref_domains' => 0,
+                                //     'status' => $status,
+                                //     'email' => $email,
+                                // ]);
+
+                                ExtDomain::create([
+                                    'user_id' => $id,
+                                    'domain' => $this->remove_http($url),
                                     'country_id' => $lang,
                                     'ahrefs_rank' => 0,
                                     'no_backlinks' => 0,
@@ -111,10 +128,15 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                                 ]);
 
                             }else{
-                                $message = ". Please check the Domain before uploading the CSV file";
-                                $file_message = "Domain is already exsit ". $url . $message . ". Check in line ". (intval($ctr) + 1);
-                                $result = false;
-                                break;
+
+                                array_push($existing_datas, [
+                                    'domain' => $url
+                                ]);
+
+                                // $message = ". Please check the Domain before uploading the CSV file";
+                                // $file_message = "Domain is already exsit ". $url . $message . ". Check in line ". (intval($ctr) + 1);
+                                // $result = false;
+                                // break;
                             }
 
                         }else{
@@ -138,25 +160,25 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         fclose($csv);
 
-        if( is_array($datas) && count($datas) > 0 ){
-            foreach( $datas as $data ){
-                ExtDomain::create([
-                    'user_id' => $id,
-                    'domain' => $data['domain'],
-                    'country_id' => $data['country_id'],
-                    'ahrefs_rank' => 0,
-                    'no_backlinks' => 0,
-                    'url_rating' => 0,
-                    'domain_rating' => 0,
-                    'organic_keywords' => '',
-                    'organic_traffic' => '',
-                    'alexa_rank' => 0,
-                    'ref_domains' => 0,
-                    'status' => $data['status'],
-                    'email' => $email,
-                ]);
-            }
-        }
+        // if( is_array($datas) && count($datas) > 0 ){
+        //     foreach( $datas as $data ){
+        //         ExtDomain::create([
+        //             'user_id' => $id,
+        //             'domain' => $data['domain'],
+        //             'country_id' => $data['country_id'],
+        //             'ahrefs_rank' => 0,
+        //             'no_backlinks' => 0,
+        //             'url_rating' => 0,
+        //             'domain_rating' => 0,
+        //             'organic_keywords' => '',
+        //             'organic_traffic' => '',
+        //             'alexa_rank' => 0,
+        //             'ref_domains' => 0,
+        //             'status' => $data['status'],
+        //             'email' => $email,
+        //         ]);
+        //     }
+        // }
             
         return [
             "success" => $result,
@@ -164,8 +186,19 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             "errors" => [
                 "file" => $file_message,
             ],
+            "exist" => $existing_datas,
         ];
     }
+
+    private function remove_http($url) {
+        $disallowed = array('http://', 'https://', 'www.');
+        foreach($disallowed as $d) {
+           if(strpos($url, $d) === 0) {
+              return str_replace($d, '', $url);
+           }
+        }
+        return $url;
+     }
 
     private function getStatusCode($status){
         $result = 0;

@@ -9,6 +9,8 @@ use App\Models\Backlink;
 use App\Models\ExtDomain;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BuyerPurchased;
+use App\Models\User;
+use App\Models\Registration;
 
 class DashboardController extends Controller
 {
@@ -20,6 +22,7 @@ class DashboardController extends Controller
         $backlink_buyer = $this->backlinkBuyer('');
         $ext_domain = $this->extDomain();
         $backlink_to_buy = $this->backlinkToBuy();
+        $inCharge = $this->inCharge();
 
         $data = [
             'total_seller' => $total_seller,
@@ -29,9 +32,25 @@ class DashboardController extends Controller
             'backlink_buyer' => $backlink_buyer,
             'ext_domain' => $ext_domain,
             'backlink_to_buy' => $backlink_to_buy,
+            'team_in_charge'=> $inCharge,
         ];
 
         return response()->json($data);
+    }
+
+    private function inCharge(){
+        $seller_in_charge = User::select('id','username')->where('isOurs', 0)->where('role_id',6)->get();
+        $data = [];
+        foreach($seller_in_charge as $in_charge){
+            $reg_seller = Registration::where('team_in_charge', $in_charge['id'])->count();
+
+            array_push($data,[
+                'username' => $in_charge['username'],
+                'total_seller' => $reg_seller
+            ]);
+        }
+
+        return $data;
     }
 
     private function TotalSeller() {

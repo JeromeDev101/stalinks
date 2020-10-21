@@ -760,6 +760,7 @@
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -783,6 +784,7 @@
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
                         { orderable: false, targets: '_all' }
                     ]
                 }

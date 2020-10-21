@@ -52,12 +52,12 @@
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-md-1" v-for="(ext_domain, index) in listData.ext_domain" :key="index" >
+                        <div class="col-md-1" v-for="(in_charge, index) in listData.team_in_charge" :key="index" >
                             <div class="small-box bg-aqua">
                                 <div class="inner">
                                     <p class="mb-0">Team In-charge</p>
-                                    <p>{{ ext_domain.username }}</p>
-                                    <h3>{{ ext_domain.num_total }}</h3>
+                                    <p>{{ in_charge.username }}</p>
+                                    <h3>{{ in_charge.total_seller }}</h3>
                                 </div>
 
                                 <!-- <div class="icon">

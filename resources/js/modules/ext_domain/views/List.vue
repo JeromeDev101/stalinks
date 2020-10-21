@@ -1053,6 +1053,35 @@
         </div>
         <!-- End Change Multiple Status -->
 
+
+        <!-- Modal Existing Domain -->
+        <div class="modal fade" id="modal-existing-domain">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Existing Domain</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-condensed">
+                            <tr>
+                                <th colspan="2">Total Existing Domain ({{existingDomain.total}})</th>
+                            </tr>
+                            <tr v-for="(ext, index) in existingDomain.data" :key="index">
+                                <td>{{ ext }}</td>
+                                <td class="text-danger">Not Uploaded</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Existing Domain -->
+
     </div>
 </template>
 
@@ -1196,6 +1225,10 @@
                     'Unlisted',
                 ],
                 isEditable: false,
+                existingDomain: {
+                    total: 0,
+                    data:[]
+                },
              };
         },
         async created() {
@@ -1425,6 +1458,7 @@
 
             async submitUpload() {
 
+                this.isEnableBtn = true;
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
                 // this.formData.append('language', this.$refs.language.value);
@@ -1435,10 +1469,23 @@
                 if (this.messageForms.action === 'uploaded') {
                     this.getExtList();
                     this.$refs.excel.value = '';
-                    this.$refs.language.value = '';
-                    this.$refs.status.value = '';
+                    // this.$refs.language.value = '';
+                    // this.$refs.status.value = '';
                     this.isEnableBtn = true;
                     this.showLang = false;
+
+                    // console.log(this.messageForms.errors.length)
+                    let cnt_existing = this.messageForms.errors.length;
+                    if (cnt_existing > 0){
+                        for (let key in this.messageForms.errors ){
+                            this.existingDomain.data.push(this.messageForms.errors[key].domain)
+                        }
+
+                        this.existingDomain.total = cnt_existing;
+                        $("#modal-existing-domain").modal('show')
+                    }
+
+                    console.log(this.existingDomain);
                 }
             },
 

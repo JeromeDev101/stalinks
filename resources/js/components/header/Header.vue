@@ -1,13 +1,10 @@
 <template>
+
     <header class="main-header">
-        <!-- Logo -->
         <a href="#" class="logo" style="position:fixed;">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">STA</span>
-            <!-- logo for regular state and mobile devices -->
             <span class="logo-lg"><b>StaLink </b>System</span>
         </a>
-        <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
             <span class="sr-only">Toggle navigation</span>
@@ -24,7 +21,48 @@
                         </a>
                     </li>
 
-                    <!-- User Account: style can be found in dropdown.less -->
+                    <li style="margin-left:-50px;margin-bottom:-55px;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i></a>
+                        <!-- <span class="label label-warning">10</span> -->
+
+                        <ul class="dropdown-menu">
+                            <li class="header">You have 10 notifications</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <!-- <ul class="menu">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                                            page and may cause design problems
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-users text-red"></i> 5 new members joined
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-user text-red"></i> You changed your username
+                                        </a>
+                                    </li>
+                                </ul> -->
+                            </li>
+                            <li class="footer"><a href="#">View all</a></li>
+                        </ul>
+
+                    </li>
+
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <img :src="user.avatar" class="user-image" alt="User Image">
@@ -34,7 +72,6 @@
 
                         </a>
                         <ul class="dropdown-menu">
-                            <!-- User image -->
                             <li class="user-header">
                                 <img :src="user.avatar" class="img-circle" alt="User Image">
                                 <p>{{ user.username }}</p>
@@ -42,7 +79,6 @@
                                 <p style="margin-top:-5%" v-if="user.isOurs == 1">{{  user.user_type ? user.user_type.type: '' }}</p>
 
                             </li>
-                            <!-- Menu Body -->
                             <li class="user-footer">
                                 <div class="pull-left">
                                     <router-link  :to="{ path: `/profile/${user.id}` }">
@@ -55,12 +91,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- <li class="dropdown user user-menu">
-                        <a href="#">
-                        <img :src="user.avatar" class="user-image" alt="User Image">
-                            <span class="hidden-xs">{{ user.name }}</span>
-                        </a>
-                        </li> -->
                 </ul>
             </div>
         </nav>
