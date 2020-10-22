@@ -52,6 +52,14 @@
                     </router-link>
                 </li>
 
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'overall-incomes' }">
+                    <router-link class="page-sidebar__item" :to="{ path: '/overall-incomes' }">
+                        <i class="fa fa-fw fa-dollar"></i>
+                        <span>Incomes</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li v-if="user.isAdmin || (user.isOurs == 0 &&  (isManager || isSeller || isBuyer || isPostingWriter))" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' || $route.name == 'writer-billing', 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing'  || $route.name == 'writer-billing'}" >
                     <a href="#">
                         <i class="fa fa-btc"></i>

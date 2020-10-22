@@ -251,15 +251,7 @@
                 {
                     this.filterModel.paginate = 1000000;
                 }
-                await this.$store.dispatch('actionGetListIncomes', {
-                    params: {
-                        payment_status: this.filterModel.payment_status,
-                        buyer: this.filterModel.buyer,
-                        seller: this.filterModel.seller,
-                        paginate: this.filterModel.paginate,
-                        date: this.filterModel.date,
-                    }
-                });
+                await this.$store.dispatch('actionGetListIncomes', params);
 
                 var columnSort = [];
 

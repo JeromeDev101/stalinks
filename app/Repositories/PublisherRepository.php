@@ -66,6 +66,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
         }
 
+        if( isset($filter['kw_anchor']) && !empty($filter['kw_anchor']) ){
+            $list = $list->where('publisher.kw_anchor', $filter['kw_anchor']);
+        }
+
         if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){
             if( $filter['got_ahref'] == 'Without' ){
                 $list = $list->where('publisher.ur', 0)

@@ -112,6 +112,17 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Keyword Anchor</label>
+                                <select name="" class="form-control" v-model="filterModel.kw_anchor">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -219,6 +230,7 @@
                                 <th v-show="tblPublisherOpt.price">Price</th>
                                 <th v-show="tblPublisherOpt.price_basis">Price Basis</th>
                                 <th v-show="tblPublisherOpt.inc_article">Inc Article</th>
+                                <th v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>
                                 <th v-show="tblPublisherOpt.ur">UR</th>
                                 <th v-show="tblPublisherOpt.dr">DR</th>
                                 <th v-show="tblPublisherOpt.backlinks">Backlinks</th>
@@ -250,6 +262,7 @@
                                 <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
                                 <td v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>
                                 <td v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
+                                <td v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>
                                 <td v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
                                 <td v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
                                 <td v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>
@@ -327,7 +340,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Include Article</label>
-                                    <select name="" id="" class="form-control" v-model="updateModel.inc_article">
+                                    <select name="" class="form-control" v-model="updateModel.inc_article">
                                         <option value=""></option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
@@ -357,6 +370,17 @@
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Keyword Anchor</label>
+                                    <select name="" class="form-control" v-model="updateModel.kw_anchor">
+                                        <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -401,7 +425,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.inc_article}" class="form-group">
                                     <label for="">Include Article</label>
-                                    <select name="" id="" class="form-control" v-model="addModel.inc_article">
+                                    <select name="" class="form-control" v-model="addModel.inc_article">
                                         <option value="">Select Include Article</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
@@ -518,6 +542,9 @@
                                 <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
+                            </div>
+                            <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -539,7 +566,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>
@@ -586,6 +613,7 @@
                     language_id: '',
                     casino_sites: '',
                     topic: '',
+                    kw_anchor: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -601,6 +629,7 @@
                     in_charge: this.$route.query.in_charge || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
+                    kw_anchor: this.$route.query.kw_anchor || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -737,6 +766,7 @@
                         in_charge: this.filterModel.in_charge,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        kw_anchor: this.filterModel.kw_anchor,
                         page: page
                     }
                 });
@@ -988,6 +1018,7 @@
                     in_charge: '',
                     casino_sites: '',
                     topic: '',
+                    kw_anchor: '',
                 }
 
                 this.getPublisherList({
@@ -1045,6 +1076,8 @@
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
 
+                console.log(that)
+
                 this.updateModel = {
                     id: that.id,
                     name: that.name,
@@ -1063,6 +1096,7 @@
                     inc_article: that.inc_article,
                     topic: that.topic == null ? '':that.topic,
                     casino_sites: that.casino_sites,
+                    kw_anchor: that.kw_anchor,
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
@@ -1103,6 +1137,7 @@
                         in_charge: this.filterModel.in_charge,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        kw_anchor: this.filterModel.kw_anchor,
                     }
                 });
             },

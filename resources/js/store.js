@@ -9,6 +9,7 @@ import storeArticles from '@/modules/article/store';
 import storeExtDomain from '@/modules/ext_domain/store';
 import storePublisher from '@/modules/publisher/store';
 import storeIncomes from '@/modules/incomes/store';
+import storeIncomesAdmin from '@/modules/incomes/admin/store';
 import storeBuy from '@/modules/buy/store';
 import storePurchase from '@/modules/purchase/store';
 import storeIntDomain from '@/modules/int_domain/store';
@@ -52,6 +53,7 @@ export default new Vuex.Store({
         storeDomain,
         storeDashboard,
         storeSystem,
+        storeIncomesAdmin,
         emailTemplateSystem
     },
     plugins: [createPersistedState({

@@ -90,6 +90,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Price Basis</label>
+                                <select name="" class="form-control" v-model="filterModel.price_basis">
+                                    <option value="">All</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Good">Good</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -400,7 +412,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>
@@ -441,6 +453,7 @@
                     code: this.$route.query.code || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
+                    price_basis: this.$route.query.price_basis || '',
                     paginate: this.$route.query.paginate || 50,
                 },
                 searchLoading: false,
@@ -533,6 +546,7 @@
                         paginate: this.filterModel.paginate,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        price_basis: this.filterModel.price_basis,
                         page: page,
                     }
                 });
@@ -627,6 +641,7 @@
                     code: '',
                     casino_sites: '',
                     topic: '',
+                    price_basis: '',
                     paginate: 50,
                 }
 
@@ -683,6 +698,7 @@
                         paginate: this.filterModel.paginate,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        price_basis: this.filterModel.price_basis,
                     }
                 });
             },

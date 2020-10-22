@@ -113,6 +113,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-incomes')->get('incomes', 'IncomesController@getList');
     Route::name('update-incomes')->put('incomes', 'IncomesController@update');
 
+    // Incomes Admin
+    Route::name('get-incomes-admin')->get('incomes-admin', 'IncomesAdminController@getList');
+
     // Followup Sales
     Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');
     Route::name('update-sales')->put('sales', 'FollowupSalesController@update');

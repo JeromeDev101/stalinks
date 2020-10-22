@@ -27,6 +27,7 @@ const state = {
         price: true,
         price_basis: true,
         inc_article: true,
+        kw_anchor: true,
         ur: true,
         dr: true,
         backlinks: true,

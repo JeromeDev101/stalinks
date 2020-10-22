@@ -29,6 +29,7 @@ import Verification from '@/modules/registration/views/Verification.vue';
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
 import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
+import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
 
@@ -66,6 +67,11 @@ const routes = [{
         path: '/articles-list',
         name: 'articles-list',
         component: ArticleList,
+    },
+    {
+        path: '/overall-incomes',
+        name: 'overall-incomes',
+        component: OverAllIncomes,
     },
     {
         path: '/articles',

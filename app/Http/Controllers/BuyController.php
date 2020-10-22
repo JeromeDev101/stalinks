@@ -133,7 +133,17 @@ class BuyController extends Controller
                 $price_basis = 'High';
             }
 
-            $value['price_basis'] = $price_basis;
+
+            // Filtering of Price Basis
+            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
+                if( $filter['price_basis'] == $price_basis ){
+                    $value['price_basis'] = $price_basis;
+                }else{
+                    $result->forget($key);
+                }
+            }else{
+                $value['price_basis'] = $price_basis;
+            }
 
         }
 
