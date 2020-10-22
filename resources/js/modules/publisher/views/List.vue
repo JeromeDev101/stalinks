@@ -594,7 +594,7 @@
         name: '',
         data(){
             return {
-                paginate: [50,150,250,350, 'All'],
+                paginate: [50,150,250,350, 123,'All'],
                 updateModel: {
                     id: '',
                     company_name: '',
@@ -750,9 +750,45 @@
                 this.isSearching = true;
                 if(this.filterModel.paginate == 'All')
                 {
-                    this.filterModel.paginate = 1000000;
+                    //this.filterModel.paginate = 1000000;
+                    await this.$store.dispatch('getListPublisher', {
+                    params: {
+                            search: this.filterModel.search,
+                            language_id: this.filterModel.language_id,
+                            inc_article: this.filterModel.inc_article,
+                            seller: this.filterModel.seller,
+                            paginate: 1000000,
+                            got_ahref: this.filterModel.got_ahref,
+                            date: this.filterModel.date,
+                            valid: this.filterModel.valid,
+                            in_charge: this.filterModel.in_charge,
+                            casino_sites: this.filterModel.casino_sites,
+                            topic: this.filterModel.topic,
+                            kw_anchor: this.filterModel.kw_anchor,
+                            page: page
+                        }
+                    });
+                }else{
+                    await this.$store.dispatch('getListPublisher', {
+                    params: {
+                            search: this.filterModel.search,
+                            language_id: this.filterModel.language_id,
+                            inc_article: this.filterModel.inc_article,
+                            seller: this.filterModel.seller,
+                            paginate: this.filterModel.paginate,
+                            got_ahref: this.filterModel.got_ahref,
+                            date: this.filterModel.date,
+                            valid: this.filterModel.valid,
+                            in_charge: this.filterModel.in_charge,
+                            casino_sites: this.filterModel.casino_sites,
+                            topic: this.filterModel.topic,
+                            kw_anchor: this.filterModel.kw_anchor,
+                            page: page
+                        }
+                    });
                 }
                 
+               
                 await this.$store.dispatch('getListPublisher', {
                     params: {
                         search: this.filterModel.search,
@@ -770,7 +806,7 @@
                         page: page
                     }
                 });
-
+                console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
@@ -849,6 +885,7 @@
 
                 this.searchLoading = false;
                 this.isSearching = false;
+                
             },
 
             async getListSeller(params) {
