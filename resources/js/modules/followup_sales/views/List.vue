@@ -523,22 +523,39 @@
                 this.isSearching = true;
                 if(this.filterModel.paginate == 'All')
                 {
-                    this.filterModel.paginate = 1000000;
+                  await this.$store.dispatch('actionGetListSales', {
+                        params: {
+                            backlink_id: this.filterModel.backlink_id,
+                            search: this.filterModel.search,
+                            status: this.filterModel.status,
+                            seller: this.filterModel.seller,
+                            buyer: this.filterModel.buyer,
+                            paginate: 1000000,
+                            article: this.filterModel.article,
+                            in_charge: this.filterModel.in_charge,
+                            country_id: this.filterModel.country_id,
+                        }
+                        
+                    });
+
+                }else
+                {
+                    await this.$store.dispatch('actionGetListSales', {
+                        params: {
+                            backlink_id: this.filterModel.backlink_id,
+                            search: this.filterModel.search,
+                            status: this.filterModel.status,
+                            seller: this.filterModel.seller,
+                            buyer: this.filterModel.buyer,
+                            paginate: this.filterModel.paginate,
+                            article: this.filterModel.article,
+                            in_charge: this.filterModel.in_charge,
+                            country_id: this.filterModel.country_id,
+                        }
+                        
+                    });
                 }
-                await this.$store.dispatch('actionGetListSales', {
-                    params: {
-                        backlink_id: this.filterModel.backlink_id,
-                        search: this.filterModel.search,
-                        status: this.filterModel.status,
-                        seller: this.filterModel.seller,
-                        buyer: this.filterModel.buyer,
-                        paginate: this.filterModel.paginate,
-                        article: this.filterModel.article,
-                        in_charge: this.filterModel.in_charge,
-                        country_id: this.filterModel.country_id,
-                    }
-                    
-                });
+                
                     console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },

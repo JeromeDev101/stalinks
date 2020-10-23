@@ -249,9 +249,20 @@
                 this.isSearchingLoading = true;
                 if(this.filterModel.paginate == 'All')
                 {
-                    this.filterModel.paginate = 1000000;
+                    await this.$store.dispatch('actionGetListIncomes',{
+                        params: {
+                            paginate: 1000000,
+                        }
+                    });
+                }else
+                {
+                    await this.$store.dispatch('actionGetListIncomes', {
+                        params: {
+                            paginate: this.filterModel.paginate,
+                        }
+                    });
                 }
-                await this.$store.dispatch('actionGetListIncomes', params);
+                //await this.$store.dispatch('actionGetListIncomes', params);
 
                 var columnSort = [];
 

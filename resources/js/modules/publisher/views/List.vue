@@ -594,7 +594,7 @@
         name: '',
         data(){
             return {
-                paginate: [50,150,250,350, 123,'All'],
+                paginate: [50,150,250,350,'All'],
                 updateModel: {
                     id: '',
                     company_name: '',
@@ -750,7 +750,7 @@
                 this.isSearching = true;
                 if(this.filterModel.paginate == 'All')
                 {
-                    //this.filterModel.paginate = 1000000;
+                    
                     await this.$store.dispatch('getListPublisher', {
                     params: {
                             search: this.filterModel.search,
