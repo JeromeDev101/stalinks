@@ -70,12 +70,12 @@
                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                <td>{{ index + 1 }}</td>
                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
-                               <td v-show="tblOptIncomesAdmin.selling_price">{{ incomes_admin.selling_price }}</td>
-                               <td v-show="tblOptIncomesAdmin.price">$ {{ incomes_admin.price }}</td>
-                               <td v-show="tblOptIncomesAdmin.gross_income"></td>
-                               <td v-show="tblOptIncomesAdmin.fee_charges"></td>
-                               <td v-show="tblOptIncomesAdmin.content_charges"></td>
-                               <td v-show="tblOptIncomesAdmin.net_incomes"></td>
+                               <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.selling_price == null ? number_format(incomes_admin.price) : number_format(incomes_admin.selling_price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.price">$ {{ number_format(incomes_admin.price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.gross_income">{{ computeGross(incomes_admin.selling_price, incomes_admin.price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
+                               <td v-show="tblOptIncomesAdmin.content_charges">0</td>
+                               <td v-show="tblOptIncomesAdmin.net_incomes">0</td>
                            </tr>
                         </tbody>
                     </table>
@@ -160,6 +160,24 @@
         },
 
         methods: {
+            computeGross(selling_price, price){
+                let p1 = parseFloat(selling_price);
+                let p2 = parseFloat(price);
+                let result = 0;
+
+                if( p1 != 0 ){
+                    result = 0;
+                }
+                
+                return result;
+
+            },
+
+            number_format(num){
+                let n = parseFloat(num);
+                return n.toFixed(0);
+            },
+
             async getListIncomesAdmin(params){
                 $('#tbl_incomes_admin').DataTable().destroy();
 

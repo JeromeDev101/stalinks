@@ -220,6 +220,7 @@
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
                                 <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
+                                <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th v-show="tblPublisherOpt.language">Language</th>
                                 <th v-show="tblPublisherOpt.topic">Topic</th>
                                 <th v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
@@ -251,6 +252,7 @@
                                         </button>
                                     </div>
                                 </td>
+                                <td v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.created_at) }}</td>
                                 <td v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td v-show="tblPublisherOpt.language">{{ publish.country_name }}</td>
                                 <td v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
@@ -509,7 +511,10 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Uploaded</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">Uploaded</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Updated</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
@@ -773,7 +778,6 @@
 
                 let columnDefs = [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
@@ -784,20 +788,21 @@
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 12, className: 'text-center' },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
                         { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
+                        { orderable: true, targets: 20 },
                         { orderable: false, targets: '_all' }
                     ];
 
                 if( this.user.isOurs == 0 && !this.user.isAdmin){
                     columnDefs = [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
@@ -808,13 +813,15 @@
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 12, className: 'text-center' },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
                         { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
+                        { orderable: true, targets: 20 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -885,6 +892,8 @@
                     ids: this.checkIds,
                 });
 
+                console.log(this.messageForms.data)
+
 
                 if( this.messageForms.action === 'saved' ){
                     swal.fire(
@@ -894,9 +903,19 @@
                         )
 
                     this.getPublisherList();
-
-                    this.checkIds = [];
                 }
+
+                if (this.messageForms.data){
+                    swal.fire(
+                        'Error',
+                        'This URL has already have a valid \n' + this.messageForms.data,
+                        'error'
+                        )
+
+                    this.getPublisherList();
+                }
+
+                this.checkIds = [];
             },
             
             select: function() {
@@ -912,8 +931,9 @@
                 let char1 = str.replace("http://", "");
                 let char2 = char1.replace("https://", "");
                 let char3 = char2.replace("www.", "");
+                let char4 = char3.replace("/", "");
 
-                return char3;
+                return char4;
             },
 
             displayDate(date) {
@@ -1069,6 +1089,8 @@
                         'success'
                         )
 
+                this.checkIds = [];
+
                 this.getPublisherList();
             },
 
@@ -1082,7 +1104,7 @@
                     id: that.id,
                     name: that.name,
                     username: that.username,
-                    url: that.url,
+                    url: this.replaceCharacters(that.url),
                     language_id: that.language_id,
                     ur: that.ur,
                     dr: that.dr,

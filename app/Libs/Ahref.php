@@ -118,6 +118,16 @@ class Ahref {
         return $dataReturn;
     }
 
+    private function remove_http($url) {
+        $disallowed = array('http://', 'https://', 'www.', '/');
+        foreach($disallowed as $d) {
+           if(strpos($url, $d) === 0) {
+              return str_replace($d, '', $url);
+           }
+        }
+        return $url;
+    }
+
     /**
      * Get ahrefs with promise for request async concurrency
      * @param Collection $publisher
@@ -137,7 +147,7 @@ class Ahref {
         $promises = (function () use ($publishers, $guzzleClient, $getFrom) {
             foreach ($publishers as $publisher) {
                 foreach($getFrom as $from) {
-                    $url =preg_replace('/\s+/', '', $publisher->url);
+                    $url = $this->remove_http($publisher->url);
 
                     yield $guzzleClient->requestAsync('GET', $this->getApiUrl($url, $from))
                         ->then(function(ResponseInterface $response) use ($publisher) {

@@ -191,14 +191,14 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
     }
 
     private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
+        $disallowed = array('http://', 'https://', 'www.', '/');
         foreach($disallowed as $d) {
            if(strpos($url, $d) === 0) {
               return str_replace($d, '', $url);
            }
         }
         return $url;
-     }
+    }
 
     private function getStatusCode($status){
         $result = 0;

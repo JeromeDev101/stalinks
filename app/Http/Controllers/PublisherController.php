@@ -128,6 +128,15 @@ class PublisherController extends Controller
         $result = [];
         foreach( $request->ids AS $id ){
             $publisher = Publisher::findOrfail($id);
+
+            if( $request->valid == 'valid' && $publisher->valid != 'valid'){
+                $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
+
+                if( $check->count() > 0 ){
+                    return response()->json(['data' => $publisher->url],422);
+                }
+            }
+
             $result[] = $publisher->update([
                 'valid' => $request->valid,
             ]);

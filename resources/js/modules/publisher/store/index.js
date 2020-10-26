@@ -16,6 +16,7 @@ const state = {
     listCountries: { data: [], total: 0 },
     listSeller: { data:[] },
     tblPublisherOpt: {
+        created: true,
         uploaded: true,
         language: true,
         topic: true,
@@ -177,9 +178,9 @@ const actions = {
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: {} });
             }
-            // else if (response.response.status === 422) {
-            //     commit(MESSAGE_FORMS, response.response.data);
-            // }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
