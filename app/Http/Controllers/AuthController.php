@@ -12,6 +12,7 @@ use App\Models\Registration;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -155,4 +156,6 @@ class AuthController extends Controller
     {
         return response()->json(['success' => $request->user()->token()->revoke()]);
     }
+
+   
 }
