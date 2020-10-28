@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search ID</label>
+                                <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>ID</th>
+                                <th>Backlink ID</th>
                                 <th>User Seller</th>
                                 <th>User Buyer</th>
                                 <th>URL Publisher</th>

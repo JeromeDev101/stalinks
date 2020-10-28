@@ -178,9 +178,9 @@
                                 <th v-show="tblBuyOptions.org_traffic">Organic Traffic</th>
                                 <th v-show="tblBuyOptions.price">Price</th>
                                 <th v-show="tblBuyOptions.status">Status</th>
-                                <th v-show="tblBuyOptions.code_comb" v-if="user.isOurs == 0">Code Combination</th>
-                                <th v-show="tblBuyOptions.code_price" v-if="user.isOurs == 0">Code Price</th>
-                                <th v-show="tblBuyOptions.price_basis" v-if="user.isOurs == 0">Price Basis</th>
+                                <th v-show="tblBuyOptions.code_comb" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Code Combination</th>
+                                <th v-show="tblBuyOptions.code_price" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Code Price</th>
+                                <th v-show="tblBuyOptions.price_basis" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Price Basis</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -207,9 +207,9 @@
                                 <td v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
                                 <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-show="tblBuyOptions.code_comb" v-if="user.isOurs== 0" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
-                                <td v-show="tblBuyOptions.code_price" v-if="user.isOurs== 0"> $ {{ buy.code_price}}</td>
-                                <td v-show="tblBuyOptions.price_basis" v-if="user.isOurs== 0">{{ buy.price_basis }}</td>
+                                <td v-show="tblBuyOptions.code_comb" v-if="user.isOurs== 0 || isExtBuyerWithCommission" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td v-show="tblBuyOptions.code_price" v-if="user.isOurs== 0 || isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
+                                <td v-show="tblBuyOptions.price_basis" v-if="user.isOurs== 0 || isExtBuyerWithCommission">{{ buy.price_basis }}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -400,13 +400,13 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Code Combination</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Code Price</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis">Price Basis</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Price Basis</label>
                             </div>
                         </div>
                     </div>
@@ -487,6 +487,8 @@
                     'Tech',
                     'Unlisted',
                 ],
+
+                isExtBuyerWithCommission: false,
             }
         },
 
@@ -507,9 +509,34 @@
             this.checkCreditAuth();
             this.getListSeller();
             this.columnShow();
+            this.checkBuyerCommission();
         },
 
         methods: {
+            checkBuyerCommission() {
+                let email = this.user.email;
+                this.getBuyerCommission(email).then(res => {
+                    let commission = res.data.commission;
+
+                    if (commission.toLowerCase() == 'yes'){
+                        this.isExtBuyerWithCommission = true;
+                    }
+                })
+            },
+
+            async getBuyerCommission(email) {
+                try {
+                    const response = await axios.get('api/buyer-commission', {
+                                            params: {
+                                                email: email,
+                                            }
+                                        });
+                    return response;
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+
             columnShow() {
                 if (this.user.role_id == 5){
                     this.tblBuyOptions.casino_sites = false;

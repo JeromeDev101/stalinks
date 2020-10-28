@@ -326,4 +326,9 @@ class AccountController extends Controller
         $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
         return response()->json(['data'=> $team], 200);
     }
+
+    public function getBuyerCommission(Request $request) {
+        $registration = Registration::where('email', $request->email)->first();
+        return $registration;
+    }
 }

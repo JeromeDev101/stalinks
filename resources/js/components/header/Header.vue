@@ -13,7 +13,7 @@
                 <ul class="nav navbar-nav">
                     <li v-if="isBuyer" style="margin-left:-450px;margin-bottom:-55px;">
                         <a href="#">
-                            Deposit: <strong>$ {{ money.deposit }}</strong>
+                            Deposit: <strong>$ {{ money.deposit }} <span ref="deposit"></span></strong>
                             &nbsp;
                             Wallet: <strong>$ {{ money.wallet }}</strong>
                             &nbsp;
@@ -158,11 +158,14 @@ export default {
                         }
                     })
                     .catch(error => console.log(error))
-
+                
                 let wallet = JSON.parse(localStorage.getItem("wallet"))
+
+
                 if ( Number.isInteger(wallet.wallet) ){
                     this.money = wallet;
                 }
+                
             }
         },
 

@@ -9,18 +9,24 @@
 
                 <div class="box-body m-3">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search URL Publisher</label>
-                                <!-- <input v-on:keyup="getBackLinkList()" v-model="fillter.querySearch" v-on:keyup.enter="getBackLinkList()" type="text" name="search" class="form-control" placeholder=""> -->
-                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="">
+                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" name="" v-model="fillter.status">
+                                <select class="form-control" v-model="fillter.status">
                                     <option value="">All</option>
                                     <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                 </select>
@@ -30,7 +36,7 @@
                         <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Seller</label>
-                                <select class="form-control" name="" v-model="fillter.seller">
+                                <select class="form-control" v-model="fillter.seller">
                                     <option value="">All</option>
                                     <option v-for="seller in listSeller.data" v-bind:value="seller.id">{{ seller.username }}</option>
                                 </select>
@@ -40,7 +46,7 @@
                         <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Buyer</label>
-                                <select class="form-control" name="" v-model="fillter.buyer">
+                                <select class="form-control" v-model="fillter.buyer">
                                     <option value="">All</option>
                                     <option v-for="option in listBuyer.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username }}
@@ -71,7 +77,7 @@
                         <tr>
                             <td>
                                 <div class="input-group input-group-sm float-right" style="width: 100px">
-                                    <select name="" class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
+                                    <select class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
                                         <option v-for="option in paginate" v-bind:value="option">
                                             {{ option }}
                                         </option>

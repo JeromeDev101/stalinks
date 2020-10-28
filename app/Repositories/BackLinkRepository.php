@@ -159,6 +159,10 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             $query = $query->where('status', $filters->status);
         }
 
+        if( !empty($filters->backlink_id) && $filters->backlink_id != ""){
+            $query = $query->where('id', $filters->backlink_id);
+        }
+
         return $query;
     }
 

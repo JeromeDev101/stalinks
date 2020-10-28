@@ -68,10 +68,12 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-seller')->get('accounts/get-sellers', 'AccountController@getUserRole');
     Route::name('get-user-wallet-credit')->get('wallet-credit', 'AccountController@getWalletCredit');
     Route::name('get-team-in-charge')->get('team-in-charge', 'AccountController@getTeamInCharge');
+    Route::name('get-buyer-commission')->get('buyer-commission', 'AccountController@getBuyerCommission');
 
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
+    // Route::name('test')->get('test', 'PurchaseController@test');
 
     //Dashboard
     Route::name('ext-reports')->post('/ext/reports', 'ExtDomainController@reports');
