@@ -20,6 +20,12 @@ export default class SystemService {
             .catch(error => error);
     }
 
+    static getFormula(params) {
+        return axios.get('/api/formula', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     /**
      * Return update status
      *
@@ -63,6 +69,12 @@ export default class SystemService {
      */
     static addCountry(params) {
         return axios.post('/api/admin/countries', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static updateFormula(params) {
+        return axios.post('/api/formula', params)
             .then(response => response)
             .catch(error => error);
     }

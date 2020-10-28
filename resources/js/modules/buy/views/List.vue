@@ -500,6 +500,7 @@
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
+                formula: state => state.storeSystem.formula,
             }),
         },
 
@@ -510,6 +511,7 @@
             this.getListSeller();
             this.columnShow();
             this.checkBuyerCommission();
+            this.getFormula();
         },
 
         methods: {
@@ -522,6 +524,12 @@
                         this.isExtBuyerWithCommission = true;
                     }
                 })
+            },
+
+            async getFormula() {
+                await this.$store.dispatch('actionGetFormula');
+
+                this.updateFormula = this.formula.data[0];
             },
 
             async getBuyerCommission(email) {
@@ -764,6 +772,8 @@
 
                 let activeUser = this.user
                 let selling_price = price
+                let percent = parseFloat(this.formula.data[0].percentage);
+                let additional = parseFloat(this.formula.data[0].additional);
 
                 if( activeUser.user_type ){ //check if has user_type value
 
@@ -781,7 +791,7 @@
                                 }
 
                                 if( commission == 'yes' ){
-                                    let percentage = this.percentage(10, price)
+                                    let percentage = this.percentage(percent, price)
                                     selling_price = parseFloat(percentage) + parseFloat(price)
                                 }
                             }
@@ -789,12 +799,12 @@
                             if( article == 'No' ){ //check if without article
 
                                 if( commission == 'no' ){
-                                    selling_price = parseFloat(price) + 10
+                                    selling_price = parseFloat(price) + additional
                                 }
 
                                 if( commission == 'yes' ){
-                                    let percentage = this.percentage(10, price)
-                                    selling_price = parseFloat(percentage) + parseFloat(price) + 10
+                                    let percentage = this.percentage(percent, price)
+                                    selling_price = parseFloat(percentage) + parseFloat(price) + additional
                                 }
 
                             }

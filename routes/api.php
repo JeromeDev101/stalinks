@@ -165,6 +165,10 @@ Route::middleware('auth:api')->group(function () {
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
     });
 
+    //Formula
+    Route::name('get-formula')->get('/formula', 'ConfigController@getFormula');
+    Route::name('update-formula')->post('/formula', 'ConfigController@updateFormula');
+
     // Ahref Subscription
     Route::name('subscription-info')->get('subscription-info', 'ConfigController@getSubscriptionInfo');
 

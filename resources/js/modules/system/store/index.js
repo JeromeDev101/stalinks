@@ -6,6 +6,7 @@ const CONFIG_SET_LIST = 'CONFIG_SET_LIST'
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const PAYMENT_LIST = 'PAYMENT_LIST';
 const SUBSCRIPTION_LIST = 'SUBSCRIPTION_LIST';
+const FORMULA = 'FORMULA';
 
 const state = {
     totalCountry: 0,
@@ -15,11 +16,16 @@ const state = {
     configList: { data: [], total: 0 },
     messageForms: { action: '', message: '', errors: {} },
     Info: {},
+    formula: {},
 };
 
 const mutations = {
     [SUBSCRIPTION_LIST](state, dataSet) {
         state.Info = dataSet;
+    },
+
+    [FORMULA](state, formula) {
+        state.formula = formula;
     },
 
     [SYSTEM_SET_ERROR](state, error) {
@@ -48,6 +54,20 @@ const actions = {
         try {
             let response = await SystemService.getConfigList(params);
             commit(CONFIG_SET_LIST, response.data)
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetFormula({ commit }, params) {
+        try {
+            let response = await SystemService.getFormula(params);
+            commit(FORMULA, response.data)
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
@@ -110,6 +130,25 @@ const actions = {
             let response = await SystemService.addCountry(params);
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'saved_country', message: '#' + response.data.data.id + ' Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionUpdateFormula({commit}, params) {
+        try {
+            let response = await SystemService.updateFormula(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'save_formula', message: '', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

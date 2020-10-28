@@ -6,6 +6,7 @@ use App\Repositories\Contracts\ConfigRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Models\Formula;
 
 class ConfigController extends Controller
 {
@@ -70,5 +71,22 @@ class ConfigController extends Controller
         $result = json_decode($response->getBody()->getContents(), true);
 
         return $result;
+    }
+
+    public function getFormula() {
+        $formula = Formula::all();
+        return response()->json(['data' => $formula],200);
+    }
+
+    public function updateFormula(Request $request) {
+        $request->validate([
+            'additional' => 'required',
+            'percentage' => 'required',
+        ]);
+
+        $input = $request->except('id');
+        $formula = Formula::findOrFail($request->id);
+        $formula->update($input);
+        return response()->json(['success' => true],200);
     }
 }
