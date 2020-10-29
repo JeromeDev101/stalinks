@@ -63,7 +63,7 @@
                                 <label for="">Country</label>
                                 <select name="" class="form-control" v-model="filterModel.country_id">
                                     <option value="">All</option>
-                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
@@ -480,7 +480,7 @@
             this.getListSeller();
             this.getListBuyer();
 
-            let countries = this.listCountries.data;
+            let countries = this.listCountryAll.data;
             if( countries.length === 0 ){
                 this.getListCountries();
             }
@@ -499,7 +499,7 @@
                 listSeller: state => state.storeFollowupSales.listSeller,
                 messageForms: state => state.storeFollowupSales.messageForms,
                 user: state => state.storeAuth.currentUser,
-                listCountries: state => state.storePublisher.listCountries,
+                listCountryAll: state => state.storePublisher.listCountryAll,
                 listIncharge: state => state.storeAccount.listIncharge,
 
             })

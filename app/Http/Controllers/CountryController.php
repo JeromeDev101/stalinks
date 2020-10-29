@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Country;
+use App\Models\Language;
 
 class CountryController extends Controller
 {
@@ -127,5 +129,21 @@ class CountryController extends Controller
         $this->countryRepository->update($country, $input);
         $response['success'] = true;
         return response()->json($response);
+    }
+
+    public function getListCountry() {
+        $country = Country::orderBy('name', 'asc');
+        return response()->json([
+            'data' => $country->get(),
+            'count' => $country->count(),
+        ],200);
+    }
+
+    public function getListLanguages() {
+        $language = Language::orderBy('name', 'asc');
+        return response()->json([
+            'data' => $language->get(),
+            'count' => $language->count(),
+        ],200);
     }
 }

@@ -704,7 +704,7 @@
                                     <label style="color: #333">Language</label>
                                     <select name="" class="form-control" v-model="publisherAdd.language_id" :disabled="isEditable">
                                         <option value="">Select Language</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1248,7 +1248,7 @@
                 this.getListSeller();
             }
 
-            let countries = this.listCountries.data;
+            let countries = this.listCountryAll.data;
             if( countries.length === 0 ){
                 this.getListCountries();
             }
@@ -1272,7 +1272,7 @@
                 listMailTemplate: state => state.storeExtDomain.listMailTemplate,
                 listExtSeller: state => state.storeExtDomain.listExtSeller,
                 listSeller: state => state.storePublisher.listSeller,
-                listCountries: state => state.storePublisher.listCountries,
+                listCountryAll: state => state.storePublisher.listCountryAll,
                 listSellerTeam: state => state.storeExtDomain.listSellerTeam,
             }),
             pagination() {

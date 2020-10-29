@@ -55,7 +55,13 @@ export default class PublisherService {
     }
 
     static getListCountries(params) {
-        return axios.get('/api/countries', params)
+        return axios.get('/api/country-list', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+    
+    static getListLanguages(params) {
+        return axios.get('/api/languages-list', params)
             .then(response => response)
             .catch(error => error);
     }

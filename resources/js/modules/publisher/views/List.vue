@@ -12,10 +12,22 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Language</label>
-                                <select name="" class="form-control" v-model="filterModel.language_id">
+                                <label for="">Country</label>
+                                <select class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
-                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Language</label>
+                                <select class="form-control" >
+                                    <option value="">All</option>
+                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
@@ -25,7 +37,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">In charge</label>
-                                <select name="" class="form-control" v-model="filterModel.in_charge">
+                                <select class="form-control" v-model="filterModel.in_charge">
                                     <option value="">All</option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username}}
@@ -37,7 +49,7 @@
                         <div class="col-md-2" v-if="user.isAdmin || user.isOurs == 0">
                             <div class="form-group">
                                 <label for="">Seller</label>
-                                <select name="" class="form-control" v-model="filterModel.seller">
+                                <select class="form-control" v-model="filterModel.seller">
                                     <option value="">All</option>
                                     <option v-for="option in listSeller.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username }}
@@ -56,7 +68,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Include Article</label>
-                                <select name="" class="form-control" v-model="filterModel.inc_article">
+                                <select class="form-control" v-model="filterModel.inc_article">
                                     <option value="">All</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -67,7 +79,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Got Ahref</label>
-                                <select name="" class="form-control" v-model="filterModel.got_ahref">
+                                <select class="form-control" v-model="filterModel.got_ahref">
                                     <option value="">All</option>
                                     <option value="With">With</option>
                                     <option value="Without">Without</option>
@@ -85,14 +97,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search URL</label>
-                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
+                                <input type="text" class="form-control" v-model="filterModel.search" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
-                                <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                <select class="form-control" v-model="filterModel.casino_sites">
                                     <option value="">All</option>
                                     <option value="yes">Yes</option>
                                     <option value="no">No</option>
@@ -103,7 +115,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Topic</label>
-                                <!-- <select name="" class="form-control" v-model="filterModel.topic">
+                                <!-- <select class="form-control" v-model="filterModel.topic">
                                     <option value="">All</option>
                                     <option v-for="option in topic" v-bind:value="option">
                                         {{ option }}
@@ -116,7 +128,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Keyword Anchor</label>
-                                <select name="" class="form-control" v-model="filterModel.kw_anchor">
+                                <select class="form-control" v-model="filterModel.kw_anchor">
                                     <option value="">All</option>
                                     <option value="yes">Yes</option>
                                     <option value="no">No</option>
@@ -142,7 +154,7 @@
                     <h3 class="box-title">Publisher URL List</h3>
 
                     <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="getPublisherList" v-model="filterModel.paginate" style="height: 37px;">
+                        <select class="form-control float-right" @change="getPublisherList" v-model="filterModel.paginate" style="height: 37px;">
                             <option v-for="option in paginate" v-bind:value="option">
                                 {{ option }}
                             </option>
@@ -171,7 +183,7 @@
                                 <div class="col-sm-12">
                                     <select class="form-control" name="language" ref="language" v-on:change="checkData">
                                         <option value="">Select language</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -305,28 +317,28 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Company Name</label>
-                                    <input type="text" v-model="updateModel.company_name" class="form-control" name="" placeholder="" disabled>
+                                    <input type="text" v-model="updateModel.company_name" class="form-control" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" v-model="updateModel.username" class="form-control" name="" placeholder="" disabled>
+                                    <input type="text" v-model="updateModel.username" class="form-control" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">URL</label>
-                                    <input type="text" v-model="updateModel.url" class="form-control" name="" placeholder="" :disabled="user.isOurs != 0">
+                                    <input type="text" v-model="updateModel.url" class="form-control" placeholder="" :disabled="user.isOurs != 0">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Language</label>
-                                    <select name="" class="form-control" v-model="updateModel.language_id">
+                                    <select class="form-control" v-model="updateModel.language_id">
                                         <option value="">Select Language</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -336,14 +348,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Price</label>
-                                    <input type="number" v-model="updateModel.price" class="form-control" name="" placeholder="">
+                                    <input type="number" v-model="updateModel.price" class="form-control" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Include Article</label>
-                                    <select name="" class="form-control" v-model="updateModel.inc_article">
+                                    <select class="form-control" v-model="updateModel.inc_article">
                                         <option value=""></option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
@@ -354,7 +366,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
                                     <label for="">Accept Casino & Betting Sites</label>
-                                    <select name="" class="form-control" v-model="updateModel.casino_sites">
+                                    <select class="form-control" v-model="updateModel.casino_sites">
                                         <option value="">Select Casino & Bettings Sites</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
@@ -366,7 +378,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
                                     <label for="">Topic</label>
-                                    <select name="" class="form-control" v-model="updateModel.topic">
+                                    <select class="form-control" v-model="updateModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
@@ -379,7 +391,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Keyword Anchor</label>
-                                    <select name="" class="form-control" v-model="updateModel.kw_anchor">
+                                    <select class="form-control" v-model="updateModel.kw_anchor">
                                         <option value=""></option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
@@ -416,7 +428,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
-                                    <select name="" class="form-control" v-model="addModel.seller">
+                                    <select class="form-control" v-model="addModel.seller">
                                         <option value="">Select Seller</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
@@ -428,7 +440,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.inc_article}" class="form-group">
                                     <label for="">Include Article</label>
-                                    <select name="" class="form-control" v-model="addModel.inc_article">
+                                    <select class="form-control" v-model="addModel.inc_article">
                                         <option value="">Select Include Article</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
@@ -439,16 +451,16 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.url}" class="form-group">
                                     <label for="">URL</label>
-                                    <input type="text" v-model="addModel.url" class="form-control" name="" placeholder="" >
+                                    <input type="text" v-model="addModel.url" class="form-control" placeholder="" >
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.language_id}" class="form-group">
                                     <label for="">Language</label>
-                                    <select name="" class="form-control" v-model="addModel.language_id">
+                                    <select class="form-control" v-model="addModel.language_id">
                                         <option value="">Select Language</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -459,7 +471,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.price}" class="form-group">
                                     <label for="">Price</label>
-                                    <input type="number" v-model="addModel.price" class="form-control" name="" placeholder="">
+                                    <input type="number" v-model="addModel.price" class="form-control" placeholder="">
                                     <span v-if="messageForms.errors.price" v-for="err in messageForms.errors.price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -467,7 +479,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
                                     <label for="">Accept Casino & Betting Sites</label>
-                                    <select name="" class="form-control" v-model="addModel.casino_sites">
+                                    <select class="form-control" v-model="addModel.casino_sites">
                                         <option value="">Select Casino & Bettings Sites</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
@@ -479,7 +491,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
                                     <label for="">Topic</label>
-                                    <select name="" class="form-control" v-model="addModel.topic">
+                                    <select class="form-control" v-model="addModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
@@ -685,10 +697,10 @@
             this.checkAccountType();
             this.getListSeller();
 
-            let countries = this.listCountries.data;
-            if( countries.length === 0 ){
+            // let countries = this.listCountries.data;
+            // if( countries.length === 0 ){
                 this.getListCountries();
-            }
+            // }
 
             let in_charge = this.listIncharge.data;
             if( in_charge.length === 0 ){
@@ -696,6 +708,7 @@
             }
 
             this.setDefaultSettings();
+            this.getListLanguages();
         },
 
         computed:{
@@ -703,15 +716,20 @@
                 tblPublisherOpt: state => state.storePublisher.tblPublisherOpt,
                 listPublish: state => state.storePublisher.listPublish,
                 messageForms: state => state.storePublisher.messageForms,
-                listCountries: state => state.storePublisher.listCountries,
+                listCountryAll: state => state.storePublisher.listCountryAll,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
+                listLanguages: state => state.storePublisher.listLanguages,
             })
         },
 
         methods: {
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
             displayStar(price_basis) {
                 let star = '';

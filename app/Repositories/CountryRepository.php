@@ -140,7 +140,7 @@ class CountryRepository extends BaseRepository implements CountryRepositoryInter
                 $results[] = $item->id;
             }
 
-            $countries = $this->model->select('countries.id', 'name', 'code')->whereIn('id', $results)->get();
+            $countries = $this->model->select('countries.id', 'name', 'code')->whereIn('id', $results)->orderBy('name', 'asc')->get();
         }
 
         return $countries;
@@ -175,7 +175,7 @@ class CountryRepository extends BaseRepository implements CountryRepositoryInter
     public function paginate($page, $perPage, $filters)
     {
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $data = $queryBuilder->orderBy('id', 'desc')->paginate($perPage, ['*'], 'page', $page);
+        $data = $queryBuilder->orderBy('name', 'asc')->paginate($perPage, ['*'], 'page', $page);
 
         return $data;
     }

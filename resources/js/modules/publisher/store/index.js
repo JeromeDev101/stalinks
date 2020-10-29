@@ -4,7 +4,8 @@ const PUBLISHER_SUMMARY_LIST = 'PUBLISHER_SUMMARY_LIST';
 const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
-const LIST_COUNTRY = 'LIST_COUNTRY';
+const LIST_COUNTRY_ALL = 'LIST_COUNTRY_ALL';
+const LIST_LANGUAGES = 'LIST_LANGUAGES';
 const LIST_SELLER = 'LIST_SELLER';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 
@@ -13,7 +14,8 @@ const state = {
     listPublish: { data:[], total: 0 },
     summaryPublish:{ total: 0, data:[] },
     messageForms: { action: '', message: '', errors: {} },
-    listCountries: { data: [], total: 0 },
+    listCountryAll: { data: [], total: 0 },
+    listLanguages: { data: [], total: 0 },
     listSeller: { data:[] },
     tblPublisherOpt: {
         created: true,
@@ -69,8 +71,12 @@ const mutations = {
         state.listPublish = dataSet.listPublish;
     },
 
-    [LIST_COUNTRY](state, listCountries) {
-        state.listCountries = listCountries;
+    [LIST_COUNTRY_ALL](state, listCountryAll) {
+        state.listCountryAll = listCountryAll;
+    },
+
+    [LIST_LANGUAGES](state, listLanguages) {
+        state.listLanguages = listLanguages;
     },
 
     [LIST_SELLER](state, dataSet) {
@@ -208,7 +214,21 @@ const actions = {
     async actionGetListCountries({ commit }, params) {
         try {
             let response = await PublisherService.getListCountries(params);
-            commit(LIST_COUNTRY, response.data );
+            commit(LIST_COUNTRY_ALL, response.data );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListLanguages({ commit }, params) {
+        try {
+            let response = await PublisherService.getListLanguages(params);
+            commit(LIST_LANGUAGES, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

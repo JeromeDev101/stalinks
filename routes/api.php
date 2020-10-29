@@ -140,6 +140,8 @@ Route::middleware('auth:api')->group(function () {
     //Role
     Route::name('role-get')->get('/roles', 'RoleController@getRoles');
     Route::name('get-countries')->get('/countries', 'CountryController@getCountries');
+    Route::name('get-list-country')->get('/country-list', 'CountryController@getListCountry');
+    Route::name('get-list-languages')->get('/languages-list', 'CountryController@getListLanguages');
     Route::name('get-countries-int')->get('/countries-int', 'UserController@getCountriesIntDomain');
     Route::name('get-mail-template')->get('/mails', 'MailController@getList');
     Route::name('send-mail')->post('/send-mails', 'MailController@sendEmails');

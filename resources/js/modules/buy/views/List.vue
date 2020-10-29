@@ -36,7 +36,7 @@
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
-                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
@@ -496,7 +496,7 @@
             ...mapState({
                 tblBuyOptions: state => state.storeBuy.tblBuyOptions,
                 listBuy: state => state.storeBuy.listBuy,
-                listCountries: state => state.storeBuy.listCountries,
+                listCountryAll: state => state.storePublisher.listCountryAll,
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
@@ -520,7 +520,7 @@
                 this.getBuyerCommission(email).then(res => {
                     let commission = res.data.commission;
 
-                    if (commission.toLowerCase() == 'yes'){
+                    if (commission == 'yes'){
                         this.isExtBuyerWithCommission = true;
                     }
                 })
