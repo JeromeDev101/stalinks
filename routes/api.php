@@ -174,4 +174,13 @@ Route::middleware('auth:api')->group(function () {
 
     // Auth routes.
     Route::name('logout')->post('/logout', 'AuthController@logout');
+
+    
 });
+
+
+//Mailgun
+    Route::group(['prefix'=> 'mail'], function(){
+        Route::name('email_send')->post('/send','MailgunController@send');
+        Route::name('email_retrieve')->post('/retrieve','MailgunController@retrieve');
+    });
