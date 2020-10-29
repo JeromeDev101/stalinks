@@ -43,7 +43,6 @@ class MailgunController extends Controller
     public function view_message(Request $request)
     {
     	
-
     	$validator = Validator::make($request->all(), [
             'url' => 'required|max:1000'
         ]);
@@ -54,7 +53,6 @@ class MailgunController extends Controller
 
     	$message = $this->mail->messages()->show($request->url);
 
-    	//dd($message->getFrom());
     	return response()->json( new ShowMessage($message) );
     }
 }
