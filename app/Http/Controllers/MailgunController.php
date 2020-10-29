@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Http\Resources\Messages;
 use App\Http\Resources\ShowMessage;
+use App\Http\Resources\MessageRecipient;
 
 class MailgunController extends Controller
 {
@@ -18,7 +19,7 @@ class MailgunController extends Controller
 		$this->mail = Mailgun::create(config('gun.mail_api'));
 	}
     
-    public function send()
+    public function send(Request $request)
     {
     	
 
@@ -54,5 +55,46 @@ class MailgunController extends Controller
     	$message = $this->mail->messages()->show($request->url);
 
     	return response()->json( new ShowMessage($message) );
+    }
+
+    public function recipient_filter(Request $request)
+    {
+    	$validator = Validator::make($request->all(), [
+            'email' => 'required|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
+
+        $aw = $this->mail->events()->get('headzupnegor.com');
+
+        return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
+
+
+    }
+
+    public function status(Request $request)
+    {
+    	// $validator = Validator::make($request->all(), [
+     //        'domain' => 'required|max:100'
+     //    ]);
+
+     //    if ($validator->fails()) {
+     //        return response()->json($validator->messages());
+     //    }
+
+       
+    	
+
+        $we = $this->mail->events()->get('headzupnegor.com');
+
+
+        
+
+       	dd($we->getItems());
+        dd(get_class_methods($we));
+
+    	return response()->json($we);
     }
 }
