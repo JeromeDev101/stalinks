@@ -63,12 +63,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Topic</label>
-                                <select name="" class="form-control" v-model="filterModel.topic">
+                                <!-- <select name="" class="form-control" v-model="filterModel.topic">
                                     <option value="">All</option>
                                     <option v-for="option in topic" v-bind:value="option">
                                         {{ option }}
                                     </option>
-                                </select>
+                                </select> -->
+                                <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -76,8 +77,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch">Clear</button>
-                            <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -87,18 +88,31 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Articles</h3>
+
+                    <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <select name="" class="form-control float-right" @change="doSearch" v-model="filterModel.paginate" style="height: 37px;">
+                            <option v-for="option in paginate" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
+
                     <button v-if="isTeam" data-toggle="modal" @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i class="fa fa-plus"></i> Create Article</button>
                 </div>
 
                 <div class="box-body no-padding relative">
-                    <table class="table table-hover table-bordered table-striped rlink-table">
+                    <span class="pagination-custom-footer-text">
+                        <b>Showing {{ listArticles.from }} to {{ listArticles.to }} of {{ listArticles.total }} entries.</b>
+                    </span>
+
+                    <table id="tbl_articles" class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>ID Article</th>
-                                <!-- <th v-show="user.isOurs == 0">Seller</th> -->
                                 <th>ID Backlink</th>
                                 <th>Language</th>
+                                <th>Writer</th>
                                 <th>Topic</th>
                                 <th>Accept Casino & Betting Sites</th>
                                 <th>Date Start</th>
@@ -108,15 +122,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listArticles.data.length == 0">
-                                <td colspan="9" class="text-center">No record</td>
-                            </tr>
                             <tr v-for="(article, index) in listArticles.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
-                                <!-- <td v-show="user.isOurs == 0">{{ article.backlinks == null ? '':article.backlinks.publisher.user.name }}</td> -->
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.backlinks == null ? article.country.name : article.backlinks.publisher.country.name }}</td>
+                                <td>{{ article.writer }}</td>
                                 <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>
                                 <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>
                                 <td>{{ article.date_start == null ? '-':article.date_start }}</td>
@@ -124,7 +135,6 @@
                                 <td>{{ article.status_writer }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <!-- <router-link class="btn btn-default" :to="{ path: 'articles/'+article.id, params: { id: article.id }}"><i class="fa fa-fw fa-pencil"></i></router-link> -->
                                         <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                                     </div>
                                 </td>
@@ -317,6 +327,7 @@
     export default {
         data() {
             return {
+                paginate: ['50','150','250','350','All'],
                 data: '',
                 options: {
                     height: 500,
@@ -348,6 +359,7 @@
                     buyer: '',
                 },
                 filterModel: {
+                    paginate: this.$route.query.paginate || '50',
                     search_article: this.$route.query.search_article || '',
                     search_backlink: this.$route.query.search_backlink || '',
                     language_id: this.$route.query.language_id || '',
@@ -363,6 +375,7 @@
                     'Beauty',
                     'Charity',
                     'Cooking',
+                    'Crypto',
                     'Education',
                     'Fashion',
                     'Finance',
@@ -379,8 +392,10 @@
                     'Shopping',
                     'Sports',
                     'Tech',
+                    'Travel',
                     'Unlisted',
                 ],
+                isSearching: false,
             }
         },
 
@@ -405,9 +420,20 @@
 
         methods: {
             async getListArticles(params){
+                $('#tbl_articles').DataTable().destroy();
+
                 this.searchLoading = true;
+                this.isSearching = true;
                 await this.$store.dispatch('actionGetListArticle', params);
                 this.searchLoading = false;
+                this.isSearching = false;
+
+                $('#tbl_articles').DataTable({
+                    paging: false,
+                    searching: false,
+                });
+
+
                 this.viewArticle();
             },
 
@@ -470,6 +496,7 @@
 
                 this.getListArticles({
                     params: {
+                        paginate: this.filterModel.paginate,
                         search_backlink: this.filterModel.search_backlink,
                         search_article: this.filterModel.search_article,
                         language_id: this.filterModel.language_id,
@@ -482,6 +509,7 @@
 
             clearSearch() {
                 this.filterModel = {
+                    paginate: '50',
                     search_article: '',
                     search_backlink: '',
                     language_id: '',

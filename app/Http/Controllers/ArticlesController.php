@@ -74,13 +74,15 @@ class ArticlesController extends Controller
 
     public function getArticleList(Request $request) {
         $filter = $request->all();
+        $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $user = Auth::user();
         $registration = Registration::where('email', $user->email)->first();
 
 
-        $list = Article::select('article.*', 'publisher.topic', 'publisher.casino_sites')
+        $list = Article::select('article.*', 'publisher.topic', 'publisher.casino_sites', 'users.username as writer')
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
                         ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
+                        ->leftJoin('users', 'article.id_writer', '=', 'users.id')
                         ->with('price')
                         ->with('country:id,name')
                         ->with(['backlinks' => function($q){
@@ -104,7 +106,7 @@ class ArticlesController extends Controller
         }
 
         if( isset($filter['topic']) && $filter['topic'] ){
-            $list->where('publisher.topic', $filter['topic']);
+            $list->whereIn('publisher.topic', $filter['topic']);
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] ){
@@ -120,14 +122,21 @@ class ArticlesController extends Controller
         }
 
         if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Seller' ){
+        // if( $user->role_id == 6 ){
             $backlinks_ids = $this->getBacklinksForSeller();
 
             $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
-        return [
-            'data' => $list->get()
-        ];
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return response()->json([
+                'data' => $list,
+                'total' => $list->count(),
+            ],200);
+        }else{
+            $paginate = intval($paginate);
+            return $list->paginate($paginate);
+        }
     }
 
     private function getBacklinksForSeller() {

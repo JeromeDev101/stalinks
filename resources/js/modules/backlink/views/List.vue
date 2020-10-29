@@ -142,7 +142,7 @@
                                         <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
                                     </div>
                                     <div v-if="user.isAdmin" class="btn-group">
-                                        <button class="btn btn-default" @click="deleteBackLink(backLink.id)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>
+                                        <button class="btn btn-default" @click="deleteBackLink(backLink.id, backLink.publisher.user.username, backLink.user.username)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -439,10 +439,10 @@
 
             }, 200),
 
-            deleteBackLink(id) {
+            deleteBackLink(id, seller, buyer) {
                 swal.fire({
-                    title: "Are you sure?",
-                    text: "Articles is also included to delete, Do you want to continue?",
+                    title: "Are you sure ?",
+                    html: "<b>ID Backlink: </b>" + id + " <br> <b>Seller: </b>" + seller + " <br> <b>Buyer: </b>" + buyer + "<br><br> Articles is also included to delete, Do you want to continue? <br>",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Yes, delete it!',

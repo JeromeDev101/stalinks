@@ -133,7 +133,13 @@ class PublisherController extends Controller
                 $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
 
                 if( $check->count() > 0 ){
-                    return response()->json(['data' => $publisher->url],422);
+                    return response()->json([
+                        'errors' => [
+                            'file' => ''
+                        ],
+                        'message' => '',
+                        'data' => $publisher->url
+                    ],422);
                 }
             }
 

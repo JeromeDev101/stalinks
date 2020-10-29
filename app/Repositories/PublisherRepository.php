@@ -101,7 +101,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
-            $list = $list->where('publisher.topic', $filter['topic']);
+            $list = $list->whereIn('publisher.topic', $filter['topic']);
         }
 
         if( isset($filter['inc_article']) && !empty($filter['inc_article']) ){
@@ -245,7 +245,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function importExcel($file){
         $user_id_list = User::pluck('id')->toArray();
         $country_name_list = Country::pluck('name')->toArray();
-        $topic_list = ['Movies & Music','Beauty','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
+        $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
         $language = $file['language'];
         $csv_file = $file['file'];
 
@@ -310,7 +310,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $seller_id = $line[3];
                     $accept = $line[4];
                     $language_excel = $line[5];
-                    $topic = $line[6];
+                    $topic = str_replace(' ', '', $line[6]);
 
 
                     if (in_array($seller_id, $user_id_list)){

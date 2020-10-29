@@ -50,6 +50,10 @@ class IncomesController extends Controller
             $list->where('backlinks.live_date', $filter['date']);
         }
 
+        if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
+            $list->where('backlinks.id', $filter['backlink_id']);
+        }
+
         if( isset($filter['buyer']) && $filter['buyer'] != ''){
             $buyer = $filter['buyer'];
             $list->whereHas('user', function($query) use ($buyer){

@@ -13,6 +13,13 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.backlink_id" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Status Payment</label>
                                 <select name="" id="" class="form-control" v-model="filterModel.payment_status">
                                     <option value="">All</option>
@@ -215,6 +222,7 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
+                    backlink_id: this.$route.query.backlink_id || '',
                     payment_status: this.$route.query.payment_status || '',
                     buyer: this.$route.query.buyer || '',
                     seller: this.$route.query.seller || '',
@@ -252,6 +260,11 @@
                     await this.$store.dispatch('actionGetListIncomes',{
                         params: {
                             paginate: 1000000,
+                            backlink_id: this.filterModel.backlink_id,
+                            payment_status: this.filterModel.payment_status,
+                            buyer: this.filterModel.buyer,
+                            seller: this.filterModel.seller,
+                            date: this.filterModel.date,
                         }
                     });
                 }else
@@ -259,6 +272,11 @@
                     await this.$store.dispatch('actionGetListIncomes', {
                         params: {
                             paginate: this.filterModel.paginate,
+                            backlink_id: this.filterModel.backlink_id,
+                            payment_status: this.filterModel.payment_status,
+                            buyer: this.filterModel.buyer,
+                            seller: this.filterModel.seller,
+                            date: this.filterModel.date,
                         }
                     });
                 }
@@ -277,6 +295,7 @@
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
@@ -350,6 +369,7 @@
 
                 this.getListIncomes({
                     params: {
+                        backlink_id: this.filterModel.backlink_id,
                         payment_status: this.filterModel.payment_status,
                         buyer: this.filterModel.buyer,
                         seller: this.filterModel.seller,
@@ -363,6 +383,7 @@
                 $('#tbl-income').DataTable().destroy();
 
                 this.filterModel = {
+                    backlink_id: '',
                     payment_status: '',
                     buyer: '',
                     seller: '',

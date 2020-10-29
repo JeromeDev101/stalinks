@@ -103,12 +103,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Topic</label>
-                                <select name="" class="form-control" v-model="filterModel.topic">
+                                <!-- <select name="" class="form-control" v-model="filterModel.topic">
                                     <option value="">All</option>
                                     <option v-for="option in topic" v-bind:value="option">
                                         {{ option }}
                                     </option>
-                                </select>
+                                </select> -->
+                                <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -219,7 +220,7 @@
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
-                                <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Uploaded</th>
+                                <th v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
                                 <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th v-show="tblPublisherOpt.language">Language</th>
                                 <th v-show="tblPublisherOpt.topic">Topic</th>
@@ -252,7 +253,7 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.created_at) }}</td>
+                                <td v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
                                 <td v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td v-show="tblPublisherOpt.language">{{ publish.country_name }}</td>
                                 <td v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
@@ -510,10 +511,10 @@
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
-                            <div class="checkbox col-md-6">
+                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">Uploaded</label>
                             </div>
-                            <div class="checkbox col-md-6">
+                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Updated</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -656,6 +657,7 @@
                     'Beauty',
                     'Charity',
                     'Cooking',
+                    'Crypto',
                     'Education',
                     'Fashion',
                     'Finance',
@@ -672,6 +674,7 @@
                     'Shopping',
                     'Sports',
                     'Tech',
+                    'Travel',
                     'Unlisted',
                 ],
             }
@@ -738,7 +741,7 @@
                     this.tblPublisherOpt.uploaded = false;
                     this.tblPublisherOpt.topic = false;
                     this.tblPublisherOpt.casino_sites = false;
-                    this.tblPublisherOpt.seller = false;
+                    this.tblPublisherOpt.in_charge = true;
                 }
                     
             },
@@ -757,7 +760,7 @@
                 {
                     
                     await this.$store.dispatch('getListPublisher', {
-                    params: {
+                        params: {
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -775,7 +778,7 @@
                     });
                 }else{
                     await this.$store.dispatch('getListPublisher', {
-                    params: {
+                        params: {
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -793,9 +796,6 @@
                     });
                 }
                 
-               
-                
-                console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 2 },
@@ -849,7 +849,6 @@
                 if( this.user.isOurs == 1 ){
                     columnDefs = [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
@@ -864,6 +863,8 @@
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -912,9 +913,6 @@
                     valid: valid,
                     ids: this.checkIds,
                 });
-
-                console.log(this.messageForms.data)
-
 
                 if( this.messageForms.action === 'saved' ){
                     swal.fire(
@@ -1118,8 +1116,6 @@
             doUpdate(publish) {
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
-
-                console.log(that)
 
                 this.updateModel = {
                     id: that.id,
