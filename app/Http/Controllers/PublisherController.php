@@ -53,7 +53,7 @@ class PublisherController extends Controller
             return response()->json($data, 422);
         }
 
-        return response()->json(['success' => true], 200);
+        return response()->json(['success' => true, 'data' => $data['exist'] ], 200);
 
     }
 

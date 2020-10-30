@@ -162,7 +162,7 @@ const actions = {
             let response = await PublisherService.uploadCsv(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'uploaded', message: '', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'uploaded', message: '', errors: response.data.data });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

@@ -591,6 +591,35 @@
         </div>
         <!-- End of Modal Settings -->
 
+
+        <!-- Modal Failed to Upload -->
+        <div class="modal fade" id="modal-failed-upload">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Failed to Upload</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-condensed">
+                            <tr>
+                                <th colspan="2">Total Failed to Upload ({{failedUpload.total}})</th>
+                            </tr>
+                            <tr v-for="(ext, index) in failedUpload.message" :key="index">
+                                <td>{{ ext }}</td>
+                                <td class="text-danger">Not Uploaded</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Failed to Upload -->
+
     </div>
 </template>
 
@@ -689,6 +718,10 @@
                     'Travel',
                     'Unlisted',
                 ],
+                failedUpload: {
+                    total: 0,
+                    message: [],
+                },
             }
         },
 
@@ -1036,11 +1069,12 @@
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
 
+                this.isEnableBtn = true;
+
                 if (this.messageForms.action === 'uploaded') {
                     this.getPublisherList();
                     this.$refs.excel.value = '';
                     this.$refs.language.value = '';
-                    this.isEnableBtn = true;
                     this.showLang = false;
 
                     swal.fire(
@@ -1048,6 +1082,18 @@
                         'Successfully Uploaded.',
                         'success'
                         )
+
+                    console.log(this.messageForms.errors)
+
+                    let cnt_failed = this.messageForms.errors.length;
+                    if (cnt_failed > 0){
+                        for (let key in this.messageForms.errors ){
+                            this.failedUpload.message.push(this.messageForms.errors[key].message)
+                        }
+
+                        this.failedUpload.total = cnt_failed;
+                        $("#modal-failed-upload").modal('show')
+                    }
                 }
             },
 

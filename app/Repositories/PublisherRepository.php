@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Pricelist;
+use App\Models\Language;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
@@ -245,6 +246,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     public function importExcel($file){
         $user_id_list = User::pluck('id')->toArray();
         $country_name_list = Country::pluck('name')->toArray();
+        $language_name_list = Language::pluck('name')->toArray();
         $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
         $language = $file['language'];
         $csv_file = $file['file'];
@@ -258,6 +260,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $ctr = 0;
 
         $datas = [];
+        $existing_datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
 
             if (Auth::user()->isOurs == 1){
@@ -309,19 +312,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $article = $line[2];
                     $seller_id = $line[3];
                     $accept = $line[4];
-                    $language_excel = $line[5];
+                    $language_excel = str_replace(' ', '', $line[5]);
                     $topic = str_replace(' ', '', $line[6]);
 
 
                     if (in_array($seller_id, $user_id_list)){
                         
-                        if (preg_grep("/".$language_excel."/i", $country_name_list)){
+                        if (preg_grep("/".$language_excel."/i", $language_name_list)){
 
                             if (preg_grep("/".$topic."/i", $topic_list)){ 
 
                                 if( trim($url, " ") != '' ){
+                                    $orig_language = $this->getLanguage($language_excel);
                                     $lang = $this->getCountry($language_excel);
-                                    array_push($datas, [
+                                    Publisher::create([
                                         'user_id' => $seller_id ,
                                         'language_id' => $lang,
                                         'url' => $url,
@@ -335,29 +339,63 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
                                         'valid' => 'unchecked',
                                         'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
-                                        'topic' => $topic
+                                        'topic' => $topic,
+                                        'country_id' => $orig_language,
                                     ]);
+                                    // array_push($datas, [
+                                    //     'user_id' => $seller_id ,
+                                    //     'language_id' => $lang,
+                                    //     'url' => $url,
+                                    //     'ur' => 0,
+                                    //     'dr' => 0,
+                                    //     'backlinks' => 0,
+                                    //     'ref_domain' => 0,
+                                    //     'org_keywords' => 0,
+                                    //     'org_traffic' => 0,
+                                    //     'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                    //     'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                    //     'valid' => 'unchecked',
+                                    //     'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                    //     'topic' => $topic,
+                                    //     'country_id' => $orig_language,
+                                    // ]);
                                 }
 
                             } else{
+
                                 $message = ". Please check the Topic before uploading the CSV file";
-                                $file_message = "No Topic name of ". $topic . $message . ". Check in line ". (intval($ctr) + 1);
-                                $result = false;
-                                break;
+                                $file_message = " No Topic name of ". $topic . $message . ". Check in line ". (intval($ctr) + 1);
+                                $result = true;
+                                // $result = false;
+                                // break;
+
+                                array_push($existing_datas, [
+                                    'message' => $message.$file_message
+                                ]);
                             }
 
                         } else {
                             $message = ". Please check the Language before uploading the CSV file";
                             $file_message = "No Language name of ". $language_excel . $message . ". Check in line ". (intval($ctr) + 1);
-                            $result = false;
-                            break;
+                            $result = true;
+                            // $result = false;
+                            // break;
+
+                            array_push($existing_datas, [
+                                'message' => $message.$file_message
+                            ]);
                         }
 
                     } else{
                         $message = ". Please check the seller ID before uploading the CSV file";
                         $file_message = "No Seller ID of ". $seller_id . $message . ". Check in line ". (intval($ctr) + 1);
-                        $result = false;
-                        break;
+                        $result = true;
+                        // $result = false;
+                        // break;
+
+                        array_push($existing_datas, [
+                            'message' => $message.$file_message
+                        ]);
                     }
                 }
             }
@@ -369,26 +407,27 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         fclose($csv);
 
-        if (Auth::user()->isOurs == 0){
-            foreach( $datas as $data ){
-                Publisher::create([
-                    'user_id' => $data['user_id'],
-                    'language_id' => $data['language_id'],
-                    'url' => $data['url'],
-                    'ur' => $data['ur'],
-                    'dr' => $data['dr'],
-                    'backlinks' => $data['backlinks'],
-                    'ref_domain' => $data['ref_domain'],
-                    'org_keywords' => $data['org_keywords'],
-                    'org_traffic' => $data['org_traffic'],
-                    'price' => $data['price'],
-                    'inc_article' => $data['inc_article'],
-                    'valid' => $data['valid'],
-                    'casino_sites' => $data['casino_sites'],
-                    'topic' => $data['topic'],
-                ]);
-            }
-        }
+        // if (Auth::user()->isOurs == 0){
+        //     foreach( $datas as $data ){
+        //         Publisher::create([
+        //             'user_id' => $data['user_id'],
+        //             'language_id' => $data['language_id'],
+        //             'url' => $data['url'],
+        //             'ur' => $data['ur'],
+        //             'dr' => $data['dr'],
+        //             'backlinks' => $data['backlinks'],
+        //             'ref_domain' => $data['ref_domain'],
+        //             'org_keywords' => $data['org_keywords'],
+        //             'org_traffic' => $data['org_traffic'],
+        //             'price' => $data['price'],
+        //             'inc_article' => $data['inc_article'],
+        //             'valid' => $data['valid'],
+        //             'casino_sites' => $data['casino_sites'],
+        //             'topic' => $data['topic'],
+        //             'country_id' => $data['country_id'],
+        //         ]);
+        //     }
+        // }
 
         return [
             "success" => $result,
@@ -396,7 +435,17 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             "errors" => [
                 "file" => $file_message,
             ],
+            "exist" => $existing_datas,
         ];
+    }
+
+    private function getLanguage($language){
+        $id = null;
+        $language = Language::where('name', 'like', '%'.$language.'%')->first();
+        if( $language ){
+            $id = $language->id;
+        }
+        return $id;
     }
 
 
