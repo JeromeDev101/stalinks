@@ -26,8 +26,8 @@ class MailgunController extends Controller
     	$this->mg->messages()->send('stalinks.com', [
 		  'from'    => 'jessica-buyer@stalinks.com',
 		  'to'      => 'morley.marketingcrossmedia@gmail.com',
-		  'subject' => 'Demo',
-          'text'    => 'This is Demo',
+		  'subject' => 'Demo 2',
+          'text'    => 'This is Demo 2',
           'o:tracking-opens' => 'yes',
           'o:tracking-clicks' => 'yes'
           
@@ -91,8 +91,8 @@ class MailgunController extends Controller
     //  dd($we);
 
     //  $expression = "catch_all()";
-    //  $actions = ["store()","stop()"];
-    //  $description = 'Test route 3';
+    //  $actions = ["store()"];
+    //  $description = 'Test';
 
     // $this->mg->routes()->create($expression, $actions, $description);
     // dd("route");
