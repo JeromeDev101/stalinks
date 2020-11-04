@@ -188,5 +188,5 @@ Route::group(['prefix'=> 'mail'], function(){
     Route::name('message_view')->post('/view-message','MailgunController@view_message');
     Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
     Route::name('domain-status')->get('/status','MailgunController@status');
-    Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');
+    Route::name('post_reply')->get('/post-reply','MailgunController@post_reply');
 });
