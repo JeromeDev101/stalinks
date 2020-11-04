@@ -93,7 +93,7 @@
             <div class="box">
                 <div class="box-header">
 
-                    <h3 class="box-title">External Domain List</h3>
+                    <h3 class="box-title">URL Prospay List</h3>
 
                     <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                     

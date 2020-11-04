@@ -11,12 +11,12 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li v-if="isBuyer" style="margin-left:-450px;margin-bottom:-55px;">
+                    <li v-if="isBuyer" style="margin-left:-400px;margin-bottom:-55px;">
                         <a href="#">
-                            Deposit: <strong>$ {{ money.deposit }} <span ref="deposit"></span></strong>
+                            <!-- Deposit: <strong>$ {{ money.deposit }} <span ref="deposit"></span></strong>
                             &nbsp;
                             Wallet: <strong>$ {{ money.wallet }}</strong>
-                            &nbsp;
+                            &nbsp; -->
                             Credit: <strong>$ {{ money.credit }}</strong>
                         </a>
                     </li>

@@ -14,6 +14,7 @@ class WalletTransactionController extends Controller
     public function getList(Request $request) {
         $filter = $request->all();
         $user = Auth::user();
+        $deposit = 0;
 
         $list = WalletTransaction::select('wallet_transactions.*')
                         ->with('user:id,name')
@@ -36,8 +37,19 @@ class WalletTransactionController extends Controller
             $list->where('wallet_transactions.date', $filter['date']);
         }
 
+        $list = $list->get();
+
+        $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+                    ->where('user_id', $user->id)
+                    ->get();
+
+        if( isset($wallet_transaction[0]['amount_usd']) ){
+            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
+        }
+
         return [
-            'data' => $list->get()
+            'data' => $list,
+            'deposit' => $deposit
         ];
     }
 

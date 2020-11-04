@@ -57,6 +57,7 @@
 
                 <div class="box-header">
                     <h3 class="box-title">Wallet Transaction</h3>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
@@ -315,6 +316,7 @@
                 listBuyer: state => state.storeWalletTransaction.listBuyer,
                 messageForms: state => state.storeWalletTransaction.messageForms,
                 listPayment: state => state.storeWalletTransaction.listPayment,
+                user: state => state.storeAuth.currentUser,
             }),
         },
 

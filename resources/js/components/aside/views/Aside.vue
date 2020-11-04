@@ -60,7 +60,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 &&  (isManager || isSeller || isBuyer || isPostingWriter))" :class="{ active: $route.name == 'seller-billing' || $route.name == 'buyer-billing' || $route.name == 'writer-billing', 'treeview': true, 'menu-open': $route.name == 'buyer-billing' || $route.name == 'seller-billing'  || $route.name == 'writer-billing'}" >
+                <li v-if="user.isAdmin || (user.isOurs == 0 &&  (isManager || isSeller || isBuyer || isPostingWriter))" :class="{ active: $route.name == 'seller-billing' || $route.name == 'wallet-transaction' || $route.name == 'writer-billing', 'treeview': true, 'menu-open': $route.name == 'wallet-transaction' || $route.name == 'seller-billing'  || $route.name == 'writer-billing'}" >
                     <a href="#">
                         <i class="fa fa-btc"></i>
                         <span>Billing</span>
@@ -121,9 +121,9 @@
                     </a>
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'ExtDomain' }">
-                            <router-link :to="{ path: '/ext' }">
+                            <router-link :to="{ path: '/prospay' }">
                                 <i class="fa fa-fw fa-reorder"></i>
-                                <span>Summary</span>
+                                <span>URL Prospay</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
