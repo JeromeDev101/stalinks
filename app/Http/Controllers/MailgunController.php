@@ -12,22 +12,25 @@ use App\Http\Resources\MessageRecipient;
 
 class MailgunController extends Controller
 {
-	private $mail;
+	private $mg;
 
 	public function __construct()
 	{
-		$this->mail = Mailgun::create(config('gun.mail_api'));
+		$this->mg = Mailgun::create(config('gun.mail_api'));
 	}
     
     public function send(Request $request)
     {
     	
 
-    	$this->mail->messages()->send('headzupnegor.com', [
-		  'from'    => 'postmaster@headzupnegor.com',
+    	$this->mg->messages()->send('stalinks.com', [
+		  'from'    => 'jessica-buyer@stalinks.com',
 		  'to'      => 'morley.marketingcrossmedia@gmail.com',
-		  'subject' => 'neg',
-		  'text'    => 'neg beg'
+		  'subject' => 'Demo',
+          'text'    => 'This is Demo',
+          'o:tracking-opens' => 'yes',
+          'o:tracking-clicks' => 'yes'
+          
 		]);
 
 		return response()->json(['message'=> 'Email sent Successfully!','status'=> 200], 200);
@@ -36,7 +39,7 @@ class MailgunController extends Controller
 
     public function retrieve_all()
     {
-    	$aw = $this->mail->events()->get('headzupnegor.com');
+    	$aw = $this->mg->events()->get('stalinks.com');
 
     	return response()->json( new Messages(collect($aw->getItems())) );
     }
@@ -52,7 +55,7 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-    	$message = $this->mail->messages()->show($request->url);
+    	$message = $this->mg->messages()->show($request->url);
 
     	return response()->json( new ShowMessage($message) );
     }
@@ -67,7 +70,7 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        $aw = $this->mail->events()->get('headzupnegor.com');
+        $aw = $this->mg->events()->get('stalinks.com');
 
         return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
 
@@ -84,17 +87,60 @@ class MailgunController extends Controller
      //        return response()->json($validator->messages());
      //    }
 
-       
-    	
+    //  $we = $this->mg->domains()->index();
+    //  dd($we);
 
-        $we = $this->mail->events()->get('headzupnegor.com');
+    //  $expression = "catch_all()";
+    //  $actions = ["store()","stop()"];
+    //  $description = 'Test route 3';
+
+    // $this->mg->routes()->create($expression, $actions, $description);
+    // dd("route");
+
+    //   $we =   $this->mg->routes()->index();
+    //   dd($we);
+
+    //   $this->mg->routes()->delete('5fa1f378d7b4bcbfe9beb4bc');
+    //   $this->mg->routes()->delete('5fa1f08fdc89bb01a75b9235');
+    //   dd("route delted");
+
+
+     $aw = $this->mg->events()->get('stalinks.com');
+     
+     foreach($aw->getItems() as $kwe)
+     {
+         echo $kwe->getEvent().'<br>';
+        //  if($kwe->getEvent() == "opened"){
+        //      dd("aw");
+        //  }
+         
+         //dd($kwe->getRecipient());
+     
+         //var_dump($kwe);
+
+        //  foreach($kwe->getStorage() as $me)
+        //  {
+        //      echo $me.'<br>';
+        //  }
+     }
+
+    //  dd("wala");
+    // 	$aw = $this->mail->tags()->stats('headzupnegor.com', 'Tag1');
+    //     dd($aw);
+
+    //     $we = $this->mail->events()->get('headzupnegor.com');
 
 
         
 
-       	dd($we->getItems());
-        dd(get_class_methods($we));
+    //    	dd($we->getItems());
+    //     dd(get_class_methods($we));
 
-    	return response()->json($we);
+    // 	return response()->json($we);
+    }
+
+    public function post_reply(Request $request)
+    {
+        return response()->json($request->all());
     }
 }
