@@ -141,7 +141,7 @@ class MailgunController extends Controller
 
     public function post_reply(Request $request)
     {
-        return response()->json("tae");
+       
         return response()->json($request->all());
     }
 }
