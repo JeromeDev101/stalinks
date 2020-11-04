@@ -28,6 +28,25 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     {
         $user = Auth::user();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
+
+        // $columns = [
+        //     'publisher.*',
+        //     'registration.username',
+        //     'A.name',
+        //     'A.username as user_name',
+        //     'A.isOurs',
+        //     'registration.company_name',
+        //     'countries.name AS country_name',
+        //     'B.username as in_charge'
+        // ];
+        // $list = Publisher::select($columns)
+        //         ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+        //         ->leftJoin('registration', 'A.email', '=', 'registration.email')
+        //         ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+        //         ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+        //         ->orderBy('created_at', 'desc');
+
+
         $columns = [
             'publisher.*',
             'registration.username',
@@ -36,13 +55,15 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'A.isOurs',
             'registration.company_name',
             'countries.name AS country_name',
+            'languages.name AS language_name',
             'B.username as in_charge'
         ];
         $list = Publisher::select($columns)
                 ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
                 ->leftJoin('registration', 'A.email', '=', 'registration.email')
                 ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
-                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
                 ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
@@ -323,7 +344,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             if (preg_grep("/".$topic."/i", $topic_list)){ 
 
                                 if( trim($url, " ") != '' ){
-                                    $orig_language = $this->getLanguage($language_excel);
+                                    // $orig_language = $this->getLanguage($language_excel);
                                     $lang = $this->getCountry($language_excel);
                                     Publisher::create([
                                         'user_id' => $seller_id ,
@@ -340,61 +361,35 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'valid' => 'unchecked',
                                         'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                         'topic' => $topic,
-                                        'country_id' => $orig_language,
+                                        // 'country_id' => $orig_language,
                                     ]);
-                                    // array_push($datas, [
-                                    //     'user_id' => $seller_id ,
-                                    //     'language_id' => $lang,
-                                    //     'url' => $url,
-                                    //     'ur' => 0,
-                                    //     'dr' => 0,
-                                    //     'backlinks' => 0,
-                                    //     'ref_domain' => 0,
-                                    //     'org_keywords' => 0,
-                                    //     'org_traffic' => 0,
-                                    //     'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                                    //     'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                    //     'valid' => 'unchecked',
-                                    //     'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
-                                    //     'topic' => $topic,
-                                    //     'country_id' => $orig_language,
-                                    // ]);
                                 }
 
                             } else{
 
-                                $message = ". Please check the Topic before uploading the CSV file";
                                 $file_message = " No Topic name of ". $topic . $message . ". Check in line ". (intval($ctr) + 1);
                                 $result = true;
-                                // $result = false;
-                                // break;
 
                                 array_push($existing_datas, [
-                                    'message' => $message.$file_message
+                                    'message' => $file_message
                                 ]);
                             }
 
                         } else {
-                            $message = ". Please check the Language before uploading the CSV file";
                             $file_message = "No Language name of ". $language_excel . $message . ". Check in line ". (intval($ctr) + 1);
                             $result = true;
-                            // $result = false;
-                            // break;
 
                             array_push($existing_datas, [
-                                'message' => $message.$file_message
+                                'message' => $file_message
                             ]);
                         }
 
                     } else{
-                        $message = ". Please check the seller ID before uploading the CSV file";
                         $file_message = "No Seller ID of ". $seller_id . $message . ". Check in line ". (intval($ctr) + 1);
                         $result = true;
-                        // $result = false;
-                        // break;
 
                         array_push($existing_datas, [
-                            'message' => $message.$file_message
+                            'message' => $file_message
                         ]);
                     }
                 }
@@ -407,28 +402,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         fclose($csv);
 
-        // if (Auth::user()->isOurs == 0){
-        //     foreach( $datas as $data ){
-        //         Publisher::create([
-        //             'user_id' => $data['user_id'],
-        //             'language_id' => $data['language_id'],
-        //             'url' => $data['url'],
-        //             'ur' => $data['ur'],
-        //             'dr' => $data['dr'],
-        //             'backlinks' => $data['backlinks'],
-        //             'ref_domain' => $data['ref_domain'],
-        //             'org_keywords' => $data['org_keywords'],
-        //             'org_traffic' => $data['org_traffic'],
-        //             'price' => $data['price'],
-        //             'inc_article' => $data['inc_article'],
-        //             'valid' => $data['valid'],
-        //             'casino_sites' => $data['casino_sites'],
-        //             'topic' => $data['topic'],
-        //             'country_id' => $data['country_id'],
-        //         ]);
-        //     }
-        // }
-
         return [
             "success" => $result,
             "message" => $message,
@@ -439,14 +412,23 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         ];
     }
 
-    private function getLanguage($language){
-        $id = null;
-        $language = Language::where('name', 'like', '%'.$language.'%')->first();
-        if( $language ){
-            $id = $language->id;
+    private function checkUrlAndSeller($seller_id, $url) {
+        $result = true;
+        $publisher = Publisher::where('user_id', $seller_id)->where('url', 'like', '%'.$url.'%')->first();
+        if (isset($publisher->id)) {
+            $result = false;
         }
-        return $id;
+        return $result;
     }
+
+    // private function getLanguage($language){
+    //     $id = null;
+    //     $language = Language::where('name', 'like', '%'.$language.'%')->first();
+    //     if( $language ){
+    //         $id = $language->id;
+    //     }
+    //     return $id;
+    // }
 
 
     private function getCountry($country){

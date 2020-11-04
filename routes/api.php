@@ -159,6 +159,9 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
         Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
         Route::name('add-country')->post('/countries', 'CountryController@store');
+        Route::name('add-language')->post('/language', 'ConfigController@storeLanguage');
+        Route::name('get-language')->get('/language', 'ConfigController@getLanguage');
+        Route::name('update-language')->put('/language', 'ConfigController@updateLanguage');
         Route::name('update-country')->put('/countries', 'CountryController@edit');
         Route::name('get-configs')->get('/configs', 'ConfigController@getList');
         Route::name('update-configs')->put('/configs', 'ConfigController@edit');

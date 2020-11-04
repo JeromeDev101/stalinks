@@ -13,7 +13,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Country</label>
-                                <select class="form-control" v-model="filterModel.language_id">
+                                <select class="form-control" v-model="filterModel.country_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                         {{ option.name }}
@@ -25,7 +25,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
-                                <select class="form-control" >
+                                <select class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                         {{ option.name }}
@@ -235,6 +235,7 @@
                                 <th v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
                                 <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th v-show="tblPublisherOpt.language">Language</th>
+                                <th v-show="tblPublisherOpt.country">Country</th>
                                 <th v-show="tblPublisherOpt.topic">Topic</th>
                                 <th v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
                                 <th v-show="tblPublisherOpt.in_charge">In-charge</th>
@@ -267,7 +268,8 @@
                                 </td>
                                 <td v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
                                 <td v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
-                                <td v-show="tblPublisherOpt.language">{{ publish.country_name }}</td>
+                                <td v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
+                                <td v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
                                 <td v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
                                 <td v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
                                 <td v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
@@ -338,6 +340,18 @@
                                     <label for="">Language</label>
                                     <select class="form-control" v-model="updateModel.language_id">
                                         <option value="">Select Language</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select class="form-control" v-model="updateModel.country_id">
+                                        <option value="">Select Country</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -460,11 +474,24 @@
                                     <label for="">Language</label>
                                     <select class="form-control" v-model="addModel.language_id">
                                         <option value="">Select Language</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
+                                    <label for="">Country</label>
+                                    <select class="form-control" v-model="addModel.country_id">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -531,6 +558,9 @@
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
@@ -661,10 +691,12 @@
                     casino_sites: '',
                     topic: '',
                     kw_anchor: '',
+                    country_id: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
+                    country_id: this.$route.query.country_id || '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
@@ -693,6 +725,7 @@
                     inc_article: '',
                     casino_sites: '',
                     topic: '',
+                    country_id: '',
                 },
                 topic: [
                     'Beauty',
@@ -812,6 +845,7 @@
                     
                     await this.$store.dispatch('getListPublisher', {
                         params: {
+                            country_id: this.filterModel.country_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -830,6 +864,7 @@
                 }else{
                     await this.$store.dispatch('getListPublisher', {
                         params: {
+                            country_id: this.filterModel.country_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -859,8 +894,8 @@
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12, className: 'text-center' },
-                        { orderable: true, targets: 13 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13, className: 'text-center' },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
@@ -868,6 +903,7 @@
                         { orderable: true, targets: 18 },
                         { orderable: true, targets: 19 },
                         { orderable: true, targets: 20 },
+                        { orderable: true, targets: 21 },
                         { orderable: false, targets: '_all' }
                     ];
 
@@ -884,8 +920,8 @@
                         { orderable: true, targets: 9 },
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12, className: 'text-center' },
-                        { orderable: true, targets: 13 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13, className: 'text-center' },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
@@ -893,6 +929,7 @@
                         { orderable: true, targets: 18 },
                         { orderable: true, targets: 19 },
                         { orderable: true, targets: 20 },
+                        { orderable: true, targets: 21 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -916,6 +953,7 @@
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
                         { orderable: false, targets: '_all' }
                     ]
                 }
@@ -1056,6 +1094,7 @@
                         price: '',
                         casino_sites: '',
                         topic: '',
+                        country_id: '',
                     }
                 }
             },
@@ -1110,6 +1149,7 @@
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.filterModel = {
+                    country_id: '',
                     search: '',
                     language_id: '',
                     inc_article: '',
@@ -1200,6 +1240,7 @@
                     topic: that.topic == null ? '':that.topic,
                     casino_sites: that.casino_sites,
                     kw_anchor: that.kw_anchor,
+                    country_id: that.country_id,
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
@@ -1229,6 +1270,7 @@
 
                 this.getPublisherList({
                     params: {
+                        country_id: this.filterModel.country_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         inc_article: this.filterModel.inc_article,
@@ -1265,23 +1307,6 @@
                     if (this.$refs.excel.value){
                         this.isEnableBtn = false;
                     }
-                }
-            },
-
-            clearModel () {
-                this.updateModel = {
-                    id: '',
-                    company_name: '',
-                    name: '',
-                    username:'',
-                    url: '',
-                    ur: '',
-                    dr: '',
-                    backlinks: '',
-                    ref_domain: '',
-                    org_keywords: '',
-                    org_traffic: '',
-                    price: '',
                 }
             },
 

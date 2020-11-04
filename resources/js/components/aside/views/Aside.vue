@@ -111,7 +111,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'email-reply' || $route.name == 'sent-mails' || $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -124,6 +124,18 @@
                             <router-link :to="{ path: '/ext' }">
                                 <i class="fa fa-fw fa-reorder"></i>
                                 <span>Summary</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'sent-mails' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/sent-mails' }">
+                                <i class="fa fa-fw fa-envelope-open"></i> <span>Sent Mails</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                        <li :class="{ active: $route.name == 'email-reply' }">
+                            <router-link class="page-sidebar__item" :to="{ path: '/email-reply' }">
+                                <i class="fa fa-fw fa-mail-reply"></i> <span>Email Reply</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>

@@ -61,6 +61,12 @@ export default class SystemService {
             .catch(error => error);
     }
 
+    static getLanguageList(params) {
+        return axios.get('api/admin/language', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     /**
      * Return new Country
      *
@@ -73,8 +79,20 @@ export default class SystemService {
             .catch(error => error);
     }
 
+    static addLanguage(params) {
+        return axios.post('/api/admin/language', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static updateFormula(params) {
         return axios.post('/api/formula', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static updateLanguage(params) {
+        return axios.put('/api/admin/language', params)
             .then(response => response)
             .catch(error => error);
     }

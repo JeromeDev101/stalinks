@@ -28,13 +28,15 @@ class BuyController extends Controller
             'users.isOurs',
             'registration.company_name',
             'countries.name AS country_name',
+            'languages.name AS language_name',
             'buyer_purchased.status as status_purchased'
         ];
 
         $list = Publisher::select($columns)
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
-                ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
+                ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
                 ->leftJoin('buyer_purchased', function($q) use ($user_id){
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user_id);

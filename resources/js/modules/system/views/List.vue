@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
+
+        <!-- <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-green">
                 <div class="inner">
                     <h3>{{ countryList.total }}</h3>
@@ -11,12 +11,44 @@
                     <i class="fa fa-anchor"></i>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Language List</h3>
+                            <button @click="clearMessageform" data-toggle="modal" data-target="#modal-add-language" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                        </div>
+
+                        <div class="box-body no-padding relative">
+                            <table class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                    <tr class="label-primary">
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in langaugeList.data" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.code }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button @click="doEditlanguage(item)" data-toggle="modal" data-target="#modal-update-language" type="submit" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- <div class="box">
                         <div class="box-header">
                             <h3 class="box-title">Countries List</h3>
                             <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
@@ -26,7 +58,7 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- /.box-header -->
+
                         <div class="box-body no-padding relative">
                             <table class="table table-hover table-bordered table-striped rlink-table">
                                 <tbody>
@@ -73,14 +105,12 @@
                                 <i class="fa fa-refresh fa-spin"></i>
                             </div>
                         </div>
-                        <!-- /.box-body -->
                         <div class="box-footer clearfix">
                             <div class="paging_simple_numbers">
                                 <pagination :data="countryList" @pagination-change-page="goToPage"></pagination>
                             </div>
                         </div>
-                    </div>
-                    <!-- /.box -->
+                    </div> -->
 
                     <div class="box">
                         <div class="box-header">
@@ -256,6 +286,77 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Add Language -->
+        <div class="modal fade" id="modal-add-language" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Language</h5>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" v-model="languageModel.name" class="form-control" required>
+                            <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                        </div>
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.code}" class="form-group">
+                            <label for="">Code</label>
+                            <input type="text" v-model="languageModel.code" class="form-control" required>
+                            <span v-if="messageForms.errors.code" v-for="err in messageForms.errors.code" class="text-danger">{{ err }}</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitAddLanguage" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Add Modal Language -->
+
+
+        <!-- Modal Update Language -->
+        <div class="modal fade" id="modal-update-language" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Language</h5>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
+                            <label for="">Name</label>
+                            <input type="text" v-model="languageUpdate.name" class="form-control" required>
+                            <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                        </div>
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.code}" class="form-group">
+                            <label for="">Code</label>
+                            <input type="text" v-model="languageUpdate.code" class="form-control" required>
+                            <span v-if="messageForms.errors.code" v-for="err in messageForms.errors.code" class="text-danger">{{ err }}</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitUpdateLanguage" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Add Update Language -->
         
         <!-- Modal Add Payment-->
         <div class="modal fade" id="modal-add-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -285,9 +386,10 @@
                 </div>
             </div>
         </div>
+        <!-- End of Modal Add Payment-->
 
-        <!--    Modal Add-->
-        <div class="modal fade" id="modal-add" style="display: none;">
+        <!-- Modal Add Country -->
+        <!-- <div class="modal fade" id="modal-add" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -326,14 +428,12 @@
                         <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!--    End Modal Add-->
+        </div> -->
+        <!-- End Modal Add Country -->
 
-        <!--    Modal Update -->
-        <div class="modal fade" id="modal-update" style="display: none;">
+        <!-- Modal Update Country -->
+        <!-- <div class="modal fade" id="modal-update" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -372,11 +472,9 @@
                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!--    End Modal Add-->
+        </div> -->
+        <!-- End Modal Update Country -->
     </div>
 </template>
 
@@ -409,6 +507,17 @@
                 paymentUpdate: {
                     id: 0,
                     type: ''
+                },
+
+                languageModel: {
+                    name: '',
+                    code: '',
+                },
+
+                languageUpdate: {
+                    id: '',
+                    name: '',
+                    code: '',
                 },
 
                 filterModel: {
@@ -449,12 +558,14 @@
 
             this.getConfigList();
             this.getPaymentList();
-            this.getCountryList({
-                params: this.filterModel
-            });
+
+            // this.getCountryList({
+            //     params: this.filterModel
+            // });
 
             this.getSubscriptionInfo();
             this.getFormula();
+            this.getLanguageList();
         },
 
         computed: {
@@ -466,10 +577,35 @@
                 configList: state => state.storeSystem.configList,
                 Info: state => state.storeSystem.Info,
                 formula: state => state.storeSystem.formula,
+                langaugeList: state => state.storeSystem.langaugeList,
             }),
         },
 
         methods: {
+            async getLanguageList() {
+                await this.$store.dispatch('actionGetLanguageList');
+            },
+
+            async submitAddLanguage() {
+                await this.$store.dispatch('actionAddLanguage', this.languageModel);
+
+                this.getLanguageList();
+
+                this.languageModel = {
+                    name: '',
+                    code: '',
+                }
+            },
+
+            async submitUpdateLanguage() {
+                await this.$store.dispatch('actionUpdateLanguage', this.languageUpdate);
+                this.getLanguageList();
+            },
+
+            doEditlanguage(item){
+                this.$store.dispatch('clearMessageFormSystem');
+                this.languageUpdate = JSON.parse(JSON.stringify(item))
+            },
 
             async submitFormula(){
                 await this.$store.dispatch('actionUpdateFormula', this.updateFormula);

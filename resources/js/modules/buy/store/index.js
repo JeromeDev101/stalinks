@@ -12,6 +12,7 @@ const state = {
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
     tblBuyOptions: {
+        country: true,
         seller: true,
         topic: true,
         casino_sites: true,

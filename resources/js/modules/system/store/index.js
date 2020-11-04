@@ -1,8 +1,9 @@
 import SystemService from '@/modules/system/api';
 
 const SYSTEM_SET_ERROR = 'SYSTEM_SET_ERROR';
-const COUNTRY_SET_LIST = 'COUNTRY_SET_LIST'
-const CONFIG_SET_LIST = 'CONFIG_SET_LIST'
+const COUNTRY_SET_LIST = 'COUNTRY_SET_LIST';
+const LANGUAGE_SET_LIST = 'LANGUAGE_SET_LIST';
+const CONFIG_SET_LIST = 'CONFIG_SET_LIST';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const PAYMENT_LIST = 'PAYMENT_LIST';
 const SUBSCRIPTION_LIST = 'SUBSCRIPTION_LIST';
@@ -13,6 +14,7 @@ const state = {
     error: {},
     paymentList: { data:[] },
     countryList: { data: [], total: 0 },
+    langaugeList: { data: [], total: 0 },
     configList: { data: [], total: 0 },
     messageForms: { action: '', message: '', errors: {} },
     Info: {},
@@ -34,6 +36,10 @@ const mutations = {
 
     [COUNTRY_SET_LIST](state, countryList) {
         state.countryList = countryList;
+    },
+
+    [LANGUAGE_SET_LIST](state, langaugeList) {
+        state.langaugeList = langaugeList;
     },
 
     [PAYMENT_LIST](state, paymentList) {
@@ -82,6 +88,20 @@ const actions = {
         try {
             let response = await SystemService.getCountryList(params);
             commit(COUNTRY_SET_LIST, response.data);
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetLanguageList({ commit }, params) {
+        try {
+            let response = await SystemService.getLanguageList(params);
+            commit(LANGUAGE_SET_LIST, response.data);
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
@@ -144,11 +164,49 @@ const actions = {
         }
     },
 
+    async actionAddLanguage({commit}, params) {
+        try {
+            let response = await SystemService.addLanguage(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'saved_language', message: 'Successfully Saved', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionUpdateFormula({commit}, params) {
         try {
             let response = await SystemService.updateFormula(params);
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'save_formula', message: '', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionUpdateLanguage({commit}, params) {
+        try {
+            let response = await SystemService.updateLanguage(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'update_language', message: 'Successfully Updated', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

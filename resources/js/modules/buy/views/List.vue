@@ -36,6 +36,18 @@
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
+                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <select class="form-control" v-model="filterModel.country_id">
+                                    <option value="">All</option>
                                     <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
@@ -169,6 +181,7 @@
                                 <th v-show="tblBuyOptions.topic">Topic</th>
                                 <th v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
                                 <th v-show="tblBuyOptions.language">Language</th>
+                                <th v-show="tblBuyOptions.country">Country</th>
                                 <th v-show="tblBuyOptions.url">URL</th>
                                 <th v-show="tblBuyOptions.ur">UR</th>
                                 <th v-show="tblBuyOptions.dr">DR</th>
@@ -197,7 +210,8 @@
                                 <td v-show="tblBuyOptions.seller">{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
                                 <td v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
-                                <td v-show="tblBuyOptions.language">{{ buy.country_name }}</td>
+                                <td v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
+                                <td v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
                                 <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
                                 <td v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
                                 <td v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
@@ -373,6 +387,9 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country">Country</label>
+                            </div>
+                            <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -446,6 +463,7 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
+                    country_id: this.$route.query.country_id || '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     status_purchase: this.$route.query.status_purchase || '',
@@ -501,6 +519,7 @@
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
                 formula: state => state.storeSystem.formula,
+                listLanguages: state => state.storePublisher.listLanguages,
             }),
         },
 
@@ -512,9 +531,14 @@
             this.columnShow();
             this.checkBuyerCommission();
             this.getFormula();
+            this.getListLanguages();
         },
 
         methods: {
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
+
             checkBuyerCommission() {
                 let email = this.user.email;
                 this.getBuyerCommission(email).then(res => {
@@ -573,6 +597,7 @@
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
+                        country_id: this.filterModel.country_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         status_purchase: this.filterModel.status_purchase,
@@ -608,6 +633,7 @@
                         { orderable: true, targets: 15 },
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
@@ -625,6 +651,7 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
@@ -669,6 +696,7 @@
                 $('#tbl_buy_backlink').DataTable().destroy();
 
                 this.filterModel = {
+                    country_id: '',
                     search: '',
                     language_id: '',
                     status_purchase: '',
@@ -725,6 +753,7 @@
 
                 this.getBuyList({
                     params: {
+                        country_id: this.filterModel.country_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         status_purchase: this.filterModel.status_purchase,
