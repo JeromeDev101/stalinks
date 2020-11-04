@@ -121,9 +121,9 @@
                     </a>
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'ExtDomain' }">
-                            <router-link :to="{ path: '/prospay' }">
+                            <router-link :to="{ path: '/url-prospect' }">
                                 <i class="fa fa-fw fa-reorder"></i>
-                                <span>URL Prospay</span>
+                                <span>URL Prospect</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
