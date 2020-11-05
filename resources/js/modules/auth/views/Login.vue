@@ -6,7 +6,7 @@
             </h2>
             <form class="homepage-login__login-form">
                 <div class="form-group">
-                    <label for="user-email">Email</label>
+                    <label for="user-email">Emails</label>
                     <input v-on:keyup.enter="submitLogin(credentials)" v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.email)}" v-model="credentials.email" autofocus="autofocus" type="email" id="user-email" class="form-control">
                     <span v-if="error && objectNotEmpty(error.email)" class="text-danger">{{ error.email[0] }}</span>
                 </div>
