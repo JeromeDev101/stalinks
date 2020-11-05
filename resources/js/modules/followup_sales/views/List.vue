@@ -160,7 +160,7 @@
                                 <td v-show="tblOptions.pub_id">{{ sales.publisher.id }}</td>
                                 <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                 <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td v-show="tblOptions.country">{{ sales.publisher.country.name == null ? 'N/A' : sales.publisher.country.name }}</td>
+                                <td v-show="tblOptions.country">{{ sales.publisher.country == null ? 'N/A' : sales.publisher.country.name }}</td>
                                 <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
                                 <td v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
                                 <td v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>

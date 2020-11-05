@@ -40,7 +40,7 @@
                                         {{ option.name }}
                                     </option>
                                 </select> -->
-                                <v-select multiple v-model="filterModel.country_id_temp" :options="filterModel.countryList.data" :reduce="name => name.name" label="name" :searchable="false" placeholder="All"/>
+                                <v-select multiple v-model="filterModel.country_id_temp" :options="listCountryAll.data" :reduce="name => name.name" label="name" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -93,7 +93,7 @@
             <div class="box">
                 <div class="box-header">
 
-                    <h3 class="box-title">URL Prospay List</h3>
+                    <h3 class="box-title">URL Prospect List</h3>
 
                     <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                     
@@ -704,7 +704,7 @@
                                     <label style="color: #333">Language</label>
                                     <select name="" class="form-control" v-model="publisherAdd.language_id" :disabled="isEditable">
                                         <option value="">Select Language</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1254,6 +1254,7 @@
             }
 
             this.getListSellerTeam();
+            this.getListLanguages();
         },
         computed: {
             ...mapState({
@@ -1274,6 +1275,7 @@
                 listSeller: state => state.storePublisher.listSeller,
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listSellerTeam: state => state.storeExtDomain.listSellerTeam,
+                listLanguages: state => state.storePublisher.listLanguages,
             }),
             pagination() {
                 return {
@@ -1333,6 +1335,11 @@
             });
         },
         methods: {
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
+
             async getListCountries(params) {
                 await this.$store.dispatch('actionGetListCountries', params);
             },
