@@ -17,3 +17,18 @@ jobs:
             cd rlink-develop
             git pull
             npm run production
+            cd ../
+            cd public_html
+            rm -R build
+            rm -R css
+            rm -R js
+            rm -R fonts
+            rm -R images
+            cd ../
+            cd rlink-develop
+            cd public
+            mv build ../../public_html
+            mv css ../../public_html
+            mv js ../../public_html
+            mv fonts ../../public_html
+            mv images ../../public_html
