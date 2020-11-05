@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <section class="content-header col-sm-12">
-            <h1>Dashboards</h1>
+            <h1>Dashboard</h1>
             <br>
         </section>
 

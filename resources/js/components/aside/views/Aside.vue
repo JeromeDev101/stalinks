@@ -111,7 +111,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'email-reply' || $route.name == 'sent-mails' || $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'ExtDomain' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'email-reply' || $route.name == 'sent-mails' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' }">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -121,9 +121,9 @@
                     </a>
                     <ul class="treeview-menu">
                         <li :class="{ active: $route.name == 'ExtDomain' }">
-                            <router-link :to="{ path: '/prospay' }">
+                            <router-link :to="{ path: '/url-prospect' }">
                                 <i class="fa fa-fw fa-reorder"></i>
-                                <span>URL Prospay</span>
+                                <span>URL Prospect</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
