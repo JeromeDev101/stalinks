@@ -142,6 +142,7 @@ class MailgunController extends Controller
 
     public function post_reply(Request $request)
     {
+        return response()->json("test");
         DB::table('replies')->insert(['alldata'=> $request->all()]);
         return response()->json($request->all());
     }
