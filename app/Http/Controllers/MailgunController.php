@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Resources\Messages;
 use App\Http\Resources\ShowMessage;
@@ -141,7 +142,7 @@ class MailgunController extends Controller
 
     public function post_reply(Request $request)
     {
-       
+        DB::table('replies')->insert(['alldata'=> $request->all()]);
         return response()->json($request->all());
     }
 }
