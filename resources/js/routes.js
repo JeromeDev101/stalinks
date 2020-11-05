@@ -131,7 +131,7 @@ const routes = [{
         component: Profile,
     },
     {
-        path: '/prospay',
+        path: '/url-prospect',
         name: 'ExtDomain',
         component: ExtDomain,
     },
