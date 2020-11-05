@@ -26,4 +26,9 @@ jobs:
             rm -R images
             cd ../
             cd rlink-develop
-            mv public/* ../public_html
+            cd public
+            mv build ../../public_html
+            mv css ../../public_html
+            mv js ../../public_html
+            mv fonts ../../public_html
+            mv images ../../public_html
