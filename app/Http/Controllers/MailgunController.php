@@ -23,12 +23,22 @@ class MailgunController extends Controller
     public function send(Request $request)
     {
     	
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|max:100',
+            'title' => 'required',
+            'content' => 'required'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
+
+    
     	$this->mg->messages()->send('stalinks.com', [
 		  'from'    => 'jessica-buyer@stalinks.com',
-		  'to'      => 'morley.marketingcrossmedia@gmail.com',
-		  'subject' => 'Demo 2',
-          'text'    => 'This is Demo 2',
+		  'to'      => $request->email,
+		  'subject' => $request->title,
+          'text'    => $request->content,
           'o:tracking-opens' => 'yes',
           'o:tracking-clicks' => 'yes'
           
