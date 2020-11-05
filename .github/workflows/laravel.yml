@@ -1,16 +1,15 @@
 name: remote ssh command
 on: [push, pull_request]
-jobs:  
-    build:
-        name: Build
-        runs-on: ubuntu-latest
-        steps:
-        - name: ssh proxy command
-        uses: appleboy/ssh-action@master
-        with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.SSHKEY }}
-            port: ${{ secrets.PORT }}
-            script: |
-                mkdir gataya
+jobs:
+    laravel-tests:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v1
+        - name: Copy ENV Laravel Configuration for CI
+          run: php -r "file_exists('.env') || copy('.env.ci', '.env');"
+        - name: Install Dependencies (PHP vendors)
+          run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        - name: Generate key
+          run: php artisan key:generate
+        - name: Create DB and schemas  
+    
