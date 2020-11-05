@@ -16,3 +16,4 @@ jobs:
         script: |
             cd rlink-develop
             git pull
+            npm run production
