@@ -129,7 +129,7 @@
                         </li>
                         <li :class="{ active: $route.name == 'sent-mails' }">
                             <router-link class="page-sidebar__item" :to="{ path: '/sent-mails' }">
-                                <i class="fa fa-fw fa-envelope-open"></i> <span>Sent Mails</span>
+                                <i class="fa fa-fw fa-envelope-open"></i> <span>Sent Mail</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
