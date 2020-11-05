@@ -13,7 +13,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: |
-            cd rlink-develop
-            git pull
+        script: cd rlink-develop git pull
+            
             
