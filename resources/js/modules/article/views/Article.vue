@@ -27,7 +27,7 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Languages</label>
+                                <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
