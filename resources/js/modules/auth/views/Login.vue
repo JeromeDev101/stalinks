@@ -11,7 +11,7 @@
                     <span v-if="error && objectNotEmpty(error.email)" class="text-danger">{{ error.email[0] }}</span>
                 </div>
                 <div class="form-group mb-5">
-                    <label for="user-password">Password</label>
+                    <label for="user-password">Passwords</label>
                     <input v-on:keyup.enter="submitLogin(credentials)" v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" v-model="credentials.password" type="password" id="user-password" class="form-control">
                     <span v-if="error && objectNotEmpty(error.password)"  class="text-danger">{{ error.password[0] }}</span>
                     <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
