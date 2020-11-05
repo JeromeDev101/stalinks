@@ -27,7 +27,7 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Language</label>
+                                <label for="">Languages</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
                                     <option v-for="option in listCountries.data" v-bind:value="option.id">
@@ -126,7 +126,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.backlinks == null ? article.country.name : article.backlinks.publisher.country.name }}</td>
+                                <td>{{ article.country == null ? 'N/A': article.country.name }}</td>
                                 <td>{{ article.writer }}</td>
                                 <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>
                                 <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>
