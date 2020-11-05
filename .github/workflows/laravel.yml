@@ -24,6 +24,7 @@ jobs:
             rm -R js
             rm -R fonts
             rm -R images
+            rm -R mix-manifest.json
             cd ../
             cd rlink-develop
             cd public
@@ -32,3 +33,4 @@ jobs:
             mv js ../../public_html
             mv fonts ../../public_html
             mv images ../../public_html
+            mv mix-manifest.json ../../public_html
