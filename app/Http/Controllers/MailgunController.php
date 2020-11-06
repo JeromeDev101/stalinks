@@ -35,7 +35,7 @@ class MailgunController extends Controller
 
     
     	$this->mg->messages()->send('stalinks.com', [
-		  'from'    => 'jessica-buyer@stalinks.com',
+		  'from'    => 'morley@stalinks.com',
 		  'to'      => $request->email,
 		  'subject' => $request->title,
           'text'    => $request->content,
@@ -101,18 +101,27 @@ class MailgunController extends Controller
     //  $we = $this->mg->domains()->index();
     //  dd($we);
 
-    //  $expression = "catch_all()";
-    //  $actions = ["store()"];
-    //  $description = 'Test';
+    // $expression = "catch_all()";
+    // $actions = ['store(notify="https://tools.stalinks.com/api/mail/post-reply")'];
+    // $description = 'Test route';
 
     // $this->mg->routes()->create($expression, $actions, $description);
-    // dd("route");
+    // dd("route 51");
 
-    //   $we =   $this->mg->routes()->index();
-    //   dd($we);
+    //  $expression = "catch_all()";
+    //  $actions = ['forward("https://tools.stalinks.com/api/mail/post-reply")'];
+    //  $description = 'Test';
 
-    //   $this->mg->routes()->delete('5fa1f378d7b4bcbfe9beb4bc');
-    //   $this->mg->routes()->delete('5fa1f08fdc89bb01a75b9235');
+     
+
+    // $this->mg->routes()->create($expression, $actions, $description);
+    // dd("route 2");
+
+      $we =   $this->mg->routes()->index();
+      dd($we);
+
+    //   $this->mg->routes()->delete('5fa4abdcd91a661f5e4f2dcb');
+    //  $this->mg->routes()->delete('5fa4a6aacd2ab582a5f03fdf');
     //   dd("route delted");
 
 
