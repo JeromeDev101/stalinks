@@ -5,7 +5,7 @@
                 <div class="input-group input-group-sm">
                     <label>Country: </label>
                     <select v-model="filterModel2.country_id" class="form-control pull-right">
-                        <option v-for="option in listCountryUpdate.data" v-bind:value="option.id">
+                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                             {{ option.name }}
                         </option>
                     </select>
@@ -94,6 +94,7 @@
             await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
             this.updateUserPermission();
             this.initFilter();
+            this.getListCountries();
         },
 
         computed: {
@@ -102,11 +103,17 @@
                 listAlexa: state => state.storeExtDomain.listAlexa,
                 listStatusText: state => state.storeExtDomain.listStatusText,
                 messageForms: state => state.storeExtDomain.messageForms,
-                listCountryUpdate: state => state.storeUser.listCountryUpdate,
+                // listCountryUpdate: state => state.storeUser.listCountryUpdate,
+                listCountryAll: state => state.storePublisher.listCountryAll,
             }),
         },
 
         methods: {
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
             async updateUserPermission() {
                 let that = this;
                 await this.$store.dispatch('actionGetListCountryId', { vue: this, params: { user_id: that.user.id , for_ext: 1, for_assign: 1} });

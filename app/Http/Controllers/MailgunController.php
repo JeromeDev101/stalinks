@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Resources\Messages;
 use App\Http\Resources\ShowMessage;
@@ -22,12 +23,22 @@ class MailgunController extends Controller
     public function send(Request $request)
     {
     	
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|max:100',
+            'title' => 'required',
+            'content' => 'required'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
+
+    
     	$this->mg->messages()->send('stalinks.com', [
 		  'from'    => 'jessica-buyer@stalinks.com',
-		  'to'      => 'morley.marketingcrossmedia@gmail.com',
-		  'subject' => 'Demo',
-          'text'    => 'This is Demo',
+		  'to'      => $request->email,
+		  'subject' => $request->title,
+          'text'    => $request->content,
           'o:tracking-opens' => 'yes',
           'o:tracking-clicks' => 'yes'
           
@@ -91,8 +102,8 @@ class MailgunController extends Controller
     //  dd($we);
 
     //  $expression = "catch_all()";
-    //  $actions = ["store()","stop()"];
-    //  $description = 'Test route 3';
+    //  $actions = ["store()"];
+    //  $description = 'Test';
 
     // $this->mg->routes()->create($expression, $actions, $description);
     // dd("route");
@@ -141,6 +152,7 @@ class MailgunController extends Controller
 
     public function post_reply(Request $request)
     {
+        DB::table('replies')->insert(['alldata'=> $request->To]);
         return response()->json($request->all());
     }
 }

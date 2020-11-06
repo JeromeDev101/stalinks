@@ -1,0 +1,19 @@
+.list-group-item{
+    cursor: pointer;
+
+    &:hover {
+        background-color: #efefef;
+    }
+
+    &.active {
+        &:hover {
+            color: #fff;
+            background-color: #497EB1;
+        }
+    }
+}
+
+.message-list {
+    background-color: #fff;
+}
+.green { color: rgb(23, 161, 23); }

@@ -29,8 +29,7 @@ import Verification from '@/modules/registration/views/Verification.vue';
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
 import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
-import EmailReply from '@/modules/mailing/email_reply/views/List.vue';
-import SentMails from '@/modules/mailing/sent_mails/views/List.vue';
+import Mails from '@/modules/mails/views/Mail.vue';
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
@@ -76,14 +75,9 @@ const routes = [{
         component: OverAllIncomes,
     },
     {
-        path: '/email-reply',
-        name: 'email-reply',
-        component: EmailReply,
-    },
-    {
-        path: '/sent-mails',
-        name: 'sent-mails',
-        component: SentMails,
+        path: '/mails',
+        name: 'mails',
+        component: Mails,
     },
     {
         path: '/articles',
