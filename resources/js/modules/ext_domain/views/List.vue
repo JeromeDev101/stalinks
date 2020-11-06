@@ -1863,6 +1863,7 @@
                 this.allowSending = true;
             },
             async doSendEmail(ext, event) {
+                console.log(event);
                 this.$store.dispatch('clearMessageForm');
                 var ids = '';
 
