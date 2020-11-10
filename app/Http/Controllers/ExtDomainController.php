@@ -191,8 +191,6 @@ class ExtDomainController extends Controller
         $sort = [
             'id', 'desc'
         ];
-
-        // dd($input);
         
         $emp_ids = [];
         if( is_array($request->employee_id) && count($request->employee_id) > 0 ){
@@ -279,9 +277,9 @@ class ExtDomainController extends Controller
             $filters['whereIn'][] = ['status', $input['status_multiple']];
         }
 
-        // if (isset($input['status']) && $input['status'] >= 0) {
-        //     $filters['whereIn'][] = ['status', explode(",", $input['status'])];
-        // }
+        if (isset($input['country_id']) && $input['country_id'] != '') {
+            $filters['whereIn'][] = ['country_id', $input['country_id']];
+        }
 
         if (isset($input['required_email']) && $input['required_email'] > 0) {
             $filters['where'][] = ['email', '!=', ''];
@@ -290,6 +288,7 @@ class ExtDomainController extends Controller
         if (isset($input['email'])) {
             $filters['where'][] = ['email', 'like', '%'.$input['email'].'%'];
         }
+
 
         if (isset($input['domain']) && $input['domain'] != '') {
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];

@@ -58,7 +58,7 @@ class Alexa {
     }
 
     /**
-    Save credentials in cache
+    * Save credentials in cache
      */
 
     protected function SaveCredentialsToCache($awsCredentials) {
