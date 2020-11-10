@@ -34,8 +34,8 @@ class MailgunController extends Controller
         }
 
     
-    	$this->mg->messages()->send('stalinks.com', [
-		  'from'    => 'morley@stalinks.com',
+    	$this->mg->messages()->send('tools.stalinks.com', [
+		  'from'    => 'moravel753@gmail.com',
 		  'to'      => $request->email,
 		  'subject' => $request->title,
           'text'    => $request->content,
@@ -50,7 +50,7 @@ class MailgunController extends Controller
 
     public function retrieve_all()
     {
-    	$aw = $this->mg->events()->get('stalinks.com');
+    	$aw = $this->mg->events()->get('tools.stalinks.com');
 
     	return response()->json( new Messages(collect($aw->getItems())) );
     }
@@ -81,7 +81,7 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        $aw = $this->mg->events()->get('stalinks.com');
+        $aw = $this->mg->events()->get('tools.stalinks.com');
 
         return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
 
@@ -104,7 +104,7 @@ class MailgunController extends Controller
     // $expression = "catch_all()";
     // $actions = ['store(notify="https://tools.stalinks.com/api/mail/post-reply")'];
     // $description = 'Test route';
-
+        dd("aw");
     $expression = "match_recipient('moravel752@gmail.com')";
 $actions = ["forward('https://tools.stalinks.com/api/mail/post-reply')"];
 $description = 'Test route';
@@ -129,7 +129,7 @@ $description = 'Test route';
     //   dd("route delted");
 
 
-     $aw = $this->mg->events()->get('stalinks.com');
+     $aw = $this->mg->events()->get('tools.stalinks.com');
      
      foreach($aw->getItems() as $kwe)
      {
