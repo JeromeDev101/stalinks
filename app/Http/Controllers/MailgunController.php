@@ -105,8 +105,12 @@ class MailgunController extends Controller
     // $actions = ['store(notify="https://tools.stalinks.com/api/mail/post-reply")'];
     // $description = 'Test route';
 
-    // $this->mg->routes()->create($expression, $actions, $description);
-    // dd("route 51");
+    $expression = "match_recipient('moravel752@gmail.com')";
+$actions = ["forward('https://tools.stalinks.com/api/mail/post-reply')"];
+$description = 'Test route';
+
+    $this->mg->routes()->create($expression, $actions, $description);
+    dd("route 51");
 
     //  $expression = "catch_all()";
     //  $actions = ['forward("https://tools.stalinks.com/api/mail/post-reply")'];
