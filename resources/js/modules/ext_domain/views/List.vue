@@ -16,7 +16,7 @@
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Filters</h3>
+                    <h3 class="box-title">Filter</h3>
                 </div>
                 <div class="box-body col-md-10 offset-md-1 relative">
                     <div class="row">
@@ -46,7 +46,7 @@
 
                         <div v-if="tableShow.domain" class="col-md-2">
                             <div class="from-group">
-                                <label style="color: #333">Domain</label>
+                                <label style="color: #333">Domains</label>
                                 <input type="text" v-model="filterModel.domain_temp" class="form-control pull-right" placeholder="Search Domain">
                             </div>
                         </div>
