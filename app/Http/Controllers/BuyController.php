@@ -12,6 +12,7 @@ use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Registration;
+use App\Models\WalletTransaction;
 
 class BuyController extends Controller
 {
@@ -19,6 +20,7 @@ class BuyController extends Controller
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
         $user_id = Auth::user()->id;
+        $credit = 0;
 
         $columns = [
             'publisher.*',
@@ -73,6 +75,23 @@ class BuyController extends Controller
         }else{
             $result = $list->paginate($paginate);
         }
+
+        // Getting credit left 
+
+        $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
+                                ->where('user_id', $user_id)
+                                ->get();
+
+
+        $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+                    ->where('user_id', $user_id)
+                    ->get();
+
+        if( isset($wallet_transaction[0]['amount_usd']) && isset($total_purchased[0]['total_purchased']) ){
+            $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+        }
+
+        // End of Getting credit left 
 
         
         foreach($result as $key => $value) {
@@ -149,13 +168,18 @@ class BuyController extends Controller
 
         }
 
-
+        
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
                 'data' => $result,
                 'total' => $result->count(),
+                'credit' => $credit,
             ],200);
         }else{
+            $custom_credit = collect(['credit' => $credit]);
+            $result = $custom_credit->merge($result);
+            // dd($result);
+            
             return $result;
         }
         

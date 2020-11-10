@@ -129,6 +129,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Buy Backlinks</h3>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Credit Left: <b>${{listBuy.credit}}</b></span>
 
                     <div class="input-group input-group-sm float-right" style="width: 100px">
                         <select name="" class="form-control float-right" @change="getBuyList" v-model="filterModel.paginate" style="height: 37px;">
