@@ -14,23 +14,6 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-            cd rlink-develop
+            cd stalinks.com
             git pull
             npm run production
-            cd ../
-            cd public_html
-            rm -R build
-            rm -R css
-            rm -R js
-            rm -R fonts
-            rm -R images
-            rm -R mix-manifest.json
-            cd ../
-            cd rlink-develop
-            cd public
-            mv build ../../public_html
-            mv css ../../public_html
-            mv js ../../public_html
-            mv fonts ../../public_html
-            mv images ../../public_html
-            mv mix-manifest.json ../../public_html
