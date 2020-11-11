@@ -171,16 +171,15 @@ $description = 'Test route';
 
         return response()->json($request->all());    
         $data = [
-            'sender'            => $request->Sender,
-            'subject'           => $request->Subject,
-            'body'              => $request->Sender,
-            'body'              => json_encode($request->only('body-html')),
+            'sender'            => $request->sender,
+            'subject'           => $request->subject,
+            'body'              => json_encode($request->only('body-plain')),
             'attachment'        => '',
-            'from_mail'         => $request->From,
-            'date'              => $request->Date,
+            'from_mail'         => $request->from,
+            'date'              => $request->timestamp,
             'message_id'        => '',
-            'received'          => $request->Received,
-            'references_mail'   => $request->References,
+            'received'          => $request->recipient,
+            'references_mail'   => '',
             'label_id'          => 0,
             'is_starred'        => 0,
             'deleted_at'        => date('Y-m-d'),
