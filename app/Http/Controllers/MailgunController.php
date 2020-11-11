@@ -189,6 +189,6 @@ $description = 'Test route';
 
        
         DB::table('replies')->insert($data);
-        //return response()->json($request->all());
+        return response()->json($request->all());
     }
 }
