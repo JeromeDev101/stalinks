@@ -69,6 +69,8 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Purchase</h3>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Wallet: <b>${{listPurchase.wallet}}</b></span>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Deposit: <b>${{listPurchase.deposit}}</b></span>
 
                     <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
 

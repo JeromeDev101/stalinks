@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\BuyerPurchased;
+use App\Models\WalletTransaction;
 
 class PurchaseController extends Controller
 {
@@ -20,6 +21,9 @@ class PurchaseController extends Controller
         $user = Auth::user();
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
+        $wallet = 0;
+        $deposit = 0;
+
         $list = Backlink::select('backlinks.*')
                     ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
                     ->with(['publisher' => function($query){
@@ -72,16 +76,38 @@ class PurchaseController extends Controller
                             ->orderBy('users.username', 'asc')
                             ->get();
 
-        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-        }else{
+        $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+                            ->where('user_id', $user->id)
+                            ->get();
+
+        $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
+                            ->where('status', 'Live')
+                            ->where('payment_status', 'Paid')
+                            ->where('user_id', $user->id)
+                            ->get();
+
+        if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
+            $wallet = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_paid[0]['total_paid']);
+        }
+
+        if( isset($wallet_transaction[0]['amount_usd']) ){
+            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
+        }
+
+        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){}
+        else{
             $list = $list->paginate($paginate);
         }
 
         $buyers = collect(['buyers' => $getBuyer]);
         $sellers = collect(['sellers' => $getSeller]);
+        $wallets = collect(['wallet' => $wallet]);
+        $deposits = collect(['deposit' => $deposit]);
 
-        $data = $buyers->merge($list);
-        $data = $sellers->merge($data);
+        $data_buyer = $buyers->merge($list);
+        $data_seller = $sellers->merge($data_buyer);
+        $data_wallet = $wallets->merge($data_seller);
+        $data = $deposits->merge($data_wallet);
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return [
@@ -89,6 +115,8 @@ class PurchaseController extends Controller
                 "total" => $list->count(),
                 "buyers" => $getBuyer,
                 "sellers" => $getSeller,
+                "wallet" => $wallet,
+                "deposit" => $deposit,
             ];
         }else{
             return response()->json($data);
