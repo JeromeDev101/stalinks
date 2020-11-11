@@ -220,7 +220,7 @@
                                 <td v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
                                 <td v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
                                 <td v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
-                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ buy.price }}</td>
+                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
                                 <td v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
@@ -365,7 +365,7 @@
         <!-- End of Modal Buy Selected -->
 
         <!-- Modal Settings -->
-        <div class="modal fade" id="modal-setting">
+        <div class="modal fade" id="modal-setting" >
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -507,7 +507,7 @@
                     'Unlisted',
                 ],
 
-                isExtBuyerWithCommission: false,
+                isExtBuyerWithCommission: true,
                 updateFormula: {},
             }
         },
@@ -532,7 +532,7 @@
             this.checkCreditAuth();
             this.getListSeller();
             this.columnShow();
-            this.checkBuyerCommission();
+            // this.checkBuyerCommission();
             this.getListLanguages();
         },
 
@@ -553,9 +553,6 @@
 
             async getFormula() {
                 await this.$store.dispatch('actionGetFormula');
-
-                console.log(this.formula)
-
                 this.updateFormula = this.formula.data[0];
             },
 
@@ -655,6 +652,7 @@
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
                         { orderable: false, targets: '_all' }
                     ];
                 }

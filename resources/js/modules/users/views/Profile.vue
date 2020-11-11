@@ -174,6 +174,54 @@
             </div>
         </div>
 
+
+        <div class="col-sm-12" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5">
+            <div class="box box-primary table-user">
+                <div class="box-header"  >
+                    <h3 class="box-title">Add Sub Account</h3>
+                </div>
+
+                <div class="box-body no-padding" >
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <tbody>
+                                <tr>
+                                    <td><b>Username</b></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" v-model="modelAddSubAccount.paypal_account" class="form-control" required="required" >
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Email</b></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" v-model="modelAddSubAccount.skrill_account" class="form-control" required="required" >
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Password</b></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" v-model="modelAddSubAccount.btc_account" class="form-control" required="required">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <button type="button" class="btn btn-primary">Add</button>
+                </div>
+
+
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -187,6 +235,11 @@ export default {
 
     data() {
         return {
+            modelAddSubAccount: {
+                username: '',
+                email: '',
+                password: '',
+            },
             defaultAvatar: config.avatar_url,
             extDomain:{
                 status: 0,

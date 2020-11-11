@@ -107,7 +107,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-if="user.isOurs == 0">ID Backlinks</th>
+                                <th v-if="user.isOurs == 0">ID Bck</th>
                                 <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
                                 <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Buyer</th>
                                 <th>URL Publisher</th>
@@ -116,7 +116,7 @@
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th>Price</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
-                                <th>Date for Proccessing</th>
+                                <th>Date for Proccess</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -130,7 +130,11 @@
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
                                 <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
-                                <td>{{ backLink.link_from }}</td>
+                                <td>
+                                    <div class="dont-break-out">
+                                        {{ backLink.link_from }}
+                                    </div>
+                                </td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)"><a href="backLink.link">{{ backLink.link }}</a></td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
@@ -299,6 +303,27 @@
         <!--    End Modal Add-->
     </div>
 </template>
+
+<style scoped>
+.dont-break-out {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+</style>
+
 <script>
     import Hepler from '@/library/Helper';
     import { mapState, mapSetter } from 'vuex';
@@ -313,7 +338,7 @@
             return {
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Issue', 'Canceled'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
@@ -423,7 +448,7 @@
                     { orderable: true, targets: 3 },
                     { orderable: true, targets: 4 },
                     { orderable: true, targets: 5 },
-                    { orderable: true, targets: 6 },
+                    { orderable: true, targets: 6, width: "200px" },
                     { orderable: true, targets: 7 },
                     { orderable: true, targets: 8 },
                     { orderable: true, targets: 9 },
@@ -435,7 +460,7 @@
                     columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2 },
+                        { orderable: true, targets: 2, width: "200px" },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },

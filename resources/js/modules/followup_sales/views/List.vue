@@ -437,7 +437,7 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Issue', 'Canceled'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
