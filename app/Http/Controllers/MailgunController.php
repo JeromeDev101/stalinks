@@ -167,16 +167,14 @@ $description = 'Test route';
     {
         //return response()->json($request->all());
 
-        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
-
-        return response()->json($request->all());    
+        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
             'attachment'        => '',
             'from_mail'         => $request->from,
-            'date'              => $request->timestamp,
+            'date'              => '',
             'message_id'        => '',
             'received'          => $request->recipient,
             'references_mail'   => '',
@@ -191,6 +189,8 @@ $description = 'Test route';
 
        
         DB::table('replies')->insert($data);
+
+        return response()->json($request->all()); 
         
     }
 }
