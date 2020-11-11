@@ -155,7 +155,7 @@
         </div>
 
         <!--   Modal Edit Followup Backlink -->
-        <div v-if="openModalBackLink" class="modal fade"  ref="modalEditBacklink" style="display: none;">
+        <div v-if="openModalBackLink" class="modal fade"  ref="modalEditBacklink" >
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -172,7 +172,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Seller name</label>
+                                    <label>Seller name</label>
                                     <input type="text" v-model="modelBaclink.username" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Processed</label>
+                                        <label>Date Processed</label>
                                         <input type="date" :disabled="isBuyer || isPostingWriter" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
@@ -188,13 +188,13 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
-                                    <label style="color: #333">URL Publisher</label>
+                                    <label>URL Publisher</label>
                                     <input type="text" v-model="modelBaclink.ext_domain.domain" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">URL Advertiser</label>
+                                    <label>URL Advertiser</label>
                                     <input type="text" v-model="modelBaclink.url_advertiser"  :disabled="isPostingWriter" class="form-control" required="required" >
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Price</label>
+                                        <label>Price</label>
                                         <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live'" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
                                     </div>
@@ -212,7 +212,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Anchor text</label>
+                                        <label>Anchor text</label>
                                         <input type="text" v-model="modelBaclink.anchor_text" class="form-control" required="required" >
                                         <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
                                     </div>
@@ -222,7 +222,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.title}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Title</label>
+                                        <label>Title</label>
 
                                         <input type="text" v-model="modelBaclink.title" class="form-control"  required="required" >
                                         <span v-if="messageBacklinkForms.errors.title" v-for="err in messageBacklinkForms.errors.title" class="text-danger">{{ err }}</span>
@@ -233,7 +233,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Link To</label>
+                                        <label>Link To</label>
 
                                         <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter" required="required" >
                                         <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
@@ -244,7 +244,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link_from}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Link From</label>
+                                        <label>Link From</label>
                                         <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
                                         <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
                                     </div>
@@ -254,7 +254,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Completed</label>
+                                        <label>Date Completed</label>
                                         <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer">
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
                                     </div>
@@ -264,7 +264,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Status</label>
+                                        <label>Status</label>
                                         <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer">
                                           <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
@@ -276,7 +276,7 @@
                             <div class="col-md-6" v-if="withArticle">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Article ID</label>
+                                        <label>Article ID</label>
                                         <input type="text" class="form-control" v-model="modelBaclink.id_article" :disabled="true ">
                                         <!-- <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter"> -->
                                     </div>
@@ -416,10 +416,23 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                $("#tbl_backlink").DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
+                let columnDefs = [
+                    { orderable: true, targets: 0 },
+                    { orderable: true, targets: 1 },
+                    { orderable: true, targets: 2 },
+                    { orderable: true, targets: 3 },
+                    { orderable: true, targets: 4 },
+                    { orderable: true, targets: 5 },
+                    { orderable: true, targets: 6 },
+                    { orderable: true, targets: 7 },
+                    { orderable: true, targets: 8 },
+                    { orderable: true, targets: 9 },
+                    { orderable: true, targets: 10 },
+                    { orderable: false, targets: '_all' }
+                ];
+
+                if (this.user.isOurs == 1){
+                    columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
@@ -429,10 +442,14 @@
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
-                        { orderable: true, targets: 10 },
                         { orderable: false, targets: '_all' }
-                    ],
+                    ];
+                }
+
+                $("#tbl_backlink").DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: columnDefs,
                 });
 
                 this.getTotalAmount()

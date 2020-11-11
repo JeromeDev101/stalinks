@@ -192,9 +192,9 @@
                                 <th v-show="tblBuyOptions.org_traffic">Organic Traffic</th>
                                 <th v-show="tblBuyOptions.price">Price</th>
                                 <th v-show="tblBuyOptions.status">Status</th>
-                                <th v-show="tblBuyOptions.code_comb" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Code Combination</th>
-                                <th v-show="tblBuyOptions.code_price" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Code Price</th>
-                                <th v-show="tblBuyOptions.price_basis" v-if="user.isOurs == 0 || isExtBuyerWithCommission">Price Basis</th>
+                                <th v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Combination</th>
+                                <th v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission">Code Price</th>
+                                <th v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -220,11 +220,11 @@
                                 <td v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
                                 <td v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
                                 <td v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
-                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ buy.price }}</td>
                                 <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-show="tblBuyOptions.code_comb" v-if="user.isOurs== 0 || isExtBuyerWithCommission" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
-                                <td v-show="tblBuyOptions.code_price" v-if="user.isOurs== 0 || isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
-                                <td v-show="tblBuyOptions.price_basis" v-if="user.isOurs== 0 || isExtBuyerWithCommission">{{ buy.price_basis }}</td>
+                                <td v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
+                                <td v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
+                                <td v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">{{ buy.price_basis }}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -365,7 +365,7 @@
         <!-- End of Modal Buy Selected -->
 
         <!-- Modal Settings -->
-        <div class="modal fade" id="modal-setting" style="display: none;">
+        <div class="modal fade" id="modal-setting">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -417,14 +417,14 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Code Combination</label>
+                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
                             </div>
-                            <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Code Price</label>
+                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
                             </div>
-                            <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis" v-if="user.isOurs== 0 || isExtBuyerWithCommission">Price Basis</label>
+                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis">Price Basis</label>
                             </div>
                         </div>
                     </div>
@@ -508,6 +508,7 @@
                 ],
 
                 isExtBuyerWithCommission: false,
+                updateFormula: {},
             }
         },
 
@@ -525,13 +526,13 @@
         },
 
         async created() {
+            this.getFormula();
             this.getBuyList();
             this.getListCountries();
             this.checkCreditAuth();
             this.getListSeller();
             this.columnShow();
             this.checkBuyerCommission();
-            this.getFormula();
             this.getListLanguages();
         },
 
@@ -544,7 +545,6 @@
                 let email = this.user.email;
                 this.getBuyerCommission(email).then(res => {
                     let commission = res.data.commission;
-
                     if (commission == 'yes'){
                         this.isExtBuyerWithCommission = true;
                     }
@@ -553,6 +553,8 @@
 
             async getFormula() {
                 await this.$store.dispatch('actionGetFormula');
+
+                console.log(this.formula)
 
                 this.updateFormula = this.formula.data[0];
             },
