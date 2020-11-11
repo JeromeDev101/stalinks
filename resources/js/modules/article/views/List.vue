@@ -43,7 +43,7 @@
                                 <select name="" class="form-control" v-model="filterModel.writer">
                                     <option value="">All</option>
                                     <option v-for="option in listWriter.data" v-bind:value="option.id">
-                                        {{ option.name }}
+                                        {{ option.username }}
                                     </option>
                                 </select>
                             </div>

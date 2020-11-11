@@ -53,19 +53,19 @@ class ArticlesController extends Controller
             }
         }
 
-        if( isset($filter['writer']) && $filter['writer'] ){
+        if( isset($filter['writer']) && $filter['writer'] != ""){
             $list->where('id_writer', $filter['writer']);
         }
         
-        if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
+        if( isset($filter['search_backlink']) && $filter['search_backlink'] != ""){
             $list->where('id_backlink', $filter['search_backlink']);
         }
 
-        if( isset($filter['search_article']) && $filter['search_article'] ){
+        if( isset($filter['search_article']) && $filter['search_article'] != ""){
             $list->where('id', $filter['search_article']);
         }
 
-        if( isset($filter['language_id']) && $filter['language_id'] ){
+        if( isset($filter['language_id']) && $filter['language_id'] != ""){
             $list->where('id_language', $filter['language_id']);
         }
 
@@ -101,20 +101,24 @@ class ArticlesController extends Controller
             $list->where('article.id', $filter['search_article']);
         }
 
-        if( isset($filter['casino_sites']) && $filter['casino_sites'] ){
+        if( isset($filter['writer']) && $filter['writer'] != ""){
+            $list->where('id_writer', $filter['writer']);
+        }
+
+        if( isset($filter['casino_sites']) && $filter['casino_sites'] != ""){
             $list->where('publisher.casino_sites', $filter['casino_sites']);
         }
 
-        if( isset($filter['topic']) && $filter['topic'] ){
+        if( isset($filter['topic']) && $filter['topic'] != ""){
             $list->whereIn('publisher.topic', $filter['topic']);
         }
 
-        if( isset($filter['language_id']) && $filter['language_id'] ){
+        if( isset($filter['language_id']) && $filter['language_id'] != ""){
             $list->where('article.id_language', $filter['language_id']);
         }
 
-        if( isset($filter['status']) && $filter['status'] ){
-            if( $filter['status'] == 'No Status' ){
+        if( isset($filter['status']) && $filter['status'] != ""){
+            if( $filter['status'] == 'Queue' ){
                 $list->whereNull('article.status_writer');
             }else{
                 $list->where('article.status_writer', $filter['status']);
@@ -148,7 +152,7 @@ class ArticlesController extends Controller
     }
 
     public function getWriterList() {
-        $writers = User::select('id', 'name', 'username')->where('role_id', 4)->where('isOurs', 1)->orderBy('username', 'asc')->get();
+        $writers = User::select('id', 'name', 'username')->where('role_id', 4)->where('isOurs', 0)->orderBy('username', 'asc')->get();
 
         return [
             'total' => $writers->count(),

@@ -39,10 +39,22 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="">Writer</label>
+                                <select name="" class="form-control" v-model="filterModel.writer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listWriter.data" v-bind:value="option.id">
+                                        {{ option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Status</label>
                                 <select name="" class="form-control" v-model="filterModel.status">
                                     <option value="">All</option>
-                                    <option value="No Status">No Status</option>
+                                    <option value="Queue">Queue</option>
                                     <option value="In Writing">In Writing</option>
                                     <option value="Done">Done</option>
                                 </select>
@@ -132,7 +144,7 @@
                                 <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>
                                 <td>{{ article.date_start == null ? '-':article.date_start }}</td>
                                 <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
-                                <td>{{ article.status_writer }}</td>
+                                <td>{{ article.status_writer == null ? 'Queue':article.status_writer  }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
@@ -366,6 +378,7 @@
                     status: this.$route.query.status || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
+                    writer: this.$route.query.writer || '',
                 },
 
                 searchLoading: false,
@@ -405,6 +418,7 @@
             this.getListWriter();
             this.getListCountries();
             this.checkTeam();
+            this.getListWriter();
         },
 
         computed: {
@@ -415,10 +429,16 @@
                 messageForms: state => state.storeArticles.messageForms,
                 listCountries: state => state.storeArticles.listCountries,
                 user: state => state.storeAuth.currentUser,
+                listWriter: state => state.storeArticles.listWriter,
             })
         },
 
         methods: {
+            async getListWriter(params) {
+                await this.$store.dispatch('actionGetListWriter', params);
+            },
+
+
             async getListArticles(params){
                 $('#tbl_articles').DataTable().destroy();
 
@@ -503,6 +523,7 @@
                         status: this.filterModel.status,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        writer: this.filterModel.writer,
                     }
                 });
             },
@@ -516,6 +537,7 @@
                     status: '',
                     casino_sites: '',
                     topic: '',
+                    writer: '',
                 }
 
                 this.getListArticles({
