@@ -167,7 +167,8 @@ $description = 'Test route';
     {
         //return response()->json($request->all());
 
-        DB::table('test_replies')->insert(['alldata' => json_encode($request->all()]);
+        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
+
         return response()->json($request->all());    
         $data = [
             'sender'            => $request->Sender,
