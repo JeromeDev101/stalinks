@@ -165,7 +165,30 @@ $description = 'Test route';
 
     public function post_reply(Request $request)
     {
-        DB::table('replies')->insert(['alldata'=> $request->Subject]);
-        return response()->json($request->all());
+        //return response()->json($request->all());
+
+        $data = [
+            'sender'            => $request->Sender,
+            'subject'           => $request->Subject,
+            'body'              => $request->Sender,
+            'body'              => json_encode($request->only('body-html')),
+            'attachment'        => '',
+            'from_mail'         => $request->From,
+            'date'              => $request->Date,
+            'message_id'        => '',
+            'received'          => $request->Received,
+            'references_mail'   => $request->References,
+            'label_id'          => 0,
+            'is_starred'        => 0,
+            'deleted_at'        => date('Y-m-d'),
+            'created_at'        => date('Y-m-d'),
+            'updated_at'        => date('Y-m-d'),
+
+
+        ];
+
+       
+        DB::table('replies')->insert($data);
+        //return response()->json($request->all());
     }
 }
