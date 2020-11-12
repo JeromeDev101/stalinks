@@ -134,8 +134,8 @@
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div class="form-group">
-                                    <label style="color: #333">Email Name</label>
-                                    <input type="text" class="form-control" value="" required="required" >
+                                    <label style="color: #333" >Email Name</label>
+                                    <input type="text" class="form-control" value="" required="required" v-model="emailContent.email">
                                 </div>
                             </div>
 
@@ -143,14 +143,14 @@
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div class="form-group">
                                     <label style="color: #333">Title</label>
-                                    <input type="text" class="form-control" value="" required="required" >
+                                    <input type="text" class="form-control" value="" required="required" v-model="emailContent.title">
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Content</label>
-                                    <textarea rows="10" type="text" class="form-control" value="" required="required"></textarea>
+                                    <textarea rows="10" type="text" class="form-control" value="" required="required" v-model="emailContent.content"></textarea>
                                 </div>
                             </div>
 
@@ -158,7 +158,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-primary" @click="sendEmail">Send</button>
                     </div>
                 </div>
             </div>
@@ -176,7 +176,11 @@ export default {
 
     data() {
         return {
-            //
+            emailContent : {
+                email: '',
+                title: '',
+                content: ''
+            }
         }
     },
 
@@ -189,7 +193,14 @@ export default {
     },
 
     methods: {
-        //
+       async sendEmail() {
+            axios.post('/api/mail/send', this.$data.emailContent)
+            .then((response) => {
+                console.log(response);
+                response => response;
+            })
+            .catch(error => error);
+       }
     }
 }
 </script>
