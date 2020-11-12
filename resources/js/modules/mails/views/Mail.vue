@@ -142,14 +142,14 @@
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div class="form-group">
-                                    <label style="color: #333">Title</label>
+                                    <label style="color: #333">Titles</label>
                                     <input type="text" class="form-control" value="" required="required" v-model="emailContent.title">
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Content</label>
+                                    <label style="color: #333">Contents</label>
                                     <textarea rows="10" type="text" class="form-control" value="" required="required" v-model="emailContent.content"></textarea>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-on:click="sendEmail()">Send</button>
+                        <button type="button" class="btn btn-primary" @click="sendEmail">Send</button>
                     </div>
                 </div>
             </div>
@@ -194,16 +194,17 @@ export default {
 
     methods: {
         sendEmail() {
+            console.log("ta");
            console.log(this.$data.emailContent);
-            axios.post('/api/mail/send', this.$data.emailContent)
-            .then((response) => {
-                console.log(response);
-                response => response;
-            })
-            .catch((error) => {
-                console.log(error);
-                error => error;
-            });
+            // axios.post('/api/mail/send', this.$data.emailContent)
+            // .then((response) => {
+            //     console.log(response);
+            //     response => response;
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            //     error => error;
+            // });
        }
     }
 }
