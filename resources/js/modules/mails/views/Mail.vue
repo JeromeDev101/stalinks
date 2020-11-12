@@ -200,6 +200,9 @@ export default {
             .then((response) => {
                 console.log(response);
                 response => response;
+                this.$data.emailContent.email = '';
+                this.$data.emailContent.title = '';
+                this.$data.emailContent.content = '';
             })
             .catch((error) => {
                 console.log(error);
