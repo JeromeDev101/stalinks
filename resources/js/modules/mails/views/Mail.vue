@@ -194,17 +194,17 @@ export default {
 
     methods: {
         sendEmail() {
-            console.log("ta");
+           
            console.log(this.$data.emailContent);
-            // axios.post('/api/mail/send', this.$data.emailContent)
-            // .then((response) => {
-            //     console.log(response);
-            //     response => response;
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            //     error => error;
-            // });
+            axios.post('/api/mail/send', this.$data.emailContent)
+            .then((response) => {
+                console.log(response);
+                response => response;
+            })
+            .catch((error) => {
+                console.log(error);
+                error => error;
+            });
        }
     }
 }
