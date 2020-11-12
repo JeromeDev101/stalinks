@@ -199,7 +199,10 @@ export default {
                 console.log(response);
                 response => response;
             })
-            .catch(error => error);
+            .catch((error) => {
+                console.log(error);
+                error => error;
+            });
        }
     }
 }
