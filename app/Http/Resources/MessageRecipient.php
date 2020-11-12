@@ -27,6 +27,6 @@ class MessageRecipient extends JsonResource
                 ];   
             }
             
-        });
+        })->filter()->all();;
     }
 }
