@@ -194,6 +194,7 @@ export default {
 
     methods: {
        async sendEmail() {
+           console.log(this.$data.emailContent);
             axios.post('/api/mail/send', this.$data.emailContent)
             .then((response) => {
                 console.log(response);
