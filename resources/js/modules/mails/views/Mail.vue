@@ -158,7 +158,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="sendEmail">Send</button>
+                        <button type="button" class="btn btn-primary" v-on:click="sendEmail()">Send</button>
                     </div>
                 </div>
             </div>
@@ -193,7 +193,7 @@ export default {
     },
 
     methods: {
-       async sendEmail() {
+        sendEmail() {
            console.log(this.$data.emailContent);
             axios.post('/api/mail/send', this.$data.emailContent)
             .then((response) => {
