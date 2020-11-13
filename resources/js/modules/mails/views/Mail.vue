@@ -46,11 +46,11 @@
                         <tbody>
                             <tr v-for="inbox in records">
                                 <td><input type="checkbox"></td>
-                                <td>{{inbox.records.from}}</td>
-                                <td>{{inbox.records.subject}}</td>
+                                <td>{{inbox.from_mail}}</td>
+                                <td>{{inbox.subject}}</td>
                                 <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
                                 <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                <td class="text-right">{{inbox.date}}</td>
+                                <td class="text-right">{{inbox.created_at}}</td>
                             </tr>
                             
                         </tbody>
