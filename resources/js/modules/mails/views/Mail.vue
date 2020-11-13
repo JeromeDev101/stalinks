@@ -279,7 +279,7 @@ export default {
            this.loadingMessage = true;
            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
             .then((response) => {
-                console.log(response.data);
+                console.log(response);
                 this.records = response.data;
                 this.loadingMessage = false;
             })
