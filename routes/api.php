@@ -69,6 +69,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-user-wallet-credit')->get('wallet-credit', 'AccountController@getWalletCredit');
     Route::name('get-team-in-charge')->get('team-in-charge', 'AccountController@getTeamInCharge');
     Route::name('get-buyer-commission')->get('buyer-commission', 'AccountController@getBuyerCommission');
+    Route::name('add-sub-account')->post('sub-account', 'AccountController@storeSubAccount');
+
 
 
     //Purchase

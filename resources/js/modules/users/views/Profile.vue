@@ -90,7 +90,6 @@
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
                                             <input type="password" class="form-control" v-model="new_password" placeholder="Type New Password">
-                                            <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -188,24 +187,27 @@
                                 <tr>
                                     <td><b>Username</b></td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="modelAddSubAccount.paypal_account" class="form-control" required="required" >
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
+                                            <input type="text" v-model="modelAddSubAccount.username" class="form-control" required="required" >
+                                            <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>Email</b></td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="modelAddSubAccount.skrill_account" class="form-control" required="required" >
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                                            <input type="text" v-model="modelAddSubAccount.email" class="form-control" required="required" >
+                                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>Password</b></td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="modelAddSubAccount.btc_account" class="form-control" required="required">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
+                                            <input type="password" v-model="modelAddSubAccount.password" class="form-control" required="required">
+                                            <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -215,7 +217,7 @@
                 </div>
 
                 <div class="col-lg-8">
-                    <button type="button" class="btn btn-primary">Add</button>
+                    <button type="button" @click="addSubAccount" class="btn btn-primary">Add Sub Account</button>
                 </div>
 
 
@@ -226,6 +228,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState } from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
@@ -334,6 +337,25 @@ export default {
                 this.billing.btc_account = that.btc_account;
                 this.billing.payment_default = this.user.id_payment_type;
             }
+        },
+
+        async addSubAccount() {
+            await this.$store.dispatch('actionAddSubAccount', this.modelAddSubAccount);
+
+            if (this.messageForms.action === 'saved_account') {
+                swal.fire(
+                    'Success',
+                    'Successfully created!',
+                    'success'
+                )
+
+                this.modelAddSubAccount = {
+                    username: '',
+                    email: '',
+                    password: '',
+                }
+            }
+
         },
 
         async getPublisherSummaryCountry() {
