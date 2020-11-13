@@ -16,6 +16,7 @@ class ShowMessage extends JsonResource
     {
         return [
                 'from'          => $this->getFrom(),
+                'subject'       => $this->getSubject(),
                 'sender'        => $this->getSender(),
                 'bodyPlain'     => $this->getBodyPlain(),
                 'strippedText'  => $this->getStrippedText(),
