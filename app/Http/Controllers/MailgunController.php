@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\Messages;
 use App\Http\Resources\ShowMessage;
 use App\Http\Resources\MessageRecipient;
+use App\Http\Resources\MessageSent;
 
 class MailgunController extends Controller
 {
@@ -83,7 +84,7 @@ class MailgunController extends Controller
 
         $aw = $this->mg->events()->get('tools.stalinks.com');
 
-        
+
         return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
 
 
@@ -193,5 +194,21 @@ $description = 'Test route';
 
         return response()->json($request->all()); 
         
+    }
+
+    public function sent(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
+
+        $aw = $this->mg->events()->get('tools.stalinks.com');
+
+       
+        return response()->json( new MessageSent( collect($aw->getItems()), $request->email) );
     }
 }
