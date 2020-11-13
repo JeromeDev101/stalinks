@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\AddSubAccountRequest;
 use App\Http\Requests\RegistrationAccountRequest;
 use App\Http\Requests\UpdateSetPasswordRequest;
 use App\Models\Registration;
@@ -330,5 +331,33 @@ class AccountController extends Controller
     public function getBuyerCommission(Request $request) {
         $registration = Registration::where('email', $request->email)->first();
         return $registration;
+    }
+
+    public function storeSubAccount(AddSubAccountRequest $request) {
+        $input['name'] = $request->username;
+        $input['username'] = $request->username;
+        $input['email'] = $request->email;
+        $input['password'] = Hash::make($request->password);
+        $input['status'] = 'active';
+        $input['role_id'] = 5;
+        $input['type'] = 0;
+        $input['phone'] = '+0000000';
+        $input['avatar'] = '/images/noavatar.jpg';
+        $input['isOurs'] = 1;
+
+        User::create($input);
+
+        unset($input['type']);
+        unset($input['role_id']);
+        unset($input['avatar']);
+        unset($input['isOurs']);
+        $input['type'] = 'Buyer';
+        $input['team_in_charge'] = Auth::user()->id;
+        $input['is_sub_account'] = 1;
+
+        Registration::create($input);
+
+
+        return response()->json(['success' => true], 200);
     }
 }

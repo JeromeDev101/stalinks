@@ -60,6 +60,12 @@ export default class UserService {
             .catch(error => error);
     }
 
+    static addSubAccount(user) {
+        return axios.post('/api/sub-account', user)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static updateUser(user) {
         return axios.put('/api/admin/update-user', user)
             .then(response => response)
