@@ -252,11 +252,12 @@ export default {
         },
 
         viewMessage(inbox) {
-            this.viewContent.from = inbox.records.from;
-            this.viewContent.strippedHtml = inbox.records.bodyPlain;
-            this.viewContent.date = inbox.date;
-            this.viewContent.subject = inbox.records.subject;
             console.log(inbox)
+            this.viewContent.from = inbox.from_mail;
+            this.viewContent.strippedHtml = inbox.body;
+            this.viewContent.date = inbox.created_at;
+            this.viewContent.subject = inbox.subject;
+            
         },
 
         sendEmail() {
