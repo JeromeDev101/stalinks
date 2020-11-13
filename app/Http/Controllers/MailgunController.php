@@ -67,7 +67,7 @@ class MailgunController extends Controller
         }
 
     	$message = $this->mg->messages()->show($request->url);
-
+        //dd($message);
     	return response()->json( new ShowMessage($message) );
     }
 
@@ -83,6 +83,7 @@ class MailgunController extends Controller
 
         $aw = $this->mg->events()->get('tools.stalinks.com');
 
+        
         return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
 
 

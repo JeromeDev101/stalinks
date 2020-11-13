@@ -44,54 +44,15 @@
                 <div class="my-4 message-list">
                     <table class="table table-condensed table-hover">
                         <tbody>
-                            <tr>
+                            <tr v-for="inbox in records">
                                 <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
+                                <td>{{inbox.records.from}}</td>
+                                <td>{{inbox.records.subject}}</td>
                                 <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
                                 <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                <td class="text-right">Nov 6, 2020</td>
+                                <td class="text-right">{{inbox.date}}</td>
                             </tr>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
-                                <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
-                                <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                <td class="text-right">Nov 6, 2020</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
-                                <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
-                                <td></td>
-                                <td class="text-right">Nov 6, 2020</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
-                                <td class="text-right"><i class="fa fa-fw fa-star green"></i></td>
-                                <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                <td class="text-right">Nov 6, 2020</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
-                                <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
-                                <td></td>
-                                <td class="text-right">Nov 6, 2020</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>No Name</td>
-                                <td>Great you have receive a meesage from our Bot</td>
-                                <td class="text-right"><i class="fa fa-fw fa-star-o"></i></td>
-                                <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                <td class="text-right">Nov 6, 2020</td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -180,7 +141,8 @@ export default {
                 email: '',
                 title: '',
                 content: ''
-            }
+            },
+            records: []
         }
     },
 
@@ -190,6 +152,10 @@ export default {
 
     computed: {
         //
+        
+    },
+    mounted() {
+        this.getInbox();
     },
 
     methods: {
@@ -203,6 +169,18 @@ export default {
                 this.$data.emailContent.email = '';
                 this.$data.emailContent.title = '';
                 this.$data.emailContent.content = '';
+            })
+            .catch((error) => {
+                console.log(error);
+                error => error;
+            });
+       },
+       getInbox(){
+
+           axios.post('/api/mail/filter-recipient',{'email': 'morley@tools.stalinks.com'})
+            .then((response) => {
+                console.log(response.data);
+                this.records = response.data;
             })
             .catch((error) => {
                 console.log(error);
