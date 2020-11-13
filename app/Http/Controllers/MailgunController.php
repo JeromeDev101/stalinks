@@ -183,7 +183,7 @@ $description = 'Test route';
             'references_mail'   => '',
             'label_id'          => 0,
             'is_starred'        => 0,
-            'deleted_at'        => date('Y-m-d'),
+            'deleted_at'        => null,
             'created_at'        => date('Y-m-d'),
             'updated_at'        => date('Y-m-d'),
 
