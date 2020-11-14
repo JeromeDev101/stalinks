@@ -16,7 +16,7 @@
                     </div>
                     <div class="box-body no-padding">
                         <ul class="list-group">
-                            <li class="list-group-item active">
+                            <li class="list-group-item ">
                                 <i class="fa fa-fw fa-inbox"></i> <router-link to="/mails">Inbox</router-link> <span class="label label-primary pull-right">{{inboxCount}}</span>
                             </li>
                             <li class="list-group-item">
@@ -26,7 +26,7 @@
                             <li class="list-group-item">
                                 <i class="fa fa-fw fa-star"></i> Starred
                             </li>
-                            <li class="list-group-item">
+                            <li class="list-group-item active">
                                 <i class="fa fa-fw fa-trash"></i>
                                 <router-link to="/deleted">Trash</router-link>
                             </li>
@@ -404,7 +404,7 @@ export default {
        },
        getInbox(){
            this.loadingMessage = true;
-           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
+           axios.post('/api/mail/deleted',{'email': this.user.work_mail})
             .then((response) => {
                 console.log(response);
                 this.records = response.data.inbox;

@@ -27,7 +27,8 @@
                                 <i class="fa fa-fw fa-star"></i> Starred
                             </li>
                             <li class="list-group-item">
-                                <i class="fa fa-fw fa-trash"></i> Trash
+                                <i class="fa fa-fw fa-trash"></i> 
+                                <router-link to="/deleted">Trash</router-link>
                             </li>
                         </ul>
                     </div>
