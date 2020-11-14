@@ -17,10 +17,11 @@
                     <div class="box-body no-padding">
                         <ul class="list-group">
                             <li class="list-group-item ">
-                                <i class="fa fa-fw fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{inboxCount}}</span>
+                                <i class="fa fa-fw fa-inbox"></i> <router-link to="/mails">Inbox</router-link> <span class="label label-primary pull-right">{{inboxCount}}</span>
                             </li>
                             <li class="list-group-item active">
-                                <i class="fa fa-fw fa-mail-reply"></i> Sent
+                                <i class="fa fa-fw fa-mail-reply"></i> 
+                                <router-link to="/sent">Sent</router-link>
                             </li>
                             <li class="list-group-item">
                                 <i class="fa fa-fw fa-star"></i> Starred
