@@ -1,14 +1,12 @@
 <template>
     <div>
         <div class="row">
-            
-            <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" data-target="#modal-compose-email" data-toggle="modal">Compose</button>
 
                 <ul class="list-group">
                     <li class="list-group-item active">
-                        <i class="fa fa-fw fa-inbox"></i> Inbox <span class="label label-primary pull-right">12</span>
+                        <i class="fa fa-fw fa-inbox"></i> Inbox
                     </li>
                     <li class="list-group-item">
                         <i class="fa fa-fw fa-mail-reply"></i> Sent
@@ -24,10 +22,9 @@
                     </li>
                 </ul>
             </div>
-
-
-            <!-- Middle Content -->
             <div class="col-md-5">
+
+
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Inbox</h3>
@@ -74,7 +71,7 @@
                         </div>
                         <table class="table table-condensed table-hover">
                             <tbody>
-                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox)">
+                                <tr v-for="inbox in records" @click="viewMessage(inbox)">
                                     <td><input type="checkbox"></td>
                                     <td>{{inbox.records.from}}</td>
                                     <td>{{inbox.records.subject}}</td>
@@ -86,58 +83,16 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
+                
             </div>
-
-
-            <!-- Right Content  -->
             <div class="col-md-5">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Read Mail</h3>
-
-                        <div class="box-tools pull-right">
-                            <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Previous"><i class="fa fa-chevron-left"></i></a>
-                            <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Next"><i class="fa fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="box-body no-padding">
-                        <div class="mailbox-read-info">
-                            <h3>{{ viewContent.subject }}</h3>
-                            <h5>From: {{ viewContent.from }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
-                        </div>
-
-                        <div class="mailbox-read-message">
-                            {{ viewContent.strippedHtml }}
-                        </div>
-                    </div>
-
-                    <!-- For Attachment -->
-
-                    <!-- <div class="box-footer">
-                        <ul class="mailbox-attachments clearfix">
-                            <li>
-                                <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
-
-                                <div class="mailbox-attachment-info">
-                                <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> Sep2014-report.pdf</a>
-                                    <span class="mailbox-attachment-size">
-                                        1,245 KB
-                                        <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                                    </span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> -->
-
-                    <div class="box-footer">
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
-                        </div>
-                        <button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
-                    </div>
+                <div class="p-5 text-center text-muted">
+                    No selected Item
                 </div>
+
+
             </div>
             
         </div>
@@ -222,10 +177,7 @@ export default {
                 content: ''
             },
             viewContent : {
-                date: '',
                 from: '',
-                subject: '',
-                strippedHtml: '',
             },
             records: [],
             loadingMessage: false,
@@ -233,15 +185,13 @@ export default {
     },
 
     created() {
-        console.log(this.user)
+        //
     },
 
     computed: {
-        ...mapState({
-            user: state => state.storeAuth.currentUser,
-        })
+        //
+        
     },
-
     mounted() {
         this.getInbox();
     },
@@ -253,9 +203,6 @@ export default {
 
         viewMessage(inbox) {
             this.viewContent.from = inbox.records.from;
-            this.viewContent.strippedHtml = inbox.records.bodyPlain;
-            this.viewContent.date = inbox.date;
-            this.viewContent.subject = inbox.records.subject;
             console.log(inbox)
         },
 
@@ -277,7 +224,7 @@ export default {
        },
        getInbox(){
            this.loadingMessage = true;
-           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
+           axios.post('/api/mail/filter-recipient',{'email': 'morley@tools.stalinks.com'})
             .then((response) => {
                 console.log(response.data);
                 this.records = response.data;
