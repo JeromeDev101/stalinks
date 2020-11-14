@@ -3,11 +3,10 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\ShowMessage;
 use Mailgun\Mailgun;
 use Carbon\Carbon;
 
-class MessageRecipient extends JsonResource
+class MessageSent extends JsonResource
 {
     private $email;
     private $mg;
@@ -23,7 +22,7 @@ class MessageRecipient extends JsonResource
     public function toArray($request)
     {
         return $this->map(function( $value ){
-            if($value->getRecipient() == $this->email)
+            if($value->getEnvelope()['sender'] == $this->email)
                
             {
                 return [
