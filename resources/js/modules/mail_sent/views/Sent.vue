@@ -375,12 +375,13 @@ export default {
         },
 
         viewMessage(inbox) {
+            console.log(inbox);
             this.selectedMessage = false;
             this.MessageDisplay = true;
-            this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = inbox.body;
-            this.viewContent.date = inbox.created_at;
-            this.viewContent.subject = inbox.subject;
+            this.viewContent.from = inbox.records.from;
+            this.viewContent.strippedHtml = inbox.records.bodyPlain;
+            this.viewContent.date = inbox.date;
+            this.viewContent.subject = inbox.records.subject;
             
         },
 
