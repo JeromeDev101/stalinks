@@ -26,16 +26,43 @@ class MailgunController extends Controller
     {
     	
         $validator = Validator::make($request->all(), [
-            'email' => 'required|max:100',
-            'title' => 'required',
-            'content' => 'required'
+            'email'     => 'required|max:100',
+            'title'     => 'required',
+            'content'   => 'required',
+            'sender'    => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->messages());
         }
 
-    
+        $request['body-plain'] = $request->content;
+        
+         $data = [
+            'sender'            => $request->sender,
+            'subject'           => $request->title,
+            'body'              => json_encode($request->only('body-plain')),
+            'attachment'        => '',
+            'from_mail'         => $request->sender,
+            'date'              => '',
+            'message_id'        => '',
+            'received'          => $request->email,
+            'references_mail'   => '',
+            'label_id'          => 0,
+            'is_starred'        => 0,
+            'deleted_at'        => null,
+            'created_at'        => date('Y-m-d'),
+            'updated_at'        => date('Y-m-d'),
+
+
+        ];
+
+       
+        DB::table('replies')->insert($data);
+
+       
+
+
     	$this->mg->messages()->send('tools.stalinks.com', [
 		  'from'    => 'morley@tools.stalinks.com',
 		  'to'      => $request->email,
@@ -45,6 +72,10 @@ class MailgunController extends Controller
           'o:tracking-clicks' => 'yes'
           
 		]);
+
+          
+       
+
 
 		return response()->json(['message'=> 'Email sent Successfully!','status'=> 200], 200);
 
