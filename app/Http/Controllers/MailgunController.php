@@ -11,6 +11,7 @@ use App\Http\Resources\Messages;
 use App\Http\Resources\ShowMessage;
 use App\Http\Resources\MessageRecipient;
 use App\Http\Resources\MessageSent;
+use App\Models\Reply;
 
 class MailgunController extends Controller
 {
@@ -211,5 +212,22 @@ $description = 'Test route';
 
        
         return response()->json( new MessageSent( collect($aw->getItems()), $request->email) );
+    }
+
+    public function starred(Request $request){
+        if (is_array($request->id)) {
+            foreach($request->id as $data) {
+                $record = json_decode($data);
+                $reply = Reply::findOrFail($record->id);
+                $reply->update(['is_starred' => 1]);
+            }
+        }else{
+            $reply = Reply::findOrFail($request->id);
+            $reply->update([
+                'is_starred' => $request->is_starred == 0 ? 1:0,
+            ]);
+        }
+
+        return response()->json(['succsss' => true],200);
     }
 }

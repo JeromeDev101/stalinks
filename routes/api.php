@@ -182,6 +182,8 @@ Route::middleware('auth:api')->group(function () {
     // Auth routes.
     Route::name('logout')->post('/logout', 'AuthController@logout');
 
+
+
     
 });
 
@@ -195,4 +197,5 @@ Route::group(['prefix'=> 'mail'], function(){
     Route::name('get_sent')->post('/sent','MailgunController@sent');
     Route::name('domain-status')->get('/status','MailgunController@status');
     Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');
+    Route::name('starred')->get('/starred','MailgunController@starred');
 });

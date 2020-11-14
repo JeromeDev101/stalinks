@@ -17,4 +17,13 @@
     }
 }
 
+.pointer { 
+    &:hover {
+        color: orange;
+    }
+}
+
+.red { color: red; }
+.yellow { color: yellow; }
+.orange { color: orange; }
 .green { color: rgb(23, 161, 23); }
