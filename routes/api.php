@@ -198,4 +198,5 @@ Route::group(['prefix'=> 'mail'], function(){
     Route::name('domain-status')->get('/status','MailgunController@status');
     Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');
     Route::name('starred')->get('/starred','MailgunController@starred');
+    Route::name('deleted')->post('/deleted','MailgunController@deleted');
 });

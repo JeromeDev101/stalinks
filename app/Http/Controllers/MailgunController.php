@@ -85,7 +85,7 @@ class MailgunController extends Controller
 
         $inbox = DB::table('replies')->where('received', $request->email)->get();
         //$aw = $this->mg->events()->get('tools.stalinks.com');
-        return response()->json($inbox);
+        return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
 
         //return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
 
@@ -229,5 +229,11 @@ $description = 'Test route';
         }
 
         return response()->json(['succsss' => true],200);
+    }
+
+    public function deleted(Request $request)
+    {
+        $inbox = DB::table('replies')->where('received', $request->email)->where('deleted_at','!=', null)->get();
+        return response()->json(['count'=> count($inbox),'data'=> $inbox]);
     }
 }

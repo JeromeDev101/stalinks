@@ -17,7 +17,7 @@
                     <div class="box-body no-padding">
                         <ul class="list-group">
                             <li class="list-group-item active">
-                                <i class="fa fa-fw fa-inbox"></i> Inbox <span class="label label-primary pull-right">12</span>
+                                <i class="fa fa-fw fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{inboxCount}}</span>
                             </li>
                             <li class="list-group-item">
                                 <i class="fa fa-fw fa-mail-reply"></i> Sent
@@ -328,6 +328,7 @@ export default {
             MessageDisplay: false,
             checkIds: [],
             btnEnable: true,
+            inboxCount : 0,
         }
     },
 
@@ -404,8 +405,9 @@ export default {
            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
             .then((response) => {
                 console.log(response);
-                this.records = response.data;
+                this.records = response.data.inbox;
                 this.loadingMessage = false;
+                this.inboxCount = response.data.count;
             })
             .catch((error) => {
                 console.log(error);
