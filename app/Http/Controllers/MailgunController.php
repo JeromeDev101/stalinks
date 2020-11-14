@@ -83,7 +83,7 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        $inbox = DB::table('replies')->where('received', $request->email)->get();
+        $inbox = DB::table('replies')->where('received', $request->email)->orderBy('id','DESC')->get();
         //$aw = $this->mg->events()->get('tools.stalinks.com');
         return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
 
