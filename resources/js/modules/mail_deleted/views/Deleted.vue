@@ -407,7 +407,7 @@ export default {
            axios.post('/api/mail/deleted',{'email': this.user.work_mail})
             .then((response) => {
                 console.log(response);
-                this.records = response.data.inbox;
+                this.records = response.data.deleted;
                 this.loadingMessage = false;
                 this.inboxCount = response.data.count;
             })

@@ -234,6 +234,6 @@ $description = 'Test route';
     public function deleted(Request $request)
     {
         $inbox = DB::table('replies')->where('received', $request->email)->where('deleted_at','!=', null)->get();
-        return response()->json(['count'=> count($inbox),'data'=> $inbox]);
+        return response()->json(['count'=> count($inbox),'deleted'=> $inbox]);
     }
 }
