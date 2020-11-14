@@ -31,7 +31,11 @@ import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
 import Mails from '@/modules/mails/views/Mail.vue';
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
-import SentMails from '@/modules/mail_sent/views/Sent.vue';
+// import SentMails from '@/modules/mail_sent/views/Sent.vue';
+import Sent from '@/modules/mails/views/Sent.vue';
+import Inbox from '@/modules/mails/views/Inbox.vue';
+import Trash from '@/modules/mails/views/Trash.vue';
+import Starred from '@/modules/mails/views/Starred.vue';
 
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
@@ -79,13 +83,30 @@ const routes = [{
     {
         path: '/mails',
         name: 'mails',
+        children: [{
+            path: 'sent',
+            name: 'sent',
+            component: Sent,
+        },{
+            path: 'inbox',
+            name: 'inbox',
+            component: Inbox,
+        },{
+            path: 'starred',
+            name: 'starred',
+            component: Starred,
+        },{
+            path: 'trash',
+            name: 'trash',
+            component: Trash,
+        }],
         component: Mails,
     },
-    {
-        path: '/sent',
-        name: 'sent',
-        component: SentMails,
-    },
+    // {
+    //     path: '/sent',
+    //     name: 'sent',
+    //     component: SentMails,
+    // },
     {
         path: '/articles',
         name: 'articles',

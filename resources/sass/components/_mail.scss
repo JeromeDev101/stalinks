@@ -1,5 +1,14 @@
 .list-group-item{
     cursor: pointer;
+    padding: 0;
+    a {
+        color: black;
+        display: block;
+        padding: 0.8em;
+        &:hover {
+            text-decoration: none;
+        }
+    }
 
     &:hover {
         background-color: #efefef;

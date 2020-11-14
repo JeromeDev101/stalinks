@@ -111,7 +111,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'mails' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'mails' }">
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'sent' || $route.name == 'starred' || $route.name == 'trash' || $route.name == 'inbox' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'inbox' || $route.name == 'sent' || $route.name == 'trash' || $route.name == 'starred'}">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -127,8 +127,8 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'mails' }">
-                            <router-link class="page-sidebar__item" :to="{ path: '/mails' }">
+                        <li :class="{ active: $route.name == 'inbox' || $route.name == 'sent' || $route.name == 'starred' || $route.name == 'trash'}">
+                            <router-link class="page-sidebar__item" :to="{ path: '/mails/inbox' }">
                                 <i class="fa fa-fw fa-envelope-open"></i> <span>Mails</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
