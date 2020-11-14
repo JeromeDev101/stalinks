@@ -16,12 +16,11 @@
                     </div>
                     <div class="box-body no-padding">
                         <ul class="list-group">
-                            <li class="list-group-item active">
+                            <li class="list-group-item ">
                                 <i class="fa fa-fw fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{inboxCount}}</span>
                             </li>
-                            <li class="list-group-item">
-                                <i class="fa fa-fw fa-mail-reply"></i>
-                                <router-link to="/sent">Sent</router-link> 
+                            <li class="list-group-item active">
+                                <i class="fa fa-fw fa-mail-reply"></i> Sent
                             </li>
                             <li class="list-group-item">
                                 <i class="fa fa-fw fa-star"></i> Starred
@@ -112,8 +111,8 @@
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
-                                    <td>{{inbox.from_mail}}</td>
-                                    <td>{{inbox.subject}}</td>
+                                    <td>{{inbox.records.from}}</td>
+                                    <td>{{inbox.records.subject}}</td>
                                     <td class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
                                             title="Starred"
@@ -121,7 +120,7 @@
                                         </i>
                                     </td>
                                     <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                    <td class="text-right">{{inbox.created_at}}</td>
+                                    <td class="text-right">{{inbox.date}}</td>
                                 </tr>
                                 
                             </tbody>
@@ -403,10 +402,10 @@ export default {
        },
        getInbox(){
            this.loadingMessage = true;
-           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
+           axios.post('/api/mail/sent',{'email': this.user.work_mail})
             .then((response) => {
                 console.log(response);
-                this.records = response.data.inbox;
+                this.records = response.data;
                 this.loadingMessage = false;
                 this.inboxCount = response.data.count;
             })
