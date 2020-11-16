@@ -136,10 +136,10 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox->where('sender', $request->email)->where('is_sent', 0);
+                    $inbox = $inbox->where('received', $request->email)->where('is_sent', 0);
                     break;
                 case 'Sent':
-                    $inbox = $inbox->where('received', $request->email)->where('is_sent', 1);
+                    $inbox = $inbox->where('sender', $request->email)->where('is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
