@@ -190,11 +190,12 @@ Route::middleware('auth:api')->group(function () {
         Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         Route::name('domain-status')->get('/status','MailgunController@status');
-        Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');
+        
         Route::name('starred')->get('/starred','MailgunController@starred');
-        Route::name('set-view-message')->get('/set-view-message','MailgunController@setViewMessage');
         Route::name('deleted')->post('/deleted','MailgunController@deleted');
     });
 
     
 });
+
+Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');

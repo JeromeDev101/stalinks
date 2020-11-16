@@ -215,6 +215,7 @@ $description = 'Test route';
 
     public function post_reply(Request $request)
     {
+       
         //return response()->json($request->all());
 
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
