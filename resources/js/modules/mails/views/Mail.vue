@@ -59,7 +59,7 @@
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div> -->
                         <div class="box-tools">
-                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" data-toggle="modal" data-target="#modal-label"><i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>
                         </div>
 
                     </div>
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Modal Add Label -->
-        <div id="modal-label" class="modal fade">
+        <div id="modal-add-label" class="modal fade">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -126,7 +126,6 @@
 import axios from 'axios';
 import { mapState } from 'vuex';
 export default {
-
     data() {
         return {
             inboxCount: 0,
@@ -134,7 +133,7 @@ export default {
     },
 
     created() {
-       console.log(this.$root.$refs.AppInbox)
+       console.log(this.$root.$refs.AppHeader)
     },
 
     computed: {

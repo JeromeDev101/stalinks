@@ -15,9 +15,9 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="box">
+                    <div class="box box-primary">
                         <div class="box-header">
-                            <h3 class="box-title">Email List</h3>
+                            <h3 class="box-title">Mail Teamplate</h3>
                             <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                             <div class="input-group input-group-sm float-right" style="width: 65px">
                                 <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
