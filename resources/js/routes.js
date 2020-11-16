@@ -108,11 +108,11 @@ const routes = [{
     //     name: 'sent',
     //     component: SentMails,
     // },
-    {
-        path: '/deleted',
-        name: 'deleted',
-        component: DeleteMails,
-    },
+    // {
+    //     path: '/deleted',
+    //     name: 'deleted',
+    //     component: DeleteMails,
+    // },
     {
         path: '/articles',
         name: 'articles',
