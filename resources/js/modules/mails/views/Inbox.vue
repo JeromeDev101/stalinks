@@ -369,7 +369,7 @@ export default {
             this.viewContent.subject = inbox.subject;
 
             if (inbox.is_viewed == 0){
-                axios.get('/api/mail/view-message',{ params: { id: inbox.id } })
+                axios.get('/api/mail/set-view-message',{ params: { id: inbox.id } })
                 this.records[index].is_viewed = 1
             }
             
