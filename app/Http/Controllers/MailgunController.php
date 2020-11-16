@@ -129,24 +129,24 @@ class MailgunController extends Controller
 
         $inbox = Reply::orderBy('id', 'desc');
 
-        if (isset($request->email) && $request->email != ''){
-            $inbox = $inbox->where('received', $request->email);
-        }
+        // if (isset($request->email) && $request->email != ''){
+        //     $inbox = $inbox->where('received', $request->email);
+        // }
 
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox->where('is_sent', 0);
+                    $inbox = $inbox->where('sender', $request->email)->where('is_sent', 0);
                     break;
                 case 'Sent':
-                    $inbox = $inbox->where('is_sent', 1);
+                    $inbox = $inbox->where('received', $request->email)->where('is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->where('deleted_at','!=',null);
+                    $inbox = $inbox->where('received', $request->email)->where('deleted_at','!=',null);
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('is_starred', $request->email);
+                    $inbox = $inbox->where('sender', $request->email)->where('is_starred', $request->email);
                     break;
                 default:
                     $inbox = $inbox;
