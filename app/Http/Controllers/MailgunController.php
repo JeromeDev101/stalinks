@@ -127,7 +127,7 @@ class MailgunController extends Controller
         //     return response()->json($validator->messages());
         // }
 
-        $inbox = Reply::orderBy('id', 'desc')->where('is_sent', 0);
+        $inbox = Reply::orderBy('id', 'desc');
 
         if (isset($request->email) && $request->email != ''){
             $inbox = $inbox->where('received', $request->email);
