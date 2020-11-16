@@ -79,6 +79,7 @@ const routes = [{
     {
         path: '/mails',
         name: 'mails',
+        component: Mails,
         children: [{
             path: 'sent',
             name: 'Sent',
@@ -100,7 +101,6 @@ const routes = [{
             name: 'mail-template',
             component: MailTemplate,
         }],
-        component: Mails,
 
     },
     // {

@@ -76,8 +76,9 @@ class MailgunController extends Controller
             'sender' => Auth::user()->work_mail,
             'subject' => $request->title,
             'is_sent' => 1,
+            'is_viewed' => 1,
             'label_id' => 0,
-            'received' => $request->email,
+            'received' => Auth::user()->work_mail,
             'body' => $request->content,
             'from_mail' => Auth::user()->work_mail,
             'attachment' => '',
@@ -127,7 +128,7 @@ class MailgunController extends Controller
         //     return response()->json($validator->messages());
         // }
 
-        $inbox = Reply::orderBy('id', 'desc')->where('is_sent', 0);
+        $inbox = Reply::orderBy('id', 'desc');
 
         if (isset($request->email) && $request->email != ''){
             $inbox = $inbox->where('received', $request->email);
@@ -136,17 +137,17 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox;
+                    $inbox = $inbox->where('is_sent', 0);
                     break;
                 case 'Sent':
-                    $inbox = $inbox->OrWhere('is_sent', 1);
+                    $inbox = $inbox->where('is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                     $inbox = $inbox;
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('is_starred', $request->email);
+                    $inbox = $inbox->where('is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;

@@ -49,7 +49,7 @@
                         </div>
                         <table class="table table-condensed table-hover">
                             <tbody>
-                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox)">
+                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox)" :class="{'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
