@@ -193,6 +193,7 @@ Route::middleware('auth:api')->group(function () {
         
         Route::name('starred')->get('/starred','MailgunController@starred');
         Route::name('deleted')->post('/deleted','MailgunController@deleted');
+        Route::name('labels')->resource('/label','LabelController');
     });
 
     
