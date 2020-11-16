@@ -119,15 +119,18 @@ class MailgunController extends Controller
 
     public function recipient_filter(Request $request)
     {
-    	$validator = Validator::make($request->all(), [
-            'email' => 'required|max:100',
-            'param' => 'required|max:100'
+        
+
+    	$validator = Validator::make(Request::all(), [
+            'email' => 'required|max:100'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->messages());
         }
 
+        
+        return response()->json("tae");
         $inbox = Reply::orderBy('id', 'desc');
 
         // if (isset($request->email) && $request->email != ''){
@@ -168,6 +171,7 @@ class MailgunController extends Controller
 
     public function status(Request $request)
     {
+        dd("tae");
     	// $validator = Validator::make($request->all(), [
      //        'domain' => 'required|max:100'
      //    ]);
