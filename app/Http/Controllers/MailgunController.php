@@ -36,29 +36,29 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        $request['body-plain'] = $request->content;
+        // $request['body-plain'] = $request->content;
         
-         $data = [
-            'sender'            => $request->sender,
-            'subject'           => $request->title,
-            'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => '',
-            'from_mail'         => $request->sender,
-            'date'              => '',
-            'message_id'        => '',
-            'received'          => $request->email,
-            'references_mail'   => '',
-            'label_id'          => 0,
-            'is_starred'        => 0,
-            'deleted_at'        => null,
-            'created_at'        => date('Y-m-d'),
-            'updated_at'        => date('Y-m-d'),
+        //  $data = [
+        //     'sender'            => $request->sender,
+        //     'subject'           => $request->title,
+        //     'body'              => json_encode($request->only('body-plain')),
+        //     'attachment'        => '',
+        //     'from_mail'         => $request->sender,
+        //     'date'              => '',
+        //     'message_id'        => '',
+        //     'received'          => $request->email,
+        //     'references_mail'   => '',
+        //     'label_id'          => 0,
+        //     'is_starred'        => 0,
+        //     'deleted_at'        => null,
+        //     'created_at'        => date('Y-m-d'),
+        //     'updated_at'        => date('Y-m-d'),
 
 
-        ];
+        // ];
 
        
-        DB::table('replies')->insert($data);
+        // DB::table('replies')->insert($data);
 
        
 
