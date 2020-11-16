@@ -26,16 +26,43 @@ class MailgunController extends Controller
     public function send(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|max:100',
-            'title' => 'required',
-            'content' => 'required'
+            'email'     => 'required|max:100',
+            'title'     => 'required',
+            'content'   => 'required',
+            'sender'    => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->messages());
         }
 
-    
+        $request['body-plain'] = $request->content;
+        
+         $data = [
+            'sender'            => $request->sender,
+            'subject'           => $request->title,
+            'body'              => json_encode($request->only('body-plain')),
+            'attachment'        => '',
+            'from_mail'         => $request->sender,
+            'date'              => '',
+            'message_id'        => '',
+            'received'          => $request->email,
+            'references_mail'   => '',
+            'label_id'          => 0,
+            'is_starred'        => 0,
+            'deleted_at'        => null,
+            'created_at'        => date('Y-m-d'),
+            'updated_at'        => date('Y-m-d'),
+
+
+        ];
+
+       
+        DB::table('replies')->insert($data);
+
+       
+
+
     	$this->mg->messages()->send('tools.stalinks.com', [
 		  'from'    => Auth::user()->work_mail,
 		  'to'      => $request->email,
@@ -59,6 +86,10 @@ class MailgunController extends Controller
             'message_id' => '',
             'references_mail' => '',
         ]);
+
+          
+       
+
 
 		return response()->json(['message'=> 'Email sent Successfully!','status'=> 200], 200);
 
@@ -126,6 +157,7 @@ class MailgunController extends Controller
         $inbox = $inbox->get();
 
         // $inbox = DB::table('replies')->where('received', $request->email)->get();
+
         //$aw = $this->mg->events()->get('tools.stalinks.com');
         return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
 
@@ -276,6 +308,6 @@ $description = 'Test route';
     public function deleted(Request $request)
     {
         $inbox = DB::table('replies')->where('received', $request->email)->where('deleted_at','!=', null)->get();
-        return response()->json(['count'=> count($inbox),'data'=> $inbox]);
+        return response()->json(['count'=> count($inbox),'deleted'=> $inbox]);
     }
 }

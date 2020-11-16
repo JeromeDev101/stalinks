@@ -19,15 +19,15 @@
                             <li class="list-group-item ">
                                 <i class="fa fa-fw fa-inbox"></i> <router-link to="/mails">Inbox</router-link> <span class="label label-primary pull-right">{{inboxCount}}</span>
                             </li>
-                            <li class="list-group-item active">
-                                <i class="fa fa-fw fa-mail-reply"></i> 
-                                <router-link to="/sent">Sent</router-link>
+                            <li class="list-group-item">
+                                <i class="fa fa-fw fa-mail-reply"></i>
+                                <router-link to="/sent">Sent</router-link> 
                             </li>
                             <li class="list-group-item">
                                 <i class="fa fa-fw fa-star"></i> Starred
                             </li>
-                            <li class="list-group-item">
-                                <i class="fa fa-fw fa-trash"></i> 
+                            <li class="list-group-item active">
+                                <i class="fa fa-fw fa-trash"></i>
                                 <router-link to="/deleted">Trash</router-link>
                             </li>
                         </ul>
@@ -113,8 +113,8 @@
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
-                                    <td>{{inbox.records.from}}</td>
-                                    <td>{{inbox.records.subject}}</td>
+                                    <td>{{inbox.from_mail}}</td>
+                                    <td>{{inbox.subject}}</td>
                                     <td class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
                                             title="Starred"
@@ -122,7 +122,7 @@
                                         </i>
                                     </td>
                                     <td><i class="fa fa-fw fa-paperclip"></i></td>
-                                    <td class="text-right">{{inbox.date}}</td>
+                                    <td class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 
                             </tbody>
@@ -377,13 +377,12 @@ export default {
         },
 
         viewMessage(inbox) {
-            console.log(inbox);
             this.selectedMessage = false;
             this.MessageDisplay = true;
-            this.viewContent.from = inbox.records.from;
-            this.viewContent.strippedHtml = inbox.records.bodyPlain;
-            this.viewContent.date = inbox.date;
-            this.viewContent.subject = inbox.records.subject;
+            this.viewContent.from = inbox.from_mail;
+            this.viewContent.strippedHtml = inbox.body;
+            this.viewContent.date = inbox.created_at;
+            this.viewContent.subject = inbox.subject;
             
         },
 
@@ -405,10 +404,10 @@ export default {
        },
        getInbox(){
            this.loadingMessage = true;
-           axios.post('/api/mail/sent',{'email': this.user.work_mail})
+           axios.post('/api/mail/deleted',{'email': this.user.work_mail})
             .then((response) => {
                 console.log(response);
-                this.records = response.data;
+                this.records = response.data.deleted;
                 this.loadingMessage = false;
                 this.inboxCount = response.data.count;
             })
