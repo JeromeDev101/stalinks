@@ -5,7 +5,7 @@
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Inbox</h3>
+                        <h3 class="box-title">{{ $route.name }}</h3>
 
                         <div class="box-tools pull-right">
                             <div class="has-feedback">
@@ -23,7 +23,7 @@
                                 <button type="button" class="btn btn-default" title="Starred" :disabled="btnEnable" @click="submitStarred(0,0,true)">
                                     <i class="fa fa-fw fa-star"></i>
                                 </button>
-                                <button type="button" class="btn btn-default" title="Label" :disabled="btnEnable" data-toggle="modal" data-target="#modal-label">
+                                <button type="button" class="btn btn-default" title="Label" :disabled="btnEnable" data-toggle="modal" data-target="#modal-label-selection">
                                     <i class="fa fa-fw fa-tag"></i>
                                 </button>
                                 <button type="button" class="btn btn-default" title="Refesh inbox" @click="refeshInbox">
@@ -73,7 +73,7 @@
 
             <div class="col-md-6">
                 <div class="box box-primary">
-                    <div v-show="selectedMessage" class="text-center text-muted m-5 p-5">
+                    <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
                         No items Selected
                     </div>
 
@@ -140,7 +140,11 @@
                                     <div class="col-md-3">
                                         <label style="color: #333">Country</label>
                                         <div>
-                                            <select class="form-control pull-right">
+                                            <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
+                                                <option value=""></option>
+                                                <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -148,7 +152,10 @@
                                         <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select class="form-control pull-right">
+                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
+                                                        {{ option.title }}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -156,10 +163,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12" style="margin-top: 15px;">
+                            <div class="col-md-6" style="margin-top: 15px;">
                                 <div class="form-group">
-                                    <label style="color: #333" >Email Name</label>
+                                    <label style="color: #333" >To:</label>
                                     <input type="text" class="form-control" value="" required="required" v-model="emailContent.email">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" style="margin-top: 15px;">
+                                <div class="form-group">
+                                    <label style="color: #333" >Cc:</label>
+                                    <input type="text" class="form-control" value="" required="required" :disabled="true">
                                 </div>
                             </div>
 
@@ -178,11 +192,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Attachment</label>
+                                    <input type="file" class="form-control" :disabled="true">
+                                </div>
+                            </div>
+
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="sendEmail">Send</button>
+                        <button type="button" class="btn btn-primary" @click="sendEmail">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
@@ -191,7 +212,7 @@
 
 
         <!-- Modal Label -->
-        <div id="modal-label" class="modal fade">
+        <div id="modal-label-selection" class="modal fade">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -247,7 +268,7 @@
 import axios from 'axios';
 import { mapState } from 'vuex';
 export default {
-
+    name: 'AppInbox',
     data() {
         return {
             emailContent : {
@@ -268,16 +289,21 @@ export default {
             checkIds: [],
             btnEnable: true,
             inboxCount : 0,
+            mailInfo: {},
+            countryMailId: ''
         }
     },
 
     created() {
-        // console.log(this.user)
+        this.getListCountries();
+        this.$root.$refs.AppInbox = this;
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
+            listCountryAll: state => state.storePublisher.listCountryAll,
+            listMailTemplate: state => state.storeExtDomain.listMailTemplate,
         })
     },
 
@@ -286,6 +312,22 @@ export default {
     },
 
     methods: {
+        async getTemplateList() {
+            await this.$store.dispatch('getListMails', { params: { country_id: this.countryMailId, full_page: 1} });
+        },
+
+        getTemplate() {
+            this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+        },
+
+        test() {
+            alert()
+        },
+
+        async getListCountries(params) {
+            await this.$store.dispatch('actionGetListCountries', params);
+        },
+
         submitStarred(id, is_starred, is_all) {
             let id_mail = is_all ? this.checkIds : id;
             axios.get('api/mail/starred', {
@@ -339,9 +381,10 @@ export default {
                 error => error;
             });
        },
+
        getInbox(){
            this.loadingMessage = true;
-           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail})
+           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
             .then((response) => {
                 console.log(response);
                 this.records = response.data.inbox;

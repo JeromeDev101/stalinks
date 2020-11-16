@@ -111,7 +111,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'sent' || $route.name == 'starred' || $route.name == 'trash' || $route.name == 'inbox' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'inbox' || $route.name == 'sent' || $route.name == 'trash' || $route.name == 'starred'}">
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'Sent' || $route.name == 'Starred' || $route.name == 'Trash' || $route.name == 'Inbox' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'Inbox' || $route.name == 'Sent' || $route.name == 'Trash' || $route.name == 'Starred'}">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -127,7 +127,7 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'inbox' || $route.name == 'sent' || $route.name == 'starred' || $route.name == 'trash'}">
+                        <li :class="{ active: $route.name == 'Inbox' || $route.name == 'Sent' || $route.name == 'Starred' || $route.name == 'Trash'}">
                             <router-link class="page-sidebar__item" :to="{ path: '/mails/inbox' }">
                                 <i class="fa fa-fw fa-envelope-open"></i> <span>Mails</span>
                                 <span class="pull-right-container"></span>
@@ -139,12 +139,12 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'mail-template' }">
+                        <!-- <li :class="{ active: $route.name == 'mail-template' }">
                             <router-link class="page-sidebar__item" :to="{ path: '/mail-template' }">
                                 <i class="fa fa-fw fa-envelope-o"></i> <span>Mail Template</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
 

@@ -12,6 +12,7 @@ use App\Http\Resources\ShowMessage;
 use App\Http\Resources\MessageRecipient;
 use App\Http\Resources\MessageSent;
 use App\Models\Reply;
+use Illuminate\Support\Facades\Auth;
 
 class MailgunController extends Controller
 {
@@ -24,7 +25,6 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
-    	
         $validator = Validator::make($request->all(), [
             'email' => 'required|max:100',
             'title' => 'required',
@@ -37,14 +37,28 @@ class MailgunController extends Controller
 
     
     	$this->mg->messages()->send('tools.stalinks.com', [
-		  'from'    => 'morley@tools.stalinks.com',
+		  'from'    => Auth::user()->work_mail,
 		  'to'      => $request->email,
 		  'subject' => $request->title,
           'text'    => $request->content,
           'o:tracking-opens' => 'yes',
           'o:tracking-clicks' => 'yes'
           
-		]);
+        ]);
+        
+        Reply::create([
+            'sender' => Auth::user()->work_mail,
+            'subject' => $request->title,
+            'is_sent' => 1,
+            'label_id' => 0,
+            'received' => $request->email,
+            'body' => $request->content,
+            'from_mail' => Auth::user()->work_mail,
+            'attachment' => '',
+            'date' => '',
+            'message_id' => '',
+            'references_mail' => '',
+        ]);
 
 		return response()->json(['message'=> 'Email sent Successfully!','status'=> 200], 200);
 
@@ -75,15 +89,43 @@ class MailgunController extends Controller
 
     public function recipient_filter(Request $request)
     {
-    	$validator = Validator::make($request->all(), [
-            'email' => 'required|max:100'
-        ]);
+    	// $validator = Validator::make($request->all(), [
+        //     'email' => 'required|max:100'
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
+        // if ($validator->fails()) {
+        //     return response()->json($validator->messages());
+        // }
+
+        $inbox = Reply::orderBy('id', 'desc')->where('is_sent', 0);
+
+        if (isset($request->email) && $request->email != ''){
+            $inbox = $inbox->where('received', $request->email);
         }
 
-        $inbox = DB::table('replies')->where('received', $request->email)->get();
+        if (isset($request->param) && $request->param != ''){
+            switch ($request->param) {
+                case 'Inbox':
+                    $inbox = $inbox;
+                    break;
+                case 'Sent':
+                    $inbox = $inbox->OrWhere('is_sent', 1);
+                    break;
+                case 'Trash':
+                    // $inbox = $inbox->withTrashed();
+                    $inbox = $inbox;
+                    break;
+                case 'Starred':
+                    $inbox = $inbox->where('is_starred', $request->email);
+                    break;
+                default:
+                    $inbox = $inbox;
+              }
+        }
+
+        $inbox = $inbox->get();
+
+        // $inbox = DB::table('replies')->where('received', $request->email)->get();
         //$aw = $this->mg->events()->get('tools.stalinks.com');
         return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
 

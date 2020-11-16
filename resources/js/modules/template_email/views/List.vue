@@ -1,7 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
+        <!-- <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-green">
                 <div class="inner">
                     <h3>{{ emailList.total }}</h3>
@@ -11,7 +10,7 @@
                     <i class="fa fa-anchor"></i>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-sm-12">
             <div class="row">
