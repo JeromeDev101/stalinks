@@ -140,7 +140,7 @@ class MailgunController extends Controller
                     $inbox = $inbox;
                     break;
                 case 'Sent':
-                    $inbox = $inbox->OrWhere('is_sent', 1);
+                    $inbox = $inbox->where('is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
