@@ -29,7 +29,6 @@ class MailgunController extends Controller
             'email'     => 'required|max:100',
             'title'     => 'required',
             'content'   => 'required',
-            'sender'    => 'required'
         ]);
 
         if ($validator->fails()) {
