@@ -151,7 +151,7 @@ class MailgunController extends Controller
                     $inbox = $inbox->where('received', $request->email)->where('deleted_at','!=',null);
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('sender', $request->email)->where('is_starred', $request->email);
+                    $inbox = $inbox->where('received', $request->email)->where('is_starred', $request->email);
                     break;
                 default:
                     $inbox = $inbox;
