@@ -122,7 +122,7 @@ class MailgunController extends Controller
     {
         
 
-    	$validator = Validator::make(Request::all(), [
+    	$validator = Validator::make($request->all(), [
             'email' => 'required|max:100'
         ]);
 
@@ -131,7 +131,6 @@ class MailgunController extends Controller
         }
 
         
-
         $inbox = Reply::orderBy('id', 'desc');
 
         // if (isset($request->email) && $request->email != ''){
