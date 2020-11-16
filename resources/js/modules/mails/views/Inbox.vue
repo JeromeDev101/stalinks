@@ -20,7 +20,7 @@
                                 <input type="checkbox">
                             </button>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-default" title="Starred" :disabled="btnEnable" @click="submitStarred(0,0,true)">
+                                <button type="button" class="btn btn-default" title="Starred" :disabled="btnEnable" @click="submitStarred(0,0,true, '')">
                                     <i class="fa fa-fw fa-star"></i>
                                 </button>
                                 <button type="button" class="btn btn-default" title="Label" :disabled="btnEnable" data-toggle="modal" data-target="#modal-label-selection">
@@ -61,7 +61,7 @@
                                     <td class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
                                             title="Starred"
-                                            @click="submitStarred(inbox.id, inbox.is_starred, false)">
+                                            @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
                                     <td><i class="fa fa-fw fa-paperclip"></i></td>
@@ -167,9 +167,10 @@
                             </div>
 
                             <div class="col-md-6" style="margin-top: 15px;">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
                                     <input type="text" class="form-control" value="" required="required" v-model="emailContent.email">
+                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -182,16 +183,18 @@
 
 
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">Titles</label>
                                     <input type="text" class="form-control" value="" required="required" v-model="emailContent.title">
+                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
                                     <textarea rows="10" type="text" class="form-control" value="" required="required" v-model="emailContent.content"></textarea>
+                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -307,6 +310,7 @@ export default {
             user: state => state.storeAuth.currentUser,
             listCountryAll: state => state.storePublisher.listCountryAll,
             listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+            messageForms: state => state.storeMailgun.messageForms,
         })
     },
 
@@ -333,19 +337,34 @@ export default {
             await this.$store.dispatch('actionGetListCountries', params);
         },
 
-        submitStarred(id, is_starred, is_all) {
+        submitStarred(id, is_starred, is_all, position) {
             let id_mail = is_all ? this.checkIds : id;
-            axios.get('api/mail/starred', {
+
+            if (!is_all) {
+                this.records[position].is_starred = is_starred == 1 ? 0:1;
+            } 
+            else {
+                for (var rec in this.records) {
+                    for (var chk in this.checkIds) {
+                        if (this.checkIds[chk].id == this.records[rec].id) {
+                            this.records[rec].is_starred = 1;
+                        }
+                    }     
+                }
+            }
+
+            axios.get('/api/mail/starred', {
                 params: {
                     id: id_mail,
                     is_starred: is_starred,
                 }
             })
             .then((res) => {
-                console.log(res.data)
-                this.getInbox();
-                this.checkIds = [];
-                this.btnEnable = true;
+                // console.log(res.data)
+                if (is_all){
+                    this.getInbox();
+                } 
+                // this.btnEnable = true;
             })
         },
 
@@ -375,26 +394,41 @@ export default {
             
         },
 
-        sendEmail() {
-           
-           console.log(this.$data.emailContent);
-            axios.post('/api/mail/send', this.$data.emailContent)
-            .then((response) => {
-                console.log(response);
-                response => response;
-                this.$data.emailContent.email = '';
-                this.$data.emailContent.title = '';
-                this.$data.emailContent.content = '';
-            })
-            .catch((error) => {
-                console.log(error);
-                error => error;
+        async sendEmail() {
+            await this.$store.dispatch('actionSendMailgun', {
+                email: this.emailContent.email,
+                title: this.emailContent.title,
+                content: this.emailContent.content,
             });
+
+            if (this.messageForms.action == 'success') {
+                $("#modal-compose-email").modal('hide');
+                
+                swal.fire(
+                        'Send',
+                        'Successfully Send Email',
+                        'success'
+                        )
+            }
+           
+        //    console.log(this.$data.emailContent);
+            // axios.post('/api/mail/send', this.$data.emailContent)
+            // .then((response) => {
+            //     console.log(response);
+            //     response => response;
+            //     this.$data.emailContent.email = '';
+            //     this.$data.emailContent.title = '';
+            //     this.$data.emailContent.content = '';
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            //     error => error;
+            // });
        },
 
-       getInbox(){
+        getInbox(){
         //    this.loadingMessage = true;
-           axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
+            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
             .then((response) => {
                 // console.log(response);
                 this.records = response.data.inbox;
@@ -405,7 +439,11 @@ export default {
                 console.log(error);
                 error => error;
             });
-       }
+        },
+
+        clearMessageform() {
+            this.$store.dispatch('clearMessageform');
+        },
     }
 }
 </script>
