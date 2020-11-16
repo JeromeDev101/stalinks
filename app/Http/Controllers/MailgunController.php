@@ -25,25 +25,23 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email'     => 'required|max:100',
+        $request->validate([
+            'email'     => 'required|max:100|email',
             'title'     => 'required',
             'content'   => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages());
-        }
-
+        // if ($validator->fails()) {
+        //     return response()->json($validator->messages(),422);
+        // }
 
     	$this->mg->messages()->send('tools.stalinks.com', [
-		  'from'    => Auth::user()->work_mail,
-		  'to'      => $request->email,
-		  'subject' => $request->title,
-          'text'    => $request->content,
-          'o:tracking-opens' => 'yes',
-          'o:tracking-clicks' => 'yes'
-          
+		    'from'    => Auth::user()->work_mail,
+		    'to'      => $request->email,
+		    'subject' => $request->title,
+            'text'    => $request->content,
+            'o:tracking-opens' => 'yes',
+            'o:tracking-clicks' => 'yes'
         ]);
         
         Reply::create([
@@ -65,7 +63,7 @@ class MailgunController extends Controller
        
 
 
-		return response()->json(['message'=> 'Email sent Successfully!','status'=> 200], 200);
+		return response()->json(['success'=> true], 200);
 
     }
 
@@ -247,7 +245,7 @@ $description = 'Test route';
     
 
     public function starred(Request $request){
-        dd($request->all());
+        // dd($request->all());
         if (is_array($request->id)) {
             foreach($request->id as $data) {
                 $record = json_decode($data);
