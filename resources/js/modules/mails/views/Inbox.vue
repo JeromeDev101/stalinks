@@ -307,6 +307,12 @@ export default {
         })
     },
 
+    watch:{
+        $route (to, from){
+            this.getInbox();
+        }
+    },
+
     mounted() {
         this.getInbox();
     },
@@ -318,10 +324,6 @@ export default {
 
         getTemplate() {
             this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
-        },
-
-        test() {
-            alert()
         },
 
         async getListCountries(params) {
@@ -337,7 +339,7 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res)
+                console.log(res.data)
                 this.getInbox();
                 this.checkIds = [];
                 this.btnEnable = true;
@@ -386,7 +388,7 @@ export default {
            this.loadingMessage = true;
            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
             .then((response) => {
-                console.log(response);
+                // console.log(response);
                 this.records = response.data.inbox;
                 this.loadingMessage = false;
                 this.inboxCount = response.data.count;

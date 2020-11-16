@@ -151,7 +151,7 @@ class MailgunController extends Controller
                     $inbox = $inbox->where('received', $request->email)->where('deleted_at','!=',null);
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('received', $request->email)->where('is_starred', $request->email);
+                    $inbox = $inbox->where('sender', $request->email)->where('is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;
@@ -294,6 +294,7 @@ $description = 'Test route';
     // }
 
     public function starred(Request $request){
+        dd($request->all());
         if (is_array($request->id)) {
             foreach($request->id as $data) {
                 $record = json_decode($data);
