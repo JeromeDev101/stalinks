@@ -131,7 +131,7 @@ class MailgunController extends Controller
         }
 
         
-        return response()->json("tae");
+
         $inbox = Reply::orderBy('id', 'desc');
 
         // if (isset($request->email) && $request->email != ''){
