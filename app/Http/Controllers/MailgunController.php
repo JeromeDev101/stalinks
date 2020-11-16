@@ -35,32 +35,6 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        // $request['body-plain'] = $request->content;
-        
-        //  $data = [
-        //     'sender'            => $request->sender,
-        //     'subject'           => $request->title,
-        //     'body'              => json_encode($request->only('body-plain')),
-        //     'attachment'        => '',
-        //     'from_mail'         => $request->sender,
-        //     'date'              => '',
-        //     'message_id'        => '',
-        //     'received'          => $request->email,
-        //     'references_mail'   => '',
-        //     'label_id'          => 0,
-        //     'is_starred'        => 0,
-        //     'deleted_at'        => null,
-        //     'created_at'        => date('Y-m-d'),
-        //     'updated_at'        => date('Y-m-d'),
-
-
-        // ];
-
-       
-        // DB::table('replies')->insert($data);
-
-       
-
 
     	$this->mg->messages()->send('tools.stalinks.com', [
 		  'from'    => Auth::user()->work_mail,
@@ -114,7 +88,7 @@ class MailgunController extends Controller
         }
 
     	$message = $this->mg->messages()->show($request->url);
-        //dd($message);
+       
     	return response()->json( new ShowMessage($message) );
     }
 
@@ -159,13 +133,7 @@ class MailgunController extends Controller
 
         $inbox = $inbox->get();
 
-        // $inbox = DB::table('replies')->where('received', $request->email)->get();
-
-        //$aw = $this->mg->events()->get('tools.stalinks.com');
         return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
-
-        //return response()->json( new MessageRecipient( collect($aw->getItems()), $request->email) );
-
 
     }
 
@@ -276,21 +244,7 @@ $description = 'Test route';
         
     }
 
-    // public function sent(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'email' => 'required|max:100'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->messages());
-    //     }
-
-    //     $aw = $this->mg->events()->get('tools.stalinks.com');
-
-       
-    //     return response()->json( new MessageSent( collect($aw->getItems()), $request->email) );
-    // }
+    
 
     public function starred(Request $request){
         dd($request->all());
@@ -310,9 +264,5 @@ $description = 'Test route';
         return response()->json(['succsss' => true],200);
     }
 
-    // public function deleted(Request $request)
-    // {
-    //     $inbox = DB::table('replies')->where('received', $request->email)->where('deleted_at','!=', null)->get();
-    //     return response()->json(['count'=> count($inbox),'deleted'=> $inbox]);
-    // }
+  
 }
