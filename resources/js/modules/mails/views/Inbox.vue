@@ -49,7 +49,10 @@
                         </div>
                         <table class="table table-condensed table-hover">
                             <tbody>
-                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox)" :class="{'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
+                                <tr v-show="records.length == 0">
+                                    <td class="text-muted text-center">No {{ $route.name }} record</td>
+                                </tr>
+                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox, index)" :class="{'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
@@ -357,13 +360,18 @@ export default {
             this.getInbox();
         },
 
-        viewMessage(inbox) {
+        viewMessage(inbox, index) {
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
             this.viewContent.strippedHtml = inbox.body;
             this.viewContent.date = inbox.created_at;
             this.viewContent.subject = inbox.subject;
+
+            if (inbox.is_viewed == 0){
+                axios.get('/api/mail/view-message',{ params: { id: inbox.id } })
+                this.records[index].is_viewed = 1
+            }
             
         },
 
@@ -385,12 +393,12 @@ export default {
        },
 
        getInbox(){
-           this.loadingMessage = true;
+        //    this.loadingMessage = true;
            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
             .then((response) => {
                 // console.log(response);
                 this.records = response.data.inbox;
-                this.loadingMessage = false;
+                // this.loadingMessage = false;
                 this.inboxCount = response.data.count;
             })
             .catch((error) => {

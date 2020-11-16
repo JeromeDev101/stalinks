@@ -133,7 +133,7 @@ export default {
     },
 
     created() {
-       console.log(this.$root.$refs.AppHeader)
+    //    console.log(this.$children)
     },
 
     computed: {
@@ -143,7 +143,7 @@ export default {
     },
 
     mounted() {
-        //
+        console.log(this.$children[5]._data.inboxCount)
     },
 
     methods: {

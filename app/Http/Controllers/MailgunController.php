@@ -312,4 +312,12 @@ $description = 'Test route';
     //     $inbox = DB::table('replies')->where('received', $request->email)->where('deleted_at','!=', null)->get();
     //     return response()->json(['count'=> count($inbox),'deleted'=> $inbox]);
     // }
+
+
+    public function setViewMessage(Request $request) {
+        $inbox = Reply::findOrFail($request->id);
+        $inbox->update(['is_viewed' => 1]);
+
+        return response()->json(['success' => true],200);
+    }
 }
