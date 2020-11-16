@@ -39,6 +39,7 @@ mix.styles([
   'node_modules/jquery-contextmenu/dist/jquery.contextMenu.css',
   'node_modules/datatables.net-dt/css/jquery.dataTables.css',
   'node_modules/tinymce/skins/lightgray/skin.min.css',
+  'node_modules/admin-lte/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
 ], 'public/build/css/vendor.css');
 
 
@@ -51,6 +52,7 @@ mix.scripts([
   'node_modules/datatables.net/js/jquery.dataTables.js',
   'node_modules/datatables.net-dt/js/dataTables.dataTables.js',
   'node_modules/tinymce/tinymce.min.js',
+  'node_modules/admin-lte/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
 ], 'public/build/js/vendor.js');
 
 mix.styles(['public/build/css/vendor.css', 'public/build/css/app.css'], 'public/css/app.css');

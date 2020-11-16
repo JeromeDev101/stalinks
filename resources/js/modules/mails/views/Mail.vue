@@ -107,6 +107,12 @@
                                     <input type="text" class="form-control">
                                  </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Color</label>
+                                    <input type="text" class="form-control my-colorpicker1">
+                                 </div>
+                            </div>
                                 
                         </div>
                     </div>
@@ -134,6 +140,7 @@ export default {
 
     created() {
     //    console.log(this.$children)
+        
     },
 
     computed: {
@@ -144,6 +151,7 @@ export default {
 
     mounted() {
         console.log(this.$children[5]._data.inboxCount)
+        $('.my-colorpicker1').colorpicker()
     },
 
     methods: {
