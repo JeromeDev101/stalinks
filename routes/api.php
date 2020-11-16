@@ -198,4 +198,4 @@ Route::middleware('auth:api')->group(function () {
     
 });
 
-Route::name('post_reply')->post('/post-reply','MailgunController@post_reply');
+Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
