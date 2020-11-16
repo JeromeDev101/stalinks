@@ -143,7 +143,7 @@ class MailgunController extends Controller
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox;
+                    $inbox = $inbox->where('deleted_at','!=',null);
                     break;
                 case 'Starred':
                     $inbox = $inbox->where('is_starred', $request->email);
