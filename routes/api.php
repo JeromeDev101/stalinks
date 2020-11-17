@@ -191,6 +191,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         Route::name('domain-status')->get('/status','MailgunController@status');
         Route::name('starred')->get('/starred','MailgunController@starred');
+        Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('deleted')->post('/deleted','MailgunController@deleted');
 
     });
