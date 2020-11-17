@@ -4,7 +4,7 @@
             
             <!-- Side menu section -->
             <div class="col-md-2">
-                <button class="btn btn-success btn-lg btn-block mb-3" data-target="#modal-compose-email" data-toggle="modal">Compose</button>
+                <button class="btn btn-success btn-lg btn-block mb-3" data-target="#modal-compose-email" data-toggle="modal" @click="clearMessageform" >Compose</button>
 
                 <div class="box box-solid">
                     <div class="box-header with-border">
@@ -20,7 +20,7 @@
                                 <router-link to="/mails/inbox">
                                     <i class="fa fa-fw fa-inbox"></i>
                                     Inbox
-                                    <span class="label label-primary pull-right">{{inboxCount}}</span>
+                                    <span class="label label-primary pull-right">{{1}}</span>
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
@@ -128,7 +128,6 @@ import { Compact } from 'vue-color';
 export default {
     data() {
         return {
-            inboxCount: 0,
             colors: '#194d33',
             labelModel: {
                 name: '',
@@ -144,17 +143,18 @@ export default {
 
     created() {
     //    console.log(this.$children)
-        
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
+            messageForms: state => state.storeMailgun.messageForms,
         })
     },
 
     mounted() {
         // console.log(this.$children[5]._data.inboxCount)
+        // console.log(this.$children[5].clearMessageform)
         this.getListLabels();
     },
 
@@ -193,6 +193,11 @@ export default {
                 }
 
             })
+        },
+
+
+        clearMessageform() {
+            this.$store.dispatch('clearMessageForm');
         },
 
 

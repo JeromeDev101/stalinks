@@ -86,10 +86,11 @@
                     <div v-show="MessageDisplay" class="box-header with-border">
                         <h3 class="box-title">Read Mail</h3>
 
-                        <div class="box-tools pull-right">
+                        <!-- <div class="box-tools pull-right">
                             <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Previous"><i class="fa fa-chevron-left"></i></a>
                             <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Next"><i class="fa fa-chevron-right"></i></a>
-                        </div>
+                        </div> -->
+
                     </div>
 
                     <div v-show="MessageDisplay" class="box-body no-padding">
@@ -123,7 +124,7 @@
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-reply"><i class="fa fa-reply"></i> Reply</button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply" data-target="#modal-email-reply"><i class="fa fa-reply"></i> Reply</button>
                         </div>
                         <button type="button" class="btn btn-default" v-show="viewContent.deleted_at == null" @click="deleteMessage(viewContent.id, viewContent.index, false)"><i class="fa fa-trash-o"></i> Delete</button>
                     </div>
@@ -172,7 +173,7 @@
                             <div class="col-md-6" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
-                                    <input type="text" class="form-control" value="" required="required" v-model="emailContent.email">
+                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -180,7 +181,7 @@
                             <div class="col-md-6" style="margin-top: 15px;">
                                 <div class="form-group">
                                     <label style="color: #333" >Cc:</label>
-                                    <input type="text" class="form-control" value="" required="required" :disabled="true">
+                                    <input type="text" class="form-control" required="required" v-model="emailContent.cc">
                                 </div>
                             </div>
 
@@ -188,7 +189,7 @@
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">Titles</label>
-                                    <input type="text" class="form-control" value="" required="required" v-model="emailContent.title">
+                                    <input type="text" class="form-control" required="required" v-model="emailContent.title">
                                     <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -196,28 +197,127 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
-                                    <textarea rows="10" type="text" class="form-control" value="" required="required" v-model="emailContent.content"></textarea>
+                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>
                                     <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <!-- <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
                                     <input type="file" class="form-control" :disabled="true">
                                 </div>
-                            </div>
+                            </div> -->
 
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="sendEmail">Send <i class="fa fa-send fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" @click="sendEmail('compose')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- End Send Email -->
+
+
+        <!-- Modal Send Reply Email -->
+        <div id="modal-email-reply" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Compose Message</h4>
+                    </div>
+                    <div class="modal-body relative">
+                        <form class="row" action="">
+
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" v-model="withTemplate" @click="toggleTemplate">
+                                        With Template
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12" v-show="withTemplate">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="color: #333">Country</label>
+                                        <div>
+                                            <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
+                                                <option value=""></option>
+                                                <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div  class="form-group">
+                                            <label style="color: #333">Select template</label>
+                                            <div>
+                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
+                                                        {{ option.title }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                                    <label style="color: #333" >To:</label>
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.email">
+                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" style="margin-top: 15px;">
+                                <div class="form-group">
+                                    <label style="color: #333" >Cc:</label>
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.cc">
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                                    <label style="color: #333">Titles</label>
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.title">
+                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
+                                    <label style="color: #333">Contents</label>
+                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>
+                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Attachment</label>
+                                    <input type="file" class="form-control" :disabled="true">
+                                </div>
+                            </div> -->
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="sendEmail('reply')">Send <i class="fa fa-send fa-fw"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Send Reply Email -->
 
 
         <!-- Modal Label -->
@@ -252,27 +352,6 @@
         </div>
         <!-- End Label -->
 
-
-        <!-- Modal Reply -->
-        <div id="modal-reply" class="modal fade">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Reply</h4>
-                    </div>
-                    <div class="modal-body relative">
-                        <div class="row">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" >Send</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Reply -->
-
     </div>
 </template>
 
@@ -284,11 +363,19 @@ export default {
     data() {
         return {
             emailContent : {
+                cc: '',
+                email: '',
+                title: '',
+                content: ''
+            },
+            replyContent : {
+                cc: '',
                 email: '',
                 title: '',
                 content: ''
             },
             viewContent : {
+                from_mail: '',
                 index: '',
                 id: '',
                 date: '',
@@ -303,13 +390,14 @@ export default {
             MessageDisplay: false,
             checkIds: [],
             btnEnable: true,
-            inboxCount : 0,
+            inboxCount : 2,
             mailInfo: {},
             countryMailId: '',
             updateModel: {
                 label_id: '',
             },
             allSelected: false,
+            withTemplate: false,
         }
     },
 
@@ -338,6 +426,19 @@ export default {
     },
 
     methods: {
+        doReply() {
+            this.clearMessageform();
+            this.replyContent.email = this.viewContent.from_mail;
+        },
+
+        toggleTemplate() {
+            if (this.withTemplate) {
+                this.withTemplate = false;
+            } else {
+                this.withTemplate = true;
+            }
+        },
+
         deleteMessage(id, index, is_all) {
             swal.fire({
                 title: "Are you sure ?",
@@ -392,6 +493,8 @@ export default {
                     this.checkIds.push(this.records[index]);
                 }
                 this.btnEnable = false;
+            } else {
+                this.btnEnable = true;
             }
         },
 
@@ -425,6 +528,7 @@ export default {
 
         getTemplate() {
             this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+            this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
         },
 
         async getListCountries(params) {
@@ -474,6 +578,15 @@ export default {
         },
 
         viewMessage(inbox, index) {
+            // console.log(inbox)
+
+            let from_mail = inbox.from_mail;
+            let reply_to = '';
+            if (from_mail.search("<") > 0) {
+                var spl = from_mail.split("<")[1]
+                reply_to = spl.slice(0, -1);
+            }
+
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
@@ -483,6 +596,7 @@ export default {
             this.viewContent.index = index;
             this.viewContent.id = inbox.id;
             this.viewContent.deleted_at = inbox.deleted_at;
+            this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
@@ -491,21 +605,39 @@ export default {
             
         },
 
-        async sendEmail() {
+        async sendEmail(type) {
             await this.$store.dispatch('actionSendMailgun', {
-                email: this.emailContent.email,
-                title: this.emailContent.title,
-                content: this.emailContent.content,
+                cc: type == 'reply' ? this.replyContent.cc : this.emailContent.cc,
+                email: type == 'reply' ? this.replyContent.email : this.emailContent.email,
+                title: type == 'reply' ? this.replyContent.title : this.emailContent.title,
+                content: type == 'reply' ? this.replyContent.content : this.emailContent.content,
             });
 
             if (this.messageForms.action == 'success') {
                 $("#modal-compose-email").modal('hide');
                 
                 swal.fire(
-                        'Send',
-                        'Successfully Send Email',
-                        'success'
-                        )
+                    'Send',
+                    'Successfully Send Email',
+                    'success'
+                )
+
+                this.emailContent = {
+                    cc: '',
+                    email: '',
+                    title: '',
+                    content: ''
+                }
+
+                this.replyContent = {
+                    cc: '',
+                    email: '',
+                    title: '',
+                    content: ''
+                }
+
+                this.countryMailId = '';
+                this.mailInfo = {};
             }
        },
 
