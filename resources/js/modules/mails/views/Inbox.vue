@@ -318,12 +318,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <blockquote class="default">
-                                    {{ viewContent.strippedHtml }}
-                                </blockquote>
-                            </div>
-
                             <div class="col-md-6" style="margin-top: 15px;" v-show="withBcc">
                                 <div class="form-group">
                                     <label style="color: #333" >Bcc:</label>
@@ -331,6 +325,11 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <blockquote class="default">
+                                    {{ viewContent.strippedHtml }}
+                                </blockquote>
+                            </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
