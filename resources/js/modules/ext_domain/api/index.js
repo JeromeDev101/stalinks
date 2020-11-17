@@ -107,4 +107,10 @@ export default class ExtDomainService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static sendEmailsWithMailgun(params) {
+        return axios.post('/api/mail/send', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 }

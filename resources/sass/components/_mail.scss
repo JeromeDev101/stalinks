@@ -26,6 +26,14 @@
     }
 }
 
+blockquote {
+    padding: 0.8em;
+    background-color: #c9e2ff;
+    color: #000;
+    font-style: italic;
+    border-left: 6px solid #1c85ff;
+}
+
 .pointer { 
     &:hover {
         color: orange;

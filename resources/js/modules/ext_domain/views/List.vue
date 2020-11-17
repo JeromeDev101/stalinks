@@ -931,7 +931,8 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Send email to {{ mailInfo.receiver_text }}</h4>
+                        <!-- <h4 class="modal-title">Send email to {{ mailInfo.receiver_text }}</h4> -->
+                        <h4 class="modal-title">Send email</h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
@@ -1165,6 +1166,7 @@
                     }
                 },
                 modelMail: {
+                    email: '',
                     title: '',
                     content: '',
                     mail_name: '',
@@ -1862,91 +1864,129 @@
                 $(element).modal('show');
                 this.allowSending = true;
             },
+
             async doSendEmail(ext, event) {
-                console.log(event);
-                this.$store.dispatch('clearMessageForm');
-                var ids = '';
 
-                if(ext != null) {
-                    if (ext === -1) {
-                        ids = this.listExt.data.map(item => item.id).join(",");
-                        var ctemp = -1;
-                        if (this.listExt.data.some(item => {
-                            if (ctemp === -1) ctemp = item.country;
-                            return item.country.id !== ctemp.id;
-                        })) {
-                            alert("can't not handle with multiple countries");
-                            return;
-                        }
-                        if (this.listExt.data.some(item => {
-                            return (item.status != 30 && item.status != 40);
-                        })) {
-                            alert("can't not handle with external domain not have contacts or was contacted");
-                            return;
-                        }
-                        if (this.listExt.data.some(item => {
-                            return (item.email === '' || item.email.split('|').length > 1);
-                        })) {
-                            alert("can't not handle with external domain not have email or multiple emails");
-                            return;
-                        }
-                        this.mailInfo.ids = ids;
-                        this.mailInfo.receiver_text = " all list";
-                        this.mailInfo.country = ctemp;
-                        this.fetchTemplateMail(this.mailInfo.country.id);
-                        this.openModalEmailElem();
-                        return;
-                    }
-                    if (ext.status != 30 && ext.status != 40) {
-                        alert("can't not handle with external domain not have contacts or was contacted");
-                        return;
-                    }
-                    if (ext.email === '' || ext.email.split('|').length > 1) {
-                        alert("can't not handle with external domain not have email or multiple emails");
-                        return;
-                    }
-
-                    this.mailInfo.ids = ext.id;
-                    this.mailInfo.receiver_text = ext.domain;
-                    this.mailInfo.country = ext.country;
-                    this.fetchTemplateMail(this.mailInfo.country.id);
-                    this.openModalEmailElem();
+                if (ext == null) {
+                    return false;
                 }
 
-                // for mulitiple selection
-                if(ext == null) {
-                    var ext_id = [];
-                    var ext_domain = [];
-                    var ext_country = [];
-
-                    var i =0;
-                    this.checkIds.forEach(function(entry) {
-                        if (entry.status != 30 && entry.status != 40) {
-                            alert("can't not handle with external domain not have contacts or was contacted");
-                            return;
-                        }
-                        if (entry.email === '' || entry.email.split('|').length > 1) {
-                            alert("can't not handle with external domain not have email or multiple emails");
-                            return;
-                        }
-
-                        ext_id[i] = entry.id;
-                        ext_domain[i] = entry.domain;
-                        ext_country[i] = entry.country;
-
-                        i++;
-                    });
-
-                    ext_id = ext_id.join(", ");
-                    ext_domain = ext_domain.join(", ");
-
-                    this.mailInfo.ids = ext_id;
-                    this.mailInfo.receiver_text = ext_domain;
-                    this.mailInfo.country =ext_country[0];
-                    this.fetchTemplateMail(this.mailInfo.country.id);
-                    this.openModalEmailElem();
+                if (ext.status == 50) {
+                    swal.fire('Invalid', 'This is Already Contacted', 'error')
                 }
+                else if (ext.email == "") {
+                    swal.fire('No email', 'Please check if with email', 'error' )
+                } 
+                else {
+                    this.openModalEmailElem();
+                    this.modelMail.email = ext.email;
+                }
+                
+                console.log(ext)
             },
+
+
+            async submitSendMail() {
+                this.allowSending = false;
+                this.isPopupLoading = true;
+                await this.$store.dispatch('sendMailWithMailgun',{
+                    // cc: '',
+                    email: this.modelMail.email,
+                    title: this.modelMail.title,
+                    content: this.modelMail.content,
+                })
+                // await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
+                this.isPopupLoading = false;
+            },
+
+
+            // async doSendEmail(ext, event) {
+            //     console.log(event);
+            //     this.$store.dispatch('clearMessageForm');
+            //     var ids = '';
+
+            //     if(ext != null) {
+            //         if (ext === -1) {
+            //             ids = this.listExt.data.map(item => item.id).join(",");
+            //             var ctemp = -1;
+            //             if (this.listExt.data.some(item => {
+            //                 if (ctemp === -1) ctemp = item.country;
+            //                 return item.country.id !== ctemp.id;
+            //             })) {
+            //                 alert("can't not handle with multiple countries");
+            //                 return;
+            //             }
+            //             if (this.listExt.data.some(item => {
+            //                 return (item.status != 30 && item.status != 40);
+            //             })) {
+            //                 alert("can't not handle with external domain not have contacts or was contacted");
+            //                 return;
+            //             }
+            //             if (this.listExt.data.some(item => {
+            //                 return (item.email === '' || item.email.split('|').length > 1);
+            //             })) {
+            //                 alert("can't not handle with external domain not have email or multiple emails");
+            //                 return;
+            //             }
+            //             this.mailInfo.ids = ids;
+            //             this.mailInfo.receiver_text = " all list";
+            //             this.mailInfo.country = ctemp;
+            //             this.fetchTemplateMail(this.mailInfo.country.id);
+            //             this.openModalEmailElem();
+            //             return;
+            //         }
+            //         if (ext.status != 30 && ext.status != 40) {
+            //             alert("can't not handle with external domain not have contacts or was contacted");
+            //             return;
+            //         }
+            //         if (ext.email === '' || ext.email.split('|').length > 1) {
+            //             alert("can't not handle with external domain not have email or multiple emails");
+            //             return;
+            //         }
+
+            //         this.mailInfo.ids = ext.id;
+            //         this.mailInfo.receiver_text = ext.domain;
+            //         this.mailInfo.country = ext.country;
+            //         this.fetchTemplateMail(this.mailInfo.country.id);
+            //         this.openModalEmailElem();
+            //     }
+
+                
+            //     if(ext == null) {
+            //         var ext_id = [];
+            //         var ext_domain = [];
+            //         var ext_country = [];
+
+            //         var i =0;
+            //         this.checkIds.forEach(function(entry) {
+            //             if (entry.status != 30 && entry.status != 40) {
+            //                 alert("can't not handle with external domain not have contacts or was contacted");
+            //                 return;
+            //             }
+            //             if (entry.email === '' || entry.email.split('|').length > 1) {
+            //                 alert("can't not handle with external domain not have email or multiple emails");
+            //                 return;
+            //             }
+
+            //             ext_id[i] = entry.id;
+            //             ext_domain[i] = entry.domain;
+            //             ext_country[i] = entry.country;
+
+            //             i++;
+            //         });
+
+            //         ext_id = ext_id.join(", ");
+            //         ext_domain = ext_domain.join(", ");
+
+            //         this.mailInfo.ids = ext_id;
+            //         this.mailInfo.receiver_text = ext_domain;
+            //         this.mailInfo.country =ext_country[0];
+            //         this.fetchTemplateMail(this.mailInfo.country.id);
+            //         this.openModalEmailElem();
+            //     }
+            // },
+
+
             async doSendEmailIndex(index) {
                 let extDomain = this.listExt.data[index];
                 this.doSendEmail(extDomain);
@@ -1965,12 +2005,13 @@
                 this.mailInfo.country = this.filterModel.countryList.data.filter(item => item.id === that.mailInfo.country.id)[0];
                 this.fetchTemplateMail(this.mailInfo.country.id);
             },
-            async submitSendMail() {
-                this.allowSending = false;
-                this.isPopupLoading = true;
-                await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
-                this.isPopupLoading = false;
-            }
+
+            // async submitSendMail() {
+            //     this.allowSending = false;
+            //     this.isPopupLoading = true;
+            //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
+            //     this.isPopupLoading = false;
+            // }
         },
         components: {
             DownloadCsv

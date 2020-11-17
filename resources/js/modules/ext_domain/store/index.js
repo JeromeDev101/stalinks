@@ -356,6 +356,28 @@ const actions = {
             }
         }
     },
+    async sendMailWithMailgun({commit}, params) {
+        try {
+            let response = await ExtDomainService.sendEmailsWithMailgun(params);
+            if (response.status === 200) {
+                if (response.data.success === true) {
+                    commit(MESSAGE_FORMS, { obj: response.data.data, action: 'send_mail', message: 'Sent !', errors: {} });
+                } else {
+                    commit(MESSAGE_FORMS, { obj: response.data.data, action: 'send_mail', message: 'Please check config work email !', errors: { message: 'Please check config work email !'} });
+                }
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(EXT_DOMAIN_SET_ERROR, errors);
+            } else {
+                commit(EXT_DOMAIN_SET_ERROR, e.response.data);
+            }
+        }
+    },
 
     async sendMail({commit}, params) {
         try {

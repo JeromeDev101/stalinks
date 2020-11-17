@@ -141,6 +141,11 @@
                         <h4 class="modal-title">Compose Message</h4>
                     </div>
                     <div class="modal-body relative">
+
+                        <blockquote>
+                            <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
+                        </blockquote>
+
                         <form class="row" action="">
                             <div class="col-md-12">
                                 <div class="row">
@@ -226,9 +231,13 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Compose Message</h4>
+                        <h4 class="modal-title">Reply</h4>
                     </div>
                     <div class="modal-body relative">
+                        <blockquote>
+                            <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
+                        </blockquote>
+                        
                         <form class="row" action="">
 
                             <div class="col-md-12">

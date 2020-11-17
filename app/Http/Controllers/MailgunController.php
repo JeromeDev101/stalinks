@@ -25,8 +25,10 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
+        // dd($request->email);
+
         $request->validate([
-            'email'     => 'required|max:100|email',
+            'email'     => 'required|max:100',
             'title'     => 'required',
             'content'   => 'required',
         ]);
@@ -34,10 +36,15 @@ class MailgunController extends Controller
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
+        $email_to = $request->email;
+
+        if (strpos($request->email, '|') !== false) {
+            $email_to = str_replace("|",",",$request->email);
+        }
 
     	$this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
-		    'to'      => $request->email,
+		    'to'      => $email_to,
             'cc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
@@ -51,7 +58,7 @@ class MailgunController extends Controller
             'is_sent' => 1,
             'is_viewed' => 1,
             'label_id' => 0,
-            'received' => Auth::user()->work_mail,
+            'received' => $request->email,
             'body' => $request->content,
             'from_mail' => Auth::user()->work_mail,
             'attachment' => '',
