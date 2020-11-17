@@ -192,8 +192,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('domain-status')->get('/status','MailgunController@status');
         Route::name('starred')->get('/starred','MailgunController@starred');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
-        Route::name('deleted')->post('/deleted','MailgunController@deleted');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
+        Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
     });
 
      Route::name('labels')->resource('/label','LabelController');

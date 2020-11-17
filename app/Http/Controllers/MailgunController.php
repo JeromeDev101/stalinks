@@ -106,8 +106,8 @@ class MailgunController extends Controller
 
 
         $inbox = Reply::select('replies.*', 'labels.name as label_name', 'labels.color as label_color')
-                ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
-                ->orderBy('id', 'desc');
+                    ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
+                    ->orderBy('id', 'desc');
 
         // if (isset($request->email) && $request->email != ''){
         //     $inbox = $inbox->where('received', $request->email);
@@ -116,17 +116,17 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox->where('received', $request->email)->where('is_sent', 0);
+                    $inbox = $inbox->where('replies.received', $request->email)->where('is_sent', 0)->whereNull('deleted_at');
                     break;
                 case 'Sent':
-                    $inbox = $inbox->where('sender', $request->email)->where('is_sent', 1);
+                    $inbox = $inbox->where('replies.sender', $request->email)->where('is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->where('received', $request->email)->where('deleted_at','!=',null);
+                    $inbox = $inbox->whereNotNull('replies.deleted_at');
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('received', $request->email)->where('is_starred', 1);
+                    $inbox = $inbox->where('replies.received', $request->email)->where('is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;
@@ -234,8 +234,8 @@ $description = 'Test route';
             'label_id'          => 0,
             'is_starred'        => 0,
             'deleted_at'        => null,
-            'created_at'        => date('Y-m-d'),
-            'updated_at'        => date('Y-m-d'),
+            'created_at'        => date('Y-m-d H:i:s'),
+            'updated_at'        => date('Y-m-d H:i:s'),
 
 
         ];
@@ -280,6 +280,20 @@ $description = 'Test route';
                 $inbox = Reply::findOrFail($ids);
                 $inbox->update($request->only('label_id'));
             }
+        }
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function deleteMessage(Request $request) {
+        if (is_array($request->id)) {
+            foreach($request->id as $id) {
+                $inbox = Reply::findOrFail($id);
+                $inbox->update(['deleted_at' => date('Y-m-d')]);
+            }
+        }else{
+            $inbox = Reply::findOrFail($request->id);
+            $inbox->update(['deleted_at' => date('Y-m-d')]);
         }
 
         return response()->json(['success' => true],200);

@@ -29,18 +29,18 @@
                                 <button type="button" class="btn btn-default" title="Refesh inbox" @click="refeshInbox">
                                     <i class="fa fa-fw fa-refresh"></i>
                                 </button>
-                                <button type="button" class="btn btn-default" title="Trash" :disabled="btnEnable">
+                                <button type="button" class="btn btn-default" title="Trash" @click="deleteMessage(0,0,true)" :disabled="btnEnable">
                                     <i class="fa fa-fw fa-trash"></i>
                                 </button>
                             </div>
 
-                            <div class="pull-right">
+                            <!-- <div class="pull-right">
                                 1-50/200
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
                                     <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
                                 </div>
-                            </div>
+                            </div> -->
                             
                         </div>
 
@@ -125,7 +125,7 @@
                         <div class="pull-right">
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-reply"><i class="fa fa-reply"></i> Reply</button>
                         </div>
-                        <button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+                        <button type="button" class="btn btn-default" v-show="viewContent.deleted_at == null" @click="deleteMessage(viewContent.id, viewContent.index, false)"><i class="fa fa-trash-o"></i> Delete</button>
                     </div>
                 </div>
             </div>
@@ -289,10 +289,13 @@ export default {
                 content: ''
             },
             viewContent : {
+                index: '',
+                id: '',
                 date: '',
                 from: '',
                 subject: '',
                 strippedHtml: '',
+                deleted_at: '',
             },
             records: [],
             loadingMessage: false,
@@ -335,15 +338,61 @@ export default {
     },
 
     methods: {
+        deleteMessage(id, index, is_all) {
+            swal.fire({
+                title: "Are you sure ?",
+                html: "Delete these message?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+
+                    let ids = [];
+                    for (var chk in this.checkIds) {
+                        ids.push(this.checkIds[chk].id);
+                    } 
+
+                    axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
+
+                    if (is_all) {
+                        this.getInbox();
+                    }else{
+                        this.records.splice(index, 1);
+                    }
+
+                    this.selectedMessage = true;
+                    this.MessageDisplay = false;
+                    this.viewContent = {
+                        index: '',
+                        id: '',
+                        date: '',
+                        from: '',
+                        subject: '',
+                        strippedHtml: '',
+                    }
+
+                    this.checkIds = [];
+
+                    swal.fire(
+                        'Deleted!',
+                        'Messages is move to Trash.',
+                        'success'
+                    )
+                }
+            });
+        },
+
         selectAll() {
             this.checkIds = [];
             if (!this.allSelected) {
                 for (var index in this.records) {
                     this.checkIds.push(this.records[index]);
                 }
+                this.btnEnable = false;
             }
-
-            console.log(this.checkIds)
         },
 
         submitLabel() {
@@ -431,6 +480,9 @@ export default {
             this.viewContent.strippedHtml = inbox.body;
             this.viewContent.date = inbox.created_at;
             this.viewContent.subject = inbox.subject;
+            this.viewContent.index = index;
+            this.viewContent.id = inbox.id;
+            this.viewContent.deleted_at = inbox.deleted_at;
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
