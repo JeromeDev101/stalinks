@@ -193,7 +193,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('starred')->get('/starred','MailgunController@starred');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('deleted')->post('/deleted','MailgunController@deleted');
-
+        Route::name('labeling')->post('/labeling','MailgunController@labeling');
     });
 
      Route::name('labels')->resource('/label','LabelController');

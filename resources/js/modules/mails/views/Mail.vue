@@ -59,25 +59,15 @@
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div> -->
                         <div class="box-tools">
-                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" @click="clearLabelInputs" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>
                         </div>
 
                     </div>
                     <div class="box-body no-padding">
-                        <ul class="list-group">
+                        <ul class="list-group" v-for="(label, index) in listLabel" :key="index">
                             <li class="list-group-item">
                                 <a href="#">
-                                    <i class="fa fa-circle-o"></i> Important
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> Promotions
-                                </a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#">
-                                    <i class="fa fa-circle-o"></i> Social
+                                    <i class="fa fa-circle-o" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
                             </li>
                         </ul>
@@ -102,15 +92,17 @@
                     <div class="modal-body relative">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageError.name != ''}" class="form-group">
                                     <label for="">Label Name</label>
                                     <input type="text" class="form-control" v-model="labelModel.name">
+                                    <span v-show="messageError.name != ''" class="text-danger">{{ messageError.name }}</span>
                                  </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageError.color != ''}" class="form-group">
                                     <label for="">Color</label>
                                     <input type="text" class="form-control" v-model="labelModel.color">
+                                    <span v-show="messageError.color != ''" class="text-danger">{{ messageError.color }}</span>
                                     <compact-picker v-model="colors" @input="updateValue" />
                                  </div>
                             </div>
@@ -119,7 +111,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" >Save</button>
+                        <button type="button" class="btn btn-primary" @click="saveLabel">Save</button>
                     </div>
                 </div>
             </div>
@@ -142,6 +134,11 @@ export default {
                 name: '',
                 color: '',
             },
+            messageError: {
+                color: '',
+                name: '',
+            },
+            listLabel: [],
         }
     },
 
@@ -158,13 +155,58 @@ export default {
 
     mounted() {
         // console.log(this.$children[5]._data.inboxCount)
+        this.getListLabels();
     },
 
     methods: {
         updateValue (value) {
             this.colors = value
             this.labelModel.color = value.hex;
-        }
+        },
+
+        getListLabels() {
+            axios.get('/api/label')
+                .then((res) => {
+                    this.listLabel = res.data.labels
+                })
+        },
+
+        saveLabel() {
+            axios.post('/api/label',{
+                name: this.labelModel.name,
+                color: this.labelModel.color,
+            })
+            .then((res) => {
+                var result = res.data;
+
+                if (result.hasOwnProperty('name') || result.hasOwnProperty('color')) {
+                    this.messageError.name = result.hasOwnProperty('name') ? result.name[0] : '';
+                    this.messageError.color = result.hasOwnProperty('color') ? result.color[0] : '';
+                } else {
+                    $("#modal-add-label").modal('hide');
+
+                    swal.fire(
+                        'Save',
+                        'Successfully Saved',
+                        'success'
+                        )
+                }
+
+            })
+        },
+
+
+        clearLabelInputs() {
+            this.messageError = {
+                name: '',
+                color: '',
+            }
+
+            this.labelModel = {
+                name: '',
+                color: '',
+            }
+        },
     }
 }
 </script>

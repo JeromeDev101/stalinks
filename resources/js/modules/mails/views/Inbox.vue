@@ -17,7 +17,7 @@
                         <div class="mailbox-controls">
 
                             <button type="button" class="btn btn-default">
-                                <input type="checkbox">
+                                <input type="checkbox" @click="selectAll" v-model="allSelected">
                             </button>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-default" title="Starred" :disabled="btnEnable" @click="submitStarred(0,0,true, '')">
@@ -56,7 +56,10 @@
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
-                                    <td>{{inbox.from_mail}}</td>
+                                    <td>
+                                        <i v-show="inbox.label_id != 0" class="fa fa-tag mr-3" :style="{'color': inbox.label_color}"></i>
+                                        {{inbox.from_mail}}
+                                    </td>
                                     <td>{{inbox.subject}}</td>
                                     <td class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
@@ -229,8 +232,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Label Name</label>
-                                    <select class="form-control">
+                                    <select class="form-control" v-model="updateModel.label_id">
                                         <option value=""></option>
+                                        <option v-for="(label, index) in $parent._data.listLabel" v-bind:value="label.id" :key="index">
+                                            {{ label.name }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -239,7 +245,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" >Save</button>
+                        <button type="button" class="btn btn-primary" @click="submitLabel">Save</button>
                     </div>
                 </div>
             </div>
@@ -296,7 +302,11 @@ export default {
             btnEnable: true,
             inboxCount : 0,
             mailInfo: {},
-            countryMailId: ''
+            countryMailId: '',
+            updateModel: {
+                label_id: '',
+            },
+            allSelected: false,
         }
     },
 
@@ -325,6 +335,41 @@ export default {
     },
 
     methods: {
+        selectAll() {
+            this.checkIds = [];
+            if (!this.allSelected) {
+                for (var index in this.records) {
+                    this.checkIds.push(this.records[index]);
+                }
+            }
+
+            console.log(this.checkIds)
+        },
+
+        submitLabel() {
+            let ids = [];
+            for (var chk in this.checkIds) {
+                ids.push(this.checkIds[chk].id);
+            } 
+
+            axios.post('/api/mail/labeling', {
+                ids: ids,
+                label_id: this.updateModel.label_id
+            })
+            .then((res) => {
+                console.log(res.data)
+
+                for (var rec in this.records) {
+                    for (var chk in this.checkIds) {
+                        if (this.checkIds[chk].id == this.records[rec].id) {
+                            this.records[rec].label_id = this.updateModel.label_id;
+                        }
+                    }     
+                }
+
+            })
+        },
+
         async getTemplateList() {
             await this.$store.dispatch('getListMails', { params: { country_id: this.countryMailId, full_page: 1} });
         },
@@ -410,20 +455,6 @@ export default {
                         'success'
                         )
             }
-           
-        //    console.log(this.$data.emailContent);
-            // axios.post('/api/mail/send', this.$data.emailContent)
-            // .then((response) => {
-            //     console.log(response);
-            //     response => response;
-            //     this.$data.emailContent.email = '';
-            //     this.$data.emailContent.title = '';
-            //     this.$data.emailContent.content = '';
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            //     error => error;
-            // });
        },
 
         getInbox(){

@@ -103,7 +103,10 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-        $inbox = Reply::orderBy('id', 'desc');
+
+        $inbox = Reply::select('replies.*', 'labels.name as label_name', 'labels.color as label_color')
+                ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
+                ->orderBy('id', 'desc');
 
         // if (isset($request->email) && $request->email != ''){
         //     $inbox = $inbox->where('received', $request->email);
@@ -266,6 +269,17 @@ $description = 'Test route';
     public function setViewMessage(Request $request) {
         $inbox = Reply::findOrFail($request->id);
         $inbox->update(['is_viewed' => 1]);
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function labeling(Request $request) {
+        if (is_array($request->ids)) {
+            foreach ($request->ids as $ids) {
+                $inbox = Reply::findOrFail($ids);
+                $inbox->update($request->only('label_id'));
+            }
+        }
 
         return response()->json(['success' => true],200);
     }
