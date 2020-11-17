@@ -1166,7 +1166,6 @@
                     }
                 },
                 modelMail: {
-                    email: '',
                     title: '',
                     content: '',
                     mail_name: '',
@@ -1231,6 +1230,7 @@
                     total: 0,
                     data:[]
                 },
+                email_to: '',
              };
         },
         async created() {
@@ -1865,37 +1865,55 @@
                 this.allowSending = true;
             },
 
-            async doSendEmail(ext, event) {
+            doSendEmail(ext, event) {
 
                 if (ext == null) {
-                    return false;
+                    if (this.checkIds.length == 0) {
+                         swal.fire('No Selected', 'Please select first', 'error');
+
+                    } else {
+                        this.openModalEmailElem();
+                        var emails = [];
+                        for (var index in this.checkIds) {
+                            if (this.checkIds[index].email != "") {
+                                emails.push(this.checkIds[index].email)
+                            }
+                        }
+                        this.email_to = emails.join('|')
+                    }  
+                    // console.log(this.checkIds)
+                    // return false;
                 }
 
-                if (ext.status == 50) {
-                    swal.fire('Invalid', 'This is Already Contacted', 'error')
+                if (ext != null) {
+                    if (ext.status == 50) {
+                        swal.fire('Invalid', 'This is Already Contacted', 'error')
+                    }
+                    else if (ext.email == "") {
+                        swal.fire('No email', 'Please check if with email', 'error' )
+                    } 
+                    else {
+                        this.openModalEmailElem();
+                        this.email_to = ext.email;
+                    }
                 }
-                else if (ext.email == "") {
-                    swal.fire('No email', 'Please check if with email', 'error' )
-                } 
-                else {
-                    this.openModalEmailElem();
-                    this.modelMail.email = ext.email;
-                }
-                
-                console.log(ext)
+                    
             },
 
 
             async submitSendMail() {
                 this.allowSending = false;
                 this.isPopupLoading = true;
+
                 await this.$store.dispatch('sendMailWithMailgun',{
-                    // cc: '',
-                    email: this.modelMail.email,
+                    cc: '',
+                    email: this.email_to,
                     title: this.modelMail.title,
                     content: this.modelMail.content,
                 })
-                // await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
+
+
+
                 this.isPopupLoading = false;
             },
 

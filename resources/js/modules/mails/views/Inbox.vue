@@ -8,8 +8,20 @@
                         <h3 class="box-title">{{ $route.name }}</h3>
 
                         <div class="box-tools pull-right">
-                            <div class="has-feedback">
+                            <!-- <div class="has-feedback">
                                 <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                            </div>
+                            <button class="btn btn-default">S</button> -->
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" title="Search">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-default" title="Clear">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -47,18 +59,18 @@
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
                             <i class="fa fa-refresh fa-spin mr-3"></i> loading messages
                         </div>
-                        <table class="table table-condensed table-hover">
+                        <table class="table table-condensed table-hover tbl-custom">
                             <tbody>
                                 <tr v-show="records.length == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>
                                 </tr>
-                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox, index)" :class="{'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
+                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox, index)" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
                                     <td>
                                         <i v-show="inbox.label_id != 0" class="fa fa-tag mr-3" :style="{'color': inbox.label_color}"></i>
-                                        {{inbox.from_mail}}
+                                        {{ inbox.is_sent == 1 ? 'To: ' + checkEmail(inbox.received) : inbox.from_mail}}
                                     </td>
                                     <td>{{inbox.subject}}</td>
                                     <td class="text-right">
@@ -96,7 +108,8 @@
                     <div v-show="MessageDisplay" class="box-body no-padding">
                         <div class="mailbox-read-info">
                             <h3>{{ viewContent.subject }}</h3>
-                            <h5>From: {{ viewContent.from }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
+                            <h5 v-show="viewContent.is_sent == 0">From: {{ viewContent.from }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
+                            <h5 v-show="viewContent.is_sent == 1">To: {{ checkEmail(viewContent.received) }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
                         </div>
 
                         <div class="mailbox-read-message">
@@ -148,6 +161,16 @@
 
                         <form class="row" action="">
                             <div class="col-md-12">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" v-model="withBcc" @click="toggleBcc">
+                                        With Bcc
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label style="color: #333">Country</label>
@@ -175,7 +198,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;">
+                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
                                     <input type="text" class="form-control" required="required" v-model="emailContent.email">
@@ -183,9 +206,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;">
+                            <div :class="{'col-md-6': true}" v-show="withBcc" style="margin-top: 15px;">
                                 <div class="form-group">
-                                    <label style="color: #333" >Cc:</label>
+                                    <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="emailContent.cc">
                                 </div>
                             </div>
@@ -234,17 +257,26 @@
                         <h4 class="modal-title">Reply</h4>
                     </div>
                     <div class="modal-body relative">
-                        <blockquote>
+                        <blockquote class="primary">
                             <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
                         </blockquote>
-                        
+
                         <form class="row" action="">
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input type="checkbox" class="form-check-input" v-model="withTemplate" @click="toggleTemplate">
                                         With Template
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" v-model="withBcc" @click="toggleBcc">
+                                        With Bcc
                                     </label>
                                 </div>
                                 <hr>
@@ -278,7 +310,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;">
+                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.email">
@@ -286,9 +318,15 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;">
+                            <div class="col-md-12">
+                                <blockquote class="default">
+                                    {{ viewContent.strippedHtml }}
+                                </blockquote>
+                            </div>
+
+                            <div class="col-md-6" style="margin-top: 15px;" v-show="withBcc">
                                 <div class="form-group">
-                                    <label style="color: #333" >Cc:</label>
+                                    <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.cc">
                                 </div>
                             </div>
@@ -297,7 +335,7 @@
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">Titles</label>
-                                    <input type="text" class="form-control" required="required" v-model="replyContent.title">
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.title" :disabled="true">
                                     <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -384,6 +422,8 @@ export default {
                 content: ''
             },
             viewContent : {
+                received: '',
+                is_sent: '',
                 from_mail: '',
                 index: '',
                 id: '',
@@ -399,7 +439,7 @@ export default {
             MessageDisplay: false,
             checkIds: [],
             btnEnable: true,
-            inboxCount : 2,
+            inboxCount : 0,
             mailInfo: {},
             countryMailId: '',
             updateModel: {
@@ -407,6 +447,7 @@ export default {
             },
             allSelected: false,
             withTemplate: false,
+            withBcc: false,
         }
     },
 
@@ -435,9 +476,26 @@ export default {
     },
 
     methods: {
+        checkEmail(email) {
+            let result = '';
+            // console.log(email.indexOf("|"))
+            if (email.indexOf("|") > 0) {
+                var spl = email.split("|")
+
+                for (var index in spl) {
+                    result += '<'+spl[index]+'> ';
+                }
+            } else {
+                result = '<'+email+'>';
+            }
+
+            return result;
+        },
+
         doReply() {
             this.clearMessageform();
             this.replyContent.email = this.viewContent.from_mail;
+            this.replyContent.title = this.viewContent.subject;
         },
 
         toggleTemplate() {
@@ -445,6 +503,14 @@ export default {
                 this.withTemplate = false;
             } else {
                 this.withTemplate = true;
+            }
+        },
+
+        toggleBcc() {
+            if (this.withBcc) {
+                this.withBcc = false;
+            } else {
+                this.withBcc = true;
             }
         },
 
@@ -476,12 +542,16 @@ export default {
                     this.selectedMessage = true;
                     this.MessageDisplay = false;
                     this.viewContent = {
+                        received: '',
+                        is_sent: '',
+                        from_mail: '',
                         index: '',
                         id: '',
                         date: '',
                         from: '',
                         subject: '',
                         strippedHtml: '',
+                        deleted_at: '',
                     }
 
                     this.checkIds = [];
@@ -606,6 +676,8 @@ export default {
             this.viewContent.id = inbox.id;
             this.viewContent.deleted_at = inbox.deleted_at;
             this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
+            this.viewContent.is_sent = inbox.is_sent;
+            this.viewContent.received = inbox.received;
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
@@ -658,6 +730,7 @@ export default {
                 this.records = response.data.inbox;
                 // this.loadingMessage = false;
                 this.inboxCount = response.data.count;
+                console.log(this.inboxCount)
             })
             .catch((error) => {
                 console.log(error);

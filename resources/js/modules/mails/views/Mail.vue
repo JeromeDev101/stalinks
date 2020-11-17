@@ -20,7 +20,7 @@
                                 <router-link to="/mails/inbox">
                                     <i class="fa fa-fw fa-inbox"></i>
                                     Inbox
-                                    <span class="label label-primary pull-right">{{1}}</span>
+                                    <span class="label label-primary pull-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
@@ -138,6 +138,7 @@ export default {
                 name: '',
             },
             listLabel: [],
+            displayInboxCnt: 0,
         }
     },
 
@@ -153,8 +154,8 @@ export default {
     },
 
     mounted() {
-        // console.log(this.$children[5]._data.inboxCount)
-        // console.log(this.$children[5].clearMessageform)
+        this.displayInboxCnt = this.$children[5]._data.inboxCount;
+        console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
     },
 
@@ -190,6 +191,8 @@ export default {
                         'Successfully Saved',
                         'success'
                         )
+
+                    this.getListLabels();
                 }
 
             })

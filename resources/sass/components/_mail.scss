@@ -26,12 +26,33 @@
     }
 }
 
+.tbl-custom {
+    tbody {
+        tr {
+            &.active {
+                background-color: #f4f4f4;
+                &:hover {
+                    background-color: #ececec;
+                }
+            }
+            
+        }
+    }
+}
+
 blockquote {
     padding: 0.8em;
-    background-color: #c9e2ff;
-    color: #000;
     font-style: italic;
-    border-left: 6px solid #1c85ff;
+    &.primary {
+        color: #000;
+        background-color: #c9e2ff;
+        border-left: 6px solid #1c85ff;
+    }
+    &.default {
+        color: gray;
+        background-color: #fafafa;
+        border-left: 6px solid #efefef;
+    }
 }
 
 .pointer { 

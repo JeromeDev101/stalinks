@@ -28,7 +28,7 @@ class MailgunController extends Controller
         // dd($request->email);
 
         $request->validate([
-            'email'     => 'required|max:100',
+            'email'     => 'required',
             'title'     => 'required',
             'content'   => 'required',
         ]);
@@ -123,17 +123,17 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox->where('replies.received', $request->email)->where('is_sent', 0)->whereNull('deleted_at');
+                    $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     break;
                 case 'Sent':
-                    $inbox = $inbox->where('replies.sender', $request->email)->where('is_sent', 1);
+                    $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                     $inbox = $inbox->whereNotNull('replies.deleted_at');
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('replies.received', $request->email)->where('is_starred', 1);
+                    $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;
@@ -141,8 +141,9 @@ class MailgunController extends Controller
         }
 
         $inbox = $inbox->get();
+        $cnt = Reply::where('is_viewed', 0)->where('is_sent', 0)->whereNull('deleted_at')->count();
 
-        return response()->json(['count'=> count($inbox), 'inbox'=> $inbox]);
+        return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
 
     }
 
