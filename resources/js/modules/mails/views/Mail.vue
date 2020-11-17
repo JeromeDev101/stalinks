@@ -104,13 +104,14 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Label Name</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="labelModel.name">
                                  </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Color</label>
-                                    <input type="text" class="form-control my-colorpicker1">
+                                    <input type="text" class="form-control" v-model="labelModel.color">
+                                    <compact-picker v-model="colors" @input="updateValue" />
                                  </div>
                             </div>
                                 
@@ -131,10 +132,16 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
+import { Compact } from 'vue-color';
 export default {
     data() {
         return {
             inboxCount: 0,
+            colors: '#194d33',
+            labelModel: {
+                name: '',
+                color: '',
+            },
         }
     },
 
@@ -150,12 +157,14 @@ export default {
     },
 
     mounted() {
-        console.log(this.$children[5]._data.inboxCount)
-        $('.my-colorpicker1').colorpicker()
+        // console.log(this.$children[5]._data.inboxCount)
     },
 
     methods: {
-        //
+        updateValue (value) {
+            this.colors = value
+            this.labelModel.color = value.hex;
+        }
     }
 }
 </script>

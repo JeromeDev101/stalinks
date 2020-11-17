@@ -11,6 +11,7 @@ import 'vue-select/dist/vue-select.css';
 import Select2 from 'vue-select';
 import swal from 'sweetalert2'
 import tinymce from 'vue-tinymce-editor';
+import { Compact } from 'vue-color';
 
 require('./bootstrap');
 
@@ -22,6 +23,7 @@ Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
 Vue.component('v-select', Select2)
 Vue.component('tinymce', tinymce)
+Vue.component('compact-picker', Compact)
 
 
 const router = new VueRouter({
