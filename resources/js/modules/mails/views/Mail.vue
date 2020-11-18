@@ -155,7 +155,7 @@ export default {
 
     mounted() {
         this.displayInboxCnt = this.$children[5]._data.inboxCount;
-        console.log(this.$children[5]._data.inboxCount)
+        // console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
     },
 

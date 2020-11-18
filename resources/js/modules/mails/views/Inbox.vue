@@ -313,7 +313,7 @@
                             <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
-                                    <input type="text" class="form-control" required="required" v-model="replyContent.email">
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>

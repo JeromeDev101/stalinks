@@ -360,4 +360,30 @@ class AccountController extends Controller
 
         return response()->json(['success' => true], 200);
     }
+
+    public function getSubAccount(Request $request) {
+        $registration = Registration::where('team_in_charge', Auth::user()->id)->where('is_sub_account', 1)->get();
+
+        return $registration;
+    }
+
+    public function deleteSubAccount(Request $request) {
+        $registration = Registration::findOrFail($request->id);
+        $registration->delete();
+
+        $user = User::where('email', $registration->email)->first();
+        $user->delete();
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function updateSubAccount(Request $request) {
+        $registration = Registration::findOrFail($request->id);
+        $registration->update($request->only('username', 'name', 'status'));
+
+        $user = User::where('email', $registration->email)->first();
+        $user->update($request->only('username', 'name', 'status'));
+
+        return response()->json(['success' => true],200);
+    }
 }

@@ -220,9 +220,84 @@
                     <button type="button" @click="addSubAccount" class="btn btn-primary">Add Sub Account</button>
                 </div>
 
-
+                <div class="col-md-12">
+                    <table class="table table-condensed table-hover table-bordered mt-4">
+                        <thead>
+                            <tr class="label-primary">
+                                <th >Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(account, index) in ListSubAccounts" :key="index">
+                                <td>{{ account.username }}</td>
+                                <td>{{ account.email }}</td>
+                                <td>{{ account.status }}</td>
+                                <td>
+                                    <button class="btn btn-default" title="Edit" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-default" title="Delete" @click="deleteSubAccount(account.id)"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                    
             </div>
         </div>
+        
+        <!-- Modal Edit Sub Account -->
+        <div class="modal fade" id="modal-edit-sub-account" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Account</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Username</label>
+                                    <input type="text" class="form-control" v-model="updateModelSubAccount.username" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control" v-model="updateModelSubAccount.name" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Email</label>
+                                    <input type="text" class="form-control" v-model="updateModelSubAccount.email" :disabled="true">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Status</label>
+                                    <select class="form-control" v-model="updateModelSubAccount.status">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateSubAccount">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Edit Sub Account -->
 
     </div>
 </template>
@@ -288,6 +363,13 @@ export default {
             },
             new_password: '',
             c_password: '',
+            ListSubAccounts: [],
+            updateModelSubAccount: {
+                name: '',
+                username: '',
+                email: '',
+                status: '',
+            },
         };
     },
 
@@ -328,7 +410,71 @@ export default {
         // this.$root.$refs.AppHeader.liveGetWallet()
     },
 
+    mounted() {
+        this.getListSubAccount();
+    },
+
     methods: {
+        submitUpdateSubAccount() {
+            axios.get('/api/update-sub-account', {
+                params: {
+                    id: this.updateModelSubAccount.id,
+                    email: this.updateModelSubAccount.email,
+                    name: this.updateModelSubAccount.name,
+                    username: this.updateModelSubAccount.username,
+                    status: this.updateModelSubAccount.status,
+                }
+            })
+            .then((res) => {
+                console.log(res.data)
+                this.getListSubAccount();
+                $("#modal-edit-sub-account").modal('hide')
+
+                swal.fire(
+                    'Update!',
+                    'Successfully Updated',
+                    'success'
+                )
+            })
+        },
+
+        deleteSubAccount(id) {
+            swal.fire({
+                title: "Are you sure ?",
+                html: "Delete these account?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+
+                    axios.get('/api/delete-sub-account',{ params: { id: id } })
+
+                    swal.fire(
+                        'Deleted!',
+                        'Messages is move to Trash.',
+                        'success'
+                    )
+
+                    this.getListSubAccount();
+                }
+            });
+        },
+
+        doUpdateSubAccounts(account) {
+            this.updateModelSubAccount = account;
+        },
+
+        getListSubAccount() {
+            axios.get('/api/sub-account')
+                .then((res) => {
+                    console.log(res.data)
+                    this.ListSubAccounts = res.data;
+                })
+        },
+
         bindPayment() {
             let that = this.user.user_type
             if( this.currentUser.isOurs == 1 ) {

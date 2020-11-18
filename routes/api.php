@@ -70,6 +70,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-team-in-charge')->get('team-in-charge', 'AccountController@getTeamInCharge');
     Route::name('get-buyer-commission')->get('buyer-commission', 'AccountController@getBuyerCommission');
     Route::name('add-sub-account')->post('sub-account', 'AccountController@storeSubAccount');
+    Route::name('get-sub-account')->get('/sub-account', 'AccountController@getSubAccount');
+    Route::name('delete-sub-account')->get('/delete-sub-account', 'AccountController@deleteSubAccount');
+    Route::name('update-sub-account')->get('/update-sub-account', 'AccountController@updateSubAccount');
 
 
 
