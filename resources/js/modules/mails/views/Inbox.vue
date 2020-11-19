@@ -79,7 +79,7 @@
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <td><i class="fa fa-fw fa-paperclip"></i></td>
+                                    <!-- <td><i class="fa fa-fw fa-paperclip"></i></td> -->
                                     <td class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 
@@ -155,7 +155,7 @@
                     </div>
                     <div class="modal-body relative">
 
-                        <blockquote>
+                        <blockquote class="primary">
                             <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
                         </blockquote>
 
@@ -729,13 +729,18 @@ export default {
 
         getInbox(){
         //    this.loadingMessage = true;
-            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name, 'search_mail': this.search_mail})
+            axios.post('/api/mail/filter-recipient',{
+                'email': this.user.work_mail,
+                'param': this.$route.name,
+                'search_mail': this.search_mail,
+                'label_id': this.$route.query.label_id,
+            })
             .then((response) => {
                 // console.log(response);
                 this.records = response.data.inbox;
                 // this.loadingMessage = false;
                 this.inboxCount = response.data.count;
-                console.log(this.inboxCount)
+                // console.log(this.inboxCount)
             })
             .catch((error) => {
                 console.log(error);

@@ -4,7 +4,7 @@
             
             <!-- Side menu section -->
             <div class="col-md-2">
-                <button class="btn btn-success btn-lg btn-block mb-3" data-target="#modal-compose-email" data-toggle="modal" @click="clearMessageform" >Compose</button>
+                <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
 
                 <div class="box box-solid">
                     <div class="box-header with-border">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="box box-solid">
+                <div class="box box-solid" v-show="$route.name != 'mail-template'">
                     <div class="box-header with-border">
                         <h3 class="box-title">Labels</h3>
 
@@ -65,10 +65,11 @@
                     </div>
                     <div class="box-body no-padding">
                         <ul class="list-group" v-for="(label, index) in listLabel" :key="index">
-                            <li class="list-group-item">
-                                <a href="#">
+                            <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
+                                <a href="#" @click="setQueryLabel(label.id)" >
                                     <i class="fa fa-circle-o" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
+                                <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
                             </li>
                         </ul>
                     </div>
@@ -101,7 +102,7 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageError.color != ''}" class="form-group">
                                     <label for="">Color</label>
-                                    <input type="text" class="form-control" v-model="labelModel.color">
+                                    <input type="text" class="form-control" v-model="labelModel.color" readonly>
                                     <span v-show="messageError.color != ''" class="text-danger">{{ messageError.color }}</span>
                                     <compact-picker v-model="colors" @input="updateValue" />
                                  </div>
@@ -143,7 +144,7 @@ export default {
     },
 
     created() {
-    //    console.log(this.$children)
+    //    console.log(this.$route.query.label_id)
     },
 
     computed: {
@@ -160,6 +161,26 @@ export default {
     },
 
     methods: {
+        clearQueryLabel() {
+            this.$router.replace({ query: null})
+        },
+
+        setQueryLabel(id) {
+            this.$router.replace({query: {'label_id': id} })
+        },
+
+        checkWorkMail() {
+            if (this.user.work_mail == '') {
+                swal.fire(
+                    'Error',
+                    'Please setup first your Work mail',
+                    'error'
+                )
+            } else {
+                $("#modal-compose-email").modal('show')
+            }
+        },
+
         updateValue (value) {
             this.colors = value
             this.labelModel.color = value.hex;
@@ -190,7 +211,7 @@ export default {
                         'Save',
                         'Successfully Saved',
                         'success'
-                        )
+                    )
 
                     this.getListLabels();
                 }
@@ -199,9 +220,9 @@ export default {
         },
 
 
-        clearMessageform() {
-            this.$store.dispatch('clearMessageForm');
-        },
+        // clearMessageform() {
+        //     this.$store.dispatch('clearMessageForm');
+        // },
 
 
         clearLabelInputs() {
