@@ -44,8 +44,8 @@ class MailgunController extends Controller
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
-		    'bcc'      => $email_to,
-            'to'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
+		    'to'      => $email_to,
+            'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
             // 'o:tracking'    => true,
