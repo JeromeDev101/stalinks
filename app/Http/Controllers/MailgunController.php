@@ -44,8 +44,8 @@ class MailgunController extends Controller
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
-		    'bcc'      => $email_to,
-            'cc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
+		    'to'      => $email_to,
+            'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
             'o:tracking'    => true,
@@ -123,10 +123,6 @@ class MailgunController extends Controller
                             ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
                             ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
                             ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
-        }
-
-        if (isset($request->label_id) && $request->label_id != ''){
-            $inbox = $inbox->where('replies.label_id', $request->label_id);
         }
 
         if (isset($request->param) && $request->param != ''){
