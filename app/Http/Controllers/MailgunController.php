@@ -117,9 +117,13 @@ class MailgunController extends Controller
                     ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
                     ->orderBy('id', 'desc');
 
-        // if (isset($request->email) && $request->email != ''){
-        //     $inbox = $inbox->where('received', $request->email);
-        // }
+        if (isset($request->search_mail) && $request->search_mail != ''){
+            $inbox = $inbox->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
+                            ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
+                            ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
+                            ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
+                            ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
+        }
 
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
