@@ -433,7 +433,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
     private function getCountry($country){
         $id = 5;
-        $country = Country::where('name', 'like', '%'.$country.'%')->first();
+        $country = Language::where('name', 'like', '%'.$country.'%')->first();
         if( $country ){
             $id = $country->id;
         }
