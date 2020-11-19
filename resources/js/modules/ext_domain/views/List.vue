@@ -1,7 +1,7 @@
 <template>
     <div class="row">
 
-        <div class="col-lg-3 col-xs-6">
+        <!-- <div class="col-lg-3 col-xs-6">
             <div class="small-box bg-green">
                 <div class="inner">
                     <h3>{{ listExt.total }}</h3>
@@ -11,7 +11,7 @@
                     <i class="fa fa-external-link"></i>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-sm-12">
             <div class="box">
@@ -1047,7 +1047,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus">Update</button>
+                        <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus(false)">Update</button>
                     </div>
                 </div>
             </div>
@@ -1401,11 +1401,11 @@
                 }
             },
 
-            async doUpdateMultipleStatus() {
+            async doUpdateMultipleStatus(is_sending) {
                 await this.$store.dispatch('actionUpdateMultipleStatus', {
                     id: this.checkIds,
                     seller: this.updateStatus.seller,
-                    status: this.updateStatus.status,
+                    status: is_sending ? 50:this.updateStatus.status,
                 });
 
                 if( this.messageForms.action == 'updated' ){
@@ -1417,9 +1417,10 @@
                     
                     this.getExtList();
                     this.checkIds = []
+                    let message = is_sending ? 'Email send' : 'Successfully Updated'
                     swal.fire(
-                        'Saved!',
-                        'Successfully Updated.',
+                        'Done',
+                        message,
                         'success'
                     )
                 }
@@ -1866,6 +1867,7 @@
             },
 
             doSendEmail(ext, event) {
+                this.$store.dispatch('clearMessageForm');
 
                 if (ext == null) {
                     if (this.checkIds.length == 0) {
@@ -1912,7 +1914,15 @@
                     content: this.modelMail.content,
                 })
 
+                this.modelMail = {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                }
 
+                $("#modal-email").modal('hide')
+
+                this.doUpdateMultipleStatus(true);
 
                 this.isPopupLoading = false;
             },

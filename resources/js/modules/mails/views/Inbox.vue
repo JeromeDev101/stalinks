@@ -13,12 +13,12 @@
                             </div>
                             <button class="btn btn-default">S</button> -->
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                                <input type="text" class="form-control input-sm" placeholder="Search Mail" v-model="search_mail">
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" title="Search">
+                                    <button type="button" class="btn btn-default" title="Search" @click="getInbox">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    <button type="button" class="btn btn-default" title="Clear">
+                                    <button type="button" class="btn btn-default" title="Clear" @click="clearSearchMail">
                                         <i class="fa fa-close"></i>
                                     </button>
                                 </span>
@@ -408,6 +408,7 @@ export default {
     name: 'AppInbox',
     data() {
         return {
+            search_mail: '',
             emailContent : {
                 cc: '',
                 email: '',
@@ -475,6 +476,11 @@ export default {
     },
 
     methods: {
+        clearSearchMail() {
+            this.search_mail = '';
+            this.getInbox();
+        },
+
         checkEmail(email) {
             let result = '';
             // console.log(email.indexOf("|"))
@@ -723,7 +729,7 @@ export default {
 
         getInbox(){
         //    this.loadingMessage = true;
-            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name})
+            axios.post('/api/mail/filter-recipient',{'email': this.user.work_mail, 'param': this.$route.name, 'search_mail': this.search_mail})
             .then((response) => {
                 // console.log(response);
                 this.records = response.data.inbox;
