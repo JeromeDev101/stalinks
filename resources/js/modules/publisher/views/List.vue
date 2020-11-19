@@ -248,10 +248,10 @@
                                 <th v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>
                                 <th v-show="tblPublisherOpt.ur">UR</th>
                                 <th v-show="tblPublisherOpt.dr">DR</th>
-                                <th v-show="tblPublisherOpt.backlinks">Backlinks</th>
+                                <th v-show="tblPublisherOpt.backlinks">Blinks</th>
                                 <th v-show="tblPublisherOpt.ref_domain">Ref Domains</th>
-                                <th v-show="tblPublisherOpt.org_keywords">Organic Keywords</th>
-                                <th v-show="tblPublisherOpt.org_traffic">Organic Traffic</th>
+                                <th v-show="tblPublisherOpt.org_keywords">Org Kwd</th>
+                                <th v-show="tblPublisherOpt.org_traffic">Org Traffic</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
