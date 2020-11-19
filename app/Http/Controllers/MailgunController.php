@@ -125,6 +125,10 @@ class MailgunController extends Controller
                             ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
         }
 
+        if (isset($request->label_id) && $request->label_id != ''){
+            $inbox = $inbox->where('replies.label_id', $request->label_id);
+        }
+
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
