@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="box box-solid">
+                <div class="box box-solid" v-show="$route.name != 'mail-template'">
                     <div class="box-header with-border">
                         <h3 class="box-title">Labels</h3>
 
