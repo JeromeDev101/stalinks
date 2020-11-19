@@ -322,7 +322,7 @@ $description = 'Test route';
             return response()->json($validator->messages());
         }
 
-        $replies = DB::table('replies')->where('sender', 'morley@tools.stalinks.com')->where('received','morley@tools.stalinks.com')->orderBy('created_at','DESC')->get();
+        $replies = DB::table('replies')->where('sender', Auth::user()->work_mail)->where('received',$request->email)->orderBy('created_at','DESC')->get();
 
         return response()->json($replies);
     }

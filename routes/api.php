@@ -197,10 +197,10 @@ Route::middleware('auth:api')->group(function () {
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
+        Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
     });
 
      Route::name('labels')->resource('/label','LabelController');
 });
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
-Route::name('get_replies')->post('/mail/get-reply','MailgunController@get_reply');
