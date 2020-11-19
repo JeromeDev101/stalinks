@@ -378,11 +378,21 @@ class AccountController extends Controller
     }
 
     public function updateSubAccount(Request $request) {
+        // dd($request->all());
+        $input = $request->only('username', 'name', 'status');
+        if ($request->password != '') {
+            $request->validate([
+                'c_password' => 'required|same:password'
+            ]);
+
+            $input['password'] = Hash::make($request->password);
+        }
+
         $registration = Registration::findOrFail($request->id);
-        $registration->update($request->only('username', 'name', 'status'));
+        $registration->update($input);
 
         $user = User::where('email', $registration->email)->first();
-        $user->update($request->only('username', 'name', 'status'));
+        $user->update($input);
 
         return response()->json(['success' => true],200);
     }

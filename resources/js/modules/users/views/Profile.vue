@@ -275,6 +275,19 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="">Password</label>
+                                    <input type="password" class="form-control" v-model="updateModelSubAccount.password">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageErrors.c_password != ''}" class="form-group">
+                                    <label for="">Confirm Password</label>
+                                    <input type="password" class="form-control" v-model="updateModelSubAccount.c_password">
+                                    <span v-show="messageErrors.c_password != ''" class="text-danger">{{ messageErrors.c_password }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="">Email</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.email" :disabled="true">
                                 </div>
@@ -369,7 +382,12 @@ export default {
                 username: '',
                 email: '',
                 status: '',
+                password: '',
+                c_password: '',
             },
+            messageErrors:{
+                c_password: '',
+            }
         };
     },
 
@@ -423,10 +441,12 @@ export default {
                     name: this.updateModelSubAccount.name,
                     username: this.updateModelSubAccount.username,
                     status: this.updateModelSubAccount.status,
+                    password: this.updateModelSubAccount.password,
+                    c_password: this.updateModelSubAccount.c_password,
                 }
             })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 this.getListSubAccount();
                 $("#modal-edit-sub-account").modal('hide')
 
@@ -435,6 +455,15 @@ export default {
                     'Successfully Updated',
                     'success'
                 )
+
+                this.messageErrors = {
+                    c_password: '',
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    this.messageErrors.c_password = error.response.data.errors.c_password[0]
+                }
             })
         },
 
@@ -464,13 +493,17 @@ export default {
         },
 
         doUpdateSubAccounts(account) {
-            this.updateModelSubAccount = account;
+            this.updateModelSubAccount.id = account.id;
+            this.updateModelSubAccount.name = account.name;
+            this.updateModelSubAccount.username = account.username;
+            this.updateModelSubAccount.status = account.status;
+            this.updateModelSubAccount.email = account.email;
         },
 
         getListSubAccount() {
             axios.get('/api/sub-account')
                 .then((res) => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     this.ListSubAccounts = res.data;
                 })
         },
