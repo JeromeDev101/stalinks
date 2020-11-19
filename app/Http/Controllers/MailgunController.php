@@ -48,9 +48,9 @@ class MailgunController extends Controller
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
-            'o:tracking'    => true,
-            'o:tracking-opens' => true,
-            'o:tracking-clicks' => true
+            // 'o:tracking'    => true,
+            // 'o:tracking-opens' => true,
+            // 'o:tracking-clicks' => true
         ]);
         
         Reply::create([
