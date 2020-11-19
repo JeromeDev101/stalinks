@@ -203,3 +203,4 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
+Route::name('get_replies')->post('/mail/get-reply','MailgunController@get_reply');

@@ -42,7 +42,7 @@ class MailgunController extends Controller
             $email_to = str_replace("|",",",$request->email);
         }
 
-    	$this->mg->messages()->send('tools.stalinks.com', [
+    	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
 		    'to'      => $email_to,
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
@@ -72,7 +72,7 @@ class MailgunController extends Controller
        
 
 
-		return response()->json(['success'=> true], 200);
+		return response()->json(['success'=> true, 'message'=> $sender], 200);
 
     }
 
@@ -306,5 +306,20 @@ $description = 'Test route';
         }
 
         return response()->json(['success' => true],200);
+    }
+
+    public function get_reply(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages());
+        }
+
+        $replies = DB::table('replies')->where('sender', 'morley@tools.stalinks.com')->where('received','morley@tools.stalinks.com')->orderBy('created_at','DESC')->get();
+
+        return response()->json($replies);
     }
 }
