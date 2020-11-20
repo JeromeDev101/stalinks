@@ -257,11 +257,14 @@
                         <h4 class="modal-title">Reply</h4>
                     </div>
                     <div class="modal-body relative">
-                        <blockquote class="primary">
-                            <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
-                        </blockquote>
-
                         <form class="row" action="">
+
+                            <div class="col-md-12">
+                                <blockquote class="default">
+                                    {{ viewContent.strippedHtml }}
+                                </blockquote>
+                            </div>
+
 
                             <div class="col-md-6">
                                 <div class="form-check">
@@ -323,12 +326,6 @@
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.cc">
                                 </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <blockquote class="default">
-                                    {{ viewContent.strippedHtml }}
-                                </blockquote>
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
@@ -501,6 +498,13 @@ export default {
             this.clearMessageform();
             this.replyContent.email = this.viewContent.from_mail;
             this.replyContent.title = this.viewContent.subject;
+
+            axios.post('/api/mail/get-reply', {
+                email: this.viewContent.from_mail,
+            })
+            .then((res) => {
+                console.log(res.data)
+            })
         },
 
         toggleTemplate() {

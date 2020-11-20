@@ -52,6 +52,7 @@ class MailgunController extends Controller
             'o:tracking-opens' => 'yes',
             'o:tracking-clicks' => 'yes'
         ]);
+
         
         Reply::create([
             'sender' => Auth::user()->work_mail,
