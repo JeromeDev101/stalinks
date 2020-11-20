@@ -42,12 +42,37 @@ class MailgunController extends Controller
             $email_to = str_replace("|",",",$request->email);
         }
 
+        $myArray = explode(',', $email_to);
+       
+        //add current email another associalte array
+        $aw = [];
+
+        foreach ($myArray as $key => $value) {
+            $kwe = array($value => ["first"=> $request->title, "id" => $key+1]);
+            array_push($aw, $kwe);
+        }
+
+        //convert to object
+        $object = (object)$aw;
+
+        //arrange all list of emails into string to be ready as one element array_merge
+        $list_emails = array();
+        foreach ($myArray as $key => $value) {
+        $list_emails[$key] = $value;
+
+        }
+
+        $str = implode (", ", $list_emails);
+       
+      
+
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
-		    'to'      => $email_to,
+		    'to'      => array($str),
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
+            'recipient-variables' => json_encode($object)
             // 'o:tracking'    => true,
             // 'o:tracking-opens' => true,
             // 'o:tracking-clicks' => true
