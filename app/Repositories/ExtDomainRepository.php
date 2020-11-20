@@ -130,7 +130,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                             }else{
 
                                 array_push($existing_datas, [
-                                    'domain' => $url
+                                    'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
                                 ]);
 
                                 // $message = ". Please check the Domain before uploading the CSV file";
@@ -140,17 +140,24 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                             }
 
                         }else{
-                            $message = ". Please check the Status before uploading the CSV file";
-                            $file_message = "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1);
-                            $result = false;
-                            break;
+                            // $message = ". Please check the Status before uploading the CSV file";
+                            // $file_message = "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1);
+                            // $result = false;
+                            // break;
+
+                            array_push($existing_datas, [
+                                'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
+                            ]);
                         }
 
                     }else{
-                        $message = ". Please check the Country before uploading the CSV file";
-                        $file_message = "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1);
-                        $result = false;
-                        break;
+                        array_push($existing_datas, [
+                            'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
+                        ]);
+                        // $message = ". Please check the Country before uploading the CSV file";
+                        // $file_message = "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1);
+                        // $result = false;
+                        // break;
                     }
                 }
             }

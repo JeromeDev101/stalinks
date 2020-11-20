@@ -1488,7 +1488,7 @@
                     let cnt_existing = this.messageForms.errors.length;
                     if (cnt_existing > 0){
                         for (let key in this.messageForms.errors ){
-                            this.existingDomain.data.push(this.messageForms.errors[key].domain)
+                            this.existingDomain.data.push(this.messageForms.errors[key].message)
                         }
 
                         this.existingDomain.total = cnt_existing;

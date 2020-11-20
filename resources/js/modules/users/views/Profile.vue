@@ -493,6 +493,10 @@ export default {
         },
 
         doUpdateSubAccounts(account) {
+            this.messageErrors = {
+                c_password: '',
+            }
+
             this.updateModelSubAccount.id = account.id;
             this.updateModelSubAccount.name = account.name;
             this.updateModelSubAccount.username = account.username;
