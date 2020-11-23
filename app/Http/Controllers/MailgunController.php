@@ -148,6 +148,10 @@ class MailgunController extends Controller
                             ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
         }
 
+        if (isset($request->label_id) && $request->label_id != ''){
+            $inbox = $inbox->orWhere('replies.label_id', $request->label_id);
+        }
+
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
@@ -158,10 +162,10 @@ class MailgunController extends Controller
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->whereNotNull('replies.deleted_at');
+                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->whereNotNull('replies.deleted_at');
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('replies.is_starred', 1);
+                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->where('replies.is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;
