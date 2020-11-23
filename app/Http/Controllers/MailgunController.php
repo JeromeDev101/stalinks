@@ -25,8 +25,6 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
-        // dd($request->email);
-
         $request->validate([
             'email'     => 'required',
             'title'     => 'required',
@@ -63,8 +61,6 @@ class MailgunController extends Controller
         }
 
         $str = implode (", ", $list_emails);
-       
-      
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
@@ -78,6 +74,7 @@ class MailgunController extends Controller
             // 'o:tracking-clicks' => true
         ]);
 
+        $input['body-plain'] = $request->content;
         
         Reply::create([
             'sender' => Auth::user()->work_mail,
@@ -86,7 +83,7 @@ class MailgunController extends Controller
             'is_viewed' => 1,
             'label_id' => 0,
             'received' => $request->email,
-            'body' => $request->content,
+            'body' => json_encode($input),
             'from_mail' => Auth::user()->work_mail,
             'attachment' => '',
             'date' => '',

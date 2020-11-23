@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="mailbox-read-message">
-                            {{ viewContent.strippedHtml }}
+                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>
                         </div>
                     </div>
 
@@ -261,7 +261,7 @@
 
                             <div class="col-md-12">
                                 <blockquote class="default">
-                                    {{ viewContent.strippedHtml }}
+                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>
                                 </blockquote>
                             </div>
 
@@ -666,10 +666,10 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            // console.log(inbox)
-
+            let content = JSON.parse(inbox.body)
             let from_mail = inbox.from_mail;
             let reply_to = '';
+
             if (from_mail.search("<") > 0) {
                 var spl = from_mail.split("<")[1]
                 reply_to = spl.slice(0, -1);
@@ -678,7 +678,7 @@ export default {
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = inbox.body;
+            this.viewContent.strippedHtml = content['body-plain'];
             this.viewContent.date = inbox.created_at;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;
