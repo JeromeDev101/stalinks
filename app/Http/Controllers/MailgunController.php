@@ -25,8 +25,6 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
-        // dd($request->email);
-
         $request->validate([
             'email'     => 'required',
             'title'     => 'required',
@@ -63,8 +61,6 @@ class MailgunController extends Controller
         }
 
         $str = implode (", ", $list_emails);
-       
-      
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
 		    'from'    => Auth::user()->work_mail,
@@ -77,6 +73,8 @@ class MailgunController extends Controller
             'o:tracking-opens' => true,
             'o:tracking-clicks' => true
         ]);
+
+        $input['body-plain'] = $request->content;
         
         Reply::create([
             'sender' => Auth::user()->work_mail,
@@ -85,7 +83,7 @@ class MailgunController extends Controller
             'is_viewed' => 1,
             'label_id' => 0,
             'received' => $request->email,
-            'body' => $request->content,
+            'body' => json_encode($input),
             'from_mail' => Auth::user()->work_mail,
             'attachment' => '',
             'date' => '',
@@ -150,6 +148,10 @@ class MailgunController extends Controller
                             ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
         }
 
+        if (isset($request->label_id) && $request->label_id != ''){
+            $inbox = $inbox->orWhere('replies.label_id', $request->label_id);
+        }
+
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
@@ -160,10 +162,10 @@ class MailgunController extends Controller
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->whereNotNull('replies.deleted_at');
+                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->whereNotNull('replies.deleted_at');
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('replies.is_starred', 1);
+                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->where('replies.is_starred', 1);
                     break;
                 default:
                     $inbox = $inbox;

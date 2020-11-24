@@ -17,32 +17,32 @@
                     <div class="box-body no-padding">
                         <ul class="list-group">
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Inbox'}">
-                                <router-link to="/mails/inbox">
+                                <router-link :to="{path:'/mails/inbox', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }" >
                                     <i class="fa fa-fw fa-inbox"></i>
                                     Inbox
                                     <span class="label label-primary pull-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
-                                <router-link to="/mails/sent">
+                                <router-link :to="{path:'/mails/sent', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-mail-reply"></i>
                                     Sent
                                 </router-link> 
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Starred'}">
-                                <router-link to="/mails/starred">                   
+                                <router-link :to="{path:'/mails/starred', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">                   
                                     <i class="fa fa-fw fa-star"></i>
                                     Starred
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
-                                <router-link to="/mails/template">                   
+                                <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">                   
                                     <i class="fa fa-fw fa-envelope-o"></i>
                                     Mail Template
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
-                                <router-link to="/mails/trash">
+                                <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-trash"></i>
                                     Trash
                                 </router-link>

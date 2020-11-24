@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="mailbox-read-message">
-                            {{ viewContent.strippedHtml }}
+                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>
                         </div>
                     </div>
 
@@ -257,11 +257,14 @@
                         <h4 class="modal-title">Reply</h4>
                     </div>
                     <div class="modal-body relative">
-                        <blockquote class="primary">
-                            <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
-                        </blockquote>
-
                         <form class="row" action="">
+
+                            <div class="col-md-12">
+                                <blockquote class="default">
+                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>
+                                </blockquote>
+                            </div>
+
 
                             <div class="col-md-6">
                                 <div class="form-check">
@@ -323,12 +326,6 @@
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.cc">
                                 </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <blockquote class="default">
-                                    {{ viewContent.strippedHtml }}
-                                </blockquote>
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
@@ -501,6 +498,13 @@ export default {
             this.clearMessageform();
             this.replyContent.email = this.viewContent.from_mail;
             this.replyContent.title = this.viewContent.subject;
+
+            axios.post('/api/mail/get-reply', {
+                email: this.viewContent.from_mail,
+            })
+            .then((res) => {
+                console.log(res.data)
+            })
         },
 
         toggleTemplate() {
@@ -662,10 +666,10 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            // console.log(inbox)
-
+            let content = JSON.parse(inbox.body)
             let from_mail = inbox.from_mail;
             let reply_to = '';
+
             if (from_mail.search("<") > 0) {
                 var spl = from_mail.split("<")[1]
                 reply_to = spl.slice(0, -1);
@@ -674,7 +678,7 @@ export default {
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = inbox.body;
+            this.viewContent.strippedHtml = content['body-plain'];
             this.viewContent.date = inbox.created_at;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;

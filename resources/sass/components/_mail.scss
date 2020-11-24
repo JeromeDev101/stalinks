@@ -54,6 +54,21 @@ blockquote {
         border-left: 6px solid #efefef;
     }
 }
+.pre-formatted {
+    white-space: pre;
+}
+
+.message-content {
+    min-height: 200px;
+    border: 0px;
+    &:read-only {
+        background-color: rgba(0, 0, 0, 0) !important;
+    }
+    &:focus {
+        border: 0px;
+        box-shadow: none;
+    }
+}
 
 .pointer { 
     &:hover {

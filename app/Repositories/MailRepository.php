@@ -34,11 +34,11 @@ class MailRepository extends BaseRepository implements MailRepositoryInterface
     public function getTemplateList($page, $perPage, $filters, $isFullPage)
     {
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        if (Auth::user()->type == config('constant.USER_TYPE_ADMIN')) {
+        // if (Auth::user()->type == config('constant.USER_TYPE_ADMIN')) {
             $queryBuilder->select('id', 'title', 'content', 'mail_name', 'country_id')->with('country')->orderBy('id', 'desc');
-        } else {
-            $queryBuilder->where('user_id', Auth::id())->select('id', 'title', 'content', 'mail_name', 'country_id')->with('country')->orderBy('id', 'desc');
-        }
+        // } else {
+        //     $queryBuilder->where('user_id', Auth::id())->select('id', 'title', 'content', 'mail_name', 'country_id')->with('country')->orderBy('id', 'desc');
+        // }
 
         if ($isFullPage) {
             $data = $queryBuilder->get();
