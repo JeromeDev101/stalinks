@@ -133,20 +133,29 @@ class PublisherController extends Controller
                 $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
 
                 if( $check->count() > 0 ){
-                    return response()->json([
-                        'errors' => [
-                            'file' => ''
-                        ],
-                        'message' => '',
-                        'data' => $publisher->url
-                    ],422);
-                }
-            }
 
-            $result[] = $publisher->update([
-                'valid' => $request->valid,
-            ]);
+                    array_push($result,[
+                        'id' => $publisher->id,
+                        'message' => 'existing',
+                        'url' => $publisher->url
+                    ]);
+                } 
+                
+            } else {
+                array_push($result,[
+                    'id' => $publisher->id,
+                    'message' => 'validated',
+                    'url' => $publisher->url
+                ]);
+
+                $publisher->update([
+                    'valid' => $request->valid,
+                ]);
+            }          
+                
         }
+
+
         return response()->json(['success'=> true, 'data' => $result],200);
     }
 

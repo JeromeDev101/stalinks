@@ -1004,24 +1004,40 @@
                 });
 
                 if( this.messageForms.action === 'saved' ){
-                    swal.fire(
-                        'Saved!',
-                        'Successfully Updated.',
-                        'success'
-                        )
-
+                    // swal.fire(
+                    //     'Saved!',
+                    //     'Successfully Updated.',
+                    //     'success'
+                    //     )
+                    
                     this.getPublisherList();
+
+                    if (this.messageForms.errors) {
+
+                        let html = '';
+
+                        for (var index in this.messageForms.errors) {
+                            var color = this.messageForms.errors[index].message == 'validated' ? 'green':'red';
+                            html += this.messageForms.errors[index].url + ' is ' + '<span class="badge" style="color:'+ color  +'">'+ this.messageForms.errors[index].message +'</span><br/>';
+                        }
+                        swal.fire({
+                            icon: 'success',
+                            title: "Success", 
+                            html: html,  
+                            confirmButtonText: "Ok", 
+                        });
+                    }
                 }
 
-                if (this.messageForms.data){
-                    swal.fire(
-                        'Error',
-                        'This URL has already have a valid \n' + this.messageForms.data,
-                        'error'
-                        )
+                // if (this.messageForms.data){
+                //     swal.fire(
+                //         'Error',
+                //         'This URL has already have a valid \n' + this.messageForms.data,
+                //         'error'
+                //         )
 
-                    this.getPublisherList();
-                }
+                //     this.getPublisherList();
+                // }
 
                 this.checkIds = [];
             },
