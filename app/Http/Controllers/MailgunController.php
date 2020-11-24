@@ -68,10 +68,10 @@ class MailgunController extends Controller
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
-            'recipient-variables' => json_encode($object)
-            // 'o:tracking'    => true,
-            // 'o:tracking-opens' => true,
-            // 'o:tracking-clicks' => true
+            'recipient-variables' => json_encode($object),
+            'o:tracking'    => 'yes',
+            'o:tracking-opens' => 'yes',
+            'o:tracking-clicks' => 'yes',
         ]);
 
         $input['body-plain'] = $request->content;
