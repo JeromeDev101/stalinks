@@ -360,4 +360,11 @@ $description = 'Test route';
 
         return response()->json($replies);
     }
+
+    public function show_attachment(Request $request)
+    {
+        return $this->mg->attachment()->show($request->url);
+        
+        
+    }
 }
