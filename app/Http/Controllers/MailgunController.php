@@ -31,7 +31,7 @@ class MailgunController extends Controller
             'content'   => 'required',
         ]);
 
-        return response()->json(['success'=> true, 'message'=> $request->all()], 200);
+        
 
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
