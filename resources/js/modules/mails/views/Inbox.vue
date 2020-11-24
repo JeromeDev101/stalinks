@@ -79,7 +79,7 @@
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <!-- <td><i class="fa fa-fw fa-paperclip"></i></td> -->
+                                    <td v-show="inbox.attachment != ''"><i class="fa fa-fw fa-paperclip"></i></td>
                                     <td class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 
@@ -230,12 +230,12 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" class="form-control" :disabled="true">
+                                    <input type="file" class="form-control" id="file_send" ref="file_send">
                                 </div>
-                            </div> -->
+                            </div>
 
                         </form>
                     </div>
@@ -344,12 +344,12 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" class="form-control" :disabled="true">
+                                    <input type="file" id="file_reply" ref="file_reply" class="form-control" :disabled="true">
                                 </div>
-                            </div> -->
+                            </div>
 
                         </form>
                     </div>
@@ -696,12 +696,15 @@ export default {
         },
 
         async sendEmail(type) {
-            await this.$store.dispatch('actionSendMailgun', {
-                cc: type == 'reply' ? this.replyContent.cc : this.emailContent.cc,
-                email: type == 'reply' ? this.replyContent.email : this.emailContent.email,
-                title: type == 'reply' ? this.replyContent.title : this.emailContent.title,
-                content: type == 'reply' ? this.replyContent.content : this.emailContent.content,
-            });
+
+            this.formData = new FormData();
+            this.formData.append('cc', type == 'reply' ? this.replyContent.cc : this.emailContent.cc);
+            this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
+            this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
+            this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
+            this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
+
+            await this.$store.dispatch('actionSendMailgun', this.formData);
 
             if (this.messageForms.action == 'success') {
                 $("#modal-compose-email").modal('hide');
