@@ -69,6 +69,7 @@ class MailgunController extends Controller
 		    'subject' => $request->title,
             'text'    => $request->content,
             'recipient-variables' => json_encode($object),
+            'o:tag'   => array('test1'),
             'o:tracking'    => 'yes',
             'o:tracking-opens' => 'yes',
             'o:tracking-clicks' => 'yes',
