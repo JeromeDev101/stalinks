@@ -73,9 +73,9 @@ class MailgunController extends Controller
 		    'subject' => $request->title,
             'text'    => $request->content,
             'recipient-variables' => json_encode($object)
-            // 'o:tracking'    => true,
-            // 'o:tracking-opens' => true,
-            // 'o:tracking-clicks' => true
+            'o:tracking'    => true,
+            'o:tracking-opens' => true,
+            'o:tracking-clicks' => true
         ]);
         
         Reply::create([
