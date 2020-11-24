@@ -123,6 +123,9 @@ export default {
     created() {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
+    },
+
+    mounted() {
         this.liveGetWallet();
     },
 
@@ -150,6 +153,8 @@ export default {
 
         liveGetWallet() {
             if (this.user.role_id == 5){
+                let wallet = {};
+
                 axios.get('api/wallet-credit')
                     .then(function (res){
                         var result = res.data
@@ -159,7 +164,7 @@ export default {
                     })
                     .catch(error => console.log(error))
                 
-                let wallet = JSON.parse(localStorage.getItem("wallet"))
+                wallet = JSON.parse(localStorage.getItem("wallet"))
 
 
                 if ( Number.isInteger(wallet.wallet) ){
