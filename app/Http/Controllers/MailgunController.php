@@ -34,6 +34,9 @@ class MailgunController extends Controller
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
+
+        //dd($request->attachment->getRealPath());
+        //dd([isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]);
         $email_to = $request->email;
 
         if (strpos($request->email, '|') !== false) {
@@ -63,12 +66,13 @@ class MailgunController extends Controller
         $str = implode (", ", $list_emails);
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
-		    'from'    => Auth::user()->work_mail,
+		    'from'    => 'morley@tools.stalinks.com',
 		    'to'      => array($str),
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
             'text'    => $request->content,
             'recipient-variables' => json_encode($object),
+            'attachment' => [isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ],
             'o:tag'   => array('test1'),
             'o:tracking'    => 'yes',
             'o:tracking-opens' => 'yes',
@@ -78,15 +82,15 @@ class MailgunController extends Controller
         $input['body-plain'] = $request->content;
         
         Reply::create([
-            'sender' => Auth::user()->work_mail,
+            'sender' => 'morley@tools.stalinks.com',
             'subject' => $request->title,
             'is_sent' => 1,
             'is_viewed' => 1,
             'label_id' => 0,
             'received' => $request->email,
             'body' => json_encode($input),
-            'from_mail' => Auth::user()->work_mail,
-            'attachment' => '',
+            'from_mail' => 'morley@tools.stalinks.com',
+            'attachment' => json_encode([isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]),
             'date' => '',
             'message_id' => '',
             'references_mail' => '',
