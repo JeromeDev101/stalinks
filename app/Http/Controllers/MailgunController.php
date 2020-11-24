@@ -66,7 +66,7 @@ class MailgunController extends Controller
         $str = implode (", ", $list_emails);
 
     	$sender = $this->mg->messages()->send('tools.stalinks.com', [
-		    'from'    => 'morley@tools.stalinks.com',
+		    'from'    => Auth::user()->work_mail,
 		    'to'      => array($str),
             'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject' => $request->title,
@@ -82,14 +82,14 @@ class MailgunController extends Controller
         $input['body-plain'] = $request->content;
         
         Reply::create([
-            'sender' => 'morley@tools.stalinks.com',
+            'sender' => Auth::user()->work_mail,
             'subject' => $request->title,
             'is_sent' => 1,
             'is_viewed' => 1,
             'label_id' => 0,
             'received' => $request->email,
             'body' => json_encode($input),
-            'from_mail' => 'morley@tools.stalinks.com',
+            'from_mail' => Auth::user()->work_mail,
             'attachment' => json_encode([isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]),
             'date' => '',
             'message_id' => '',
