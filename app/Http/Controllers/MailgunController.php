@@ -385,4 +385,17 @@ $description = 'Test route';
         
         
     }
+
+    public function check_domain(Request $request)
+    {
+        try{
+            $client = new \GuzzleHttp\Client();
+            $request = $client->get($request->domain);
+            $response = $request;
+           
+            return response()->json(['status'=> $response->getStatusCode(), 'message'=>$response->getReasonPhrase()]);
+        }catch(\Exception $e){
+            return response()->json(['status'=> 401,'message'=> $e->getHandlerContext()['error']]);
+        }
+    }
 }
