@@ -31,6 +31,8 @@ class MailgunController extends Controller
             'content'   => 'required',
         ]);
 
+        return response()->json(['success'=> true, 'message'=> $request->all()], 200);
+
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
@@ -270,7 +272,7 @@ $description = 'Test route';
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => '',
+            'attachment'        => isset($request->attachments) ? json_encode($request->attachments) : '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',
