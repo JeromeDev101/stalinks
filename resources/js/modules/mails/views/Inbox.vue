@@ -696,9 +696,15 @@ export default {
         },
 
         async sendEmail(type) {
+            let cc = '';
+            if (type == 'reply') {
+                cc = (typeof(this.replyContent.cc) == "undefined" ) ? "": this.replyContent.cc;
+            } else {
+                cc = (typeof(this.emailContent.cc) == "undefined" ) ? "": this.emailContent.cc;
+            }
 
             this.formData = new FormData();
-            this.formData.append('cc', type == 'reply' ? this.replyContent.cc : this.emailContent.cc);
+            this.formData.append('cc', cc);
             this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
             this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
             this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
