@@ -132,6 +132,13 @@ class ArticlesController extends Controller
             $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
+        if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Buyer' ){
+            // if( $user->role_id == 6 ){
+                $backlinks_ids = $this->getBacklinksForBuyer();
+    
+                $list->whereIn('article.id_backlink', $backlinks_ids);
+            }
+
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
                 'data' => $list,
@@ -147,6 +154,13 @@ class ArticlesController extends Controller
         $user = Auth::user();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
         $backlinks_ids = Backlink::whereIn('publisher_id', $publisher_ids)->pluck('id')->toArray();
+
+        return $backlinks_ids;
+    }
+
+    private function getBacklinksForBuyer() {
+        $user = Auth::user();
+        $backlinks_ids = Backlink::whereIn('user_id', $user->id)->pluck('id')->toArray();
 
         return $backlinks_ids;
     }

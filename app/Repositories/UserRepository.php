@@ -47,6 +47,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         // $user = $this->model->with('UserType','role', 'countriesAccessable', 'internalDomainsAccessable.country', 'backlinks.intDomain.country')->findOrFail($id);
 
         $user = $this->model
+                            ->with('registration:id,email,is_sub_account')
                             ->with('total_wallet')
                             ->with('UserType','role', 'countriesAccessable')->findOrFail($id);
 

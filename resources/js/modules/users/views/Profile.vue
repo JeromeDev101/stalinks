@@ -174,7 +174,7 @@
         </div>
 
 
-        <div class="col-sm-12" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5">
+        <div class="col-sm-12" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
             <div class="box box-primary table-user">
                 <div class="box-header"  >
                     <h3 class="box-title">Add Sub Account</h3>
@@ -407,23 +407,17 @@ export default {
 
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-        // if (!this.currentUser.isAdmin) {
-        //     window.location.href = '/';
-        //     return;
-        // }
         let userId = this.$route.params.id || null;
         await this.$store.dispatch('actionGetUserInformation', {
             vue: this,
             id: userId,
         });
 
-        // this.filterExtDomain();
-        // this.filterIntDomain();
-        // this.filterBacklink();
-        // this.filterPrice();
         this.checkAccountType();
         this.getPublisherSummaryCountry();
         this.bindPayment();
+
+        console.log(this.user)
 
         // this.$root.$refs.AppHeader.liveGetWallet()
     },
@@ -507,7 +501,6 @@ export default {
         getListSubAccount() {
             axios.get('/api/sub-account')
                 .then((res) => {
-                    // console.log(res.data)
                     this.ListSubAccounts = res.data;
                 })
         },
@@ -537,6 +530,8 @@ export default {
                     email: '',
                     password: '',
                 }
+
+                this.getListSubAccount();
             }
 
         },
@@ -587,25 +582,6 @@ export default {
             }
         },
 
-        // async filterExtDomain() {
-        //     let that = this;
-        //     that.extDomain.country_id_of_user = [],
-        //     that.extDomain.status_of_user = [],
-        //     this.user.countries_accessable.forEach(function(country) {
-        //         that.extDomain.country_id_of_user.push(country.id)
-        //         if (country.external_domains) {
-        //             country.external_domains.forEach(function(ext) {
-        //                 that.extDomain.status_of_user.push(ext.status)
-        //             })
-        //         }
-        //     });
-        //     that.extDomain.employee_id = that.user.id;
-        //     await this.$store.dispatch('filterExtDomain', {
-        //         vue: this,
-        //         params: this.extDomain,
-        //     });
-        // },
-
         checkAccountType() {
             let that = this.currentUser
             if( that.user_type ){
@@ -614,50 +590,6 @@ export default {
                 }
             }
         },
-
-        // async filterIntDomain() {
-        //     let that = this;
-        //     that.intDomain.country_id_of_user = [],
-
-        //     this.user.internal_domains_accessable.forEach(function(internal_domain) {
-        //         that.intDomain.country_id_of_user.push(internal_domain.country.id)
-        //     });
-        //     that.intDomain.employee_id = that.user.id;
-        //     await this.$store.dispatch('filterIntDomain', {
-        //         vue: this,
-        //         params: this.intDomain,
-        //     });
-        // },
-
-        // async filterBacklink() {
-        //     let that = this;
-        //     that.backLink.country_id_of_user = [],
-        //     that.backLink.status_of_backlink = [],
-
-        //     this.user.backlinks.forEach(function(backlink) {
-        //         that.backLink.status_of_backlink.push(backlink.status)
-        //         that.backLink.country_id_of_user.push(backlink.int_domain.country.id)
-        //     });
-        //     that.backLink.employee_id = that.user.id;
-        //     await this.$store.dispatch('filterBackLink', {
-        //         vue: this,
-        //         params: this.backLink,
-        //     });
-        // },
-
-        // async filterPrice() {
-        //     let that = this;
-        //     that.price.country_id_of_user = [],
-
-        //     this.user.backlinks.forEach(function(backlink) {
-        //         that.price.country_id_of_user.push(backlink.int_domain.country.id)
-        //     });
-        //     that.price.employee_id = that.user.id;
-        //     await this.$store.dispatch('filterPrice', {
-        //         vue: this,
-        //         params: this.price,
-        //     });
-        // },
 
         checkArray(array) {
             return Hepler.arrayNotEmpty(array);
