@@ -85,19 +85,7 @@ class MailgunController extends Controller
 
         $str = implode (", ", $list_emails);
         
-        if(isset($request->attachment) && $request->attachment != "undefined")
-        {
-            $atth = [
-                'filePath'=>$request->attachment->getRealPath(),
-                'filename'=>$request->attachment->getClientOriginalName()
-            ];
-        }else 
-        {
-           $atth = [
-                'filePath'=>'',
-                'filename'=>''
-            ];
-        }
+       
 
 
        
@@ -108,7 +96,7 @@ class MailgunController extends Controller
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'recipient-variables'   => json_encode($object),
-            'attachment'            => [$atth],
+            'attachment'            => [isset($request->attachment) ? array('filePath'       =>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ],
             'o:tag'                 => array('test1'),
             'o:tracking'            => 'yes',
             'o:tracking-opens'      => 'yes',
