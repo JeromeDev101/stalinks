@@ -25,20 +25,38 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
+        // if(isset($request->attachment1))
+        // {
+        //     $list = array($request->attachment1, $request->attachment2);
+
+        //     $list_attach = array();
+
+        //     foreach ($list as $key => $value) {
+        //         $list_attach[$key]['filePath'] = $value->getRealPath();
+        //         $list_attach[$key]['filename'] = $value->getClientOriginalName();
+
+        //     }
+
+            
+
+           
+        // }else {
+        //     $list_attach = '';
+        // }
+
+
         $request->validate([
             'email'     => 'required',
             'title'     => 'required',
             'content'   => 'required',
         ]);
 
-        return response()->json(['success'=> true, 'message'=> $request->all()], 200);
+        
 
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
 
-        //dd($request->attachment->getRealPath());
-        //dd([isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]);
         $email_to = $request->email;
 
         if (strpos($request->email, '|') !== false) {
@@ -66,36 +84,40 @@ class MailgunController extends Controller
         }
 
         $str = implode (", ", $list_emails);
+        
+       
 
-    	$sender = $this->mg->messages()->send('tools.stalinks.com', [
-		    'from'    => Auth::user()->work_mail,
-		    'to'      => array($str),
-            'bcc'      => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
-		    'subject' => $request->title,
-            'text'    => $request->content,
-            'recipient-variables' => json_encode($object),
-            'attachment' => [isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ],
-            'o:tag'   => array('test1'),
-            'o:tracking'    => 'yes',
-            'o:tracking-opens' => 'yes',
-            'o:tracking-clicks' => 'yes',
+
+       
+    	$sender = $this->mg->messages()->send('stalinks.com', [
+		    'from'                  => Auth::user()->work_mail,
+		    'to'                    => array($str),
+            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
+		    'subject'               => $request->title,
+            'text'                  => $request->content,
+            'recipient-variables'   => json_encode($object),
+            'attachment'            => [isset($request->attachment) ? array('filePath'       =>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ],
+            'o:tag'                 => array('test1'),
+            'o:tracking'            => 'yes',
+            'o:tracking-opens'      => 'yes',
+            'o:tracking-clicks'     => 'yes',
         ]);
 
         $input['body-plain'] = $request->content;
         
         Reply::create([
-            'sender' => Auth::user()->work_mail,
-            'subject' => $request->title,
-            'is_sent' => 1,
-            'is_viewed' => 1,
-            'label_id' => 0,
-            'received' => $request->email,
-            'body' => json_encode($input),
-            'from_mail' => Auth::user()->work_mail,
-            'attachment' => json_encode([isset($request->attachment) ? array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]),
-            'date' => '',
-            'message_id' => '',
-            'references_mail' => '',
+            'sender'            => Auth::user()->work_mail,
+            'subject'           => $request->title,
+            'is_sent'           => 1,
+            'is_viewed'         => 1,
+            'label_id'          => 0,
+            'received'          => $request->email,
+            'body'              => json_encode($input),
+            'from_mail'         => Auth::user()->work_mail,
+            'attachment'        => json_encode([isset($request->attachment) ? array('filePath'       =>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]),
+            'date'              => '',
+            'message_id'        => '',
+            'references_mail'   => '',
         ]);
 
           
@@ -108,7 +130,7 @@ class MailgunController extends Controller
 
     public function retrieve_all()
     {
-    	$aw = $this->mg->events()->get('tools.stalinks.com');
+    	$aw = $this->mg->events()->get('stalinks.com');
 
     	return response()->json( new Messages(collect($aw->getItems())) );
     }
@@ -201,18 +223,18 @@ class MailgunController extends Controller
     //  dd($we);
 
     // $expression = "catch_all()";
-    // $actions = ['store(notify="https://tools.stalinks.com/api/mail/post-reply")'];
+    // $actions = ['store(notify="https://stalinks.com/api/mail/post-reply")'];
     // $description = 'Test route';
         dd("aw");
     $expression = "match_recipient('moravel752@gmail.com')";
-$actions = ["forward('https://tools.stalinks.com/api/mail/post-reply')"];
+$actions = ["forward('https://stalinks.com/api/mail/post-reply')"];
 $description = 'Test route';
 
     $this->mg->routes()->create($expression, $actions, $description);
     dd("route 51");
 
     //  $expression = "catch_all()";
-    //  $actions = ['forward("https://tools.stalinks.com/api/mail/post-reply")'];
+    //  $actions = ['forward("https://stalinks.com/api/mail/post-reply")'];
     //  $description = 'Test';
 
      
@@ -228,7 +250,7 @@ $description = 'Test route';
     //   dd("route delted");
 
 
-     $aw = $this->mg->events()->get('tools.stalinks.com');
+     $aw = $this->mg->events()->get('stalinks.com');
      
      foreach($aw->getItems() as $kwe)
      {
@@ -366,5 +388,18 @@ $description = 'Test route';
         return $this->mg->attachment()->show($request->url);
         
         
+    }
+
+    public function check_domain(Request $request)
+    {
+        try{
+            $client = new \GuzzleHttp\Client();
+            $request = $client->get($request->domain);
+            $response = $request;
+           
+            return response()->json(['status'=> $response->getStatusCode(), 'message'=>$response->getReasonPhrase()]);
+        }catch(\Exception $e){
+            return response()->json(['status'=> 401,'message'=> $e->getHandlerContext()['error']]);
+        }
     }
 }
