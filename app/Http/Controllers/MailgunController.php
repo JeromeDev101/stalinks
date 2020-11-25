@@ -93,7 +93,10 @@ class MailgunController extends Controller
             ];
         }else 
         {
-            $atth = [''];
+           $atth = [
+                'filePath'=>'',
+                'filename'=>''
+            ];
         }
 
 
