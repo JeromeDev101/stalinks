@@ -85,7 +85,7 @@ class MailgunController extends Controller
 
         $str = implode (", ", $list_emails);
        
-    	$sender = $this->mg->messages()->send('tools.stalinks.com', [
+    	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
             'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
@@ -126,7 +126,7 @@ class MailgunController extends Controller
 
     public function retrieve_all()
     {
-    	$aw = $this->mg->events()->get('tools.stalinks.com');
+    	$aw = $this->mg->events()->get('stalinks.com');
 
     	return response()->json( new Messages(collect($aw->getItems())) );
     }
@@ -219,18 +219,18 @@ class MailgunController extends Controller
     //  dd($we);
 
     // $expression = "catch_all()";
-    // $actions = ['store(notify="https://tools.stalinks.com/api/mail/post-reply")'];
+    // $actions = ['store(notify="https://stalinks.com/api/mail/post-reply")'];
     // $description = 'Test route';
         dd("aw");
     $expression = "match_recipient('moravel752@gmail.com')";
-$actions = ["forward('https://tools.stalinks.com/api/mail/post-reply')"];
+$actions = ["forward('https://stalinks.com/api/mail/post-reply')"];
 $description = 'Test route';
 
     $this->mg->routes()->create($expression, $actions, $description);
     dd("route 51");
 
     //  $expression = "catch_all()";
-    //  $actions = ['forward("https://tools.stalinks.com/api/mail/post-reply")'];
+    //  $actions = ['forward("https://stalinks.com/api/mail/post-reply")'];
     //  $description = 'Test';
 
      
@@ -246,7 +246,7 @@ $description = 'Test route';
     //   dd("route delted");
 
 
-     $aw = $this->mg->events()->get('tools.stalinks.com');
+     $aw = $this->mg->events()->get('stalinks.com');
      
      foreach($aw->getItems() as $kwe)
      {
