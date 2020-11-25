@@ -44,6 +44,7 @@ class MailgunController extends Controller
         //     $list_attach = '';
         // }
 
+        dd($request->all());
 
         $request->validate([
             'email'     => 'required',
