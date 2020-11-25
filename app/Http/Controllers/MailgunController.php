@@ -44,7 +44,15 @@ class MailgunController extends Controller
         //     $list_attach = '';
         // }
 
-        dd($request->all());
+        if($request->attachment == "undefined" )
+        {
+            $atth = null;
+        }else{
+            $atth = [
+                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
+            ];
+            
+        }
 
         $request->validate([
             'email'     => 'required',
@@ -97,7 +105,7 @@ class MailgunController extends Controller
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'recipient-variables'   => json_encode($object),
-            'attachment'            => [isset($request->attachment) ? array('filePath'       =>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ],
+            'attachment'            => $atth,
             'o:tag'                 => array('test1'),
             'o:tracking'            => 'yes',
             'o:tracking-opens'      => 'yes',
@@ -115,7 +123,7 @@ class MailgunController extends Controller
             'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => json_encode([isset($request->attachment) ? array('filePath'       =>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()) : '' ]),
+            'attachment'        => json_encode($atth),
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',
