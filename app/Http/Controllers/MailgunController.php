@@ -31,6 +31,8 @@ class MailgunController extends Controller
             'content'   => 'required',
         ]);
 
+        return response()->json(['success'=> true, 'message'=> $request->all()], 200);
+
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
@@ -270,7 +272,7 @@ $description = 'Test route';
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => '',
+            'attachment'        => isset($request->attachments) ? json_encode($request->attachments) : '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',
@@ -357,5 +359,12 @@ $description = 'Test route';
         $replies = DB::table('replies')->where('sender', Auth::user()->work_mail)->where('received',$request->email)->orderBy('created_at','DESC')->get();
 
         return response()->json($replies);
+    }
+
+    public function show_attachment(Request $request)
+    {
+        return $this->mg->attachment()->show($request->url);
+        
+        
     }
 }

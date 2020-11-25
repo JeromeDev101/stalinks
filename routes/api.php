@@ -198,9 +198,11 @@ Route::middleware('auth:api')->group(function () {
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
+        Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
     });
 
      Route::name('labels')->resource('/label','LabelController');
 });
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
+
