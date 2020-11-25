@@ -183,7 +183,7 @@
                                 <div class="col-sm-12">
                                     <select class="form-control" name="language" ref="language" v-on:change="checkData">
                                         <option value="">Select language</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
