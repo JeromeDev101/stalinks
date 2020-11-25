@@ -79,7 +79,7 @@
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <td v-show="inbox.attachment != ''"><i class="fa fa-fw fa-paperclip"></i></td>
+                                    <td><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
                                     <td class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 

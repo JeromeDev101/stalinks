@@ -183,7 +183,7 @@ const actions = {
             let response = await PublisherService.validData(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: response.data.data });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);
