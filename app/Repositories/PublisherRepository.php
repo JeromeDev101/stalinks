@@ -299,6 +299,9 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $article = $line[2];
 
                     if( trim($url, " ") != '' ){
+
+                        $valid = $this->checkValid($url);
+
                         Publisher::create([
                             'user_id' => $id,
                             'language_id' => $language,
@@ -311,7 +314,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             'org_traffic' => 0,
                             'price' => preg_replace('/[^0-9.\-]/', '', $price),
                             'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                            'valid' => 'unchecked',
+                            'valid' => $valid,
                             'casino_sites' => 'yes',
                             'topic' => null
                         ]);
@@ -346,6 +349,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 if( trim($url, " ") != '' ){
                                     // $orig_language = $this->getLanguage($language_excel);
                                     $lang = $this->getCountry($language_excel);
+                                    $valid = $this->checkValid($url);
                                     Publisher::create([
                                         'user_id' => $seller_id ,
                                         'language_id' => $lang,
@@ -358,7 +362,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'org_traffic' => 0,
                                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
                                         'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                        'valid' => 'unchecked',
+                                        'valid' => $valid,
                                         'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                         'topic' => $topic,
                                         // 'country_id' => $orig_language,
@@ -410,6 +414,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ],
             "exist" => $existing_datas,
         ];
+    }
+
+    private function checkValid($url) {
+        $result = 'valid';
+        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->first();
+        if (isset($publisher->id)) {
+            $result = 'unchecked';
+        }
+
+        return $result;
     }
 
     private function checkUrlAndSeller($seller_id, $url) {
