@@ -116,17 +116,17 @@ class WalletTransactionController extends Controller
             'admin_confirmation' => 'Paid',
         ]);
 
-        $total_wallet = TotalWallet::where('user_id', $request->user_id_buyer)->first();
+        // $total_wallet = TotalWallet::where('user_id', $request->user_id_buyer)->first();
 
-        if( $total_wallet['user_id'] == ""){
-            TotalWallet::create([
-                'user_id' => $request->user_id_buyer,
-                'total_wallet' => $request->amount_usd,
-            ]);
-        }else{
-            $amount = floatVal($total_wallet['total_wallet']) + floatVal($request->amount_usd);
-            $total_wallet->update(['total_wallet' => $amount]);
-        }
+        // if( isset($total_wallet['user_id']) && $total_wallet['user_id'] == ""){
+        //     TotalWallet::create([
+        //         'user_id' => $request->user_id_buyer,
+        //         'total_wallet' => $request->amount_usd,
+        //     ]);
+        // }else{
+        //     $amount = floatVal($total_wallet['total_wallet']) + floatVal($request->amount_usd);
+        //     $total_wallet->update(['total_wallet' => $amount]);
+        // }
 
         return response()->json(['success' => true], 200);
     }

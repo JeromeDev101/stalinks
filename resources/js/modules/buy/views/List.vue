@@ -863,7 +863,16 @@
             },
 
             async submitBuy(params) {
+                let credit_left = parseInt(this.listBuy.credit);
                 $('#tbl_buy_backlink').DataTable().destroy();
+
+
+                if (this.user.isOurs == 1 && this.user.role_id == 5 && (this.user.registration != null && this.user.registration.is_sub_account == 1) ) { // check if sub buyer account
+                    if (credit_left <= 0 ) { // check if credit is 0
+                        swal.fire('error', 'No credits left', 'error');
+                        return false;
+                    }
+                } 
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateBuy', this.updateModel);

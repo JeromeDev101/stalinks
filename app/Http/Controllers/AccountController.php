@@ -275,26 +275,48 @@ class AccountController extends Controller
         //                                 ->get()
         //                                 ->toArray();
 
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+        // dd($sub_buyer_ids);
+
 
         $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
                                 ->where('status', 'Live')
                                 ->where('payment_status', 'Paid')
                                 ->where('user_id', $user_id)
+                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                })
                                 ->get();
 
         $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
                                 ->where('user_id', $user_id)
+                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                })
                                 ->get();
 
         $total_purchased_paid = Backlink::selectRaw('SUM(price) as total_purchased_paid')
                                 ->where('status', 'Live')
                                 ->where('user_id', $user_id)
+                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                })
                                 ->get();
 
-        $user = User::select('id','name')
-                    ->with('total_wallet')
-                    ->where('id', $user_id)
-                    ->get();
+        // $user = User::select('id','name')
+        //             ->with('total_wallet')
+        //             ->where('id', $user_id)
+        //             ->get();
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
@@ -304,8 +326,12 @@ class AccountController extends Controller
             $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
         }
 
-        if( isset($wallet_transaction[0]['amount_usd']) && isset($total_purchased[0]['total_purchased']) ){
-            $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+        if( isset($wallet_transaction[0]['amount_usd']) ){
+            if ( isset($total_purchased[0]['total_purchased']) ) {
+                $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+            } else {
+                $credit = floatval($wallet_transaction[0]['amount_usd']);
+            }
         }
 
         if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){

@@ -9,6 +9,7 @@ use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\BuyerPurchased;
 use App\Models\WalletTransaction;
+use App\Models\User;
 
 class PurchaseController extends Controller
 {
@@ -63,6 +64,26 @@ class PurchaseController extends Controller
             });
         }
 
+
+        // Getting wallet and deposits 
+
+        $user_id = $user->id;
+
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+        if (count($sub_buyer_ids) > 0) {
+            $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
+        }
+
         $getBuyer = BuyerPurchased::select('buyer_purchased.user_id_buyer','users.username')
                                 ->leftJoin('users', 'users.id', '=', 'buyer_purchased.user_id_buyer')
                                 ->where('buyer_purchased.status', 'Purchased')
@@ -77,13 +98,16 @@ class PurchaseController extends Controller
                             ->get();
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
-                            ->where('user_id', $user->id)
+                            ->where('user_id', $user_id)
                             ->get();
 
         $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
                             ->where('status', 'Live')
                             ->where('payment_status', 'Paid')
-                            ->where('user_id', $user->id)
+                            ->where('user_id', $user_id)
+                            ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                                return $query->orWhereIn('user_id', $sub_buyer_ids);
+                            })
                             ->get();
 
         if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
@@ -93,6 +117,10 @@ class PurchaseController extends Controller
         if( isset($wallet_transaction[0]['amount_usd']) ){
             $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
         }
+
+        // end of getting wallet and deposits
+
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){}
         else{

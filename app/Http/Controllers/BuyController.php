@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Registration;
 use App\Models\WalletTransaction;
+use App\Models\User;
 
 class BuyController extends Controller
 {
@@ -78,8 +79,21 @@ class BuyController extends Controller
 
         // Getting credit left 
 
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
         $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
                                 ->where('user_id', $user_id)
+                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                })
                                 ->get();
 
 
@@ -87,8 +101,12 @@ class BuyController extends Controller
                     ->where('user_id', $user_id)
                     ->get();
 
-        if( isset($wallet_transaction[0]['amount_usd']) && isset($total_purchased[0]['total_purchased']) ){
-            $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+        if( isset($wallet_transaction[0]['amount_usd']) ){
+            if (isset($total_purchased[0]['total_purchased'])) {
+                $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
+            } else {
+                $credit = floatval($wallet_transaction[0]['amount_usd']);
+            }
         }
 
         // End of Getting credit left 
