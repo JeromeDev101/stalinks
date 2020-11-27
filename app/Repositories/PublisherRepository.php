@@ -418,9 +418,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
     private function checkValid($url) {
         $result = 'valid';
-        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->first();
-        if (isset($publisher->id)) {
+        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->where('valid', 'valid')->count();
+        if ($publisher > 0) {
             $result = 'unchecked';
+        } else {
+            $result = 'valid';
         }
 
         return $result;
