@@ -119,21 +119,24 @@
 
                     <!-- For Attachment -->
 
-                    <!-- <div v-show="MessageDisplay" class="box-footer">
+                    <div v-show="MessageDisplay && viewContent.is_sent == 0 && viewContent.attachment.name != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
                             <li>
-                                <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
-
+                                <span class="mailbox-attachment-icon">
+                                    <!-- <i class="fa fa-file-pdf-o"></i> -->
+                                    <img class="img-attachment" id="img-read-mail-attach">
+                                </span>
+                                    
                                 <div class="mailbox-attachment-info">
-                                <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> Sep2014-report.pdf</a>
+                                <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.name }}</a>
                                     <span class="mailbox-attachment-size">
-                                        1,245 KB
-                                        <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                                        {{ viewContent.attachment.size }}
+                                        <!-- <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a> -->
                                     </span>
                                 </div>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
@@ -429,6 +432,11 @@ export default {
                 subject: '',
                 strippedHtml: '',
                 deleted_at: '',
+                attachment: {
+                    url: '',
+                    name: '',
+                    size: '',
+                },
             },
             records: [],
             loadingMessage: false,
@@ -561,6 +569,11 @@ export default {
                         subject: '',
                         strippedHtml: '',
                         deleted_at: '',
+                        attachment: {
+                            url: '',
+                            name: '',
+                            size: '',
+                        },  
                     }
 
                     this.checkIds = [];
@@ -665,10 +678,34 @@ export default {
             this.getInbox();
         },
 
+        bytesToSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes == 0) return '0 Byte';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        },
+
         viewMessage(inbox, index) {
-            let content = JSON.parse(inbox.body)
+            let content = JSON.parse(inbox.body);
+            let attachment = JSON.parse(inbox.attachment);
+            let attach = JSON.parse(attachment);
             let from_mail = inbox.from_mail;
             let reply_to = '';
+
+            if (attach[0].url) {
+                axios.post('/api/mail/show-attachment', {
+                    url: attach[0].url
+                },{ responseType: 'arraybuffer' })
+                .then((res) => {
+
+                    // const blob = new Blob( [ res.data ] );
+                    // const url = URL.createObjectURL( blob );
+                    // const img = document.getElementById( 'img-read-mail-attach' );
+                    // img.src = url;
+                    // img.onload = e => URL.revokeObjectURL( url );
+
+                })
+            }
 
             if (from_mail.search("<") > 0) {
                 var spl = from_mail.split("<")[1]
@@ -687,6 +724,11 @@ export default {
             this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
             this.viewContent.is_sent = inbox.is_sent;
             this.viewContent.received = inbox.received;
+
+            if(attach[0].name) {
+                this.viewContent.attachment.name = attach[0].name
+                this.viewContent.attachment.size = this.bytesToSize(attach[0].size)
+            }
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })

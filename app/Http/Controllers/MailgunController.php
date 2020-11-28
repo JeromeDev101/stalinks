@@ -123,7 +123,7 @@ class MailgunController extends Controller
             'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => json_encode($atth),
+            'attachment'        => $atth == null ? '' : json_encode($atth),
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',

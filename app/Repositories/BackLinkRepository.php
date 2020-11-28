@@ -8,6 +8,7 @@ use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use Illuminate\Support\Arr;
 use App\Models\Registration;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 
 class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInterface
@@ -100,13 +101,27 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
     public function getBackLink($countryIds, $intDomains, $filters)
     {
         $paginate = $filters->paginate == '' ? 50:$filters->paginate;
-        $user = Auth::user();
+        // $user = Auth::user();
+        $user_id = Auth::user()->id;
         $query = $this->model->orderBy('id', 'desc');
 
-        $registered = Registration::where('email', $user->email)->first();
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
 
-        if( (isset($registered->type) && $registered->type == 'Buyer') || $user->role_id == 5){
-            $query->where('user_id', $user->id);
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+        if( (isset($registered->type) && $registered->type == 'Buyer') || Auth::user()->role_id == 5){
+            $query->where('user_id', $user_id)
+                    ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                        return $query->orWhereIn('user_id', $sub_buyer_ids);
+                    });
         }
 
         $backlink = $this->fillter($query, $filters);

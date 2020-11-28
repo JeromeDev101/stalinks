@@ -54,6 +54,13 @@ blockquote {
         border-left: 6px solid #efefef;
     }
 }
+
+.img-attachment {
+    object-fit: contain;
+    height: 90px;
+    width: 90px;
+}
+
 .pre-formatted {
     white-space: pre;
 }

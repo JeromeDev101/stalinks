@@ -186,13 +186,13 @@
                                 <th v-show="tblBuyOptions.url">URL</th>
                                 <th v-show="tblBuyOptions.ur">UR</th>
                                 <th v-show="tblBuyOptions.dr">DR</th>
-                                <th v-show="tblBuyOptions.backlinks">Backlinks</th>
-                                <th v-show="tblBuyOptions.ref_domains">Ref Domains</th>
-                                <th v-show="tblBuyOptions.org_keywords">Organic Keywords</th>
-                                <th v-show="tblBuyOptions.org_traffic">Organic Traffic</th>
+                                <th v-show="tblBuyOptions.backlinks">Blinks</th>
+                                <th v-show="tblBuyOptions.ref_domains">Ref Domain</th>
+                                <th v-show="tblBuyOptions.org_keywords">Org Kw</th>
+                                <th v-show="tblBuyOptions.org_traffic">Org Traffic</th>
                                 <th v-show="tblBuyOptions.price">Price</th>
                                 <th v-show="tblBuyOptions.status">Status</th>
-                                <th v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Combination</th>
+                                <th v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Comb</th>
                                 <th v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission">Code Price</th>
                                 <th v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
                                 <th>Buy</th>

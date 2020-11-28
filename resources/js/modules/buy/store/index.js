@@ -15,7 +15,7 @@ const state = {
         country: true,
         seller: true,
         topic: true,
-        casino_sites: true,
+        casino_sites: false,
         language: true,
         url: true,
         ur: true,

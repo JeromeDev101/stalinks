@@ -167,6 +167,19 @@ class DashboardController extends Controller
     }
 
     private function backlinkBuyer($buyer) {
+        $user_id = Auth::user()->id;
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+
         $columns = [
             'users.username',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
@@ -184,6 +197,7 @@ class DashboardController extends Controller
             '),
         ];
 
+
         $list = Backlink::select($columns)
                     ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                     ->leftJoin('users', 'backlinks.user_id', '=', 'users.id');
@@ -194,6 +208,11 @@ class DashboardController extends Controller
 
         if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
             $list = $list->where('backlinks.user_id', Auth::user()->id);
+        }
+
+        if( Auth::user()->isOurs == 1 && Auth::user()->role_id == 5 ) {
+            $list = $list->where('backlinks.user_id', Auth::user()->id)
+                        ->orWhereIn('backlinks.user_id', $sub_buyer_ids);
         }
                     
         return $list->groupBy('backlinks.user_id', 'users.username')
