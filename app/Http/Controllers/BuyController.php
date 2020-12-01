@@ -43,7 +43,9 @@ class BuyController extends Controller
                 ->leftJoin('buyer_purchased', function($q) use ($user_id){
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user_id);
-                });
+                })
+                ->where('publisher.ur', '!=', '0')
+                ->where('publisher.dr', '!=', '0');
 
         $registered = Registration::where('email', Auth::user()->email)->first();
 
@@ -155,11 +157,11 @@ class BuyController extends Controller
 
                 if( $result_1 != 0 && $result_2 != 0 ){
                     if( $var_a <= $result_1 ){
-                        $price_basis = 'Low';
+                        $price_basis = 'Good';
                     }
 
                     if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Good';
+                        $price_basis = 'Average';
                     }
 
                     if( $var_a > $result_2 ){

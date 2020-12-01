@@ -31,6 +31,9 @@ class ArticlesController extends Controller
     public function getArticleListAdmin(Request $request) {
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:15;
+        $user = Auth::user();
+        $registration = Registration::where('email', $user->email)->first();
+
         $list = Article::with('country:id,name')
                         ->with('price')
                         ->with(['backlinks' => function($q){
@@ -51,6 +54,13 @@ class ArticlesController extends Controller
             if( $filter['date_type'] == 'Completed'){
                 $list->where('date_complete', $filter['date']);
             }
+        }
+
+        if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Buyer' ){
+            // if( $user->role_id == 6 ){
+                $backlinks_ids = $this->getBacklinksForBuyer();
+    
+                $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
         if( isset($filter['writer']) && $filter['writer'] != ""){
@@ -137,7 +147,7 @@ class ArticlesController extends Controller
                 $backlinks_ids = $this->getBacklinksForBuyer();
     
                 $list->whereIn('article.id_backlink', $backlinks_ids);
-            }
+        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -160,7 +170,7 @@ class ArticlesController extends Controller
 
     private function getBacklinksForBuyer() {
         $user = Auth::user();
-        $backlinks_ids = Backlink::whereIn('user_id', $user->id)->pluck('id')->toArray();
+        $backlinks_ids = Backlink::where('user_id', $user->id)->pluck('id')->toArray();
 
         return $backlinks_ids;
     }
