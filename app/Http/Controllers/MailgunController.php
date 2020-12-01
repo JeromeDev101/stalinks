@@ -99,7 +99,7 @@ class MailgunController extends Controller
 
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
-		    'from'                  => Auth::user()->work_mail,
+		    'from'                  => 'morley@stalinks.com',
 		    'to'                    => array($str),
             'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject'               => $request->title,
@@ -112,22 +112,32 @@ class MailgunController extends Controller
             'o:tracking-clicks'     => 'yes',
         ]);
 
+        if($request->attachment != "undefined" )
+        {
+            $attach = time().'.'.$request->attachment->getClientOriginalExtension();
+            $request->attachment->move(public_path('/attachment'), $attach);
+        }
+
         $input['body-plain'] = $request->content;
         
         Reply::create([
-            'sender'            => Auth::user()->work_mail,
+            'sender'            => 'morley@stalinks.com',
             'subject'           => $request->title,
             'is_sent'           => 1,
             'is_viewed'         => 1,
             'label_id'          => 0,
             'received'          => $request->email,
             'body'              => json_encode($input),
-            'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => $atth == null ? '' : json_encode($atth),
+            'from_mail'         => 'morley@stalinks.com',
+            'attachment'        => $attach,
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',
         ]);
+
+
+        
+        
 
           
        
@@ -297,13 +307,15 @@ $description = 'Test route';
     {
        
         //return response()->json($request->all());
+       
+        //dd(json_decode($request->attachments)[0]->url);
 
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => isset($request->attachments) ? json_encode($request->attachments) : '',
+            'attachment'        => isset($request->attachments) ? json_decode($request->attachments)[0]->url : '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',

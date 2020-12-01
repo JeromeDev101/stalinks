@@ -187,7 +187,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Mailgun
     Route::group(['prefix'=> 'mail'], function(){
-        Route::name('email_send')->post('/send','MailgunController@send');
+        // Route::name('email_send')->post('/send','MailgunController@send');
         Route::name('email_retrieve_all')->get('/retrieve-all','MailgunController@retrieve_all');
         Route::name('message_view')->post('/view-message','MailgunController@view_message');
         Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
@@ -206,4 +206,4 @@ Route::middleware('auth:api')->group(function () {
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
 Route::name('/check_domain')->post('/check-domain','MailgunController@check_domain');
-
+Route::name('email_send')->post('/mail/send','MailgunController@send');
