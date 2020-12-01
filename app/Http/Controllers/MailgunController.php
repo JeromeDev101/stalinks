@@ -112,6 +112,12 @@ class MailgunController extends Controller
             'o:tracking-clicks'     => 'yes',
         ]);
 
+        if($request->attachment != "undefined" )
+        {
+            $attach = time().'.'.$request->attachment->getClientOriginalExtension();
+            $request->attachment->move(public_path('/attachment'), $attach);
+        }
+
         $input['body-plain'] = $request->content;
         
         Reply::create([
@@ -123,11 +129,15 @@ class MailgunController extends Controller
             'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => $atth == null ? '' : json_encode($atth),
+            'attachment'        => $attach,
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',
         ]);
+
+
+        
+        
 
           
        
