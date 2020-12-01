@@ -99,7 +99,7 @@ class MailgunController extends Controller
 
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
-		    'from'                  => Auth::user()->work_mail,
+		    'from'                  => 'morley@stalinks.com',
 		    'to'                    => array($str),
             'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
 		    'subject'               => $request->title,
@@ -121,14 +121,14 @@ class MailgunController extends Controller
         $input['body-plain'] = $request->content;
         
         Reply::create([
-            'sender'            => Auth::user()->work_mail,
+            'sender'            => 'morley@stalinks.com',
             'subject'           => $request->title,
             'is_sent'           => 1,
             'is_viewed'         => 1,
             'label_id'          => 0,
             'received'          => $request->email,
             'body'              => json_encode($input),
-            'from_mail'         => Auth::user()->work_mail,
+            'from_mail'         => 'morley@stalinks.com',
             'attachment'        => $attach,
             'date'              => '',
             'message_id'        => '',
