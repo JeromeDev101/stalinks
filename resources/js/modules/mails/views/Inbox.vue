@@ -119,21 +119,24 @@
 
                     <!-- For Attachment -->
 
-                    <div v-show="MessageDisplay && viewContent.is_sent == 0 && viewContent.attachment.name != ''" class="box-footer">
+                    <div v-show="MessageDisplay && viewContent.attachment != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
                             <li>
-                                <span class="mailbox-attachment-icon">
-                                    <!-- <i class="fa fa-file-pdf-o"></i> -->
+                                <!-- <span class="mailbox-attachment-icon">
+                                    <i class="fa fa-file-pdf-o"></i>
                                     <img class="img-attachment" id="img-read-mail-attach">
-                                </span>
+                                </span> -->
                                     
-                                <div class="mailbox-attachment-info">
-                                <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.name }}</a>
-                                    <span class="mailbox-attachment-size">
-                                        {{ viewContent.attachment.size }}
-                                        <!-- <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a> -->
-                                    </span>
+                                <div v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
+                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment }}</a>
+                                    <!-- <span class="mailbox-attachment-size">{{ viewContent.attachment }}</span> -->
                                 </div>
+
+                                <div v-show="viewContent.is_sent == 1" class="mailbox-attachment-info">
+                                    <a :href="'/attachment/'+viewContent.attachment" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment }}</a>
+                                    <!-- <span class="mailbox-attachment-size">{{ viewContent.attachment }}</span> -->
+                                </div>
+
                             </li>
                         </ul>
                     </div>
@@ -432,11 +435,7 @@ export default {
                 subject: '',
                 strippedHtml: '',
                 deleted_at: '',
-                attachment: {
-                    url: '',
-                    name: '',
-                    size: '',
-                },
+                attachment: '',
             },
             records: [],
             loadingMessage: false,
@@ -569,11 +568,7 @@ export default {
                         subject: '',
                         strippedHtml: '',
                         deleted_at: '',
-                        attachment: {
-                            url: '',
-                            name: '',
-                            size: '',
-                        },  
+                        attachment: '',  
                     }
 
                     this.checkIds = [];
@@ -687,25 +682,34 @@ export default {
 
         viewMessage(inbox, index) {
             let content = JSON.parse(inbox.body);
-            let attachment = JSON.parse(inbox.attachment);
-            let attach = JSON.parse(attachment);
+            let url = inbox.attachment;
             let from_mail = inbox.from_mail;
+            let is_sent = inbox.is_sent;
             let reply_to = '';
 
-            if (attach[0].url) {
-                axios.post('/api/mail/show-attachment', {
-                    url: attach[0].url
-                },{ responseType: 'arraybuffer' })
-                .then((res) => {
+            if(url != '') {
 
-                    // const blob = new Blob( [ res.data ] );
-                    // const url = URL.createObjectURL( blob );
-                    // const img = document.getElementById( 'img-read-mail-attach' );
-                    // img.src = url;
-                    // img.onload = e => URL.revokeObjectURL( url );
+                if (is_sent == 0) { // For receiver
+                    axios.post('/api/mail/show-attachment', {
+                        url: url
+                    },{ responseType: 'arraybuffer' })
+                    .then((res) => {
 
-                })
+                        let blob = new Blob( [ res.data ] );
+                        let link = document.getElementById( 'link-download-href' );
+                        link.href = URL.createObjectURL( blob );
+                        link.download = url;
+                        // const img = document.getElementById( 'img-read-mail-attach' );
+                        // img.src = url;
+                        // img.onload = e => URL.revokeObjectURL( url );
+
+                    })
+                } else { // For Sender
+
+                }
+
             }
+                
 
             if (from_mail.search("<") > 0) {
                 var spl = from_mail.split("<")[1]
@@ -722,13 +726,9 @@ export default {
             this.viewContent.id = inbox.id;
             this.viewContent.deleted_at = inbox.deleted_at;
             this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
-            this.viewContent.is_sent = inbox.is_sent;
+            this.viewContent.is_sent = is_sent;
             this.viewContent.received = inbox.received;
-
-            if(attach[0].name) {
-                this.viewContent.attachment.name = attach[0].name
-                this.viewContent.attachment.size = this.bytesToSize(attach[0].size)
-            }
+            this.viewContent.attachment = inbox.attachment;
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
