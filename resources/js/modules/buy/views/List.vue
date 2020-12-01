@@ -107,8 +107,8 @@
                                 <label for="">Price Basis</label>
                                 <select name="" class="form-control" v-model="filterModel.price_basis">
                                     <option value="">All</option>
-                                    <option value="Low">Low</option>
                                     <option value="Good">Good</option>
+                                    <option value="Average">Average</option>
                                     <option value="High">High</option>
                                 </select>
                             </div>
@@ -178,7 +178,7 @@
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                     Select
                                 </th>
-                                <th v-show="tblBuyOptions.seller">Seller</th>
+                                <th v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1">Seller</th>
                                 <th v-show="tblBuyOptions.topic">Topic</th>
                                 <th v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
                                 <th v-show="tblBuyOptions.language">Language</th>
@@ -208,7 +208,7 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-show="tblBuyOptions.seller">{{ buy.username ? buy.username : buy.user_name}}</td>
+                                <td v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1" >{{ buy.username ? buy.username : buy.user_name}}</td>
                                 <td v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
                                 <td v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
                                 <td v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
@@ -375,7 +375,7 @@
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
-                            <div class="checkbox col-md-6">
+                            <div class="checkbox col-md-6" v-if="user.role_id != 5 && user.isOurs != 1">
                                 <label><input type="checkbox" :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">

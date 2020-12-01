@@ -95,6 +95,8 @@
                                 <th>Name</th>
                                 <th>Company Name</th>
                                 <th>Type</th>
+                                <th>Sub Account</th>
+                                <th>Under of Main Buyer</th>
                                 <th>In-charge</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -108,7 +110,9 @@
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.company_name == null ? 'N/A':account.company_name }}</td>
                                 <td>{{ account.type }}</td>
-                                <td>{{ account.team_in_charge == null ?  '': account.team_in_charge.username }}</td>
+                                <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
+                                <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
+                                <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -665,6 +669,7 @@
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
