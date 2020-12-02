@@ -116,6 +116,8 @@ class MailgunController extends Controller
         {
             $attach = time().'.'.$request->attachment->getClientOriginalExtension();
             $request->attachment->move(public_path('/attachment'), $attach);
+
+            $attac_object = ['url'=> url('/attachment/'.$attach), 'size' => \File::size(public_path('/attachment'), $attach), 'type'=> $request->attachment->getClientOriginalExtension()];
         }
 
         $input['body-plain'] = $request->content;
@@ -129,7 +131,7 @@ class MailgunController extends Controller
             'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => $attach,
+            'attachment'        => json_encode($attac_object),
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',
@@ -315,7 +317,7 @@ $description = 'Test route';
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => isset($request->attachments) ? json_decode($request->attachments)[0]->url : '',
+            'attachment'        => isset($request->attachments) ? json_decode($request->attachments)[0] : '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',
