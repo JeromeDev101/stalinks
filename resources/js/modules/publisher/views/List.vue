@@ -393,12 +393,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
                                     <label for="">Topic</label>
-                                    <select class="form-control" v-model="updateModel.topic">
+                                    <!-- <select class="form-control" v-model="updateModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <v-select multiple v-model="updateModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -519,12 +520,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
                                     <label for="">Topic</label>
-                                    <select class="form-control" v-model="addModel.topic">
+                                    <!-- <select class="form-control" v-model="addModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <v-select multiple v-model="addModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -714,12 +716,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Topic</label>
-                                    <select class="form-control" v-model="updateMultiple.topic">
+                                    <!-- <select class="form-control" v-model="updateMultiple.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <v-select multiple v-model="updateMultiple.topic" :options="topic" :searchable="false" placeholder="All"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -877,7 +880,12 @@
             }
 
             this.setDefaultSettings();
-            this.getListLanguages();
+
+            let language = this.listLanguages.data;
+            if ( language.length === 0 ) {
+                this.getListLanguages();
+            }
+                
         },
 
         computed:{
@@ -1377,6 +1385,17 @@
             doUpdate(publish) {
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
+                let topic = '';
+
+
+                if(that.topic != null && that.topic != '') {
+                    let _topic = that.topic;
+                    if (_topic.indexOf(',') > -1) { 
+                        topic = _topic.split(',') 
+                    } else {
+                        topic = _topic;
+                    }
+                }
 
                 this.updateModel = {
                     id: that.id,
@@ -1394,7 +1413,7 @@
                     anchor_text: that.anchor_text, 
                     link: that.link,
                     inc_article: that.inc_article,
-                    topic: that.topic == null ? '':that.topic,
+                    topic: topic,
                     casino_sites: that.casino_sites,
                     kw_anchor: that.kw_anchor,
                     country_id: that.country_id,
