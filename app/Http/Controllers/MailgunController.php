@@ -123,11 +123,7 @@ class MailgunController extends Controller
                 'size'          => \File::size(public_path('/attachment/'), $attach), 
                 'type'          => $request->attachment->getClientOriginalExtension(),
                 'filename'      => $attach,
-<<<<<<< HEAD
-                'display_name'  =>  $request->attachment->getClientOriginalName()
-=======
                 'display_name'  => $request->attachment->getClientOriginalName()
->>>>>>> dd5456a24c28ee2dde64e692de2e5e76209a2111
             ];
         }
 
