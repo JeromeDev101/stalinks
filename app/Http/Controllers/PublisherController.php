@@ -58,6 +58,7 @@ class PublisherController extends Controller
     }
 
     public function store(Request $request){
+        $valid = 'valid';
         $request->validate([
             'seller' => 'required',
             'inc_article' => 'required',
@@ -68,11 +69,34 @@ class PublisherController extends Controller
             'topic' => 'required',
         ]);
         
+        $publisher = Publisher::where('url', 'like', '%'.$request->url.'%')->where('valid', 'valid')->count();
+        if ($publisher > 0) {
+            $valid = 'unchecked';
+        }
+        
         $input = $request->except('seller');
         $input['user_id'] = $request->seller;
-        $input['valid'] = 'unchecked';
+        $input['valid'] = $valid;
 
         Publisher::create($input);
+        return response()->json(['success' => true], 200);
+    }
+
+    public function updateMultiple(Request $request) {
+        // dd($request->all());
+        foreach( $request->ids as $id ) {
+            $publisher = Publisher::findOrFail($id);
+            $publisher->update([
+                'language_id' => $request->language == '' ? $publisher->language_id : $request->language,
+                'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
+                'topic' => $request->topic == '' ? $publisher->topic : $request->topic,
+                'casino_sites' => $request->casino_sites == '' ? $publisher->casino_sites : $request->casino_sites,
+                'kw_anchor' => $request->kw_anchor == '' ? $publisher->kw_anchor : $request->kw_anchor,
+                'price' => $request->price == '' ? $publisher->price : $request->price,
+                'inc_article' => $request->inc_article == '' ? $publisher->inc_article : $request->inc_article,
+            ]);
+        }
+
         return response()->json(['success' => true], 200);
     }
 

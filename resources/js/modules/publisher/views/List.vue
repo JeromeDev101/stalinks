@@ -199,6 +199,7 @@
                                         Selected Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
                                         <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
                                         <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.isOurs == 0">Valid</a>
@@ -650,6 +651,98 @@
         </div>
         <!-- End Modal Failed to Upload -->
 
+
+        <!-- Modal Multiple edit -->
+        <div class="modal fade" id="modal-multiple-edit">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Multiple Edit (Selected: {{checkIds.length}} items)</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="updateMultiple.language">
+                                        <option value=""></option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <select class="form-control" v-model="updateMultiple.country">
+                                        <option value=""></option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="number" class="form-control" placeholder="" v-model="updateMultiple.price">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Accept Casino & Betting Sites</label>
+                                    <select class="form-control" v-model="updateMultiple.casino_sites">
+                                        <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Keyword Anchor</label>
+                                    <select class="form-control" v-model="updateMultiple.kw_anchor">
+                                        <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Topic</label>
+                                    <select class="form-control" v-model="updateMultiple.topic">
+                                        <option value="">Select Topic</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Include Article</label>
+                                    <select class="form-control" v-model="updateMultiple.inc_article">
+                                        <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitMultipleEdit" class="btn btn-primary" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Multiple Edit -->
+
     </div>
 </template>
 
@@ -666,12 +759,22 @@
 <script>
 
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: '',
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
+                updateMultiple: {
+                    inc_article: '',
+                    topic: '',
+                    kw_anchor: '',
+                    casino_sites: '',
+                    price: '',
+                    country: '',
+                    language: '',
+                },
                 updateModel: {
                     id: '',
                     company_name: '',
@@ -1069,6 +1172,44 @@
                 if( this.checkIds.length > 0 ){
                     this.isDisabled = false;
                 }
+            },
+
+            doMultipleEdit() {
+                this.updateMultiple = {
+                    language: '',
+                    country: '',
+                    price: '',
+                    casino_sites: '',
+                    kw_anchor: '',
+                    topic: '',
+                    inc_article: '',
+                }
+            },
+
+            submitMultipleEdit() {
+                axios.post('/api/update-multiple-publisher',{
+                    ids: this.checkIds,
+                    language: this.updateMultiple.language,
+                    country: this.updateMultiple.country,
+                    price: this.updateMultiple.price,
+                    casino_sites: this.updateMultiple.casino_sites,
+                    kw_anchor: this.updateMultiple.kw_anchor,
+                    topic: this.updateMultiple.topic,
+                    inc_article: this.updateMultiple.inc_article,
+                })
+                .then((res) => {
+                    this.checkIds = [];
+
+                    this.getPublisherList();
+                    this.isDisabled = true;
+
+                    swal.fire(
+                        'Saved!',
+                        'Successfully Updated.',
+                        'success'
+                    )
+                    
+                })
             },
 
             async doMultipleDelete(){
