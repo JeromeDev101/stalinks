@@ -117,7 +117,13 @@ class MailgunController extends Controller
             $attach = time().'.'.$request->attachment->getClientOriginalExtension();
             $request->attachment->move(public_path('/attachment'), $attach);
 
-            $attac_object = ['url'=> url('/attachment/'.$attach), 'size' => \File::size(public_path('/attachment'), $attach), 'type'=> $request->attachment->getClientOriginalExtension()];
+            $attac_object = [
+                'url'           => url('/attachment/'.$attach),
+                'size'          => \File::size(public_path('/attachment'), $attach), 
+                'type'          => $request->attachment->getClientOriginalExtension(),
+                'filename'      => $attach,
+                'display_name'  =>  $request->attachment->getClientOriginalName
+            ];
         }
 
         $input['body-plain'] = $request->content;
