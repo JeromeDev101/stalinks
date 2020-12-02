@@ -25,6 +25,7 @@ class MailgunController extends Controller
     
     public function send(Request $request)
     {
+        // dd($request->attachment);
         // if(isset($request->attachment1))
         // {
         //     $list = array($request->attachment1, $request->attachment2);
@@ -119,10 +120,10 @@ class MailgunController extends Controller
 
             $attac_object = [
                 'url'           => url('/attachment/'.$attach),
-                'size'          => \File::size(public_path('/attachment'), $attach), 
+                'size'          => \File::size(public_path('/attachment/'), $attach), 
                 'type'          => $request->attachment->getClientOriginalExtension(),
                 'filename'      => $attach,
-                'display_name'  =>  $request->attachment->getClientOriginalName
+                'display_name'  =>  $request->attachment->getClientOriginalName()
             ];
         }
 

@@ -133,8 +133,8 @@
                                 </div>
 
                                 <div v-show="viewContent.is_sent == 1" class="mailbox-attachment-info">
-                                    <a :href="'/attachment/'+viewContent.attachment" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment }}</a>
-                                    <!-- <span class="mailbox-attachment-size">{{ viewContent.attachment }}</span> -->
+                                    <a :href="'/attachment/'+viewContent.attachment.filename" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.display_name }}</a>
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
 
                             </li>
@@ -435,7 +435,13 @@ export default {
                 subject: '',
                 strippedHtml: '',
                 deleted_at: '',
-                attachment: '',
+                attachment: {
+                    url: '',
+                    size: '',
+                    type: '',
+                    filename: '',
+                    display_name: '',
+                },
             },
             records: [],
             loadingMessage: false,
@@ -568,7 +574,13 @@ export default {
                         subject: '',
                         strippedHtml: '',
                         deleted_at: '',
-                        attachment: '',  
+                        attachment: {
+                            url: '',
+                            size: '',
+                            type: '',
+                            filename: '',
+                            display_name: '',
+                        },  
                     }
 
                     this.checkIds = [];
@@ -699,13 +711,10 @@ export default {
                         let link = document.getElementById( 'link-download-href' );
                         link.href = URL.createObjectURL( blob );
                         link.download = url;
-                        // const img = document.getElementById( 'img-read-mail-attach' );
-                        // img.src = url;
-                        // img.onload = e => URL.revokeObjectURL( url );
-
                     })
                 } else { // For Sender
-
+                    let attachment_info = JSON.parse(inbox.attachment)
+                    this.viewContent.attachment = attachment_info;
                 }
 
             }
@@ -728,7 +737,6 @@ export default {
             this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
             this.viewContent.is_sent = is_sent;
             this.viewContent.received = inbox.received;
-            this.viewContent.attachment = inbox.attachment;
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
