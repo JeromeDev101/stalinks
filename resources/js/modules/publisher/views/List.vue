@@ -233,26 +233,26 @@
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
-                                <th v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
-                                <th v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
-                                <th v-show="tblPublisherOpt.language">Language</th>
-                                <th v-show="tblPublisherOpt.country">Country</th>
-                                <th v-show="tblPublisherOpt.topic">Topic</th>
-                                <th v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
-                                <th v-show="tblPublisherOpt.in_charge">In-charge</th>
-                                <th v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>
-                                <th v-show="tblPublisherOpt.valid">Valid</th>
+                                <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
+                                <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
+                                <th class="resize" v-show="tblPublisherOpt.language">Language</th>
+                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>
+                                <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>
+                                <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
+                                <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>
+                                <th class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>
+                                <th class="resize" v-show="tblPublisherOpt.valid">Valid</th>
                                 <th v-show="tblPublisherOpt.url">URL</th>
-                                <th v-show="tblPublisherOpt.price">Price</th>
-                                <th v-show="tblPublisherOpt.price_basis">Price Basis</th>
-                                <th v-show="tblPublisherOpt.inc_article">Inc Article</th>
-                                <th v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>
-                                <th v-show="tblPublisherOpt.ur">UR</th>
-                                <th v-show="tblPublisherOpt.dr">DR</th>
-                                <th v-show="tblPublisherOpt.backlinks">Blinks</th>
-                                <th v-show="tblPublisherOpt.ref_domain">Ref Domains</th>
-                                <th v-show="tblPublisherOpt.org_keywords">Org Kwd</th>
-                                <th v-show="tblPublisherOpt.org_traffic">Org Traffic</th>
+                                <th class="resize" v-show="tblPublisherOpt.price">Price</th>
+                                <th class="resize" v-show="tblPublisherOpt.price_basis">Price Basis</th>
+                                <th class="resize" v-show="tblPublisherOpt.inc_article">Inc Article</th>
+                                <th class="resize" v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>
+                                <th class="resize" v-show="tblPublisherOpt.ur">UR</th>
+                                <th class="resize" v-show="tblPublisherOpt.dr">DR</th>
+                                <th class="resize" v-show="tblPublisherOpt.backlinks">Blinks</th>
+                                <th class="resize" v-show="tblPublisherOpt.ref_domain">Ref Domains</th>
+                                <th class="resize" v-show="tblPublisherOpt.org_keywords">Org Kwd</th>
+                                <th class="resize" v-show="tblPublisherOpt.org_traffic">Org Traffic</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -267,26 +267,26 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
-                                <td v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
-                                <td v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
-                                <td v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
-                                <td v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
-                                <td v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
-                                <td v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
-                                <td v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
-                                <td v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
                                 <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>
-                                <td v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
-                                <td v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>
-                                <td v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
-                                <td v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>
-                                <td v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
-                                <td v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
-                                <td v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>
-                                <td v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>
-                                <td v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>
-                                <td v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>
+                                <td class="resize" v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -757,6 +757,17 @@
     #vs1__combobox {
         height: 38px;
     }
+
+    #tbl-publisher {
+        table-layout: fixed;
+        width: 100% !important;
+    }
+    #tbl-publisher .resize{
+        width: auto !important;
+        white-space: normal;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 </style>
 
 <script>
@@ -1069,11 +1080,14 @@
                     ]
                 }
 
-                $('#tbl-publisher').DataTable({
+                var table = $('#tbl-publisher').DataTable({
                     paging: false,
                     searching: false,
                     columnDefs: columnDefs,
+                    autoWidth: true,
                 });
+
+                table.columns.adjust().draw();
 
                 this.searchLoading = false;
                 this.isSearching = false;
