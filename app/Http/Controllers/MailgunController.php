@@ -310,14 +310,14 @@ $description = 'Test route';
        
         //return response()->json($request->all());
        
-        //dd(json_decode($request->attachments)[0]->url);
-
+        //dd($request->only('attachment-1'));
+        //dd("exit");
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => isset($request->attachments) ? json_decode($request->attachments)[0] : '',
+            'attachment'        => isset($request->attachments) ? json_decode($request->only('attachment-1')) : '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',
