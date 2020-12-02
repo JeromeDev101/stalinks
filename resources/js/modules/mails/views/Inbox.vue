@@ -693,11 +693,13 @@ export default {
         },
 
         viewMessage(inbox, index) {
+            console.log(JSON.parse(inbox.attachment));
             let content = JSON.parse(inbox.body);
-            let url = inbox.attachment;
+            let url = JSON.parse(inbox.attachment).url;
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
+            let get_data = JSON.parse(inbox.attachment);
 
             if(url != '') {
 
@@ -706,11 +708,12 @@ export default {
                         url: url
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-
+                        console.log(res);
                         let blob = new Blob( [ res.data ] );
                         let link = document.getElementById( 'link-download-href' );
                         link.href = URL.createObjectURL( blob );
                         link.download = url;
+                        this.viewContent.attachment  = get_data;
                     })
                 } else { // For Sender
                     let attachment_info = JSON.parse(inbox.attachment)
