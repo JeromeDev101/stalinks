@@ -74,9 +74,10 @@ class PublisherController extends Controller
             $valid = 'unchecked';
         }
         
-        $input = $request->except('seller');
+        $input = $request->except('seller','topic');
         $input['user_id'] = $request->seller;
         $input['valid'] = $valid;
+        $input['topic'] = implode(",", $request->topic);
 
         Publisher::create($input);
         return response()->json(['success' => true], 200);
@@ -89,7 +90,7 @@ class PublisherController extends Controller
             $publisher->update([
                 'language_id' => $request->language == '' ? $publisher->language_id : $request->language,
                 'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
-                'topic' => $request->topic == '' ? $publisher->topic : $request->topic,
+                'topic' => $request->topic == '' ? $publisher->topic : implode(",", $request->topic),
                 'casino_sites' => $request->casino_sites == '' ? $publisher->casino_sites : $request->casino_sites,
                 'kw_anchor' => $request->kw_anchor == '' ? $publisher->kw_anchor : $request->kw_anchor,
                 'price' => $request->price == '' ? $publisher->price : $request->price,
@@ -101,8 +102,9 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
-        $input = $request->except('name', 'company_name', 'username');
-
+        $input = $request->except('name', 'company_name', 'username', 'topic');
+        $input['topic'] = implode(",", $request->topic);
+        // dd($input);
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
 

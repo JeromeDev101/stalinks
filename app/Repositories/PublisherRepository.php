@@ -28,6 +28,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     {
         $user = Auth::user();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
+        // dd($filter);
 
         // $columns = [
         //     'publisher.*',
@@ -123,7 +124,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
-            $list = $list->whereIn('publisher.topic', $filter['topic']);
+            if(is_array($filter['topic'])) {
+                foreach($filter['topic'] as $topic) {
+                    $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                }
+            } else {
+                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
+            }
         }
 
         if( isset($filter['inc_article']) && !empty($filter['inc_article']) ){

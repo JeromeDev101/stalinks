@@ -176,7 +176,6 @@
                                 <th>#</th>
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
-                                    Select
                                 </th>
                                 <th v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1">Seller</th>
                                 <th v-show="tblBuyOptions.topic">Topic</th>
@@ -533,7 +532,11 @@
             this.getListSeller();
             this.columnShow();
             // this.checkBuyerCommission();
-            this.getListLanguages();
+
+            let language = this.listLanguages.data;
+            if ( language.length === 0 ) {
+                this.getListLanguages();
+            }
         },
 
         methods: {
@@ -690,6 +693,8 @@
                         this.checkIds.push(this.listBuy.data[buy].id);
                     }
                     this.isDisabled = false;
+                } else {
+                    this.isDisabled = true;
                 }
             },
 
