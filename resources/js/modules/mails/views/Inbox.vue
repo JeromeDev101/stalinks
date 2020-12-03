@@ -119,7 +119,7 @@
 
                     <!-- For Attachment -->
 
-                    <div v-show="MessageDisplay && viewContent.attachment != ''" class="box-footer">
+                    <div v-show="MessageDisplay && viewContent.attachment.url != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
                             <li>
                                 <!-- <span class="mailbox-attachment-icon">
@@ -128,8 +128,8 @@
                                 </span> -->
                                     
                                 <div v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
-                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment }}</a>
-                                    <!-- <span class="mailbox-attachment-size">{{ viewContent.attachment }}</span> -->
+                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.name }}</a>
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
 
                                 <div v-show="viewContent.is_sent == 1" class="mailbox-attachment-info">
@@ -694,15 +694,13 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            console.log(JSON.parse(inbox.attachment));
             let content = JSON.parse(inbox.body);
-            let url = JSON.parse(inbox.attachment).url;
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
-            let get_data = JSON.parse(inbox.attachment);
 
-            if(url != '') {
+            if(inbox.attachment != '') {
+                let url = JSON.parse(inbox.attachment).url;
 
                 if (is_sent == 0) { // For receiver
                     axios.post('/api/mail/show-attachment', {
@@ -714,13 +712,20 @@ export default {
                         let link = document.getElementById( 'link-download-href' );
                         link.href = URL.createObjectURL( blob );
                         link.download = url;
-                        this.viewContent.attachment  = get_data;
+                        this.viewContent.attachment  = JSON.parse(inbox.attachment);
                     })
                 } else { // For Sender
-                    let attachment_info = JSON.parse(inbox.attachment)
-                    this.viewContent.attachment = attachment_info;
+                    this.viewContent.attachment = JSON.parse(inbox.attachment);
                 }
 
+            } else {
+                this.viewContent.attachment = {
+                    url: '',
+                    size: '',
+                    type: '',
+                    filename: '',
+                    display_name: '',
+                }
             }
                 
 
@@ -790,6 +795,7 @@ export default {
                     content: ''
                 }
 
+                this.getInbox();
                 this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
