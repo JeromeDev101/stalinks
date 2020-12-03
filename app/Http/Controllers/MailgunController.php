@@ -312,7 +312,7 @@ class MailgunController extends Controller
             'created_at'        => date('Y-m-d H:i:s'),
             'updated_at'        => date('Y-m-d H:i:s'),
             'status_code'       => 200,
-            'message_status'    => '',
+            'message_status'    => 'message received',
 
 
         ];
