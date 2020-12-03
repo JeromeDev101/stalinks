@@ -87,7 +87,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                 if( trim($url, " ") != '' ){
 
-
                     if (preg_grep("/".$country."/i", $country_name_list)){
 
                         if (preg_grep("/".$status."/i", $status_list)){
