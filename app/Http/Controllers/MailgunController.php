@@ -323,10 +323,7 @@ $description = 'Test route';
            $attch_obj = json_decode($request->attachments)[0]; 
         }
 
-        if( $request->only('attachment-1') !== null )
-        {
-            $attch_obj = $request->only('attachment-1'); 
-        }
+       
            
         $data = [
             'sender'            => $request->sender,
