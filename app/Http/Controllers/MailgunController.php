@@ -316,12 +316,15 @@ $description = 'Test route';
     public function post_reply(Request $request)
     {
        
-        //return response()->json($request->all());
-       
-       // dd(json_decode($request->attachments)[0]);
-        //dd("exit");
-        $attch_obj = json_decode($request->attachments)[0];
-        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
+        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
+
+        if( $request->has('attachments') )
+        {
+
+           $attch_obj = json_decode($request->attachments)[0]; 
+        }
+
+           
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
