@@ -177,23 +177,23 @@
                                 <th>
                                     <input type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
-                                <th v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1">Seller</th>
-                                <th v-show="tblBuyOptions.topic">Topic</th>
-                                <th v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
-                                <th v-show="tblBuyOptions.language">Language</th>
-                                <th v-show="tblBuyOptions.country">Country</th>
+                                <th class="resize" v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1">Seller</th>
+                                <th class="resize" v-show="tblBuyOptions.topic">Topic</th>
+                                <th class="resize" v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
+                                <th class="resize" v-show="tblBuyOptions.language">Language</th>
+                                <th class="resize" v-show="tblBuyOptions.country">Country</th>
                                 <th v-show="tblBuyOptions.url">URL</th>
-                                <th v-show="tblBuyOptions.ur">UR</th>
-                                <th v-show="tblBuyOptions.dr">DR</th>
-                                <th v-show="tblBuyOptions.backlinks">Blinks</th>
-                                <th v-show="tblBuyOptions.ref_domains">Ref Domain</th>
-                                <th v-show="tblBuyOptions.org_keywords">Org Kw</th>
-                                <th v-show="tblBuyOptions.org_traffic">Org Traffic</th>
-                                <th v-show="tblBuyOptions.price">Price</th>
-                                <th v-show="tblBuyOptions.status">Status</th>
-                                <th v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Comb</th>
-                                <th v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission">Code Price</th>
-                                <th v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
+                                <th class="resize" v-show="tblBuyOptions.ur">UR</th>
+                                <th class="resize" v-show="tblBuyOptions.dr">DR</th>
+                                <th class="resize" v-show="tblBuyOptions.backlinks">Blinks</th>
+                                <th class="resize" v-show="tblBuyOptions.ref_domains">Ref Domain</th>
+                                <th class="resize" v-show="tblBuyOptions.org_keywords">Org Kw</th>
+                                <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
+                                <th class="resize" v-show="tblBuyOptions.price">Price</th>
+                                <th class="resize" v-show="tblBuyOptions.status">Status</th>
+                                <th class="resize" v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Comb</th>
+                                <th class="resize" v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission">Code Price</th>
+                                <th class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
                                 <th>Buy</th>
                             </tr>
                         </thead>
@@ -207,23 +207,23 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1" >{{ buy.username ? buy.username : buy.user_name}}</td>
-                                <td v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
-                                <td v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
-                                <td v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
-                                <td v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
+                                <td class="resize" v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1" >{{ buy.username ? buy.username : buy.user_name}}</td>
+                                <td class="resize" v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
+                                <td class="resize" v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
+                                <td class="resize" v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
+                                <td class="resize" v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
                                 <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
-                                <td v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
-                                <td v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
-                                <td v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
-                                <td v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
-                                <td v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
-                                <td v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
-                                <td v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
-                                <td v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission" class="text-center font-weight-bold">{{ buy.code_combination}}</td>
-                                <td v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
-                                <td v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">{{ buy.price_basis }}</td>
+                                <td class="resize" v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
+                                <td class="resize" v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
+                                <td class="resize" v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
+                                <td class="resize" v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
+                                <td class="resize" v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
+                                <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">{{ buy.code_combination}}</td>
+                                <td class="resize" v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
+                                <td class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">{{ buy.price_basis }}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
                                         <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
@@ -444,6 +444,16 @@
     {
         min-height: 37px;
     }
+    #tbl_buy_backlink {
+        table-layout: fixed;
+        width: 100% !important;
+    }
+    #tbl_buy_backlink .resize{
+        width: auto !important;
+        white-space: normal;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 </style>
 
 <script>
@@ -660,11 +670,14 @@
                     ];
                 }
 
-                $('#tbl_buy_backlink').DataTable({
+                var table = $('#tbl_buy_backlink').DataTable({
                     paging: false,
                     searching: false,
                     columnDefs: columnsOrder,
+                    autoWidth: true,
                 });
+
+                table.columns.adjust().draw();
 
 
                 this.searchLoading = false;

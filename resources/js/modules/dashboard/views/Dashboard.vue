@@ -50,6 +50,20 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+            </div>
+
+            
+
+        </div>
+
+
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+
+                <div class="box-header">
+                    <h3 class="box-title text-primary">Total Seller</h3>
 
                     <div class="row mt-3">
                         <div class="col-md-1" v-for="(in_charge, index) in listData.team_in_charge" :key="index" >
@@ -70,26 +84,13 @@
                             </div>
                         </div>
                     </div>
-
-
+                    
                 </div>
 
-            </div>
-
-            
-
-        </div>
-
-
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
-            <div class="box box-primary" style="padding-bottom:0.5em;">
-
-                <div class="box-header">
-                    <h3 class="box-title text-primary">Total Seller</h3>
-                </div>
+                
                 
                 <div class="box-body custom-box">
-                    
+
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-hover tbl-custom">
