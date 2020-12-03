@@ -207,6 +207,6 @@ Route::middleware('auth:api')->group(function () {
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
 Route::name('/check_domain')->post('/check-domain','MailgunController@check_domain');
-Route::name('domain-status')->get('/mail/status','MailgunController@status');
+Route::name('domain-status')->get('/mail/status','MailgunController@status_mail');
 
 
