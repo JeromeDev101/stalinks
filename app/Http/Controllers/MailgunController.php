@@ -316,7 +316,7 @@ $description = 'Test route';
     public function post_reply(Request $request)
     {
        
-        DB::table('test_replies')->insert(['alldata' => json_decode($request->all())]);
+        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
 
         if( $request->has('attachments') )
         {
