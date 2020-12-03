@@ -155,10 +155,10 @@ class PublisherController extends Controller
         foreach( $request->ids AS $id ){
             $publisher = Publisher::findOrfail($id);
 
-            if( $request->valid == 'valid' && $publisher->valid != 'valid'){
+            // if( $request->valid == 'valid' && $publisher->valid != 'valid'){
                 $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
 
-                if( $check->count() > 0 ){
+                if( $check->count() > 0 && $publisher->valid != 'valid'){
 
                     array_push($result,[
                         'id' => $publisher->id,
@@ -167,7 +167,8 @@ class PublisherController extends Controller
                     ]);
                 } 
                 
-            } else {
+            // } 
+            else {
                 array_push($result,[
                     'id' => $publisher->id,
                     'message' => 'validated',
