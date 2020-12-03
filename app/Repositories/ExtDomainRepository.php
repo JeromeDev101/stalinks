@@ -71,7 +71,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $existing_datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
             if(count($line) > 4 || count($line) < 4){
-                $message = "Please check the header: Domain, Email, Price and Inc Article only.";
+                $message = "Please check the header: Domain, Status, Country and Email only.";
                 $file_message = "Invalid Header format. ".$message;
                 $result = false;
                 break;
@@ -96,20 +96,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                                 $lang = $this->getCountry($country);
                                 $status = $this->getStatusCode($status);
-                                // array_push($datas, [
-                                //     'domain' => $url,
-                                //     'country_id' => $lang,
-                                //     'ahrefs_rank' => 0,
-                                //     'no_backlinks' => 0,
-                                //     'url_rating' => 0,
-                                //     'domain_rating' => 0,
-                                //     'organic_keywords' => '',
-                                //     'organic_traffic' => '',
-                                //     'alexa_rank' => 0,
-                                //     'ref_domains' => 0,
-                                //     'status' => $status,
-                                //     'email' => $email,
-                                // ]);
 
                                 ExtDomain::create([
                                     'user_id' => $id,
@@ -132,19 +118,9 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                                 array_push($existing_datas, [
                                     'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
                                 ]);
-
-                                // $message = ". Please check the Domain before uploading the CSV file";
-                                // $file_message = "Domain is already exsit ". $url . $message . ". Check in line ". (intval($ctr) + 1);
-                                // $result = false;
-                                // break;
                             }
 
                         }else{
-                            // $message = ". Please check the Status before uploading the CSV file";
-                            // $file_message = "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1);
-                            // $result = false;
-                            // break;
-
                             array_push($existing_datas, [
                                 'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
                             ]);
@@ -154,10 +130,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                         array_push($existing_datas, [
                             'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
                         ]);
-                        // $message = ". Please check the Country before uploading the CSV file";
-                        // $file_message = "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1);
-                        // $result = false;
-                        // break;
                     }
                 }
             }
@@ -166,26 +138,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         fclose($csv);
-
-        // if( is_array($datas) && count($datas) > 0 ){
-        //     foreach( $datas as $data ){
-        //         ExtDomain::create([
-        //             'user_id' => $id,
-        //             'domain' => $data['domain'],
-        //             'country_id' => $data['country_id'],
-        //             'ahrefs_rank' => 0,
-        //             'no_backlinks' => 0,
-        //             'url_rating' => 0,
-        //             'domain_rating' => 0,
-        //             'organic_keywords' => '',
-        //             'organic_traffic' => '',
-        //             'alexa_rank' => 0,
-        //             'ref_domains' => 0,
-        //             'status' => $data['status'],
-        //             'email' => $email,
-        //         ]);
-        //     }
-        // }
             
         return [
             "success" => $result,

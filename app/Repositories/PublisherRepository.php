@@ -294,7 +294,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             if (Auth::user()->isOurs == 1){
 
                 if(count($line) > 3 || count($line) < 3){
-                    $message = "Please check the header: Url, Price, Inc Article, Seller ID and Accept only.";
+                    $message = "Please check the header: Url, Price and Inc Article only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -331,7 +331,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             } else {
 
                 if(count($line) > 7 || count($line) < 7){
-                    $message = "Please check the header: Url, Price, Inc Article, Seller ID and Accept only.";
+                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept, Language and Topic only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
