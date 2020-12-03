@@ -320,7 +320,15 @@ $description = 'Test route';
        
        // dd(json_decode($request->attachments)[0]);
         //dd("exit");
-        $attch_obj = json_decode($request->attachments)[0];
+        if( isset($request->attachments) )
+        {
+           $attch_obj = json_decode($request->attachments)[0]; 
+        }else 
+       {
+        $attch_obj = null;
+        // $attch_obj = json_decode($request->only('attachment-1'));
+       }
+        
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
         $data = [
             'sender'            => $request->sender,
