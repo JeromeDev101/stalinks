@@ -247,7 +247,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="sendEmail('compose')">Send <i class="fa fa-send fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('compose')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
@@ -361,7 +361,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="sendEmail('reply')">Send <i class="fa fa-send fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('reply')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
@@ -458,6 +458,7 @@ export default {
             allSelected: false,
             withTemplate: false,
             withBcc: false,
+            sendBtn: false,
         }
     },
 
@@ -753,6 +754,7 @@ export default {
                 cc = (typeof(this.emailContent.cc) == "undefined" ) ? "": this.emailContent.cc;
             }
 
+            this.sendBtn = true;
             this.formData = new FormData();
             this.formData.append('cc', cc);
             this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
@@ -785,6 +787,7 @@ export default {
                     content: ''
                 }
 
+                this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
             }

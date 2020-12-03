@@ -112,7 +112,8 @@ class MailgunController extends Controller
             'o:tracking-opens'      => 'yes',
             'o:tracking-clicks'     => 'yes',
         ]);
-
+        
+        $attac_object = '';
         if($request->attachment != "undefined" )
         {
             $attach = time().'.'.$request->attachment->getClientOriginalExtension();
@@ -138,7 +139,7 @@ class MailgunController extends Controller
             'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => json_encode($attac_object),
+            'attachment'        => $attac_object == '' ? '' : json_encode($attac_object),
             'date'              => '',
             'message_id'        => '',
             'references_mail'   => '',
