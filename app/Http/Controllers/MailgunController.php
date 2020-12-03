@@ -285,7 +285,7 @@ class MailgunController extends Controller
     public function post_reply(Request $request)
     {
        
-        //DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
+        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
 
         if( $request->has('attachments') )
         {
@@ -293,10 +293,7 @@ class MailgunController extends Controller
            $attch_obj = json_decode($request->attachments)[0]; 
         }
 
-        if($request->has('attachment-1'))
-        {
-            dd($request->only('attachment-1'));
-        }
+       
 
            
         $data = [
@@ -314,6 +311,8 @@ class MailgunController extends Controller
             'deleted_at'        => null,
             'created_at'        => date('Y-m-d H:i:s'),
             'updated_at'        => date('Y-m-d H:i:s'),
+            'status_code'       => 200,
+            'message_status'    => '',
 
 
         ];
