@@ -330,27 +330,27 @@ $description = 'Test route';
        }
         
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);   
-        $data = [
-            'sender'            => $request->sender,
-            'subject'           => $request->subject,
-            'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => isset($request->attachments) ? json_encode($attch_obj) : '',
-            'from_mail'         => $request->from,
-            'date'              => '',
-            'message_id'        => '',
-            'received'          => $request->recipient,
-            'references_mail'   => '',
-            'label_id'          => 0,
-            'is_starred'        => 0,
-            'deleted_at'        => null,
-            'created_at'        => date('Y-m-d H:i:s'),
-            'updated_at'        => date('Y-m-d H:i:s'),
+        // $data = [
+        //     'sender'            => $request->sender,
+        //     'subject'           => $request->subject,
+        //     'body'              => json_encode($request->only('body-plain')),
+        //     'attachment'        => isset($request->attachments) ? json_encode($attch_obj) : '',
+        //     'from_mail'         => $request->from,
+        //     'date'              => '',
+        //     'message_id'        => '',
+        //     'received'          => $request->recipient,
+        //     'references_mail'   => '',
+        //     'label_id'          => 0,
+        //     'is_starred'        => 0,
+        //     'deleted_at'        => null,
+        //     'created_at'        => date('Y-m-d H:i:s'),
+        //     'updated_at'        => date('Y-m-d H:i:s'),
 
 
-        ];
+        // ];
 
        
-        DB::table('replies')->insert($data);
+        // DB::table('replies')->insert($data);
 
         return response()->json($request->all()); 
         
