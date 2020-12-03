@@ -318,12 +318,12 @@ $description = 'Test route';
        
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
 
-        if( isset($request->attachments) )
+        if( $request->has('attachments') )
         {
+
            $attch_obj = json_decode($request->attachments)[0]; 
         }
 
-       
            
         $data = [
             'sender'            => $request->sender,
