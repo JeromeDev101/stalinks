@@ -152,19 +152,8 @@ class MailgunController extends Controller
         ]);
 
 
-        
-        sleep(3);
 
-        $check_message_status = $this->status_mail($sendEmail->message_id);
-        
-        return response()->json([
-            'all'           => $check_message_status->getData(),
-            'message_id'    => $sendEmail->message_id
-        ],200);    
-       
-
-
-		//return response()->json(['success'=> true, 'message'=> $sender], 200);
+		return response()->json(['success'=> true, 'message'=> $sender], 200);
 
     }
 
