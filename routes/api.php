@@ -193,7 +193,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('message_view')->post('/view-message','MailgunController@view_message');
         Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
-        Route::name('domain-status')->get('/status','MailgunController@status');
+        // Route::name('domain-status')->get('/status','MailgunController@status');
         Route::name('starred')->get('/starred','MailgunController@starred');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
@@ -207,4 +207,5 @@ Route::middleware('auth:api')->group(function () {
 
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
 Route::name('/check_domain')->post('/check-domain','MailgunController@check_domain');
+Route::name('mail-status')->get('/mail/status','MailgunController@status_mail');
 

@@ -14,6 +14,7 @@ use App\Http\Resources\MessageSent;
 use App\Models\Reply;
 use Illuminate\Support\Facades\Auth;
 
+
 class MailgunController extends Controller
 {
 	private $mg;
@@ -112,6 +113,8 @@ class MailgunController extends Controller
             'o:tracking-opens'      => 'yes',
             'o:tracking-clicks'     => 'yes',
         ]);
+
+       
         
         $attac_object = '';
         if($request->attachment != "undefined" )
@@ -129,8 +132,9 @@ class MailgunController extends Controller
         }
 
         $input['body-plain'] = $request->content;
+        $res = preg_replace("/[<->]/", "", $sender->getId());
         
-        Reply::create([
+        $sendEmail = Reply::create([
             'sender'            => Auth::user()->work_mail,
             'subject'           => $request->title,
             'is_sent'           => 1,
@@ -140,20 +144,27 @@ class MailgunController extends Controller
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
             'attachment'        => $attac_object == '' ? '' : json_encode($attac_object),
-            'date'              => '',
-            'message_id'        => '',
+            'date'              => date('Y-m-d'),
+            'message_id'        => $res,
             'references_mail'   => '',
+            'status_code'       => 0,
+            'message_status'    => '',
         ]);
 
 
         
-        
+        sleep(3);
 
-          
+        $check_message_status = $this->status_mail($sendEmail->message_id);
+        
+        return response()->json([
+            'all'           => $check_message_status->getData(),
+            'message_id'    => $sendEmail->message_id
+        ],200);    
        
 
 
-		return response()->json(['success'=> true, 'message'=> $sender], 200);
+		//return response()->json(['success'=> true, 'message'=> $sender], 200);
 
     }
 
@@ -237,91 +248,65 @@ class MailgunController extends Controller
 
     }
 
-    public function status(Request $request)
+    public function status_mail($mesage_url = '')
     {
-        dd("tae");
-    	// $validator = Validator::make($request->all(), [
-     //        'domain' => 'required|max:100'
-     //    ]);
-
-     //    if ($validator->fails()) {
-     //        return response()->json($validator->messages());
-     //    }
-
-    //  $we = $this->mg->domains()->index();
-    //  dd($we);
-
-    // $expression = "catch_all()";
-    // $actions = ['store(notify="https://stalinks.com/api/mail/post-reply")'];
-    // $description = 'Test route';
-        dd("aw");
-    $expression = "match_recipient('moravel752@gmail.com')";
-$actions = ["forward('https://stalinks.com/api/mail/post-reply')"];
-$description = 'Test route';
-
-    $this->mg->routes()->create($expression, $actions, $description);
-    dd("route 51");
-
-    //  $expression = "catch_all()";
-    //  $actions = ['forward("https://stalinks.com/api/mail/post-reply")'];
-    //  $description = 'Test';
-
-     
-
-    // $this->mg->routes()->create($expression, $actions, $description);
-    // dd("route 2");
-
-      $we =   $this->mg->routes()->index();
-      dd($we);
-
-    //   $this->mg->routes()->delete('5fa4abdcd91a661f5e4f2dcb');
-    //  $this->mg->routes()->delete('5fa4a6aacd2ab582a5f03fdf');
-    //   dd("route delted");
-
 
      $aw = $this->mg->events()->get('stalinks.com');
      
+     //get all eventsitems
      foreach($aw->getItems() as $kwe)
      {
-         echo $kwe->getEvent().'<br>';
-        //  if($kwe->getEvent() == "opened"){
-        //      dd("aw");
-        //  }
-         
-         //dd($kwe->getRecipient());
-     
-         //var_dump($kwe);
 
-        //  foreach($kwe->getStorage() as $me)
-        //  {
-        //      echo $me.'<br>';
-        //  }
+        //all all message sent/received
+      foreach( $kwe->getMessage() as $wa)
+      {
+        //check if data is array some is not we need to make sure
+        if(is_array($wa))
+        {
+            //check if mesage_id property exist before using it as condition
+            if (array_key_exists("message-id",$wa))
+            {
+                $pending = Reply::where('status_code',0)->get();
+
+                foreach($pending as $get)
+                {
+                    if($wa['message-id'] == $get->message_id)
+                    {
+                        $get->update([
+                            'status_code'       => $kwe->getDeliveryStatus()['code'],
+                            'message_status'    => $kwe->getDeliveryStatus()['message']
+                        ]);
+                       
+                        
+                    }
+                }
+                
+               
+            }
+        }
+        
+        
+      }
+      
      }
 
-    //  dd("wala");
-    // 	$aw = $this->mail->tags()->stats('headzupnegor.com', 'Tag1');
-    //     dd($aw);
-
-    //     $we = $this->mail->events()->get('headzupnegor.com');
-
-
-        
-
-    //    	dd($we->getItems());
-    //     dd(get_class_methods($we));
-
-    // 	return response()->json($we);
+    
     }
 
     public function post_reply(Request $request)
     {
        
-        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
+        //DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
 
         if( $request->has('attachments') )
         {
 
            $attch_obj = json_decode($request->attachments)[0]; 
+        }
+
+        if($request->has('attachment-1'))
+        {
+            dd($request->only('attachment-1'));
         }
 
            
