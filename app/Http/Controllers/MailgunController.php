@@ -414,9 +414,8 @@ class MailgunController extends Controller
     public function mail_logs()
     {
         $mail_logs = DB::table('replies')
-                        ->join('ext_domains','replies.received','LIKE',"%"."ext_domains.email"."%")
                         ->where('replies.is_sent',1)
-                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','ext_domains.domain as domain','replies.status_code as status')
+                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status')
                         ->get();
         return response()->json($mail_logs);                
     }
