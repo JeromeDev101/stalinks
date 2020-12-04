@@ -69,7 +69,7 @@
                                         <td>{{ log.from }}</td>
                                         <td>{{ log.to }}</td>
                                         <td v-html="statusLabel(log.status)"></td>
-                                        <td>{{ log.to }}</td>
+                                        <td>{{ log.date }}</td>
                                     </tr>
                                 </tbody>
                             </table>
