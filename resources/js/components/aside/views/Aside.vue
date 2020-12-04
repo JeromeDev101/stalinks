@@ -19,6 +19,13 @@
                     </router-link>
                 </li>
 
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'mail-logs' }">
+                    <router-link class="page-sidebar__item" :to="{ path: '/mail-logs' }">
+                        <i class="fa fa-fw fa-square"></i> <span>Mail Logs</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'logs' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/logs' }">
                         <i class="fa fa-fw fa-circle"></i> <span>System Logs</span>
@@ -133,12 +140,12 @@
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
-                        <li :class="{ active: $route.name == 'mail-logs' }">
+                        <!-- <li :class="{ active: $route.name == 'mail-logs' }">
                             <router-link class="page-sidebar__item" :to="{ path: '/mail-logs' }">
                                 <i class="fa fa-fw fa-square"></i> <span>Mail Logs</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
-                        </li>
+                        </li> -->
                         <!-- <li :class="{ active: $route.name == 'mail-template' }">
                             <router-link class="page-sidebar__item" :to="{ path: '/mail-template' }">
                                 <i class="fa fa-fw fa-envelope-o"></i> <span>Mail Template</span>

@@ -618,7 +618,7 @@ export default {
                 label_id: this.updateModel.label_id
             })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
 
                 for (var rec in this.records) {
                     for (var chk in this.checkIds) {
@@ -707,7 +707,6 @@ export default {
                         url: url
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        console.log(res);
                         let blob = new Blob( [ res.data ] );
                         let link = document.getElementById( 'link-download-href' );
                         link.href = URL.createObjectURL( blob );
@@ -794,13 +793,21 @@ export default {
                     title: '',
                     content: ''
                 }
-
+                
+                this.getStatus();
                 this.getInbox();
                 this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
             }
-       },
+        },
+
+        getStatus() {
+            axios.get('/api/mail/status')
+                .then((res) => {
+                    console.log(res.data)
+                })
+        },
 
         getInbox(){
         //    this.loadingMessage = true;
@@ -811,7 +818,6 @@ export default {
                 'label_id': this.$route.query.label_id,
             })
             .then((response) => {
-                // console.log(response);
                 this.records = response.data.inbox;
                 // this.loadingMessage = false;
                 this.inboxCount = response.data.count;

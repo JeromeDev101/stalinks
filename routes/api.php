@@ -154,7 +154,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('add-mail-template')->post('/mails', 'MailController@store');
     Route::name('update-mail-template')->put('/mails', 'MailController@edit');
     Route::name('delete-mail-template')->delete('/mails', 'MailController@delete');
-    Route::name('get-mail-logs')->get('/mail-logs', 'LogController@getMailList');
+    // Route::name('get-mail-logs')->get('/mail-logs', 'LogController@getMailList');
 
     Route::middleware(['check_admin'])->prefix('admin')->group(function() {
         Route::name('add-user')->post('/add-user', 'AuthController@register');

@@ -15,7 +15,7 @@ import DetailDomain from '@/modules/domain/views/DetailDomain.vue'
 import Domain from '@/modules/domain/views/Domain.vue'
 import System from '@/modules/system/views/List.vue'
 import MailTemplate from '@/modules/template_email/views/List.vue'
-import MailLog from '@/modules/logs/views/MailLog.vue';
+// import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue';
 import FollowupSales from '@/modules/followup_sales/views/List.vue';
 import Purchase from '@/modules/purchase/views/List.vue';
@@ -33,6 +33,7 @@ import Mails from '@/modules/mails/views/Mail.vue';
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
 // import SentMails from '@/modules/mail_sent/views/Sent.vue';
 import Inbox from '@/modules/mails/views/Inbox.vue';
+import Maillog from '@/modules/mails/views/Maillog.vue';
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
 
@@ -231,7 +232,7 @@ const routes = [{
     {
         path: 'mail-logs',
         name: 'mail-logs',
-        component: MailLog,
+        component: Maillog,
     },
     {
         path: '*',
