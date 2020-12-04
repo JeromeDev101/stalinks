@@ -69,7 +69,7 @@
                                         <td>{{ log.from }}</td>
                                         <td>{{ log.to }}</td>
                                         <td v-html="statusLabel(log.status)"></td>
-                                        <td>date</td>
+                                        <td>{{ log.to }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,7 +117,7 @@
                     label = '<span class="label label-success">Success</span>';
                 }
 
-                if (code == 522) {
+                if (code == 552) {
                     label = '<span class="label label-danger">Failed</span>';
                 }
 
