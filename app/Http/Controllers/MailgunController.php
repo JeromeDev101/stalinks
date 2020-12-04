@@ -220,7 +220,7 @@ class MailgunController extends Controller
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->whereNotNull('replies.deleted_at');
+                    $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->where('replies.deleted_at','!=',null);
                     break;
                 case 'Starred':
                     $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->where('replies.is_starred', 1);
@@ -415,7 +415,7 @@ class MailgunController extends Controller
     {
         $mail_logs = DB::table('replies')
                         ->where('replies.is_sent',1)
-                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status')
+                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status','replies.created_at as date')
                         ->get();
         $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
 
@@ -427,7 +427,8 @@ class MailgunController extends Controller
             'logs'          => $mail_logs,
             'total_mail'    => $total,
             'sent'          => $sent,
-            'failed'        => $failed
+            'failed'        => $failed,
+
         ]);                
     }
 }
