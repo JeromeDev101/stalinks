@@ -417,11 +417,11 @@ class MailgunController extends Controller
                         ->where('replies.is_sent',1)
                         ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status')
                         ->get();
-        $sent = Reply::where('status_code',250)->count();  
+        $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
 
-        $total = Reply::all()->count();   
+        $total = Reply::where('is_sent',1)->count();   
 
-        $failed = Reply::where('status_code',552)->count();             
+        $failed = Reply::where('is_sent',1)->where('status_code',552)->count();             
 
         return response()->json([
             'logs'          => $mail_logs,
