@@ -117,7 +117,7 @@
                     label = '<span class="label label-success">Success</span>';
                 }
 
-                if (code == 522) {
+                if (code == 552) {
                     label = '<span class="label label-danger">Failed</span>';
                 }
 
