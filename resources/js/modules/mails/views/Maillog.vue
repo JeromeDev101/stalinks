@@ -135,7 +135,7 @@
             getStatus() {
                 axios.get('/api/mail/status')
                     .then((res) => {
-                        console.log(res.data)
+                        console.log(res)
                     })
             },
         },

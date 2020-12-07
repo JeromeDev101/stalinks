@@ -239,7 +239,7 @@ class MailgunController extends Controller
 
     }
 
-    public function status_mail($mesage_url = '')
+    public function status_mail()
     {
 
      $aw = $this->mg->events()->get('stalinks.com');
