@@ -484,7 +484,6 @@ export default {
 
     mounted() {
         this.getInbox();
-        this.getStatus();
     },
 
     methods: {
@@ -795,7 +794,7 @@ export default {
                     content: ''
                 }
                 
-                this.getStatus();
+                //this.getStatus();
                 this.getInbox();
                 this.sendBtn = false;
                 this.countryMailId = '';

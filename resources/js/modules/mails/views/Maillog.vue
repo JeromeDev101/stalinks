@@ -108,6 +108,7 @@
 
         mounted() {
             this.getMaillogs();
+            this.getStatus();
         },
 
         methods: {
@@ -128,6 +129,12 @@
                 axios.get('/api/mail/mail-logs')
                     .then((res) => {
                         this.Listlogs = res.data
+                        console.log(res.data)
+                    })
+            },
+            getStatus() {
+                axios.get('/api/mail/status')
+                    .then((res) => {
                         console.log(res.data)
                     })
             },
