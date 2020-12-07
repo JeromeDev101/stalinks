@@ -220,7 +220,9 @@ class MailgunController extends Controller
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
-                    $inbox = $inbox->where('replies.deleted_at','!=',1)->orWhere('replies.sender', $request->email)->orWhere('replies.received', $request->email);
+                // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
+
+                    $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
                     break;
                 case 'Starred':
                     $inbox = $inbox->where('replies.sender', $request->email)->orWhere('replies.received', $request->email)->where('replies.is_starred', 1);
