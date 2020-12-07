@@ -484,6 +484,7 @@ export default {
 
     mounted() {
         this.getInbox();
+        this.getStatus();
     },
 
     methods: {
