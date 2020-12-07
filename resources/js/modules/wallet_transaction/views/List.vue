@@ -334,6 +334,7 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
+                        { orderable: true, targets: 1 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 7 },
@@ -425,6 +426,7 @@
 
                 if( this.messageForms.action == 'success' ){
 
+                    $("#modal-add-wallet").modal('hide');
                     this.updateModel = {
                         user_id_buyer: '',
                         payment_type: '',
@@ -432,6 +434,13 @@
                     }
 
                     this.$refs.proof.value = '';
+
+                    swal.fire(
+                        'Success',
+                        'Successfully Added',
+                        'success'
+                    )
+
                     this.getWalletTransactionList();
                 }
 

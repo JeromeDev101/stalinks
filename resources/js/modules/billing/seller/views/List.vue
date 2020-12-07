@@ -416,11 +416,19 @@
                 this.isPopupLoading = false;
 
                 if( this.messageForms.action == 'success' ){
+                    $("#modal-payment").modal('hide')
                     this.getSellerBilling();
                     this.$refs.proof.value = '';
                     this.updateModel.payment_type = '';
 
                     this.checkIds = [];
+
+                    swal.fire(
+                        'Success',
+                        'Paid Successfully',
+                        'success'
+                    )
+
                 }
 
                 this.$root.$refs.AppHeader.liveGetWallet()
