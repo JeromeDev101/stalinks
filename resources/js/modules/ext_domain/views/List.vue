@@ -1902,6 +1902,13 @@
                     
             },
 
+            getStatus() {
+                axios.get('/api/mail/status')
+                    .then((res) => {
+                        console.log(res.data)
+                    })
+            },
+
 
             async submitSendMail() {
                 this.allowSending = false;
@@ -1912,6 +1919,7 @@
                     email: this.email_to,
                     title: this.modelMail.title,
                     content: this.modelMail.content,
+                    attachment: 'undefined',
                 })
 
                 this.modelMail = {
@@ -1920,9 +1928,9 @@
                     mail_name: '',
                 }
 
-                $("#modal-email").modal('hide')
-
+                this.getStatus();
                 this.doUpdateMultipleStatus(true);
+                $("#modal-email").modal('hide')
 
                 this.isPopupLoading = false;
             },
