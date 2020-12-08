@@ -158,7 +158,7 @@ class PublisherController extends Controller
             // if( $request->valid == 'valid' && $publisher->valid != 'valid'){
                 $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
 
-                if( $check->count() > 0 && $publisher->valid != 'valid'){
+                if( $check->count() > 0 && $publisher->valid != 'valid' && $request->valid == 'valid'){
 
                     array_push($result,[
                         'id' => $publisher->id,
