@@ -128,7 +128,7 @@
                                 </span> -->
                                     
                                 <div v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
-                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.name }}</a>
+                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0] }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
 
@@ -694,39 +694,41 @@ export default {
         },
 
         viewMessage(inbox, index) {
+            console.log(inbox);
             console.log(JSON.parse(inbox.attachment));
             let content = JSON.parse(inbox.body);
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
+            this.viewContent.attachment  = JSON.parse(inbox.attachment);
 
-            if(inbox.attachment != '') {
-                let url = JSON.parse(inbox.attachment).url;
+            // if(inbox.attachment != '') {
+            //     let url = JSON.parse(inbox.attachment).url;
 
-                if (is_sent == 0) { // For receiver
-                    axios.post('/api/mail/show-attachment', {
-                        url: url
-                    },{ responseType: 'arraybuffer' })
-                    .then((res) => {
-                        let blob = new Blob( [ res.data ] );
-                        let link = document.getElementById( 'link-download-href' );
-                        link.href = URL.createObjectURL( blob );
-                        link.download = url;
-                        this.viewContent.attachment  = JSON.parse(inbox.attachment);
-                    })
-                } else { // For Sender
-                    this.viewContent.attachment = JSON.parse(inbox.attachment);
-                }
+            //     if (is_sent == 0) { // For receiver
+            //         axios.post('/api/mail/show-attachment', {
+            //             url: url
+            //         },{ responseType: 'arraybuffer' })
+            //         .then((res) => {
+            //             let blob = new Blob( [ res.data ] );
+            //             let link = document.getElementById( 'link-download-href' );
+            //             link.href = URL.createObjectURL( blob );
+            //             link.download = url;
+            //             this.viewContent.attachment  = JSON.parse(inbox.attachment);
+            //         })
+            //     } else { // For Sender
+            //         this.viewContent.attachment = JSON.parse(inbox.attachment);
+            //     }
 
-            } else {
-                this.viewContent.attachment = {
-                    url: '',
-                    size: '',
-                    type: '',
-                    filename: '',
-                    display_name: '',
-                }
-            }
+            // } else {
+            //     this.viewContent.attachment = {
+            //         url: '',
+            //         size: '',
+            //         type: '',
+            //         filename: '',
+            //         display_name: '',
+            //     }
+            // }
                 
 
             if (from_mail.search("<") > 0) {
