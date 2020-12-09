@@ -694,6 +694,7 @@ export default {
         },
 
         viewMessage(inbox, index) {
+            console.log(inbox);
             let content = JSON.parse(inbox.body);
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
