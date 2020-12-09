@@ -128,8 +128,8 @@
                                 </span> -->
                                     
                                 <div v-if="viewContent.attachment[0]" v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
-                                    <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
-                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
+                                    <a href="#" @click="getAttachmentReceiver(viewContent.attachment[0]['url'])" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment[0]['size']) }}</span>
                                 </div>
 
                                 <div v-show="viewContent.is_sent == 1" class="mailbox-attachment-info">
@@ -835,6 +835,20 @@ export default {
         clearMessageform() {
             this.$store.dispatch('clearMessageform');
         },
+        getAttachmentReceiver(url)
+        {
+           axios.post('/api/mail/show-attachment', {
+                        url: url
+                    },{ responseType: 'arraybuffer' })
+                    .then((res) => {
+                        console.log(res);
+                        let blob = new Blob( [ res.data ] );
+                         let link = document.getElementById( 'link-download-href' );
+                         link.href = URL.createObjectURL( blob );
+                         link.download = url;
+                    });
+                   
+        }
     }
 }
 </script>
