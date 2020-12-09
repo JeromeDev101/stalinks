@@ -127,7 +127,7 @@
                                     <img class="img-attachment" id="img-read-mail-attach">
                                 </span> -->
                                     
-                                <div v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
+                                <div v-if="viewContent.attachment[0]" v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
                                     <a href="#" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0] }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
