@@ -190,7 +190,7 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix'=> 'mail'], function(){
         Route::name('email_send')->post('/send','MailgunController@send');
         Route::name('email_retrieve_all')->get('/retrieve-all','MailgunController@retrieve_all');
-        Route::name('message_view')->post('/view-message','MailgunController@view_message');
+        // Route::name('message_view')->post('/view-message','MailgunController@view_message');
         Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         // Route::name('domain-status')->get('/status','MailgunController@status_mail');
@@ -210,6 +210,7 @@ Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_rep
 Route::name('/check_domain')->post('/check-domain','MailgunController@check_domain');
 // Route::name('mail-logs')->get('/mail/mail-logs','MailgunController@mail_logs');
 Route::name('domain-status')->get('/mail/status','MailgunController@status_mail');
+Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
 
 
 
