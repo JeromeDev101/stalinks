@@ -31,7 +31,7 @@
                                 <tbody>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Email Name</th>
+                                    <th>Template Name</th>
                                     <th>Title</th>
                                     <th>Country</th>
                                     <th>Action</th>

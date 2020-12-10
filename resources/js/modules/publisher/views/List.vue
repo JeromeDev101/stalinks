@@ -231,7 +231,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>
-                                    <input type="checkbox" @click="selectAll" v-model="allSelected">
+                                    <input class="custom-checkbox" type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
                                 <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
                                 <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
@@ -263,7 +263,7 @@
                                     <div class="btn-group">
                                         <button class="btn btn-default">
                                             <!-- <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds"> -->
-                                            <input type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
+                                            <input class="custom-checkbox" type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
                                         </button>
                                     </div>
                                 </td>
