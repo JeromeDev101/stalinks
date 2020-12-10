@@ -706,16 +706,16 @@ export default {
                 let url = JSON.parse(inbox.attachment).url;
 
                 if (is_sent == 0) { // For receiver
-                    axios.post('/api/mail/show-attachment', {
-                        url: url
-                    },{ responseType: 'arraybuffer' })
-                    .then((res) => {
-                        let blob = new Blob( [ res.data ] );
-                        let link = document.getElementById( 'link-download-href' );
-                        link.href = URL.createObjectURL( blob );
-                        link.download = url;
-                        this.viewContent.attachment  = JSON.parse(inbox.attachment);
-                    })
+                    // axios.post('/api/mail/show-attachment', {
+                    //     url: url
+                    // },{ responseType: 'arraybuffer' })
+                    // .then((res) => {
+                    //     let blob = new Blob( [ res.data ] );
+                    //     let link = document.getElementById( 'link-download-href' );
+                    //     link.href = URL.createObjectURL( blob );
+                    //     link.download = url;
+                    //     this.viewContent.attachment  = JSON.parse(inbox.attachment);
+                    // })
                 } else { // For Sender
                     this.viewContent.attachment = JSON.parse(inbox.attachment);
                 }
@@ -740,9 +740,9 @@ export default {
                         console.log(res[1]);
 
                         let link = document.getElementById( 'link-download-href' );
-                        link.href = window.URL.createObjectURL(blob)
-                        link.download = 'file.'+res[1]
-                        link.click()
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'file.'+res[1];
+                        link.click();
 
                     });
             }
