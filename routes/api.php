@@ -199,7 +199,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
-        Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
+        // Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
     });
 
@@ -211,6 +211,7 @@ Route::name('/check_domain')->post('/check-domain','MailgunController@check_doma
 // Route::name('mail-logs')->get('/mail/mail-logs','MailgunController@mail_logs');
 Route::name('domain-status')->get('/mail/status','MailgunController@status_mail');
 Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
+ Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
 
 
 
