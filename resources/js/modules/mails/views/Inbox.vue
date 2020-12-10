@@ -707,11 +707,17 @@ export default {
                         url: this.viewContent.attachment[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        console.log(res);
-                        let blob = new Blob( [ res.data ] );
-                         let link = document.getElementById( 'link-download-href' );
-                         link.href = URL.createObjectURL( blob );
-                         link.download = url;
+                        //console.log(res.headers['content-type']);
+
+                        let blob = new Blob([res.data], { type: res.headers['content-type'] })
+                        var res = res.headers['content-type'].split("/");
+                        console.log(res[1]);
+
+                        let link = document.getElementById( 'link-download-href' );
+                        link.href = window.URL.createObjectURL(blob)
+                        link.download = 'file.'+res[1]
+                        link.click()
+
                     });
             }
             
@@ -860,6 +866,7 @@ export default {
                     .then((res) => {
                         console.log(res);
                         let blob = new Blob( [ res.data ] );
+                        console.og(res.data);
                          let link = document.getElementById( 'link-download-href' );
                          link.href = URL.createObjectURL( blob );
                          link.download = url;
