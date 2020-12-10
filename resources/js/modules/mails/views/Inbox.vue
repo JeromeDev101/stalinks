@@ -734,8 +734,7 @@ export default {
                         url: this.viewContent.attachment[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        //console.log(res.headers['content-type']);
-
+                       
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
                         console.log(res[1]);
