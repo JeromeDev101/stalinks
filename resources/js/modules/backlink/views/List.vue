@@ -135,7 +135,11 @@
                                         {{ backLink.link_from }}
                                     </div>
                                 </td>
-                                <td v-if="(user.isOurs == 1 && !user.isAdmin)"><a href="backLink.link">{{ backLink.link }}</a></td>
+                                <td v-if="(user.isOurs == 1 && !user.isAdmin)">
+                                    <div class="dont-break-out">
+                                        <a href="backLink.link">{{ backLink.link }}</a>
+                                    </div>
+                                </td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
@@ -449,7 +453,7 @@
                     { orderable: true, targets: 4 },
                     { orderable: true, targets: 5 },
                     { orderable: true, targets: 6, width: "200px" },
-                    { orderable: true, targets: 7 },
+                    { orderable: true, targets: 7, width: "200px" },
                     { orderable: true, targets: 8 },
                     { orderable: true, targets: 9 },
                     { orderable: true, targets: 10 },
@@ -461,7 +465,7 @@
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
                         { orderable: true, targets: 2, width: "200px" },
-                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 3, width: "200px" },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
