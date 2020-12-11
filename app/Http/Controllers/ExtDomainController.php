@@ -748,14 +748,23 @@ class ExtDomainController extends Controller
             }
 
         }else{
-            foreach( $request->id as $domain ){
-                $id = $domain['id'];
-                $extDomain = ExtDomain::findOrFail($id);
+            if( is_array($request->id) ) {
+                foreach( $request->id as $domain ){
+                    $id = $domain['id'];
+                    $extDomain = ExtDomain::findOrFail($id);
+                    $extDomain->update([
+                        'status' => $request->status,
+                        'user_id' => $request->seller,
+                    ]);
+                }
+            } else {
+                $extDomain = ExtDomain::findOrFail($request->id);
                 $extDomain->update([
                     'status' => $request->status,
                     'user_id' => $request->seller,
                 ]);
             }
+                
         }
         // dd($test);
 

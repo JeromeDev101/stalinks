@@ -214,7 +214,7 @@
                             <td>
                                 <div class="btn-group">
                                     <button class="btn btn-default">
-                                        <input type="checkbox" v-on:change="checkSelected" :id="ext.id" :value="ext" v-model="checkIds">
+                                        <input type="checkbox" class="custom-checkbox" v-on:change="checkSelected" :id="ext.id" :value="ext" v-model="checkIds">
                                     </button>
                                 </div>
                             </td>
@@ -961,7 +961,7 @@
                                             <div>
                                                 <select @change="doChangeEmailTemplate" v-model="mailInfo.tpl" class="form-control pull-right">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
-                                                        {{ option.title }}
+                                                        {{ option.mail_name }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -970,13 +970,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12" style="margin-top: 15px;">
+                            <!-- <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
                                     <label style="color: #333">Email Name</label>
                                     <input type="text" v-model="modelMail.mail_name" class="form-control" value="" required="required" >
                                     <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
                                 </div>
-                            </div>
+                            </div> -->
 
 
                             <div class="col-md-12" style="margin-top: 15px;">
@@ -1047,7 +1047,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus(false)">Update</button>
+                        <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus(false, '')">Update</button>
                     </div>
                 </div>
             </div>
@@ -1085,6 +1085,18 @@
 
     </div>
 </template>
+
+<style>
+    .custom-checkbox {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        transform: scale(2);
+        padding: 10px;
+    }
+</style>
 
 <script>
     import { mapState } from 'vuex';
@@ -1231,6 +1243,7 @@
                     data:[]
                 },
                 email_to: '',
+                extDomain_id: '',
              };
         },
         async created() {
@@ -1398,31 +1411,6 @@
                 this.isEnableBtn = true;
                 if( this.$refs.excel.value ){
                     this.isEnableBtn = false;
-                }
-            },
-
-            async doUpdateMultipleStatus(is_sending) {
-                await this.$store.dispatch('actionUpdateMultipleStatus', {
-                    id: this.checkIds,
-                    seller: this.updateStatus.seller,
-                    status: is_sending ? 50:this.updateStatus.status,
-                });
-
-                if( this.messageForms.action == 'updated' ){
-                    let element = this.$refs.modalMultipleStatus
-                    $(element).modal('hide')
-
-                    this.updateStatus.seller = '';
-                    this.updateStatus.status = '';
-                    
-                    this.getExtList();
-                    this.checkIds = []
-                    let message = is_sending ? 'Email send' : 'Successfully Updated'
-                    swal.fire(
-                        'Done',
-                        message,
-                        'success'
-                    )
                 }
             },
 
@@ -1897,6 +1885,7 @@
                     else {
                         this.openModalEmailElem();
                         this.email_to = ext.email;
+                        this.extDomain_id = ext.id;
                     }
                 }
                     
@@ -1928,11 +1917,49 @@
                     mail_name: '',
                 }
 
-                this.getStatus();
-                this.doUpdateMultipleStatus(true);
+                // this.getStatus();
+                this.doUpdateMultipleStatus(true, this.extDomain_id);
                 $("#modal-email").modal('hide')
 
                 this.isPopupLoading = false;
+            },
+
+
+            async doUpdateMultipleStatus(is_sending, id) {
+                await this.$store.dispatch('actionUpdateMultipleStatus', {
+                    id: is_sending ? id:this.checkIds,
+                    seller: this.updateStatus.seller,
+                    status: is_sending ? 50:this.updateStatus.status,
+                });
+
+                if( this.messageForms.action == 'updated' ){
+                    let element = this.$refs.modalMultipleStatus
+                    $(element).modal('hide')
+                    
+                    // this.getExtList();
+
+                    if(is_sending) {
+                        let obj = this.listExt.data.findIndex(o => o.id === id);
+                        this.listExt.data[obj].status = 50;
+                    } else {
+                        for(var index in this.checkIds) {
+                            var id = this.checkIds[index].id
+                            var obj = this.listExt.data.findIndex(o => o.id === id);
+                            this.listExt.data[obj].status = this.updateStatus.status;
+                        }
+                    }
+
+                    this.checkIds = []
+
+                    this.updateStatus.seller = '';
+                    this.updateStatus.status = '';
+                    let message = is_sending ? 'Email send' : 'Successfully Updated'
+                    swal.fire(
+                        'Done',
+                        message,
+                        'success'
+                    )
+                }
             },
 
 
