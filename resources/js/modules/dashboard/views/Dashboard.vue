@@ -139,6 +139,8 @@
                                     <tr>
                                         <th>Seller <span class="text-primary">( {{ backlink_seller.total }} )</span></th>
                                         <th>Total <span class="text-primary">( {{ backlink_seller.num_total }} )</span></th>
+                                        <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
+                                        <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
                                         <th>Processing <span class="text-primary">( {{ backlink_seller.num_processing }} )</span></th>
                                         <th>Content Writing <span class="text-primary">( {{ backlink_seller.writing }} )</span></th>
                                         <th>Content Done <span class="text-primary">( {{ backlink_seller.num_done }} )</span></th>
@@ -216,6 +218,8 @@
                                     <tr>
                                         <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
                                         <th>Total <span class="text-primary">( {{ backlink_buyer.num_total }} )</span></th>
+                                        <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
+                                        <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
                                         <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
                                         <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
                                         <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
@@ -357,6 +361,8 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_issue: 0,
+                num_canceled: 0,
             },
 
             backlink_buyer:{
@@ -367,6 +373,8 @@ export default {
                 num_sent: 0,
                 num_live: 0,
                 num_total: 0,
+                num_issue: 0,
+                num_canceled: 0,
             },
 
             ext_domain:{
@@ -475,6 +483,8 @@ export default {
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
                 this.backlink_seller.num_sent += parseInt(backlink_seller[index].num_sent);
                 this.backlink_seller.num_live += parseInt(backlink_seller[index].num_live);
+                this.backlink_seller.num_issue += parseInt(backlink_seller[index].num_issue);
+                this.backlink_seller.num_canceled += parseInt(backlink_seller[index].num_canceled);
                 this.backlink_seller.num_total += parseInt(backlink_seller[index].num_total);
                 backlink_seller_ctr++;
             }
@@ -486,6 +496,8 @@ export default {
                 this.backlink_buyer.num_done += parseInt(backlink_buyer[index].num_done);
                 this.backlink_buyer.num_sent += parseInt(backlink_buyer[index].num_sent);
                 this.backlink_buyer.num_live += parseInt(backlink_buyer[index].num_live);
+                this.backlink_buyer.num_issue += parseInt(backlink_buyer[index].num_issue);
+                this.backlink_buyer.num_canceled += parseInt(backlink_buyer[index].num_canceled);
                 this.backlink_buyer.num_total += parseInt(backlink_buyer[index].num_total);
                 backlink_buyer_ctr++;
             }

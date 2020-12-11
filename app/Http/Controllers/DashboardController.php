@@ -155,12 +155,16 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Sent" THEN 1 ELSE 0 END) AS num_sent'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Live" THEN 1 ELSE 0 END) AS num_live'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Canceled" THEN 1 ELSE 0 END) AS num_canceled'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
             DB::raw('
                 SUM(CASE WHEN backlinks.status = "Live" 
                 OR backlinks.status = "Content Sent" 
                 OR backlinks.status = "Content Done" 
                 OR backlinks.status = "Content Writing" 
-                OR backlinks.status = "Processing" 
+                OR backlinks.status = "Processing"  
+                OR backlinks.status = "Canceled" 
+                OR backlinks.status = "Issue" 
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -204,12 +208,16 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Sent" THEN 1 ELSE 0 END) AS num_sent'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Live" THEN 1 ELSE 0 END) AS num_live'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Canceled" THEN 1 ELSE 0 END) AS num_canceled'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
             DB::raw('
                 SUM(CASE WHEN backlinks.status = "Live" 
                 OR backlinks.status = "Processing" 
                 OR backlinks.status = "Content In Writing" 
                 OR backlinks.status = "Content Done" 
                 OR backlinks.status = "Content Sent" 
+                OR backlinks.status = "Canceled" 
+                OR backlinks.status = "Issue" 
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
