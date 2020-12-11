@@ -152,6 +152,8 @@
                                     <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
                                         <td>{{ upperCase(seller.username) }}</td>
                                         <td>{{ seller.num_total }}</td>
+                                        <td>{{ seller.num_issue }}</td>
+                                        <td>{{ seller.num_canceled }}</td>
                                         <td>{{ seller.num_processing }}</td>
                                         <td>{{ seller.writing }}</td>
                                         <td>{{ seller.num_done }}</td>
@@ -231,6 +233,8 @@
                                     <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
                                         <td>{{ upperCase(buyer.username) }}</td>
                                         <td>{{ buyer.num_total }}</td>
+                                        <td>{{ buyer.num_issue }}</td>
+                                        <td>{{ buyer.num_canceled }}</td>
                                         <td>{{ buyer.num_processing }}</td>
                                         <td>{{ buyer.writing }}</td>
                                         <td>{{ buyer.num_done }}</td>
