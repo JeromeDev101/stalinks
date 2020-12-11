@@ -128,7 +128,7 @@
                                 </span> -->
                                     
                                 <div v-if="viewContent.attachment[0]" v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
-                                    <a href="#" @click="getAttachmentReceiver(viewContent.attachment[0]['url'])" id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
+                                    <a href="#"  id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment[0]['size']) }}</span>
                                 </div>
 
@@ -729,6 +729,50 @@ export default {
                     display_name: '',
                 }
             }
+            if(this.viewContent.attachment.length > 0){
+                 axios.post('/api/mail/show-attachment', {
+                        url: this.viewContent.attachment[0]['url']
+                    },{ responseType: 'arraybuffer' })
+                    .then((res) => {
+                        console.log(res);
+                        let blob = new Blob( [ res.data ] );
+                         let link = document.getElementById( 'link-download-href' );
+                         link.href = URL.createObjectURL( blob );
+                         link.download = url;
+                    });
+            }
+            
+
+           
+
+
+            // if(inbox.attachment != '') {
+            //     let url = JSON.parse(inbox.attachment).url;
+
+            //     if (is_sent == 0) { // For receiver
+            //         axios.post('/api/mail/show-attachment', {
+            //             url: url
+            //         },{ responseType: 'arraybuffer' })
+            //         .then((res) => {
+            //             let blob = new Blob( [ res.data ] );
+            //             let link = document.getElementById( 'link-download-href' );
+            //             link.href = URL.createObjectURL( blob );
+            //             link.download = url;
+            //             this.viewContent.attachment  = JSON.parse(inbox.attachment);
+            //         })
+            //     } else { // For Sender
+            //         this.viewContent.attachment = JSON.parse(inbox.attachment);
+            //     }
+
+            // } else {
+            //     this.viewContent.attachment = {
+            //         url: '',
+            //         size: '',
+            //         type: '',
+            //         filename: '',
+            //         display_name: '',
+            //     }
+            // }
                 
 
             if (from_mail.search("<") > 0) {
