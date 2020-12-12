@@ -187,6 +187,7 @@ class ConfigController extends Controller
 
         if ($country == 'United States of America')  $result = 247;
         if ($country == 'United Kingdom of Great Britain and Northern Ireland')  $result = 246;
+        if ($country == 'Czechia')  $result = 72;
 
         return $result;
     }
