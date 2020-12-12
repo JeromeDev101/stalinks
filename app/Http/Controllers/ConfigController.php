@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Models\Formula;
 use App\Models\Language;
+use App\Models\Publisher;
+use App\Models\Country;
 
 class ConfigController extends Controller
 {
@@ -126,24 +128,69 @@ class ConfigController extends Controller
 
 
     public function getCountryWebsite() {
-        $url = "https://check-host.net/ip-info?host=ardailymagazine.com";
+        $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(10);
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $test = [];
+        if( count($list_sites) > 0 ) {
+            foreach( $list_sites as $key => $sites) {
 
-        $headers = array(
-        "Accept: application/json",
-        );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-   
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                $url = "https://check-host.net/ip-info?host=".$sites;
 
-        $resp = curl_exec($curl);
-        curl_close($curl);
+                $curl = curl_init($url);
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
+                $headers = array(
+                "Accept: application/json",
+                );
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         
-        dd($resp);
+                // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+                $resp = curl_exec($curl);
+                curl_close($curl);
+
+                $dom = new \DOMDocument();
+                @$dom->loadHtml($resp);
+                $country_name = isset($dom->getElementsByTagName('strong')->item(2)->nodeValue) ? $dom->getElementsByTagName('strong')->item(2)->nodeValue : '';
+                $country_id = $this->getCountryId($country_name);
+
+                if (!is_null($country_id) && $country_name != '') {
+                    $publisher = Publisher::findOrFail($key);
+                    if($publisher) {
+                        $publisher->update(['country_id' => $country_id]);
+                    }
+                }
+
+                array_push($test,[
+                    'sites' => $sites,
+                    'country' => $country_name,
+                    'id' => $country_id,
+                ]);
+                // dd($dom->getElementsByTagName('strong')->item(2)->nodeValue);
+                // dd($dom);
+
+            }
+        }
+
+        return response()->json(['data' => $test]);
+        // dd($test);
+
     }
+
+    private function getCountryId($country) {
+        $result = null;
+        $country_list = Country::where('name', 'like', '%'.$country.'%')->first();
+
+        if($country_list) {
+            $result = $country_list->id;
+        } 
+
+        if ($country == 'United States of America')  $result = 247;
+        if ($country == 'United Kingdom of Great Britain and Northern Ireland')  $result = 246;
+
+        return $result;
+    }
+
 }
