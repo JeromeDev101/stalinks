@@ -469,8 +469,8 @@ class MailgunController extends Controller
             $mail_logs = $mail_logs->where('replies.status_code', $request->status);
         }
 
-        if( isset($request->user_mail) && $request->user_mail != '') {
-            $mail_logs = $mail_logs->where('replies.sender', $request->user_mail);
+        if( isset($request->user_email) && $request->user_email != '') {
+            $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
         }
 
         $mail_logs = $mail_logs->get();

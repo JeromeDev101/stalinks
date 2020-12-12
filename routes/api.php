@@ -201,6 +201,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
         // Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
+        Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
     });
 
      Route::name('labels')->resource('/label','LabelController');
@@ -212,6 +213,9 @@ Route::name('/check_domain')->post('/check-domain','MailgunController@check_doma
 Route::name('domain-status')->get('/mail/status','MailgunController@status_mail');
 Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
  Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
+
+
+Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
 
 
 

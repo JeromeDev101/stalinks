@@ -49,6 +49,9 @@
                                 <label for="">User Email</label>
                                 <select class="form-control" v-model="filterModel.user_email">
                                     <option value="">All</option>
+                                    <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
+                                        {{ option.work_mail }}
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -134,6 +137,7 @@
                     user_email: this.$route.query.user_email || '',
                     status: this.$route.query.status || '',
                 },
+                listUserEmail: [],
             };
         },
 
@@ -150,9 +154,17 @@
         mounted() {
             this.getMaillogs();
             this.getStatus();
+            this.getListUserEmails();
         },
 
         methods: {
+            getListUserEmails() {
+                axios.get('/api/mail/user-email-list')
+                    .then((res) => {
+                        this.listUserEmail = res.data;
+                    })
+            },
+
             statusLabel(code) {
                 let label = '<span class="label label-warning">Waiting</span>';
                 if (code == 250) {

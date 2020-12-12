@@ -422,4 +422,10 @@ class AccountController extends Controller
 
         return response()->json(['success' => true],200);
     }
+
+    public function userEmailFilter() {
+        $user_email = User::select('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+
+        return $user_email;
+    }
 }
