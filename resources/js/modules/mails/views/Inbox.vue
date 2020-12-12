@@ -694,8 +694,6 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            console.log(inbox);
-            console.log(JSON.parse(inbox.attachment));
             let content = JSON.parse(inbox.body);
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
@@ -734,15 +732,15 @@ export default {
                         url: this.viewContent.attachment[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                       
+                       console.log(res)
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
-                        console.log(res[1]);
+                        // console.log(res[1]);
 
                         let link = document.getElementById( 'link-download-href' );
                         link.href = window.URL.createObjectURL(blob);
                         link.download = 'file.'+res[1];
-                        link.click();
+                        // link.click();
 
                     });
             }

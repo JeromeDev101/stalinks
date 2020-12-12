@@ -38,6 +38,43 @@
         </div>
 
         <div class="col-sm-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                </div>
+                <div class="box-body m-3">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">User Email</label>
+                                <select class="form-control" v-model="filterModel.user_email">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select class="form-control" v-model="filterModel.status">
+                                    <option value="">All</option>
+                                    <option value="250">Success</option>
+                                    <option value="0">Waiting</option>
+                                    <option value="552">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch">Clear</button>
+                            <button class="btn btn-default" @click="doSearch">Search <i v-show="false" class="fa fa-refresh fa-spin" ></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="box box-primary">
@@ -51,7 +88,7 @@
                         </div>
 
                         <div class="box-body no-padding relative">
-                            <table class="table table-hover table-bordered table-striped rlink-table">
+                            <table id="tbl_maillog" class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr class="label-primary">
                                         <th>#</th>
@@ -93,6 +130,10 @@
         data() {
             return {
                 Listlogs: {},
+                filterModel: {
+                    user_email: this.$route.query.user_email || '',
+                    status: this.$route.query.status || '',
+                },
             };
         },
 
@@ -125,12 +166,45 @@
                 return label;
             },
 
+            clearSearch() {
+                $('#tbl_maillog').DataTable().destroy();
+
+                this.filterModel = {
+                    user_email: '',
+                    status: '',
+                }
+
+                this.$router.replace({'query': null});
+
+                this.getMaillogs();
+            },
+
+            doSearch() {
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getMaillogs();
+            },
+
             getMaillogs() {
-                axios.get('/api/mail/mail-logs')
-                    .then((res) => {
-                        this.Listlogs = res.data
-                        console.log(res.data)
-                    })
+                axios.get('/api/mail/mail-logs',{
+                    params: {
+                        user_email: this.filterModel.user_email,
+                        status: this.filterModel.status,
+                    }
+                })
+                .then((res) => {
+                    this.Listlogs = res.data
+                    $('#tbl_maillog').DataTable().destroy();
+                })
+                .then((res) => {
+                    $('#tbl_maillog').DataTable({
+                        paging: false,
+                        searching: false,
+                    });
+                })
+
             },
             getStatus() {
                 axios.get('/api/mail/status')

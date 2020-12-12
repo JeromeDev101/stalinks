@@ -459,12 +459,23 @@ class MailgunController extends Controller
         }
     }
 
-    public function mail_logs()
+    public function mail_logs(Request $request)
     {
         $mail_logs = DB::table('replies')
                         ->where('replies.is_sent',1)
-                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status','replies.created_at as date')
-                        ->get();
+                        ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status','replies.created_at as date');
+                        
+        if( isset($request->status) && $request->status != '') {
+            $mail_logs = $mail_logs->where('replies.status_code', $request->status);
+        }
+
+        if( isset($request->user_mail) && $request->user_mail != '') {
+            $mail_logs = $mail_logs->where('replies.sender', $request->user_mail);
+        }
+
+        $mail_logs = $mail_logs->get();
+
+
         $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
 
         $total = Reply::where('is_sent',1)->count();   
