@@ -159,6 +159,9 @@ class ConfigController extends Controller
                 if (!is_null($country_id) && $country_name != '') {
                     $publisher = Publisher::findOrFail($key);
                     $publisher->update(['country_id' => $country_id]);
+                } else {
+                    $publisher = Publisher::findOrFail($key);
+                    $publisher->update(['country_id' => 0]);
                 }
 
                 array_push($test,[
