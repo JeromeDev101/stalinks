@@ -128,7 +128,7 @@ class ConfigController extends Controller
 
 
     public function getCountryWebsite() {
-        $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(10);
+        $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(50);
 
         $test = [];
         if( count($list_sites) > 0 ) {
