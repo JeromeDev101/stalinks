@@ -754,14 +754,14 @@ class ExtDomainController extends Controller
                     $extDomain = ExtDomain::findOrFail($id);
                     $extDomain->update([
                         'status' => $request->status,
-                        'user_id' => $request->seller,
+                        // 'user_id' => $request->seller,
                     ]);
                 }
             } else {
                 $extDomain = ExtDomain::findOrFail($request->id);
                 $extDomain->update([
                     'status' => $request->status,
-                    'user_id' => $request->seller,
+                    // 'user_id' => $request->seller,
                 ]);
             }
                 
