@@ -9,6 +9,7 @@ import IntDomain from '@/modules/int_domain/views/List.vue';
 import Log from '@/modules/logs/views/List.vue';
 import Admin from '@/components/Admin';
 import Dashboard from '@/modules/dashboard/views/Dashboard.vue';
+import DashboardAdmin from '@/modules/dashboard/views/DashboardAdmin.vue';
 import ErrorPage from '@/components/errors/ErrorPage';
 import DetailHosting from '@/modules/hosting/views/DetailHosting.vue'
 import DetailDomain from '@/modules/domain/views/DetailDomain.vue'
@@ -66,6 +67,11 @@ const routes = [{
         path: '/users',
         name: 'List User',
         component: ListUser,
+    },
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: DashboardAdmin,
     },
     {
         path: '/articles-list',

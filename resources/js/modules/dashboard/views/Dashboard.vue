@@ -54,8 +54,6 @@
 
             </div>
 
-            
-
         </div>
 
 
@@ -329,10 +327,14 @@
 import { mapState } from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
+import LineChart from '@/components/chart/Line.js'
 
 export default {
-    name: 'Dashboard',
 
+    name: 'Dashboard',
+    components: {
+        LineChart
+    },
     data() {
         return {
             total_seller: {
@@ -403,7 +405,6 @@ export default {
                 num_purchased: 0,
                 num_total: 0,
             },
-
 
         };
     },

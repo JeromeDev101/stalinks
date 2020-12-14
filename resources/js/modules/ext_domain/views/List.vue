@@ -180,7 +180,9 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>Action</th>
-                                <th>Select</th>
+                                <th>
+                                    <input class="custom-checkbox" type="checkbox" @click="selectAll" v-model="allSelected">
+                                </th>
                                 <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
                                 <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
                                 <th class="sorting" data-index="2" v-show="tableShow.country">Country</th>
@@ -1244,6 +1246,7 @@
                 },
                 email_to: '',
                 extDomain_id: '',
+                allSelected: false,
              };
         },
         async created() {
@@ -1350,6 +1353,15 @@
             });
         },
         methods: {
+
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (var ext in this.listExt.data) {
+                        this.checkIds.push(this.listExt.data[ext]);
+                    }
+                }
+            },
 
             async getListLanguages() {
                 await this.$store.dispatch('actionGetListLanguages');
@@ -1918,7 +1930,13 @@
                 }
 
                 // this.getStatus();
-                this.doUpdateMultipleStatus(true, this.extDomain_id);
+                let result = true;
+                if( this.extDomain_id == '' ) {
+                    result = false;
+                    this.updateStatus.status = 50;
+                }
+
+                this.doUpdateMultipleStatus(result, this.extDomain_id);
                 $("#modal-email").modal('hide')
 
                 this.isPopupLoading = false;
@@ -1950,7 +1968,6 @@
                     }
 
                     this.checkIds = []
-
                     this.updateStatus.seller = '';
                     this.updateStatus.status = '';
                     let message = is_sending ? 'Email send' : 'Successfully Updated'
