@@ -1968,7 +1968,6 @@
                     }
 
                     this.checkIds = []
-
                     this.updateStatus.seller = '';
                     this.updateStatus.status = '';
                     let message = is_sending ? 'Email send' : 'Successfully Updated'
