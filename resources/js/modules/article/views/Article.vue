@@ -237,7 +237,7 @@
 
                         <div class="row mt-3">
                             <div class="col-sm-12">
-                                <tinymce id="d1" v-model="data" :other_options="options"></tinymce>
+                                <tinymce id="articleContent" v-model="data" :other_options="options"></tinymce>
                             </div>
                         </div>
                     </div>
@@ -343,6 +343,11 @@
                 data: '',
                 options: {
                     height: 500,
+                    // target_list: false,
+                    // relative_urls : false,
+                    // remove_script_host : false,
+                    // document_base_url : 'http://www.example.com/path1/'
+                    allow_script_urls: false,
                 },
 
                 writer_status: ['In Writing', 'Done'],

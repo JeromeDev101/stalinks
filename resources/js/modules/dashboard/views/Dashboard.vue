@@ -139,26 +139,26 @@
                                     <tr>
                                         <th>Seller <span class="text-primary">( {{ backlink_seller.total }} )</span></th>
                                         <th>Total <span class="text-primary">( {{ backlink_seller.num_total }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
                                         <th>Processing <span class="text-primary">( {{ backlink_seller.num_processing }} )</span></th>
                                         <th>Content Writing <span class="text-primary">( {{ backlink_seller.writing }} )</span></th>
                                         <th>Content Done <span class="text-primary">( {{ backlink_seller.num_done }} )</span></th>
                                         <th>Content Sent <span class="text-primary">( {{ backlink_seller.num_sent }} )</span></th>
+                                        <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
                                         <th>Live <span class="text-primary">( {{ backlink_seller.num_live }} )</span></th>
+                                        <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
                                         <td>{{ upperCase(seller.username) }}</td>
                                         <td>{{ seller.num_total }}</td>
-                                        <td>{{ seller.num_issue }}</td>
-                                        <td>{{ seller.num_canceled }}</td>
                                         <td>{{ seller.num_processing }}</td>
                                         <td>{{ seller.writing }}</td>
                                         <td>{{ seller.num_done }}</td>
                                         <td>{{ seller.num_sent }}</td>
+                                        <td>{{ seller.num_issue }}</td>
                                         <td>{{ seller.num_live }}</td>
+                                        <td>{{ seller.num_canceled }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -220,26 +220,26 @@
                                     <tr>
                                         <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
                                         <th>Total <span class="text-primary">( {{ backlink_buyer.num_total }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
                                         <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
                                         <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
                                         <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
                                         <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
+                                        <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
                                         <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
+                                        <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
                                         <td>{{ upperCase(buyer.username) }}</td>
                                         <td>{{ buyer.num_total }}</td>
-                                        <td>{{ buyer.num_issue }}</td>
-                                        <td>{{ buyer.num_canceled }}</td>
                                         <td>{{ buyer.num_processing }}</td>
                                         <td>{{ buyer.writing }}</td>
                                         <td>{{ buyer.num_done }}</td>
                                         <td>{{ buyer.num_sent }}</td>
+                                        <td>{{ buyer.num_issue }}</td>
                                         <td>{{ buyer.num_live }}</td>
+                                        <td>{{ buyer.num_canceled }}</td>
                                     </tr>
                                 </tbody>
                             </table>
