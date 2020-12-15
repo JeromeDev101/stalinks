@@ -123,15 +123,15 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.casino_sites', $filter['casino_sites']);
         }
 
-        if( isset($filter['topic']) && !empty($filter['topic']) ){
-            if(is_array($filter['topic'])) {
-                foreach($filter['topic'] as $topic) {
-                    $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
-                }
-            } else {
-                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
-            }
-        }
+        // if( isset($filter['topic']) && !empty($filter['topic']) ){
+        //     if(is_array($filter['topic'])) {
+        //         foreach($filter['topic'] as $topic) {
+        //             $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+        //         }
+        //     } else {
+        //         $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
+        //     }
+        // }
 
         if( isset($filter['inc_article']) && !empty($filter['inc_article']) ){
             $list = $list->where('publisher.inc_article', $filter['inc_article']);
@@ -147,6 +147,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            if( isset($filter['topic']) && !empty($filter['topic']) ){
+            if(is_array($filter['topic'])) {
+                foreach($filter['topic'] as $topic) {
+                    $result = $list->where('publisher.topic', 'like', '%'.$topic.'%')->get();
+                }
+            } else {
+                $result = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%')->get();
+            }
+        }
+
             $result = $list->get();
         }else{
             $result = $list->paginate($paginate);
