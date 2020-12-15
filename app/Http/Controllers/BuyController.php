@@ -44,14 +44,15 @@ class BuyController extends Controller
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user_id);
                 })
+                ->where('publisher.valid', 'valid')
                 ->where('publisher.ur', '!=', '0')
                 ->where('publisher.dr', '!=', '0');
 
         $registered = Registration::where('email', Auth::user()->email)->first();
 
-        if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
-            $list->where('publisher.valid', 'valid');
-        }
+        // if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
+        //     $list->where('publisher.valid', 'valid');
+        // }
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);

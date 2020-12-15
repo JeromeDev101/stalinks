@@ -288,7 +288,10 @@ class DashboardController extends Controller
 
     private function backlinkToBuy() {
 
-        $publisher = Publisher::count();
+        $publisher = Publisher::where('valid','valid')
+                        ->where('publisher.ur', '!=', '0')
+                        ->where('publisher.dr', '!=', '0')
+                        ->count();
 
         $columns = [
             'users.id as id_user',
@@ -306,7 +309,11 @@ class DashboardController extends Controller
                 ->leftJoin('publisher', 'buyer_purchased.publisher_id', '=', 'publisher.id')
                 ->leftJoin('backlinks', 'publisher.id', '=', 'backlinks.publisher_id')
                 ->whereNull('backlinks.deleted_at')
-                ->where('publisher.valid', '=' ,'valid');
+                ->whereNull('publisher.deleted_at')
+                ->where('publisher.valid', '=' ,'valid')
+                ->where('publisher.ur', '!=', '0')
+                ->where('publisher.dr', '!=', '0');
+
                 
         if( Auth::user()->role_id == 5 ){
             $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id);
