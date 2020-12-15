@@ -13,6 +13,13 @@
                     </router-link>
                 </li>
 
+                <li v-if="user.isAdmin" :class="{ active: $route.name == 'dashboard' }">
+                    <router-link class="page-sidebar__item" :to="{ path: '/dashboard' }">
+                        <i class="fa fa-fw fa-dashboard"></i> <span>Dashboard</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'List User' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/users' }">
                         <i class="fa fa-fw fa-users"></i> <span>Team</span>
