@@ -2,10 +2,10 @@ name: remote ssh command
 on:
   push:
      branches:
-        - master       
+        - staging_final       
   pull_request:
      branches:
-        - master
+        - staging_final
 jobs:
 
   build:
@@ -15,12 +15,12 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.HOST2 }}
+        username: ${{ secrets.USERNAME2 }}
+        password: ${{ secrets.PASSWORD2 }}
         port: ${{ secrets.PORT }}
         script: |
-            cd /var/www/html/stalinks.com
-            git pull
+            cd /var/www/html/staging.stalinks.com
+            git pull origin staging_final
             npm run production
             cd ../
