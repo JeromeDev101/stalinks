@@ -169,14 +169,11 @@ class ConfigController extends Controller
                     'country' => $country_name,
                     'id' => $country_id,
                 ]);
-                // dd($dom->getElementsByTagName('strong')->item(2)->nodeValue);
-                // dd($dom);
 
             }
         }
 
         return response()->json(['data' => $test]);
-        // dd($test);
 
     }
 
@@ -193,6 +190,22 @@ class ConfigController extends Controller
         if ($country == 'Czechia')  $result = 72;
 
         return $result;
+    }
+
+
+    public function getTopicWebsite() {
+        $list_sites = Publisher::whereNull('topic')->pluck('url','id')->take(50);
+        $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted', 'Unlisted', 'Unlisted', 'Unlisted'];
+
+
+        if( count($list_sites) > 0 ) {
+            foreach( $list_sites as $key => $sites) {
+                $publisher = Publisher::findOrFail($key);
+                $publisher->update(['topic' => $topic_list[rand(0,24)] ]);
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
 
 }
