@@ -218,5 +218,8 @@ Route::name('message_view')->post('/mail/view-message','MailgunController@view_m
 Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
 Route::name('get-topic-website')->get('/get-website-topic','ConfigController@getTopicWebsite');
 
+//test pusher
+Route::name('pusher')->get('/test-pusher','PushController@test');
+
 
 
