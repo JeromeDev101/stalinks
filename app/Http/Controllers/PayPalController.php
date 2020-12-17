@@ -17,9 +17,9 @@ class PayPalController extends Controller
         $data = [];
         $data['items'] = [
             [
-                'name' => 'ItSolutionStuff.com',
+                'name' => 'morley customer',
                 'price' => 100,
-                'desc'  => 'Description for ItSolutionStuff.com',
+                'desc'  => 'Morley utang 5/6',
                 'qty' => 1
             ]
         ];
