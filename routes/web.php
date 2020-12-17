@@ -11,6 +11,13 @@
 |
 */
 
+Route::get('/aw', function(){
+	return view('paypal');
+});
+Route::get('payment', 'PayPalController@payment')->name('payment');
+Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
+Route::get('payment/success', 'PayPalController@success')->name('payment.success');
+
 Route::get('/{any}', 'HomeController@index')->where('any', '.*');
 
 
