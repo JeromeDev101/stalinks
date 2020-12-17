@@ -62,6 +62,23 @@ class BuyController extends Controller
             $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
         }
 
+        if( isset($filter['topic']) && !empty($filter['topic']) ){
+            if(is_array($filter['topic'])) {
+                $ctr = 0;
+                foreach($filter['topic'] as $topic) {
+                    // $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                    if($ctr == 0) {
+                        $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                    } else {
+                        $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+                    }
+                    $ctr++;
+                }
+            } else {
+                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
+            }
+        }
+
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
             $list->where('publisher.language_id', $filter['language_id']);
         }
