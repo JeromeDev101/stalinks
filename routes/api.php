@@ -80,6 +80,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
     // Route::name('test')->get('test', 'PurchaseController@test');
 
+    //Dashboard Admin
+    Route::name('dashboard-admin')->get('/dashboard-admin', 'DashboardAdminController@index');
+
     //Dashboard
     Route::name('ext-reports')->post('/ext/reports', 'ExtDomainController@reports');
     Route::name('int-reports')->post('/int/reports', 'IntDomainController@reports');
