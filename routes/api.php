@@ -87,6 +87,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('baclink-reports-price')->post('/backlink/reports-price', 'BackLinkController@reportsPrice');
     Route::name('dashboard')->get('/dashboard', 'DashboardController@index');
 
+    //URL propect list page
+    Route::name('get-list-url-propect')->get('/url-prospect', 'UrlProspectController@getList');
+
     //Publisher URL list page
     Route::name('get-publisher-info')->get('/get-publisher-info', 'PublisherController@getInfo');
     Route::name('publisher-create')->post('/publisher', 'PublisherController@store');
