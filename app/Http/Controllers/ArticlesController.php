@@ -101,6 +101,8 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
+                        ->where('backlinks.status' ,'!=', 'Canceled')
+                        ->where('backlinks.status' ,'!=', 'Issue')
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
