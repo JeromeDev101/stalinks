@@ -45,9 +45,12 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             config('constant.EXT_STATUS_GOT_CONTACTS') => 'GotContacts',
             config('constant.EXT_STATUS_AHREAFED') => 'Ahreafed',
             config('constant.EXT_STATUS_CONTACTED') => 'Contacted',
+            config('constant.EXT_STATUS_NO_ANSWER') => 'NoAnswer',
             config('constant.EXT_STATUS_REFUSED') => 'Refused',
             config('constant.EXT_STATUS_IN_TOUCHED') => 'InTouched',
             config('constant.EXT_STATUS_UNDEFINED') => 'Undefined',
+            config('constant.EXT_STATUS_QUALIFIED') => 'Qualified',
+            config('constant.UNQUALIFIED') => 'Unqualified',
         );
     }
 
