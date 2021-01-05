@@ -221,5 +221,10 @@ Route::name('get-topic-website')->get('/get-website-topic','ConfigController@get
 //test pusher
 Route::name('pusher')->get('/test-pusher','PushController@test');
 
+//test paypal payment
+Route::get('payment', 'PayPalController@payment')->name('payment');
+Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
+Route::get('payment/success', 'PayPalController@success')->name('payment.success');
+
 
 
