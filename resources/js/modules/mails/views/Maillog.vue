@@ -171,7 +171,6 @@
                 } else {
                     display = email;
                 }
-
                 return display;
             },
 
