@@ -107,7 +107,7 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ log.user_mail }}</td>
                                         <td>{{ log.from }}</td>
-                                        <td>{{ log.to }}</td>
+                                        <td v-html="checkEmailTo(log.to)"></td>
                                         <td v-html="statusLabel(log.status)"></td>
                                         <td>{{ log.date }}</td>
                                     </tr>
@@ -158,6 +158,23 @@
         },
 
         methods: {
+            checkEmailTo(email) {
+                let display = '';
+                if(email.indexOf('|') > -1) {
+                    var emails = '';
+                    var email = email.split('|');
+                    for(var i = 0; i < email.length; i++) {
+                        var num = i + 1;
+                        emails += num + '.)' + email[i] + '<br>';
+                    }
+                    display = emails;
+                } else {
+                    display = email;
+                }
+
+                return display;
+            },
+
             getListUserEmails() {
                 axios.get('/api/mail/user-email-list')
                     .then((res) => {
