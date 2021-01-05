@@ -56,9 +56,15 @@ class PayPalController extends Controller
 
         $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
-                    'Ad9q5Iwgok1_FyGUQqiBBVx3vJca6h1y-NpW-ruBte5h48eRyGeF6027_6wSBdsFtASUJq51KEY6EUPO',     // ClientID
-                    'EFsxZxVfjKwWvkNrQetf0oXse14HdTFdAZ5lvi_yhCkVvIeeSwe_dZh_k9vssrivzIfsMS6DLdGlnYJy'      // ClientSecret
+                    'AcgZ4wkD3gOrOgw__HWtZY8U6-x5P_BzX0bFRVRTE0Qyc0FGMUsU93Arr2K1IF8F9Tu84hOHWikik3Hc',     // ClientID
+                    'EEIncJx_s8oMUd-kzQAbTTrgdDoFq5BBRObgqur3vhuN-XT9X2I1o3fsi4NPHmALwDfKNCyPIYdfdawG'      // ClientSecret
                 )
+        );
+
+        $apiContext->setConfig(
+              array(
+                'mode' => 'live',
+              )
         );
 
 
@@ -119,28 +125,21 @@ class PayPalController extends Controller
     
     }
     catch (\PayPal\Exception\PayPalConnectionException $ex) {
-        // This will print the detailed information on the exception.
-        //REALLY HELPFUL FOR DEBUGGING
         return $ex->getData();
     }
 
 
-    // try {
-    //     $payment->create($apiContext);
-    // } catch (Exception $ex) {
-
-    //     ResultPrinter::printError("Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", null, $request, $ex);
-    //     exit(1);
-    // }
+   
 
    
 
     $approvalUrl = $payment->getApprovalLink();
 
-    // ResultPrinter::printResult("Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a>", $request, $payment);
+    //dd($approvalUrl);
+   
 
     return redirect($approvalUrl);
-    return response()->json( $approvalUrl );
+    //return response()->json( $approvalUrl );
 
     }
    
