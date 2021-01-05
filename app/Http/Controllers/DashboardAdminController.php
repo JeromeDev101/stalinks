@@ -8,7 +8,16 @@ use App\Models\ExtDomain;
 use Illuminate\Support\Facades\DB;
 
 class DashboardAdminController extends Controller
-{
+{   
+    private $filter = '';
+
+    public function __construct(Request $request) {
+        $this->filter = $request->all();
+        $range_date = $this->rangeDate();
+
+        // dd($range_date);
+    }
+
     public function index() {
         $url_statistics = $this->urlStatistics();
         $seller_statistics = $this->sellerStatistics();
@@ -231,6 +240,7 @@ class DashboardAdminController extends Controller
             '#f6ff47',
             '#f0752e',
             '#7900e3',
+            '#efefef',
         ];
         return $list;
     }

@@ -424,7 +424,7 @@ class AccountController extends Controller
     }
 
     public function userEmailFilter() {
-        $user_email = User::select('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+        $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
 
         return $user_email;
     }
