@@ -56,8 +56,8 @@ class PayPalController extends Controller
 
         $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
-                    'AcgZ4wkD3gOrOgw__HWtZY8U6-x5P_BzX0bFRVRTE0Qyc0FGMUsU93Arr2K1IF8F9Tu84hOHWikik3Hc',     // ClientID
-                    'EEIncJx_s8oMUd-kzQAbTTrgdDoFq5BBRObgqur3vhuN-XT9X2I1o3fsi4NPHmALwDfKNCyPIYdfdawG'      // ClientSecret
+                    'Ad9q5Iwgok1_FyGUQqiBBVx3vJca6h1y-NpW-ruBte5h48eRyGeF6027_6wSBdsFtASUJq51KEY6EUPO',     // ClientID
+                    'EFsxZxVfjKwWvkNrQetf0oXse14HdTFdAZ5lvi_yhCkVvIeeSwe_dZh_k9vssrivzIfsMS6DLdGlnYJy'      // ClientSecret
                 )
         );
 
@@ -72,7 +72,7 @@ class PayPalController extends Controller
         $item1->setName('Morley')
             ->setCurrency('USD')
             ->setQuantity(1)
-            ->setSku("123145423") // Similar to `item_number` in Classic API
+            ->setSku("123145423")
             ->setPrice(1);
         
 
