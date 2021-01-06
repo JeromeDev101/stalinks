@@ -200,7 +200,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Sales Information</h5>
+                        <h5 class="modal-title">Sales Information | ID Backlink: <b class="text-primary">{{ updateModel.id }}</b> </h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
