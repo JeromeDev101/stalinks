@@ -14,6 +14,7 @@ use App\Models\Article;
 use App\Models\Registration;
 use App\Models\WalletTransaction;
 use App\Models\User;
+use App\Events\LikeEvent;
 
 class BuyController extends Controller
 {
@@ -253,6 +254,12 @@ class BuyController extends Controller
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
             ]);
+            $users = User::where('status','active')->get();
+            foreach($users as $user)
+            {
+                event(new LikeEvent("New Article to be write today!", $user->id)); 
+            }
+            
         }
 
         return response()->json(['success'=> true], 200);
