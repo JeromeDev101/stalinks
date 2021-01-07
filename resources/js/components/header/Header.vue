@@ -135,6 +135,7 @@ export default {
                     this.$toast.success(e.message,{timeout: 2000});
                      
                 }
+                console.log(e);
             });
     },
 
