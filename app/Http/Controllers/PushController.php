@@ -10,8 +10,8 @@ class PushController extends Controller
     
     public function test()
 	{
-		$message = $_GET['message'];
-		$user_id = $_GET['user_id'];
+		$message = @$_GET['message'];
+		$user_id = @$_GET['user_id'];
 
 	   event(new LikeEvent($message, $user_id)); 
 	}
