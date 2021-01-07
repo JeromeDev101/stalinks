@@ -39,7 +39,7 @@ class UpdateAccountRequest extends FormRequest
                 Rule::unique('registration')->ignore($this->id),
             ],
             'phone' => [
-                'required'
+                'nullable'
             ],
             'password' => [
                 new SecurePasswordRule(),
@@ -54,13 +54,10 @@ class UpdateAccountRequest extends FormRequest
                 'nullable'
             ],
             'skype' => [
-                'nullable'
+                'required'
             ],
             'commission' => [
                 'required'
-            ],
-            'id_payment_type' => [
-                'nullable'
             ],
             'payment_email' => [
                 'email',
@@ -70,7 +67,13 @@ class UpdateAccountRequest extends FormRequest
             ],
             'payment_account' => [
                 'nullable'
-            ]
+            ],
+            'account_validation' => [
+                'required'
+            ],
+            'id_payment_type' => [
+                'required'
+            ],
         ];
     }
 }

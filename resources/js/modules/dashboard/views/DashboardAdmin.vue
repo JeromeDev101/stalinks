@@ -30,7 +30,7 @@
                                 <input type="date" class="form-control" v-model="filterModel.date1" v-show="isRangeDate">
                                 <input type="date" class="form-control" v-model="filterModel.date2" v-show="isRangeDate">
 
-                                <button class="btn btn-default" @click="fillData">Filter</button>
+                                <button class="btn btn-default" @click="fillData('with')">Filter</button>
                                 <button class="btn btn-default">Clear</button>
                             </div>
                             
@@ -154,7 +154,7 @@ export default {
     },
 
     mounted() {
-        this.fillData()
+        this.fillData('without')
     },
 
     methods: {
@@ -170,13 +170,14 @@ export default {
             }
         },
 
-        fillData() {
+        fillData(isFilter) {
             axios.get('/api/dashboard-admin',{
                 params: {
                     date_type: this.filterModel.date_type,
                     monthly: this.filterModel.monthly,
                     date1: this.filterModel.date1,
                     date2: this.filterModel.date2,
+                    is_filter: isFilter == 'with' ? true: false,
                 }
             })
             .then((res) => {

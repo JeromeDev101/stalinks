@@ -31,6 +31,7 @@ class DashboardAdminController extends Controller
 
 
     private function sellerStatistics() {
+        $request = $this->filter;
         $range_date = $this->rangeDate();
         $labels = ['New', 'GotContacts', 'Contacted', 'InTouched', 'Qualified', 'NoAnswer', 'Refused', 'Unqualified'];
         $colors = $this->colorList();
@@ -144,6 +145,7 @@ class DashboardAdminController extends Controller
 
 
     private function urlStatistics() {
+        $request = $this->filter;
         $range_date = $this->rangeDate();
         $labels = ['Sites', 'Valid', 'Unchecked', 'Invalid'];
         $colors = $this->colorList();
@@ -246,8 +248,11 @@ class DashboardAdminController extends Controller
     }
 
     private function rangeDate() {
+        $request = $this->filter;
         $range_month = 4;
         $result = [];
+        $result2 = [];
+        $result3 = [];
         $sub_3_months = date("01-m-Y", strtotime("-2 months"));
         $time = strtotime($sub_3_months);
         for($i = 1;$i < $range_month;$i++) {
@@ -255,6 +260,31 @@ class DashboardAdminController extends Controller
             $result[date("Y-m-t", $time)] = date("t M", $time);
             $time = strtotime("+1 month", $time);
         }
+
+
+        if($request['is_filter'] == true) {
+
+            // Monthly filter
+            if($request['date_type'] == 'Monthly'){
+                if($request['monthly'] != null){
+                    $lastday_of_the_month = date('t', strtotime(date("Y").'-'.$request['monthly']));
+                    for($i = 1;$i <= $lastday_of_the_month;$i++){
+                        $date = date('Y').'-'.$request['monthly'].'-'.$i;
+                        $result2[date('Y-m-d',strtotime($date))] = date('d M',strtotime($date));
+                    }
+
+                    return $result2;
+                }
+            }
+                
+            // Range Date filter
+            if($request['date_type'] == 'Monthly'){
+                if($request['date1'] != null && $request['date2'] != null){
+                    return $result3;
+                }
+            }
+        }
+
         return $result;
     }
 }
