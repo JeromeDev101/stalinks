@@ -254,7 +254,7 @@ class BuyController extends Controller
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
             ]);
-            $users = User::where('status','active')->get();
+            $users = User::where('status','active')->where('role_id',4)->get();
             foreach($users as $user)
             {
                 event(new LikeEvent("New Article to be write today!", $user->id)); 
