@@ -127,6 +127,16 @@ export default {
 
     mounted() {
         this.liveGetWallet();
+        Echo.channel('morley') //Should be Channel Name
+            .listen('LikeEvent', (e) => {
+               console.log(e);
+
+                if(this.user.id == e.user_id){
+                    this.$toast.success(e.message,{timeout: 2000});
+                     
+                }
+                console.log(e);
+            });
     },
 
     computed: {

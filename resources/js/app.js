@@ -12,12 +12,16 @@ import Select2 from 'vue-select';
 import swal from 'sweetalert2'
 import tinymce from 'vue-tinymce-editor';
 import { Compact } from 'vue-color';
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 
 require('./bootstrap');
 
 Vue.use(VueRouter);
 Vue.use(Toasted);
 Vue.use(Cookies);
+Vue.use(Toast);
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)

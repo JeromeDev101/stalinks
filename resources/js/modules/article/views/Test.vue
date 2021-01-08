@@ -22,6 +22,7 @@ export default {
                 if(this.user.id == e.user_id){
                      alert(e.message);
                 }
+                console.log(3);
             });
 
         
