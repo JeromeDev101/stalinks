@@ -103,7 +103,7 @@ class PublisherController extends Controller
 
     public function update(Request $request){
         $input = $request->except('name', 'company_name', 'username', 'topic');
-        $input['topic'] = implode(",", $request->topic);
+        $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
         // dd($input);
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);

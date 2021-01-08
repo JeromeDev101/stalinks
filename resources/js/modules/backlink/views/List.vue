@@ -18,6 +18,13 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label for="">Search URL Advertiser</label>
+                                <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
                             </div>

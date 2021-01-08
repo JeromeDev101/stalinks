@@ -160,6 +160,10 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
             });
         }
 
+        if(!empty($filters->url_advertiser)) {
+            $query = $query->where('url_advertiser', 'like', '%' . $filters->url_advertiser . '%');
+        }
+
         if(!empty($filters->seller)) {
             $query = $query->whereHas('publisher', function ($query) use ($filters) {
                 $query->where('user_id', $filters->seller );
