@@ -2,11 +2,11 @@
 
 namespace App\Listerners;
 
-use App\Events\LikeEvent;
+use App\Events\NotificationEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class LikeEventListener
+class NotificationEventListener
 {
     /**
      * Create the event listener.
@@ -24,7 +24,7 @@ class LikeEventListener
      * @param  LikeEvent  $event
      * @return void
      */
-    public function handle(LikeEvent $event)
+    public function handle(NotificationEvent $event)
     {
         
     }
