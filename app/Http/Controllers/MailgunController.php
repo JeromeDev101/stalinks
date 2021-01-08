@@ -213,7 +213,7 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    if(Auth::user()->role_id == 3){
+                    if(Auth::user()->role_id == 1){
                         $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }else{
                         $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
@@ -221,7 +221,7 @@ class MailgunController extends Controller
                     
                     break;
                 case 'Sent':
-                     if(Auth::user()->role_id == 3){
+                     if(Auth::user()->role_id == 1){
                         $inbox = $inbox->where('replies.is_sent', 1);
                      }else{
                         $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
@@ -231,7 +231,7 @@ class MailgunController extends Controller
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
-                    if(Auth::user()->role_id == 3){
+                    if(Auth::user()->role_id == 1){
                         $inbox = $inbox->where('replies.deleted_at','!=',1);
                     }else{
                         $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
@@ -239,7 +239,7 @@ class MailgunController extends Controller
                     
                     break;
                 case 'Starred':
-                     if(Auth::user()->role_id == 3){
+                     if(Auth::user()->role_id == 1){
                         $inbox = $inbox->where('replies.is_starred', 1);
                      }else{
                         $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
