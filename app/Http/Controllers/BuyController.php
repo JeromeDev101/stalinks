@@ -14,7 +14,7 @@ use App\Models\Article;
 use App\Models\Registration;
 use App\Models\WalletTransaction;
 use App\Models\User;
-use App\Events\LikeEvent;
+use App\Events\NotificationEvent;
 
 class BuyController extends Controller
 {
@@ -257,7 +257,7 @@ class BuyController extends Controller
             $users = User::where('status','active')->where('role_id',4)->get();
             foreach($users as $user)
             {
-                event(new LikeEvent("New Article to be write today!", $user->id)); 
+                event(new NotificationEvent("New Article to be write today!", $user->id)); 
             }
             
         }
