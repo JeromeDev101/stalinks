@@ -93,12 +93,13 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Topic</label>
-                                <select name="" class="form-control" v-model="filterModel.topic">
+                                <!-- <select name="" class="form-control" v-model="filterModel.topic">
                                     <option value="">All</option>
                                     <option v-for="option in topic" v-bind:value="option">
                                         {{ option }}
                                     </option>
-                                </select>
+                                </select> -->
+                                 <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 

@@ -37,6 +37,7 @@ import Inbox from '@/modules/mails/views/Inbox.vue';
 import Maillog from '@/modules/mails/views/Maillog.vue';
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue';
+import TestPush from '@/modules/article/views/Test.vue';
 
 const routes = [{
     path: '/login',
@@ -47,6 +48,11 @@ const routes = [{
     path: '/registration',
     name: 'registration',
     component: RegistrationPage,
+},
+{
+    path: '/test-aw',
+    name: 'test_aw',
+    component: TestPush,
 },
 {
     path: '/verification/:code',

@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/aw', function(){
+	return view('paypal');
+});
+
+
 Route::get('/{any}', 'HomeController@index')->where('any', '.*');
 
 

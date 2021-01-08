@@ -126,7 +126,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
                 foreach($filter['topic'] as $topic) {
-                    $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                    $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
                 }
             } else {
                 $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
@@ -147,6 +147,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+           
             $result = $list->get();
         }else{
             $result = $list->paginate($paginate);

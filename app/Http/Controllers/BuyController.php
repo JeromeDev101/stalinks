@@ -14,6 +14,7 @@ use App\Models\Article;
 use App\Models\Registration;
 use App\Models\WalletTransaction;
 use App\Models\User;
+use App\Events\NotificationEvent;
 
 class BuyController extends Controller
 {
@@ -60,6 +61,23 @@ class BuyController extends Controller
 
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
+        }
+
+        if( isset($filter['topic']) && !empty($filter['topic']) ){
+            if(is_array($filter['topic'])) {
+                $ctr = 0;
+                foreach($filter['topic'] as $topic) {
+                    // $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                    if($ctr == 0) {
+                        $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                    } else {
+                        $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+                    }
+                    $ctr++;
+                }
+            } else {
+                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
+            }
         }
 
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
@@ -236,6 +254,12 @@ class BuyController extends Controller
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
             ]);
+            $users = User::where('status','active')->where('role_id',4)->get();
+            foreach($users as $user)
+            {
+                event(new NotificationEvent("New Article to be write today!", $user->id)); 
+            }
+            
         }
 
         return response()->json(['success'=> true], 200);
