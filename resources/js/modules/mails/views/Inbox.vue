@@ -869,6 +869,7 @@ export default {
             })
             .then((response) => {
                 this.records = response.data.inbox;
+                console.log(this.records);
                 // this.loadingMessage = false;
                 this.inboxCount = response.data.count;
                 // console.log(this.inboxCount)

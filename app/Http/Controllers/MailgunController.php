@@ -182,7 +182,7 @@ class MailgunController extends Controller
 
     public function recipient_filter(Request $request)
     {
-        
+        //return response()->json(['inbox'=> Auth::user()->role_id]);
 
     	$validator = Validator::make($request->all(), [
             'email' => 'required|max:100',
@@ -213,19 +213,38 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+                    if(Auth::user()->role_id == 3){
+                        $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+                    }else{
+                        $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+                    }
+                    
                     break;
                 case 'Sent':
-                    $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
+                     if(Auth::user()->role_id == 3){
+                        $inbox = $inbox->where('replies.is_sent', 1);
+                     }else{
+                        $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
+                     }
+                    
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
-
-                    $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
+                    if(Auth::user()->role_id == 3){
+                        $inbox = $inbox->where('replies.deleted_at','!=',1);
+                    }else{
+                        $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
+                    }
+                    
                     break;
                 case 'Starred':
-                    $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
+                     if(Auth::user()->role_id == 3){
+                        $inbox = $inbox->where('replies.is_starred', 1);
+                     }else{
+                        $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
+                     }
+                    
                     break;
                 default:
                     $inbox = $inbox;
