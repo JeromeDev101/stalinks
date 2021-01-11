@@ -7,6 +7,7 @@ use App\Models\Backlink;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
+use App\Events\BacklinkLiveEvent;
 
 class FollowupSalesController extends Controller
 {
@@ -78,6 +79,15 @@ class FollowupSalesController extends Controller
     }
 
     public function update( Request $request ){
+        $seller = DB::table('backlinks')
+                    
+                    ->join('publisher','backlinks.publisher_id','=','publisher.id')
+                    ->join('users','publisher.user_id','=','users.id')
+                    ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
+                    ->where('backlinks.id',$request->id)
+                    ->first();
+                    
+
         $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
@@ -95,7 +105,7 @@ class FollowupSalesController extends Controller
             $input['live_date'] = date('Y-m-d');
         }
         $backlink->update($input);
-
+        event(new BacklinkLiveEvent("Article is already LIVE.", $seller->user_id)); 
         return response()->json(['success'=> true], 200);
     }
 }
