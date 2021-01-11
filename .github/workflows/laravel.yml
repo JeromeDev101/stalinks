@@ -1,11 +1,11 @@
-name: remote ssh command
+name: Deployment Automation
 on:
   push:
      branches:
-        - staging_final       
+        - master      
   pull_request:
      branches:
-        - staging_final
+        - master
 jobs:
 
   build:
