@@ -127,9 +127,10 @@ export default {
 
     mounted() {
         this.liveGetWallet();
+
         Echo.channel('morley') //Should be Channel Name
             .listen('NotificationEvent', (e) => {
-               console.log(e);
+               
 
                 if(this.user.id == e.user_id){
                     this.$toast.success(e.message,{timeout: 2000});
@@ -137,6 +138,16 @@ export default {
                 }
                 
             });
+        Echo.channel('morley') //Should be Channel Name
+            .listen('ArticleEvent', (e) => {
+               
+
+                if(this.user.id == e.user_id){
+                    this.$toast.success(e.message,{timeout: 2000});
+                     console.log(e);
+                }
+                
+            });    
     },
 
     computed: {

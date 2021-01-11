@@ -149,7 +149,6 @@ const actions = {
             let response = await ArticleService.updateContent(params)
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'success', message: 'Sucessfully Updated', errors: {} });
-                console.log("tae");
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);
