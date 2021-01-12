@@ -302,7 +302,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status Sales</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive">
+                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive" @change="checkStatus()">
                                             <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
                                     </div>
@@ -325,6 +325,29 @@
                                     <div>
                                         <label style="color: #333">Date Completed</label>
                                         <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" v-show="showReason">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Reason</label>
+                                        <select  class="form-control pull-right" v-model="updateModel.reason" style="height: 37px;" @change="checkReason()">
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-show="showReasonText">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Details of Issue/Cancelled</label>
+                                        <textarea class="form-control" v-model="updateModel.reason_text"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -455,6 +478,8 @@
                     },
                     link_from: '',
                     url_from: '',
+                    reason: '',
+                    reason_text: '',
                 },
                 isPopupLoading: false,
                 filterModel: {
@@ -472,6 +497,8 @@
                 isLive: false,
                 totalAmount: 0,
                 isSearching: false,
+                showReason: false,
+                showReasonText: false,
             }
         },
 
@@ -506,6 +533,22 @@
         },
 
         methods: {
+
+            checkReason() {
+                if(this.updateModel.reason == 'Other'){
+                    this.showReasonText = true;
+                } else {
+                    this.showReasonText = false;
+                }
+            },
+
+            checkStatus() {
+                if(this.updateModel.status == 'Issue' || this.updateModel.status == 'Canceled'){
+                    this.showReason = true;
+                } else {
+                    this.showReason = false;
+                }
+            },
 
             async getTeamInCharge(){
                 await this.$store.dispatch('actionGetTeamInCharge');
