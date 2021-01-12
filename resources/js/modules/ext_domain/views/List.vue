@@ -948,10 +948,10 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label style="color: #333">Country</label>
+                                        <label style="color: #333">Language</label>
                                         <div>
                                             <select @change="doChangeEmailCountry" v-model="mailInfo.country.id" class="form-control pull-right">
-                                                <option v-for="option in filterModel.countryList.data" v-bind:value="option.id">
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
