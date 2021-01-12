@@ -33,7 +33,7 @@
                                     <th>#</th>
                                     <th>Template Name</th>
                                     <th>Title</th>
-                                    <th>Country</th>
+                                    <th>Language</th>
                                     <th>Action</th>
                                 </tr>
                                 <tr>
@@ -62,7 +62,7 @@
                                         <div class="input-group input-group-sm">
                                             <select v-model="filterModel.country_id_temp" class="form-control pull-right">
                                                 <option value="0"></option>
-                                                <option v-for="option in countryList.data" v-bind:value="option.id">
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -78,7 +78,7 @@
                                     <td class="center-content">{{ index + 1 }}</td>
                                     <td>{{ item.mail_name }}</td>
                                     <td>{{ item.title }}</td>
-                                    <td>{{ (item.country) ? item.country.name : '' }}</td>
+                                    <td>{{ (item.language) ? item.language.name : '' }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button @click="doEdit(item)" data-toggle="modal" data-target="#modal-update" type="submit" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -107,7 +107,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Country</h4>
+                        <h4 class="modal-title">Add Language</h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
@@ -121,11 +121,11 @@
 
                             <div class="col-md-4">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">Language</label>
                                     <div>
                                         <select v-model="emailModel.country_id" class="form-control pull-right">
-                                            <option value="0">-- Select country --</option>
-                                            <option v-for="option in countryList.data" v-bind:value="option.id">
+                                            <option value="0">-- Select language --</option>
+                                            <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
@@ -191,11 +191,11 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">Language</label>
                                     <div>
                                         <select v-model="emailUpdate.country_id" class="form-control pull-right">
-                                            <option value="0">-- Select country --</option>
-                                            <option v-for="option in countryList.data" v-bind:value="option.id">
+                                            <option value="0">-- Select Language --</option>
+                                            <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
@@ -290,6 +290,12 @@
             this.getEmailList({
                 params: this.filterModel
             });
+
+
+            let language = this.listLanguages.data;
+            if ( language.length === 0 ) {
+                this.getListLanguages();
+            }
         },
 
         computed: {
@@ -298,6 +304,7 @@
                 emailList: state => state.emailTemplateSystem.emailList,
                 messageForms: state => state.emailTemplateSystem.messageForms,
                 countryList: state => state.storeSystem.countryList,
+                listLanguages: state => state.storePublisher.listLanguages,
             }),
 
             pagination() {
@@ -316,6 +323,10 @@
         },
 
         methods: {
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
             async getEmailList(params) {
                 this.isLoadingTable = true;

@@ -13,4 +13,8 @@ class MailContent extends Model
     {
         return $this->belongsTo('App\Models\Country', 'country_id');
     }
+
+    public function language() {
+        return $this->belongsTo('App\Models\Language', 'country_id');
+    }
 }
