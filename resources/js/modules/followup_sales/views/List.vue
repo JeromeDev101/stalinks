@@ -334,10 +334,7 @@
                                     <div>
                                         <label style="color: #333">Reason</label>
                                         <select  class="form-control pull-right" v-model="updateModel.reason" style="height: 37px;" @change="checkReason()">
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                            <option value="Other">Other</option>
+                                            <option v-for="reason in listReason" v-bind:value="reason">{{ reason }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -499,6 +496,15 @@
                 isSearching: false,
                 showReason: false,
                 showReasonText: false,
+                listReason: [
+                    'I am having technical problems',
+                    'I am no longer using this service',
+                    'I am having issues with customer care',
+                    'Not a right fit, the product is not for us',
+                    'I couldn\'t figure out how to use the site effectively',
+                    'It is to expensive',
+                    'Other',
+                ],
             }
         },
 
