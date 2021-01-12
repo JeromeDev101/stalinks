@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BacklinkLiveEvent
+class BacklinkLiveEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,9 +19,13 @@ class BacklinkLiveEvent
      *
      * @return void
      */
-    public function __construct()
+    public $message;
+    public $user_id; 
+
+    public function __construct(  $message, $user_id  )
     {
-        //
+        $this->message = $message;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -31,6 +35,6 @@ class BacklinkLiveEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return ['morley'];
     }
 }
