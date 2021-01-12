@@ -2,7 +2,7 @@
     <div>
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $route.name }}</h3>
@@ -89,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="box box-primary">
                     <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
                         No items Selected
@@ -698,7 +698,7 @@ export default {
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
-            this.viewContent.attachment  = JSON.parse(inbox.attachment);
+            // this.viewContent.attachment  = JSON.parse(inbox.attachment);
 
             if(inbox.attachment != '') {
                 let url = JSON.parse(inbox.attachment).url;
@@ -714,6 +714,7 @@ export default {
                     //     link.download = url;
                     //     this.viewContent.attachment  = JSON.parse(inbox.attachment);
                     // })
+                    
                 } else { // For Sender
                     this.viewContent.attachment = JSON.parse(inbox.attachment);
                 }
@@ -727,27 +728,22 @@ export default {
                     display_name: '',
                 }
             }
-            if(this.viewContent.attachment.length > 0){
-                 axios.post('/api/mail/show-attachment', {
+            
+            if(inbox.attachment != '' && this.viewContent.attachment.length > 0){
+                axios.post('/api/mail/show-attachment', {
                         url: this.viewContent.attachment[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                       console.log(res)
+                    //    console.log(res)
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
-                        // console.log(res[1]);
 
                         let link = document.getElementById( 'link-download-href' );
                         link.href = window.URL.createObjectURL(blob);
                         link.download = 'file.'+res[1];
-                        // link.click();
-
                     });
             }
             
-
-           
-
 
             // if(inbox.attachment != '') {
             //     let url = JSON.parse(inbox.attachment).url;
