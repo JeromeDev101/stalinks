@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ArticleEvent' => [
           'App\Listerners\ArticleEventListener',
         ],
+        'App\Events\BacklinkLiveEvent' => [
+          'App\Listerners\BacklinkLiveEventListener',
+        ],
     ];
 
     /**

@@ -147,7 +147,19 @@ export default {
                      console.log(e);
                 }
                 
-            });    
+            });  
+        
+        Echo.channel('morley') //Should be Channel Name
+            .listen('BacklinkLiveEvent', (e) => {
+               
+
+                if(this.user.id == e.user_id){
+                    this.$toast.success(e.message,{timeout: 2000});
+                     console.log(e);
+                }
+                
+            }); 
+
     },
 
     computed: {

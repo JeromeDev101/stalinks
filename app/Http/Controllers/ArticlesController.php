@@ -12,7 +12,7 @@ use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\Price;
 
-use App\Events\ArticleEvent;
+
 
 class ArticlesController extends Controller
 {
@@ -206,14 +206,7 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
-        $seller = DB::table('article')
-                    ->join('backlinks','article.id_backlink','=','backlinks.id')
-                    ->join('publisher','backlinks.publisher_id','=','publisher.id')
-                    ->join('users','publisher.user_id','=','users.id')
-                    ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
-                    ->where('article.id',$request->content['id'])
-                    ->first();
-                
+        
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
         $price_id = null;
@@ -242,7 +235,7 @@ class ArticlesController extends Controller
             if( $backlink->status != 'Live' ){
                 $backlink->update(['status' => 'Content Done']);
             }
-            event(new ArticleEvent("Article has been DONE", $seller->user_id)); 
+            
         }
 
         if( $request->content['status'] == 'In Writing' ){

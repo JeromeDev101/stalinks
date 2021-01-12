@@ -11,6 +11,8 @@ use App\Models\Backlink;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Models\Article;
+use App\Events\ArticleEvent;
+use Illuminate\Support\Facades\DB;
 
 class BackLinkController extends Controller
 {
@@ -136,6 +138,15 @@ class BackLinkController extends Controller
 
     public function update(UpdateBacklinkRequest $request, $id)
     {
+        $seller = DB::table('backlinks')
+                    
+                    ->join('publisher','backlinks.publisher_id','=','publisher.id')
+                    ->join('buyer_purchased','publisher.id','=','buyer_purchased.publisher_id')
+                    ->join('users','buyer_purchased.user_id_buyer','=','users.id')
+                    ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
+                    ->where('backlinks.id',$id)
+                    ->first();
+              
         $response = ['update_success' => false];
         $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser', 'title');
         $backlink = $this->backLinkRepository->findById($id);
@@ -155,6 +166,8 @@ class BackLinkController extends Controller
         if (!$backlink) {
             return response()->json($response);
         }
+
+        event(new ArticleEvent("Article is now LIVE", $seller->user_id)); 
 
         $this->backLinkRepository->update($backlink, $input);
         $response['update_success'] = true;
