@@ -170,14 +170,14 @@ export default {
         },
 
         checkWorkMail() {
-            if (this.user.work_mail == '') {
+            if (this.user.work_mail) {
+                $("#modal-compose-email").modal('show')
+            } else {
                 swal.fire(
                     'Error',
                     'Please setup first your Work mail',
                     'error'
                 )
-            } else {
-                $("#modal-compose-email").modal('show')
             }
         },
 

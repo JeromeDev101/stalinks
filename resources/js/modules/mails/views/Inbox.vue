@@ -857,23 +857,33 @@ export default {
 
         getInbox(){
         //    this.loadingMessage = true;
-            axios.post('/api/mail/filter-recipient',{
-                'email': this.user.work_mail,
-                'param': this.$route.name,
-                'search_mail': this.search_mail,
-                'label_id': this.$route.query.label_id,
-            })
-            .then((response) => {
-                this.records = response.data.inbox;
-                console.log(this.records);
-                // this.loadingMessage = false;
-                this.inboxCount = response.data.count;
-                // console.log(this.inboxCount)
-            })
-            .catch((error) => {
-                console.log(error);
-                error => error;
-            });
+            if(this.user.work_mail) {
+                axios.post('/api/mail/filter-recipient',{
+                    'email': this.user.work_mail,
+                    'param': this.$route.name,
+                    'search_mail': this.search_mail,
+                    'label_id': this.$route.query.label_id,
+                })
+                .then((response) => {
+                    this.records = response.data.inbox;
+                    // console.log(this.records);
+                    // this.loadingMessage = false;
+                    this.inboxCount = response.data.count;
+                    // console.log(this.inboxCount)
+                })
+                .catch((error) => {
+                    console.log(error);
+                    error => error;
+                });
+            } 
+            // else {
+            //     swal.fire(
+            //         'Cannot Access',
+            //         'Please Setup first your Work Mail. Contact your Administrator',
+            //         'error'
+            //     )
+            // }
+            
         },
 
         clearMessageform() {
@@ -885,9 +895,9 @@ export default {
                         url: url
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        console.log(res);
+                        // console.log(res);
                         let blob = new Blob( [ res.data ] );
-                        console.og(res.data);
+                        // console.og(res.data);
                          let link = document.getElementById( 'link-download-href' );
                          link.href = URL.createObjectURL( blob );
                          link.download = url;

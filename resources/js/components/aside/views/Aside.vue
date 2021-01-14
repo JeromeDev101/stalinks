@@ -4,7 +4,7 @@
         <section class="sidebar" style="height: auto;">
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu tree" data-widget="tree">
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isBuyer))" class="header">ADMIN</li>
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isBuyer || isQc))" class="header">ADMIN</li>
 
                 <li v-if="user.isAdmin" :class="{ active: $route.name == 'system' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/system' }">
@@ -13,7 +13,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin" :class="{ active: $route.name == 'dashboard' }">
+                <li v-if="user.isAdmin || isQc" :class="{ active: $route.name == 'dashboard' }">
                     <router-link class="page-sidebar__item" :to="{ path: '/dashboard' }">
                         <i class="fa fa-fw fa-dashboard"></i> <span>Dashboard</span>
                         <span class="pull-right-container"></span>
@@ -48,7 +48,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.role_id == 3 && user.isOurs == 0) || (user.role_id == 5 && user.isOurs == 0) || (user.role_id == 6 && user.isOurs == 0) || (user.role_id == 7 && user.isOurs == 0)" 
+                <li v-if="user.isAdmin || (user.role_id == 3 && user.isOurs == 0) || (user.role_id == 5 && user.isOurs == 0) || (user.role_id == 6 && user.isOurs == 0) || (user.role_id == 7 && user.isOurs == 0) || (user.role_id == 8 && user.isOurs == 0)" 
                     :class="{ active: $route.name == 'Registration' }">
 
                     <router-link :to="{ path: '/accounts' }">
@@ -125,7 +125,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller ))" :class="{ active: $route.name == 'Sent' || $route.name == 'Starred' || $route.name == 'Trash' || $route.name == 'Inbox' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'Inbox' || $route.name == 'Sent' || $route.name == 'Trash' || $route.name == 'Starred'}">
+                <li v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc))" :class="{ active: $route.name == 'Sent' || $route.name == 'Starred' || $route.name == 'Trash' || $route.name == 'Inbox' || $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template', 'treeview': true, 'menu-open': $route.name == 'url-prospect' || $route.name == 'mail-logs' || $route.name == 'mail-template' || $route.name == 'Inbox' || $route.name == 'Sent' || $route.name == 'Trash' || $route.name == 'Starred'}">
                     <a href="#">
                         <i class="fa fa-search"></i>
                         <span>Search  Domains</span>
@@ -170,7 +170,7 @@
                     </router-link>
                 </li>
 
-                <li v-if="isSeller || user.isAdmin || isManager || isPostingWriter" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
+                <li v-if="isSeller || user.isAdmin || isManager || isPostingWriter || isQc" :class="{ active: $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes', 'treeview': true, 'menu-open': $route.name == 'publisher' || $route.name == 'followup-sales' || $route.name == 'incomes'}">
                     <a href="#">
                         <i class="fa fa-fw fa-user-o"></i>
                         <span>Seller</span>
@@ -204,7 +204,7 @@
 
                 </li>
 
-                <li v-if="isBuyer || user.isAdmin ||(user.isOurs == 0 && (isManager || isPostingWriter )) " :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
+                <li v-if="isBuyer || user.isAdmin ||(user.isOurs == 0 && (isManager || isPostingWriter || isQc)) " :class="{ active: $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase', 'treeview': true, 'menu-open': $route.name == 'BackLink' || $route.name == 'list-backlinks' || $route.name == 'purchase' }">
                     <a href="#">
                         <i class="fa fa-fw fa-money"></i>
                         <span>Buyer</span>
@@ -254,6 +254,7 @@ export default {
             isBuyer: false,
             isManager: false,
             isPostingWriter: false,
+            isQc: false,
         }
     },
     created() {
@@ -281,7 +282,7 @@ export default {
                 }
             }
 
-            // for emaployee with a role of seller/buyer
+            // checking role type
             if( that.role.id == 5){
                 this.isBuyer = true;
             }
@@ -296,6 +297,10 @@ export default {
 
             if( that.role.id == 4 ){
                 this.isPostingWriter = true;
+            }
+
+            if( that.role.id == 8 ){
+                this.isQc = true;
             }
         },
     },
