@@ -208,6 +208,7 @@ Route::middleware('auth:api')->group(function () {
         // Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
+        Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
     });
 
      Route::name('labels')->resource('/label','LabelController');
@@ -231,6 +232,7 @@ Route::name('pusher')->get('/test-pusher','PushController@test');
 Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
+
 
 
 

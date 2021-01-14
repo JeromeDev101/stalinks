@@ -12,6 +12,7 @@ use App\Http\Resources\ShowMessage;
 use App\Http\Resources\MessageRecipient;
 use App\Http\Resources\MessageSent;
 use App\Models\Reply;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -510,5 +511,11 @@ class MailgunController extends Controller
             'sent_today'          => $sent_today,
             'failed'        => $failed,
         ]);                
+    }
+
+    public function get_mail_list()
+    {
+        $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+        return response()->json($user_email);
     }
 }
