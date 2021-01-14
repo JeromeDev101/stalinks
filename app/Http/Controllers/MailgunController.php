@@ -103,7 +103,7 @@ class MailgunController extends Controller
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
-            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
+            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'dov@marketingcrossmedia.asia',
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'recipient-variables'   => json_encode($object),
