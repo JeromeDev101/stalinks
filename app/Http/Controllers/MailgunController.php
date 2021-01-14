@@ -495,6 +495,8 @@ class MailgunController extends Controller
         $mail_logs = $mail_logs->get();
 
 
+        $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();  
+
         $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
 
         $total = Reply::where('is_sent',1)->count();   
@@ -505,8 +507,8 @@ class MailgunController extends Controller
             'logs'          => $mail_logs,
             'total_mail'    => $total,
             'sent'          => $sent,
+            'sent_today'          => $sent_today,
             'failed'        => $failed,
-
         ]);                
     }
 }

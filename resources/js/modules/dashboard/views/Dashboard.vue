@@ -5,7 +5,7 @@
             <br>
         </section>
 
-        <div class="col-lg-12" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6)">
+        <div class="col-lg-12" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6) || (user.isOurs == 0 && user.role_id == 8)">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -57,7 +57,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -121,7 +121,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -167,7 +167,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -202,7 +202,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -248,7 +248,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -286,7 +286,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">

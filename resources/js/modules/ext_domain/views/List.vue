@@ -2082,7 +2082,7 @@
             },
             async doChangeEmailCountry() {
                 let that = this;
-                this.mailInfo.country = this.filterModel.countryList.data.filter(item => item.id === that.mailInfo.country.id)[0];
+                this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
                 this.fetchTemplateMail(this.mailInfo.country.id);
             },
 
