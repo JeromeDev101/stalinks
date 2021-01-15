@@ -5,7 +5,7 @@
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
-                <div class="col-md-2">
+                <div class="col-md-2" v-if="user.role_id == 1">
                             <div class="form-group">
                                 <label for="">Login As: {{user.work_mail}}</label>
                                 <select class="form-control" v-model="user.work_mail">
@@ -15,7 +15,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                </div>
                 <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Folders</h3>
