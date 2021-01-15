@@ -302,8 +302,9 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status Sales</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive" @change="checkStatus()">
-                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive && user.role_id != 8" @change="checkStatus()">
+                                            <option v-show="user.role_id != 8 && user.role_id != 3 && user.role_id != 1" v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                            <option v-show="user.role_id == 8 || user.role_id == 3 || user.role_id == 1" v-for="status in statusBaclinkQc" v-bind:value="status">{{ status }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -457,7 +458,8 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Issue', 'Canceled'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue', 'Canceled'],
+                statusBaclinkQc: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process', 'Issue', 'Canceled'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
