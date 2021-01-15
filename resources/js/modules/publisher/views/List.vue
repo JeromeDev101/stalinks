@@ -202,8 +202,8 @@
                                         <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
                                         <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
                                         <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-                                        <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.isOurs == 0">Valid</a>
-                                        <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.isOurs == 0">Invalid</a>
+                                        <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>
+                                        <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>
                                         <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
                                     </div>
                                 </div>

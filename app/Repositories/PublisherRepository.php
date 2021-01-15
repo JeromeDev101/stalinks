@@ -308,7 +308,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                     if( trim($url, " ") != '' ){
 
-                        $valid = $this->checkValid($url);
+                        // $valid = $this->checkValid($url);
 
                         Publisher::create([
                             'user_id' => $id,
@@ -322,7 +322,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             'org_traffic' => 0,
                             'price' => preg_replace('/[^0-9.\-]/', '', $price),
                             'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                            'valid' => $valid,
+                            'valid' => 'unchecked',
                             'casino_sites' => 'yes',
                             'topic' => null
                         ]);
@@ -357,7 +357,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 if( trim($url, " ") != '' ){
                                     // $orig_language = $this->getLanguage($language_excel);
                                     $lang = $this->getCountry($language_excel);
-                                    $valid = $this->checkValid($url);
+                                    // $valid = $this->checkValid($url);
                                     Publisher::create([
                                         'user_id' => $seller_id ,
                                         'language_id' => $lang,
@@ -370,7 +370,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'org_traffic' => 0,
                                         'price' => preg_replace('/[^0-9.\-]/', '', $price),
                                         'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                        'valid' => $valid,
+                                        'valid' => 'unchecked',
                                         'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                         'topic' => $topic,
                                         // 'country_id' => $orig_language,
