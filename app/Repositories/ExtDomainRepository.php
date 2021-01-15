@@ -299,6 +299,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                     'organic_traffic' => '',
                     'email' => '',
                     'phone' => '',
+                    'user_id' => Auth::user()->id,
                     'facebook' => '',
                     'status' => config('constant.EXT_STATUS_NEW'),
                 ]);
