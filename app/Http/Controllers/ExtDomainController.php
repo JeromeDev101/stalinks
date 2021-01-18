@@ -361,7 +361,9 @@ class ExtDomainController extends Controller
             return response()->json($message,422);
         }
 
-        if( $request->status === '100'){
+        $input['user_id'] = $id;
+
+        // if( $request->status === '100'){
             // Publisher::create([
             //     'user_id' => $id,
             //     'url' => $input['domain'],
@@ -376,8 +378,8 @@ class ExtDomainController extends Controller
             //     'valid' => 'unchecked',
             // ]);
 
-            $input['user_id'] = $id;
-        }
+            // $input['user_id'] = $id;
+        // }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];
@@ -425,6 +427,7 @@ class ExtDomainController extends Controller
         if ($this->countryRepository->find([['id', $input['country_id']]])->count() == 0) {
             return response()->json(false);
         }
+        
 
         $newExtDomain = $this->extDomainRepository->create($input);
         $newExtDomain->country;
