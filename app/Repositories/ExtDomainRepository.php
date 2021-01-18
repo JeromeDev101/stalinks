@@ -394,17 +394,18 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function updateData(array $attributes = [], array $countryIdsFilter)
     {
-        if (Auth::user()->isAdmin()) {
-            $extModel = $this->model->where('id', $attributes['id']);
-            if ($extModel->count() > 0) {
-                $this->update($extModel->first(), $attributes);
-                return true;
-            }
+        // if (Auth::user()->isAdmin()) {
+        //     $extModel = $this->model->where('id', $attributes['id']);
+        //     if ($extModel->count() > 0) {
+        //         $this->update($extModel->first(), $attributes);
+        //         return true;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
 
-        $extModel = $this->model->whereIn('country_id', $countryIdsFilter)->where('id', $attributes['id']);
+        // $extModel = $this->model->whereIn('country_id', $countryIdsFilter)->where('id', $attributes['id']);
+        $extModel = $this->model->where('id', $attributes['id']);
         if ($extModel->count() > 0) {
             $this->update($extModel->first(), $attributes);
             return true;

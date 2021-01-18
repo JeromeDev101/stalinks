@@ -498,6 +498,7 @@ class ExtDomainController extends Controller
         $input['ref_domains']  = $request->ext['ref_domains'];
         $input['organic_keywords']  = $request->ext['organic_keywords'];
         $input['organic_traffic']  = $request->ext['organic_traffic'];
+        $input['country_id']  = $request->ext['country_id'];
 
         if ( $request->ext['status'] == 100){
             $request->validate([
@@ -612,12 +613,13 @@ class ExtDomainController extends Controller
             'domain' => Rule::unique('ext_domains')->ignore($input['id']),
         ])->validate();
 
-        Validator::make($input, $validateRule)->validate();
+        // Validator::make($input, $validateRule)->validate();
 
 //        if (!isset($input['facebook'])  && !isset($input['email']) && !isset($input['phone'])
 //            && $input['status'] === config('constant.EXT_STATUS_GOT_CONTACTS')) {
 //            return response()->json(['success' => false, 'message' => 'status invalid']);
 //        }
+
 
         $result = $this->extDomainRepository->updateData($input, $countryIds);
         return response()->json(['success' => $result]);
