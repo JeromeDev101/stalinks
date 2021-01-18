@@ -8,6 +8,8 @@ use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Auth;
 use League\OAuth2\Server\RequestEvent;
+use App\Models\User;
+use App\Models\Registration;
 
 class PublisherController extends Controller
 {
@@ -102,11 +104,19 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
-        $input = $request->except('name', 'company_name', 'username', 'topic');
+        $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
-        // dd($input);
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
+
+        // Updating Team in Charge
+        if( $request->user_id != "" && $request->team_in_charge_old != "" && $request->team_in_charge != $request->team_in_charge_old ) {
+            $user = User::find($request->user_id);
+            $registration = Registration::where('email', $user->email)->first();
+            if(isset($registration->id)){
+                $registration->update(['team_in_charge' => $request->team_in_charge]);
+            }
+        }
 
         return response()->json(['success' => true], 200);
     }

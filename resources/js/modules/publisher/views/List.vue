@@ -136,6 +136,18 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Price Basis</label>
+                                <select name="" class="form-control" v-model="filterModel.price_basis">
+                                    <option value="">All</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Average">Average</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -411,6 +423,18 @@
                                         <option value=""></option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" >
+                                <div class="form-group">
+                                    <label for="">Team in Charge</label>
+                                    <select class="form-control" v-model="updateModel.team_in_charge">
+                                        <option value=""></option>
+                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name:option.username}}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -809,6 +833,9 @@
                     topic: '',
                     kw_anchor: '',
                     country_id: '',
+                    team_in_charge: '',
+                    team_in_charge_old: '',
+                    user_id: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -826,6 +853,7 @@
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
                     kw_anchor: this.$route.query.kw_anchor || '',
+                    price_basis: this.$route.query.price_basis || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -921,7 +949,7 @@
 
             displayStar(price_basis) {
                 let star = '';
-                if( price_basis == 'Low'  ){
+                if( price_basis == 'Good'  ){
                     star = '<i class="fa fa-star" style="color: green;"></i>';
                 }
 
@@ -929,7 +957,7 @@
                     star = '<i class="fa fa-star" style="color: red;"></i>';
                 }
 
-                if( price_basis == 'Good'  ){
+                if( price_basis == 'Average'  ){
                     star = '<i class="fa fa-star" style="color: orange;"></i>';
                 }
 
@@ -980,6 +1008,7 @@
                             casino_sites: this.filterModel.casino_sites,
                             topic: this.filterModel.topic,
                             kw_anchor: this.filterModel.kw_anchor,
+                            price_basis: this.filterModel.price_basis,
                             page: page
                         }
                     });
@@ -999,6 +1028,7 @@
                             casino_sites: this.filterModel.casino_sites,
                             topic: this.filterModel.topic,
                             kw_anchor: this.filterModel.kw_anchor,
+                            price_basis: this.filterModel.price_basis,
                             page: page
                         }
                     });
@@ -1341,6 +1371,7 @@
                     casino_sites: '',
                     topic: '',
                     kw_anchor: '',
+                    price_basis: '',
                 }
 
                 this.getPublisherList({
@@ -1401,6 +1432,7 @@
                 let that = JSON.parse(JSON.stringify(publish))
                 let topic = '';
 
+                console.log(that)
 
                 if(that.topic != null && that.topic != '') {
                     let _topic = that.topic;
@@ -1431,6 +1463,9 @@
                     casino_sites: that.casino_sites,
                     kw_anchor: that.kw_anchor,
                     country_id: that.country_id,
+                    team_in_charge: that.team_in_charge,
+                    user_id: that.user_id,
+                    team_in_charge_old: that.team_in_charge,
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
@@ -1473,6 +1508,7 @@
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
                         kw_anchor: this.filterModel.kw_anchor,
+                        price_basis: this.filterModel.price_basis,
                     }
                 });
             },

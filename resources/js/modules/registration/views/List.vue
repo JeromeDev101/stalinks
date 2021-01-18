@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="isTeamSeller">
+                        <div class="col-md-2" v-if="isTeamSeller" v-show="user.role_id == 8 && user.isAdmin">
                             <div class="form-group">
                                 <label for="">Team In-charge</label>
                                 <select class="form-control" name="" v-model="filterModel.team_in_charge">
