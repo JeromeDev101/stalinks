@@ -179,11 +179,11 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label style="color: #333">Country</label>
+                                        <label style="color: #333">Language</label>
                                         <div>
                                             <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
                                                 <option value=""></option>
-                                                <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -294,11 +294,11 @@
                             <div class="col-md-12" v-show="withTemplate">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label style="color: #333">Country</label>
+                                        <label style="color: #333">Language</label>
                                         <div>
                                             <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
                                                 <option value=""></option>
-                                                <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -465,6 +465,11 @@ export default {
     created() {
         this.getListCountries();
         this.$root.$refs.AppInbox = this;
+
+        let language = this.listLanguages.data;
+        if( language.length === 0 ){
+            this.getListLanguages();
+        }
     },
 
     computed: {
@@ -473,6 +478,7 @@ export default {
             listCountryAll: state => state.storePublisher.listCountryAll,
             listMailTemplate: state => state.storeExtDomain.listMailTemplate,
             messageForms: state => state.storeMailgun.messageForms,
+            listLanguages: state => state.storePublisher.listLanguages,
         })
     },
 
@@ -487,6 +493,10 @@ export default {
     },
 
     methods: {
+        async getListLanguages() {
+            await this.$store.dispatch('actionGetListLanguages');
+        },
+
         clearSearchMail() {
             this.search_mail = '';
             this.getInbox();
