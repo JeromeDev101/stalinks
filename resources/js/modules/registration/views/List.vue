@@ -219,7 +219,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Skype <span class="text-danger">*</span></label>
+                                    <label for="">Skype</label>
                                     <input type="text" class="form-control" v-model="accountUpdate.skype">
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
@@ -448,7 +448,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Skype <span class="text-danger">*</span></label>
+                                    <label for="">Skype</label>
                                     <input type="text" class="form-control" v-model="accountModel.skype">
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>

@@ -53,7 +53,7 @@ class AccountRequest extends FormRequest
                 'nullable'
             ],
             'skype' => [
-                'required'
+                'nullable'
             ],
             'commission' => [
                 'required'
