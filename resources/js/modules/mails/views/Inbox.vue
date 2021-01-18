@@ -195,7 +195,7 @@
                                             <div>
                                                 <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
-                                                        {{ option.title }}
+                                                        {{ option.mail_name }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -310,7 +310,7 @@
                                             <div>
                                                 <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
-                                                        {{ option.title }}
+                                                        {{ option.mail_name }}
                                                     </option>
                                                 </select>
                                             </div>
