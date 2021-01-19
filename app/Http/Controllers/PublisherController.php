@@ -110,13 +110,13 @@ class PublisherController extends Controller
         $publisher->update($input);
 
         // Updating Team in Charge
-        if( $request->user_id != "" && $request->team_in_charge_old != "" && $request->team_in_charge != $request->team_in_charge_old ) {
-            $user = User::find($request->user_id);
-            $registration = Registration::where('email', $user->email)->first();
-            if(isset($registration->id)){
-                $registration->update(['team_in_charge' => $request->team_in_charge]);
-            }
-        }
+        // if( $request->user_id != "" && $request->team_in_charge_old != "" && $request->team_in_charge != $request->team_in_charge_old ) {
+        //     $user = User::find($request->user_id);
+        //     $registration = Registration::where('email', $user->email)->first();
+        //     if(isset($registration->id)){
+        //         $registration->update(['team_in_charge' => $request->team_in_charge]);
+        //     }
+        // }
 
         return response()->json(['success' => true], 200);
     }

@@ -427,7 +427,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" >
+                            <!-- <div class="col-md-6" >
                                 <div class="form-group">
                                     <label for="">Team in Charge</label>
                                     <select class="form-control" v-model="updateModel.team_in_charge">
@@ -437,7 +437,7 @@
                                         </option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
 
                         </div>
@@ -833,8 +833,8 @@
                     topic: '',
                     kw_anchor: '',
                     country_id: '',
-                    team_in_charge: '',
-                    team_in_charge_old: '',
+                    // team_in_charge: '',
+                    // team_in_charge_old: '',
                     user_id: '',
                 },
                 isEnableBtn: true,
@@ -1463,9 +1463,9 @@
                     casino_sites: that.casino_sites,
                     kw_anchor: that.kw_anchor,
                     country_id: that.country_id,
-                    team_in_charge: that.team_in_charge,
+                    // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
-                    team_in_charge_old: that.team_in_charge,
+                    // team_in_charge_old: that.team_in_charge,
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
