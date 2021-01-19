@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Events\BacklinkLiveEvent;
+use Illuminate\Support\Facades\DB;
 
 class FollowupSalesController extends Controller
 {
