@@ -89,7 +89,7 @@ class AuthController extends Controller
             'wallet_transaction',
             'purchased',
             'total_wallet',
-            'registration',
+            'registration'
         );
 
         unset($input['c_password']);
