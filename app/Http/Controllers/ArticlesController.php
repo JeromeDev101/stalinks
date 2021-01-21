@@ -7,9 +7,12 @@ use App\Models\Backlink;
 use App\Models\User;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\Price;
+
+
 
 class ArticlesController extends Controller
 {
@@ -101,6 +104,8 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
+                        ->where('backlinks.status' ,'!=', 'Canceled')
+                        ->where('backlinks.status' ,'!=', 'Issue')
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
@@ -201,6 +206,7 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
+        
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
         $price_id = null;
@@ -229,6 +235,7 @@ class ArticlesController extends Controller
             if( $backlink->status != 'Live' ){
                 $backlink->update(['status' => 'Content Done']);
             }
+            
         }
 
         if( $request->content['status'] == 'In Writing' ){

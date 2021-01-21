@@ -269,7 +269,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add External Domain</h4>
+                        <h4 class="modal-title">Add URL Prospect</h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
@@ -307,7 +307,7 @@
                                     <div>
                                         <select v-model="extModel.country_id" class="form-control pull-right">
                                             <option value="0">-- Select country --</option>
-                                            <option v-for="option in filterModel.countryList.data" v-bind:value="option.id">
+                                            <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
@@ -511,7 +511,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Update External Domain: <a :href="'http://' + extUpdate.domain">{{ extUpdate.domain }}</a></h4>
+                        <h4 class="modal-title">Update URL Prospect: <a :href="'http://' + extUpdate.domain">{{ extUpdate.domain }}</a></h4>
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
@@ -550,6 +550,20 @@
                             </div>
 
                             <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
+                                    <label style="color: #333">Country</label>
+                                    <div>
+                                        <select v-model="extUpdate.country_id" class="form-control pull-right">
+                                            <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.facebook}" class="form-group">
                                     <label style="color: #333">Facebook</label>
                                     <textarea type="text" v-model="extUpdate.facebook" class="form-control" value=""  placeholder="Enter Facebook"></textarea>
@@ -557,7 +571,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333">Email</label>
                                     <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
@@ -845,7 +859,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" @click="submitUpdate" data-dismiss="modal" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -948,10 +962,10 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label style="color: #333">Country</label>
+                                        <label style="color: #333">Language</label>
                                         <div>
                                             <select @change="doChangeEmailCountry" v-model="mailInfo.country.id" class="form-control pull-right">
-                                                <option v-for="option in filterModel.countryList.data" v-bind:value="option.id">
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -2082,7 +2096,7 @@
             },
             async doChangeEmailCountry() {
                 let that = this;
-                this.mailInfo.country = this.filterModel.countryList.data.filter(item => item.id === that.mailInfo.country.id)[0];
+                this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
                 this.fetchTemplateMail(this.mailInfo.country.id);
             },
 

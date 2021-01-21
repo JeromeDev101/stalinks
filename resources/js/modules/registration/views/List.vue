@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="isTeamSeller">
+                        <div class="col-md-2" v-if="isTeamSeller" v-show="user.role_id == 8 && user.isAdmin">
                             <div class="form-group">
                                 <label for="">Team In-charge</label>
                                 <select class="form-control" name="" v-model="filterModel.team_in_charge">
@@ -144,17 +144,21 @@
                         </span>
                     </div>
                     <div class="modal-body">
+
+                        <h4 class="text-primary">Account Information</h4>
+                        <hr/>
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Username</label>
+                                    <label for="">Username <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Name</label>
+                                    <label for="">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -162,7 +166,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Email</label>
+                                    <label for="">Email <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
@@ -194,7 +198,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Account Type</label>
+                                    <label for="">Account Type <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
@@ -221,10 +225,37 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select class="form-control" v-model="accountUpdate.country_id">
+                                        <option value="">All</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Address</label>
+                                    <textarea class="form-control" v-model="accountUpdate.address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Info</label>
+                                    <textarea class="form-control" v-model="accountUpdate.info"></textarea>
+                                </div>
+                            </div>
+
                         </div>
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
+                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
 
                         <table class="table">
                             <tr>
@@ -266,12 +297,14 @@
                         </table>
 
                         <hr/>
+                        <h4 class="text-primary">Internal Information</h4>
+                        <hr/>
 
                         <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Commission</label>
+                                    <label for="">Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.commission">
                                         <option value="">Select Commission</option>
                                         <option value="yes">Yes</option>
@@ -281,7 +314,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <label for="">Status</label>
                                 <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
                                     <option value="active">Active</option>
@@ -289,7 +322,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <label for="">Credit Authorization</label>
                                 <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
                                     <option value=""></option>
@@ -298,13 +331,22 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <label for="">Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
                                     <option value=""></option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username}}
                                     </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="">Account Validation <span class="text-danger">*</span></label>
+                                <select class="form-control" name="" v-model="accountUpdate.account_validation">
+                                    <option value=""></option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
                                 </select>
                             </div>
 
@@ -332,10 +374,12 @@
                         </span>
                     </div>
                     <div class="modal-body">
+                        <h4 class="text-primary">Account Information</h4>
+                        <hr/>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Username</label>
+                                    <label for="">Username <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
@@ -343,7 +387,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Name</label>
+                                    <label for="">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -351,7 +395,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Email</label>
+                                    <label for="">Email <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
@@ -367,7 +411,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Password</label>
+                                    <label for="">Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" v-model="accountModel.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -375,7 +419,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Confirm Password</label>
+                                    <label for="">Confirm Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -383,7 +427,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Account Type</label>
+                                    <label for="">Account Type <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountModel.type">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
@@ -409,12 +453,38 @@
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select class="form-control" v-model="accountModel.country_id">
+                                        <option value="">All</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Address</label>
+                                    <textarea class="form-control" v-model="accountModel.address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Info</label>
+                                    <textarea class="form-control" v-model="accountModel.info"></textarea>
+                                </div>
+                            </div>
+
                         </div>
-
-
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
+                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
 
                         <table class="table">
                             <tr>
@@ -456,12 +526,14 @@
                         </table>
 
                         <hr/>
+                        <h4 class="text-primary">Internal Information</h4>
+                        <hr/>
 
                         <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Commission</label>
+                                    <label for="">Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountModel.commission">
                                         <option value="">Select Commission</option>
                                         <option value="yes">Yes</option>
@@ -481,6 +553,16 @@
                                         </option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="">Account Validation <span class="text-danger">*</span></label>
+                                <select class="form-control" name="" v-model="accountModel.account_validation">
+                                    <option value=""></option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                                <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
 
                         </div>
@@ -521,6 +603,10 @@
                     btc_account:'',
                     commission: '',
                     team_in_charge: '',
+                    account_validation: '',
+                    address: '',
+                    info: '',
+                    country_id: '',
                 },
 
                 filterModel: {
@@ -551,6 +637,10 @@
                     btc_account:'',
                     username:'',
                     team_in_charge:'',
+                    account_validation: '',
+                    address: '',
+                    info: '',
+                    country_id: '',
                 },
 
                 isPopupLoading: false,
@@ -567,6 +657,7 @@
             this.checkAccessRole();
             this.getTeamInCharge();
             this.checkTeamSeller();
+            this.getListCountries();
         },
 
         computed: {
@@ -576,14 +667,19 @@
                 listPayment: state => state.storeAccount.listPayment,
                 listIncharge: state => state.storeAccount.listIncharge,
                 user: state => state.storeAuth.currentUser,
+                listCountryAll: state => state.storePublisher.listCountryAll,
             }),
         },
 
         methods: {
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
             async submitAdd(){
-                let that = this;
                 this.isPopupLoading = true;
-                await this.$store.dispatch('actionAddAccount', that.accountModel);
+                await this.$store.dispatch('actionAddAccount', this.accountModel);
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'saved_account') {
@@ -591,6 +687,12 @@
                     this.getAccountList({
                         params: this.filterModel
                     });
+
+                    swal.fire(
+                        'Saved',
+                        'Successfully Added!',
+                        'success'
+                    );
                 }
             },
 
@@ -601,6 +703,12 @@
 
                 if (this.messageForms.action === 'updated_account') {
                     this.getAccountList();
+
+                    swal.fire(
+                        'Updated',
+                        'Successfully Updated!',
+                        'success'
+                    );
                 }
             },
 
@@ -629,7 +737,7 @@
                 this.clearMessageform();
                 let that = JSON.parse(JSON.stringify(account))
                 this.accountUpdate = that
-                this.accountUpdate.team_in_charge = that.team_in_charge.id;
+                this.accountUpdate.team_in_charge = that.team_in_charge == null ? '':that.team_in_charge.id;
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
             },
@@ -722,6 +830,9 @@
                     payment_account: '',
                     commission: '',
                     team_in_charge: '',
+                    info: '',
+                    address: '',
+                    country_id: '',
                 };
             },
         }

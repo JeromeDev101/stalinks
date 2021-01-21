@@ -1,11 +1,11 @@
-name: remote ssh command
+name: Deployment Automation
 on:
   push:
      branches:
-        - staging_final       
+        - master      
   pull_request:
      branches:
-        - staging_final
+        - master
 jobs:
 
   build:
@@ -15,12 +15,12 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST2 }}
-        username: ${{ secrets.USERNAME2 }}
-        password: ${{ secrets.PASSWORD2 }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-            cd /var/www/html/staging.stalinks.com
-            git pull origin staging_final
+            cd /var/www/html/stalinks.com
+            git pull origin master
             npm run production
             cd ../

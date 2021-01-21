@@ -26,6 +26,7 @@ class AccountRequest extends FormRequest
     public function rules()
     {
         return [
+            'username' => [ 'required' ],
             'name' => [ 'required' ],
             'email' => [
                 'unique:users,email',
@@ -35,7 +36,7 @@ class AccountRequest extends FormRequest
                 new ValidateEmailRule,
             ],
             'phone' => [
-                'required'
+                'nullable'
             ],
             'password' => [
                 'required',
@@ -57,9 +58,6 @@ class AccountRequest extends FormRequest
             'commission' => [
                 'required'
             ],
-            'id_payment_type' => [
-                'nullable'
-            ],
             'payment_email' => [
                 'email',
                 'nullable',
@@ -67,7 +65,13 @@ class AccountRequest extends FormRequest
             ],
             'payment_account' => [
                 'nullable'
-            ]
+            ],
+            'account_validation' => [
+                'required'
+            ],
+            'id_payment_type' => [
+                'required'
+            ],
         ];
     }
 }

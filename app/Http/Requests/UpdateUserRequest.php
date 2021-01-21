@@ -42,7 +42,7 @@ class UpdateUserRequest extends FormRequest
                 'max:255'
             ],
             'work_mail_pass' => [
-                'required_with:work_mail'
+                'nullable'
             ],
             'email' => [
                 'required',

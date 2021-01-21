@@ -25,6 +25,10 @@ class AccountController extends Controller
 
     public function store(AccountRequest $request)
     {
+        if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+
         $input = $request->all();
         $isTeamSeller = $this->checkTeamSeller();
         unset($input['c_password']);
@@ -112,6 +116,10 @@ class AccountController extends Controller
 
     public function edit(UpdateAccountRequest $request)
     {
+        if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        
         $response['success'] = false;
         $input = $request->all();
         unset($input['c_password']);
@@ -424,7 +432,7 @@ class AccountController extends Controller
     }
 
     public function userEmailFilter() {
-        $user_email = User::select('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+        $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
 
         return $user_email;
     }

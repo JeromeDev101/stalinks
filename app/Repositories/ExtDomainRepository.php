@@ -45,9 +45,12 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             config('constant.EXT_STATUS_GOT_CONTACTS') => 'GotContacts',
             config('constant.EXT_STATUS_AHREAFED') => 'Ahreafed',
             config('constant.EXT_STATUS_CONTACTED') => 'Contacted',
+            config('constant.EXT_STATUS_NO_ANSWER') => 'NoAnswer',
             config('constant.EXT_STATUS_REFUSED') => 'Refused',
             config('constant.EXT_STATUS_IN_TOUCHED') => 'InTouched',
             config('constant.EXT_STATUS_UNDEFINED') => 'Undefined',
+            config('constant.EXT_STATUS_QUALIFIED') => 'Qualified',
+            config('constant.UNQUALIFIED') => 'Unqualified',
         );
     }
 
@@ -296,6 +299,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                     'organic_traffic' => '',
                     'email' => '',
                     'phone' => '',
+                    'user_id' => Auth::user()->id,
                     'facebook' => '',
                     'status' => config('constant.EXT_STATUS_NEW'),
                 ]);
@@ -390,17 +394,18 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function updateData(array $attributes = [], array $countryIdsFilter)
     {
-        if (Auth::user()->isAdmin()) {
-            $extModel = $this->model->where('id', $attributes['id']);
-            if ($extModel->count() > 0) {
-                $this->update($extModel->first(), $attributes);
-                return true;
-            }
+        // if (Auth::user()->isAdmin()) {
+        //     $extModel = $this->model->where('id', $attributes['id']);
+        //     if ($extModel->count() > 0) {
+        //         $this->update($extModel->first(), $attributes);
+        //         return true;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
 
-        $extModel = $this->model->whereIn('country_id', $countryIdsFilter)->where('id', $attributes['id']);
+        // $extModel = $this->model->whereIn('country_id', $countryIdsFilter)->where('id', $attributes['id']);
+        $extModel = $this->model->where('id', $attributes['id']);
         if ($extModel->count() > 0) {
             $this->update($extModel->first(), $attributes);
             return true;

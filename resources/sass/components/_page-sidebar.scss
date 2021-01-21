@@ -7,7 +7,7 @@
 
     &__item {
         display: block;
-        padding: 10px 15px;
+        padding: 8px 15px;
         color: $white;
         @include transition(all, .3s);
 
@@ -16,5 +16,58 @@
             background: $black-lighter;
             text-decoration: none;
         }
+       
     }
 }
+.skin-blue {
+.sidebar-menu{
+  
+    li.active{
+               a{
+                color:#59c1e0!important;
+               }
+              
+                
+            }
+   
+            img{
+                height: 25px;
+               }
+        
+    }
+    
+   .header-custom{
+       color:$white!important;
+       font-size:20px;
+       letter-spacing: 1px;
+       font-weight:600;
+    
+   }
+}
+
+.sidebar-menu{
+    li{
+        .custom-padding{
+            padding:8px 5px 12px 15px!important;
+        }
+    }
+}
+
+.main-sidebar-custom{
+    background-color: #1f292d!important;
+    top:23px;
+}
+
+.main-header-custom {
+    .logo-custom{
+        background-color:$white!important;
+        min-height: 69px!important;
+
+    img{
+        margin: 23px auto!important;
+    }
+    }
+
+}
+
+

@@ -12,6 +12,7 @@ use App\Http\Resources\ShowMessage;
 use App\Http\Resources\MessageRecipient;
 use App\Http\Resources\MessageSent;
 use App\Models\Reply;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -103,7 +104,7 @@ class MailgunController extends Controller
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
-            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'moravel752@gmail.com',
+            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'dov@marketingcrossmedia.asia',
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'recipient-variables'   => json_encode($object),
@@ -213,7 +214,7 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    if(Auth::user()->role_id == 3){
+                    if($request->email == 'jess@stalinks.com'){
                         $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }else{
                         $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
@@ -221,7 +222,7 @@ class MailgunController extends Controller
                     
                     break;
                 case 'Sent':
-                     if(Auth::user()->role_id == 3){
+                     if($request->email == 'jess@stalinks.com'){
                         $inbox = $inbox->where('replies.is_sent', 1);
                      }else{
                         $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
@@ -231,7 +232,7 @@ class MailgunController extends Controller
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
-                    if(Auth::user()->role_id == 3){
+                    if($request->email == 'jess@stalinks.com'){
                         $inbox = $inbox->where('replies.deleted_at','!=',1);
                     }else{
                         $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
@@ -239,7 +240,7 @@ class MailgunController extends Controller
                     
                     break;
                 case 'Starred':
-                     if(Auth::user()->role_id == 3){
+                     if($request->email == 'jess@stalinks.com'){
                         $inbox = $inbox->where('replies.is_starred', 1);
                      }else{
                         $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
@@ -495,6 +496,8 @@ class MailgunController extends Controller
         $mail_logs = $mail_logs->get();
 
 
+        $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();  
+
         $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
 
         $total = Reply::where('is_sent',1)->count();   
@@ -505,8 +508,14 @@ class MailgunController extends Controller
             'logs'          => $mail_logs,
             'total_mail'    => $total,
             'sent'          => $sent,
+            'sent_today'          => $sent_today,
             'failed'        => $failed,
-
         ]);                
+    }
+
+    public function get_mail_list()
+    {
+        $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+        return response()->json($user_email);
     }
 }
