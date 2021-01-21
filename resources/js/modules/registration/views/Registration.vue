@@ -47,7 +47,20 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}">
+                                    <label for="">Country</label>
+                                    <select name="" class="form-control" v-model="RegisterModel.country_id">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in countryList" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
                                     <label for="">Company Type</label>
                                     <select class="form-control" v-model="RegisterModel.company_type" @change="checkType()">
@@ -71,10 +84,12 @@
                                     <label for="">Account Type</label>
                                     <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
                                         <option value="">Select Account type</option>
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                        <option value="Freelance">Freelance</option>
+                                        <option v-show="isCompany" v-for="type in accountType_1" v-bind:value="type">
+                                            {{ type }}
+                                        </option>
+                                        <option v-show="!isCompany" v-for="type in accountType_2" v-bind:value="type">
+                                            {{ type }}
+                                        </option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -99,10 +114,13 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         data() {
             return {
+                accountType_1: ['Seller', 'Buyer', 'Writer'],
+                accountType_2: ['Seller', 'Buyer', 'Writer', 'Freelance'],
                 RegisterModel: {
                     username: '',
                     name: '',
@@ -111,26 +129,41 @@
                     company_name: '',
                     type: '',
                     company_type: 'Company',
+                    country_id: '',
                 },
 
                 isPopupLoading: false,
                 isVerifiedEmail: false,
                 isCompany: true,
                 isCompanySelected: false,
+                countryList: [],
             }
+        },
+
+        created() {
+            this.getListCountry();
         },
 
         computed: {
             ...mapState({
                 messageForms: state => state.storeAccount.messageForms,
+                // messageFormsMailgun: state => state.storeMailgun.messageForms,
             }),
         },
 
         methods: {
+            getListCountry() {
+                axios.get('/api/registration-country-list')
+                    .then((res) => {
+                        this.countryList = res.data.data;
+                    })
+            },
+
             checkType() {
                 if (this.RegisterModel.company_type == 'Company') {
                     this.isCompany = true;
                     this.isCompanySelected = false;
+                    this.RegisterModel.type = ''
                 } else {
                     this.isCompany = false;
                     this.isCompanySelected = true;
@@ -150,6 +183,15 @@
                 if (this.messageForms.action === 'registration_success') {
                     this.clearRegistrationModel();
                     this.isVerifiedEmail = true;
+
+                    axios.post('/api/registration-email-validation',{
+                        cc: '',
+                        email: 'richards@stalinks.com',
+                        title: 'test',
+                        content: 'test',
+                        attachment: 'undefined'
+                    })
+
                 }
             },
 
@@ -160,7 +202,9 @@
                     email: '',
                     phone: '',
                     company_name: '',
+                    company_type: 'Company',
                     type: '',
+                    country_id: '',
                 }
             },
         }

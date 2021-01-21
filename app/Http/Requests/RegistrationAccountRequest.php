@@ -38,9 +38,12 @@ class RegistrationAccountRequest extends FormRequest
                 Rule::unique('users')->ignore($this->id),
             ],
             'phone' => [
-                'required'
+                'nullable'
             ],
             'type' => [
+                'required'
+            ],
+            'country_id' => [
                 'required'
             ],
             'company_name' => [

@@ -186,13 +186,15 @@ class AccountController extends Controller
     }
 
     public function register(RegistrationAccountRequest $request){
-        $input = $request->all();
+        $input = $request->except('company_type');
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
 
-        $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
-        $email->sendEmail();
+        // OLD SENDING OF EMAIL
+
+        // $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
+        // $email->sendEmail();
 
         Registration::create($input);
 

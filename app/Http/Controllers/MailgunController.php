@@ -518,4 +518,65 @@ class MailgunController extends Controller
         $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
         return response()->json($user_email);
     }
+
+    public function send_validation(Request $request)
+    {
+
+        $request->validate([
+            'email'     => 'required',
+            'title'     => 'required',
+            'content'   => 'required',
+        ]);
+
+        $email_to = $request->email;
+
+        if (strpos($request->email, '|') !== false) {
+            $email_to = str_replace("|",",",$request->email);
+        }
+
+        $myArray = explode(',', $email_to);
+       
+        //add current email another associalte array
+        $aw = [];
+
+        foreach ($myArray as $key => $value) {
+            $kwe = array($value => ["first"=> $request->title, "id" => $key+1]);
+            array_push($aw, $kwe);
+        }
+
+        //convert to object
+        $object = (object)$aw;
+
+        //arrange all list of emails into string to be ready as one element array_merge
+        $list_emails = array();
+        foreach ($myArray as $key => $value) {
+        $list_emails[$key] = $value;
+
+        }
+
+        $str = implode (", ", $list_emails);
+        
+        $data = [
+            'name' => 'Jerome',
+            'verification_code' => 'awersofxasdf44f'
+        ];
+       
+    	$sender = $this->mg->messages()->send('stalinks.com', [
+		    'from'                  => 'richards@stalinks.com',
+		    'to'                    => array($str),
+            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'lhabzter21@gmail.com',
+		    'subject'               => $request->title,
+            'text'                  => $request->content,
+            'html'                  => view('email', $data)->render(),
+            'recipient-variables'   => json_encode($object),
+            'attachment'            => null,
+            'o:tag'                 => array('test1'),
+            'o:tracking'            => 'yes',
+            'o:tracking-opens'      => 'yes',
+            'o:tracking-clicks'     => 'yes',
+        ]);
+
+		return response()->json(['success'=> true, 'message'=> $sender], 200);
+
+    }
 }
