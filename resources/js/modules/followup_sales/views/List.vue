@@ -200,7 +200,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Sales Information</h5>
+                        <h5 class="modal-title">Sales Information | ID Backlink: <b class="text-primary">{{ updateModel.id }}</b> </h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -302,8 +302,9 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status Sales</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive">
-                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive && user.role_id != 8" @change="checkStatus()">
+                                            <option v-show="user.role_id != 8 && user.role_id != 3 && user.role_id != 1" v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                            <option v-show="user.role_id == 8 || user.role_id == 3 || user.role_id == 1" v-for="status in statusBaclinkQc" v-bind:value="status">{{ status }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -325,6 +326,26 @@
                                     <div>
                                         <label style="color: #333">Date Completed</label>
                                         <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" v-show="showReason">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Reason</label>
+                                        <select  class="form-control pull-right" v-model="updateModel.reason" style="height: 37px;" @change="checkReason()">
+                                            <option v-for="reason in listReason" v-bind:value="reason">{{ reason }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-show="showReasonText">
+                                <div class="form-group">
+                                    <div>
+                                        <label style="color: #333">Details of Issue/Cancelled</label>
+                                        <textarea class="form-control" v-model="updateModel.reason_text"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -437,7 +458,8 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Issue', 'Canceled'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue', 'Canceled'],
+                statusBaclinkQc: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process', 'Issue', 'Canceled'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
@@ -455,6 +477,8 @@
                     },
                     link_from: '',
                     url_from: '',
+                    reason: '',
+                    reason_text: '',
                 },
                 isPopupLoading: false,
                 filterModel: {
@@ -472,6 +496,17 @@
                 isLive: false,
                 totalAmount: 0,
                 isSearching: false,
+                showReason: false,
+                showReasonText: false,
+                listReason: [
+                    'I am having technical problems',
+                    'I am no longer using this service',
+                    'I am having issues with customer care',
+                    'Not a right fit, the product is not for us',
+                    'I couldn\'t figure out how to use the site effectively',
+                    'It is to expensive',
+                    'Other',
+                ],
             }
         },
 
@@ -506,6 +541,22 @@
         },
 
         methods: {
+
+            checkReason() {
+                if(this.updateModel.reason == 'Other'){
+                    this.showReasonText = true;
+                } else {
+                    this.showReasonText = false;
+                }
+            },
+
+            checkStatus() {
+                if(this.updateModel.status == 'Issue' || this.updateModel.status == 'Canceled'){
+                    this.showReason = true;
+                } else {
+                    this.showReason = false;
+                }
+            },
 
             async getTeamInCharge(){
                 await this.$store.dispatch('actionGetTeamInCharge');

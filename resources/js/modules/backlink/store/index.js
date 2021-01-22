@@ -12,6 +12,7 @@ const state = {
     listBackLink: {},
     error: {},
     fillter: {
+        url_advertiser: '',
         page: 0,
         querySearch: '',
         full_data: false,

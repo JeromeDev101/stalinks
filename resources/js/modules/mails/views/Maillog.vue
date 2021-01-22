@@ -37,6 +37,18 @@
             </div>
         </div>
 
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ Listlogs.sent_today }}</h3>
+                    <p>Total Emailed today</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+
         <div class="col-sm-12">
             <div class="box">
                 <div class="box-header">
@@ -107,7 +119,7 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ log.user_mail }}</td>
                                         <td>{{ log.from }}</td>
-                                        <td>{{ log.to }}</td>
+                                        <td v-html="checkEmailTo(log.to)"></td>
                                         <td v-html="statusLabel(log.status)"></td>
                                         <td>{{ log.date }}</td>
                                     </tr>
@@ -132,7 +144,12 @@
 
         data() {
             return {
-                Listlogs: {},
+                Listlogs: {
+                    total_mail: 0,
+                    sent: 0,
+                    sent_today: 0,
+                    failed: 0,
+                },
                 filterModel: {
                     user_email: this.$route.query.user_email || '',
                     status: this.$route.query.status || '',
@@ -158,6 +175,22 @@
         },
 
         methods: {
+            checkEmailTo(email) {
+                let display = '';
+                if(email.indexOf('|') > -1) {
+                    var emails = '';
+                    var email = email.split('|');
+                    for(var i = 0; i < email.length; i++) {
+                        var num = i + 1;
+                        emails += num + '.)' + email[i] + '<br>';
+                    }
+                    display = emails;
+                } else {
+                    display = email;
+                }
+                return display;
+            },
+
             getListUserEmails() {
                 axios.get('/api/mail/user-email-list')
                     .then((res) => {

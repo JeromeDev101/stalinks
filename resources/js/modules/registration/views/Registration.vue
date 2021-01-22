@@ -14,13 +14,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
-                                    <label for="">Name</label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" placeholder="Enter your name">
-                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.username}">
                                     <label for="">Username</label>
@@ -28,6 +22,7 @@
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}">
                                     <label for="">Email</label>
@@ -35,6 +30,15 @@
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" placeholder="Enter your name">
+                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
                                     <label for="">Phone</label>
@@ -44,6 +48,17 @@
                             </div>
 
                             <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
+                                    <label for="">Company Type</label>
+                                    <select class="form-control" v-model="RegisterModel.company_type" @change="checkType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-show="isCompany">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}">
                                     <label for="">Company Name</label>
                                     <input type="text" class="form-control" name="" v-model="RegisterModel.company_name" aria-describedby="helpId" placeholder="Enter your Company Name">
@@ -54,11 +69,12 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
                                     <label for="">Account Type</label>
-                                    <select name="" class="form-control" v-model="RegisterModel.type">
+                                    <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
                                         <option value="">Select Account type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
+                                        <option value="Freelance">Freelance</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -94,10 +110,13 @@
                     phone: '',
                     company_name: '',
                     type: '',
+                    company_type: 'Company',
                 },
 
                 isPopupLoading: false,
                 isVerifiedEmail: false,
+                isCompany: true,
+                isCompanySelected: false,
             }
         },
 
@@ -108,6 +127,17 @@
         },
 
         methods: {
+            checkType() {
+                if (this.RegisterModel.company_type == 'Company') {
+                    this.isCompany = true;
+                    this.isCompanySelected = false;
+                } else {
+                    this.isCompany = false;
+                    this.isCompanySelected = true;
+                    this.RegisterModel.type = 'Freelance'
+                }
+            },
+
             loginPage() {
                 this.$router.push('login')
             },

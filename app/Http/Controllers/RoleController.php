@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -23,7 +24,8 @@ class RoleController extends Controller
     }
 
     public function getRoles() {
-        $data = $this->roleRepository->findAll();
+        // $data = $this->roleRepository->findAll();
+        $data = Role::orderBy('name', 'asc')->get();
         return response()->json($data);
     }
 }

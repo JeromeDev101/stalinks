@@ -5,7 +5,7 @@
             <br>
         </section>
 
-        <div class="col-lg-12" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6)">
+        <div class="col-lg-12" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 6) || (user.isOurs == 0 && user.role_id == 8)">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -57,29 +57,38 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
-                    <h3 class="box-title text-primary">Total Seller</h3>
+                    <h3 class="box-title text-primary">Team & Seller</h3>
 
                     <div class="row mt-3">
-                        <div class="col-md-1" v-for="(in_charge, index) in listData.team_in_charge" :key="index" >
+                        <!-- <div class="col-md-" v-for="(in_charge, index) in listData.team_in_charge" :key="index" >
                             <div class="small-box bg-aqua">
                                 <div class="inner">
                                     <p class="mb-0">Team In-charge</p>
                                     <p>{{ in_charge.username }}</p>
                                     <h3>{{ in_charge.total_seller }}</h3>
                                 </div>
-
-                                <!-- <div class="icon">
-                                    <i class="fa fa-user"></i>
-                                </div> -->
-
-                                <!-- <a href="#" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a> -->
                             </div>
+                        </div> -->
+
+                        <div class="col-md-12">
+                            <table class="table table-hover tbl-custom">
+                                <thead>
+                                    <tr class="white">
+                                        <th>In-charge</th>
+                                        <th>Total Seller</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(in_charge, index) in listData.team_in_charge" :key="index">
+                                        <td>{{ in_charge.username }}</td>
+                                        <td>{{ in_charge.total_seller }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     
@@ -88,7 +97,7 @@
                 
                 
                 <div class="box-body custom-box">
-
+                    <h5 class="box-title text-primary mt-4">Seller List</h5>
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-hover tbl-custom">
@@ -121,7 +130,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -167,7 +176,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -202,7 +211,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -248,7 +257,7 @@
         </div>
 
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">
@@ -286,7 +295,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5">
+        <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
                 <div class="box-header">

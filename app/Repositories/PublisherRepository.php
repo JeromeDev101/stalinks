@@ -28,7 +28,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     {
         $user = Auth::user();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
-        // dd($filter);
+
+        $paginate = $filter['price_basis'] == '' ? $paginate:Publisher::count();
 
         // $columns = [
         //     'publisher.*',
@@ -57,7 +58,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'registration.company_name',
             'countries.name AS country_name',
             'languages.name AS language_name',
-            'B.username as in_charge'
+            'B.username AS in_charge',
+            'B.id AS team_in_charge',
         ];
         $list = Publisher::select($columns)
                 ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
@@ -186,11 +188,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                 if( $result_1 != 0 && $result_2 != 0 ){
                     if( $var_a <= $result_1 ){
-                        $price_basis = 'Low';
+                        $price_basis = 'Good';
                     }
 
                     if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Good';
+                        $price_basis = 'Average';
                     }
 
                     if( $var_a > $result_2 ){
@@ -203,7 +205,17 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 $price_basis = 'High';
             }
 
-            $value['price_basis'] = $price_basis;
+
+            // Filtering of Price Basis
+            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
+                if( $filter['price_basis'] == $price_basis ){
+                    $value['price_basis'] = $price_basis;
+                }else{
+                    $result->forget($key);
+                }
+            }else{
+                $value['price_basis'] = $price_basis;
+            }
 
         }
 

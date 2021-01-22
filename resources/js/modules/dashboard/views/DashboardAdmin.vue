@@ -2,6 +2,42 @@
     <div class="row">
         <section class="content-header col-sm-12">
             <h1>Dashboard Admin</h1>
+            <hr>
+            <div class="my-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <!-- <label for="">Date</label> -->
+                            <div class="input-group">
+                                <select name="" class="form-control" v-model="filterModel.date_type" @change="changeSelection">
+                                    <option value="Monthly">Monthly</option>
+                                    <option value="Range Date">Range Date</option>
+                                </select>
+                                <select class="form-control" v-model="filterModel.monthly" v-show="isMonthly">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                <input type="date" class="form-control" v-model="filterModel.date1" v-show="isRangeDate">
+                                <input type="date" class="form-control" v-model="filterModel.date2" v-show="isRangeDate">
+
+                                <button class="btn btn-default" @click="fillData('with')">Filter</button>
+                                <button class="btn btn-default">Clear</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br>
         </section>
 
@@ -47,6 +83,7 @@ import { mapState } from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
 import LineChart from '@/components/chart/Line.js'
+import axios from 'axios';
 
 export default {
 
@@ -56,6 +93,14 @@ export default {
     },
     data() {
         return {
+            isRangeDate: false,
+            isMonthly: true,
+            filterModel: {
+                date_type: 'Monthly',
+                monthly: '',
+                date1: '',
+                date2: '',
+            },
             datacollection: {},
             datacollection2: {},
             options: {
@@ -109,175 +154,36 @@ export default {
     },
 
     mounted() {
-        this.fillData()
-        this.fillData2()
+        this.fillData('without')
     },
 
     methods: {
-        fillData2() {
-            this.datacollection2 = {
-                labels: ['15-Oct', '30-Oct', '15-Nov', '30-Nov', '15-Dec', '30-Dec'],
-                datasets: [
-                    {
-                        label: 'New',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#ed13d7',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'GotContacts',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#ff5454',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'Contacted',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#3530d1',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'InTouched',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#54a851',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'Qualified',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#0cdfeb',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'NoAnswer',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#f6ff47',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'Refused',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#f0752e',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'Unqualified',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#7900e3',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }
-                ]
+        changeSelection() {
+            let date_type = this.filterModel.date_type
+
+            if( date_type != 'Monthly' ) {
+                this.isRangeDate = true;
+                this.isMonthly = false;
+            } else {
+                this.isRangeDate = false;
+                this.isMonthly = true;
             }
         },
 
-        fillData() {
-            this.datacollection = {
-                labels: ['15-Oct', '30-Oct', '15-Nov', '30-Nov', '15-Dec', '30-Dec'],
-                datasets: [
-                    {
-                        label: 'No. Sites',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#ed13d7',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'No. Valid',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#ff5454',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'No. Unchecked',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#3530d1',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }, {
-                        label: 'No. Invalid',
-                        backgroundColor: 'rgba(255,255,255,000.2)',
-                        borderColor: '#54a851',
-                        data: [
-                            this.getRandomInt(), 
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt(),
-                            this.getRandomInt()
-                        ]
-                    }
-                ]
-            }
-        },
-
-        getRandomInt () {
-            return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+        fillData(isFilter) {
+            axios.get('/api/dashboard-admin',{
+                params: {
+                    date_type: this.filterModel.date_type,
+                    monthly: this.filterModel.monthly,
+                    date1: this.filterModel.date1,
+                    date2: this.filterModel.date2,
+                    is_filter: isFilter == 'with' ? true: false,
+                }
+            })
+            .then((res) => {
+                this.datacollection = res.data.url_statistics;
+                this.datacollection2 = res.data.seller_statistics;
+            })
         },
     }
 }

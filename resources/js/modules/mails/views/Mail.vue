@@ -5,7 +5,17 @@
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
-
+                <div class="col-md-2" v-if="user.role_id == 1">
+                            <div class="form-group">
+                                <label for="">Login As: {{user.work_mail}}</label>
+                                <select class="form-control" v-model="user.work_mail">
+                                    <option value="">All</option>
+                                    <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
+                                        {{ option.work_mail }}
+                                    </option>
+                                </select>
+                            </div>
+                </div>
                 <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Folders</h3>
@@ -140,6 +150,11 @@ export default {
             },
             listLabel: [],
             displayInboxCnt: 0,
+            listUserEmail: [],
+            filterModel: {
+                user_email: this.$route.query.user_email || ''
+                    
+            },
         }
     },
 
@@ -158,6 +173,8 @@ export default {
         this.displayInboxCnt = this.$children[5]._data.inboxCount;
         // console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
+        this.getListEmails();
+        console.log(this.user.work_mail);
     },
 
     methods: {
@@ -170,14 +187,14 @@ export default {
         },
 
         checkWorkMail() {
-            if (this.user.work_mail == '') {
+            if (this.user.work_mail) {
+                $("#modal-compose-email").modal('show')
+            } else {
                 swal.fire(
                     'Error',
                     'Please setup first your Work mail',
                     'error'
                 )
-            } else {
-                $("#modal-compose-email").modal('show')
             }
         },
 
@@ -236,6 +253,12 @@ export default {
                 color: '',
             }
         },
+        getListEmails() {
+            axios.get('/api/mail/get-mail-list').then((response) => {
+                
+                this.listUserEmail = response.data;
+            });
+        }
     }
 }
 </script>
