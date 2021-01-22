@@ -189,6 +189,7 @@
                                 <th class="resize" v-show="tblBuyOptions.backlinks">Blinks</th>
                                 <th class="resize" v-show="tblBuyOptions.ref_domains">Ref Domain</th>
                                 <th class="resize" v-show="tblBuyOptions.org_keywords">Org Kw</th>
+                                <th class="resize" v-show="tblBuyOptions.ratio">Ratio</th>
                                 <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
                                 <th class="resize" v-show="tblBuyOptions.price">Price</th>
                                 <th class="resize" v-show="tblBuyOptions.status">Status</th>
@@ -219,6 +220,7 @@
                                 <td class="resize" v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
                                 <td class="resize" v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
                                 <td class="resize" v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.ratio">{{ getRatio(buy.org_keywords, buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
@@ -409,6 +411,9 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.ratio ? 'checked':''" v-model="tblBuyOptions.ratio">Ratio</label>
+                            </div>
+                            <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -551,6 +556,16 @@
         },
 
         methods: {
+            getRatio(org_kw, org_traffic) {
+                let result = 0;
+
+                if(org_traffic != 0){
+                    result = parseFloat(org_kw)/parseFloat(org_traffic)
+                }
+                
+                return result.toFixed(3);
+            },
+
             async getListLanguages() {
                 await this.$store.dispatch('actionGetListLanguages');
             },
@@ -648,6 +663,7 @@
                         { orderable: true, targets: 16 },
                         { orderable: true, targets: 17 },
                         { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
@@ -667,6 +683,7 @@
                         { orderable: true, targets: 13 },
                         { orderable: true, targets: 14 },
                         { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
