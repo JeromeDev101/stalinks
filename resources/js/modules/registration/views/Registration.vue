@@ -16,8 +16,21 @@
                         <div class="row">
 
                             <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
+                                    <label for="">Account Type <span class="text-danger">*</span></label>
+                                    <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
+                                        <option value="">Select Account type</option>
+                                        <option v-for="type in accountType" v-bind:value="type">
+                                            {{ type }}
+                                        </option>
+                                    </select>
+                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.username}">
-                                    <label for="">Username</label>
+                                    <label for="">Username <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="RegisterModel.username" name="" aria-describedby="helpId" placeholder="Enter your username">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
@@ -25,7 +38,7 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}">
-                                    <label for="">Email</label>
+                                    <label for="">Email <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="RegisterModel.email" name="" aria-describedby="helpId" placeholder="Enter your email">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
@@ -33,13 +46,29 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
-                                    <label for="">Name</label>
+                                    <label for="">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" placeholder="Enter your name">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.password}">
+                                    <label for="">Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" v-model="RegisterModel.password" name="" aria-describedby="helpId" placeholder="Enter your password">
+                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}">
+                                    <label for="">Confirm Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" v-model="RegisterModel.c_password" name="" aria-describedby="helpId" placeholder="Re-enter your password">
+                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
                                     <label for="">Phone</label>
                                     <input type="text" class="form-control" v-model="RegisterModel.phone" name="" aria-describedby="helpId" placeholder="Enter your Phone">
@@ -77,27 +106,11 @@
                                     <input type="text" class="form-control" name="" v-model="RegisterModel.company_name" aria-describedby="helpId" placeholder="Enter your Company Name">
                                     <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
-                                    <label for="">Account Type</label>
-                                    <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
-                                        <option value="">Select Account type</option>
-                                        <option v-show="isCompany" v-for="type in accountType_1" v-bind:value="type">
-                                            {{ type }}
-                                        </option>
-                                        <option v-show="!isCompany" v-for="type in accountType_2" v-bind:value="type">
-                                            {{ type }}
-                                        </option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-12 mt-4">
                                 <button @click="submitForm" type="submit" class="btn btn-primary btn-flat pull-right">Submit <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
-                                <button @click="loginPage" class="btn btn-default btn-flat">Login</button>
+                                <!-- <button @click="loginPage" class="btn btn-default btn-flat">Login</button> -->
                             </div>
 
                         </div>
@@ -119,8 +132,7 @@
     export default {
         data() {
             return {
-                accountType_1: ['Seller', 'Buyer', 'Writer'],
-                accountType_2: ['Seller', 'Buyer', 'Writer', 'Freelance'],
+                accountType: ['Seller', 'Buyer', 'Writer'],
                 RegisterModel: {
                     username: '',
                     name: '',
@@ -128,7 +140,7 @@
                     phone: '',
                     company_name: '',
                     type: '',
-                    company_type: 'Company',
+                    // company_type: 'Company',
                     country_id: '',
                 },
 
@@ -159,17 +171,17 @@
                     })
             },
 
-            checkType() {
-                if (this.RegisterModel.company_type == 'Company') {
-                    this.isCompany = true;
-                    this.isCompanySelected = false;
-                    this.RegisterModel.type = ''
-                } else {
-                    this.isCompany = false;
-                    this.isCompanySelected = true;
-                    this.RegisterModel.type = 'Freelance'
-                }
-            },
+            // checkType() {
+            //     if (this.RegisterModel.company_type == 'Company') {
+            //         this.isCompany = true;
+            //         this.isCompanySelected = false;
+            //         this.RegisterModel.type = ''
+            //     } else {
+            //         this.isCompany = false;
+            //         this.isCompanySelected = true;
+            //         this.RegisterModel.type = 'Freelance'
+            //     }
+            // },
 
             loginPage() {
                 this.$router.push('login')
@@ -185,11 +197,8 @@
                     this.isVerifiedEmail = true;
 
                     axios.post('/api/registration-email-validation',{
-                        cc: '',
-                        email: 'richards@stalinks.com',
-                        title: 'test',
-                        content: 'test',
-                        attachment: 'undefined'
+                        email: 'lhabzter21@gmail.com',
+                        title: 'Email Validation'
                     })
 
                 }
@@ -202,7 +211,7 @@
                     email: '',
                     phone: '',
                     company_name: '',
-                    company_type: 'Company',
+                    // company_type: 'Company',
                     type: '',
                     country_id: '',
                 }

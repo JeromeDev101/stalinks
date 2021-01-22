@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateEmailRule;
 use Illuminate\Validation\Rule;
+use App\Rules\SecurePasswordRule;
 
 class RegistrationAccountRequest extends FormRequest
 {
@@ -37,18 +38,17 @@ class RegistrationAccountRequest extends FormRequest
                 Rule::unique('registration')->ignore($this->id),
                 Rule::unique('users')->ignore($this->id),
             ],
-            'phone' => [
-                'nullable'
-            ],
             'type' => [
                 'required'
             ],
-            'country_id' => [
-                'required'
+            'password' => [
+                'required',
+                new SecurePasswordRule(),
             ],
-            'company_name' => [
-                'nullable'
-            ]
+            'c_password' => [
+                'required',
+                'same:password'
+            ],
         ];
     }
 }

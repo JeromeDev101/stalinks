@@ -186,10 +186,11 @@ class AccountController extends Controller
     }
 
     public function register(RegistrationAccountRequest $request){
-        $input = $request->except('company_type');
+        $input = $request->except('c_password');
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
+        $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
 

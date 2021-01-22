@@ -521,11 +521,9 @@ class MailgunController extends Controller
 
     public function send_validation(Request $request)
     {
-
         $request->validate([
             'email'     => 'required',
             'title'     => 'required',
-            'content'   => 'required',
         ]);
 
         $email_to = $request->email;
@@ -546,15 +544,6 @@ class MailgunController extends Controller
 
         //convert to object
         $object = (object)$aw;
-
-        //arrange all list of emails into string to be ready as one element array_merge
-        $list_emails = array();
-        foreach ($myArray as $key => $value) {
-        $list_emails[$key] = $value;
-
-        }
-
-        $str = implode (", ", $list_emails);
         
         $data = [
             'name' => 'Jerome',
@@ -563,8 +552,8 @@ class MailgunController extends Controller
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => 'richards@stalinks.com',
-		    'to'                    => array($str),
-            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'lhabzter21@gmail.com',
+		    'to'                    => $request->email,
+            // 'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'html'                  => view('email', $data)->render(),
