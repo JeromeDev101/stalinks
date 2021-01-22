@@ -148,12 +148,12 @@
                 isVerifiedEmail: false,
                 isCompany: true,
                 isCompanySelected: false,
-                countryList: [],
+                // countryList: [],
             }
         },
 
         created() {
-            this.getListCountry();
+            // this.getListCountry();
         },
 
         computed: {
@@ -164,12 +164,12 @@
         },
 
         methods: {
-            getListCountry() {
-                axios.get('/api/registration-country-list')
-                    .then((res) => {
-                        this.countryList = res.data.data;
-                    })
-            },
+            // getListCountry() {
+            //     axios.get('/api/registration-country-list')
+            //         .then((res) => {
+            //             this.countryList = res.data.data;
+            //         })
+            // },
 
             // checkType() {
             //     if (this.RegisterModel.company_type == 'Company') {

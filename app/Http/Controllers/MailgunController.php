@@ -14,6 +14,7 @@ use App\Http\Resources\MessageSent;
 use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Registration;
 
 
 class MailgunController extends Controller
@@ -544,11 +545,17 @@ class MailgunController extends Controller
 
         //convert to object
         $object = (object)$aw;
+
+
+        $registration = Registration::where('email', $request->email)->first();
+
+        if($registration->id) {
+            $data = [
+                'name' => $registration->name,
+                'verification_code' => $registration->verification_code
+            ];
+        }
         
-        $data = [
-            'name' => 'Jerome',
-            'verification_code' => 'awersofxasdf44f'
-        ];
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => 'richards@stalinks.com',

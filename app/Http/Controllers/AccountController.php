@@ -185,6 +185,60 @@ class AccountController extends Controller
         return response()->json($response);
     }
 
+    public function updateRegistrationAccount(Request $request) {
+        // dd($request->all());
+        $input = $request->except('company_type');
+        $request->validate([
+            'country_id' => 'required',
+            'id_payment_type' => 'required',
+            'company_name' => 'required_if:company_type,==,Company',
+            'paypal_account' => 'required_if:id_payment_type,==,1',
+            'btc_account' => 'required_if:id_payment_type,==,3',
+            'skrill_account' => 'required_if:id_payment_type,==,2',
+        ]);
+
+        $input['verification_code'] = null;
+        $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
+
+        $registration = Registration::where('email', $request->email)->first();
+        $registration->update($input);
+
+        $role_id = 6; //default seller
+        if( $registration->type == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $registration->type == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $registration->type == 'Writer' ){
+            $role_id = 4;
+        }
+
+
+        // duplicate the record in Users Table
+        $data['username'] = $registration->username;
+        $data['name'] = $registration->name;
+        $data['email'] = $registration->email;
+        $data['phone'] = $registration->phone;
+        $data['avatar'] = '/images/noavatar.jpg';
+        $data['role_id'] = $role_id;
+        $data['type'] = 0;
+        $data['isOurs'] = 1;
+        $data['password'] = $registration->password;
+        $data['id_payment_type'] = $registration->id_payment_type;
+        User::create($data);
+
+        return response()->json(['success' => true], 200);
+
+
+
+        // if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        // if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        // if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+    }
+
     public function register(RegistrationAccountRequest $request){
         $input = $request->except('c_password');
         $verification_code = md5(uniqid(rand(), true));
@@ -438,5 +492,10 @@ class AccountController extends Controller
         $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
 
         return $user_email;
+    }
+
+    public function getInfo(Request $request) {
+        $registration = Registration::where('verification_code', $request->code)->first();
+        return $registration;
     }
 }

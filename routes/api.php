@@ -19,6 +19,8 @@ Route::name('check-verification-code')->get('/check-verification-code', 'Account
 Route::name('update-registration')->post('/verification', 'AccountController@setPassword');
 Route::name('registration-country')->get('/registration-country-list', 'CountryController@getListCountry');
 Route::name('registration-email-validation')->post('/registration-email-validation', 'MailgunController@send_validation');
+Route::name('registration-get-info')->get('/registration-get-info','AccountController@getInfo');
+Route::name('registration-get-update-info')->post('/registration-get-update-info','AccountController@updateRegistrationAccount');
 
 Route::middleware('auth:api')->group(function () {
 
