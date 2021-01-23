@@ -203,4 +203,21 @@ class PublisherController extends Controller
         }
         return response()->json(['success' => true, 'data' => $publisher],200);
     }
+
+    public function qcValidation() {
+        $publishers = Publisher::select('id')
+                        ->where('valid', 'valid')
+                        ->where('publisher.ur', '!=', '0')
+                        ->where('publisher.dr', '!=', '0')
+                        ->get();
+
+        foreach($publishers as $publisher) {
+
+            $pub = Publisher::find($publisher->id);
+            $pub->update(['qc_validation' => 'yes']);
+
+        }
+
+        return response()->json(['success'=> true],200);
+    }
 }

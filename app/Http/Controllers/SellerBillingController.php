@@ -26,7 +26,8 @@ class SellerBillingController extends Controller
                         $q->with('user:id,name,username');
                     }])
                     ->with('user:id,name,username')
-                    ->where('status', 'Live');
+                    ->where('status', 'Live')
+                    ->orWhere('status', 'Live in Process');
 
         if( isset($filter['status_billing']) && !empty($filter['status_billing']) ){
             if( $filter['status_billing'] == 'Done'){

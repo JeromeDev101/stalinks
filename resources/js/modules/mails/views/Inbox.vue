@@ -2,7 +2,7 @@
     <div>
         <div class="row">
 
-            <div class="col-md-7">
+            <div class="col-md-12 col-lg-7">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $route.name }}</h3>
@@ -89,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-12 col-lg-5">
                 <div class="box box-primary">
                     <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
                         No items Selected

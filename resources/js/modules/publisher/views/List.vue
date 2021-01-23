@@ -148,6 +148,17 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2" v-show="user.isAdmin || user.role_id == 8">
+                            <div class="form-group">
+                                <label for="">QC Validation</label>
+                                <select name="" class="form-control" v-model="filterModel.qc_validation">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -421,6 +432,16 @@
                                     <label for="">Keyword Anchor</label>
                                     <select class="form-control" v-model="updateModel.kw_anchor">
                                         <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">QC Validation</label>
+                                    <select class="form-control" v-model="updateModel.qc_validation">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -836,6 +857,7 @@
                     // team_in_charge: '',
                     // team_in_charge_old: '',
                     user_id: '',
+                    qc_validation: '',
                 },
                 isEnableBtn: true,
                 isPopupLoading: false,
@@ -854,6 +876,7 @@
                     topic: this.$route.query.topic || '',
                     kw_anchor: this.$route.query.kw_anchor || '',
                     price_basis: this.$route.query.price_basis || '',
+                    qc_validation: this.$route.query.qc_validation || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1009,6 +1032,7 @@
                             topic: this.filterModel.topic,
                             kw_anchor: this.filterModel.kw_anchor,
                             price_basis: this.filterModel.price_basis,
+                            qc_validation: this.filterModel.qc_validation,
                             page: page
                         }
                     });
@@ -1029,6 +1053,7 @@
                             topic: this.filterModel.topic,
                             kw_anchor: this.filterModel.kw_anchor,
                             price_basis: this.filterModel.price_basis,
+                            qc_validation: this.filterModel.qc_validation,
                             page: page
                         }
                     });
@@ -1372,6 +1397,7 @@
                     topic: '',
                     kw_anchor: '',
                     price_basis: '',
+                    qc_validation: '',
                 }
 
                 this.getPublisherList({
@@ -1465,6 +1491,7 @@
                     country_id: that.country_id,
                     // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
+                    qc_validation: that.qc_validation,
                     // team_in_charge_old: that.team_in_charge,
                 }
 
@@ -1509,6 +1536,7 @@
                         topic: this.filterModel.topic,
                         kw_anchor: this.filterModel.kw_anchor,
                         price_basis: this.filterModel.price_basis,
+                        qc_validation: this.filterModel.qc_validation,
                     }
                 });
             },

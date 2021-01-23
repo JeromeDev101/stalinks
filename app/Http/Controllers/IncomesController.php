@@ -26,6 +26,7 @@ class IncomesController extends Controller
                     }])
                     ->with('user:id,name,username')
                     ->where('backlinks.status', 'Live')
+                    ->orWhere('backlinks.status', 'Live in Process')
                     ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();

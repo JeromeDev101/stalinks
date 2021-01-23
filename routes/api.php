@@ -238,5 +238,9 @@ Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
 
+//test for updating publisher for QC_validation
+Route::get('/updating-publisher-validation','PublisherController@qcValidation')->name('updating-publisher-validation');
+
+
 
 
