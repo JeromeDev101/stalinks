@@ -97,6 +97,7 @@ class PublisherController extends Controller
                 'kw_anchor' => $request->kw_anchor == '' ? $publisher->kw_anchor : $request->kw_anchor,
                 'price' => $request->price == '' ? $publisher->price : $request->price,
                 'inc_article' => $request->inc_article == '' ? $publisher->inc_article : $request->inc_article,
+                'qc_validation' => $request->qc_validation == '' ? $publisher->qc_validation : $request->qc_validation,
             ]);
         }
 

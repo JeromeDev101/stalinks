@@ -438,7 +438,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8">
                                 <div class="form-group">
                                     <label for="">QC Validation</label>
                                     <select class="form-control" v-model="updateModel.qc_validation">
@@ -780,6 +780,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8">
+                                <div class="form-group">
+                                    <label>QC Validation</label>
+                                    <select class="form-control" v-model="updateMultiple.qc_validation">
+                                        <option value=""></option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -833,6 +843,7 @@
                     price: '',
                     country: '',
                     language: '',
+                    qc_validation: '',
                 },
                 updateModel: {
                     id: '',
@@ -1260,6 +1271,7 @@
                     kw_anchor: '',
                     topic: '',
                     inc_article: '',
+                    qc_validation: '',
                 }
             },
 
@@ -1273,6 +1285,7 @@
                     kw_anchor: this.updateMultiple.kw_anchor,
                     topic: this.updateMultiple.topic,
                     inc_article: this.updateMultiple.inc_article,
+                    qc_validation: this.updateMultiple.qc_validation,
                 })
                 .then((res) => {
                     this.checkIds = [];
