@@ -21,7 +21,6 @@
                                     <thead>
                                         <tr class="white">
                                             <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
-                                            <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
                                             <th>New <span class="text-primary">( {{ ext_domain.num_new }} )</span></th>
                                             <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
                                             <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
