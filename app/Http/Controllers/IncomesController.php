@@ -29,10 +29,10 @@ class IncomesController extends Controller
                     ->whereIn('backlinks.status', ['Live','Live in Process'])
                     ->orderBy('created_at', 'desc');
 
-        $registered = Registration::where('email', $user->email)->first();
+        // $registered = Registration::where('email', $user->email)->first();
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
-        if( ($user->type != 10 && $user->role->description != 'Manager') && (isset($registered->type) && $registered->type) == 'Seller' ){
+        if( $user->role_id == 6 ){
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
