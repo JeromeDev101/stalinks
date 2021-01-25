@@ -13,6 +13,7 @@ class IncomesController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
+        // dd($filter);
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $user = Auth::user();
         $list = Backlink::select('backlinks.*', 'billing.proof_doc_path', 'billing.admin_confirmation','B.username as in_charge')
@@ -25,8 +26,7 @@ class IncomesController extends Controller
                         $query->with('user:id,name,username');
                     }])
                     ->with('user:id,name,username')
-                    ->where('backlinks.status', 'Live')
-                    ->orWhere('backlinks.status', 'Live in Process')
+                    ->whereIn('backlinks.status', ['Live','Live in Process'])
                     ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
