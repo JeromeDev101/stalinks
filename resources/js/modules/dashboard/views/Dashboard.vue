@@ -152,6 +152,7 @@
                                         <th>Content Sent <span class="text-primary">( {{ backlink_seller.num_sent }} )</span></th>
                                         <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
                                         <th>Live <span class="text-primary">( {{ backlink_seller.num_live }} )</span></th>
+                                        <th>Live in Process <span class="text-primary">( {{ backlink_seller.num_live_in_process }} )</span></th>
                                         <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
                                     </tr>
                                 </thead>
@@ -165,6 +166,7 @@
                                         <td>{{ seller.num_sent }}</td>
                                         <td>{{ seller.num_issue }}</td>
                                         <td>{{ seller.num_live }}</td>
+                                        <td>{{ seller.num_live_in_process }}</td>
                                         <td>{{ seller.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -233,6 +235,7 @@
                                         <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
                                         <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
                                         <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
+                                        <th>Live in Process<span class="text-primary">( {{ backlink_buyer.num_live_in_process }} )</span></th>
                                         <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
                                     </tr>
                                 </thead>
@@ -246,6 +249,7 @@
                                         <td>{{ buyer.num_sent }}</td>
                                         <td>{{ buyer.num_issue }}</td>
                                         <td>{{ buyer.num_live }}</td>
+                                        <td>{{ buyer.num_live_in_process }}</td>
                                         <td>{{ buyer.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -376,6 +380,7 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_live_in_process: 0,
                 num_issue: 0,
                 num_canceled: 0,
             },
@@ -387,6 +392,7 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_live_in_process: 0,
                 num_total: 0,
                 num_issue: 0,
                 num_canceled: 0,
@@ -497,6 +503,7 @@ export default {
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
                 this.backlink_seller.num_sent += parseInt(backlink_seller[index].num_sent);
                 this.backlink_seller.num_live += parseInt(backlink_seller[index].num_live);
+                this.backlink_seller.num_live_in_process += parseInt(backlink_seller[index].num_live_in_process);
                 this.backlink_seller.num_issue += parseInt(backlink_seller[index].num_issue);
                 this.backlink_seller.num_canceled += parseInt(backlink_seller[index].num_canceled);
                 this.backlink_seller.num_total += parseInt(backlink_seller[index].num_total);
@@ -510,6 +517,7 @@ export default {
                 this.backlink_buyer.num_done += parseInt(backlink_buyer[index].num_done);
                 this.backlink_buyer.num_sent += parseInt(backlink_buyer[index].num_sent);
                 this.backlink_buyer.num_live += parseInt(backlink_buyer[index].num_live);
+                this.backlink_buyer.num_live_in_process += parseInt(backlink_buyer[index].num_live_in_process);
                 this.backlink_buyer.num_issue += parseInt(backlink_buyer[index].num_issue);
                 this.backlink_buyer.num_canceled += parseInt(backlink_buyer[index].num_canceled);
                 this.backlink_buyer.num_total += parseInt(backlink_buyer[index].num_total);

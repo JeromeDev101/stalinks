@@ -193,8 +193,8 @@
                                 <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
                                 <th class="resize" v-show="tblBuyOptions.price">Price</th>
                                 <th class="resize" v-show="tblBuyOptions.status">Status</th>
-                                <th class="resize" v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">Code Comb</th>
-                                <th class="resize" v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission">Code Price</th>
+                                <th class="resize" v-show="tblBuyOptions.code_comb">Code Comb</th>
+                                <th class="resize" v-show="tblBuyOptions.code_price">Code Price</th>
                                 <th class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
                                 <th>Buy</th>
                             </tr>
@@ -224,8 +224,8 @@
                                 <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" v-if="isExtBuyerWithCommission">{{ buy.code_combination}}</td>
-                                <td class="resize" v-show="tblBuyOptions.code_price" v-if="isExtBuyerWithCommission"> $ {{ buy.code_price}}</td>
+                                <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" >{{ buy.code_combination}}</td>
+                                <td class="resize" v-show="tblBuyOptions.code_price" > $ {{ buy.code_price}}</td>
                                 <td class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">{{ buy.price_basis }}</td>
                                 <td>
                                     <div class="btn-group" ref="text">
@@ -422,10 +422,10 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
+                            <div class="checkbox col-md-6" v-show="user.role_id != 5">
                                 <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
                             </div>
-                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
+                            <div class="checkbox col-md-6" v-show="user.role_id != 5">
                                 <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
@@ -602,6 +602,8 @@
                 if (this.user.role_id == 5){
                     this.tblBuyOptions.casino_sites = false;
                     this.tblBuyOptions.seller = false;
+                    this.tblBuyOptions.code_comb = false;
+                    this.tblBuyOptions.code_price = false;
                 }
             },
 
