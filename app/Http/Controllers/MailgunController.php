@@ -218,7 +218,7 @@ class MailgunController extends Controller
                     if($request->email == 'jess@stalinks.com'){
                         $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }else{
-                        $inbox = $inbox->where('replies.received', $request->email)->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+                        $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }
                     
                     break;
