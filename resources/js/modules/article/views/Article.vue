@@ -60,18 +60,6 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Accept Casino & Betting Sites</label>
-                                <select name="" class="form-control" v-model="filterModel.casino_sites">
-                                    <option value="">All</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Topic</label>
@@ -84,11 +72,24 @@
                                 <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
+                        
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Accept Casino & Betting Sites</label>
+                                <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                    <option value="">All</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
 
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-2">
+                        <div class="col-md-12">
                             <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
                             <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
