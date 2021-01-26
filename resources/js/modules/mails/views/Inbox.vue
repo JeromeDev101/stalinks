@@ -855,6 +855,8 @@ export default {
                 this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
+
+                console.log(this.messageForms)
             }
         },
 

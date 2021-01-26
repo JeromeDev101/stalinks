@@ -369,7 +369,8 @@ class MailgunController extends Controller
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => json_encode($r_attachment),
+            // 'attachment'        => json_encode($r_attachment),
+            'attachment'        => '',
             'from_mail'         => $request->from,
             'date'              => '',
             'message_id'        => '',
@@ -381,9 +382,7 @@ class MailgunController extends Controller
             'created_at'        => date('Y-m-d H:i:s'),
             'updated_at'        => date('Y-m-d H:i:s'),
             'status_code'       => 200,
-            'message_status'    => 'message received',
-
-
+            'message_status'    => 'message received'
         ];
 
        
