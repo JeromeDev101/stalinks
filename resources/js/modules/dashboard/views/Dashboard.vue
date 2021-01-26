@@ -20,16 +20,16 @@
                                 <table class="table table-hover tbl-custom">
                                     <thead>
                                         <tr class="white">
-                                            <th>Team In-charge <span class="text-primary">( {{ ext_domain.total }} )</span></th>
-                                            <th>Total <span class="text-primary">( {{ ext_domain.num_total }} )</span></th>
-                                            <th>New <span class="text-primary">( {{ ext_domain.num_new }} )</span></th>
-                                            <th>GotContacts <span class="text-primary">( {{ ext_domain.num_got_contact }} )</span></th>
-                                            <th>Contacted <span class="text-primary">( {{ ext_domain.num_contacted }} )</span></th>
-                                            <th>InTouched <span class="text-primary">( {{ ext_domain.num_in_touched }} )</span></th>
-                                            <th>Qualified <span class="text-primary">( {{ ext_domain.num_qualified }} )</span></th>
-                                            <th>NoAnswer <span class="text-primary">( {{ ext_domain.num_no_answer }} )</span></th>
-                                            <th>Refused <span class="text-primary">( {{ ext_domain.num_refused }} )</span></th>
-                                            <th>Unqualified <span class="text-primary">( {{ ext_domain.num_unqualified }} )</span></th>
+                                            <th>Team In-charge <span class="text-primary">({{ ext_domain.total }})</span></th>
+                                            <th>Total <span class="text-primary">({{ ext_domain.num_total }})</span></th>
+                                            <th>New <span class="text-primary">({{ ext_domain.num_new }})</span></th>
+                                            <th>GotContacts <span class="text-primary">({{ ext_domain.num_got_contact }})</span></th>
+                                            <th>Contacted <span class="text-primary">({{ ext_domain.num_contacted }})</span></th>
+                                            <th>InTouched <span class="text-primary">({{ ext_domain.num_in_touched }})</span></th>
+                                            <th>Qualified <span class="text-primary">({{ ext_domain.num_qualified }})</span></th>
+                                            <th>NoAnswer <span class="text-primary">({{ ext_domain.num_no_answer }})</span></th>
+                                            <th>Refused <span class="text-primary">({{ ext_domain.num_refused }})</span></th>
+                                            <th>Unqualified <span class="text-primary">({{ ext_domain.num_unqualified }})</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,11 +104,11 @@
                                 <thead>
                                     <tr class="white">
                                         <th>In-charge</th>
-                                        <th>Seller <span class="text-primary">( {{ total_seller.total }} )</span></th>
-                                        <th>No. Sites <span class="text-primary">( {{ total_seller.num_sites }} )</span></th>
-                                        <th>No. Valid <span class="text-primary">( {{ total_seller.num_valid }} )</span></th>
-                                        <th>No. Unchecked <span class="text-primary">( {{ total_seller.num_unchecked }} )</span></th>
-                                        <th>No. Invalid <span class="text-primary">( {{ total_seller.num_invalid }} )</span></th>
+                                        <th>Seller <span class="text-primary">({{ total_seller.total }})</span></th>
+                                        <th>No. Sites <span class="text-primary">({{ total_seller.num_sites }})</span></th>
+                                        <th>No. Valid <span class="text-primary">({{ total_seller.num_valid }})</span></th>
+                                        <th>No. Unchecked <span class="text-primary">({{ total_seller.num_unchecked }})</span></th>
+                                        <th>No. Invalid <span class="text-primary">({{ total_seller.num_invalid }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,15 +144,16 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th>Seller <span class="text-primary">( {{ backlink_seller.total }} )</span></th>
-                                        <th>Total <span class="text-primary">( {{ backlink_seller.num_total }} )</span></th>
-                                        <th>Processing <span class="text-primary">( {{ backlink_seller.num_processing }} )</span></th>
-                                        <th>Content Writing <span class="text-primary">( {{ backlink_seller.writing }} )</span></th>
-                                        <th>Content Done <span class="text-primary">( {{ backlink_seller.num_done }} )</span></th>
-                                        <th>Content Sent <span class="text-primary">( {{ backlink_seller.num_sent }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
-                                        <th>Live <span class="text-primary">( {{ backlink_seller.num_live }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
+                                        <th>Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
+                                        <th>Total <span class="text-primary">({{ backlink_seller.num_total }})</span></th>
+                                        <th>Processing <span class="text-primary">({{ backlink_seller.num_processing }})</span></th>
+                                        <th>Content Writing <span class="text-primary">({{ backlink_seller.writing }})</span></th>
+                                        <th>Content Done <span class="text-primary">({{ backlink_seller.num_done }})</span></th>
+                                        <th>Content Sent <span class="text-primary">({{ backlink_seller.num_sent }})</span></th>
+                                        <th>Issue <span class="text-primary">({{ backlink_seller.num_issue }})</span></th>
+                                        <th>Live <span class="text-primary">({{ backlink_seller.num_live }})</span></th>
+                                        <th>Live in Process <span class="text-primary">({{ backlink_seller.num_live_in_process }})</span></th>
+                                        <th>Canceled <span class="text-primary">({{ backlink_seller.num_canceled }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -165,6 +166,7 @@
                                         <td>{{ seller.num_sent }}</td>
                                         <td>{{ seller.num_issue }}</td>
                                         <td>{{ seller.num_live }}</td>
+                                        <td>{{ seller.num_live_in_process }}</td>
                                         <td>{{ seller.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -189,10 +191,10 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th>Seller <span class="text-primary">( {{ incomes.total }} )</span></th>
-                                        <th>No. Backlinks <span class="text-primary">( {{ incomes.num_backlink }} )</span></th>
-                                        <th>Unpaid <span class="text-primary">( {{ incomes.num_unpaid }} )</span></th>
-                                        <th>Paid <span class="text-primary">( {{ incomes.num_paid }} )</span></th>
+                                        <th>Seller <span class="text-primary">({{ incomes.total }})</span></th>
+                                        <th>No. Backlinks <span class="text-primary">({{ incomes.num_backlink }})</span></th>
+                                        <th>Unpaid <span class="text-primary">({{ incomes.num_unpaid }})</span></th>
+                                        <th>Paid <span class="text-primary">({{ incomes.num_paid }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -225,15 +227,16 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
-                                        <th>Total <span class="text-primary">( {{ backlink_buyer.num_total }} )</span></th>
-                                        <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
-                                        <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
-                                        <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
-                                        <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
-                                        <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
+                                        <th>Buyer <span class="text-primary">({{ backlink_buyer.total }})</span></th>
+                                        <th>Total <span class="text-primary">({{ backlink_buyer.num_total }})</span></th>
+                                        <th>Processing <span class="text-primary">({{ backlink_buyer.num_processing }})</span></th>
+                                        <th>Content Writing <span class="text-primary">({{ backlink_buyer.writing }})</span></th>
+                                        <th>Content Done <span class="text-primary">({{ backlink_buyer.num_done }})</span></th>
+                                        <th>Content Sent <span class="text-primary">({{ backlink_buyer.num_sent }})</span></th>
+                                        <th>Issue <span class="text-primary">({{ backlink_buyer.num_issue }})</span></th>
+                                        <th>Live <span class="text-primary">({{ backlink_buyer.num_live }})</span></th>
+                                        <th>Live in Process<span class="text-primary">({{ backlink_buyer.num_live_in_process }})</span></th>
+                                        <th>Canceled <span class="text-primary">({{ backlink_buyer.num_canceled }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -246,6 +249,7 @@
                                         <td>{{ buyer.num_sent }}</td>
                                         <td>{{ buyer.num_issue }}</td>
                                         <td>{{ buyer.num_live }}</td>
+                                        <td>{{ buyer.num_live_in_process }}</td>
                                         <td>{{ buyer.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -270,12 +274,12 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th v-if="user.isAdmin">Buyer <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.total }} )</span></th>
-                                        <th>New <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_new }} )</span></th>
-                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_interested }} )</span></th>
-                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_purchased }} )</span></th>
-                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_not_interested }} )</span></th>
-                                        <th>Total <span v-if="user.isAdmin" class="text-primary">( {{ backlink_to_buy.num_total }} )</span></th>
+                                        <th v-if="user.isAdmin">Buyer <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.total }})</span></th>
+                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>
+                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>
+                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>
+                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>
+                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -308,10 +312,10 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th>Buyer <span class="text-primary">( {{ purchase.total }} )</span></th>
-                                        <th>No. Backlinks <span class="text-primary">( {{ purchase.num_backlink }} )</span></th>
-                                        <th>Unpaid <span class="text-primary">( {{ purchase.num_unpaid }} )</span></th>
-                                        <th>Paid <span class="text-primary">( {{ purchase.num_paid }} )</span></th>
+                                        <th>Buyer <span class="text-primary">({{ purchase.total }})</span></th>
+                                        <th>No. Backlinks <span class="text-primary">({{ purchase.num_backlink }})</span></th>
+                                        <th>Unpaid <span class="text-primary">({{ purchase.num_unpaid }})</span></th>
+                                        <th>Paid <span class="text-primary">({{ purchase.num_paid }})</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -376,6 +380,7 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_live_in_process: 0,
                 num_issue: 0,
                 num_canceled: 0,
             },
@@ -387,6 +392,7 @@ export default {
                 num_done: 0,
                 num_sent: 0,
                 num_live: 0,
+                num_live_in_process: 0,
                 num_total: 0,
                 num_issue: 0,
                 num_canceled: 0,
@@ -497,6 +503,7 @@ export default {
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
                 this.backlink_seller.num_sent += parseInt(backlink_seller[index].num_sent);
                 this.backlink_seller.num_live += parseInt(backlink_seller[index].num_live);
+                this.backlink_seller.num_live_in_process += parseInt(backlink_seller[index].num_live_in_process);
                 this.backlink_seller.num_issue += parseInt(backlink_seller[index].num_issue);
                 this.backlink_seller.num_canceled += parseInt(backlink_seller[index].num_canceled);
                 this.backlink_seller.num_total += parseInt(backlink_seller[index].num_total);
@@ -510,6 +517,7 @@ export default {
                 this.backlink_buyer.num_done += parseInt(backlink_buyer[index].num_done);
                 this.backlink_buyer.num_sent += parseInt(backlink_buyer[index].num_sent);
                 this.backlink_buyer.num_live += parseInt(backlink_buyer[index].num_live);
+                this.backlink_buyer.num_live_in_process += parseInt(backlink_buyer[index].num_live_in_process);
                 this.backlink_buyer.num_issue += parseInt(backlink_buyer[index].num_issue);
                 this.backlink_buyer.num_canceled += parseInt(backlink_buyer[index].num_canceled);
                 this.backlink_buyer.num_total += parseInt(backlink_buyer[index].num_total);
