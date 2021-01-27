@@ -188,7 +188,8 @@
                               <button data-action="a1" :data-index="index" @click="doEditExt(ext)" data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
                               <button data-action="a2" :data-index="index" v-if="hasBacklink(ext.status)" @click="doShowBackLink(ext)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
                               <button data-action="a4" :data-index="index" @click="doSendEmail(ext, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                              <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
+                              <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
+                              <button type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
                            </div>
                            <!--                                <router-link class="btn btn-success" :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i> View</router-link>-->
                         </td>
@@ -1749,10 +1750,10 @@
                });
            },
            async getAhrefsById(extId, extStatus) {
-               if (extStatus != 30) {
-                   alert('List invalid: status diff with GotContacts');
-                   return;
-               }
+               // if (extStatus != 30) {
+               //     alert('List invalid: status diff with GotContacts');
+               //     return;
+               // }
                var listIds = extId;
                this.isLoadingTable = true;
                await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });

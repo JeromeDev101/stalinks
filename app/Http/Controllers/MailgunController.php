@@ -557,16 +557,16 @@ class MailgunController extends Controller
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => 'jess@stalinks.com',
 		    'to'                    => $request->email,
-            'bcc'                   => 'lhabzter21@gmail.com',
+            // 'bcc'                   => 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,
             'text'                  => 'Email Validation',
             'html'                  => view('email', $data)->render(),
-            // 'recipient-variables'   => json_encode($object),
-            // 'attachment'            => null,
-            // 'o:tag'                 => array('test1'),
-            // 'o:tracking'            => 'yes',
-            // 'o:tracking-opens'      => 'yes',
-            // 'o:tracking-clicks'     => 'yes',
+            'recipient-variables'   => json_encode($object),
+            'attachment'            => null,
+            'o:tag'                 => array('test1'),
+            'o:tracking'            => 'yes',
+            'o:tracking-opens'      => 'yes',
+            'o:tracking-clicks'     => 'yes',
         ]);
 
 		return response()->json(['success'=> true, 'message'=> $sender], 200);

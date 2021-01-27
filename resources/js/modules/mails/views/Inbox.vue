@@ -47,7 +47,7 @@
                             </div>
 
                             <div class="pull-right">
-                                {{paginate.from + '-' + paginate.to + "/" + paginate.total}}
+                                {{paginate.from + '-' + paginate.to + " / " + paginate.total}}
                                 <div class="btn-group">
                                     <button type="button" :disabled="records.current_page == 1" class="btn btn-default btn-sm" @click="getInbox(page = paginate.prev)"><i class="fa fa-chevron-left"></i></button>
                                     <button type="button" :disabled="records.next_page_url == null" class="btn btn-default btn-sm" @click="getInbox(page = paginate.next)"><i class="fa fa-chevron-right"></i></button>
