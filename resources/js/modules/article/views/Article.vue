@@ -11,21 +11,21 @@
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-12 col-lg-2">
                             <div class="form-group">
                                 <label for="">Search ID article</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID backlink</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Writer</label>
                                 <select name="" class="form-control" v-model="filterModel.writer">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
                                 <select name="" class="form-control" v-model="filterModel.casino_sites">
