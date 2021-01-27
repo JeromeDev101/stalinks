@@ -201,7 +201,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('email_send')->post('/send','MailgunController@send');
         Route::name('email_retrieve_all')->get('/retrieve-all','MailgunController@retrieve_all');
         // Route::name('message_view')->post('/view-message','MailgunController@view_message');
-        Route::name('filter_recipient')->post('/filter-recipient','MailgunController@recipient_filter');
+        Route::name('filter_recipient')->get('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         // Route::name('domain-status')->get('/status','MailgunController@status_mail');
         Route::name('starred')->get('/starred','MailgunController@starred');

@@ -97,15 +97,10 @@ class MailgunController extends Controller
         }
 
         $str = implode (", ", $list_emails);
-        
-       
 
-
-       
-    	$sender = $this->mg->messages()->send('stalinks.com', [
+        $params = [
 		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
-            'bcc'                   => isset($request->cc) && $request->cc != "" ? $request->cc : 'dov@marketingcrossmedia.asia',
 		    'subject'               => $request->title,
             'text'                  => $request->content,
             'recipient-variables'   => json_encode($object),
@@ -114,9 +109,13 @@ class MailgunController extends Controller
             'o:tracking'            => 'yes',
             'o:tracking-opens'      => 'yes',
             'o:tracking-clicks'     => 'yes',
-        ]);
+        ];
 
+        if(isset($request->cc) && $request->cc != ""){
+            $params['bcc'] = $request->cc;
+        }
        
+    	$sender = $this->mg->messages()->send('stalinks.com', $params);
         
         $attac_object = '';
         if($request->attachment != "undefined" )
@@ -253,7 +252,7 @@ class MailgunController extends Controller
               }
         }
 
-        $inbox = $inbox->get();
+        $inbox = $inbox->paginate();
         $cnt = Reply::where('is_viewed', 0)->where('is_sent', 0)->whereNull('deleted_at')->count();
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);

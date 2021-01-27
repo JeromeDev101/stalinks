@@ -46,13 +46,13 @@
                                 </button>
                             </div>
 
-                            <!-- <div class="pull-right">
-                                1-50/200
+                            <div class="pull-right">
+                                {{paginate.from + '-' + paginate.to + "/" + paginate.total}}
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+                                    <button type="button" :disabled="records.current_page == 1" class="btn btn-default btn-sm" @click="getInbox(page = paginate.prev)"><i class="fa fa-chevron-left"></i></button>
+                                    <button type="button" :disabled="records.next_page_url == null" class="btn btn-default btn-sm" @click="getInbox(page = paginate.next)"><i class="fa fa-chevron-right"></i></button>
                                 </div>
-                            </div> -->
+                            </div>
                             
                         </div>
 
@@ -61,10 +61,10 @@
                         </div>
                         <table class="table table-condensed table-hover tbl-custom">
                             <tbody>
-                                <tr v-show="records.length == 0">
+                                <tr v-show="records.data.length == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>
                                 </tr>
-                                <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox, index)" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
+                                <tr v-for="(inbox, index) in records.data" :key="index" @click="viewMessage(inbox, index)" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
                                     <td>
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
@@ -459,6 +459,13 @@ export default {
             withTemplate: false,
             withBcc: false,
             sendBtn: false,
+            paginate: {
+                next: 0,
+                prev: 0,
+                from: 0,
+                to: 0,
+                total: 0,
+            },
         }
     },
 
@@ -569,7 +576,7 @@ export default {
                     if (is_all) {
                         this.getInbox();
                     }else{
-                        this.records.splice(index, 1);
+                        this.records.data.splice(index, 1);
                     }
 
                     this.selectedMessage = true;
@@ -608,8 +615,8 @@ export default {
         selectAll() {
             this.checkIds = [];
             if (!this.allSelected) {
-                for (var index in this.records) {
-                    this.checkIds.push(this.records[index]);
+                for (var index in this.records.data) {
+                    this.checkIds.push(this.records.data[index]);
                 }
                 this.btnEnable = false;
             } else {
@@ -630,10 +637,10 @@ export default {
             .then((res) => {
                 // console.log(res.data)
 
-                for (var rec in this.records) {
+                for (var rec in this.records.data) {
                     for (var chk in this.checkIds) {
-                        if (this.checkIds[chk].id == this.records[rec].id) {
-                            this.records[rec].label_id = this.updateModel.label_id;
+                        if (this.checkIds[chk].id == this.records.data[rec].id) {
+                            this.records.data[rec].label_id = this.updateModel.label_id;
                         }
                     }     
                 }
@@ -658,13 +665,13 @@ export default {
             let id_mail = is_all ? this.checkIds : id;
 
             if (!is_all) {
-                this.records[position].is_starred = is_starred == 1 ? 0:1;
+                this.records.data[position].is_starred = is_starred == 1 ? 0:1;
             } 
             else {
-                for (var rec in this.records) {
+                for (var rec in this.records.data) {
                     for (var chk in this.checkIds) {
-                        if (this.checkIds[chk].id == this.records[rec].id) {
-                            this.records[rec].is_starred = 1;
+                        if (this.checkIds[chk].id == this.records.data[rec].id) {
+                            this.records.data[rec].is_starred = 1;
                         }
                     }     
                 }
@@ -804,7 +811,7 @@ export default {
 
             if (inbox.is_viewed == 0){
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
-                this.records[index].is_viewed = 1
+                this.records.data[index].is_viewed = 1
             }
             
         },
@@ -863,18 +870,20 @@ export default {
         getStatus() {
             axios.get('/api/mail/status')
                 .then((res) => {
-                    console.log(res.data)
+                    // console.log(res.data)
                 })
         },
 
-        getInbox(){
+        getInbox(page = 1){
         //    this.loadingMessage = true;
             if(this.user.work_mail) {
-                axios.post('/api/mail/filter-recipient',{
-                    'email': this.user.work_mail,
-                    'param': this.$route.name,
-                    'search_mail': this.search_mail,
-                    'label_id': this.$route.query.label_id,
+                axios.get('/api/mail/filter-recipient?page=' + page, { 
+                    params : {
+                        'email': this.user.work_mail,
+                        'param': this.$route.name,
+                        'search_mail': this.search_mail,
+                        'label_id': this.$route.query.label_id,
+                    }
                 })
                 .then((response) => {
                     this.records = response.data.inbox;
@@ -882,6 +891,21 @@ export default {
                     // this.loadingMessage = false;
                     this.inboxCount = response.data.count;
                     // console.log(this.inboxCount)
+
+                    this.paginate.to = this.records.to == null ? 0:this.records.to;
+                    this.paginate.total = this.records.total == null ? 0:this.records.total;
+                    this.paginate.from = this.records.from == null ? 0:this.records.from;
+
+                    if(this.records.next_page_url != null) {
+                        let page = this.records.next_page_url.split("=")[1];
+                        this.paginate.next = page;
+                    }
+
+                    if(this.records.prev_page_url != null) {
+                        let page = this.records.prev_page_url.split("=")[1];
+                        this.paginate.prev = page;
+                    }
+
                 })
                 .catch((error) => {
                     console.log(error);
