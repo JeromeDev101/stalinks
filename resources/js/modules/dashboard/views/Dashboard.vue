@@ -144,18 +144,6 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-<<<<<<< HEAD
-                                        <th>Seller <span class="text-primary">( {{ backlink_seller.total }} )</span></th>
-                                        <th>Total <span class="text-primary">( {{ backlink_seller.num_total }} )</span></th>
-                                        <th>Processing <span class="text-primary">( {{ backlink_seller.num_processing }} )</span></th>
-                                        <th>Content Writing <span class="text-primary">( {{ backlink_seller.writing }} )</span></th>
-                                        <th>Content Done <span class="text-primary">( {{ backlink_seller.num_done }} )</span></th>
-                                        <th>Content Sent <span class="text-primary">( {{ backlink_seller.num_sent }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_seller.num_issue }} )</span></th>
-                                        <th>Live <span class="text-primary">( {{ backlink_seller.num_live }} )</span></th>
-                                        <th>Live in Process <span class="text-primary">( {{ backlink_seller.num_live_in_process }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_seller.num_canceled }} )</span></th>
-=======
                                         <th>Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
                                         <th>Total <span class="text-primary">({{ backlink_seller.num_total }})</span></th>
                                         <th>Processing <span class="text-primary">({{ backlink_seller.num_processing }})</span></th>
@@ -166,7 +154,6 @@
                                         <th>Live <span class="text-primary">({{ backlink_seller.num_live }})</span></th>
                                         <th>Live in Process <span class="text-primary">({{ backlink_seller.num_live_in_process }})</span></th>
                                         <th>Canceled <span class="text-primary">({{ backlink_seller.num_canceled }})</span></th>
->>>>>>> 35d4f0629298badc76453717a4f6048e2a7737cf
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -240,18 +227,6 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-<<<<<<< HEAD
-                                        <th>Buyer <span class="text-primary">( {{ backlink_buyer.total }} )</span></th>
-                                        <th>Total <span class="text-primary">( {{ backlink_buyer.num_total }} )</span></th>
-                                        <th>Processing <span class="text-primary">( {{ backlink_buyer.num_processing }} )</span></th>
-                                        <th>Content Writing <span class="text-primary">( {{ backlink_buyer.writing }} )</span></th>
-                                        <th>Content Done <span class="text-primary">( {{ backlink_buyer.num_done }} )</span></th>
-                                        <th>Content Sent <span class="text-primary">( {{ backlink_buyer.num_sent }} )</span></th>
-                                        <th>Issue <span class="text-primary">( {{ backlink_buyer.num_issue }} )</span></th>
-                                        <th>Live <span class="text-primary">( {{ backlink_buyer.num_live }} )</span></th>
-                                        <th>Live in Process<span class="text-primary">( {{ backlink_buyer.num_live_in_process }} )</span></th>
-                                        <th>Canceled <span class="text-primary">( {{ backlink_buyer.num_canceled }} )</span></th>
-=======
                                         <th>Buyer <span class="text-primary">({{ backlink_buyer.total }})</span></th>
                                         <th>Total <span class="text-primary">({{ backlink_buyer.num_total }})</span></th>
                                         <th>Processing <span class="text-primary">({{ backlink_buyer.num_processing }})</span></th>
@@ -262,7 +237,6 @@
                                         <th>Live <span class="text-primary">({{ backlink_buyer.num_live }})</span></th>
                                         <th>Live in Process<span class="text-primary">({{ backlink_buyer.num_live_in_process }})</span></th>
                                         <th>Canceled <span class="text-primary">({{ backlink_buyer.num_canceled }})</span></th>
->>>>>>> 35d4f0629298badc76453717a4f6048e2a7737cf
                                     </tr>
                                 </thead>
                                 <tbody>
