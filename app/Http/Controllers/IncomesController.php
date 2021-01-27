@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\BuyerPurchased;
+use App\Models\User;
 
 class IncomesController extends Controller
 {
@@ -29,10 +30,21 @@ class IncomesController extends Controller
                     ->whereIn('backlinks.status', ['Live','Live in Process'])
                     ->orderBy('created_at', 'desc');
 
-        // $registered = Registration::where('email', $user->email)->first();
+        
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
-        if( $user->role_id == 6 ){
+        $ext_seller_emails = Registration::select('email')->where('team_in_charge', $user->id)->where('status', 'active');
+        
+        if( $ext_seller_emails->count() > 0 ) {
+            $seller_emails = $ext_seller_emails->pluck('email')->toArray();
+            $ext_seller_ids = User::select('id')->whereIn('email', $seller_emails)->where('status', 'active')->pluck('id')->toArray();
+            
+            $list->whereHas('publisher', function($query) use ($ext_seller_ids){
+                return $query->whereIn('user_id', $ext_seller_ids);
+            });
+        }
+
+        if( $user->isOurs == 1 && $user->role_id == 6 ){
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 

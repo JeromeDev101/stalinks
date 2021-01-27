@@ -25,6 +25,7 @@ import BillingBuyer from '@/modules/billing/buyer/views/List.vue';
 import BillingSeller from '@/modules/billing/seller/views/List.vue';
 import BillingWriter from '@/modules/billing/writer/views/List.vue';
 import Registration from '@/modules/registration/views/List.vue';
+import ForgotPassword from '@/modules/registration/views/ForgotPassword.vue';
 import RegistrationPage from '@/modules/registration/views/Registration.vue';
 import Verification from '@/modules/registration/views/Verification.vue';
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
@@ -48,6 +49,11 @@ const routes = [{
     path: '/registration',
     name: 'registration',
     component: RegistrationPage,
+},
+{
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: ForgotPassword,
 },
 {
     path: '/test-aw',
