@@ -160,7 +160,7 @@
                      <tr class="label-primary">
                         <th>Action</th>
                         <th>
-                           <input class="custom-checkbox" type="checkbox" @click="selectAll" v-model="allSelected">
+                           <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
                         </th>
                         <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
                         <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
