@@ -197,7 +197,7 @@
                     this.isVerifiedEmail = true;
 
                     axios.post('/api/registration-email-validation',{
-                        email: 'lhabzter21@gmail.com',
+                        email: this.RegisterModel.email,
                         title: 'Email Validation'
                     })
 

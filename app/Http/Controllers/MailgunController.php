@@ -525,15 +525,6 @@ class MailgunController extends Controller
             'title'     => 'required',
         ]);
 
-        $registration = Registration::where('email', $request->email)->first();
-
-        if($registration->id) {
-            $data = [
-                'name' => $registration->name,
-                'verification_code' => $registration->verification_code
-            ];
-        }
-
         $email_to = $request->email;
 
         if (strpos($request->email, '|') !== false) {
@@ -560,10 +551,19 @@ class MailgunController extends Controller
         }
 
         $str = implode (", ", $list_emails);
+
+        $registration = Registration::where('email', $request->email)->first();
+
+        if($registration->id) {
+            $data = [
+                'name' => $registration->name,
+                'verification_code' => $registration->verification_code
+            ];
+        }
         
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
-		    'from'                  => 'jess@stalinks.com',
+		    'from'                  => 'support@stalinks.com',
 		    'to'                    => array($str),
             // 'bcc'                   => 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,
