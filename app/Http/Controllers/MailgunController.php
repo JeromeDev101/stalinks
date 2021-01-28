@@ -552,11 +552,19 @@ class MailgunController extends Controller
 
         //convert to object
         $object = (object)$aw;
+
+        $list_emails = array();
+        foreach ($myArray as $key => $value) {
+        $list_emails[$key] = $value;
+
+        }
+
+        $str = implode (", ", $list_emails);
         
        
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => 'jess@stalinks.com',
-		    'to'                    => $request->email,
+		    'to'                    => array($str),
             // 'bcc'                   => 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,
             'text'                  => 'Email Validation',
