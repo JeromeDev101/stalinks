@@ -252,11 +252,13 @@
                     code: this.$route.params.code
                 });
 
-                if( !this.messageForms.action ){
-                    this.redirectToLogin();
-                } else {
-                    this.getInfo();
-                }
+                console.log(this.messageForms.action)
+
+                // if( !this.messageForms.action ){
+                //     this.redirectToLogin();
+                // } else {
+                //     this.getInfo();
+                // }
             },
 
             submitRegister() {

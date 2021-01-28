@@ -259,7 +259,7 @@ class AccountController extends Controller
     public function checkVerificationCode(Request $request) {
         $result = false;
         $code = Registration::where('verification_code', $request->code)->first();
-        if( $code['verification_code'] ){
+        if( isset($code->verification_code) ){
             $result = true;
         }
         return response()->json(['success' => $result]);

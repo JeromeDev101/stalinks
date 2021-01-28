@@ -22,7 +22,7 @@
                             </div>
 
                             <div class="col-md-12 mt-4">
-                                <button type="submit" class="btn btn-primary btn-flat btn-block">Reset Password</button>
+                                <button type="submit" class="btn btn-primary btn-flat btn-block" @click="submitResetPassword">Reset Password</button>
                             </div>
 
                         </div>
@@ -59,7 +59,9 @@
         },
 
         methods: {
-           //
+           submitResetPassword() {
+               //
+           },
         }
     }
 </script>
