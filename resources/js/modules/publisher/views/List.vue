@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Country</label>
                                 <select class="form-control" v-model="filterModel.country_id">
@@ -22,7 +22,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select class="form-control" v-model="filterModel.language_id">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">In charge</label>
                                 <select class="form-control" v-model="filterModel.in_charge">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin || user.isOurs == 0">
+                        <div class="col-md-3" v-if="user.isAdmin || user.isOurs == 0">
                             <div class="form-group">
                                 <label for="">Seller</label>
                                 <select class="form-control" v-model="filterModel.seller">
@@ -58,14 +58,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Valid</label>
                                 <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Include Article</label>
                                 <select class="form-control" v-model="filterModel.inc_article">
@@ -76,7 +76,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Got Ahref</label>
                                 <select class="form-control" v-model="filterModel.got_ahref">
@@ -87,21 +87,21 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Date</label>
                                 <input type="date" class="form-control" v-model="filterModel.date">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search URL</label>
                                 <input type="text" class="form-control" v-model="filterModel.search" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
                                 <select class="form-control" v-model="filterModel.casino_sites">
@@ -112,7 +112,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Topic</label>
                                 <!-- <select class="form-control" v-model="filterModel.topic">
@@ -125,7 +125,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Keyword Anchor</label>
                                 <select class="form-control" v-model="filterModel.kw_anchor">
@@ -136,7 +136,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Price Basis</label>
                                 <select name="" class="form-control" v-model="filterModel.price_basis">
@@ -162,9 +162,17 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                        <div class="col-md-12">
+                            
+                                
+                                     <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                                
+                               
+                                      <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                               
+                            
+                            
+                           
                         </div>
                     </div>
 
@@ -254,7 +262,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>
-                                    <input class="custom-checkbox" type="checkbox" @click="selectAll" v-model="allSelected">
+                                    <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
                                 </th>
                                 <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
                                 <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
