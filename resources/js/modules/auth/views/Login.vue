@@ -14,7 +14,7 @@
                     <label for="user-password">Password</label>
                     <input v-on:keyup.enter="submitLogin(credentials)" v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" v-model="credentials.password" type="password" id="user-password" class="form-control">
                     <router-link :to="{ path: '/forgot-password' }">
-                        <span>Forgot Password ?</span>
+                        <span>Forgot Password?</span>
                     </router-link>
                     <span v-if="error && objectNotEmpty(error.password)"  class="text-danger">{{ error.password[0] }}</span>
                     <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
