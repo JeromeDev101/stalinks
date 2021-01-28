@@ -5,9 +5,12 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
                 </div>
 
-                <div class="box-body m-3">
+                <div class="box-body m-3 collapse" id="collapseExample">
 
                     <div class="row">
                         <div class="col-md-3">

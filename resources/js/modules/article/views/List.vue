@@ -11,7 +11,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-2 col-sm-12">
+                        <div class="col-md-12 col-lg-2">
                             <div class="form-group">
                                 <label for="">Search ID article</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
