@@ -193,13 +193,14 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'registration_success') {
-                    this.clearRegistrationModel();
-                    this.isVerifiedEmail = true;
-
+                
                     axios.post('/api/registration-email-validation',{
                         email: this.RegisterModel.email,
                         title: 'Email Validation'
-                    })
+                    });
+
+                    this.clearRegistrationModel();
+                    this.isVerifiedEmail = true;
 
                 }
             },
