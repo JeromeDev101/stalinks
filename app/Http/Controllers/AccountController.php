@@ -498,4 +498,8 @@ class AccountController extends Controller
         $registration = Registration::where('verification_code', $request->code)->first();
         return $registration;
     }
+
+    public function forgotPassword(Request $request) {
+        $registration = Registration::where('email', $request->email)->first();
+    }
 }

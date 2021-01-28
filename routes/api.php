@@ -21,6 +21,7 @@ Route::name('registration-country')->get('/registration-country-list', 'CountryC
 Route::name('registration-email-validation')->post('/registration-email-validation', 'MailgunController@send_validation');
 Route::name('registration-get-info')->get('/registration-get-info','AccountController@getInfo');
 Route::name('registration-get-update-info')->post('/registration-get-update-info','AccountController@updateRegistrationAccount');
+Route::name('forgot-password')->post('/forgot-password','AccountController@forgotPassword');
 
 Route::middleware('auth:api')->group(function () {
 
