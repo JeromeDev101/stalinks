@@ -217,8 +217,8 @@ class Alexa {
                 $ret = self::makeRequest($url, $authorizationHeader);
                 $topsitesArray = json_decode($ret, true);
                 if (isset($topsitesArray)) {
-                    if (isset($topsitesArray["Ats"]) && $topsitesArray["Ats"]["Results"]["ResponseStatus"]["StatusCode"] == 200) {
-                        $dataExtDomain = $topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["Sites"]["Site"];
+                    if (isset($topsitesArray["Ats"]) && $topsitesArray["Ats"]["Results"]["ResponseStatus"]["StatusCode"] == 200 ) {
+                        $dataExtDomain = isset($topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["Sites"]["Site"]) ? $topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["Sites"]["Site"] : [];
                         $dataTotalTopSites = $topsitesArray["Ats"]["Results"]["Result"]["Alexa"]["TopSites"]["Country"]["TotalSites"];
                         $newData = $extDomainRepository->importAlexaSites($dataExtDomain, $dataTotalTopSites, $this->countryCode, $oldStart, $oldCount);
                         yield $newData;
