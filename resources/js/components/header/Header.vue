@@ -36,38 +36,17 @@
                         ></a>
                         <!-- <span class="label label-warning">10</span> -->
 
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu notification-menu-custom">
                             <li class="header">You have 10 notifications</li>
+                            
                             <li>
-                                <!-- inner menu: contains the actual data -->
-                                <!-- <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                            page and may cause design problems
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                        <i class="fa fa-users text-red"></i> 5 new members joined
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                        <i class="fa fa-user text-red"></i> You changed your username
-                                        </a>
-                                    </li>
-                                </ul> -->
+                                <div class="vertical-menu">
+                                    <a href="#">Your purchase 152 from sample.com is Live </a>
+                                    <a href="#">Your purchase 58 from sample.com is Live </a>
+                                    <a href="#">Your purchase 20 from sample.com is Live </a>
+                                    <a href="#">Your purchase 10 from sample.com is Live </a>
+                                </div>
+
                             </li>
                             <li class="footer"><a href="#">View all</a></li>
                         </ul>
