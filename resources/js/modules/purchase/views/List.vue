@@ -310,7 +310,7 @@
             },
 
             formatPrice(value) {
-                let val = (value/1).toFixed(0)
+                let val = (value/1).toFixed(2)
                 return val;
             },
 
