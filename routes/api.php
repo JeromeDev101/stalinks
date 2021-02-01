@@ -237,6 +237,14 @@ Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
+Route::get('/test-email-show',function(){
+    $data = [
+        'name' => 'Choco',
+        'verification_code' => 'awefijnxcASiaisdasd2168asd'
+    ];
+
+    return view('email', $data);
+});
 
 //test for updating publisher for QC_validation
 Route::get('/updating-publisher-validation','PublisherController@qcValidation')->name('updating-publisher-validation');
