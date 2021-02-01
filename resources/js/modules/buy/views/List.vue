@@ -168,7 +168,7 @@
                     </div>
                 </div>
 
-                <div class="box-body no-padding relative">
+                <div class="box-body no-padding relative" >
 
                     <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
                         <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
@@ -449,14 +449,19 @@
         min-height: 37px;
     }
     #tbl_buy_backlink {
-        table-layout: fixed;
+        /* table-layout: fixed; */
+        overflow: scroll ;
         width: 100% !important;
     }
     #tbl_buy_backlink .resize{
         width: auto !important;
         white-space: normal;
-        text-overflow: ellipsis;
+        text-overflow: clip;
         overflow: hidden;
+    }
+
+    .box-body.no-padding.relative{
+        overflow: scroll;
     }
 </style>
 
