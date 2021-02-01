@@ -511,7 +511,6 @@ export default {
 
         checkEmail(email) {
             let result = '';
-            // console.log(email.indexOf("|"))
             if (email.indexOf("|") > 0) {
                 var spl = email.split("|")
 
@@ -635,7 +634,6 @@ export default {
                 label_id: this.updateModel.label_id
             })
             .then((res) => {
-                // console.log(res.data)
 
                 for (var rec in this.records.data) {
                     for (var chk in this.checkIds) {
@@ -684,7 +682,6 @@ export default {
                 }
             })
             .then((res) => {
-                // console.log(res.data)
                 if (is_all){
                     this.getInbox();
                 } 
@@ -751,7 +748,6 @@ export default {
                         url: this.viewContent.attachment[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                    //    console.log(res)
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
 
@@ -862,8 +858,6 @@ export default {
                 this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
-
-                console.log(this.messageForms)
             }
         },
 
@@ -887,10 +881,7 @@ export default {
                 })
                 .then((response) => {
                     this.records = response.data.inbox;
-                    // console.log(this.records);
-                    // this.loadingMessage = false;
                     this.inboxCount = response.data.count;
-                    // console.log(this.inboxCount)
 
                     this.paginate.to = this.records.to == null ? 0:this.records.to;
                     this.paginate.total = this.records.total == null ? 0:this.records.total;
@@ -912,13 +903,6 @@ export default {
                     error => error;
                 });
             } 
-            // else {
-            //     swal.fire(
-            //         'Cannot Access',
-            //         'Please Setup first your Work Mail. Contact your Administrator',
-            //         'error'
-            //     )
-            // }
             
         },
 
@@ -931,9 +915,7 @@ export default {
                         url: url
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        // console.log(res);
                         let blob = new Blob( [ res.data ] );
-                        // console.og(res.data);
                          let link = document.getElementById( 'link-download-href' );
                          link.href = URL.createObjectURL( blob );
                          link.download = url;

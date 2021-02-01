@@ -1195,12 +1195,7 @@
                 });
 
                 if( this.messageForms.action === 'saved' ){
-                    // swal.fire(
-                    //     'Saved!',
-                    //     'Successfully Updated.',
-                    //     'success'
-                    //     )
-                    
+
                     this.getPublisherList();
 
                     if (this.messageForms.errors) {
@@ -1208,8 +1203,7 @@
                         let html = '';
 
                         for (var index in this.messageForms.errors) {
-                            var color = this.messageForms.errors[index].message == 'validated' ? 'green':'red';
-                            html += this.messageForms.errors[index].url + ' is ' + '<span class="badge" style="color:'+ color  +'">'+ this.messageForms.errors[index].message +'</span><br/>';
+                            html += 'Success <b>' + this.messageForms.errors[index].url + '</b> action has been done.';
                         }
                         swal.fire({
                             icon: 'success',
@@ -1219,16 +1213,6 @@
                         });
                     }
                 }
-
-                // if (this.messageForms.data){
-                //     swal.fire(
-                //         'Error',
-                //         'This URL has already have a valid \n' + this.messageForms.data,
-                //         'error'
-                //         )
-
-                //     this.getPublisherList();
-                // }
 
                 this.checkIds = [];
             },
