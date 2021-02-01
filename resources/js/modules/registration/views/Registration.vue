@@ -10,7 +10,7 @@
                         <hr class="mb-4"/>
 
                         <div class="alert alert-success" v-if="isVerifiedEmail">
-                            Please check your email to verify and complete the process.
+                            Please for validation check your email Inbox or Spam or Promotion to click on the link to complete the process.
                         </div>
 
                         <div class="row">
