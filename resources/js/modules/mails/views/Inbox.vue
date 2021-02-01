@@ -820,7 +820,7 @@ export default {
                 cc = (typeof(this.emailContent.cc) == "undefined" ) ? "": this.emailContent.cc;
             }
 
-            this.sendBtn = true;
+            // this.sendBtn = true;
             this.formData = new FormData();
             this.formData.append('cc', cc);
             this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
@@ -855,7 +855,7 @@ export default {
                 
                 //this.getStatus();
                 this.getInbox();
-                this.sendBtn = false;
+                // this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
             }
