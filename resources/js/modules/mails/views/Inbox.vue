@@ -59,27 +59,27 @@
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
                             <i class="fa fa-refresh fa-spin mr-3"></i> loading messages
                         </div>
-                        <table class="table table-condensed table-hover tbl-custom">
+                        <table class="table table-condensed table-hover tbl-custom" style="table-layout: fixed;">
                             <tbody>
                                 <tr v-show="records.length == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>
                                 </tr>
                                 <tr v-for="(inbox, index) in records" :key="index" @click="viewMessage(inbox, index)" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
-                                    <td>
+                                    <td style="width:5%;">
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
-                                    <td>
+                                    <td style="overflow-wrap: anywhere;">
                                         <i v-show="inbox.label_id != 0" class="fa fa-tag mr-3" :style="{'color': inbox.label_color}"></i>
                                         {{ inbox.is_sent == 1 ? 'To: ' + checkEmail(inbox.received) : inbox.from_mail}}
                                     </td>
-                                    <td>{{inbox.subject}}</td>
+                                    <td style="overflow-wrap: anywhere;">{{inbox.subject}}</td>
                                     <td class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
                                             title="Starred"
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <td><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
+                                    <!-- <td><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td> -->
                                     <td class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 
