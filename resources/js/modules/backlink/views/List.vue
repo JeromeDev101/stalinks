@@ -14,35 +14,11 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search URL Publisher</label>
-                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Search URL Advertiser</label>
-                                <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select class="form-control" v-model="fillter.status">
-                                    <option value="">All</option>
-                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                </select>
-                            </div>
-                        </div>
-
+                        
                         <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Seller</label>
@@ -64,6 +40,36 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search URL Advertiser</label>
+                                <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select class="form-control" v-model="fillter.status">
+                                    <option value="">All</option>
+                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+
+                        
 
                     </div>
 

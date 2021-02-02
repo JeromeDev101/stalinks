@@ -19,25 +19,7 @@
                                 <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Search URL Publisher</label>
-                                <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Payment Status</label>
-                                <select name="" id="" class="form-control" v-model="filterModel.payment_status">
-                                    <option value="">All</option>
-                                    <option value="Paid">Paid</option>
-                                    <option value="Not paid">Not paid</option>
-                                </select>
-                            </div>
-                        </div>
-
+                        
                         <div class="col-md-2" v-if="user.isOurs != 1">
                             <div class="form-group">
                                 <label for="">Seller</label>
@@ -57,6 +39,28 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Payment Status</label>
+                                <select name="" id="" class="form-control" v-model="filterModel.payment_status">
+                                    <option value="">All</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Not paid">Not paid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+
+                        
                     </div>
 
                     <div class="row mb-3">
