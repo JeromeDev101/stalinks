@@ -356,7 +356,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" id="file_reply" ref="file_reply" class="form-control" :disabled="true">
+                                    <input type="file" id="file_reply" ref="file_reply" class="form-control">
                                 </div>
                             </div>
 
