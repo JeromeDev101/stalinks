@@ -240,8 +240,10 @@ Route::get('payment/success', 'PayPalController@success')->name('payment.success
 
 
 //test for updating publisher for QC_validation
-Route::get('/updating-publisher-validation','PublisherController@qcValidation')->name('updating-publisher-validation');
+// Route::get('/updating-publisher-validation','PublisherController@qcValidation')->name('updating-publisher-validation');
 
 
-
-
+// direct viewing of forgot password-template
+// Route::get('/test-forgot-password', function() {
+//     return view('forgot_password');
+// });

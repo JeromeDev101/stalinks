@@ -500,6 +500,13 @@ class AccountController extends Controller
     }
 
     public function forgotPassword(Request $request) {
-        $registration = Registration::where('email', $request->email)->first();
+        $request->validate(['email' => 'required|email']);
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user) {
+            return response()->json(['success'=> false],422);
+        }
+
+        return response()->json(['success' => true],200);
     }
 }

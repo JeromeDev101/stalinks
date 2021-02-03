@@ -17,7 +17,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Email Address</label>
-                                    <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="e.g. email@domain.com">
+                                    <input type="text" class="form-control" v-model="email" aria-describedby="helpId" placeholder="e.g. email@domain.com">
                                 </div>
                             </div>
 
@@ -44,7 +44,7 @@
     export default {
         data() {
             return {
-               //
+               email: '',
             }
         },
 
@@ -60,7 +60,35 @@
 
         methods: {
            submitResetPassword() {
-               //
+               if( this.email != '' ) {
+                   axios.post('/api/forgot-password',{
+                        email: this.email,
+                    })
+                    .then((res) => {
+                        swal.fire(
+                            'Success',
+                            'Resetting password has been send, Please check now your email',
+                            'success'
+                        );
+
+                        this.email = '';
+                    })
+                    .catch(err => {
+                        if(err.response.data.success === false) {
+                            swal.fire(
+                                'Invalid',
+                                'Email Address doesn\'t exist, Please check again your email address',
+                                'error'
+                            );
+                        }
+                    })
+               } else {
+                   swal.fire(
+                       'Error',
+                       'Please provide Email Address',
+                       'error'
+                   );
+               }
            },
         }
     }
