@@ -2,7 +2,7 @@
     <div>
         <div class="row">
 
-            <div class="col-md-12 col-lg-7">
+            <div class="col-md-12" v-show="cardInbox">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $route.name }}</h3>
@@ -61,26 +61,26 @@
                         </div>
                         <table class="table table-condensed table-hover tbl-custom">
                             <tbody>
-                                <tr v-show="records.data.length == 0">
+                                <tr v-show="paginate.total == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>
                                 </tr>
-                                <tr v-for="(inbox, index) in records.data" :key="index" @click="viewMessage(inbox, index)" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
-                                    <td>
+                                <tr v-for="(inbox, index) in records.data" :key="index" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
+                                    <td style="width:30px;">
                                         <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
                                     </td>
-                                    <td>
+                                    <td @click="viewMessage(inbox, index)">
                                         <i v-show="inbox.label_id != 0" class="fa fa-tag mr-3" :style="{'color': inbox.label_color}"></i>
                                         {{ inbox.is_sent == 1 ? 'To: ' + checkEmail(inbox.received) : inbox.from_mail}}
                                     </td>
-                                    <td>{{inbox.subject}}</td>
-                                    <td class="text-right">
+                                    <td @click="viewMessage(inbox, index)">{{inbox.subject}}</td>
+                                    <td style="width:30px;" class="text-right">
                                         <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
                                             title="Starred"
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <td><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
-                                    <td class="text-right">{{inbox.created_at}}</td>
+                                    <td @click="viewMessage(inbox, index)"><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
+                                    <td @click="viewMessage(inbox, index)" class="text-right">{{inbox.created_at}}</td>
                                 </tr>
                                 
                             </tbody>
@@ -89,14 +89,17 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-lg-5">
+            <div class="col-md-12" v-show="cardReadMessage">
                 <div class="box box-primary">
                     <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
                         No items Selected
                     </div>
 
                     <div v-show="MessageDisplay" class="box-header with-border">
-                        <h3 class="box-title">Read Mail</h3>
+                        <h3 class="box-title">
+                            <button type="button" title="Back" class="btn btn-default btn-sm" @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
+                            Read Mail
+                        </h3>
 
                         <!-- <div class="box-tools pull-right">
                             <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Previous"><i class="fa fa-chevron-left"></i></a>
@@ -466,6 +469,8 @@ export default {
                 to: 0,
                 total: 0,
             },
+            cardInbox: true,
+            cardReadMessage: false,
         }
     },
 
@@ -492,6 +497,7 @@ export default {
     watch:{
         $route (to, from){
             this.getInbox();
+            this.clearViewing();
         }
     },
 
@@ -500,6 +506,11 @@ export default {
     },
 
     methods: {
+        clearViewing() {
+            this.cardInbox = true;
+            this.cardReadMessage = false;
+        },
+
         async getListLanguages() {
             await this.$store.dispatch('actionGetListLanguages');
         },
@@ -809,6 +820,10 @@ export default {
                 axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
                 this.records.data[index].is_viewed = 1
             }
+
+
+            this.cardInbox = false;
+            this.cardReadMessage = true;
             
         },
 
