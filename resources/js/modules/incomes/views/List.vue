@@ -120,7 +120,7 @@
                                 <td v-if="isSeller">{{ incomes.publisher.user.username == null ? incomes.publisher.user.name : incomes.publisher.user.username }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user.username == null ? incomes.user.name : incomes.user.username }}</td>
                                 <td>{{ replaceCharacters(incomes.publisher.url) }}</td>
-                                <td>$ {{ incomes.price }}</td>
+                                <td>$ {{ incomes.publisher.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>
                                 <td>{{ incomes.payment_status }}</td>

@@ -191,7 +191,7 @@
                                 <th class="resize" v-show="tblBuyOptions.org_keywords">Org Kw</th>
                                 <th class="resize" v-show="tblBuyOptions.ratio">Ratio</th>
                                 <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
-                                <th class="resize" v-show="tblBuyOptions.price">Price</th>
+                                <th class="resize" v-show="tblBuyOptions.price">{{ user.role_id == 5 ? 'Price_S':'Price' }}</th>
                                 <th class="resize" v-show="tblBuyOptions.status">Status</th>
                                 <th class="resize" v-show="tblBuyOptions.code_comb">Code Comb</th>
                                 <th class="resize" v-show="tblBuyOptions.code_price">Code Price</th>

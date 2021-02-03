@@ -200,7 +200,6 @@
                                 <div class="form-group">
                                     <label for="">Account Type <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
-                                        <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
@@ -229,7 +228,6 @@
                                 <div class="form-group">
                                     <label for="">Country</label>
                                     <select class="form-control" v-model="accountUpdate.country_id">
-                                        <option value="">All</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -306,7 +304,6 @@
                                 <div class="form-group">
                                     <label for="">Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.commission">
-                                        <option value="">Select Commission</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -325,7 +322,6 @@
                             <div class="col-sm-6">
                                 <label for="">Credit Authorization</label>
                                 <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
-                                    <option value=""></option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -334,7 +330,6 @@
                             <div class="col-sm-6">
                                 <label for="">Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
-                                    <option value=""></option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username}}
                                     </option>
@@ -344,7 +339,6 @@
                             <div class="col-sm-6">
                                 <label for="">Account Validation <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountUpdate.account_validation">
-                                    <option value=""></option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
                                 </select>
