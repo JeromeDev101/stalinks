@@ -62,14 +62,14 @@ class ArticlesController extends Controller
         if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Buyer' ){
             // if( $user->role_id == 6 ){
                 $backlinks_ids = $this->getBacklinksForBuyer();
-    
+
                 $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
         if( isset($filter['writer']) && $filter['writer'] != ""){
             $list->where('id_writer', $filter['writer']);
         }
-        
+
         if( isset($filter['search_backlink']) && $filter['search_backlink'] != ""){
             $list->where('id_backlink', $filter['search_backlink']);
         }
@@ -150,7 +150,7 @@ class ArticlesController extends Controller
         if( $user->isOurs == 1 && isset($registration->type) && $registration->type == 'Buyer' ){
             // if( $user->role_id == 6 ){
                 $backlinks_ids = $this->getBacklinksForBuyer();
-    
+
                 $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
@@ -206,7 +206,7 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request){
-        
+
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
         $price_id = null;
@@ -235,11 +235,15 @@ class ArticlesController extends Controller
             if( $backlink->status != 'Live' ){
                 $backlink->update(['status' => 'Content Done']);
             }
-            
+
         }
 
         if( $request->content['status'] == 'In Writing' ){
             $backlink->update(['status' => 'Content In Writing']);
+        }
+
+        if (isset($request->get('content')['title'])) {
+            $backlink->update(['title' => $request->get('content')['title']]);
         }
 
         $article->update([

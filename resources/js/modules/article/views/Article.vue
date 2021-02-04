@@ -75,7 +75,7 @@
                                 <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
@@ -87,7 +87,7 @@
                             </div>
                         </div>
 
-                        
+
 
                     </div>
 
@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal Content -->
         <div class="modal fade" id="modal-content-edit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-xl" role="document">
@@ -180,7 +180,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Title</label>
-                                    <input type="text" v-model="contentModel.title" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
@@ -254,7 +254,7 @@
             </div>
         </div>
         <!-- End of Modal Content -->
-        
+
         <!-- Modal Add Article -->
         <div class="modal fade" id="modal-add-article" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -321,7 +321,7 @@
                                     <span v-if="messageForms.errors.writer" v-for="err in messageForms.errors.writer" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">
