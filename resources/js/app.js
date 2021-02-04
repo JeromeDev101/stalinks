@@ -80,6 +80,14 @@ router.beforeEach((to, from, next) => {
 //sweetalert
 window.swal = swal;
 
+//Work around for TinyMCE integration with bootstrap
+// Prevent bootstrap dialog from blocking focusin
+$(document).on('focusin', function(e) {
+    if ($(e.target).closest(".mce-window").length) {
+        e.stopImmediatePropagation();
+    }
+});
+
 //toast
 const toast = swal.mixin({
     toast: true,
