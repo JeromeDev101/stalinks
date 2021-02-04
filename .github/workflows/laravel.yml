@@ -22,5 +22,5 @@ jobs:
         script: |
             cd /var/www/html/stalinks.com
             git pull origin master
-            npm run production
+            npm run dev
             cd ../

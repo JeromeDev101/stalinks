@@ -105,7 +105,7 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher.user.username == null ? seller.publisher.user.name : seller.publisher.user.username }}</td>
-                                <td>$ {{ seller.price }}</td>
+                                <td>$ {{ formatPrice(seller.price) }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
@@ -357,6 +357,11 @@
 
             calcSum(total, num) {
                 return total + num
+            },
+
+            formatPrice(price) {
+                price = parseFloat(price).toFixed(0);
+                return price;
             },
 
             doSearch() {

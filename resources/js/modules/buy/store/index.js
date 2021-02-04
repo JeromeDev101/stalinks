@@ -25,6 +25,7 @@ const state = {
         org_keywords: true,
         org_traffic: true,
         price: true,
+        prices: true,
         status: true,
         code_comb: true,
         code_price: true,

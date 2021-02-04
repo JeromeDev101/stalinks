@@ -191,7 +191,8 @@
                                 <th class="resize" v-show="tblBuyOptions.org_keywords">Org Kw</th>
                                 <th class="resize" v-show="tblBuyOptions.ratio">Ratio</th>
                                 <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
-                                <th class="resize" v-show="tblBuyOptions.price">{{ user.role_id == 5 ? 'Price_S':'Price' }}</th>
+                                <th class="resize" v-show="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</th>
+                                <th class="resize" v-show="tblBuyOptions.prices">Prices</th>
                                 <th class="resize" v-show="tblBuyOptions.status">Status</th>
                                 <th class="resize" v-show="tblBuyOptions.code_comb">Code Comb</th>
                                 <th class="resize" v-show="tblBuyOptions.code_price">Code Price</th>
@@ -223,6 +224,7 @@
                                 <td class="resize" v-show="tblBuyOptions.ratio">{{ getRatio(buy.org_keywords, buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.prices">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePriceStalinks(buy.price, buy.inc_article) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" >{{ buy.code_combination}}</td>
                                 <td class="resize" v-show="tblBuyOptions.code_price" > $ {{ buy.code_price}}</td>
@@ -417,7 +419,10 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">Price</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Price_S':'Price' }}</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices">Prices</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
@@ -666,6 +671,7 @@
                         { orderable: true, targets: 17 },
                         { orderable: true, targets: 18 },
                         { orderable: true, targets: 19 },
+                        { orderable: true, targets: 20 },
                         { orderable: false, targets: '_all' }
                     ];
                 } else {
@@ -835,6 +841,51 @@
 
                 this.getBuyList();
             },
+
+            computePriceStalinks(price, article) {
+
+                let activeUser = this.user
+                let selling_price = price
+                let percent = parseFloat(this.formula.data[0].percentage);
+                let additional = parseFloat(this.formula.data[0].additional);
+
+                let commission = 'yes';
+
+                if( price != '' && price != null ){ // check if price has a value
+
+                        if( article == 'Yes' ){ //check if with article
+
+                            // if( commission == 'no' ){
+                            //     selling_price = price
+                            // }
+
+                            if( commission == 'yes' ){
+                                let percentage = this.percentage(percent, price)
+                                selling_price = parseFloat(percentage) + parseFloat(price)
+                            }
+                        }
+
+                        if( article == 'No' ){ //check if without article
+
+                            // if( commission == 'no' ){
+                            //     selling_price = parseFloat(price) + additional
+                            // }
+
+                            if( commission == 'yes' ){
+                                let percentage = this.percentage(percent, price)
+                                selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                            }
+
+                        }
+
+                }
+
+                selling_price = selling_price.toFixed(0);
+
+                return selling_price;
+            },
+
+
 
             computePrice(price, article) {
 
