@@ -105,7 +105,7 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher.user.username == null ? seller.publisher.user.name : seller.publisher.user.username }}</td>
-                                <td>$ {{ formatPrice(seller.price) }}</td>
+                                <td>$ {{ formatPrice(seller.publisher.price) }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
