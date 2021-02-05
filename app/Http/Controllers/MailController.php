@@ -34,7 +34,7 @@ class MailController extends Controller
     }
 
     public function getList(Request $request) {
-        
+
         $input = $request->all();
         $countryId = 0;
         $page = 0;
@@ -74,6 +74,7 @@ class MailController extends Controller
         }
 
         $data = $this->mailRepository->getTemplateList($page, $perPage, $filters, $isFullPage);
+
         return response()->json($this->addPaginationRaw($data));
     }
 
@@ -86,7 +87,7 @@ class MailController extends Controller
             'mail_name' => 'required',
             'country_id' => 'required|not_in:0',
         ])->validate();
-        
+
         $input['user_id'] = Auth::id();
         $newTemplate = $this->mailRepository->create($input);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\InboxResource;
 use Illuminate\Http\Request;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
@@ -25,7 +26,7 @@ class MailgunController extends Controller
 	{
 		$this->mg = Mailgun::create(config('gun.mail_api'));
 	}
-    
+
     public function send(Request $request)
     {
         // dd($request->attachment);
@@ -41,9 +42,9 @@ class MailgunController extends Controller
 
         //     }
 
-            
 
-           
+
+
         // }else {
         //     $list_attach = '';
         // }
@@ -55,7 +56,7 @@ class MailgunController extends Controller
             $atth = [
                 array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
             ];
-            
+
         }
 
         $request->validate([
@@ -64,7 +65,7 @@ class MailgunController extends Controller
             'content'   => 'required',
         ]);
 
-        
+
 
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
@@ -77,7 +78,7 @@ class MailgunController extends Controller
         }
 
         $myArray = explode(',', $email_to);
-       
+
         //add current email another associalte array
         $aw = [];
 
@@ -114,9 +115,9 @@ class MailgunController extends Controller
         if(isset($request->cc) && $request->cc != ""){
             $params['bcc'] = $request->cc;
         }
-       
+
     	$sender = $this->mg->messages()->send('stalinks.com', $params);
-        
+
         $attac_object = '';
         if($request->attachment != "undefined" )
         {
@@ -125,7 +126,7 @@ class MailgunController extends Controller
 
             $attac_object = [
                 'url'           => url('/attachment/'.$attach),
-                'size'          => \File::size(public_path('/attachment/'), $attach), 
+                'size'          => \File::size(public_path('/attachment/'), $attach),
                 'type'          => $request->attachment->getClientOriginalExtension(),
                 'filename'      => $attach,
                 'display_name'  => $request->attachment->getClientOriginalName()
@@ -134,7 +135,7 @@ class MailgunController extends Controller
 
         $input['body-plain'] = $request->content;
         $res = preg_replace("/[<->]/", "", $sender->getId());
-        
+
         $sendEmail = Reply::create([
             'sender'            => Auth::user()->work_mail,
             'subject'           => $request->title,
@@ -167,7 +168,7 @@ class MailgunController extends Controller
 
     public function view_message(Request $request)
     {
-    	
+
     	$validator = Validator::make($request->all(), [
             'url' => 'required|max:1000'
         ]);
@@ -177,7 +178,7 @@ class MailgunController extends Controller
         }
 
     	$message = $this->mg->messages()->show($request->url);
-       
+
     	return response()->json( new ShowMessage($message) );
     }
 
@@ -219,7 +220,7 @@ class MailgunController extends Controller
                     }else{
                         $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }
-                    
+
                     break;
                 case 'Sent':
                      if($request->email == 'jess@stalinks.com'){
@@ -227,7 +228,7 @@ class MailgunController extends Controller
                      }else{
                         $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
                      }
-                    
+
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
@@ -237,7 +238,7 @@ class MailgunController extends Controller
                     }else{
                         $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
                     }
-                    
+
                     break;
                 case 'Starred':
                      if($request->email == 'jess@stalinks.com'){
@@ -245,7 +246,7 @@ class MailgunController extends Controller
                      }else{
                         $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
                      }
-                    
+
                     break;
                 default:
                     $inbox = $inbox;
@@ -253,6 +254,7 @@ class MailgunController extends Controller
         }
 
         $inbox = $inbox->paginate();
+
         $cnt = Reply::where('is_viewed', 0)->where('is_sent', 0)->whereNull('deleted_at')->count();
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
@@ -263,7 +265,7 @@ class MailgunController extends Controller
     {
 
      $aw = $this->mg->events()->get('stalinks.com');
-     
+
      //get all eventsitems
      foreach($aw->getItems() as $kwe)
      {
@@ -287,21 +289,21 @@ class MailgunController extends Controller
                             'status_code'       => $kwe->getDeliveryStatus()['code'],
                             'message_status'    => $kwe->getDeliveryStatus()['message']
                         ]);
-                       
-                        
+
+
                     }
                 }
-                
-               
+
+
             }
         }
-        
-        
+
+
       }
-      
+
      }
 
-    
+
     }
 
     public function post_reply(Request $request)
@@ -311,11 +313,11 @@ class MailgunController extends Controller
         //$get_attachment = new ShowMessage($message);================
 
         $message_id = $request->only('Message-Id');
-       
+
         $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
 
         $aw = $this->mg->events()->get('stalinks.com');
-     
+
         //  //get all eventsitems============
         foreach($aw->getItems() as $kwe)
         {
@@ -329,41 +331,41 @@ class MailgunController extends Controller
                 //check if mesage_id property exist before using it as condition=======
                 if (array_key_exists("message-id",$wa))
                 {
-                    
+
 
                     if($wa['message-id'] == $message_id)
                         {
                             //dd($kwe->getStorage()['url']);=========
-                           
+
                             $aw = $this->mg->messages()->show($kwe->getStorage()['url']);
-                            
+
                             $r_attachment = $aw->getAttachments();
                             //return response()->json( new ShowMessage($message) ); ============
                         }
-                    
-                   
+
+
                 }
             }
-            
-            
+
+
           }
-          
+
         }
 
-       
+
         DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
 
         // if( $request->has('attachments') )
         // {
 
-        //    $attch_obj = json_decode($request->attachments)[0]; 
+        //    $attch_obj = json_decode($request->attachments)[0];
         // }
 
 
 
-       
 
-           
+
+
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
@@ -384,14 +386,14 @@ class MailgunController extends Controller
             'message_status'    => 'message received'
         ];
 
-       
+
         DB::table('replies')->insert($data);
 
-        return response()->json($request->all()); 
-        
+        return response()->json($request->all());
+
     }
 
-    
+
 
     public function starred(Request $request){
         // dd($request->all());
@@ -461,8 +463,8 @@ class MailgunController extends Controller
     public function show_attachment(Request $request)
     {
         return $this->mg->attachment()->show($request->url);
-        
-        
+
+
     }
 
     public function check_domain(Request $request)
@@ -471,7 +473,7 @@ class MailgunController extends Controller
             $client = new \GuzzleHttp\Client();
             $request = $client->get($request->domain);
             $response = $request;
-           
+
             return response()->json(['status'=> $response->getStatusCode(), 'message'=>$response->getReasonPhrase()]);
         }catch(\Exception $e){
             return response()->json(['status'=> 401,'message'=> $e->getHandlerContext()['error']]);
@@ -483,7 +485,7 @@ class MailgunController extends Controller
         $mail_logs = DB::table('replies')
                         ->where('replies.is_sent',1)
                         ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status','replies.created_at as date');
-                        
+
         if( isset($request->status) && $request->status != '') {
             $mail_logs = $mail_logs->where('replies.status_code', $request->status);
         }
@@ -495,13 +497,13 @@ class MailgunController extends Controller
         $mail_logs = $mail_logs->get();
 
 
-        $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();  
+        $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();
 
-        $sent = Reply::where('is_sent',1)->where('status_code',250)->count();  
+        $sent = Reply::where('is_sent',1)->where('status_code',250)->count();
 
-        $total = Reply::where('is_sent',1)->count();   
+        $total = Reply::where('is_sent',1)->count();
 
-        $failed = Reply::where('is_sent',1)->where('status_code',552)->count();             
+        $failed = Reply::where('is_sent',1)->where('status_code',552)->count();
 
         return response()->json([
             'logs'          => $mail_logs,
@@ -509,7 +511,7 @@ class MailgunController extends Controller
             'sent'          => $sent,
             'sent_today'          => $sent_today,
             'failed'        => $failed,
-        ]);                
+        ]);
     }
 
     public function get_mail_list()
@@ -532,7 +534,7 @@ class MailgunController extends Controller
         }
 
         $myArray = explode(',', $email_to);
-       
+
         //add current email another associalte array
         $aw = [];
 
@@ -560,8 +562,8 @@ class MailgunController extends Controller
                 'verification_code' => $registration->verification_code
             ];
         }
-        
-       
+
+
     	$sender = $this->mg->messages()->send('stalinks.com', [
 		    'from'                  => 'support@stalinks.com',
 		    'to'                    => array($str),
