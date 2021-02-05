@@ -5,27 +5,30 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
                 </div>
 
-                <div class="box-body m-3">
+                <div class="box-body m-3 collapse" id="collapseExample">
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-12 col-lg-2">
                             <div class="form-group">
                                 <label for="">Search ID article</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID backlink</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Language</label>
                                 <select name="" class="form-control" v-model="filterModel.language_id">
@@ -37,7 +40,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Writer</label>
                                 <select name="" class="form-control" v-model="filterModel.writer">
@@ -72,8 +75,8 @@
                                 <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
-                        
-                        <div class="col-md-2">
+
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
                                 <select name="" class="form-control" v-model="filterModel.casino_sites">
@@ -84,7 +87,7 @@
                             </div>
                         </div>
 
-                        
+
 
                     </div>
 
@@ -158,7 +161,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal Content -->
         <div class="modal fade" id="modal-content-edit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-xl" role="document">
@@ -177,7 +180,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Title</label>
-                                    <input type="text" v-model="contentModel.title" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
                                 </div>
                             </div>
 
@@ -251,7 +254,7 @@
             </div>
         </div>
         <!-- End of Modal Content -->
-        
+
         <!-- Modal Add Article -->
         <div class="modal fade" id="modal-add-article" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -318,7 +321,7 @@
                                     <span v-if="messageForms.errors.writer" v-for="err in messageForms.errors.writer" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">

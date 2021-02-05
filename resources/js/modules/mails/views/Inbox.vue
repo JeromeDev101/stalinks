@@ -59,7 +59,7 @@
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
                             <i class="fa fa-refresh fa-spin mr-3"></i> loading messages
                         </div>
-                        <table class="table table-condensed table-hover tbl-custom">
+                        <table class="table table-condensed table-hover tbl-custom" style="table-layout: fixed;">
                             <tbody>
                                 <tr v-show="paginate.total == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>

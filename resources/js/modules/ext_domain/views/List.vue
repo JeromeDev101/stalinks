@@ -15,8 +15,11 @@
          <div class="box">
             <div class="box-header">
                <h3 class="box-title">Filter</h3>
+                <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
             </div>
-            <div class="box-body col-md-10 offset-md-1 relative">
+            <div class="container-fluid m-3 collapse" id="collapseExample">
                <div class="row">
                   <div v-if="tableShow.country" class="col-md-2">
                      <div class="form-group">
@@ -85,7 +88,7 @@
             </div>
             <div class="container-fluid">
             <div class="form-row">
-               <div class="col-md-4 my-3">
+               <div class="col-md-4 col-sm-12 my-3">
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="input-group">
@@ -122,9 +125,9 @@
                      </div>
                      </div> -->
                </div>
-               <div class="col-4">
+               <div class="col-md-6 col-sm-6">
                <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 400px;">
-                  <label style="color: #333;margin: 5%;">Selected Action</label>
+                  <label style="color: #333;margin: 3%;">Selected Action</label>
                   <div class="btn-group">
                      <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
                      <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
@@ -133,7 +136,7 @@
                   </div>
                </div>
             </div>
-               <div class="col-4 my-3">
+               <div class="col-md-2 col-sm-6 my-3">
                   <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                   <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                   <div class="input-group input-group-sm float-right" style="width: 65px">
@@ -160,7 +163,7 @@
                      <tr class="label-primary">
                         <th>Action</th>
                         <th>
-                           <input class="custom-checkbox" type="checkbox" @click="selectAll" v-model="allSelected">
+                           <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
                         </th>
                         <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
                         <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>

@@ -5,15 +5,38 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
                 </div>
 
-                <div class="box-body m-3">
+                <div class="box-body m-3 collapse" id="collapseExample">
 
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select class="form-control" name="" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select class="form-control" name="" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
+                                </select>
                             </div>
                         </div>
 
@@ -35,25 +58,9 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isOurs != 1">
-                            <div class="form-group">
-                                <label for="">Seller</label>
-                                <select class="form-control" name="" v-model="filterModel.seller">
-                                    <option value="">All</option>
-                                    <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
-                                </select>
-                            </div>
-                        </div>
+                        
 
-                        <div class="col-md-2" v-if="user.isOurs != 1">
-                            <div class="form-group">
-                                <label for="">Buyer</label>
-                                <select class="form-control" name="" v-model="filterModel.buyer">
-                                    <option value="">All</option>
-                                    <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
-                                </select>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     <div class="row mb-3">
