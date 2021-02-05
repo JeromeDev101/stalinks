@@ -53,7 +53,7 @@
                                     <button type="button" :disabled="records.next_page_url == null" class="btn btn-default btn-sm" @click="getInbox(page = paginate.next)"><i class="fa fa-chevron-right"></i></button>
                                 </div>
                             </div>
-                            
+
                         </div>
 
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
@@ -74,15 +74,16 @@
                                     </td>
                                     <td @click="viewMessage(inbox, index)">{{inbox.subject}}</td>
                                     <td style="width:30px;" class="text-right">
-                                        <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}" 
+                                        <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}"
                                             title="Starred"
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
                                     <td @click="viewMessage(inbox, index)"><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
-                                    <td @click="viewMessage(inbox, index)" class="text-right">{{inbox.created_at}}</td>
+                                    <td
+                                        @click="viewMessage(inbox, index)" class="text-right">{{inbox.clean_date}}</td>
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                     </div>
@@ -129,7 +130,7 @@
                                     <i class="fa fa-file-pdf-o"></i>
                                     <img class="img-attachment" id="img-read-mail-attach">
                                 </span> -->
-                                    
+
                                 <div v-if="viewContent.attachment[0]" v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
                                     <a href="#"  id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment[0]['size']) }}</span>
@@ -152,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
         <!-- Modal Send Email -->
@@ -392,7 +393,7 @@
                                     </select>
                                 </div>
                             </div>
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -579,7 +580,7 @@ export default {
                     let ids = [];
                     for (var chk in this.checkIds) {
                         ids.push(this.checkIds[chk].id);
-                    } 
+                    }
 
                     axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
 
@@ -608,7 +609,7 @@ export default {
                             type: '',
                             filename: '',
                             display_name: '',
-                        },  
+                        },
                     }
 
                     this.checkIds = [];
@@ -638,7 +639,7 @@ export default {
             let ids = [];
             for (var chk in this.checkIds) {
                 ids.push(this.checkIds[chk].id);
-            } 
+            }
 
             axios.post('/api/mail/labeling', {
                 ids: ids,
@@ -651,7 +652,7 @@ export default {
                         if (this.checkIds[chk].id == this.records.data[rec].id) {
                             this.records.data[rec].label_id = this.updateModel.label_id;
                         }
-                    }     
+                    }
                 }
 
             })
@@ -675,14 +676,14 @@ export default {
 
             if (!is_all) {
                 this.records.data[position].is_starred = is_starred == 1 ? 0:1;
-            } 
+            }
             else {
                 for (var rec in this.records.data) {
                     for (var chk in this.checkIds) {
                         if (this.checkIds[chk].id == this.records.data[rec].id) {
                             this.records.data[rec].is_starred = 1;
                         }
-                    }     
+                    }
                 }
             }
 
@@ -695,7 +696,7 @@ export default {
             .then((res) => {
                 if (is_all){
                     this.getInbox();
-                } 
+                }
                 // this.btnEnable = true;
             })
         },
@@ -739,7 +740,7 @@ export default {
                     //     link.download = url;
                     //     this.viewContent.attachment  = JSON.parse(inbox.attachment);
                     // })
-                    
+
                 } else { // For Sender
                     this.viewContent.attachment = JSON.parse(inbox.attachment);
                 }
@@ -753,7 +754,7 @@ export default {
                     display_name: '',
                 }
             }
-            
+
             if(inbox.attachment != '' && this.viewContent.attachment.length > 0){
                 axios.post('/api/mail/show-attachment', {
                         url: this.viewContent.attachment[0]['url']
@@ -767,7 +768,7 @@ export default {
                         link.download = 'file.'+res[1];
                     });
             }
-            
+
 
             if(inbox.attachment != '' && inbox.attachment != '[]') {
                 let url = JSON.parse(inbox.attachment).url;
@@ -796,7 +797,7 @@ export default {
                     display_name: '',
                 }
             }
-                
+
 
             if (from_mail.search("<") > 0) {
                 var spl = from_mail.split("<")[1]
@@ -807,7 +808,7 @@ export default {
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
             this.viewContent.strippedHtml = content['body-plain'];
-            this.viewContent.date = inbox.created_at;
+            this.viewContent.date = inbox.clean_date;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;
             this.viewContent.id = inbox.id;
@@ -824,7 +825,7 @@ export default {
 
             this.cardInbox = false;
             this.cardReadMessage = true;
-            
+
         },
 
         async sendEmail(type) {
@@ -847,7 +848,7 @@ export default {
 
             if (this.messageForms.action == 'success') {
                 $("#modal-compose-email").modal('hide');
-                
+
                 swal.fire(
                     'Send',
                     'Successfully Send Email',
@@ -867,7 +868,7 @@ export default {
                     title: '',
                     content: ''
                 }
-                
+
                 //this.getStatus();
                 this.getInbox();
                 // this.sendBtn = false;
@@ -886,7 +887,7 @@ export default {
         getInbox(page = 1){
         //    this.loadingMessage = true;
             if(this.user.work_mail) {
-                axios.get('/api/mail/filter-recipient?page=' + page, { 
+                axios.get('/api/mail/filter-recipient?page=' + page, {
                     params : {
                         'email': this.user.work_mail,
                         'param': this.$route.name,
@@ -917,8 +918,8 @@ export default {
                     console.log(error);
                     error => error;
                 });
-            } 
-            
+            }
+
         },
 
         clearMessageform() {
@@ -935,7 +936,7 @@ export default {
                          link.href = URL.createObjectURL( blob );
                          link.download = url;
                     });
-                   
+
         }
     }
 }
