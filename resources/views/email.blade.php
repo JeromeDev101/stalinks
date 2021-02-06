@@ -105,7 +105,7 @@
     </style>
 </head>
 
-<body style="background-image: {{ asset('/images/background-login.jpg') }}; background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
+<body style="background-image: url('{{ asset('/images/background-login.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
     <!-- HIDDEN PREHEADER TEXT -->
     <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
