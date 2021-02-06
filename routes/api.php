@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+// Registration, Validation and Forgot Password
 Route::name('login')->post('/login', 'AuthController@login');
 Route::name('registration')->post('/register', 'AccountController@register');
 Route::name('check-verification-code')->get('/check-verification-code', 'AccountController@checkVerificationCode');
@@ -79,11 +80,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('delete-sub-account')->get('/delete-sub-account', 'AccountController@deleteSubAccount');
     Route::name('update-sub-account')->get('/update-sub-account', 'AccountController@updateSubAccount');
 
-
-
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
-    // Route::name('test')->get('test', 'PurchaseController@test');
 
     //Dashboard Admin
     Route::name('dashboard-admin')->get('/dashboard-admin', 'DashboardAdminController@index');
@@ -201,16 +199,13 @@ Route::middleware('auth:api')->group(function () {
     Route::group(['prefix'=> 'mail'], function(){
         Route::name('email_send')->post('/send','MailgunController@send');
         Route::name('email_retrieve_all')->get('/retrieve-all','MailgunController@retrieve_all');
-        // Route::name('message_view')->post('/view-message','MailgunController@view_message');
         Route::name('filter_recipient')->get('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
-        // Route::name('domain-status')->get('/status','MailgunController@status_mail');
         Route::name('starred')->get('/starred','MailgunController@starred');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
-        // Route::name('show_attach')->post('/show-attachment','MailgunController@show_attachment');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
@@ -219,16 +214,15 @@ Route::middleware('auth:api')->group(function () {
      Route::name('labels')->resource('/label','LabelController');
 });
 
+//Mailgun external
 Route::name('post_replies')->post('/mail/post-reply','MailgunController@post_reply');
 Route::name('/check_domain')->post('/check-domain','MailgunController@check_domain');
-// Route::name('mail-logs')->get('/mail/mail-logs','MailgunController@mail_logs');
 Route::name('domain-status')->get('/mail/status','MailgunController@status_mail');
 Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
- Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
+Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
 
-
-Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
-Route::name('get-topic-website')->get('/get-website-topic','ConfigController@getTopicWebsite');
+// Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
+// Route::name('get-topic-website')->get('/get-website-topic','ConfigController@getTopicWebsite');
 
 //test pusher
 Route::name('pusher')->get('/test-pusher','PushController@test');
@@ -238,20 +232,5 @@ Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
-Route::get('/test-email-show',function(){
-    $data = [
-        'name' => 'Choco',
-        'verification_code' => 'awefijnxcASiaisdasd2168asd'
-    ];
 
-    return view('email', $data);
-});
-
-//test for updating publisher for QC_validation
-// Route::get('/updating-publisher-validation','PublisherController@qcValidation')->name('updating-publisher-validation');
-
-
-// direct viewing of forgot password-template
-// Route::get('/test-forgot-password', function() {
-//     return view('forgot_password');
-// });
+Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');

@@ -144,9 +144,6 @@ class ConfigController extends Controller
                 "Accept: application/json",
                 );
                 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        
-                // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
                 $resp = curl_exec($curl);
                 curl_close($curl);
