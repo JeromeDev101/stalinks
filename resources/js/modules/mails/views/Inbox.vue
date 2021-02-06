@@ -442,9 +442,7 @@ export default {
                 attachment: {
                     url: '',
                     size: '',
-                    type: '',
-                    filename: '',
-                    display_name: '',
+                    name: '',
                 },
             },
             records: [],
@@ -606,9 +604,7 @@ export default {
                         attachment: {
                             url: '',
                             size: '',
-                            type: '',
-                            filename: '',
-                            display_name: '',
+                            name: '',
                         },
                     }
 
@@ -724,77 +720,38 @@ export default {
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
-            // this.viewContent.attachment  = JSON.parse(inbox.attachment);
 
-            if(inbox.attachment != '') {
-                let url = JSON.parse(inbox.attachment).url;
+            if(inbox.attachment != '' && inbox.attachment != '[]') {
+                let attach = JSON.parse(inbox.attachment);
+                this.viewContent.attachment  = attach;
 
                 if (is_sent == 0) { // For receiver
-                    // axios.post('/api/mail/show-attachment', {
-                    //     url: url
-                    // },{ responseType: 'arraybuffer' })
-                    // .then((res) => {
-                    //     let blob = new Blob( [ res.data ] );
-                    //     let link = document.getElementById( 'link-download-href' );
-                    //     link.href = URL.createObjectURL( blob );
-                    //     link.download = url;
-                    //     this.viewContent.attachment  = JSON.parse(inbox.attachment);
-                    // })
-
-                } else { // For Sender
-                    this.viewContent.attachment = JSON.parse(inbox.attachment);
-                }
-
-            } else {
-                this.viewContent.attachment = {
-                    url: '',
-                    size: '',
-                    type: '',
-                    filename: '',
-                    display_name: '',
-                }
-            }
-
-            if(inbox.attachment != '' && this.viewContent.attachment.length > 0){
-                axios.post('/api/mail/show-attachment', {
-                        url: this.viewContent.attachment[0]['url']
+                    axios.post('/api/mail/show-attachment', {
+                        url: attach[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
+                        // let blob = new Blob( [ res.data ] );
+                        // let link = document.getElementById( 'link-download-href' );
+                        // link.href = URL.createObjectURL( blob );
+                        // link.download = url;
+
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
 
                         let link = document.getElementById( 'link-download-href' );
                         link.href = window.URL.createObjectURL(blob);
-                        link.download = 'file.'+res[1];
-                    });
-            }
-
-
-            if(inbox.attachment != '' && inbox.attachment != '[]') {
-                let url = JSON.parse(inbox.attachment).url;
-
-                if (is_sent == 0) { // For receiver
-                    axios.post('/api/mail/show-attachment', {
-                        url: url
-                    },{ responseType: 'arraybuffer' })
-                    .then((res) => {
-                        let blob = new Blob( [ res.data ] );
-                        let link = document.getElementById( 'link-download-href' );
-                        link.href = URL.createObjectURL( blob );
-                        link.download = url;
-                        this.viewContent.attachment  = JSON.parse(inbox.attachment);
+                        // link.download = 'file'+res[1];
+                        link.download = attach[0]['name'];
                     })
-                } else { // For Sender
-                    this.viewContent.attachment = JSON.parse(inbox.attachment);
                 }
+
+                console.log(this.viewContent.attachment)
 
             } else {
                 this.viewContent.attachment = {
                     url: '',
                     size: '',
-                    type: '',
-                    filename: '',
-                    display_name: '',
+                    name: '',
                 }
             }
 

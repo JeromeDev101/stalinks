@@ -456,8 +456,6 @@ class MailgunController extends Controller
     public function show_attachment(Request $request)
     {
         return $this->mg->attachment()->show($request->url);
-
-
     }
 
     public function check_domain(Request $request)
