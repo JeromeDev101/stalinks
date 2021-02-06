@@ -309,20 +309,16 @@ class MailgunController extends Controller
     public function post_reply(Request $request)
     {
 
-        //$message = $this->mg->messages()->show($request->only('Message-Id'));==========
-        //$get_attachment = new ShowMessage($message);================
-
         $message_id = $request->only('Message-Id');
-
         $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
 
         $aw = $this->mg->events()->get('stalinks.com');
 
-        //  //get all eventsitems============
+        //get all eventsitems============
         foreach($aw->getItems() as $kwe)
         {
 
-            //all all message sent/received==========
+        //all all message sent/received==========
           foreach( $kwe->getMessage() as $wa)
           {
             //check if data is array some is not we need to make sure=======

@@ -194,6 +194,7 @@
 
                 if (this.messageForms.action === 'registration_success') {
                 
+                    // Send Email Validation
                     axios.post('/api/registration-email-validation',{
                         email: this.RegisterModel.email,
                         title: 'Email Validation'
