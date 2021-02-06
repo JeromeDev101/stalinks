@@ -725,15 +725,11 @@ export default {
                 let attach = JSON.parse(inbox.attachment);
                 this.viewContent.attachment  = attach;
 
-                if (is_sent == 0) { // For receiver
+                if (is_sent == 0) { 
                     axios.post('/api/mail/show-attachment', {
                         url: attach[0]['url']
                     },{ responseType: 'arraybuffer' })
                     .then((res) => {
-                        // let blob = new Blob( [ res.data ] );
-                        // let link = document.getElementById( 'link-download-href' );
-                        // link.href = URL.createObjectURL( blob );
-                        // link.download = url;
 
                         let blob = new Blob([res.data], { type: res.headers['content-type'] })
                         var res = res.headers['content-type'].split("/");
@@ -745,7 +741,7 @@ export default {
                     })
                 }
 
-                console.log(this.viewContent.attachment)
+                // console.log(this.viewContent.attachment)
 
             } else {
                 this.viewContent.attachment = {

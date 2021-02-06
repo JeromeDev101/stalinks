@@ -313,7 +313,7 @@ class MailgunController extends Controller
         $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
 
         $aw = $this->mg->events()->get('stalinks.com');
-        $r_attachment = '';
+        // $r_attachment = '';
 
         //get all eventsitems============
         foreach($aw->getItems() as $kwe)
@@ -358,12 +358,14 @@ class MailgunController extends Controller
         //    $attch_obj = json_decode($request->attachments)[0];
         // }
 
+        // dd($r_attachment);
+
 
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
-            'attachment'        => $r_attachment,
+            'attachment'        => json_encode($r_attachment),
             // 'attachment'        => '',
             'from_mail'         => $request->from,
             'date'              => '',
