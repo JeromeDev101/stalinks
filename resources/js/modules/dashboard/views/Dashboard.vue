@@ -94,10 +94,9 @@
                     
                 </div>
 
-                
+                <h5 class="box-title text-primary mt-4 ml-3">Seller List</h5>
                 
                 <div class="box-body custom-box">
-                    <h5 class="box-title text-primary mt-4">Seller List</h5>
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-hover tbl-custom">

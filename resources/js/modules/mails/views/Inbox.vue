@@ -98,7 +98,7 @@
 
                     <div v-show="MessageDisplay" class="box-header with-border">
                         <h3 class="box-title">
-                            <button type="button" title="Back" class="btn btn-default btn-sm" @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
+                            <button type="button" title="Back" class="btn btn-default btn-sm mr-3" @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
                             Read Mail
                         </h3>
 
