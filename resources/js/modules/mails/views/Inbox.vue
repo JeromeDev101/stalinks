@@ -125,18 +125,20 @@
 
                     <div v-show="MessageDisplay && viewContent.attachment.url != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
-                            <li>
+                            
                                 <!-- <span class="mailbox-attachment-icon">
                                     <i class="fa fa-file-pdf-o"></i>
                                     <img class="img-attachment" id="img-read-mail-attach">
                                 </span> -->
-
-                                <div v-if="viewContent.attachment[0]" v-show="viewContent.is_sent == 0" class="mailbox-attachment-info">
-                                    <a href="#"  id="link-download-href" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment[0]['name'] }}</a>
-                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment[0]['size']) }}</span>
+                            <li v-show="viewContent.is_sent == 0 && viewContent.attachment.length != 0" v-for="(attach, index) in viewContent.attachment" :key="index">
+                                <div class="mailbox-attachment-info">
+                                    <a href="#"  :id="'link-download-href-'+index" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ attach.name }}</a>
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(attach.size) }}</span>
                                 </div>
+                            </li>
 
-                                <div v-show="viewContent.is_sent == 1" class="mailbox-attachment-info">
+                            <li v-show="viewContent.is_sent == 1">
+                                <div class="mailbox-attachment-info">
                                     <a :href="'/attachment/'+viewContent.attachment.filename" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.display_name }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
@@ -726,22 +728,21 @@ export default {
                 this.viewContent.attachment  = attach;
 
                 if (is_sent == 0) { 
-                    axios.post('/api/mail/show-attachment', {
-                        url: attach[0]['url']
-                    },{ responseType: 'arraybuffer' })
-                    .then((res) => {
+                    for(var index in attach) {
+                        axios.post('/api/mail/show-attachment', {
+                            url: attach[index]['url']
+                        },{ responseType: 'arraybuffer' })
+                        .then((res) => {
 
-                        let blob = new Blob([res.data], { type: res.headers['content-type'] })
-                        var res = res.headers['content-type'].split("/");
+                            let blob = new Blob([res.data], { type: res.headers['content-type'] })
+                            var res = res.headers['content-type'].split("/");
 
-                        let link = document.getElementById( 'link-download-href' );
-                        link.href = window.URL.createObjectURL(blob);
-                        // link.download = 'file'+res[1];
-                        link.download = attach[0]['name'];
-                    })
+                            let link = document.getElementById( 'link-download-href-' + index );
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = attach[index]['name'];
+                        })
+                    }
                 }
-
-                // console.log(this.viewContent.attachment)
 
             } else {
                 this.viewContent.attachment = {
