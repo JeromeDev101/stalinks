@@ -40,6 +40,12 @@
     }
 }
 
+.mailbox-attachment-info-custom {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 blockquote {
     padding: 0.8em;
     font-style: italic;

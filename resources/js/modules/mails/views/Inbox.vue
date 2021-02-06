@@ -131,14 +131,14 @@
                                     <img class="img-attachment" id="img-read-mail-attach">
                                 </span> -->
                             <li v-show="viewContent.is_sent == 0 && viewContent.attachment.length != 0" v-for="(attach, index) in viewContent.attachment" :key="index">
-                                <div class="mailbox-attachment-info">
-                                    <a href="#"  :id="'link-download-href-'+index" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ attach.name }}</a>
+                                <div class="mailbox-attachment-info mailbox-attachment-info-custom">
+                                    <a href="#" :title="attach.name" :id="'link-download-href-'+index" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ attach.name }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(attach.size) }}</span>
                                 </div>
                             </li>
 
                             <li v-show="viewContent.is_sent == 1">
-                                <div class="mailbox-attachment-info">
+                                <div class="mailbox-attachment-info mailbox-attachment-info-custom">
                                     <a :href="'/attachment/'+viewContent.attachment.filename" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.display_name }}</a>
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
@@ -879,19 +879,6 @@ export default {
         clearMessageform() {
             this.$store.dispatch('clearMessageform');
         },
-        getAttachmentReceiver(url)
-        {
-           axios.post('/api/mail/show-attachment', {
-                        url: url
-                    },{ responseType: 'arraybuffer' })
-                    .then((res) => {
-                        let blob = new Blob( [ res.data ] );
-                         let link = document.getElementById( 'link-download-href' );
-                         link.href = URL.createObjectURL( blob );
-                         link.download = url;
-                    });
-
-        }
     }
 }
 </script>

@@ -166,16 +166,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            
-                                
-                                     <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                
-                               
-                                      <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
-                               
-                            
-                            
-                           
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button> 
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
 
@@ -199,7 +191,7 @@
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
 
                     <div class="form-row">
-                        <div class="col-md-4 my-3">
+                        <div class="col-md-8 col-lg-6 my-3">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group">
