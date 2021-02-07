@@ -79,7 +79,7 @@ class PublisherController extends Controller
         $input = $request->except('seller','topic','url');
         $input['user_id'] = $request->seller;
         $input['valid'] = $valid;
-        $input['topic'] = implode(",", $request->topic);
+        $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
 
 
         $url_copy = $this->remove_http($request->url);
