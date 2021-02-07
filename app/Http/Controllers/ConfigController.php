@@ -127,82 +127,82 @@ class ConfigController extends Controller
     }
 
 
-    public function getCountryWebsite() {
-        $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(50);
+    // public function getCountryWebsite() {
+    //     $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(50);
 
-        $test = [];
-        if( count($list_sites) > 0 ) {
-            foreach( $list_sites as $key => $sites) {
+    //     $test = [];
+    //     if( count($list_sites) > 0 ) {
+    //         foreach( $list_sites as $key => $sites) {
 
-                $url = "https://check-host.net/ip-info?host=".$sites;
+    //             $url = "https://check-host.net/ip-info?host=".$sites;
 
-                $curl = curl_init($url);
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    //             $curl = curl_init($url);
+    //             curl_setopt($curl, CURLOPT_URL, $url);
+    //             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-                $headers = array(
-                "Accept: application/json",
-                );
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    //             $headers = array(
+    //             "Accept: application/json",
+    //             );
+    //             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
-                $resp = curl_exec($curl);
-                curl_close($curl);
+    //             $resp = curl_exec($curl);
+    //             curl_close($curl);
 
-                $dom = new \DOMDocument();
-                @$dom->loadHtml($resp);
-                $country_name = isset($dom->getElementsByTagName('strong')->item(2)->nodeValue) ? $dom->getElementsByTagName('strong')->item(2)->nodeValue : '';
-                $country_id = $this->getCountryId($country_name);
+    //             $dom = new \DOMDocument();
+    //             @$dom->loadHtml($resp);
+    //             $country_name = isset($dom->getElementsByTagName('strong')->item(2)->nodeValue) ? $dom->getElementsByTagName('strong')->item(2)->nodeValue : '';
+    //             $country_id = $this->getCountryId($country_name);
 
-                if (!is_null($country_id) && $country_name != '') {
-                    $publisher = Publisher::findOrFail($key);
-                    $publisher->update(['country_id' => $country_id]);
-                } else {
-                    $publisher = Publisher::findOrFail($key);
-                    $publisher->update(['country_id' => 0]);
-                }
+    //             if (!is_null($country_id) && $country_name != '') {
+    //                 $publisher = Publisher::findOrFail($key);
+    //                 $publisher->update(['country_id' => $country_id]);
+    //             } else {
+    //                 $publisher = Publisher::findOrFail($key);
+    //                 $publisher->update(['country_id' => 0]);
+    //             }
 
-                array_push($test,[
-                    'sites' => $sites,
-                    'country' => $country_name,
-                    'id' => $country_id,
-                ]);
+    //             array_push($test,[
+    //                 'sites' => $sites,
+    //                 'country' => $country_name,
+    //                 'id' => $country_id,
+    //             ]);
 
-            }
-        }
+    //         }
+    //     }
 
-        return response()->json(['data' => $test]);
+    //     return response()->json(['data' => $test]);
 
-    }
+    // }
 
-    private function getCountryId($country) {
-        $result = null;
-        $country_list = Country::where('name', 'like', '%'.$country.'%')->first();
+    // private function getCountryId($country) {
+    //     $result = null;
+    //     $country_list = Country::where('name', 'like', '%'.$country.'%')->first();
 
-        if($country_list) {
-            $result = $country_list->id;
-        } 
+    //     if($country_list) {
+    //         $result = $country_list->id;
+    //     } 
 
-        if ($country == 'United States of America')  $result = 247;
-        if ($country == 'United Kingdom of Great Britain and Northern Ireland')  $result = 246;
-        if ($country == 'Czechia')  $result = 72;
+    //     if ($country == 'United States of America')  $result = 247;
+    //     if ($country == 'United Kingdom of Great Britain and Northern Ireland')  $result = 246;
+    //     if ($country == 'Czechia')  $result = 72;
 
-        return $result;
-    }
-
-
-    public function getTopicWebsite() {
-        $list_sites = Publisher::whereNull('topic')->pluck('url','id')->take(50);
-        $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted', 'Unlisted', 'Unlisted', 'Unlisted'];
+    //     return $result;
+    // }
 
 
-        if( count($list_sites) > 0 ) {
-            foreach( $list_sites as $key => $sites) {
-                $publisher = Publisher::findOrFail($key);
-                $publisher->update(['topic' => $topic_list[rand(0,24)] ]);
-            }
-        }
+    // public function getTopicWebsite() {
+    //     $list_sites = Publisher::whereNull('topic')->pluck('url','id')->take(50);
+    //     $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted', 'Unlisted', 'Unlisted', 'Unlisted'];
 
-        return response()->json(['success' => true]);
-    }
+
+    //     if( count($list_sites) > 0 ) {
+    //         foreach( $list_sites as $key => $sites) {
+    //             $publisher = Publisher::findOrFail($key);
+    //             $publisher->update(['topic' => $topic_list[rand(0,24)] ]);
+    //         }
+    //     }
+
+    //     return response()->json(['success' => true]);
+    // }
 
 }

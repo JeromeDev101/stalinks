@@ -151,35 +151,32 @@ class PurchaseController extends Controller
         }
     }
 
-    public function testRemoveHttp() {
-        $publishers = Publisher::where('url', 'like', '%http%')->take(100)->get();
+    // public function testRemoveHttp() {
+    //     $publishers = Publisher::where('url', 'like', '%http%')->take(100)->get();
 
-        // dd($publishers);
+    //     foreach($publishers as $publisher) {
+    //         $url_copy = $this->remove_http($publisher->url);
+    //         $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
 
-        foreach($publishers as $publisher) {
-            $url_copy = $this->remove_http($publisher->url);
-            $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
+    //         $pub = Publisher::findOrfail($publisher->id);
+    //         $pub->update(['url' => $url]);
 
-            $pub = Publisher::findOrfail($publisher->id);
-            $pub->update(['url' => $url]);
-
-        }
+    //     }
 
 
-        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%http%')->get();
+    //     $publishers = Publisher::select('id', 'url')->where('url', 'like', '%http%')->get();
 
-        return $publishers;
-    }
+    //     return $publishers;
+    // }
 
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
+    // private function remove_http($url) {
+    //     $disallowed = array('http://', 'https://', 'www.');
+    //     foreach($disallowed as $d) {
+    //        if(strpos($url, $d) === 0) {
+    //           return str_replace($d, '', $url);
+    //        }
+    //     }
+    //     return $url;
+    // }
 
 }

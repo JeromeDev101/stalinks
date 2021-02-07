@@ -76,13 +76,28 @@ class PublisherController extends Controller
             $valid = 'unchecked';
         }
         
-        $input = $request->except('seller','topic');
+        $input = $request->except('seller','topic','url');
         $input['user_id'] = $request->seller;
         $input['valid'] = $valid;
         $input['topic'] = implode(",", $request->topic);
 
+
+        $url_copy = $this->remove_http($request->url);
+        $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
+        $input['url'] = $url;
+
         Publisher::create($input);
         return response()->json(['success' => true], 200);
+    }
+
+    private function remove_http($url) {
+        $disallowed = array('http://', 'https://', 'www.');
+        foreach($disallowed as $d) {
+           if(strpos($url, $d) === 0) {
+              return str_replace($d, '', $url);
+           }
+        }
+        return $url;
     }
 
     public function updateMultiple(Request $request) {

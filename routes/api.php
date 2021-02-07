@@ -232,5 +232,5 @@ Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
-
-Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
+//removing http,www,https
+// Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
