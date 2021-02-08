@@ -125,7 +125,7 @@
 
                     <div v-show="MessageDisplay && viewContent.attachment.url != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
-                            
+
                                 <!-- <span class="mailbox-attachment-icon">
                                     <i class="fa fa-file-pdf-o"></i>
                                     <img class="img-attachment" id="img-read-mail-attach">
@@ -727,7 +727,7 @@ export default {
                 let attach = JSON.parse(inbox.attachment);
                 this.viewContent.attachment  = attach;
 
-                if (is_sent == 0) { 
+                if (is_sent == 0) {
                     for(var index in attach) {
                         axios.post('/api/mail/show-attachment', {
                             url: attach[index]['url']
@@ -762,7 +762,7 @@ export default {
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
             this.viewContent.strippedHtml = content['body-plain'];
-            this.viewContent.date = inbox.clean_date;
+            this.viewContent.date = inbox.full_clean_date;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;
             this.viewContent.id = inbox.id;

@@ -10,11 +10,25 @@ class Reply extends Model
     protected $guarded = [];
     protected $table = 'replies';
 
-    protected $appends = ['clean_date'];
+    protected $appends = ['clean_date', 'full_clean_date'];
 
     public function getCleanDateAttribute()
     {
-        // return Carbon::createFromTimeStamp(strtotime($this->created_at))->diffForHumans();
-        return Carbon::parse($this->created_at)->diffInDays(Carbon::now()) < 31 ? Carbon::parse($this->created_at)->format('M j') : Carbon::parse($this->created_at)->format('m/d/Y');
+        $carbonDate = Carbon::parse($this->created_at);
+
+        if ($carbonDate->isToday()) {
+            return $carbonDate->diffForHumans();
+        } else if ($carbonDate->diffInDays(Carbon::now()) < 31) {
+            return $carbonDate->format('M j');
+        } else {
+            return $carbonDate->format('m/d/Y');
+        }
+    }
+
+    public function getFullCleanDateAttribute()
+    {
+        $carbonDate = Carbon::parse($this->created_at);
+
+        return $carbonDate->format('M j Y, g:i A');
     }
 }
