@@ -45,9 +45,7 @@ class BuyController extends Controller
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user_id);
                 })
-                ->where('publisher.valid', 'valid')
-                ->where('publisher.ur', '!=', '0')
-                ->where('publisher.dr', '!=', '0');
+                ->where('publisher.valid', 'valid');
 
         $registered = Registration::where('email', Auth::user()->email)->first();
 
@@ -92,13 +90,49 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['ur']) && !empty($filter['ur'])) {
+            if ($filter['ur_direction'] === 'Above') {
+                $list->where('publisher.ur' , '>=', intval($filter['ur']));
+            } else {
+                $list->where('publisher.ur', '<=', intval($filter['ur']));
+            }
+        } else {
+            $list->where('publisher.ur', '!=', 0);
+        }
+
+        if (isset($filter['dr']) && !empty($filter['dr'])) {
+            if ($filter['dr_direction'] === 'Above') {
+                $list->where('publisher.dr' , '>=', intval($filter['dr']));
+            } else {
+                $list->where('publisher.dr', '<=', intval($filter['dr']));
+            }
+        } else {
+            $list->where('publisher.dr', '!=', 0);
+        }
+
+        if (isset($filter['org_kw']) && !empty($filter['org_kw'])) {
+            if ($filter['org_kw_direction'] === 'Above') {
+                $list->where('publisher.org_keywords' , '>=', intval($filter['org_kw']));
+            } else {
+                $list->where('publisher.org_keywords', '<=', intval($filter['org_kw']));
+            }
+        }
+
+        if (isset($filter['org_traffic']) && !empty($filter['org_traffic'])) {
+            if ($filter['org_traffic_direction'] === 'Above') {
+                $list->where('publisher.org_traffic' , '>=', intval($filter['org_traffic']));
+            } else {
+                $list->where('publisher.org_traffic', '<=', intval($filter['org_traffic']));
+            }
+        }
+
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             $result = $list->orderBy('id', 'desc')->get();
         }else{
             $result = $list->paginate($paginate);
         }
 
-        // Getting credit left 
+        // Getting credit left
 
         if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
             if ( isset($registered->team_in_charge) ) {
@@ -130,9 +164,9 @@ class BuyController extends Controller
             }
         }
 
-        // End of Getting credit left 
+        // End of Getting credit left
 
-        
+
         foreach($result as $key => $value) {
 
             $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
@@ -145,7 +179,7 @@ class BuyController extends Controller
 
             $count_letter_a = substr_count($combineALl, 'A');
 
-            // Filtering of Code A's 
+            // Filtering of Code A's
             if( isset($filter['code']) && !empty($filter['code']) ){
                 $code = substr($filter['code'],0,1);
 
@@ -155,7 +189,7 @@ class BuyController extends Controller
                 }else{
                     $result->forget($key);
                 }
-                
+
             }else{
                 $value['code_combination'] = $combineALl;
                 $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
@@ -167,7 +201,7 @@ class BuyController extends Controller
 
             $price_basis = '-';
             if( !empty($value['code_price']) ){
-                
+
                 $var_a = floatVal($value->price);
                 $var_b = floatVal($value['code_price']);
 
@@ -207,7 +241,7 @@ class BuyController extends Controller
 
         }
 
-        
+
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
                 'data' => $result,
@@ -218,10 +252,10 @@ class BuyController extends Controller
             $custom_credit = collect(['credit' => $credit]);
             $result = $custom_credit->merge($result);
             // dd($result);
-            
+
             return $result;
         }
-        
+
     }
 
     /**
@@ -257,9 +291,9 @@ class BuyController extends Controller
             $users = User::where('status','active')->where('role_id',4)->get();
             foreach($users as $user)
             {
-                event(new NotificationEvent("New Article to be write today!", $user->id)); 
+                event(new NotificationEvent("New Article to be write today!", $user->id));
             }
-            
+
         }
 
         return response()->json(['success'=> true], 200);
