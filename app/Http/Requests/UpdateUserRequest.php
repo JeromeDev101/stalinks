@@ -52,8 +52,7 @@ class UpdateUserRequest extends FormRequest
                 new ValidateEmailRule,
             ],
             'phone' => [
-                'required',
-                Rule::unique('users')->ignore($this->id),
+                'nullable',
             ],
             'password' => [
                 new SecurePasswordRule(),

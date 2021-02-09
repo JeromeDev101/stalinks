@@ -36,6 +36,7 @@ class AccountController extends Controller
             $input['team_in_charge'] = Auth::user()->id;
         }
         $input['password'] = Hash::make($input['password']);
+        $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
         $registration = Registration::create($input);
 
         $role_id = 6; //default seller
@@ -121,7 +122,8 @@ class AccountController extends Controller
         if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
         
         $response['success'] = false;
-        $input = $request->all();
+        $input = $request->except('company_type');
+        $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
         unset($input['c_password']);
 
         if (isset($input['password']) && $input['password'] != '') {

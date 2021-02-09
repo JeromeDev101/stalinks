@@ -50,7 +50,7 @@ class AccountRequest extends FormRequest
                 'required'
             ],
             'company_name' => [
-                'nullable'
+                'required_if:company_type,==,Company'
             ],
             'skype' => [
                 'nullable'

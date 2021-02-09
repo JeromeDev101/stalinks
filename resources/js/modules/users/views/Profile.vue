@@ -68,6 +68,18 @@
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1">
+                                    <td><b>Company Type</b></td>
+                                    <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_type}" class="form-group">
+                                            <select class="form-control"  v-model="company_type" @click="checkCompanyType()">
+                                                <option value="Company">Company</option>
+                                                <option value="Freelancer">Freelancer</option>
+                                            </select>
+                                            <span v-if="messageForms.errors.company_type" v-for="err in messageForms.errors.company_type" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
                                     <td><b>Company Name</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
@@ -82,6 +94,19 @@
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
                                             <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
                                             <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="currentUser.isOurs == 1">
+                                    <td><b>Country</b></td>
+                                    <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
+                                            <select name="" class="form-control" v-model="country_id">
+                                                    <option v-for="option in countryList" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                            <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -387,7 +412,11 @@ export default {
             },
             messageErrors:{
                 c_password: '',
-            }
+            },
+            company_type: '',
+            CompanyName: true,
+            countryList: [],
+            country_id: '',
         };
     },
 
@@ -419,6 +448,14 @@ export default {
 
         console.log(this.user)
 
+        if(this.user.user_type) {
+            this.company_type = this.user.user_type.is_freelance == '0' ? 'Company':'Freelancer';
+            this.CompanyName = this.user.user_type.is_freelance == '0' ? true:false;
+            this.country_id = this.user.user_type.country_id;
+        }
+
+        this.getListCountry();
+
         // this.$root.$refs.AppHeader.liveGetWallet()
     },
 
@@ -427,6 +464,22 @@ export default {
     },
 
     methods: {
+
+        getListCountry() {
+            axios.get('/api/registration-country-list')
+                .then((res) => {
+                    this.countryList = res.data.data;
+                })
+        },
+
+        checkCompanyType() {
+            if(this.company_type == 'Company') {
+                this.CompanyName = true;
+            } else {
+                this.CompanyName = false;
+            }
+        },
+
         submitUpdateSubAccount() {
             axios.get('/api/update-sub-account', {
                 params: {
@@ -555,6 +608,8 @@ export default {
                 this.user.user_type.skrill_account = this.billing.skrill_account;
                 this.user.user_type.btc_account = this.billing.btc_account;
                 this.user.id_payment_type = this.billing.payment_default;
+                this.user.user_type.company_type = this.company_type;
+                this.user.user_type.country_id = this.country_id;
             }
 
             this.user.password = this.new_password;

@@ -134,6 +134,8 @@ class AuthController extends Controller
                 'paypal_account' => $request->user_type['paypal_account'],
                 'btc_account' => $request->user_type['btc_account'],
                 'skrill_account' => $request->user_type['skrill_account'],
+                'is_freelance' => $request->user_type['company_type'] == 'Company' ? 0:1,
+                'country_id' => $request->user_type['country_id'],
                 'id_payment_type' => $request->id_payment_type,
             ];
 

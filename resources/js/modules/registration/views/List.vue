@@ -151,6 +151,17 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label for="">Account Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
+                                        <option value="Seller">Seller</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label for="">Username <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
@@ -180,6 +191,24 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label for="">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Password</label>
@@ -193,26 +222,6 @@
                                     <label for="">Confirm Password</label>
                                     <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Company Name</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -373,6 +382,19 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label for="">Account Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountModel.type">
+                                        <option value="">Select Type</option>
+                                        <option value="Seller">Seller</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label for="">Username <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
@@ -403,6 +425,24 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6" >
+                                <div class="form-group">
+                                    <label for="">Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-show="addCompanyName">
+                                <div class="form-group">
+                                    <label for="">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountModel.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="">Password <span class="text-danger">*</span></label>
@@ -416,27 +456,6 @@
                                     <label for="">Confirm Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountModel.type">
-                                        <option value="">Select Type</option>
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="">Company Name</label>
-                                    <input type="text" class="form-control" v-model="accountModel.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -601,6 +620,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    company_type: 'Company',
                 },
 
                 filterModel: {
@@ -635,6 +655,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    company_type: '',
                 },
 
                 isPopupLoading: false,
@@ -642,6 +663,8 @@
                 isDisabled: true,
                 isTeamSeller: true,
                 isSearching: false,
+                addCompanyName: true,
+                updateCompanyName: true,
             }
         },
 
@@ -666,6 +689,20 @@
         },
 
         methods: {
+
+            checkCompanyType() {
+                if(this.accountModel.company_type == 'Company') {
+                    this.addCompanyName = true;
+                } else {
+                    this.addCompanyName = false;
+                }
+
+                if(this.accountUpdate.company_type == 'Company') {
+                    this.updateCompanyName = true;
+                } else {
+                    this.updateCompanyName = false;
+                }
+            },
 
             async getListCountries(params) {
                 await this.$store.dispatch('actionGetListCountries', params);
@@ -734,6 +771,7 @@
                 this.accountUpdate.team_in_charge = that.team_in_charge == null ? '':that.team_in_charge.id;
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
+                this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
             },
 
             async getPaymentTypeList(params) {
