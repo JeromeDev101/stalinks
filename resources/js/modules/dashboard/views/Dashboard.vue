@@ -60,7 +60,7 @@
         <div class="col-lg-12" v-if="user.isAdmin || user.role_id == 6 || user.role_id == 8">
             <div class="box box-primary" style="padding-bottom:0.5em;">
 
-                <div class="box-header">
+                <div class="box-header" v-if="user.isAdmin || user.role_id == 8">
                     <h3 class="box-title text-primary">Team & Seller</h3>
 
                     <div class="row mt-3">
