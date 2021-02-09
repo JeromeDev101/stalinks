@@ -118,6 +118,54 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">UR</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" @click="buttonState.ur = buttonState.ur === 'Above' ? 'Below' : 'Above'">{{ buttonState.ur }}</button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Type here" aria-label="" aria-describedby="basic-addon1" v-model="filterModel.ur">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">DR</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" @click="buttonState.dr = buttonState.dr === 'Above' ? 'Below' : 'Above'">{{ buttonState.dr }}</button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Type here" aria-label="" aria-describedby="basic-addon1" v-model="filterModel.dr">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Org Kw</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" @click="buttonState.org_kw = buttonState.org_kw === 'Above' ? 'Below' : 'Above'">{{ buttonState.org_kw }}</button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Type here" aria-label="" aria-describedby="basic-addon1" v-model="filterModel.org_kw">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Org Traffic</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" @click="buttonState.org_traffic = buttonState.org_traffic === 'Above' ? 'Below' : 'Above'">{{ buttonState.org_traffic }}</button>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Type here" aria-label="" aria-describedby="basic-addon1" v-model="filterModel.org_traffic">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -360,7 +408,7 @@
                                 </div>
                             </div>
                         </div>
-                                
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -502,6 +550,16 @@
                     topic: this.$route.query.topic || '',
                     price_basis: this.$route.query.price_basis || '',
                     paginate: this.$route.query.paginate || 50,
+                    ur: this.$route.query.ur || 0,
+                    dr: this.$route.query.dr || 0,
+                    org_kw: this.$route.query.org_kw || 0,
+                    org_traffic: this.$route.query.org_traffic || 0,
+                },
+                buttonState: {
+                    ur : 'Above',
+                    dr : 'Above',
+                    org_kw : 'Above',
+                    org_traffic : 'Above'
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -575,7 +633,7 @@
                 if(org_traffic != 0){
                     result = parseFloat(org_kw)/parseFloat(org_traffic)
                 }
-                
+
                 return result.toFixed(3);
             },
 
@@ -651,13 +709,21 @@
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
                         price_basis: this.filterModel.price_basis,
+                        ur: this.filterModel.ur,
+                        ur_direction: this.buttonState.ur,
+                        dr: this.filterModel.dr,
+                        dr_direction: this.buttonState.dr,
+                        org_kw: this.filterModel.org_kw,
+                        org_kw_direction: this.buttonState.org_kw,
+                        org_traffic: this.filterModel.org_traffic,
+                        org_traffic_direction: this.buttonState.org_traffic,
                         page: page,
                     }
                 });
 
 
                 var columnsOrder = [];
-                
+
                 if(this.user.isOurs == 0 || this.user.isAdmin) {
                     columnsOrder = [
                         { orderable: true, targets: 0 },
@@ -720,7 +786,7 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
-            }, 
+            },
 
             checkSelected() {
                 this.isDisabled = true;
@@ -816,6 +882,14 @@
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
                         price_basis: this.filterModel.price_basis,
+                        ur: this.filterModel.ur,
+                        ur_direction: this.buttonState.ur,
+                        dr: this.filterModel.dr,
+                        dr_direction: this.buttonState.dr,
+                        org_kw: this.filterModel.org_kw,
+                        org_kw_direction: this.buttonState.org_kw,
+                        org_traffic: this.filterModel.org_traffic,
+                        org_traffic_direction: this.buttonState.org_traffic
                     }
                 });
             },
@@ -969,7 +1043,7 @@
                         swal.fire('error', 'No credits left', 'error');
                         return false;
                     }
-                } 
+                }
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateBuy', this.updateModel);
