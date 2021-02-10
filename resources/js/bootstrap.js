@@ -49,7 +49,17 @@ if (token) {
 
 import Echo from 'laravel-echo';
 
-window.Pusher = require('pusher-js');
+import * as Pusher from 'pusher-js';
+
+window.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    authEndpoint: '/api/broadcasting/auth',
+    auth: {
+        headers: {
+            Authorization: localStorage.hasOwnProperty('vuex') ? 'Bearer ' + JSON.parse(localStorage.getItem("vuex")).storeAuth.token.access_token : ''
+        }
+    }
+});
 
 window.Echo = new Echo({
     broadcaster: 'pusher',

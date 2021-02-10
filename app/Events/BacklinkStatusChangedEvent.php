@@ -10,20 +10,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BacklinkLiveEvent implements ShouldBroadcast
+class BacklinkStatusChangedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    protected $userId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public $user_id;
-
     public function __construct($userId)
     {
-        $this->user_id = $userId;
+        $this->userId = $userId;
     }
 
     /**
@@ -33,11 +33,11 @@ class BacklinkLiveEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->user_id);
+        return new PrivateChannel('user.' . $this->userId);
     }
 
     public function broadcastAs()
     {
-        return 'backlink.live';
+        return 'backlink.status.changed';
     }
 }
