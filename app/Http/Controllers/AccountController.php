@@ -25,11 +25,14 @@ class AccountController extends Controller
 
     public function store(AccountRequest $request)
     {
-        if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
+        $input = $request->except('company_type');
 
-        $input = $request->all();
+        if( Auth::user()->role_id == 8 || Auth::user()->role_id == 1 || Auth::user()->role_id == 3 ) {
+            $request->validate(['account_validation' => 'required']);
+        } else {
+            $input['account_validation'] = 'invalid';
+        }
+
         $isTeamSeller = $this->checkTeamSeller();
         unset($input['c_password']);
         if( $isTeamSeller ){
@@ -117,10 +120,6 @@ class AccountController extends Controller
 
     public function edit(UpdateAccountRequest $request)
     {
-        if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        
         $response['success'] = false;
         $input = $request->except('company_type');
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
@@ -233,12 +232,6 @@ class AccountController extends Controller
         User::create($data);
 
         return response()->json(['success' => true], 200);
-
-
-
-        // if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        // if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        // if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
     }
 
     public function register(RegistrationAccountRequest $request){
@@ -249,12 +242,10 @@ class AccountController extends Controller
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
-
         // $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
         // $email->sendEmail();
 
         Registration::create($input);
-
         return response()->json(['success' => true], 200);
     }
 

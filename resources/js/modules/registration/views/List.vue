@@ -345,7 +345,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-show="user.isAdmin || user.role_id == 8">
                                 <label for="">Account Validation <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountUpdate.account_validation">
                                     <option value="valid">Valid</option>
@@ -548,7 +548,7 @@
                                 <div class="form-group">
                                     <label for="">Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountModel.commission">
-                                        <option value="">Select Commission</option>
+                                        <option value="" disabled>Select Commission</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -560,7 +560,7 @@
                                 <div class="form-group">
                                     <label for="">Team In-charge</label>
                                     <select class="form-control" v-model="accountModel.team_in_charge">
-                                        <option value=""></option>
+                                        <option value="">Select Team In-charge</option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username}}
                                         </option>
@@ -568,10 +568,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-show="user.isAdmin || user.role_id == 8">
                                 <label for="">Account Validation <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountModel.account_validation">
-                                    <option value=""></option>
+                                    <option value="" disabled>Select Account Validation</option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
                                 </select>

@@ -110,6 +110,7 @@
                                         <th>User Email</th>
                                         <th>From</th>
                                         <th>To</th>
+                                        <th>Bcc</th>
                                         <th>Status</th>
                                         <th>Date</th>
                                     </tr>
@@ -120,6 +121,7 @@
                                         <td>{{ log.user_mail }}</td>
                                         <td>{{ log.from }}</td>
                                         <td v-html="checkEmailTo(log.to)"></td>
+                                        <td></td>
                                         <td v-html="statusLabel(log.status)"></td>
                                         <td>{{ log.date }}</td>
                                     </tr>
