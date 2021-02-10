@@ -79,7 +79,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3" v-if="isTeamSeller" v-show="user.role_id == 8 && user.isAdmin">
+                        <div class="col-md-3" v-if="isTeamSeller" v-show="user.role_id == 8 || user.isAdmin">
                             <div class="form-group">
                                 <label>Team In-charge</label>
                                 <select class="form-control" v-model="filterModel.team_in_charge">
@@ -380,7 +380,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
                                 <label>Account Validation <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountUpdate.account_validation">
                                     <option value="valid">Valid</option>
@@ -603,7 +603,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
                                 <label>Account Validation <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountModel.account_validation">
                                     <option value=""></option>
