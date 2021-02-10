@@ -64,7 +64,7 @@ class AccountController extends Controller
         $data['password'] = $input['password'];
         $data['id_payment_type'] = $registration['id_payment_type'];
         User::create($data);
-        
+
         return response()->json(['success' => true, 'data' => $registration], 200);
     }
 
@@ -76,6 +76,9 @@ class AccountController extends Controller
         $search = $request->search;
         $paginate = $request->paginate;
         $team_in_charge = $request->team_in_charge;
+        $country = $request->country;
+        $commission = $request->commission;
+        $credit_auth = $request->credit_auth;
         $isTeamSeller = $this->checkTeamSeller();
 
         $list = Registration::when( $status, function($query) use ($status){
@@ -86,13 +89,17 @@ class AccountController extends Controller
             return $query->where( 'name', 'LIKE', '%'.$search.'%' )
                 ->orWhere( 'email', 'LIKE', '%'.$search.'%' )
                 ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
-        })
-        ->when( $team_in_charge, function($query) use ($team_in_charge){
+        })->when( $team_in_charge, function($query) use ($team_in_charge){
             return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {
                 $subquery->where('team_in_charge', $team_in_charge);
             });
-        })
-        ->when( $isTeamSeller, function($query) use ($user_id){
+        })->when( $country, function($query) use ($country){
+            return $query->where( 'country_id', $country );
+        })->when( $commission, function($query) use ($commission){
+            return $query->where( 'commission', $commission );
+        })->when( $credit_auth, function($query) use ($credit_auth){
+            return $query->where( 'credit_auth', $credit_auth );
+        })->when( $isTeamSeller, function($query) use ($user_id){
             return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
                 $subquery->where('team_in_charge', $user_id);
             });
@@ -120,7 +127,7 @@ class AccountController extends Controller
         if ($request->id_payment_type == '1' && $request->paypal_account == '') return response()->json(['errors' => ['paypal_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
         if ($request->id_payment_type == '3' && $request->btc_account == '') return response()->json(['errors' => ['btc_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
         if ($request->id_payment_type == '2' && $request->skrill_account == '') return response()->json(['errors' => ['skrill_account' => 'Please provide payment account'],'message' => 'The given data was invalid.'],422);
-        
+
         $response['success'] = false;
         $input = $request->except('company_type');
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
@@ -388,7 +395,7 @@ class AccountController extends Controller
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
                     ->get();
-        
+
         if( isset($wallet_transaction[0]['amount_usd']) ){
             $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
         }
@@ -404,7 +411,7 @@ class AccountController extends Controller
         if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
             $wallet = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_paid[0]['total_paid']);
         }
-    
+
         return [
             'wallet' => $wallet,
             'total_purchased' => floatVal($total_purchased[0]['total_purchased']),
