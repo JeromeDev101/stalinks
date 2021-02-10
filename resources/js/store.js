@@ -26,6 +26,7 @@ import storeDomain from '@/modules/domain/store';
 import storeSystem from '@/modules/system/store';
 import emailTemplateSystem from '@/modules/template_email/store';
 import storeMailgun from '@/modules/mails/store';
+import storeNotification from "@/modules/notification/store";
 import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
@@ -56,7 +57,8 @@ export default new Vuex.Store({
         storeSystem,
         storeIncomesAdmin,
         storeMailgun,
-        emailTemplateSystem
+        emailTemplateSystem,
+        storeNotification
     },
     plugins: [createPersistedState({
         paths: [

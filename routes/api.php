@@ -212,6 +212,10 @@ Route::middleware('auth:api')->group(function () {
     });
 
      Route::name('labels')->resource('/label','LabelController');
+
+     //Notifications
+    Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
+    Route::name('notifications.seen')->put('/notifications/{user_id}', 'NotificationController@setUserNotificationsSeen');
 });
 
 //Mailgun external

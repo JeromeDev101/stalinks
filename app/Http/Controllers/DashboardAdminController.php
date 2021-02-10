@@ -8,7 +8,7 @@ use App\Models\ExtDomain;
 use Illuminate\Support\Facades\DB;
 
 class DashboardAdminController extends Controller
-{   
+{
     private $filter = '';
 
     public function __construct(Request $request) {
@@ -93,10 +93,10 @@ class DashboardAdminController extends Controller
                     $sum_no_refused[] = 0;
                     $sum_no_unqualified[] = 0;
                 }
-                    
+
                 if( $label == 'New' ) {
                     $data_label[] = array_sum($sum_no_new);
-                } 
+                }
                 else if ($label == 'GotContacts') {
                     $data_label[] = array_sum($sum_no_got_contacts);
                 }
@@ -119,7 +119,7 @@ class DashboardAdminController extends Controller
                     $data_label[] = array_sum($sum_no_unqualified);
                 }
 
-                
+
             }
 
             array_push($datasets,[
@@ -155,8 +155,8 @@ class DashboardAdminController extends Controller
             DB::raw('COUNT(CASE WHEN publisher.valid = "invalid" THEN 1 ELSE NULL END) as num_invalid'),
             DB::raw('COUNT(CASE WHEN publisher.valid = "unchecked" THEN 1 ELSE NULL END) as num_unchecked'),
             DB::raw('
-                COUNT(CASE WHEN publisher.valid = "valid" 
-                OR publisher.valid = "invalid" 
+                COUNT(CASE WHEN publisher.valid = "valid"
+                OR publisher.valid = "invalid"
                 OR publisher.valid = "unchecked"
                 THEN 1 ELSE NULL END) AS num_sites
             '),
@@ -195,10 +195,10 @@ class DashboardAdminController extends Controller
                     $sum_no_invalid[] = 0;
                     $sum_no_unchecked[] = 0;
                 }
-                    
+
                 if( $label == 'Sites' ) {
                     $data_label[] = array_sum($sum_no_sites);
-                } 
+                }
                 else if ($label == 'Valid') {
                     $data_label[] = array_sum($sum_no_valid);
                 }
@@ -209,7 +209,7 @@ class DashboardAdminController extends Controller
                     $data_label[] = array_sum($sum_no_invalid);
                 }
 
-                
+
             }
 
             array_push($datasets,[
@@ -262,7 +262,7 @@ class DashboardAdminController extends Controller
         }
 
 
-        if($request['is_filter'] == true) {
+        if(isset($request['is_filter']) && $request['is_filter'] == true) {
 
             // Monthly filter
             if($request['date_type'] == 'Monthly'){
@@ -276,7 +276,7 @@ class DashboardAdminController extends Controller
                     return $result2;
                 }
             }
-                
+
             // Range Date filter
             if($request['date_type'] == 'Monthly'){
                 if($request['date1'] != null && $request['date2'] != null){
