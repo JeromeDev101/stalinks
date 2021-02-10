@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateEmailRule;
 use App\Rules\SecurePasswordRule;
+use Illuminate\Support\Facades\Auth;
 
 class AccountRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'username' => [ 'required' ],
             'name' => [ 'required' ],
             'email' => [
@@ -66,12 +67,15 @@ class AccountRequest extends FormRequest
             'payment_account' => [
                 'nullable'
             ],
-            'account_validation' => [
-                'required'
-            ],
             'id_payment_type' => [
                 'required'
             ],
         ];
+
+        if(Auth::user()->isAdmin() || auth()->user()->role_id === 8){
+            $rules['account_validation'] = ['required'];
+        }
+
+        return $rules;
     }
 }
