@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BacklinkStatusChangedEvent;
+use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Events\BacklinkLiveEvent;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 
 class FollowupSalesController extends Controller
@@ -79,15 +82,13 @@ class FollowupSalesController extends Controller
 
     }
 
-    public function update( Request $request ){
+    public function update( Request $request, NotificationInterface $notification){
         $seller = DB::table('backlinks')
-                    
                     ->join('publisher','backlinks.publisher_id','=','publisher.id')
                     ->join('users','publisher.user_id','=','users.id')
                     ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
                     ->where('backlinks.id',$request->id)
                     ->first();
-                    
 
         $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title');
         $backlink = Backlink::findOrFail($request->id);
@@ -103,10 +104,23 @@ class FollowupSalesController extends Controller
                 ],422);
             }
 
+            $notification->create([
+                'user_id' => $backlink->user_id,
+                'notification' => 'Your purchased Backlink ID ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' is Live.',
+            ]);
+
+            broadcast(new BacklinkLiveEvent($backlink->user_id));
             $input['live_date'] = date('Y-m-d');
         }
+
+        $notification->create([
+            'user_id' => $backlink->publisher->user_id,
+            'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
+        ]);
+
+        broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
+
         $backlink->update($input);
-        event(new BacklinkLiveEvent("Article is already LIVE.", $seller->user_id)); 
         return response()->json(['success'=> true], 200);
     }
 }

@@ -15,6 +15,6 @@
 //     return (int) $user->id === (int) $id;
 // });
 
-Broadcast::channel('morley', function () {
+Broadcast::channel('user.{id}', function ($user, $id) {
      return true; //Always return true or false
 });
