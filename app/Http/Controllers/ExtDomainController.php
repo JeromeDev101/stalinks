@@ -294,7 +294,7 @@ class ExtDomainController extends Controller
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
         }
 
-        if (isset($input['status']) && $input['status'] != '' ) {
+        if (isset($input['status']) && $input['status'] >= 0 ) {
             $filters['where'][] = ['status', $input['status']];
         }
 
