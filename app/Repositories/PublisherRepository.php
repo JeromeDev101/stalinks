@@ -82,7 +82,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if( $user->isOurs != 0 && $user->type != 10 ){
             $list = $list->where('A.id', $user->id);
         }
-        
+
         if( isset($filter['in_charge']) && !empty($filter['in_charge']) ){
             $list = $list->where('B.id', $filter['in_charge']);
         }
@@ -153,7 +153,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-           
+
             $result = $list->get();
         }else{
             $result = $list->paginate($paginate);
@@ -172,10 +172,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             $count_letter_a = substr_count($combineALl, 'A');
 
-          
+
             $value['code_combination'] = $combineALl;
             $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-            
+
 
             // Price Basis
             $result_1 = 0;
@@ -183,7 +183,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             $price_basis = '-';
             if( !empty($value['code_price']) ){
-                
+
                 $var_a = floatVal($value->price);
                 $var_b = floatVal($value['code_price']);
 
@@ -232,7 +232,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             return $result;
         }
 
-            
+
     }
 
     /**
@@ -307,20 +307,22 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $datas = [];
         $existing_datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
+            \Log::debug($line);
 
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 3 || count($line) < 3){
-                    $message = "Please check the header: Url, Price and Inc Article only.";
+                if(count($line) > 4 || count($line) < 4){
+                    $message = "Please check the header: Url, Price, Inc Article and KW Anchor only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
                 }
 
                 if( $ctr > 0 ){
-                    $url = $line[0];
-                    $price = $line[1];
-                    $article = $line[2];
+                    $url = trim_excel_special_chars($line[0]);
+                    $price = trim_excel_special_chars($line[1]);
+                    $article = trim_excel_special_chars($line[2]);
+                    $casinoSites = trim_excel_special_chars($line[3]);
 
                     if( trim($url, " ") != '' ){
 
@@ -339,7 +341,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             'price' => preg_replace('/[^0-9.\-]/', '', $price),
                             'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
                             'valid' => $valid,
-                            'casino_sites' => 'yes',
+                            'casino_sites' => $casinoSites ? $casinoSites : 'yes',
                             'topic' => null
                         ]);
                     }
@@ -355,20 +357,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 if( $ctr > 0 ){
-                    $url = $line[0];
-                    $price = $line[1];
-                    $article = $line[2];
-                    $seller_id = $line[3];
-                    $accept = $line[4];
-                    $language_excel = str_replace(' ', '', $line[5]);
-                    $topic = str_replace(' ', '', $line[6]);
+                    $url = trim_excel_special_chars($line[0]);
+                    $price = trim_excel_special_chars($line[1]);
+                    $article = trim_excel_special_chars($line[2]);
+                    $seller_id = trim_excel_special_chars($line[3]);
+                    $accept = trim_excel_special_chars($line[4]);
+                    $language_excel = trim_excel_special_chars($line[5]);
+                    $topic = trim_excel_special_chars($line[6]);
 
 
                     if (in_array($seller_id, $user_id_list)){
-                        
+
                         if (preg_grep("/".$language_excel."/i", $language_name_list)){
 
-                            if (preg_grep("/".$topic."/i", $topic_list)){ 
+                            if (preg_grep("/".$topic."/i", $topic_list)){
 
                                 if( trim($url, " ") != '' ){
                                     // $orig_language = $this->getLanguage($language_excel);
@@ -423,7 +425,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
             }
 
-                
+
 
             $ctr++;
         }
