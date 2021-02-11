@@ -371,7 +371,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             if (preg_grep("/".$topic."/i", $topic_list)){ 
 
                                 if( trim($url, " ") != '' ){
-                                    // $orig_language = $this->getLanguage($language_excel);
                                     $lang = $this->getCountry($language_excel);
                                     $valid = $this->checkValid($url);
                                     Publisher::create([
@@ -389,7 +388,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'valid' => $valid,
                                         'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                         'topic' => $topic,
-                                        // 'country_id' => $orig_language,
                                     ]);
                                 }
 

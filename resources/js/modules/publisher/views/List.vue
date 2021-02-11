@@ -322,7 +322,7 @@
                         </tbody>
                     </table>
 
-                    <!-- <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination> -->
+                    <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
 
                 </div>
             </div>
