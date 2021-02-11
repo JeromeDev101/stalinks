@@ -243,7 +243,7 @@
                                 <th class="resize" v-show="tblBuyOptions.ratio">Ratio</th>
                                 <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
                                 <th class="resize" v-show="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</th>
-                                <th class="resize" v-show="tblBuyOptions.prices">Prices</th>
+                                <th class="resize" v-show="tblBuyOptions.prices && user.isAdmin">Prices</th>
                                 <th class="resize" v-show="tblBuyOptions.status">Status</th>
                                 <th class="resize" v-show="tblBuyOptions.code_comb">Code Comb</th>
                                 <th class="resize" v-show="tblBuyOptions.code_price">Code Price</th>
@@ -275,7 +275,7 @@
                                 <td class="resize" v-show="tblBuyOptions.ratio">{{ getRatio(buy.org_keywords, buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.prices">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePriceStalinks(buy.price, buy.inc_article) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.prices && user.isAdmin">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePriceStalinks(buy.price, buy.inc_article) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
                                 <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" >{{ buy.code_combination}}</td>
                                 <td class="resize" v-show="tblBuyOptions.code_price" > $ {{ buy.code_price}}</td>
@@ -470,9 +470,9 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Price_S':'Price' }}</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</label>
                             </div>
-                            <div class="checkbox col-md-6">
+                            <div class="checkbox col-md-6" v-show="user.isAdmin">
                                 <label><input type="checkbox" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices">Prices</label>
                             </div>
                             <div class="checkbox col-md-6">
