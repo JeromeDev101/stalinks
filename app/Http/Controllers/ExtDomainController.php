@@ -191,14 +191,14 @@ class ExtDomainController extends Controller
         $sort = [
             'id', 'desc'
         ];
-        
+
         $emp_ids = [];
         if( is_array($request->employee_id) && count($request->employee_id) > 0 ){
             foreach( $request->employee_id as $name){
                 $user = User::where('username', 'like', '%'.$name.'%')->first();
                 $emp_ids[] = $user->id;
             }
-        }    
+        }
 
         $cntry_ids = [];
         if( is_array($request->country_id) && count($request->country_id) > 0 ){
@@ -206,7 +206,7 @@ class ExtDomainController extends Controller
                 $cntry = Country::where('name', 'like', '%'.$name.'%')->first();
                 $cntry_ids[] = $cntry->id;
             }
-        } 
+        }
         if (count($cntry_ids) > 0){
             $input['country_id'] = $cntry_ids;
         }else{
@@ -264,11 +264,11 @@ class ExtDomainController extends Controller
 
 
         $filters['whereIn'][] = ['country_id', $countryIds];
-        
+
         if (count($emp_ids) > 0){
             $filters['whereIn'][] = ['user_id', $emp_ids];
         }
-        
+
 
         $filters['other']['whereIn'][] = ['country_id', $countryIds];
         $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
@@ -294,11 +294,12 @@ class ExtDomainController extends Controller
             $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
         }
 
-        if (isset($input['status']) && $input['status'] > 0 ) {
-            $filters['whereIn'][] = ['status', explode(",", $input['status'])];
+        if (isset($input['status']) && $input['status'] >= 0 ) {
+            $filters['where'][] = ['status', $input['status']];
         }
 
         $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
+
         $data = $this->extDomainRepository->paginate($page, $perPage, $filters,  $countryIds, $countryIdsInt, $countriesExceptIds, $findAllExt, $sort, $extDomainIds);
         return response()->json($this->addPaginationRaw($data));
     }
@@ -339,13 +340,13 @@ class ExtDomainController extends Controller
 
         $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$input['domain'].'%');
         $checkPublisher = Publisher::where('url', 'like', '%'.$input['domain'].'%');
-        
+
         if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
             $inputted = '';
             if( $checkExtDomain->count() > 0 ){
                 $extdomain = $checkExtDomain->first();
                 $inputted = isset($extdomain->users->name) ? $extdomain->users->name : 'Unknown User';
-            } 
+            }
 
             if( $checkPublisher->count() > 0 ){
                 $publisher = $checkPublisher->first();
@@ -427,7 +428,7 @@ class ExtDomainController extends Controller
         if ($this->countryRepository->find([['id', $input['country_id']]])->count() == 0) {
             return response()->json(false);
         }
-        
+
 
         $newExtDomain = $this->extDomainRepository->create($input);
         $newExtDomain->country;
@@ -444,7 +445,7 @@ class ExtDomainController extends Controller
         $file = $request->all();
         $data = $this->extDomainRepository->importExcel($file);
 
-        
+
         if($data['success'] === false){
             unset($data['success']);
             return response()->json($data, 422);
@@ -769,12 +770,12 @@ class ExtDomainController extends Controller
                     // 'user_id' => $request->seller,
                 ]);
             }
-                
+
         }
         // dd($test);
 
         return response()->json(['success' => true], 200);
-   
+
     }
 
     public function getListExtSeller() {
