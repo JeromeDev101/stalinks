@@ -51,6 +51,8 @@
                      <div class="form-group">
                         <label style="color: #333">Status</label>
                         <select v-model="filterModel.status_temp" class="form-control">
+                            <option value="-1" selected>All
+                            </option>
                            <option v-for="(option, key) in listStatusText" v-bind:value="key">
                               {{ option.text }}
                            </option>
@@ -111,7 +113,7 @@
                          </select>
                      </div>
                      </div>
-                     
+
                      <div class="row" v-show="showLang">
                      <div class="col-sm-12">
                          <select class="form-control" name="status" ref="status" v-on:change="checkData">
@@ -323,7 +325,7 @@
                             <span v-if="messageForms.errors.alexa_rank" v-for="err in messageForms.errors.alexa_rank" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.ahrefs_rank}" class="form-group">
                             <label style="color: #333">Ahrefs Traffic</label>
@@ -331,7 +333,7 @@
                             <span v-if="messageForms.errors.ahrefs_rank" v-for="err in messageForms.errors.ahrefs_rank" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.ref_domains}" class="form-group">
                             <label style="color: #333">Ref Domains</label>
@@ -339,7 +341,7 @@
                             <span v-if="messageForms.errors.ref_domains" v-for="err in messageForms.errors.ref_domains" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.no_backlinks}" class="form-group">
                             <label style="color: #333">No Backlinks</label>
@@ -347,7 +349,7 @@
                             <span v-if="messageForms.errors.no_backlinks" v-for="err in messageForms.errors.no_backlinks" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.url_rating}" class="form-group">
                             <label style="color: #333">URL Rating</label>
@@ -355,7 +357,7 @@
                             <span v-if="messageForms.errors.url_rating" v-for="err in messageForms.errors.url_rating" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.domain_rating}" class="form-group">
                             <label style="color: #333">Domain Rating</label>
@@ -363,7 +365,7 @@
                             <span v-if="messageForms.errors.domain_rating" v-for="err in messageForms.errors.domain_rating" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.organic_keywords}" class="form-group">
                             <label style="color: #333">Organic Keywords</label>
@@ -371,7 +373,7 @@
                             <span v-if="messageForms.errors.organic_keywords" v-for="err in messageForms.errors.organic_keywords" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.organic_traffic}" class="form-group">
                             <label style="color: #333">Organic Traffic</label>
@@ -397,7 +399,7 @@
                             <input type="number" v-model="extModel.price" class="form-control" value="" placeholder="0.00">
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div class="form-group">
                             <label style="color: #333">Include Article</label>
@@ -552,7 +554,7 @@
                             <span v-if="messageForms.errors.ahrefs_rank" v-for="err in messageForms.errors.ahrefs_rank" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.ref_domains}" class="form-group">
                             <label style="color: #333">Ref Domains</label>
@@ -560,7 +562,7 @@
                             <span v-if="messageForms.errors.ref_domains" v-for="err in messageForms.errors.ref_domains" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.no_backlinks}" class="form-group">
                             <label style="color: #333">No Backlinks</label>
@@ -568,7 +570,7 @@
                             <span v-if="messageForms.errors.no_backlinks" v-for="err in messageForms.errors.no_backlinks" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.url_rating}" class="form-group">
                             <label style="color: #333">URL Rating</label>
@@ -576,7 +578,7 @@
                             <span v-if="messageForms.errors.url_rating" v-for="err in messageForms.errors.url_rating" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.domain_rating}" class="form-group">
                             <label style="color: #333">Domain Rating</label>
@@ -584,7 +586,7 @@
                             <span v-if="messageForms.errors.domain_rating" v-for="err in messageForms.errors.domain_rating" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.organic_keywords}" class="form-group">
                             <label style="color: #333">Organic Keywords</label>
@@ -592,7 +594,7 @@
                             <span v-if="messageForms.errors.organic_keywords" v-for="err in messageForms.errors.organic_keywords" class="text-danger">{{ err }}</span>
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.organic_traffic}" class="form-group">
                             <label style="color: #333">Organic Traffic</label>
@@ -618,7 +620,7 @@
                             <input type="number" v-model="extUpdate.price" class="form-control" value="" placeholder="0.00">
                         </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                         <div class="form-group">
                             <label style="color: #333">Include Article</label>
@@ -1054,7 +1056,8 @@
                    domain: this.$route.query.domain || '',
                    domain_temp: this.$route.query.domain_temp || '',
                    status: this.$route.query.status || -1,
-                   status_temp: this.$route.query.status_temp || 0,
+                   status_temp:
+                       this.$route.query.status_temp || -1,
                    page: this.$route.query.page || 0,
                    per_page: this.$route.query.per_page || 50,
                    employee_id: this.$route.query.employee_id || '',
@@ -1176,17 +1179,17 @@
            this.fillterIntByCountry();
            this.checkQualified();
            this.getListExtSeller();
-   
+
            let seller = this.listSeller.data;
            if( seller.length === 0 ){
                this.getListSeller();
            }
-   
+
            let countries = this.listCountryAll.data;
            if( countries.length === 0 ){
                this.getListCountries();
            }
-   
+
            this.getListSellerTeam();
            this.getListLanguages();
        },
@@ -1269,7 +1272,7 @@
            });
        },
        methods: {
-   
+
            selectAll() {
                this.checkIds = [];
                if (!this.allSelected) {
@@ -1278,15 +1281,15 @@
                    }
                }
            },
-   
+
            async getListLanguages() {
                await this.$store.dispatch('actionGetListLanguages');
            },
-   
+
            async getListCountries(params) {
                await this.$store.dispatch('actionGetListCountries', params);
            },
-   
+
            showAddURL() {
                this.formAddUrl = false;
                if ( this.extUpdate.status == 100 ){
@@ -1294,7 +1297,7 @@
                    this.extUpdate.url = this.extUpdate.domain;
                }
            },
-   
+
            checkSellerAccess(seller_id) {
                if( this.user.role_id == 6 && this.user.isOurs == 0 ){
                    let check = false;
@@ -1306,19 +1309,19 @@
                    return true;
                }
            },
-   
+
            async getListSeller(params) {
                await this.$store.dispatch('actionGetListSeller', params);
            },
-   
+
            async getListSellerTeam(params) {
                await this.$store.dispatch('actionGetListSellerTeam', params);
            },
-   
+
            async getListExtSeller() {
                await this.$store.dispatch('actionGetListExtSeller');
            },
-   
+
            checkQualified() {
                let check = this.updateStatus.status
                if( check == 100 ){
@@ -1327,21 +1330,21 @@
                    this.isQualified = false;
                }
            },
-   
+
            // checkData() {
            //     this.isEnableBtn = true;
            //     if( this.$refs.language.value && this.$refs.status.value){
            //         this.isEnableBtn = false;
            //     }
            // },
-   
+
            checkDataExcel() {
                this.isEnableBtn = true;
                if( this.$refs.excel.value ){
                    this.isEnableBtn = false;
                }
            },
-   
+
            doMultipleStatus() {
                if( this.checkIds.length > 0 ){
                    let element = this.$refs.modalMultipleStatus
@@ -1354,7 +1357,7 @@
                    )
                }
            },
-   
+
            async deleteAll() {
                if( this.checkIds.length > 0 ){
                    if( confirm("Are you sure you want to delete selected records?") ){
@@ -1363,7 +1366,7 @@
                                id: this.checkIds,
                            }
                        });
-   
+
                        this.getExtList();
                        this.checkIds = []
                        swal.fire(
@@ -1379,19 +1382,19 @@
                        'error'
                        )
                }
-                   
+
            },
-   
+
            async submitUpload() {
-   
+
                this.isEnableBtn = true;
                this.formData = new FormData();
                this.formData.append('file', this.$refs.excel.files[0]);
                // this.formData.append('language', this.$refs.language.value);
                // this.formData.append('status', this.$refs.status.value);
-   
+
                await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
-   
+
                if (this.messageForms.action === 'uploaded') {
                    this.getExtList();
                    this.$refs.excel.value = '';
@@ -1399,34 +1402,34 @@
                    // this.$refs.status.value = '';
                    this.isEnableBtn = true;
                    this.showLang = false;
-   
+
                    // console.log(this.messageForms.errors.length)
                    let cnt_existing = this.messageForms.errors.length;
                    if (cnt_existing > 0){
                        for (let key in this.messageForms.errors ){
                            this.existingDomain.data.push(this.messageForms.errors[key].message)
                        }
-   
+
                        this.existingDomain.total = cnt_existing;
                        $("#modal-existing-domain").modal('show')
                    }
-   
+
                    console.log(this.existingDomain);
                }
            },
-   
+
            formatPrice(value) {
                let val = (value/1).toFixed(0)
                return val;
            },
-   
+
            checkSelected() {
                this.isDisabled = true;
                if( this.checkIds.length > 0 ){
                    this.isDisabled = false;
                }
            },
-   
+
            async updateUserPermission() {
                let that = this;
                await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
@@ -1605,26 +1608,26 @@
                });
                this.isPopupLoading = false;
            },
-   
+
            async doShowBackLinkIndex(index) {
                var extDomain = this.listExt.data[index];
                this.doShowBackLinkIndex(extDomain);
            },
-   
+
            doAddExt() {
                this.$store.dispatch('clearMessageForm');
            },
-   
+
            doEditExt(extDomain) {
                this.formAddUrl = true;
-   
+
                this.$store.dispatch('clearMessageForm');
                this.extUpdate = JSON.parse(JSON.stringify(extDomain))
-   
+
                if (this.extUpdate.status != 100){
                    this.formAddUrl = false;
                }
-   
+
                this.getPublisherInfo(this.extUpdate.domain).then(res => {
                    var result = res.data
                    if (res.data.success == true){
@@ -1635,7 +1638,7 @@
                        this.publisherAdd.topic = result.data.topic
                        this.publisherAdd.casino_sites = result.data.casino_sites
                        this.publisherAdd.price = result.data.price
-   
+
                        this.isEditable = true;
                    } else {
                        this.publisherAdd.seller = ''
@@ -1645,14 +1648,14 @@
                        this.publisherAdd.topic = ''
                        this.publisherAdd.casino_sites = ''
                        this.publisherAdd.price = ''
-   
+
                        this.isEditable = false;
                    }
-                   
+
                });
-               
+
            },
-   
+
            async getPublisherInfo(domain) {
                try {
                    const response = await axios.get('api/get-publisher-info', {
@@ -1665,12 +1668,12 @@
                    console.error(error);
                }
            },
-   
+
            doEditExtIndex(index) {
                let extDomain = this.listExt.data[index];
                this.doEditExt(extDomain);
            },
-   
+
            hasBacklink(status) {
                if (status == 70) {
                    return true
@@ -1707,7 +1710,7 @@
                await this.$store.dispatch('actionSaveBacklink', {
                    params: this.modelBaclink
                })
-   
+
                if (this.messageForms.action === 'saved_backlink') {
                    this.closeModalBacklink()
                }
@@ -1781,14 +1784,14 @@
                $(element).modal('show');
                this.allowSending = true;
            },
-   
+
            doSendEmail(ext, event) {
                this.$store.dispatch('clearMessageForm');
-   
+
                if (ext == null) {
                    if (this.checkIds.length == 0) {
                         swal.fire('No Selected', 'Please select first', 'error');
-   
+
                    } else {
                        this.openModalEmailElem();
                        var emails = [];
@@ -1798,39 +1801,39 @@
                            }
                        }
                        this.email_to = emails.join('|')
-                   }  
+                   }
                    // console.log(this.checkIds)
                    // return false;
                }
-   
+
                if (ext != null) {
                    if (ext.status == 50) {
                        swal.fire('Invalid', 'This is Already Contacted', 'error')
                    }
                    else if (ext.email == "") {
                        swal.fire('No email', 'Please check if with email', 'error' )
-                   } 
+                   }
                    else {
                        this.openModalEmailElem();
                        this.email_to = ext.email;
                        this.extDomain_id = ext.id;
                    }
                }
-                   
+
            },
-   
+
            getStatus() {
                axios.get('/api/mail/status')
                    .then((res) => {
                        console.log(res.data)
                    })
            },
-   
-   
+
+
            async submitSendMail() {
                this.allowSending = false;
                this.isPopupLoading = true;
-   
+
                await this.$store.dispatch('sendMailWithMailgun',{
                    cc: '',
                    email: this.email_to,
@@ -1838,40 +1841,40 @@
                    content: this.modelMail.content,
                    attachment: 'undefined',
                })
-   
+
                this.modelMail = {
                    title: '',
                    content: '',
                    mail_name: '',
                }
-   
+
                // this.getStatus();
                let result = true;
                if( this.extDomain_id == '' ) {
                    result = false;
                    this.updateStatus.status = 50;
                }
-   
+
                this.doUpdateMultipleStatus(result, this.extDomain_id);
                $("#modal-email").modal('hide')
-   
+
                this.isPopupLoading = false;
            },
-   
-   
+
+
            async doUpdateMultipleStatus(is_sending, id) {
                await this.$store.dispatch('actionUpdateMultipleStatus', {
                    id: is_sending ? id:this.checkIds,
                    seller: this.updateStatus.seller,
                    status: is_sending ? 50:this.updateStatus.status,
                });
-   
+
                if( this.messageForms.action == 'updated' ){
                    let element = this.$refs.modalMultipleStatus
                    $(element).modal('hide')
-                   
+
                    // this.getExtList();
-   
+
                    if(is_sending) {
                        let obj = this.listExt.data.findIndex(o => o.id === id);
                        this.listExt.data[obj].status = 50;
@@ -1882,7 +1885,7 @@
                            this.listExt.data[obj].status = this.updateStatus.status;
                        }
                    }
-   
+
                    this.checkIds = []
                    this.updateStatus.seller = '';
                    this.updateStatus.status = '';
@@ -1894,13 +1897,13 @@
                    )
                }
            },
-   
-   
+
+
            // async doSendEmail(ext, event) {
            //     console.log(event);
            //     this.$store.dispatch('clearMessageForm');
            //     var ids = '';
-   
+
            //     if(ext != null) {
            //         if (ext === -1) {
            //             ids = this.listExt.data.map(item => item.id).join(",");
@@ -1939,20 +1942,20 @@
            //             alert("can't not handle with external domain not have email or multiple emails");
            //             return;
            //         }
-   
+
            //         this.mailInfo.ids = ext.id;
            //         this.mailInfo.receiver_text = ext.domain;
            //         this.mailInfo.country = ext.country;
            //         this.fetchTemplateMail(this.mailInfo.country.id);
            //         this.openModalEmailElem();
            //     }
-   
-               
+
+
            //     if(ext == null) {
            //         var ext_id = [];
            //         var ext_domain = [];
            //         var ext_country = [];
-   
+
            //         var i =0;
            //         this.checkIds.forEach(function(entry) {
            //             if (entry.status != 30 && entry.status != 40) {
@@ -1963,17 +1966,17 @@
            //                 alert("can't not handle with external domain not have email or multiple emails");
            //                 return;
            //             }
-   
+
            //             ext_id[i] = entry.id;
            //             ext_domain[i] = entry.domain;
            //             ext_country[i] = entry.country;
-   
+
            //             i++;
            //         });
-   
+
            //         ext_id = ext_id.join(", ");
            //         ext_domain = ext_domain.join(", ");
-   
+
            //         this.mailInfo.ids = ext_id;
            //         this.mailInfo.receiver_text = ext_domain;
            //         this.mailInfo.country =ext_country[0];
@@ -1981,8 +1984,8 @@
            //         this.openModalEmailElem();
            //     }
            // },
-   
-   
+
+
            async doSendEmailIndex(index) {
                let extDomain = this.listExt.data[index];
                this.doSendEmail(extDomain);
@@ -2001,7 +2004,7 @@
                this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
                this.fetchTemplateMail(this.mailInfo.country.id);
            },
-   
+
            // async submitSendMail() {
            //     this.allowSending = false;
            //     this.isPopupLoading = true;
