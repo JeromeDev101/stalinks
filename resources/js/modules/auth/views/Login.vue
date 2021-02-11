@@ -4,15 +4,15 @@
             <h2 class="homepage-login__title">
                 <img src="images/banner.png" alt="User Image">
             </h2>
-            <form class="homepage-login__login-form">
+            <form class="homepage-login__login-form" @submit.prevent="submitLogin(credentials)">
                 <div class="form-group">
                     <label for="user-email">Email</label>
-                    <input v-on:keyup.enter="submitLogin(credentials)" v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.email)}" v-model="credentials.email" autofocus="autofocus" type="email" id="user-email" class="form-control" autocomplete="off">
+                    <input v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.email)}" v-model="credentials.email" autofocus="autofocus" type="email" id="user-email" class="form-control" autocomplete="off">
                     <span v-if="error && objectNotEmpty(error.email)" class="text-danger">{{ error.email[0] }}</span>
                 </div>
                 <div class="form-group mb-5">
                     <label for="user-password">Password</label>
-                    <input v-on:keyup.enter="submitLogin(credentials)" v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" v-model="credentials.password" type="password" id="user-password" class="form-control">
+                    <input v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" v-model="credentials.password" type="password" id="user-password" class="form-control">
                     <router-link :to="{ path: '/forgot-password' }">
                         <span>Forgot Password?</span>
                     </router-link>
@@ -20,10 +20,10 @@
                     <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
                 </div>
                 <div class="form-group">
-                    <button type="button" @click="submitLogin(credentials)" class="btn btn-primary btn-flat pull-right"><span><b>Login</b></span></button>
+                    <button type="submit" class="btn btn-primary btn-flat pull-right"><span><b>Login</b></span></button>
                 </div>
                 <div class="form-group">
-                    <button @click="registrationPage" class="btn btn-default btn-flat">Register</button>
+                    <button type="button" @click="registrationPage" class="btn btn-default btn-flat">Register</button>
                 </div>
             </form>
         </div>
