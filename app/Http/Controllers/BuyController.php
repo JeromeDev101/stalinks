@@ -64,32 +64,42 @@ class BuyController extends Controller
             $list->where('publisher.url', 'like', '%'.$filter['search'].'%');
         }
 
-        if( isset($filter['topic']) && !empty($filter['topic']) ){
-            if(is_array($filter['topic'])) {
-                $ctr = 0;
-                foreach($filter['topic'] as $topic) {
-                    // $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
-                    if($ctr == 0) {
-                        $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
-                    } else {
-                        $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
-                    }
-                    $ctr++;
-                }
+        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
+            if (is_array($filter['language_id'])) {
+                $list->whereIn('publisher.language_id', $filter['language_id']);
             } else {
-                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
+                $list->where('publisher.language_id', $filter['language_id']);
             }
         }
 
-        if( isset($filter['language_id']) && !empty($filter['language_id']) ){
-            $list->where('publisher.language_id', $filter['language_id']);
+        if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
+            if (is_array($filter['status_purchase'])) {
+                if (in_array('New', $filter['status_purchase'])) {
+                    $list->whereNull('buyer_purchased.publisher_id')
+                    ->orWhere(function ($query) use ($filter) {
+                        if (($key = array_search('New', $filter['status_purchase'])) !== false) {
+                            unset($filter['status_purchase'][$key]);
+                        }
+
+                        $query->whereIn('buyer_purchased.status', $filter['status_purchase']);
+                    });
+                } else {
+                    $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
+                }
+            } else {
+                if ($filter['status_purchase'] === 'New') {
+                    $list->whereNull('buyer_purchased.publisher_id');
+                } else {
+                    $list->where('buyer_purchased.status', $filter['status_purchase']);
+                }
+            }
         }
 
-        if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
-            if( $filter['status_purchase'] == 'New' ){
-                $list->whereNull('buyer_purchased.publisher_id');
-            }else{
-                $list->where('buyer_purchased.status', $filter['status_purchase']);
+        if (isset($filter['country_id']) && !empty($filter['country_id'])) {
+            if (is_array($filter['country_id'])) {
+                $list->whereIn('publisher.country_id', $filter['country_id']);
+            } else {
+                $list->where('publisher.country_id', $filter['country_id']);
             }
         }
 
@@ -126,6 +136,26 @@ class BuyController extends Controller
                 $list->where('publisher.org_traffic' , '>=', intval($filter['org_traffic']));
             } else {
                 $list->where('publisher.org_traffic', '<=', intval($filter['org_traffic']));
+            }
+        }
+
+        if( isset($filter['topic']) && !empty($filter['topic']) ){
+            if(is_array($filter['topic'])) {
+                $list->where(function ($query) use ($filter) {
+                    $ctr = 0;
+                    foreach($filter['topic'] as $topic) {
+                        // $list = $list->where('publisher.topic', 'like', '%'.$topic.'%');
+                        if($ctr == 0) {
+                            $query->where('publisher.topic', 'like', '%'.$topic.'%');
+                        } else {
+                            $query->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+                        }
+                        $ctr++;
+                    }
+                });
+
+            } else {
+                $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
             }
         }
 
@@ -233,10 +263,20 @@ class BuyController extends Controller
 
             // Filtering of Price Basis
             if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if( $filter['price_basis'] == $price_basis ){
-                    $value['price_basis'] = $price_basis;
-                }else{
-                    $result->forget($key);
+                if (is_array($filter['price_basis'])) {
+                    foreach ($filter['price_basis'] as $price) {
+                        if(in_array($price_basis, $filter['price_basis']) ){
+                            $value['price_basis'] = $price_basis;
+                        }else{
+                            $result->forget($key);
+                        }
+                    }
+                } else {
+                    if( $filter['price_basis'] == $price_basis ){
+                        $value['price_basis'] = $price_basis;
+                    }else{
+                        $result->forget($key);
+                    }
                 }
             }else{
                 $value['price_basis'] = $price_basis;
