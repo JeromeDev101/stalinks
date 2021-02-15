@@ -438,7 +438,7 @@ export default {
 
     methods: {
         upperCase(string) {
-            return string.toUpperCase();
+            return (string == null || string == '') ? '-':string.toUpperCase();
         },
 
         async getData() {
