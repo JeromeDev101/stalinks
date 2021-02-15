@@ -21,6 +21,14 @@
             </div>
             <div class="container-fluid m-3 collapse" id="collapseExample">
                <div class="row">
+                   <div v-if="tableShow.domain" class="col-md-2">
+                       <div class="from-group">
+                           <label style="color: #333">Email
+                           </label>
+                           <input type="text"
+                                  v-model="filterModel.email" class="form-control pull-right" placeholder="Search Email">
+                       </div>
+                   </div>
                   <div v-if="tableShow.country" class="col-md-2">
                      <div class="form-group">
                         <label style="color: #333">Email Required</label>
@@ -59,27 +67,29 @@
                         </select>
                      </div>
                   </div>
-                  <div class="col-md-2" v-if="user.isAdmin || tableShow.employee">
-                     <div class="form-group">
-                        <label style="color: #333">Employee</label>
-                        <!-- <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
-                           <option value="0">Select Employee</option>
-                           <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
-                           </select> -->
-                        <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
-                     </div>
-                  </div>
-                  <div v-if="tableShow.status" class="col-md-2">
-                     <div class="form-group pull-right">
-                        <label style="color: #333">Action</label>
-                        <br>
-                        <div class="btn-group">
-                           <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                           <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
-                        </div>
-                     </div>
-                  </div>
                </div>
+                <div class="row">
+                    <div class="col-md-2" v-if="user.isAdmin || tableShow.employee">
+                        <div class="form-group">
+                            <label style="color: #333">Employee</label>
+                            <!-- <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
+                               <option value="0">Select Employee</option>
+                               <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
+                               </select> -->
+                            <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
+                        </div>
+                    </div>
+                    <div v-if="tableShow.status" class="col-md-2">
+                        <div class="form-group pull-right">
+                            <label style="color: #333">Action</label>
+                            <br>
+                            <div class="btn-group">
+                                <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
+                                <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
          </div>
       </div>
@@ -1055,6 +1065,7 @@
                    countryList: { data: [], total: 0},
                    domain: this.$route.query.domain || '',
                    domain_temp: this.$route.query.domain_temp || '',
+                   email: this.$route.query.email || '',
                    status: this.$route.query.status || -1,
                    status_temp:
                        this.$route.query.status_temp || -1,
@@ -1521,6 +1532,7 @@
                        country_id: that.filterModel.country_id,
                        status: that.filterModel.status,
                        domain: that.filterModel.domain,
+                       email: that.filterModel.email,
                        employee_id: that.filterModel.employee_id,
                        required_email: that.filterModel.required_email,
                        id: that.filterModel.id,
