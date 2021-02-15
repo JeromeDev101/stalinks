@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Buyer;
 
+use App\Models\Notif;
+use App\Repositories\NotificationRepository;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,20 +12,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BacklinkLiveEvent implements ShouldBroadcast
+class BuyEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    protected $userId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public $user_id;
-
     public function __construct($userId)
     {
-        $this->user_id = $userId;
+        $this->userId = $userId;
     }
 
     /**
@@ -33,11 +35,11 @@ class BacklinkLiveEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->user_id);
+        return new PrivateChannel('user.' . $this->userId);
     }
 
     public function broadcastAs()
     {
-        return 'backlink.live';
+        return 'buyer.bought';
     }
 }

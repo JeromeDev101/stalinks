@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Buyer\BuyEvent;
+use App\Events\SellerReceivesOrderEvent;
+use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
@@ -261,10 +264,11 @@ class BuyController extends Controller
     /**
      * Buy function
      *
-     * @param Request $request
+     * @param Request               $request
+     * @param NotificationInterface $notification
      * @return response
      */
-    public function update(Request $request) {
+    public function update(Request $request, NotificationInterface $notification) {
         $publisher = Publisher::find($request->id);
         $user = Auth::user();
 
@@ -282,6 +286,19 @@ class BuyController extends Controller
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
         ]);
+
+        $notification->create([
+            'user_id' => $user->id,
+            'notification' => 'You have purchased from '. $request->url_advertiser .' on '. date('Y-m-d') . ' at $'. $request->price . ' follow up with Backlink ID '. $backlink->id,
+        ]);
+
+        $notification->create([
+            'user_id' => $publisher->user_id,
+            'notification' => 'You have received an order for ' . $request->url_advertise . ' on ' . date('Y-m-d') . ' follow up with Backlink ID ' . $backlink->id,
+        ]);
+
+        broadcast(new BuyEvent($user->id));
+        broadcast(new SellerReceivesOrderEvent($publisher->user_id));
 
         if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
             Article::create([

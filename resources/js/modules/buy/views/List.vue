@@ -1014,6 +1014,8 @@
                     }
                 }
 
+                selling_price = parseFloat(selling_price).toFixed(0);
+
                 return selling_price;
             },
 

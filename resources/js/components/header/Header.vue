@@ -32,19 +32,21 @@
                             href="#"
                             class="dropdown-toggle"
                             data-toggle="dropdown"
-                            ><i class="fa fa-bell-o"></i
-                        ></a>
-                        <!-- <span class="label label-warning">10</span> -->
+                            @click="notificationsSeen"
+                            >
+                            <i
+                                class="fa fa-bell-o"
+                                v-if="notifications.new_notifications < 1"></i>
+                            <i
+                                class="fa fa-bell text-red"
+                                v-else></i>
+                        </a>
 
-                        <ul class="dropdown-menu notification-menu-custom">
-                            <li class="header">You have 10 notifications</li>
-                            
+                        <ul class="dropdown-menu notification-menu-custom overflow-auto" style="height: 300px;">
                             <li>
                                 <div class="vertical-menu">
-                                    <a href="#">Your purchase 152 from sample.com is Live </a>
-                                    <a href="#">Your purchase 58 from sample.com is Live </a>
-                                    <a href="#">Your purchase 20 from sample.com is Live </a>
-                                    <a href="#">Your purchase 10 from sample.com is Live </a>
+                                    <a href="#"
+                                       v-for="notification in notifications.data">{{ notification.notification }}</a>
                                 </div>
 
                             </li>
@@ -146,7 +148,7 @@ export default {
                 total_paid: "",
                 credit: "",
                 deposit: ""
-            }
+            },
         };
     },
 
@@ -157,40 +159,42 @@ export default {
 
     mounted() {
         this.liveGetWallet();
+        this.getNotifications(this.user.id);
 
-        Echo.channel("morley") //Should be Channel Name
-            .listen("NotificationEvent", e => {
-                if (this.user.id == e.user_id) {
-                    this.$toast.success(e.message, { timeout: 2000 });
-                    console.log(e);
-                }
-            });
-        Echo.channel("morley") //Should be Channel Name
-            .listen("ArticleEvent", e => {
-                if (this.user.id == e.user_id) {
-                    this.$toast.success(e.message, { timeout: 2000 });
-                    console.log(e);
-                }
-            });
+        pusher.logToConsole = true;
 
-        Echo.channel("morley") //Should be Channel Name
-            .listen("BacklinkLiveEvent", e => {
-                if (this.user.id == e.user_id) {
-                    this.$toast.success(e.message, { timeout: 2000 });
-                    console.log(e);
-                }
-            });
+        const channel = pusher.subscribe('private-user.' +
+            this.user.id);
+
+        channel.bind('buyer.bought', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('backlink.live', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('seller.receives.order', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('backlink.status.changed', (e) => {
+            this.getNotifications(this.user.id);
+        })
     },
 
     computed: {
         ...mapState({
-            user: state => state.storeAuth.currentUser
+            user: state => state.storeAuth.currentUser,
+            notifications: state => state.storeNotification.notifications
         })
     },
 
     methods: {
         ...mapActions({
-            logout: "auth/logout"
+            logout: "auth/logout",
+            getNotifications: "getUserNotifications",
+            seenNotifications: "seenUserNotifications"
         }),
 
         calcSum(total, num) {
@@ -242,6 +246,14 @@ export default {
             // for emaployee with a role of seller/buyer
             if (that.role.description == "Buyer") {
                 this.isBuyer = true;
+            }
+        },
+
+        notificationsSeen() {
+            if (this.notifications.new_notifications !==
+                0) {
+                this.seenNotifications(this.user.id);
+                this.getNotifications(this.user.id);
             }
         }
     }
