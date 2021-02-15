@@ -127,7 +127,7 @@
                                 <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                             </td>
                         </tr>
-                    </table>  
+                    </table>
                 </div>
 
                 <div class="box-body no-padding">
@@ -313,7 +313,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                             <div class="col-md-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
@@ -328,7 +328,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Date Completed</label>
-                                        <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive">
+                                        <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive || user.role_id === 6">
                                     </div>
                                 </div>
                             </div>
@@ -570,7 +570,7 @@
             },
 
             async getListSales(params){
-                
+
                 $('#tbl-followupsales').DataTable().destroy();
 
                 this.searchLoading = true;
@@ -589,7 +589,7 @@
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
                         }
-                        
+
                     });
 
                 }else
@@ -606,10 +606,10 @@
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
                         }
-                        
+
                     });
                 }
-                
+
                     console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
@@ -694,11 +694,11 @@
 
             async getListBuyer(params) {
                 await this.$store.dispatch('actionGetListBuyer', params);
-            }, 
+            },
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
-            }, 
+            },
 
             redirectToArticle(id) {
                 this.$router.push({
@@ -761,7 +761,7 @@
                 this.updateModel = that
                 this.updateModel.url_publisher = that.publisher == null ? that.ext_domain.domain:that.publisher.url
                 this.updateModel.article_id = that.article == null ? '':that.article.id
-                this.updateModel.status_writer = that.article == null ? '':that.article.status_writer; 
+                this.updateModel.status_writer = that.article == null ? '':that.article.status_writer;
 
                 this.isLive = false;
                 if( that.status == 'Live' && !this.user.isAdmin){
