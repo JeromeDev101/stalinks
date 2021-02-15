@@ -583,12 +583,15 @@ export default {
                     }
 
                     axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
-
-                    if (is_all) {
-                        this.getInbox();
-                    }else{
-                        this.records.data.splice(index, 1);
-                    }
+                    .then((res) => {
+                        if (is_all) {
+                            this.getInbox();
+                            this.paginate.total -= ids.length;
+                        }else{
+                            this.records.data.splice(index, 1);
+                            this.paginate.total--;
+                        }
+                    })
 
                     this.selectedMessage = true;
                     this.MessageDisplay = false;
@@ -611,6 +614,8 @@ export default {
                     }
 
                     this.checkIds = [];
+
+                    this.clearViewing()
 
                     swal.fire(
                         'Deleted!',
