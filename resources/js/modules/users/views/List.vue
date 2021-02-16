@@ -786,7 +786,7 @@ export default {
             countryListAddId: 0,
             intListAddId: 0,
             countryIdForInt: 0,
-            listPageOptions: [10, 25, 50, 100],
+            listPageOptions: [10, 25, 50, 100, 'All'],
             isLoadingTable: false,
             isPopupLoading: false,
             isSearchLoading: false,

@@ -90,6 +90,18 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company Type</label>
+                                <select class="form-control" v-model="filterModel.company_type">
+                                    <option value="">All</option>
+                                    <option value="1">Freelancer</option>
+                                    <option value="0">Company</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -125,14 +137,14 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>In-charge</th>
                                 <th>User ID</th>
                                 <th>Username</th>
                                 <th>Name</th>
-                                <th>Company Name</th>
+                                <th>Company Type</th>
                                 <th>Type</th>
                                 <th>Sub Account</th>
                                 <th>Under of Main Buyer</th>
-                                <th>In-charge</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -140,14 +152,14 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td>{{ account.id }}</td>
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
-                                <td>{{ account.company_name == null ? 'N/A':account.company_name }}</td>
+                                <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td>{{ account.type }}</td>
                                 <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
                                 <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
-                                <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -633,7 +645,7 @@
     export default {
         data() {
             return {
-                paginate: [15,25,50,100,200,250],
+                paginate: [15,25,50,100,200,250,'All'],
                 accountModel: {
                     name: '',
                     email: '',
@@ -667,6 +679,7 @@
                     country: this.$route.query.country || '',
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
+                    company_type: this.$route.query.company_type || '',
                 },
 
                 accountUpdate: {
@@ -832,6 +845,7 @@
                         country: this.filterModel.country,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
+                        company_type: this.filterModel.company_type,
                     }
                 });
                 this.isLoadingTable = false;
@@ -863,6 +877,9 @@
                     search: '',
                     paginate: '15',
                     team_in_charge: '',
+                    company_type: '',
+                    commission: '',
+                    credit_auth: '',
                 }
 
                 this.getAccountList({
@@ -884,6 +901,9 @@
                         type: this.filterModel.type,
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
+                        company_type: this.filterModel.company_type,
+                        commission: this.filterModel.commission,
+                        credit_auth: this.filterModel.credit_auth,
                     }
                 });
             },
