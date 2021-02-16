@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendResetPasswordEmail;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Backlink;
 use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AccountController extends Controller
 {
@@ -507,6 +510,39 @@ class AccountController extends Controller
             return response()->json(['success'=> false],422);
         }
 
+        $user->update([
+            'reset_password_token' => Str::random('60')
+        ]);
+
+        Mail::to($request->email)->send(new SendResetPasswordEmail($user->reset_password_token));
+
         return response()->json(['success' => true],200);
+    }
+
+    public function validateResetPasswordToken(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        dd($user);
+
+        if (!$user || $user->reset_password_token !== $request->token) {
+            return response()->json(['success' => false], 422);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|confirmed'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        $user->update([
+            'password' => bcrypt($request->password)
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }
