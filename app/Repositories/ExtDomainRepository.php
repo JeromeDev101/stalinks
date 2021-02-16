@@ -81,10 +81,10 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             }
 
             if( $ctr > 0 ){
-                $url = $line[0];
-                $status = $line[1];
-                $country = $line[2];
-                $email = $line[3];
+                $url = trim_excel_special_chars($line[0]);
+                $status = trim_excel_special_chars($line[1]);
+                $country = trim_excel_special_chars($line[2]);
+                $email = trim_excel_special_chars($line[3]);
 
                 $isExistDomain = $this->checkDomain($url);
 
@@ -187,6 +187,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     private function checkDomain($domain) {
         $result = true;
+
+        $domain = $this->remove_http($domain);
 
         $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$domain.'%');
         $checkPublisher = Publisher::where('url', 'like', '%'.$domain.'%');

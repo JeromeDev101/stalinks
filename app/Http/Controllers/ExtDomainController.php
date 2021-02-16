@@ -315,6 +315,16 @@ class ExtDomainController extends Controller
         return $result;
     }
 
+    private function remove_http($url) {
+        $disallowed = array('http://', 'https://', 'www.', '/');
+        foreach($disallowed as $d) {
+           if(strpos($url, $d) === 0) {
+              return str_replace($d, '', $url);
+           }
+        }
+        return $url;
+    }
+
     public function store(Request $request) {
         $id = Auth::user()->id;
         $input = $request->only(['info','skype','domain', 'country_id', 'alexa_rank',
@@ -338,8 +348,10 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0'
         ])->validate();
 
-        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$input['domain'].'%');
-        $checkPublisher = Publisher::where('url', 'like', '%'.$input['domain'].'%');
+        $url_remove_http = $this->remove_http($input['domain']);
+
+        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
+        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
 
         if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
             $inputted = '';
@@ -354,7 +366,7 @@ class ExtDomainController extends Controller
             }
 
             $message = [
-                'message' => 'It was inputted by '. $inputted,
+                'message' => 'Data is already given. It was inputted by '. strtoupper($inputted),
                 'errors' => [
                     'domain' => 'Domain is already exists'
                 ]
@@ -585,26 +597,26 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
 
-        if( $input['status'] === '100'){
-            Publisher::create([
-                'user_id' => $request->pub['seller'],
-                'url' => $request->pub['url'],
-                'ur' => $input['url_rating'],
-                'dr' => $input['domain_rating'],
-                'backlinks' => $input['no_backlinks'],
-                'ref_domain' => $input['ref_domains'],
-                'org_keywords' => $input['organic_keywords'],
-                'org_traffic' => $input['organic_traffic'],
-                'price' => $request->pub['price'],
-                'language_id' => $request->pub['language_id'],
-                'inc_article' => $request->pub['inc_article'],
-                'topic' => $request->pub['topic'],
-                'casino_sites' => $request->pub['casino_sites'],
-                'valid' => 'unchecked',
-            ]);
+        // if( $input['status'] === '100'){
+        //     Publisher::create([
+        //         'user_id' => $request->pub['seller'],
+        //         'url' => $request->pub['url'],
+        //         'ur' => $input['url_rating'],
+        //         'dr' => $input['domain_rating'],
+        //         'backlinks' => $input['no_backlinks'],
+        //         'ref_domain' => $input['ref_domains'],
+        //         'org_keywords' => $input['organic_keywords'],
+        //         'org_traffic' => $input['organic_traffic'],
+        //         'price' => $request->pub['price'],
+        //         'language_id' => $request->pub['language_id'],
+        //         'inc_article' => $request->pub['inc_article'],
+        //         'topic' => $request->pub['topic'],
+        //         'casino_sites' => $request->pub['casino_sites'],
+        //         'valid' => 'unchecked',
+        //     ]);
 
-            $input['user_id'] = $id;
-        }
+        //     $input['user_id'] = $id;
+        // }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];
