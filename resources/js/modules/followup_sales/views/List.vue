@@ -501,15 +501,21 @@
                 isSearching: false,
                 showReason: false,
                 showReasonText: false,
-                listReason: [
-                    'I am having technical problems',
-                    'I am no longer using this service',
-                    'I am having issues with customer care',
-                    'Not a right fit, the product is not for us',
-                    'I couldn\'t figure out how to use the site effectively',
-                    'It is to expensive',
-                    'Other',
+                reasonIssue: [
+                    'URL link to cannot be found',
+                    'One-click ads URL',
+                    'I am having technical issue',
+                    'I am in vacation',
+                    'Articles are no good',
+                    'Other'
                 ],
+                reasonCancelled: [
+                    'URL not available',
+                    'URL sold',
+                    'Not selling backlink',
+                    'Other'
+                ],
+                listReason: '',
             }
         },
 
@@ -540,7 +546,7 @@
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listIncharge: state => state.storeAccount.listIncharge,
 
-            })
+            }),
         },
 
         methods: {
@@ -554,8 +560,12 @@
             },
 
             checkStatus() {
-                if(this.updateModel.status == 'Issue' || this.updateModel.status == 'Canceled'){
+                if(this.updateModel.status === 'Issue'){
                     this.showReason = true;
+                    this.listReason = this.reasonIssue
+                } else if(this.updateModel.status === 'Canceled'){
+                    this.showReason = true;
+                    this.listReason = this.reasonCancelled
                 } else {
                     this.showReason = false;
                 }
