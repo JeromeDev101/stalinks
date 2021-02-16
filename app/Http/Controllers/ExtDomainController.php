@@ -262,6 +262,9 @@ class ExtDomainController extends Controller
 
         $countryIdsInt = $this->countryRepository->getListCountriesAccess($userId);
 
+        if (isset($input['email'])) {
+            $filters['where'][] = ['email', $input['email']];
+        }
 
         $filters['whereIn'][] = ['country_id', $countryIds];
 

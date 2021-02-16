@@ -23,13 +23,8 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status of Purchased</label>
-                                <select name="" v-model="filterModel.status_purchase" class="form-control">
-                                    <option value="">All</option>
-                                    <option value="New">New</option>
-                                    <option value="Interested">Interested</option>
-                                    <option value="Not interested">Not interested</option>
-                                    <option value="Purchased">Purchased</option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" :searchable="false" placeholder="All"/>
                                 <!-- <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select> -->
                             </div>
                         </div>
@@ -37,24 +32,28 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
-                                <select name="" class="form-control" v-model="filterModel.language_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.language_id" label="name" :options="listLanguages.data" :reduce="language => language.id" :searchable="false" placeholder="All"/>
+<!--                                <select name="" class="form-control" v-model="filterModel.language_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Country</label>
-                                <select class="form-control" v-model="filterModel.country_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.country_id" label="name" :options="listCountryAll.data" :reduce="country => country.id" :searchable="false" placeholder="All"/>
+<!--                                <select class="form-control" v-model="filterModel.country_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
@@ -109,12 +108,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Price Basis</label>
-                                <select name="" class="form-control" v-model="filterModel.price_basis">
-                                    <option value="">All</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Average">Average</option>
-                                    <option value="High">High</option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.price_basis" :options="['Good', 'Average', 'High']" :searchable="false" placeholder="All"/>
+<!--                                <select name="" class="form-control" v-model="filterModel.price_basis">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option value="Good">Good</option>-->
+<!--                                    <option value="Average">Average</option>-->
+<!--                                    <option value="High">High</option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
@@ -540,9 +541,9 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
-                    country_id: this.$route.query.country_id || '',
+                    country_id: '',
                     search: this.$route.query.search || '',
-                    language_id: this.$route.query.language_id || '',
+                    language_id: '',
                     status_purchase: this.$route.query.status_purchase || '',
                     seller: this.$route.query.seller || '',
                     code: this.$route.query.code || '',
@@ -1060,6 +1061,10 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            setSelectedOption(options, value) {
+                console.log(value);
+            }
         },
     }
 </script>
