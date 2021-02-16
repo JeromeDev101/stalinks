@@ -33,6 +33,7 @@ import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
 import Mails from '@/modules/mails/views/Mail.vue';
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
+import ResetPassword from '@/modules/reset_password/views/List.vue';
 // import SentMails from '@/modules/mail_sent/views/Sent.vue';
 import Inbox from '@/modules/mails/views/Inbox.vue';
 import Maillog from '@/modules/mails/views/Maillog.vue';
@@ -54,6 +55,11 @@ const routes = [{
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword,
+},
+{
+    path: '/reset-password',
+    name: 'Reset Password',
+    component: ResetPassword,
 },
 {
     path: '/test-aw',

@@ -23,6 +23,8 @@ Route::name('registration-email-validation')->post('/registration-email-validati
 Route::name('registration-get-info')->get('/registration-get-info','AccountController@getInfo');
 Route::name('registration-get-update-info')->post('/registration-get-update-info','AccountController@updateRegistrationAccount');
 Route::name('forgot-password')->post('/forgot-password','AccountController@forgotPassword');
+Route::name('check-reset-password-token')->post('/validate-reset-password-token', 'AccountController@validateResetPasswordToken');
+Route::name('reset-password')->post('/reset-password', 'AccountController@resetPassword');
 
 Route::middleware('auth:api')->group(function () {
 
