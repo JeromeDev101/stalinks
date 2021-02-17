@@ -91,8 +91,8 @@ class UserController extends Controller
         $filters['where'][] = ['isOurs',0];
 
         $isFullList = false;
-        if (isset($request->full_data)) {
-            $isFullList = $request->full_data;
+        if ($request->per_page === 'All') {
+            $isFullList = true;
         }
 
         if (isset($input['per_page'])) {

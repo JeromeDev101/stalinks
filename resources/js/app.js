@@ -34,26 +34,26 @@ const router = new VueRouter({
     mode: 'history',
     routes,
 });
-// Auto logout
-var idleMax = 120; // Logout after 1hr of IDLE
-var idleTime = 0;
-
-var idleInterval = setInterval(timerIncrement, 60000);  // 1 minute interval
-$( "body" ).mousemove(function( event ) {
-    idleTime = 0; // reset to zero
-});
-
-// count minutes
-function timerIncrement() {
-  idleTime = idleTime + 1;
-  if (idleTime > idleMax) {
-    store.dispatch('logout')
-    localStorage.clear();
-    Cookies.remove('vuex');
-    router.push({ name: 'login' });
-  }
-}
-//End auto logout
+// // Auto logout
+// var idleMax = 120; // Logout after 1hr of IDLE
+// var idleTime = 0;
+//
+// var idleInterval = setInterval(timerIncrement, 5000);  // 1 minute interval
+// $( "body" ).mousemove(function( event ) {
+//     idleTime = 0; // reset to zero
+// });
+//
+// // count minutes
+// function timerIncrement() {
+//   idleTime = idleTime + 1;
+//   if (idleTime > idleMax) {
+//     store.dispatch('logout')
+//     localStorage.clear();
+//     Cookies.remove('vuex');
+//     router.push({ name: 'login' });
+//   }
+// }
+// //End auto logout
 router.beforeEach((to, from, next) => {
 
     if (to.matched.some(record => record.meta.requiresAuth)) {

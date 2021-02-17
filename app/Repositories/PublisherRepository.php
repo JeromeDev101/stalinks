@@ -325,13 +325,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $casinoSites = trim_excel_special_chars($line[3]);
 
                     if( trim($url, " ") != '' ){
-
-                        $valid = $this->checkValid($url);
+                        $url_remove_http = $this->remove_http($url);
+                        $valid = $this->checkValid($url_remove_http);
 
                         Publisher::create([
                             'user_id' => $id,
                             'language_id' => $language,
-                            'url' => $url,
+                            'url' => $url_remove_http,
                             'ur' => 0,
                             'dr' => 0,
                             'backlinks' => 0,
@@ -373,12 +373,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             if (preg_grep("/".$topic."/i", $topic_list)){
 
                                 if( trim($url, " ") != '' ){
+                                    $url_remove_http = $this->remove_http($url);
                                     $lang = $this->getCountry($language_excel);
-                                    $valid = $this->checkValid($url);
+                                    $valid = $this->checkValid($url_remove_http);
                                     Publisher::create([
                                         'user_id' => $seller_id ,
                                         'language_id' => $lang,
-                                        'url' => $url,
+                                        'url' => $url_remove_http,
                                         'ur' => 0,
                                         'dr' => 0,
                                         'backlinks' => 0,
@@ -440,6 +441,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         ];
     }
 
+    private function remove_http($url) {
+        $disallowed = array('http://', 'https://', 'www.');
+        foreach($disallowed as $d) {
+           if(strpos($url, $d) === 0) {
+              return str_replace($d, '', $url);
+           }
+        }
+        return $url;
+    }
+
     private function checkValid($url) {
         $result = 'valid';
         $publisher = Publisher::where('url', 'like', '%'.$url.'%')->where('valid', 'valid')->count();
@@ -460,16 +471,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
         return $result;
     }
-
-    // private function getLanguage($language){
-    //     $id = null;
-    //     $language = Language::where('name', 'like', '%'.$language.'%')->first();
-    //     if( $language ){
-    //         $id = $language->id;
-    //     }
-    //     return $id;
-    // }
-
 
     private function getCountry($country){
         $id = 5;

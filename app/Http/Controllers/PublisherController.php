@@ -70,8 +70,10 @@ class PublisherController extends Controller
             'casino_sites' => 'required',
             'topic' => 'required',
         ]);
+
+        $url_copy = $this->remove_http($request->url);
         
-        $publisher = Publisher::where('url', 'like', '%'.$request->url.'%')->where('valid', 'valid')->count();
+        $publisher = Publisher::where('url', 'like', '%'.$url_copy.'%')->where('valid', 'valid')->count();
         if ($publisher > 0) {
             $valid = 'unchecked';
         }
@@ -82,7 +84,6 @@ class PublisherController extends Controller
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
 
 
-        $url_copy = $this->remove_http($request->url);
         $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
         $input['url'] = $url;
 

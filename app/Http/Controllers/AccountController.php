@@ -111,10 +111,16 @@ class AccountController extends Controller
             });
         })
         ->with('team_in_charge:id,name,username')
-        ->orderBy('id', 'desc')
-        ->paginate($paginate);
-
-        return $list;
+        ->orderBy('id', 'desc');
+        
+        if($paginate === 'All'){
+            return response()->json([
+                'data' => $list->get(),
+                'total' => $list->count(),
+            ],200);
+        } else {
+            return $list->paginate($paginate);
+        }
 
     }
 
