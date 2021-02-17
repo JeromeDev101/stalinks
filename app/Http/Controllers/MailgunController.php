@@ -103,7 +103,7 @@ class MailgunController extends Controller
 		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
 		    'subject'               => $request->title,
-            'text'                  => $request->content,
+            'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
             'recipient-variables'   => json_encode($object),
             'attachment'            => $atth,
             'o:tag'                 => array('test1'),
