@@ -514,7 +514,7 @@ class AccountController extends Controller
             'reset_password_token' => Str::random('60')
         ]);
 
-        Mail::to($request->email)->send(new SendResetPasswordEmail($user->reset_password_token));
+        Mail::to($request->email)->send(new SendResetPasswordEmail($user->reset_password_token, $request->email));
 
         return response()->json(['success' => true],200);
     }
@@ -522,7 +522,6 @@ class AccountController extends Controller
     public function validateResetPasswordToken(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        dd($user);
 
         if (!$user || $user->reset_password_token !== $request->token) {
             return response()->json(['success' => false], 422);
@@ -538,6 +537,10 @@ class AccountController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['success' => false], 422);
+        }
 
         $user->update([
             'password' => bcrypt($request->password)
