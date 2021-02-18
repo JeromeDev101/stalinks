@@ -18,7 +18,7 @@
                                 <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
                             </div>
                         </div>
-                        
+
                         <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Seller</label>
@@ -55,21 +55,23 @@
                             </div>
                         </div>
 
-                        
+
 
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" v-model="fillter.status">
-                                    <option value="">All</option>
-                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                </select>
+                                <v-select multiple
+                                          v-model="fillter.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+<!--                                <select class="form-control" v-model="fillter.status">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
-                        
 
-                        
+
+
 
                     </div>
 
@@ -109,8 +111,8 @@
                                 </div>
                             </td>
                         </tr>
-                    </table>    
-                        
+                    </table>
+
                 </div>
 
                 <div class="box-body no-padding">
@@ -441,7 +443,7 @@
         methods: {
             getBackLinkList: _.debounce(async function(page) {
                 $("#tbl_backlink").DataTable().destroy();
-                
+
                 if (page) {
                     this.page = page
                 }
@@ -593,7 +595,7 @@
             editBackLink(baclink) {
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
-                this.withArticle = that.publisher.inc_article == "No" ? true:false; 
+                this.withArticle = that.publisher.inc_article == "No" ? true:false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher.id
                 this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
