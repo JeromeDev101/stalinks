@@ -130,7 +130,7 @@ class PurchaseController extends Controller
         $buyers = collect(['buyers' => $getBuyer]);
         $sellers = collect(['sellers' => $getSeller]);
         $wallets = collect(['wallet' => number_format($wallet, 2)]);
-        $deposits = collect(['deposit' => number_format($deposit, 2)]);
+        $deposits = collect(['deposit' => $deposit]);
 
         $data_buyer = $buyers->merge($list);
         $data_seller = $sellers->merge($data_buyer);
@@ -144,7 +144,7 @@ class PurchaseController extends Controller
                 "buyers" => $getBuyer,
                 "sellers" => $getSeller,
                 "wallet" => number_format($wallet, 2),
-                "deposit" => number_format($deposit, 2),
+                "deposit" => $deposit,
             ];
         }else{
             return response()->json($data);
