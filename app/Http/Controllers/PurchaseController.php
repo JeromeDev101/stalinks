@@ -65,7 +65,7 @@ class PurchaseController extends Controller
         }
 
 
-        // Getting wallet and deposits 
+        // Getting wallet and deposits
 
         $user_id = $user->id;
 
@@ -129,8 +129,8 @@ class PurchaseController extends Controller
 
         $buyers = collect(['buyers' => $getBuyer]);
         $sellers = collect(['sellers' => $getSeller]);
-        $wallets = collect(['wallet' => $wallet]);
-        $deposits = collect(['deposit' => $deposit]);
+        $wallets = collect(['wallet' => number_format($wallet, 2)]);
+        $deposits = collect(['deposit' => number_format($deposit, 2)]);
 
         $data_buyer = $buyers->merge($list);
         $data_seller = $sellers->merge($data_buyer);
@@ -143,8 +143,8 @@ class PurchaseController extends Controller
                 "total" => $list->count(),
                 "buyers" => $getBuyer,
                 "sellers" => $getSeller,
-                "wallet" => $wallet,
-                "deposit" => $deposit,
+                "wallet" => number_format($wallet, 2),
+                "deposit" => number_format($deposit, 2),
             ];
         }else{
             return response()->json($data);

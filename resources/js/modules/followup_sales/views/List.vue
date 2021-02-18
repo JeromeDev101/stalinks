@@ -30,10 +30,12 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select name="" class="form-control" v-model="filterModel.status">
-                                    <option value="">All</option>
-                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+<!--                                <select name="" class="form-control" v-model="filterModel.status">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 

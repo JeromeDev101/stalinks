@@ -19,7 +19,7 @@
                                 <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
-                        
+
                         <div class="col-md-2" v-if="user.isOurs != 1">
                             <div class="form-group">
                                 <label for="">Seller</label>
@@ -58,9 +58,9 @@
                             </div>
                         </div>
 
-                        
 
-                        
+
+
                     </div>
 
                     <div class="row mb-3">
@@ -93,7 +93,7 @@
                                 </div>
                             </td>
                         </tr>
-                    </table>  
+                    </table>
 
                 </div>
 
@@ -108,7 +108,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>Backlink ID</th>
-                                <th>User Seller</th>
+                                <th v-show="user.isAdmin || user.isOurs === 0">User Seller</th>
                                 <th>User Buyer</th>
                                 <th>URL Publisher</th>
                                 <th>Price</th>
@@ -121,7 +121,7 @@
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ purchase.id }}</td>
-                                <td>{{ purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
+                                <td v-show="user.isAdmin || user.isOurs === 0">{{ purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
                                 <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
                                 <td>{{ replaceCharacters(purchase.publisher.url) }}</td>
                                 <td>$ {{ formatPrice(purchase.price) }}</td>
