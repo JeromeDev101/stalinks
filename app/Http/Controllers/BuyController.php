@@ -289,10 +289,10 @@ class BuyController extends Controller
             return response()->json([
                 'data' => $result,
                 'total' => $result->count(),
-                'credit' => $credit,
+                'credit' => number_format($credit, 2),
             ],200);
         }else{
-            $custom_credit = collect(['credit' => $credit]);
+            $custom_credit = collect(['credit' => number_format($credit, 2)]);
             $result = $custom_credit->merge($result);
             // dd($result);
 
