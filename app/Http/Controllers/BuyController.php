@@ -25,7 +25,7 @@ class BuyController extends Controller
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
         $user_id = Auth::user()->id;
-        $credit = 0;
+        $credit = 844.0000000123;
 
         $columns = [
             'publisher.*',
@@ -289,10 +289,10 @@ class BuyController extends Controller
             return response()->json([
                 'data' => $result,
                 'total' => $result->count(),
-                'credit' => $credit,
+                'credit' => number_format($credit, 2),
             ],200);
         }else{
-            $custom_credit = collect(['credit' => $credit]);
+            $custom_credit = collect(['credit' => number_format($credit, 2)]);
             $result = $custom_credit->merge($result);
             // dd($result);
 
