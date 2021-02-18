@@ -794,7 +794,7 @@
     }
 
     #tbl-publisher {
-        /* table-layout: fixed; */
+        table-layout: fixed;
         width: 100% !important;
     }
     #tbl-publisher .resize{
