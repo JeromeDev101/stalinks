@@ -22,8 +22,8 @@ class PurchaseController extends Controller
         $user = Auth::user();
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
-        $wallet = 633.23123123123;
-        $deposit = 955.12312123123123;
+        $wallet = 0;
+        $deposit = 0;
 
         $list = Backlink::select('backlinks.*')
                     ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
