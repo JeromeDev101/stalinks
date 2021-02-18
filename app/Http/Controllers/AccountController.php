@@ -430,6 +430,24 @@ class AccountController extends Controller
         return response()->json(['data'=> $team], 200);
     }
 
+    public function getTeamInChargePerRole(Request $request) {
+        $role_id = 0;
+        if( $request->role == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $request->role == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $request->role == 'Writer' ){
+            $role_id = 4;
+        }
+
+        $team = User::select('id','name', 'username')->where('isOurs',0)->where('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
+        return response()->json($team, 200);
+    }
+
     public function getBuyerCommission(Request $request) {
         $registration = Registration::where('email', $request->email)->first();
         return $registration;

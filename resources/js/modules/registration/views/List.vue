@@ -641,6 +641,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         data() {
@@ -726,6 +727,7 @@
             this.getTeamInCharge();
             this.checkTeamSeller();
             this.getListCountries();
+            this.checkTeamIncharge();
         },
 
         computed: {
@@ -740,6 +742,17 @@
         },
 
         methods: {
+            checkTeamIncharge() {
+                let role = this.accountModel.type
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
+                    console.log(res)
+                })
+            },
 
             checkCompanyType() {
                 if(this.accountModel.company_type == 'Company') {
