@@ -255,7 +255,7 @@ class AccountController extends Controller
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
-        $input['credit_auth'] = 'no';
+        $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
