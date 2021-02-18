@@ -25,7 +25,7 @@ class BuyController extends Controller
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
         $user_id = Auth::user()->id;
-        $credit = 844.0000000123;
+        $credit = 0;
 
         $columns = [
             'publisher.*',
