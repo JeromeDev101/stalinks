@@ -69,7 +69,11 @@ class FollowupSalesController extends Controller
         }
 
         if( isset($filter['status']) && !empty($filter['status']) ){
-            $list->where('backlinks.status', $filter['status'] );
+            if (!is_array($filter['status'])) {
+                $list->where('backlinks.status', $filter['status'] );
+            } else {
+                $list->whereIn('backlinks.status', $filter['status'] );
+            }
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
