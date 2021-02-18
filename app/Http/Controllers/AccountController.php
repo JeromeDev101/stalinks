@@ -41,6 +41,7 @@ class AccountController extends Controller
         if( $isTeamSeller ){
             $input['team_in_charge'] = Auth::user()->id;
         }
+        $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
         $registration = Registration::create($input);
