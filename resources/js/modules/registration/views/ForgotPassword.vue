@@ -6,7 +6,7 @@
             <div class="col-md-5">
                 <div class="card mt-5 pb-3">
                     <div class="card-body mx-5">
-                        <h4>Forgot your Password ?</h4> 
+                        <h4>Forgot your Password ?</h4>
                         <hr class="mb-4"/>
 
                         <div class="alert alert-info" >
@@ -74,13 +74,11 @@
                         this.email = '';
                     })
                     .catch(err => {
-                        if(err.response.data.success === false) {
-                            swal.fire(
-                                'Invalid',
-                                'Email Address doesn\'t exist, Please check again your email address',
-                                'error'
-                            );
-                        }
+                        swal.fire(
+                            'Invalid',
+                            err.response.data.error,
+                            'error'
+                        );
                     })
                } else {
                    swal.fire(
