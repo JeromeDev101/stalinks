@@ -41,6 +41,7 @@ class AccountController extends Controller
         if( $isTeamSeller ){
             $input['team_in_charge'] = Auth::user()->id;
         }
+        $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
         $registration = Registration::create($input);
@@ -112,7 +113,7 @@ class AccountController extends Controller
         })
         ->with('team_in_charge:id,name,username')
         ->orderBy('id', 'desc');
-        
+
         if($paginate === 'All'){
             return response()->json([
                 'data' => $list->get(),
@@ -255,6 +256,7 @@ class AccountController extends Controller
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
+        $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
@@ -511,9 +513,12 @@ class AccountController extends Controller
     public function forgotPassword(Request $request) {
         $request->validate(['email' => 'required|email']);
         $user = User::where('email', $request->email)->first();
+        $reg = Registration::where('email', $request->email)->first();
 
-        if(!$user) {
-            return response()->json(['success'=> false],422);
+        if($reg && !$user) {
+            return response()->json(['error'=> 'Your account is unverified, check your email to verify your account or contact an administrator.'],422);
+        } else if (!$user) {
+            return response()->json(['error'=> 'Your email does not exist, please try again.'],422);
         }
 
         $user->update([
