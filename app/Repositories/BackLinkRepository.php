@@ -148,11 +148,11 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         }else{
             return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,name,username'); }, 'user'])->paginate($paginate);
         }
-            
+
     }
 
     protected function fillter($query, $filters)
-    {        
+    {
         if (!empty($filters->querySearch)) {
             $query = $this->model
             ->whereHas('publisher', function ($query) use ($filters) {
@@ -175,7 +175,11 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         }
 
         if( !empty($filters->status) && $filters->status != ""){
-            $query = $query->where('status', $filters->status);
+            if (!is_array($filters->status)) {
+                $query = $query->where('status', $filters->status);
+            } else {
+                $query = $query->whereIn('status', $filters->status);
+            }
         }
 
         if( !empty($filters->backlink_id) && $filters->backlink_id != ""){
