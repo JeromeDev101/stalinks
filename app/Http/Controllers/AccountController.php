@@ -243,6 +243,7 @@ class AccountController extends Controller
         $data['role_id'] = $role_id;
         $data['type'] = 0;
         $data['isOurs'] = 1;
+        $data['credit_auth'] = 'no';
         $data['password'] = $registration->password;
         $data['id_payment_type'] = $registration->id_payment_type;
         User::create($data);
