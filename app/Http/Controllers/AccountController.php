@@ -243,7 +243,6 @@ class AccountController extends Controller
         $data['role_id'] = $role_id;
         $data['type'] = 0;
         $data['isOurs'] = 1;
-        $data['credit_auth'] = 'no';
         $data['password'] = $registration->password;
         $data['id_payment_type'] = $registration->id_payment_type;
         User::create($data);
@@ -256,6 +255,7 @@ class AccountController extends Controller
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
+        $input['credit_auth'] = 'no';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
