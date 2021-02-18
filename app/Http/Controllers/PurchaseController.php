@@ -115,7 +115,7 @@ class PurchaseController extends Controller
         }
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
-            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
+            $deposit = floatval($wallet_transaction[0]['amount_usd']);
         }
 
         // end of getting wallet and deposits
@@ -129,8 +129,8 @@ class PurchaseController extends Controller
 
         $buyers = collect(['buyers' => $getBuyer]);
         $sellers = collect(['sellers' => $getSeller]);
-        $wallets = collect(['wallet' => number_format($wallet, 2)]);
-        $deposits = collect(['deposit' => $deposit]);
+        $wallets = collect(['wallet' => round($wallet)]);
+        $deposits = collect(['deposit' => round($deposit)]);
 
         $data_buyer = $buyers->merge($list);
         $data_seller = $sellers->merge($data_buyer);
@@ -143,8 +143,8 @@ class PurchaseController extends Controller
                 "total" => $list->count(),
                 "buyers" => $getBuyer,
                 "sellers" => $getSeller,
-                "wallet" => number_format($wallet, 2),
-                "deposit" => $deposit,
+                "wallet" => round($wallet),
+                "deposit" => round($deposit),
             ];
         }else{
             return response()->json($data);
