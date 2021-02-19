@@ -199,7 +199,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
+                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
@@ -386,8 +386,8 @@
                             <div class="col-sm-6">
                                 <label>Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
-                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username}}
+                                    <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                        {{ option.username == null || option.username == '' ? option.name:option.username}}
                                     </option>
                                 </select>
                             </div>
@@ -430,7 +430,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountModel.type">
+                                    <select class="form-control" name="" v-model="accountModel.type" @change="checkTeamIncharge('add')">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -608,8 +608,8 @@
                                     <label>Team In-charge</label>
                                     <select class="form-control" v-model="accountModel.team_in_charge">
                                         <option value="">Select Team In-charge</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username}}
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{ option.username == null || option.username == '' ? option.name:option.username}}
                                         </option>
                                     </select>
                                 </div>
@@ -717,6 +717,7 @@
                 isSearching: false,
                 addCompanyName: true,
                 updateCompanyName: true,
+                listTeamIncharge: [],
             }
         },
 
@@ -727,7 +728,6 @@
             this.getTeamInCharge();
             this.checkTeamSeller();
             this.getListCountries();
-            this.checkTeamIncharge();
         },
 
         computed: {
@@ -742,15 +742,15 @@
         },
 
         methods: {
-            checkTeamIncharge() {
-                let role = this.accountModel.type
+            checkTeamIncharge(method) {
+                let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
                 axios.get('/api/team-in-charge-per-role',{
                     params: {
                         role: role
                     }
                 })
                 .then((res)=> {
-                    console.log(res)
+                    this.listTeamIncharge = res.data
                 })
             },
 
@@ -836,6 +836,8 @@
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
                 this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
+
+                this.checkTeamIncharge('update');
             },
 
             async getPaymentTypeList(params) {
