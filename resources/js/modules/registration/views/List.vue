@@ -238,21 +238,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
-                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
+                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -272,15 +262,25 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="form-control" v-model="accountUpdate.country_id">
@@ -472,21 +472,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" >
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="addCompanyName">
-                                <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" v-model="accountModel.skype">
+                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -506,15 +496,25 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-md-12" >
                                 <div class="form-group">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" v-model="accountModel.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12" v-show="addCompanyName">
+                                <div class="form-group">
+                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountModel.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="form-control" v-model="accountModel.country_id">
