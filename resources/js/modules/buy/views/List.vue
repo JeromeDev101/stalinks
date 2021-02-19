@@ -267,9 +267,9 @@
                                 <td class="resize" v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
                                 <td class="resize" v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
                                 <td class="resize" v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
-                                <td class="resize resizeurl" v-show="tblBuyOptions.url"><span>{{ replaceCharacters(buy.url) }}</span></td>
-                                <td class="resize " v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
-                                <td class="resize " v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
+                                <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
+                                <td class="resize" v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
+                                <td class="resize" v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
                                 <td class="resize" v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
                                 <td class="resize" v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
                                 <td class="resize" v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
@@ -508,23 +508,20 @@
         min-height: 37px;
     }
     #tbl_buy_backlink {
-        table-layout:fixed!important;
+        /* table-layout: fixed; */
         overflow: scroll ;
         width: 100% !important;
     }
     #tbl_buy_backlink .resize{
+        width: auto !important;
+        white-space: normal;
         text-overflow: clip;
         overflow: hidden;
-         width: 100% !important;
-        
     }
+
     .box-body.no-padding.relative{
         overflow: scroll;
     }
-    .resize.resizeurl{
-        overflow-wrap: break-word!important;
-    }
-    
 </style>
 
 <script>

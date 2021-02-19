@@ -43,6 +43,8 @@ class MailgunController extends Controller
         //     }
 
 
+
+
         // }else {
         //     $list_attach = '';
         // }
@@ -57,15 +59,13 @@ class MailgunController extends Controller
 
         }
 
-        // check if email is a string or json object
-        $request['email'] = json_decode($request->email, true) ?? $request->email;
-
         $request->validate([
             'email'     => 'required',
-            'email.*.text' => 'required|email',
             'title'     => 'required',
             'content'   => 'required',
         ]);
+
+
 
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
@@ -73,15 +73,11 @@ class MailgunController extends Controller
 
         $email_to = $request->email;
 
-        if(is_array($email_to)) {
-            $myArray = array_column($email_to, 'text');
-        }else{
-            if (strpos($request->email, '|') !== false) {
-                $email_to = str_replace("|",",",$request->email);
-            }
-
-            $myArray = explode(',', $email_to);
+        if (strpos($request->email, '|') !== false) {
+            $email_to = str_replace("|",",",$request->email);
         }
+
+        $myArray = explode(',', $email_to);
 
         //add current email another associalte array
         $aw = [];
@@ -146,7 +142,7 @@ class MailgunController extends Controller
             'is_sent'           => 1,
             'is_viewed'         => 1,
             'label_id'          => 0,
-            'received'          => $str,
+            'received'          => $request->email,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
             'attachment'        => $attac_object == '' ? '' : json_encode($attac_object),
