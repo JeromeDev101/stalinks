@@ -158,8 +158,11 @@ export default {
         this.checkAccountType();
     },
 
-    mounted() {
+    beforeMount() {
         this.liveGetWallet();
+    },
+
+    mounted() {
         this.getNotifications(this.user.id);
 
         pusher.logToConsole = true;
@@ -217,13 +220,19 @@ export default {
                     .get("api/wallet-credit")
                     .then(function(res) {
                         let result = res.data;
+                        console.log(result)
                         if (typeof result === "object") {
                             localStorage.setItem(
                                 "wallet",
                                 JSON.stringify(res.data)
                             );
 
+                            console.log(Number.isInteger(res.data.wallet))
+
+
                             app.money = Number.isInteger(res.data.wallet) ? res.data : app.money;
+
+                            console.log(app.money)
                         }
                     })
                     .catch(error => console.log(error));
