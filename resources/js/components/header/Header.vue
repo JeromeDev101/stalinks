@@ -213,8 +213,6 @@ export default {
             let app = this
 
             if (this.user.role_id == 5) {
-                let wallet = {};
-
                 axios
                     .get("api/wallet-credit")
                     .then(function(res) {
@@ -224,12 +222,8 @@ export default {
                                 "wallet",
                                 JSON.stringify(res.data)
                             );
-                        }
 
-                        wallet = JSON.parse(localStorage.getItem("wallet"));
-
-                        if(wallet){
-                            app.money = Number.isInteger(wallet.wallet) ? wallet : app.money;
+                            app.money = Number.isInteger(res.data.wallet) ? res.data : app.money;
                         }
                     })
                     .catch(error => console.log(error));
