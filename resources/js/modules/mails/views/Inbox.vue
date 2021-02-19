@@ -199,7 +199,7 @@
                                         <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                <select v-on:change="getTemplate('send')" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
@@ -210,7 +210,7 @@
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
+                            <div class="col-md-12" style="margin-top: 15px;">
                                 <div
                                     :class="{
                                         'has-error': messageForms.errors.email
@@ -256,7 +256,7 @@
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': true}" v-show="withBcc" style="margin-top: 15px;">
+                            <div class="col-md-12" v-show="withBcc" style="margin-top: 15px;">
                                 <div class="form-group">
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="emailContent.cc">
@@ -352,7 +352,7 @@
                                         <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                <select v-on:change="getTemplate('reply')" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
@@ -363,7 +363,7 @@
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
+                            <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
 <!--                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">-->
@@ -384,7 +384,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;" v-show="withBcc">
+                            <div class="col-md-12" style="margin-top: 15px;" v-show="withBcc">
                                 <div class="form-group">
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.cc">
@@ -726,9 +726,18 @@ export default {
             await this.$store.dispatch('getListMails', { params: { country_id: this.countryMailId, full_page: 1} });
         },
 
-        getTemplate() {
-            this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
-            this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+        getTemplate(mod) {
+            // this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+            // this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+            let content = mod === 'send' ? this.emailContent : this.replyContent;
+
+            let template = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0]
+
+            for (let key in template) {
+                if(template.hasOwnProperty(key)){
+                    content[key] = template[key]
+                }
+            }
         },
 
         async getListCountries(params) {
