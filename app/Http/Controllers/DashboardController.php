@@ -55,6 +55,8 @@ class DashboardController extends Controller
 
     private function TotalSeller() {
         $columns = [
+            'A.id as seller_id',
+            'B.id as incharge_id',
             'A.username as username',
             'B.username as in_charge',
             DB::raw('COUNT(publisher.url) as num_sites'),
@@ -76,7 +78,7 @@ class DashboardController extends Controller
             $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
-        return $list->groupBy('publisher.user_id', 'A.username', 'B.username')
+        return $list->groupBy('publisher.user_id', 'A.username', 'B.username', 'A.id', 'B.id')
                     ->orderBy('A.username', 'asc')
                     ->get();
     }
