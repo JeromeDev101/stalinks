@@ -577,4 +577,53 @@ class AccountController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function checkVerifiedAccount(Request $request) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['success' => false], 422);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function verifyAccount(Request $request) {
+        $registered = Registration::find($request->id);
+
+        if (!$registered) {
+            return response()->json(['success' => false], 422);
+        }
+
+        $registered->update([
+            'verification_code' => ''
+        ]);
+
+        $role_id = 0;
+        if( $registered->type == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $registered->type == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $registered->type == 'Writer' ){
+            $role_id = 4;
+        }
+
+        $data['name'] = $registered->name;
+        $data['username'] = $registered->username;
+        $data['email'] = $registered->email;
+        $data['password'] = $registered->password;
+        $data['type'] = 0;
+        $data['avatar'] = '/images/noavatar.jpg';
+        $data['isOurs'] = 1;
+        $data['role_id'] = $role_id;
+
+        User::create($data);
+
+        return response()->json(['success' => true]);
+
+    }
 }
