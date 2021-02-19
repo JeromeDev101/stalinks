@@ -399,7 +399,7 @@ class AccountController extends Controller
                     ->get();
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
-            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
+            $deposit = round($wallet_transaction[0]['amount_usd']);
         }
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
@@ -419,7 +419,7 @@ class AccountController extends Controller
             'total_purchased' => floatVal($total_purchased[0]['total_purchased']),
             'total_purchased_paid' => floatVal($total_purchased_paid[0]['total_purchased_paid']),
             'total_paid' => floatVal($total_paid[0]['total_paid']),
-            'credit' => number_format($credit,2),
+            'credit' => round($credit),
             'deposit' => $deposit,
         ];
     }

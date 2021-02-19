@@ -144,10 +144,11 @@ export default {
             error: null,
             money: {
                 wallet: "",
-                total_purchased: "",
-                total_paid: "",
                 credit: "",
-                deposit: ""
+                deposit: "",
+                total_paid: "",
+                total_purchased: "",
+                total_purchased_paid: "",
             },
         };
     },
@@ -209,27 +210,29 @@ export default {
         },
 
         liveGetWallet() {
+            let app = this
+
             if (this.user.role_id == 5) {
                 let wallet = {};
 
                 axios
                     .get("api/wallet-credit")
                     .then(function(res) {
-                        var result = res.data;
+                        let result = res.data;
                         if (typeof result === "object") {
                             localStorage.setItem(
                                 "wallet",
                                 JSON.stringify(res.data)
                             );
                         }
+
+                        wallet = JSON.parse(localStorage.getItem("wallet"));
+
+                        if(wallet){
+                            app.money = Number.isInteger(wallet.wallet) ? wallet : app.money;
+                        }
                     })
                     .catch(error => console.log(error));
-
-                wallet = JSON.parse(localStorage.getItem("wallet"));
-
-                if (Number.isInteger(wallet.wallet)) {
-                    this.money = wallet;
-                }
             }
         },
 
