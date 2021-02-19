@@ -196,6 +196,14 @@
                         <hr/>
 
                         <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-warning" v-show="!isVerified">
+                                    <p>
+                                        This account is not yet verified. Please click 'Verified Account' to proceed.
+                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">Verified Account</button>
+                                    </p>
+                                </div>
+                            </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Account Type <span class="text-danger">*</span></label>
@@ -718,6 +726,7 @@
                 addCompanyName: true,
                 updateCompanyName: true,
                 listTeamIncharge: [],
+                isVerified: true,
             }
         },
 
@@ -742,6 +751,43 @@
         },
 
         methods: {
+            verifiedAccount() {
+                 axios.get('/api/verify-account',{
+                    params: {
+                        id: this.accountUpdate.id
+                    }
+                })
+                .then((res) => {
+                    if( res.data.success === true ) {
+                        this.isVerified = true;
+
+                        swal.fire(
+                            'Verify',
+                            'Successfully Verified!',
+                            'success'
+                        );
+                    }
+                })
+            },
+
+            checkVerified() {
+                axios.get('/api/get-verified-account',{
+                    params: {
+                        email: this.accountUpdate.email
+                    }
+                })
+                .then((res) => {
+                    if( res.data.success === true ) {
+                        this.isVerified = res.data.success
+                    }
+                })
+                .catch(res => {
+                    if( res.response.data.success === false ) {
+                        this.isVerified = res.response.data.success
+                    }
+                }) 
+            },
+
             checkTeamIncharge(method) {
                 let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
                 axios.get('/api/team-in-charge-per-role',{
@@ -838,6 +884,7 @@
                 this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
 
                 this.checkTeamIncharge('update');
+                this.checkVerified();
             },
 
             async getPaymentTypeList(params) {

@@ -82,6 +82,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-sub-account')->get('/sub-account', 'AccountController@getSubAccount');
     Route::name('delete-sub-account')->get('/delete-sub-account', 'AccountController@deleteSubAccount');
     Route::name('update-sub-account')->get('/update-sub-account', 'AccountController@updateSubAccount');
+    Route::name('get-verified-account')->get('/get-verified-account', 'AccountController@checkVerifiedAccount');
+    Route::name('verify-account')->get('/verify-account', 'AccountController@verifyAccount');
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
