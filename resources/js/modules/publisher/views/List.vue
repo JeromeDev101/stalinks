@@ -252,7 +252,7 @@
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
 
-                    <table id="tbl-publisher"  class="table-responsive table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl-publisher"  class="table table-hover table-bordered table-striped rlink-table">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -821,7 +821,7 @@
         width: 100% !important;
     }
     #tbl-publisher .resize{
-        width: auto !important;
+        /* width: auto !important; */
         white-space: normal;
         text-overflow: initial;
         overflow: hidden;
