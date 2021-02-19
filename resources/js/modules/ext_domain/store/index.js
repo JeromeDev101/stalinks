@@ -55,6 +55,7 @@ const state = {
     tableExtShowOptions: {
         id: true,
         employee: true,
+        alexa_created_at: true,
         country: true,
         domain: true,
         email: false,
