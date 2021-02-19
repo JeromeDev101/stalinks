@@ -227,12 +227,7 @@ export default {
                                 JSON.stringify(res.data)
                             );
 
-                            console.log(Number.isInteger(res.data.wallet))
-
-
-                            app.money = Number.isInteger(res.data.wallet) ? res.data : app.money;
-
-                            console.log(app.money)
+                            app.money = res.data
                         }
                     })
                     .catch(error => console.log(error));
