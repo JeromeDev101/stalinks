@@ -67,7 +67,8 @@ class DashboardController extends Controller
         $list = Publisher::select($columns)
                     ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
                     ->leftJoin('registration', 'A.email', '=', 'registration.email')
-                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id');
+                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+                    ->whereNotNull('A.id');
                     
   
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
