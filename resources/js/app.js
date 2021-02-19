@@ -14,6 +14,7 @@ import tinymce from 'vue-tinymce-editor';
 import { Compact } from 'vue-color';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import VueTagsInput from '@johmun/vue-tags-input';
 
 
 require('./bootstrap');
@@ -28,6 +29,7 @@ Vue.component('pagination', Pagination)
 Vue.component('v-select', Select2)
 Vue.component('tinymce', tinymce)
 Vue.component('compact-picker', Compact)
+Vue.component('vue-tags-input', VueTagsInput);
 
 
 const router = new VueRouter({
