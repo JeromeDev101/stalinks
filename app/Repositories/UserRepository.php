@@ -28,9 +28,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         if ($isFullList === true) {
             $queryBuilder = $this->buildSimpleFilterQuery($filters);
-            $results = $queryBuilder->select('id', 'name', 'username','email', 'phone', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with('role')->get();
+            $results = $queryBuilder->select('id', 'name', 'username','email', 'phone', 'skype', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with('role')->get();
             // $results = $this->model->isOurs()->select('id', 'name', 'username','email', 'phone', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with('role')->get();
-             
+
             return [
                 'data' => $results,
                 'total' => $results->count()
@@ -38,7 +38,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         }
 
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $queryBuilder = $queryBuilder->select('id', 'name', 'username', 'email', 'phone', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with(['role' => function($query) {
+        $queryBuilder = $queryBuilder->select('id', 'name', 'username', 'email', 'phone', 'skype', 'role_id', 'type', 'status', 'id_payment_type', 'host_work_mail', 'work_mail', 'work_mail_pass')->with(['role' => function($query) {
             $query->select(['id', 'name']);
         }]);
 
