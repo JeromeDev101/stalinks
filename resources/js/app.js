@@ -14,9 +14,6 @@ import tinymce from 'vue-tinymce-editor';
 import { Compact } from 'vue-color';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import DateRangePicker from 'vue2-daterange-picker'
-//you need to import the CSS manually (in case you want to override it)
-import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 
 
 require('./bootstrap');
@@ -31,7 +28,6 @@ Vue.component('pagination', Pagination)
 Vue.component('v-select', Select2)
 Vue.component('tinymce', tinymce)
 Vue.component('compact-picker', Compact)
-Vue.component('date-range-picker', DateRangePicker);
 
 
 const router = new VueRouter({
