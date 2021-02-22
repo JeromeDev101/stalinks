@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,14 @@ class PurchaseController extends Controller
      * @return list
      */
     public function getList(Request $request) {
+
         $user = Auth::user();
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $wallet = 0;
         $deposit = 0;
+
+        $filter['date_completed'] = json_decode($filter['date_completed']);
 
         $list = Backlink::select('backlinks.*')
                     ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
@@ -36,6 +40,13 @@ class PurchaseController extends Controller
 
         if( !$user->isAdmin() && $user->role->id != 7 ){
             $list->where('backlinks.user_id', $user->id);
+        }
+
+        if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
+            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+                ->format('Y-m-d'));
+            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
         }
 
         if( isset($filter['search_id']) && $filter['search_id'] != ''){

@@ -12,15 +12,17 @@
 
                 <div class="box-body m-3 collapse" id="collapseExample">
 
+<!--                    {{ this.$route. }}-->
+
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isOurs != 1">
+                        <div class="col-md-4" v-if="user.isOurs != 1">
                             <div class="form-group">
                                 <label for="">Seller</label>
                                 <select class="form-control" name="" v-model="filterModel.seller">
@@ -30,7 +32,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isOurs != 1">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Buyer</label>
                                 <select class="form-control" name="" v-model="filterModel.buyer">
@@ -40,14 +42,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Search URL Publisher</label>
                                 <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="">Payment Status</label>
                                 <select name="" id="" class="form-control" v-model="filterModel.payment_status">
@@ -58,9 +60,22 @@
                             </div>
                         </div>
 
-
-
-
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Date Completed</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        v-model="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        ref="picker"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -173,7 +188,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label style="color: #333">Payment Status</label>
-                                    <select name="" id="" v-model="updateModel.payment_status" class="form-control">
+                                    <select name="" v-model="updateModel.payment_status" class="form-control">
                                         <option value="Paid">Paid</option>
                                         <option value="Not Paid">Not Paid</option>
                                     </select>
@@ -214,6 +229,10 @@
                     search_id: this.$route.query.search_id || '',
                     search_url_publisher: this.$route.query.search_url_publisher || '',
                     paginate: this.$route.query.paginate || '50',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    }
                 },
                 isPopupLoading: false,
                 totalAmount: 0,
@@ -250,6 +269,7 @@
                         search_id: this.filterModel.search_id,
                         search_url_publisher: this.filterModel.search_url_publisher,
                         paginate: this.filterModel.paginate,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
 
@@ -287,6 +307,10 @@
                     search_id: '',
                     search_url_publisher: '',
                     paginate: '50',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getPurchaseList({
@@ -312,6 +336,7 @@
                         search_id: this.filterModel.search_id,
                         search_url_publisher: this.filterModel.search_url_publisher,
                         paginate: this.filterModel.paginate,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
             },
