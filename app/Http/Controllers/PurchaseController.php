@@ -29,24 +29,17 @@ class PurchaseController extends Controller
 
         $filter['date_completed'] = json_decode($filter['date_completed']);
 
-        $list = Backlink::select('backlinks.*')
-                    ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
-                    ->with(['publisher' => function($query){
-                        $query->with('user:id,name,username');
-                    }])
-                    ->with('user:id,name,username')
-                    ->where('status', 'Live')
-                    ->orderBy('id', 'desc');
-
-        if( !$user->isAdmin() && $user->role->id != 7 ){
-            $list->where('backlinks.user_id', $user->id);
-        }
+        $list = Backlink::select('backlinks.*');
 
         if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
             $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
             $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
                 ->format('Y-m-d'));
+        }
+
+        if( !$user->isAdmin() && $user->role->id != 7 ){
+            $list->where('backlinks.user_id', $user->id);
         }
 
         if( isset($filter['search_id']) && $filter['search_id'] != ''){
@@ -75,6 +68,13 @@ class PurchaseController extends Controller
             });
         }
 
+        $list->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
+            ->with(['publisher' => function($query){
+                $query->with('user:id,name,username');
+            }])
+            ->with('user:id,name,username')
+            ->where('status', 'Live')
+            ->orderBy('id', 'desc');
 
         // Getting wallet and deposits
 
