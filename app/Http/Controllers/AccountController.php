@@ -399,7 +399,7 @@ class AccountController extends Controller
                     ->get();
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
-            $deposit = number_format($wallet_transaction[0]['amount_usd'],2);
+            $deposit = round($wallet_transaction[0]['amount_usd']);
         }
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
@@ -419,7 +419,7 @@ class AccountController extends Controller
             'total_purchased' => floatVal($total_purchased[0]['total_purchased']),
             'total_purchased_paid' => floatVal($total_purchased_paid[0]['total_purchased_paid']),
             'total_paid' => floatVal($total_paid[0]['total_paid']),
-            'credit' => number_format($credit,2),
+            'credit' => round($credit),
             'deposit' => $deposit,
         ];
     }
@@ -444,7 +444,7 @@ class AccountController extends Controller
             $role_id = 4;
         }
 
-        $team = User::select('id','name', 'username')->where('isOurs',0)->where('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
+        $team = User::select('id','name', 'username')->where('isOurs',0)->where('role_id', $role_id)->orderBy('username', 'asc')->get();
         return response()->json($team, 200);
     }
 
@@ -576,5 +576,54 @@ class AccountController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function checkVerifiedAccount(Request $request) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['success' => false], 422);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function verifyAccount(Request $request) {
+        $registered = Registration::find($request->id);
+
+        if (!$registered) {
+            return response()->json(['success' => false], 422);
+        }
+
+        $registered->update([
+            'verification_code' => ''
+        ]);
+
+        $role_id = 0;
+        if( $registered->type == 'Seller' ){
+            $role_id = 6;
+        }
+
+        if( $registered->type == 'Buyer' ){
+            $role_id = 5;
+        }
+
+        if( $registered->type == 'Writer' ){
+            $role_id = 4;
+        }
+
+        $data['name'] = $registered->name;
+        $data['username'] = $registered->username;
+        $data['email'] = $registered->email;
+        $data['password'] = $registered->password;
+        $data['type'] = 0;
+        $data['avatar'] = '/images/noavatar.jpg';
+        $data['isOurs'] = 1;
+        $data['role_id'] = $role_id;
+
+        User::create($data);
+
+        return response()->json(['success' => true]);
+
     }
 }

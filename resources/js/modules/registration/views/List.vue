@@ -196,10 +196,18 @@
                         <hr/>
 
                         <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-warning" v-show="!isVerified">
+                                    <p>
+                                        This account is not yet verified. Please click 'Verified Account' to proceed.
+                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">Verified Account</button>
+                                    </p>
+                                </div>
+                            </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled">
+                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
@@ -238,21 +246,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
-                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
+                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -272,15 +270,25 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="form-control" v-model="accountUpdate.country_id">
@@ -386,8 +394,8 @@
                             <div class="col-sm-6">
                                 <label>Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
-                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username}}
+                                    <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                        {{ option.username == null || option.username == '' ? option.name:option.username}}
                                     </option>
                                 </select>
                             </div>
@@ -430,7 +438,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountModel.type">
+                                    <select class="form-control" name="" v-model="accountModel.type" @change="checkTeamIncharge('add')">
                                         <option value="">Select Type</option>
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
@@ -472,21 +480,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" >
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="addCompanyName">
-                                <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" v-model="accountModel.skype">
+                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -506,15 +504,25 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-md-12" >
                                 <div class="form-group">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" v-model="accountModel.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-12" v-show="addCompanyName">
+                                <div class="form-group">
+                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountModel.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="form-control" v-model="accountModel.country_id">
@@ -608,8 +616,8 @@
                                     <label>Team In-charge</label>
                                     <select class="form-control" v-model="accountModel.team_in_charge">
                                         <option value="">Select Team In-charge</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username}}
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{ option.username == null || option.username == '' ? option.name:option.username}}
                                         </option>
                                     </select>
                                 </div>
@@ -717,6 +725,8 @@
                 isSearching: false,
                 addCompanyName: true,
                 updateCompanyName: true,
+                listTeamIncharge: [],
+                isVerified: true,
             }
         },
 
@@ -727,7 +737,6 @@
             this.getTeamInCharge();
             this.checkTeamSeller();
             this.getListCountries();
-            this.checkTeamIncharge();
         },
 
         computed: {
@@ -742,15 +751,52 @@
         },
 
         methods: {
-            checkTeamIncharge() {
-                let role = this.accountModel.type
+            verifiedAccount() {
+                 axios.get('/api/verify-account',{
+                    params: {
+                        id: this.accountUpdate.id
+                    }
+                })
+                .then((res) => {
+                    if( res.data.success === true ) {
+                        this.isVerified = true;
+
+                        swal.fire(
+                            'Verify',
+                            'Successfully Verified!',
+                            'success'
+                        );
+                    }
+                })
+            },
+
+            checkVerified() {
+                axios.get('/api/get-verified-account',{
+                    params: {
+                        email: this.accountUpdate.email
+                    }
+                })
+                .then((res) => {
+                    if( res.data.success === true ) {
+                        this.isVerified = res.data.success
+                    }
+                })
+                .catch(res => {
+                    if( res.response.data.success === false ) {
+                        this.isVerified = res.response.data.success
+                    }
+                }) 
+            },
+
+            checkTeamIncharge(method) {
+                let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
                 axios.get('/api/team-in-charge-per-role',{
                     params: {
                         role: role
                     }
                 })
                 .then((res)=> {
-                    console.log(res)
+                    this.listTeamIncharge = res.data
                 })
             },
 
@@ -836,6 +882,9 @@
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
                 this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
+
+                this.checkTeamIncharge('update');
+                this.checkVerified();
             },
 
             async getPaymentTypeList(params) {

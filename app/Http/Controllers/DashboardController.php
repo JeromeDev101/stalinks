@@ -55,6 +55,8 @@ class DashboardController extends Controller
 
     private function TotalSeller() {
         $columns = [
+            'A.id as seller_id',
+            'B.id as incharge_id',
             'A.username as username',
             'B.username as in_charge',
             DB::raw('COUNT(publisher.url) as num_sites'),
@@ -65,7 +67,8 @@ class DashboardController extends Controller
         $list = Publisher::select($columns)
                     ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
                     ->leftJoin('registration', 'A.email', '=', 'registration.email')
-                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id');
+                    ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+                    ->whereNotNull('A.id');
                     
   
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
@@ -76,7 +79,7 @@ class DashboardController extends Controller
             $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
-        return $list->groupBy('publisher.user_id', 'A.username', 'B.username')
+        return $list->groupBy('publisher.user_id', 'A.username', 'B.username', 'A.id', 'B.id')
                     ->orderBy('A.username', 'asc')
                     ->get();
     }

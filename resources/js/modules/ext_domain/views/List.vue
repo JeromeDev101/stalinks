@@ -58,15 +58,13 @@
                   <div v-if="tableShow.status" class="col-md-2">
                      <div class="form-group">
                         <label style="color: #333">Status</label>
-                         <v-select multiple
-                                   v-model="filterModel.status_temp" :options="objectToArray(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
-<!--                        <select v-model="filterModel.status_temp" class="form-control">-->
-<!--                            <option value="-1" selected>All-->
-<!--                            </option>-->
-<!--                           <option v-for="(option, key) in listStatusText" v-bind:value="key">-->
-<!--                              {{ option.text }}-->
-<!--                           </option>-->
-<!--                        </select>-->
+                        <select v-model="filterModel.status_temp" class="form-control">
+                            <option value="-1" selected>All
+                            </option>
+                           <option v-for="(option, key) in listStatusText" v-bind:value="key">
+                              {{ option.text }}
+                           </option>
+                        </select>
                      </div>
                   </div>
                </div>
@@ -81,31 +79,11 @@
                             <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
                         </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label
-                                style="color: #333">Alexa
-                                                    Date
-                                                    Upload
-                            </label>
-                            <div class="input-group">
-                                <date-range-picker
-                                    ref="picker"
-                                    v-model="filterModel.alexa_date_upload"
-                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                    :dateRange="filterModel.alexa_date_upload"
-                                    :linkedCalendars="true"
-                                />
-                            </div>
-                        </div>
-                    </div>
                     <div v-if="tableShow.status" class="col-md-2">
                         <div class="form-group pull-right">
                             <label style="color: #333">Action</label>
                             <br>
                             <div class="btn-group">
-                                <button class="btn btn-default" @click="clearSearch" >Clear</button>
                                 <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
                                 <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
                             </div>
@@ -201,43 +179,21 @@
                         </th>
                         <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
                         <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
-                        <th class="sorting"
-                            data-index="2"
-                            v-show="tableShow.alexa_created_at">
-                            Alexa Date Upload</th>
-                        <th class="sorting"
-                            data-index="3" v-show="tableShow.country">Country</th>
-                        <th class="sorting"
-                            data-index="4" v-show="tableShow.domain">Domain</th>
-                        <th class="sorting"
-                            data-index="5" v-show="tableShow.email">Emails</th>
-                        <th class="sorting"
-                            data-index="6" v-show="tableShow.facebook">Facebook</th>
-                        <th class="sorting"
-                            data-index="7" v-show="tableShow.phone">Phone</th>
-                        <th class="sorting"
-                            data-index="8"
-                            v-show="tableShow.rank">
-                            Alexa Rank</th>
-                        <th class="sorting"
-                            data-index="9" v-show="tableShow.status">Status</th>
-                        <th class="sorting"
-                            data-index="10"
-                            v-show="tableShow.total_spent">Total Spent</th>
-                        <th class="sorting"
-                            data-index="11" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
-                        <th class="sorting"
-                            data-index="12" v-show="tableShow.no_backlinks">No Backlinks</th>
-                        <th class="sorting"
-                            data-index="13" v-show="tableShow.url_rating">UR</th>
-                        <th class="sorting"
-                            data-index="14" v-show="tableShow.domain_rating">DR</th>
-                        <th class="sorting"
-                            data-index="15" v-show="tableShow.ref_domains">Ref Domains</th>
-                        <th class="sorting"
-                            data-index="16" v-show="tableShow.organic_keywords">Organic Keywords</th>
-                        <th class="sorting"
-                            data-index="17" v-show="tableShow.organic_traffic">Organic Traffic</th>
+                        <th class="sorting" data-index="2" v-show="tableShow.country">Country</th>
+                        <th class="sorting" data-index="3" v-show="tableShow.domain">Domain</th>
+                        <th class="sorting" data-index="4" v-show="tableShow.email">Emails</th>
+                        <th class="sorting" data-index="5" v-show="tableShow.facebook">Facebook</th>
+                        <th class="sorting" data-index="6" v-show="tableShow.phone">Phone</th>
+                        <th class="sorting" data-index="7" v-show="tableShow.rank">Rank</th>
+                        <th class="sorting" data-index="8" v-show="tableShow.status">Status</th>
+                        <th class="sorting" data-index="9" v-show="tableShow.total_spent">Total Spent</th>
+                        <th class="sorting" data-index="10" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
+                        <th class="sorting" data-index="11" v-show="tableShow.no_backlinks">No Backlinks</th>
+                        <th class="sorting" data-index="12" v-show="tableShow.url_rating">UR</th>
+                        <th class="sorting" data-index="13" v-show="tableShow.domain_rating">DR</th>
+                        <th class="sorting" data-index="14" v-show="tableShow.ref_domains">Ref Domains</th>
+                        <th class="sorting" data-index="15" v-show="tableShow.organic_keywords">Organic Keywords</th>
+                        <th class="sorting" data-index="16" v-show="tableShow.organic_traffic">Organic Traffic</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -261,8 +217,6 @@
                         </td>
                         <td v-show="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
                         <td v-show="tableShow.employee">{{ ext.users == null ? 'N/A':ext.users.username }}</td>
-                        <td v-show="tableShow.alexa_created_at">{{
-                                                 ext.alexa_created_at }}</td>
                         <td v-show="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
                         <td v-show="tableShow.domain" title="Domain" ><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
                         <td v-show="tableShow.email" title="Emails" style="max-width: 200px;">
@@ -1114,27 +1068,20 @@
                    email: this.$route.query.email || '',
                    status: this.$route.query.status || -1,
                    status_temp:
-                       this.$route.query.status_temp ||
-                       null,
+                       this.$route.query.status_temp || -1,
                    page: this.$route.query.page || 0,
                    per_page: this.$route.query.per_page || 50,
                    employee_id: this.$route.query.employee_id || '',
                    required_email_temp: this.$route.query.required_email_temp || 0,
                    required_email: this.$route.query.required_email || 0,
                    sort_key: this.$route.query.sort_key || 'id',
-                   sort_value:
-                       this.$route.query.sort_value || 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
+                   sort_value: this.$route.query.sort_value || 'desc'
                },
                listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
                extModel: {
                    id: 0,
                    domain: '',
                    country_id: 0,
-                   alexa_created_at: 'N/A',
                    alexa_rank: 0,
                    ahrefs_rank: 0,
                    no_backlinks: 0,
@@ -1591,8 +1538,6 @@
                        id: that.filterModel.id,
                        sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
                        per_page: that.filterModel.per_page,
-                       alexa_date_upload:
-                       that.filterModel.alexa_date_upload
                    }
                });
            },
@@ -2070,48 +2015,6 @@
                let that = this;
                this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
                this.fetchTemplateMail(this.mailInfo.country.id);
-           },
-
-           objectToArray(ob) {
-               let arr = [];
-               Object.keys(ob).forEach((key) => {
-                   ob[key]['id'] = key;
-                   arr.push(ob[key]);
-               });
-
-               return arr;
-           },
-
-           clearSearch() {
-               this.filterModel = {
-                   id: 0,
-                   id_temp: 0,
-                   country_id: 0,
-                   country_id_temp: '',
-                   countryList: { data: [], total: 0},
-                   domain: '',
-                   domain_temp: '',
-                   email: '',
-                   status: -1,
-                   status_temp: null,
-                   page: 0,
-                   per_page: 50,
-                   employee_id: '',
-                   required_email_temp: 0,
-                   required_email: 0,
-                   sort_key: 'id',
-                   sort_value: 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
-               };
-
-               this.getExtList({
-                   params: this.filterModel
-               });
-
-               this.$router.replace({'query': null});
            },
 
            // async submitSendMail() {
