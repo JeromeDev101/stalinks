@@ -61,7 +61,7 @@
                         </div>
 
                     </div>
-
+                    
                     <div class="row my-3">
                         <div class="col-md-2">
                             <button class="btn btn-default" @click="clearSearch">Clear</button>
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-
+            
             <div class="box">
                 <div class="box-header">
 
@@ -95,13 +95,13 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Work mail</th>
-                                <th>Skype</th>
+                                <th>Phone</th>
                                 <th>Role</th>
                                 <th>Status</th>
                                 <th>Type</th>
                                 <th>Action</th>
                             </tr>
-
+                            
                             <!-- <tr>
                                 <td style="max-width: 30px;">
                                     Filter
@@ -138,18 +138,18 @@
                                         <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
                                     </div>
                                 </td>
-
+            
 
                             </tr> -->
                         </thead>
-
+                        
                         <tbody>
                             <tr v-for="(user, index) in listUser.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ user.username == null ? user.name:user.username }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.work_mail }}</td>
-                                <td>{{ user.skype }}</td>
+                                <td>{{ user.phone }}</td>
                                 <td>{{ user.role ? user.role.name : '' }}</td>
                                 <td>{{ user.status }}</td>
                                 <td>{{ userTypeList[user.type] }}</td>
@@ -221,19 +221,11 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">-->
-<!--                                    <label style="color: #333">Phone</label>-->
-<!--                                    <input type="text" v-model="userModel.phone" class="form-control" value="" required="required" placeholder="Enter Phone">-->
-<!--                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                    <label style="color: #333">Skype</label>
-                                    <input type="text" v-model="userModel.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">
+                                    <label style="color: #333">Phone</label>
+                                    <input type="text" v-model="userModel.phone" class="form-control" value="" required="required" placeholder="Enter Phone">
+                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -359,19 +351,11 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">-->
-<!--                                    <label style="color: #333">Phone</label>-->
-<!--                                    <input autocomplete="off" type="text" v-model="userUpdate.phone" class="form-control" value="" required="required" placeholder="Enter Phone">-->
-<!--                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                    <label style="color: #333">Skype</label>
-                                    <input autocomplete="off" type="text" v-model="userUpdate.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">
+                                    <label style="color: #333">Phone</label>
+                                    <input autocomplete="off" type="text" v-model="userUpdate.phone" class="form-control" value="" required="required" placeholder="Enter Phone">
+                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -428,7 +412,7 @@
                                 </div>
                             </div>
 
-
+                        
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -447,17 +431,17 @@
                                         </div>
                                     </div>
 
-<!--                                    <div class="col-md-6">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label style="color: #333">Payment Type</label>-->
-<!--                                            <select v-model="userUpdate.id_payment_type" class="form-control pull-right">-->
-<!--                                                <option value="">&#45;&#45; Select Payment Type &#45;&#45;</option>-->
-<!--                                                <option v-for="option in listPayment.data" v-bind:value="option.id">-->
-<!--                                                    {{ option.type }}-->
-<!--                                                </option>-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="color: #333">Payment Type</label>
+                                            <select v-model="userUpdate.id_payment_type" class="form-control pull-right">
+                                                <option value="">-- Select Payment Type --</option>
+                                                <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                                    {{ option.type }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -469,17 +453,17 @@
                                         </div>
                                     </div>
 
-<!--                                    <div class="col-md-6">-->
-<!--                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.credit_auth}" class="form-group">-->
-<!--                                            <label style="color: #333">Credit Authorization</label>-->
-<!--                                            <select name="" class="form-control" v-model="userUpdate.credit_auth">-->
-<!--                                                <option value=""></option>-->
-<!--                                                <option value="Yes">Yes</option>-->
-<!--                                                <option value="No">No</option>-->
-<!--                                            </select>-->
-<!--                                            <span v-if="messageForms.errors.credit_auth" v-for="err in messageForms.errors.credit_auth" class="text-danger">{{ err }}</span>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <div class="col-md-6">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.credit_auth}" class="form-group">
+                                            <label style="color: #333">Credit Authorization</label>
+                                            <select name="" class="form-control" v-model="userUpdate.credit_auth">
+                                                <option value=""></option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                            <span v-if="messageForms.errors.credit_auth" v-for="err in messageForms.errors.credit_auth" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -762,7 +746,6 @@ export default {
                 name: this.$route.query.name || '',
                 name_temp: this.$route.query.name_temp || '',
                 phone: this.$route.query.phone || '',
-                skype: this.$route.query.skype || '',
                 phone_temp: this.$route.query.phone_temp || '',
                 page: this.$route.query.page || 0,
                 per_page: this.$route.query.per_page || 10,
@@ -771,8 +754,7 @@ export default {
             userModel: {
                 name: '',
                 email: '',
-                // phone: '',
-                skype: '',
+                phone: '',
                 password: '',
                 c_password: '',
                 role_id: '',
@@ -786,8 +768,7 @@ export default {
                 username: '',
                 name: '',
                 email: '',
-                // phone: '',
-                skype: '',
+                phone: '',
                 password: '',
                 c_password: '',
                 role_id: '',
@@ -936,8 +917,7 @@ export default {
             this.userModel = {
                 name: '',
                 email: '',
-                // phone: '',
-                skype: '',
+                phone: '',
                 password: '',
                 c_password: '',
                 role_id: '',

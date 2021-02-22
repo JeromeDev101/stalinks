@@ -48,10 +48,7 @@ class RegisterRequest extends FormRequest
                 'email',
                 new ValidateEmailRule,
             ],
-//            'phone' => [
-//                'required'
-//            ],
-            'skype' => [
+            'phone' => [
                 'required'
             ],
             'password' => [

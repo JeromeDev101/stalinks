@@ -83,10 +83,6 @@ class UserController extends Controller
             $filters['where'][] = ['phone', 'like', '%'.$input['phone'].'%'];
         }
 
-        if (isset($input['skype']) && $input['skype'] != '') {
-            $filters['where'][] = ['skype', 'like', '%'.$input['skype'].'%'];
-        }
-
         if (isset($input['name']) && $input['name'] != '') {
             $filters['where'][] = ['name', 'like', '%'.$input['name'].'%'];
         }
