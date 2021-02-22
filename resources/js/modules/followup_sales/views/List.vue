@@ -137,7 +137,8 @@
                         <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
                     </span>
 
-                    <table id="tbl-followupsales" class="table table-hover table-bordered table-striped rlink-table">
+                    <table id="tbl-followupsales"
+                           class="table table-hover table-bordered table-striped rlink-table table-responsive" style="height: 650px;">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
