@@ -29,14 +29,14 @@ class PurchaseController extends Controller
 
         $filter['date_completed'] = json_decode($filter['date_completed']);
 
-        $list = Backlink::select('backlinks.*');
-
-        if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
-            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
-                ->format('Y-m-d'));
-            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
-                ->format('Y-m-d'));
-        }
+        $list = Backlink::select('backlinks.*')
+                    ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
+                    ->with(['publisher' => function($query){
+                        $query->with('user:id,name,username');
+                    }])
+                    ->with('user:id,name,username')
+                    ->where('status', 'Live')
+                    ->orderBy('id', 'desc');
 
         if( !$user->isAdmin() && $user->role->id != 7 ){
             $list->where('backlinks.user_id', $user->id);
@@ -68,14 +68,6 @@ class PurchaseController extends Controller
             });
         }
 
-        $list->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
-            ->with(['publisher' => function($query){
-                $query->with('user:id,name,username');
-            }])
-            ->with('user:id,name,username')
-            ->where('status', 'Live')
-            ->orderBy('id', 'desc');
-
         // Getting wallet and deposits
 
         $user_id = $user->id;
@@ -93,6 +85,13 @@ class PurchaseController extends Controller
 
         if (count($sub_buyer_ids) > 0) {
             $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
+        }
+
+        if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
+            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+                ->format('Y-m-d'));
+            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
         }
 
         $getBuyer = BuyerPurchased::select('buyer_purchased.user_id_buyer','users.username')
@@ -130,8 +129,6 @@ class PurchaseController extends Controller
         }
 
         // end of getting wallet and deposits
-
-
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){}
         else{
