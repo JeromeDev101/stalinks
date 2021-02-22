@@ -309,8 +309,8 @@ class ExtDomainController extends Controller
         $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
 
         if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
-            $filters['where'][] = ['created_at', '>=', Carbon::create( $input['alexa_date_upload']['startDate'])];
-            $filters['where'][] = ['created_at', '<=', Carbon::create( $input['alexa_date_upload']['endDate'])];
+            $filters['where'][] = ['created_at', '>=', Carbon::create( $input['alexa_date_upload']['startDate'])->format('Y-m-d')];
+            $filters['where'][] = ['created_at', '<=', Carbon::create( $input['alexa_date_upload']['endDate'])->format('Y-m-d')];
             $filters['where'][] = ['alexa_rank', '!=', 0];
         }
 
