@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ArticleDone;
+use App\Events\NewWriterArticle;
+use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\User;
@@ -189,23 +192,30 @@ class ArticlesController extends Controller
         ];
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, NotificationInterface $notification) {
         $request->validate([
             'backlink' => 'required',
             'writer' => 'required',
         ]);
 
-        Article::create([
+        $article = Article::create([
             'id_backlink' => $request->backlink,
             'id_writer' => $request->writer,
             'id_language' => $request->language_id,
             'date_start' => date('Y-m-d'),
         ]);
 
+        $notification->create([
+            'user_id' => $request->writer,
+            'notification' => 'Hello writers there is a new articles to write for ' . $article->language->name . '  for '. $article->backlinks->url_advertiser .' on '. date('Y-m-d') .' follow up with backlink ID ' . $request->backlink
+        ]);
+
+        broadcast(New NewWriterArticle($request->writer));
+
         return response()->json(['success' => true], 200);
     }
 
-    public function updateContent(Request $request){
+    public function updateContent(Request $request, NotificationInterface $notification){
 
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
@@ -236,6 +246,12 @@ class ArticlesController extends Controller
                 $backlink->update(['status' => 'Content Done']);
             }
 
+            $notification->create([
+                'user_id' => $article->id_writer,
+                'notification' => 'Thanks for finishing the articles on '. date('Y-m-d') .' for the article '. $article->id .' we will credit your account soon thanks'
+            ]);
+
+            broadcast(new ArticleDone($article->id_writer));
         }
 
         if( $request->content['status'] == 'In Writing' ){

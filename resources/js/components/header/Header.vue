@@ -184,7 +184,27 @@ export default {
 
         channel.bind('backlink.status.changed', (e) => {
             this.getNotifications(this.user.id);
-        })
+        });
+
+        channel.bind('buyer.debited', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('seller.paid', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('writer.new.article', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('writer.article.done', (e) => {
+            this.getNotifications(this.user.id);
+        });
+
+        channel.bind('writer.paid', (e) => {
+            this.getNotifications(this.user.id);
+        });
     },
 
     computed: {

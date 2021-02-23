@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BuyerDebited;
+use App\Events\SellerPaid;
+use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
@@ -33,7 +36,7 @@ class SellerBillingController extends Controller
                 $list = $list->where('billing.admin_confirmation', '=', '1');
             }else{
                 $list = $list->whereNull('billing.admin_confirmation');
-            }    
+            }
         }
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){
@@ -43,29 +46,31 @@ class SellerBillingController extends Controller
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list = $list->where('backlinks.id', $filter['search']);
         }
-                    
+
         $list->orderBy('created_at', 'desc');
         return [
             'data' => $list->get(),
         ];
     }
 
-    public function payBilling(Request $request) {
+    public function payBilling(Request $request, NotificationInterface $notification) {
         $request->validate([
             'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $ids = json_decode($request->ids);
-        
+
         $image = $request->file;
         $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/billing'), $new_name);
         $backlink_ids = [];
+        $totalBacklinkAmount = 0;
         foreach( $ids as $data ){
             $backlink_id = $data->id;
             $user_id_seller = $data->publisher->user->id;
             $seller_price = $data->publisher->price;
             $backlink_ids[] = $backlink_id;
+            $totalBacklinkAmount += $seller_price;
 
             $backlink = Backlink::find($backlink_id);
             $backlink->update(['payment_status' => 'Paid']);
@@ -92,6 +97,19 @@ class SellerBillingController extends Controller
                 $wallet->update(['total_wallet' => $total_amount]);
             }
         }
+
+        $notification->create([
+            'user_id' => $backlink->user_id,
+            'notification' => 'Your account has been debited of '. $totalBacklinkAmount .' for the different order '. implode(', ', $backlink_ids) .' thanks'
+        ]);
+
+        $notification->create([
+            'user_id' => $user_id_seller,
+            'notification' => 'Your account has been credited of '. $totalBacklinkAmount .' for the different order '. implode(', ', $backlink_ids) .' thanks'
+        ]);
+
+        broadcast(new BuyerDebited($backlink->user_id));
+        broadcast(new SellerPaid($user_id_seller));
 
         return response()->json(['success' => true], 200);
     }
