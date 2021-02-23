@@ -247,7 +247,7 @@ class ArticlesController extends Controller
             }
 
             $notification->create([
-                'user_id' => $article->id_writer,
+                'user_id' => $user_id,
                 'notification' => 'Thanks for finishing the articles on '. date('Y-m-d') .' for the article '. $article->id .' we will credit your account soon thanks'
             ]);
 
