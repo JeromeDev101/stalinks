@@ -350,7 +350,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Details of Issue/Cancelled</label>
-                                        <textarea class="form-control" v-model="updateModel.reason_text"></textarea>
+                                        <textarea class="form-control" v-model="updateModel.reason_detailed"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -483,7 +483,7 @@
                     link_from: '',
                     url_from: '',
                     reason: '',
-                    reason_text: '',
+                    reason_detailed: '',
                 },
                 isPopupLoading: false,
                 filterModel: {
@@ -562,6 +562,7 @@
             },
 
             checkStatus() {
+                this.updateModel.reason = ''
                 if(this.updateModel.status === 'Issue'){
                     this.showReason = true;
                     this.listReason = this.reasonIssue
@@ -570,6 +571,7 @@
                     this.listReason = this.reasonCancelled
                 } else {
                     this.showReason = false;
+                    this.showReasonText = false;
                 }
             },
 
@@ -774,6 +776,26 @@
                 this.updateModel.url_publisher = that.publisher == null ? that.ext_domain.domain:that.publisher.url
                 this.updateModel.article_id = that.article == null ? '':that.article.id
                 this.updateModel.status_writer = that.article == null ? '':that.article.status_writer;
+
+                // to display the Details of Issue/Cancelled field
+                if(this.updateModel.reason == 'Other' && this.updateModel.reason != null ){
+                    this.showReasonText = true;
+                } else {
+                    this.showReasonText = false;
+                }
+
+                // to display the Reason field
+                if(this.updateModel.status === 'Issue'){
+                    this.showReason = true;
+                    this.listReason = this.reasonIssue
+                } else if(this.updateModel.status === 'Canceled'){
+                    this.showReason = true;
+                    this.listReason = this.reasonCancelled
+                } else {
+                    this.showReason = false;
+                    this.showReasonText = false;
+                }
+
 
                 this.isLive = false;
                 if( that.status == 'Live' && !this.user.isAdmin){

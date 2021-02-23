@@ -94,7 +94,7 @@ class FollowupSalesController extends Controller
                     ->where('backlinks.id',$request->id)
                     ->first();
 
-        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
