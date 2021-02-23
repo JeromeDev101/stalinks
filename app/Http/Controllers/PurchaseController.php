@@ -89,9 +89,9 @@ class PurchaseController extends Controller
             }
         }
 
+        dd($sub_buyer_ids);
         if (count($sub_buyer_ids) > 0) {
 //            $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
-            dd($sub_buyer_ids);
             $user_ids = array_merge($user_ids, $sub_buyer_ids->toArray());
         }
 
