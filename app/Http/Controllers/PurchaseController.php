@@ -26,75 +26,76 @@ class PurchaseController extends Controller
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $wallet = 0;
         $deposit = 0;
+        $user_ids = [];
 
         $filter['date_completed'] = json_decode($filter['date_completed']);
 
         $list = Backlink::select('backlinks.*')
-                    ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
-                    ->with(['publisher' => function($query){
-                        $query->with('user:id,name,username');
-                    }])
-                    ->with('user:id,name,username')
-                    ->orderBy('id', 'desc');
+            ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
+            ->with(['publisher' => function($query){
+                $query->with('user:id,name,username');
+            }])
+            ->with('user:id,name,username')
+            ->where('status', 'Live')
+            ->orderBy('id', 'desc');
 
-        $user_id = $user->id;
+        if( !$user->isAdmin() && $user->role->id != 7 ){
+            $user_ids[] = $user->id;
+        }
 
-        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
-        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+        if( isset($filter['search_id']) && $filter['search_id'] != ''){
+            $list->where('backlinks.id', $filter['search_id']);
+        }
 
-        $list->where(function ($query) use($user,$filter,$user_id,$sub_buyer_ids){
+        if( isset($filter['search_url_publisher']) && $filter['search_url_publisher'] != ''){
+            $list->where('publisher.url', 'like', '%'.$filter['search_url_publisher'].'%');
+        }
 
-            $query->where('status', 'Live');
+        if( isset($filter['payment_status']) && $filter['payment_status'] != ''){
+            $list->where('backlinks.payment_status', $filter['payment_status']);
+        }
 
-            if( !$user->isAdmin() && $user->role->id != 7 ){
-                $query->where('backlinks.user_id', $user->id);
-            }
+        if( isset($filter['buyer']) && $filter['buyer'] != ''){
+            $buyer = $filter['buyer'];
+            $list->whereHas('user', function($query) use ($buyer){
+                return $query->where('id', $buyer);
+            });
+        }
 
-            if( isset($filter['search_id']) && $filter['search_id'] != ''){
-                $query->where('backlinks.id', $filter['search_id']);
-            }
-
-            if( isset($filter['search_url_publisher']) && $filter['search_url_publisher'] != ''){
-                $query->where('publisher.url', 'like', '%'.$filter['search_url_publisher'].'%');
-            }
-
-            if( isset($filter['payment_status']) && $filter['payment_status'] != ''){
-                $query->where('backlinks.payment_status', $filter['payment_status']);
-            }
-
-            if( isset($filter['buyer']) && $filter['buyer'] != ''){
-                $buyer = $filter['buyer'];
-                $query->whereHas('user', function($query) use ($buyer){
-                    return $query->where('id', $buyer);
-                });
-            }
-
-            if( isset($filter['seller']) && $filter['seller'] != ''){
-                $seller = $filter['seller'];
-                $query->whereHas('publisher', function($query) use ($seller){
-                    return $query->where('user_id', $seller);
-                });
-            }
-
-            $registered = Registration::where('email', Auth::user()->email)->first();
-            if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
-                if ( isset($registered->team_in_charge) ) {
-                    $user_model = User::where('id', $registered->team_in_charge)->first();
-                    $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
-                }
-            }
-
-            if (count($sub_buyer_ids) > 0) {
-                $query->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
-            }
-
-        });
+        if( isset($filter['seller']) && $filter['seller'] != ''){
+            $seller = $filter['seller'];
+            $list->whereHas('publisher', function($query) use ($seller){
+                return $query->where('user_id', $seller);
+            });
+        }
 
         if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
             $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
             $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
                 ->format('Y-m-d'));
+        }
+
+        $user_id = $user->id;
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        if (count($sub_buyer_ids) > 0) {
+//            $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
+            $user_ids = array_merge($user_ids, $sub_buyer_ids->toArray());
+        }
+
+        if($user_ids){
+            $list->whereIn('backlinks.user_id', $user_ids)->where('backlinks.status', 'Live');
         }
 
         // Getting wallet and deposits
