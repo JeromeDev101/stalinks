@@ -54,6 +54,9 @@ class UpdateUserRequest extends FormRequest
             'phone' => [
                 'nullable',
             ],
+            'skype' => [
+                'required',
+            ],
             'password' => [
                 new SecurePasswordRule(),
             ],

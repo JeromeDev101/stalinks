@@ -199,7 +199,7 @@
                                         <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                <select v-on:change="getTemplate('send')" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
@@ -210,15 +210,53 @@
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div
+                                    :class="{
+                                        'has-error': messageForms.errors.email
+                                        || checkEmailValidationError(messageForms.errors)
+                                    }"
+                                    class="form-group">
+
                                     <label style="color: #333" >To:</label>
-                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">
-                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+<!--                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">-->
+
+                                    <p
+                                        v-if="emailContent.email.length"
+                                        class="text-primary small"
+                                        style="cursor: pointer"
+
+                                        @click="emailContent.email = []">
+                                        Remove all emails
+                                    </p>
+
+                                    <vue-tags-input
+                                        v-model="tag"
+                                        :separators="separators"
+                                        :tags="emailContent.email"
+                                        :class="{
+                                            'vue-tag-error': messageForms.errors.email
+                                            || checkEmailValidationError(messageForms.errors)
+                                        }"
+                                        placeholder=""
+
+                                        @tags-changed="newTags => emailContent.email = newTags"
+                                    />
+
+                                    <span
+                                        v-if="messageForms.errors.email"
+                                        v-for="err in messageForms.errors.email"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+
+                                    <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
+                                        The email field must contain valid emails.
+                                    </span>
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': true}" v-show="withBcc" style="margin-top: 15px;">
+                            <div class="col-md-12" v-show="withBcc" style="margin-top: 15px;">
                                 <div class="form-group">
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="emailContent.cc">
@@ -314,7 +352,7 @@
                                         <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate" class="form-control pull-right" v-model="mailInfo">
+                                                <select v-on:change="getTemplate('reply')" class="form-control pull-right" v-model="mailInfo">
                                                     <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
@@ -325,15 +363,28 @@
                                 </div>
                             </div>
 
-                            <div :class="{'col-md-6': withBcc, 'col-md-12': !withBcc}" style="margin-top: 15px;">
+                            <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                     <label style="color: #333" >To:</label>
-                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">
+<!--                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">-->
+
+                                    <vue-tags-input
+                                        v-model="tag"
+                                        :disabled="true"
+                                        :separators="separators"
+                                        :tags="replyContent.email"
+                                        :class="{'vue-tag-error': messageForms.errors.email}"
+                                        ref="replyTag"
+                                        placeholder=""
+
+                                        @tags-changed="newTags => replyContent.email = newTags"
+                                    />
+
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-top: 15px;" v-show="withBcc">
+                            <div class="col-md-12" style="margin-top: 15px;" v-show="withBcc">
                                 <div class="form-group">
                                     <label style="color: #333" >Bcc:</label>
                                     <input type="text" class="form-control" required="required" v-model="replyContent.cc">
@@ -413,6 +464,8 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
+import { createTag } from '@johmun/vue-tags-input';
+
 export default {
     name: 'AppInbox',
     data() {
@@ -420,13 +473,13 @@ export default {
             search_mail: '',
             emailContent : {
                 cc: '',
-                email: '',
+                email: [],
                 title: '',
                 content: ''
             },
             replyContent : {
                 cc: '',
-                email: '',
+                email: [],
                 title: '',
                 content: ''
             },
@@ -472,6 +525,10 @@ export default {
             },
             cardInbox: true,
             cardReadMessage: false,
+
+            // for tag input component
+            tag: '',
+            separators: [';', ',', '|', ' ']
         }
     },
 
@@ -538,8 +595,12 @@ export default {
 
         doReply() {
             this.clearMessageform();
-            this.replyContent.email = this.viewContent.from_mail;
+            // this.replyContent.email.push(this.viewContent.from_mail);
             this.replyContent.title = this.viewContent.subject;
+
+            // add email
+            let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
+            this.$refs.replyTag.addTag(tag);
 
             axios.post('/api/mail/get-reply', {
                 email: this.viewContent.from_mail,
@@ -665,9 +726,18 @@ export default {
             await this.$store.dispatch('getListMails', { params: { country_id: this.countryMailId, full_page: 1} });
         },
 
-        getTemplate() {
-            this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
-            this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+        getTemplate(mod) {
+            // this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+            // this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
+            let content = mod === 'send' ? this.emailContent : this.replyContent;
+
+            let template = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0]
+
+            for (let key in template) {
+                if(template.hasOwnProperty(key)){
+                    content[key] = template[key]
+                }
+            }
         },
 
         async getListCountries(params) {
@@ -798,7 +868,8 @@ export default {
             // this.sendBtn = true;
             this.formData = new FormData();
             this.formData.append('cc', cc);
-            this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
+            this.formData.append('email', type == 'reply' ? JSON.stringify(this.replyContent.email) : JSON.stringify(this.emailContent.email));
+            // this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
             this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
             this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
             this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
@@ -816,14 +887,14 @@ export default {
 
                 this.emailContent = {
                     cc: '',
-                    email: '',
+                    email: [],
                     title: '',
                     content: ''
                 }
 
                 this.replyContent = {
                     cc: '',
-                    email: '',
+                    email: [],
                     title: '',
                     content: ''
                 }
@@ -884,6 +955,61 @@ export default {
         clearMessageform() {
             this.$store.dispatch('clearMessageform');
         },
+
+        checkEmailValidationError(error){
+            return Object.keys(error).some(function(err){ return ~err.indexOf("email.") })
+        }
     }
 }
 </script>
+
+<style>
+
+.vue-tags-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    color: #495057;
+    display: block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 10px;
+    border-radius: .25rem;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    background-clip: padding-box;
+    /*height: calc(1.5em + .75rem + 2px);*/
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.vue-tags-input .ti-tag{
+    background-color: floralwhite !important ;
+    color: #495057;
+    border: 1px solid grey;
+}
+
+.ti-tag.ti-valid {
+    color: #495057 !important
+}
+
+.ti-input {
+    border: none !important;
+}
+
+.ti-tag .ti-actions {
+    margin-left: 7px !important;
+    border-radius: 50%;
+    border: 1px solid #495057;
+}
+
+.vue-tags-input.ti-focus .ti-input {
+    outline: 0 none;
+    border-color: rgba(2, 117, 216, 0.3);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.075) inset, 0 0 10px rgba(2, 117, 216, 0.4);
+}
+
+.vue-tag-error {
+    border-color: red !important;
+}
+
+</style>

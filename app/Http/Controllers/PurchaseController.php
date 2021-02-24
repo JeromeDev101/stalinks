@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use Illuminate\Support\Facades\Auth;
@@ -19,23 +20,27 @@ class PurchaseController extends Controller
      * @return list
      */
     public function getList(Request $request) {
+
         $user = Auth::user();
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
         $wallet = 0;
         $deposit = 0;
+        $user_ids = [];
+
+        $filter['date_completed'] = json_decode($filter['date_completed']);
 
         $list = Backlink::select('backlinks.*')
-                    ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
-                    ->with(['publisher' => function($query){
-                        $query->with('user:id,name,username');
-                    }])
-                    ->with('user:id,name,username')
-                    ->where('status', 'Live')
-                    ->orderBy('id', 'desc');
+            ->leftJoin('publisher', 'publisher.id', '=', 'backlinks.publisher_id')
+            ->with(['publisher' => function($query){
+                $query->with('user:id,name,username');
+            }])
+            ->with('user:id,name,username')
+            ->where('status', 'Live')
+            ->orderBy('id', 'desc');
 
         if( !$user->isAdmin() && $user->role->id != 7 ){
-            $list->where('backlinks.user_id', $user->id);
+            $user_ids[] = $user->id;
         }
 
         if( isset($filter['search_id']) && $filter['search_id'] != ''){
@@ -64,10 +69,17 @@ class PurchaseController extends Controller
             });
         }
 
-
-        // Getting wallet and deposits
+        if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
+            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+                ->format('Y-m-d'));
+            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
+        }
 
         $user_id = $user->id;
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
         $registered = Registration::where('email', Auth::user()->email)->first();
         if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
@@ -77,12 +89,16 @@ class PurchaseController extends Controller
             }
         }
 
-        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
-        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
-
         if (count($sub_buyer_ids) > 0) {
-            $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
+//            $list->orWhereIn('backlinks.user_id', $sub_buyer_ids)->where('backlinks.status', 'Live');
+            $user_ids = array_merge($user_ids, $sub_buyer_ids->toArray());
         }
+
+        if($user_ids){
+            $list->whereIn('backlinks.user_id', $user_ids)->where('backlinks.status', 'Live');
+        }
+
+        // Getting wallet and deposits
 
         $getBuyer = BuyerPurchased::select('buyer_purchased.user_id_buyer','users.username')
                                 ->leftJoin('users', 'users.id', '=', 'buyer_purchased.user_id_buyer')
@@ -119,8 +135,6 @@ class PurchaseController extends Controller
         }
 
         // end of getting wallet and deposits
-
-
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){}
         else{

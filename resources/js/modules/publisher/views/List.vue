@@ -166,7 +166,7 @@
 
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button> 
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
                             <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
@@ -356,14 +356,15 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div :class="{'has-error': messageForms.errors.url}" class="form-group">
                                     <label for="">URL</label>
                                     <input type="text" v-model="updateModel.url" class="form-control" placeholder="" :disabled="user.isOurs != 0">
+                                    <span v-if="messageForms.errors.url" v-for="err in messageForms.errors.url" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'has-error': messageForms.errors.language_id}" class="form-group">
                                     <label for="">Language</label>
                                     <select class="form-control" v-model="updateModel.language_id">
                                         <option value="">Select Language</option>
@@ -371,6 +372,7 @@
                                             {{ option.name }}
                                         </option>
                                     </select>
+                                    <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -387,9 +389,10 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'has-error': messageForms.errors.price}" class="form-group">
                                     <label for="">Price</label>
                                     <input type="number" v-model="updateModel.price" class="form-control" placeholder="">
+                                    <span v-if="messageForms.errors.price" v-for="err in messageForms.errors.price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -425,19 +428,20 @@
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="updateModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                    <v-select multiple v-model="updateModel.topic" :options="topic" :searchable="false" placeholder="Select Topic"/>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div :class="{'has-error': messageForms.errors.kw_anchor}" class="form-group">
                                     <label for="">Keyword Anchor</label>
                                     <select class="form-control" v-model="updateModel.kw_anchor">
-                                        <option value=""></option>
+                                        <option value="">Select Option</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
+                                    <span v-if="messageForms.errors.kw_anchor" v-for="err in messageForms.errors.kw_anchor" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -516,6 +520,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.url}" class="form-group">
                                     <label for="">URL</label>
                                     <input type="text" v-model="addModel.url" class="form-control" placeholder="" >
+                                    <span v-if="messageForms.errors.url" v-for="err in messageForms.errors.url" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -574,7 +579,7 @@
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="addModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                    <v-select multiple v-model="addModel.topic" :options="topic" :searchable="false" placeholder="Select Topic"/>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -961,7 +966,7 @@
             if ( language.length === 0 ) {
                 this.getListLanguages();
             }
-                
+
         },
 
         computed:{
@@ -1014,7 +1019,7 @@
                     this.tblPublisherOpt.casino_sites = false;
                     this.tblPublisherOpt.in_charge = true;
                 }
-                    
+
             },
 
             async getTeamInCharge(){
@@ -1029,7 +1034,7 @@
                 this.isSearching = true;
                 if(this.filterModel.paginate == 'All')
                 {
-                    
+
                     await this.$store.dispatch('getListPublisher', {
                         params: {
                             country_id: this.filterModel.country_id,
@@ -1072,7 +1077,7 @@
                         }
                     });
                 }
-                
+
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 2 },
@@ -1160,7 +1165,7 @@
 
                 this.searchLoading = false;
                 this.isSearching = false;
-                
+
             },
 
             async getListSeller(params) {
@@ -1185,7 +1190,7 @@
                         // if( !ahref ){
                             this.checkIds.push(this.listPublish.data[publisher].id);
                         // }
-                        
+
                     }
                     this.isDisabled = false;
                 }
@@ -1210,16 +1215,16 @@
                         }
                         swal.fire({
                             icon: 'success',
-                            title: "Success", 
-                            html: html,  
-                            confirmButtonText: "Ok", 
+                            title: "Success",
+                            html: html,
+                            confirmButtonText: "Ok",
                         });
                     }
                 }
 
                 this.checkIds = [];
             },
-            
+
             select: function() {
                 this.allSelected = false;
             },
@@ -1285,7 +1290,7 @@
                         'Successfully Updated.',
                         'success'
                     )
-                    
+
                 })
             },
 
@@ -1312,7 +1317,7 @@
                 if (this.messageForms.action === 'saved'){
                     $("#modal-add-url").modal('hide')
                     this.getPublisherList();
-                    
+
                     swal.fire(
                         'Saved!',
                         'URL has been saved.',
@@ -1425,7 +1430,7 @@
 
             async getAhrefs() {
                 $('#tbl-publisher').DataTable().destroy();
-        
+
                 swal.fire({
                     title: "Getting Ahrefs...",
                     text: "Please wait",
@@ -1462,8 +1467,8 @@
 
                 if(that.topic != null && that.topic != '') {
                     let _topic = that.topic;
-                    if (_topic.indexOf(',') > -1) { 
-                        topic = _topic.split(',') 
+                    if (_topic.indexOf(',') > -1) {
+                        topic = _topic.split(',')
                     } else {
                         topic = _topic;
                     }
@@ -1482,7 +1487,7 @@
                     org_keywords: that.org_keywords,
                     org_traffic: that.org_traffic,
                     price: that.price,
-                    anchor_text: that.anchor_text, 
+                    anchor_text: that.anchor_text,
                     link: that.link,
                     inc_article: that.inc_article,
                     topic: topic,
