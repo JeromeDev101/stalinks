@@ -151,6 +151,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             }
         }
 
+        if (isset($filter['country_id']) && !empty($filter['country_id'])) {
+            $list = $list->where('publisher.country_id', $filter['country_id']);
+        }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 
