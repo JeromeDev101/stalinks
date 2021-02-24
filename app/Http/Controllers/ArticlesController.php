@@ -251,7 +251,7 @@ class ArticlesController extends Controller
                 'notification' => 'Thanks for finishing the articles on '. date('Y-m-d') .' for the article '. $article->id .' we will credit your account soon thanks'
             ]);
 
-            broadcast(new ArticleDone($article->id_writer));
+            broadcast(new ArticleDone($user_id));
         }
 
         if( $request->content['status'] == 'In Writing' ){
