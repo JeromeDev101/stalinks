@@ -55,8 +55,6 @@
                             </div>
                         </div>
 
-
-
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Status</label>
@@ -69,9 +67,39 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Process Date
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="fillter.process_date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="fillter.process_date"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-
-
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="fillter.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="fillter.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WriterPaid;
+use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\User;
@@ -37,7 +39,7 @@ class WriterBillingController extends Controller
         ];
     }
 
-    public function payBilling(Request $request) {
+    public function payBilling(Request $request, NotificationInterface $notification) {
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -65,6 +67,13 @@ class WriterBillingController extends Controller
                 'proof_doc_path' => '/images/billing/'.$new_name,
             ]);
         }
+
+        $notification->create([
+            'user_id' => $ids[0]->id_writer,
+            'notification' => 'Your account has been credited of '. $request->price .' for the different order '. implode(', ', $article_ids) .' thanks'
+        ]);
+
+        broadcast(new WriterPaid($ids[0]->id_writer));
 
         return response()->json(['success' => true], 200);
     }
