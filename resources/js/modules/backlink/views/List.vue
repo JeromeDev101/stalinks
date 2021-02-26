@@ -12,14 +12,14 @@
 
                 <div class="box-body m-3 collapse" id="collapseExample">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                        <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Seller</label>
                                 <select class="form-control" v-model="fillter.seller">
@@ -29,7 +29,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                        <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                             <div class="form-group">
                                 <label for="">Buyer</label>
                                 <select class="form-control" v-model="fillter.buyer">
@@ -41,21 +41,21 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search URL Publisher</label>
                                 <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search URL Advertiser</label>
                                 <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Status</label>
                                 <v-select multiple
@@ -67,7 +67,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Process Date
                                 </label>
@@ -79,12 +79,13 @@
                                         :dateRange="fillter.process_date"
                                         :linkedCalendars="true"
                                         opens="right"
+                                        style="width: 100%"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Date Completed
                                 </label>
@@ -96,8 +97,19 @@
                                         :dateRange="fillter.date_completed"
                                         :linkedCalendars="true"
                                         opens="right"
+                                        style="width: 100%"
                                     />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" v-if="listSubAccounts.length > 0">
+                            <div class="form-group">
+                                <label for="">User Buyer</label>
+                                <select class="form-control" v-model="fillter.sub_buyer_id">
+                                    <option value="">All</option>
+                                    <option v-for="buyer in listSubAccounts" v-bind:value="buyer.id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
+                                </select>
                             </div>
                         </div>
 
@@ -155,7 +167,7 @@
                                 <th>#</th>
                                 <th v-if="user.isOurs == 0">ID Bck</th>
                                 <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
-                                <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Buyer</th>
+                                <th>User Buyer</th>
                                 <th>URL Publisher</th>
                                 <th v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
                                 <th>Link From</th>
@@ -173,7 +185,7 @@
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
                                 <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username }}</td>
-                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
+                                <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
                                 <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>
@@ -426,6 +438,7 @@
                 withArticle: true,
                 totalAmount: 0,
                 isSearching: false,
+                listSubAccounts: [],
             }
         },
         async created() {
@@ -434,6 +447,7 @@
             this.checkAccountType();
             this.getSellerList();
             this.getBuyerList();
+            this.getSubAccount();
         },
 
         computed: {
@@ -469,6 +483,17 @@
         },
 
         methods: {
+            getSubAccount() {
+                axios.get('/api/sub-account',{
+                    params: {
+                        team_in_charge: this.user.id
+                    }
+                })
+                .then((res)=> {
+                    this.listSubAccounts = res.data
+                })
+            },
+
             getBackLinkList: _.debounce(async function(page) {
                 $("#tbl_backlink").DataTable().destroy();
 
@@ -510,13 +535,14 @@
                     columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2, width: "200px" },
+                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3, width: "200px" },
-                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 4, width: "200px" },
                         { orderable: true, targets: 5 },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
@@ -573,6 +599,15 @@
                 await this.$store.dispatch('actionResetFillterBacklink');
                 this.fillter.status = ''
                 this.fillter.paginate = '50'
+
+                this.process_date = {
+                    startDate: null,
+                    endDate: null
+                },
+                this.date_completed = {
+                    startDate: null,
+                    endDate: null
+                }
                 this.getBackLinkList();
             },
 

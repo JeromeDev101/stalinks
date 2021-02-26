@@ -469,6 +469,7 @@ class AccountController extends Controller
         $input['status'] = 'active';
         $input['role_id'] = 5;
         $input['type'] = 0;
+        $input['skype'] = 'none';
         $input['phone'] = '+0000000';
         $input['avatar'] = '/images/noavatar.jpg';
         $input['isOurs'] = 1;
@@ -490,7 +491,8 @@ class AccountController extends Controller
     }
 
     public function getSubAccount(Request $request) {
-        $registration = Registration::where('team_in_charge', Auth::user()->id)->where('is_sub_account', 1)->get();
+        $team_in_charge = $request->team_in_charge == '' ?  Auth::user()->id : $request->team_in_charge;
+        $registration = Registration::where('team_in_charge', $team_in_charge)->where('is_sub_account', 1)->get();
 
         return $registration;
     }
