@@ -575,6 +575,7 @@
                     'Beauty',
                     'Charity',
                     'Cooking',
+                    'Crypto',
                     'Education',
                     'Fashion',
                     'Finance',
