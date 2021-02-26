@@ -49,7 +49,7 @@ class PublisherController extends Controller
         $file = $request->all();
         $data = $this->publisherRepository->importExcel($file);
 
-        
+
         if($data['success'] === false){
             unset($data['success']);
             return response()->json($data, 422);
@@ -72,12 +72,12 @@ class PublisherController extends Controller
         ]);
 
         $url_copy = $this->remove_http($request->url);
-        
+
         $publisher = Publisher::where('url', 'like', '%'.$url_copy.'%')->where('valid', 'valid')->count();
         if ($publisher > 0) {
             $valid = 'unchecked';
         }
-        
+
         $input = $request->except('seller','topic','url');
         $input['user_id'] = $request->seller;
         $input['valid'] = $valid;
@@ -121,6 +121,16 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
+
+        $request->validate([
+            'url' => 'required',
+            'topic' => 'required',
+            'language_id' => 'required',
+            'price' => 'required',
+            'casino_sites' => 'required',
+            'kw_anchor' => 'required',
+        ]);
+
         $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
         $publisher = Publisher::findOrFail($input['id']);
@@ -192,9 +202,9 @@ class PublisherController extends Controller
                         'message' => 'existing',
                         'url' => $publisher->url
                     ]);
-                } 
-                
-            // } 
+                }
+
+            // }
             else {
                 array_push($result,[
                     'id' => $publisher->id,
@@ -205,8 +215,8 @@ class PublisherController extends Controller
                 $publisher->update([
                     'valid' => $request->valid,
                 ]);
-            }          
-                
+            }
+
         }
 
 

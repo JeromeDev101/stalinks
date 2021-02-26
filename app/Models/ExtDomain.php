@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,9 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class ExtDomain extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'ext_domains';
     protected $guarded = [];
+
+    protected $appends = [
+        'alexa_created_at'
+    ];
 
     public function users() {
         return $this->belongsTo('App\Models\User', 'user_id');
@@ -24,6 +29,15 @@ class ExtDomain extends Model
     public function backlinks()
     {
         return $this->hasMany('App\Models\Backlink', 'ext_domain_id');
+    }
+
+    public function getAlexaCreatedAtAttribute()
+    {
+        if ($this->alexa_rank != 0) {
+            return Carbon::parse($this->created_at)->format('Y-m-d');
+        } else {
+            return 'N/A';
+        }
     }
 
 }

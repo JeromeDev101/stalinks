@@ -22,6 +22,14 @@ const state = {
         buyer: '',
         backlink_id: '',
         paginate: '50',
+        process_date : {
+            startDate: null,
+            endDate: null
+        },
+        date_completed : {
+            startDate: null,
+            endDate: null
+        }
     },
     messageBacklinkForms: { obj: {}, action: '', message: '', errors: {} },
 };
@@ -58,7 +66,7 @@ const actions = {
         try {
             let response = await BackLinkService.getTotalBackLink(params);
             commit(BACKLINK_SET_TOTAL, response.data)
-        } catch (e) {            
+        } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(BACKLINK_SET_ERROR, errors);
@@ -72,7 +80,7 @@ const actions = {
         try {
             let response = await BackLinkService.getTotalPrice(params);
             commit(PRICE_SET_TOTAL, response.data)
-        } catch (e) {            
+        } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(BACKLINK_SET_ERROR, errors);

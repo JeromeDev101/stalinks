@@ -24,4 +24,9 @@ class Article extends Model
     public function price() {
         return $this->belongsTo('App\Models\Price', 'id_writer_price', 'id');
     }
+
+    public function language()
+    {
+        return $this->belongsTo('App\Models\Language', 'id_language', 'id');
+    }
 }

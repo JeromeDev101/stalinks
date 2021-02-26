@@ -10,6 +10,7 @@ use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Rules\ExtListEmail;
 use App\Rules\ExtListLink;
 use App\Rules\ExtListPhone;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -298,7 +299,19 @@ class ExtDomainController extends Controller
         }
 
         if (isset($input['status']) && $input['status'] >= 0 ) {
-            $filters['where'][] = ['status', $input['status']];
+            if (!is_array($input['status'])) {
+                $filters['where'][] = ['status', $input['status']];
+            } else {
+                $filters['whereIn'][] = ['status', $input['status']];
+            }
+        }
+
+        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
+
+        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
+            $filters['where'][] = ['created_at', '>=', Carbon::create( $input['alexa_date_upload']['startDate'])->format('Y-m-d')];
+            $filters['where'][] = ['created_at', '<=', Carbon::create( $input['alexa_date_upload']['endDate'])->format('Y-m-d')];
+            $filters['where'][] = ['alexa_rank', '!=', 0];
         }
 
         $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
