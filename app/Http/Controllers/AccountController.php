@@ -68,6 +68,7 @@ class AccountController extends Controller
         $data['role_id'] = $role_id;
         $data['type'] = 0;
         $data['isOurs'] = 1;
+        $data['skype'] = $registration['skype'] == '' ? 'none':$registration['skype'];
         $data['password'] = $input['password'];
         $data['id_payment_type'] = $registration['id_payment_type'];
         User::create($data);
@@ -112,6 +113,7 @@ class AccountController extends Controller
             });
         })
         ->with('team_in_charge:id,name,username')
+        ->with('user:id,email')
         ->orderBy('id', 'desc');
 
         if($paginate === 'All'){
@@ -179,6 +181,12 @@ class AccountController extends Controller
 
         if (isset($input['name']) && $input['name'] != '') {
             $user->update(['name' => $input['name']]);
+        }
+
+        if (isset($input['skype']) && $input['skype'] != '') {
+            $user->update(['skype' => $input['skype']]);
+        } else {
+            $user->update(['skype' => 'none']);
         }
 
         if (isset($input['id_payment_type']) && $input['id_payment_type'] != '') {
@@ -619,6 +627,7 @@ class AccountController extends Controller
         $data['type'] = 0;
         $data['avatar'] = '/images/noavatar.jpg';
         $data['isOurs'] = 1;
+        $data['skype'] = $registered->skype == '' ? 'none':$registered->skype;
         $data['role_id'] = $role_id;
 
         User::create($data);
