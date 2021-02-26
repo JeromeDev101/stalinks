@@ -56,6 +56,10 @@ class BuyController extends Controller
         //     $list->where('publisher.valid', 'valid');
         // }
 
+        if( isset($filter['casino_sites']) && !empty($filter['casino_sites']) ){
+            $list->where('publisher.casino_sites', $filter['casino_sites']);
+        }
+
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);
         }
