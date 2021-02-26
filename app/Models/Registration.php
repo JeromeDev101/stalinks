@@ -12,4 +12,8 @@ class Registration extends Model
     public function team_in_charge() {
         return $this->belongsTo('App\Models\User', 'team_in_charge');
     }
+
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'email', 'email');
+    }
 }

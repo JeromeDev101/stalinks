@@ -75,13 +75,9 @@ class BuyController extends Controller
         if( isset($filter['status_purchase']) && !empty($filter['status_purchase']) ){
             if (is_array($filter['status_purchase'])) {
                 if (in_array('New', $filter['status_purchase'])) {
-                    $list->whereNull('buyer_purchased.publisher_id')
-                    ->orWhere(function ($query) use ($filter) {
-                        if (($key = array_search('New', $filter['status_purchase'])) !== false) {
-                            unset($filter['status_purchase'][$key]);
-                        }
-
-                        $query->whereIn('buyer_purchased.status', $filter['status_purchase']);
+                    $list->where(function ($query) use ($filter) {
+                        $query->whereNull('buyer_purchased.publisher_id');
+                        $query->orWhereIn('buyer_purchased.status', $filter['status_purchase']);
                     });
                 } else {
                     $list->whereIn('buyer_purchased.status', $filter['status_purchase']);
