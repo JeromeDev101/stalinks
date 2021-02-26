@@ -153,7 +153,7 @@
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
-                                <td>{{ account.id }}</td>
+                                <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
