@@ -106,6 +106,10 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         $user_id = Auth::user()->id;
         $query = $this->model->orderBy('id', 'desc');
 
+        if(isset($filters->sub_buyer_id) && $filters->sub_buyer_id != '') {
+            $query->where('user_id', $filters->sub_buyer_id);
+        }
+
         $registered = Registration::where('email', Auth::user()->email)->first();
         if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
             if ( isset($registered->team_in_charge) ) {
