@@ -124,8 +124,7 @@
 
                 <li
                     v-if="
-                        user.isAdmin ||
-                            isBuyer ||
+                        user.isAdmin || 
                             (user.isOurs == 0 &&
                                 (isManager || isSeller || isPostingWriter))
                     "
