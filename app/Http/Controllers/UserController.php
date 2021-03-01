@@ -88,7 +88,7 @@ class UserController extends Controller
         }
 
         if (isset($input['name']) && $input['name'] != '') {
-            $filters['where'][] = ['name', 'like', '%'.$input['name'].'%'];
+            $filters['where'][] = ['username', 'like', '%'.$input['name'].'%'];
         }
 
         //it doesnt show the seller/buyer

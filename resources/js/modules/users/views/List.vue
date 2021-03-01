@@ -13,7 +13,7 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Search Name</label>
+                                <label for="">Search Username</label>
                                 <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Name">
                             </div>
                         </div>
