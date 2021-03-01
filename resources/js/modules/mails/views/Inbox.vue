@@ -596,6 +596,7 @@ export default {
         doReply() {
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
+            this.replyContent.email = [];
             this.replyContent.title = this.viewContent.subject;
 
             // add email
