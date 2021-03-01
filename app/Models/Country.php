@@ -39,4 +39,9 @@ class Country extends Model
     {
         return $this->belongsToMany('App\Models\User', 'user_country_ext');
     }
+
+    public function continent()
+    {
+        return $this->belongsTo('App\Models\Continent', 'continent_id');
+    }
 }

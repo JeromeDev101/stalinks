@@ -39,6 +39,7 @@ export default class PublisherService {
             }
         })
         .then(response => response)
+        .then(response => response)
         .catch(error => error);
     }
 
@@ -59,7 +60,13 @@ export default class PublisherService {
             .then(response => response)
             .catch(error => error);
     }
-    
+
+    static getListContinents(params) {
+        return axios.get('/api/continent-list', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static getListLanguages(params) {
         return axios.get('/api/languages-list', params)
             .then(response => response)
