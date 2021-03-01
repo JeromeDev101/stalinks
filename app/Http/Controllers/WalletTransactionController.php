@@ -67,7 +67,7 @@ class WalletTransactionController extends Controller
                     ->where('users.status', 'active')
                     ->where('role_id', 5)
                     ->orderBy('users.username', 'asc');
-                    
+
 
         return [
             'data' => $list->get()
@@ -86,7 +86,7 @@ class WalletTransactionController extends Controller
         $ids = [];
         foreach( $list as $id ){
             $ids[] = $id['user_id'];
-        }   
+        }
         // $list = User::whereIn('id', $ids)->orderBy('username', 'asc');
         $list = User::where('role_id', 6)->orderBy('username', 'asc');
         return [
@@ -95,12 +95,11 @@ class WalletTransactionController extends Controller
     }
 
     public function addWallet(Request $request) {
-
         $request->validate([
             'payment_type' => 'required',
             'amount_usd' => 'required',
             'user_id_buyer' => 'required',
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $image = $request->file;
