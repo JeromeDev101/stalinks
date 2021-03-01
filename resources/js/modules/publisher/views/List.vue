@@ -1621,6 +1621,7 @@
             },
 
             getCountriesByContinent() {
+                this.filterModel.country_id = '';
                 this.$store.dispatch('actionGetCountriesByContinentId', {
                     continent_id: this.filterModel.continent_id
                 })
