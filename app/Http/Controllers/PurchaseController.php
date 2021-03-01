@@ -147,7 +147,7 @@ class PurchaseController extends Controller
             $list = $list->paginate($paginate);
         }
 
-        $buyers = collect(['buyers' => $getBuyerSubs]);
+        $buyers = collect(['buyers' => $user->isAdmin() ? $getBuyer : $getBuyerSubs]);
         $sellers = collect(['sellers' => $getSeller]);
         $wallets = collect(['wallet' => round($wallet)]);
         $deposits = collect(['deposit' => round($deposit)]);
@@ -161,7 +161,7 @@ class PurchaseController extends Controller
             return [
                 "data" => $list->get(),
                 "total" => $list->count(),
-                "buyers" => $getBuyerSubs,
+                "buyers" => $user->isAdmin() ? $getBuyer : $getBuyerSubs,
                 "sellers" => $getSeller,
                 "wallet" => round($wallet),
                 "deposit" => round($deposit),
