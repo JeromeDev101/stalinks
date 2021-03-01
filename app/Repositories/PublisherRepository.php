@@ -66,8 +66,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('registration', 'A.email', '=', 'registration.email')
                 ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                 ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
-                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-                ->orderBy('created_at', 'desc');
+                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
+
+        if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
+            $list = $list->join(DB::raw('(
+                    SELECT url
+                    FROM publisher
+                    WHERE deleted_at IS NULL
+                    GROUP BY url
+                    HAVING COUNT(*) > 1
+                    )temp'), 'publisher.url', 'temp.url')
+                ->orderBy('url', 'asc');
+        } else {
+            $list->orderBy('created_at', 'desc');
+        }
 
         $registered = Registration::where('email', $user->email)->first();
 
@@ -155,14 +167,12 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.country_id', $filter['country_id']);
         }
 
-
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 
             $result = $list->get();
         }else{
             $result = $list->paginate($paginate);
         }
-
 
         foreach($result as $key => $value) {
 
