@@ -464,7 +464,11 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue', 'Canceled'],
+                statusBaclink: ['Processing',
+                                'Content In Writing',
+                                'Content Done',
+                                'Content sent', 'Live',
+                                'Live in Process', 'Issue', 'Canceled'],
                 statusBaclinkQc: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process', 'Issue', 'Canceled'],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
@@ -745,6 +749,8 @@
                         in_charge: this.filterModel.in_charge,
                     }
                 });
+
+                this.getTotalAmount();
             },
 
             clearSearch() {
