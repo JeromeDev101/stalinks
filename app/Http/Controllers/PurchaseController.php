@@ -100,6 +100,12 @@ class PurchaseController extends Controller
 
         // Getting wallet and deposits
 
+        $getBuyerSubs = Registration::select('users.id as user_id_buyer', 'users.username')
+            ->leftJoin('users', 'users.email', '=', 'registration.email')
+            ->where('registration.team_in_charge', $user_id)
+            ->where('registration.is_sub_account', 1)
+            ->get();
+
         $getBuyer = BuyerPurchased::select('buyer_purchased.user_id_buyer','users.username')
                                 ->leftJoin('users', 'users.id', '=', 'buyer_purchased.user_id_buyer')
                                 ->where('buyer_purchased.status', 'Purchased')
@@ -141,7 +147,7 @@ class PurchaseController extends Controller
             $list = $list->paginate($paginate);
         }
 
-        $buyers = collect(['buyers' => $getBuyer]);
+        $buyers = collect(['buyers' => $getBuyerSubs]);
         $sellers = collect(['sellers' => $getSeller]);
         $wallets = collect(['wallet' => round($wallet)]);
         $deposits = collect(['deposit' => round($deposit)]);
@@ -155,7 +161,7 @@ class PurchaseController extends Controller
             return [
                 "data" => $list->get(),
                 "total" => $list->count(),
-                "buyers" => $getBuyer,
+                "buyers" => $getBuyerSubs,
                 "sellers" => $getSeller,
                 "wallet" => round($wallet),
                 "deposit" => round($deposit),
