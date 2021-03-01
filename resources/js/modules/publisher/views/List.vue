@@ -151,13 +151,28 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-show="user.isAdmin || user.role_id == 8">
+                        <div class="col-md-3"
+                             v-show="user.isAdmin || user.role_id == 8">
                             <div class="form-group">
                                 <label for="">QC Validation</label>
                                 <select name="" class="form-control" v-model="filterModel.qc_validation">
                                     <option value="">All</option>
                                     <option value="yes">Yes</option>
                                     <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3"
+                             v-show="user.isAdmin || user.role_id == 8">
+                            <div class="form-group">
+                                <label for="">Show
+                                              Duplicates</label>
+                                <select name=""
+                                        class="form-control" v-model="filterModel.show_duplicates">
+                                    <option value="no">
+                                        No</option>
+                                    <option value="yes">Yes</option>
                                 </select>
                             </div>
                         </div>
@@ -896,6 +911,9 @@
                     kw_anchor: this.$route.query.kw_anchor || '',
                     price_basis: this.$route.query.price_basis || '',
                     qc_validation: this.$route.query.qc_validation || '',
+                    show_duplicates:
+                        this.$route.query.show_duplicates
+                        || 'no'
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1052,7 +1070,9 @@
                             kw_anchor: this.filterModel.kw_anchor,
                             price_basis: this.filterModel.price_basis,
                             qc_validation: this.filterModel.qc_validation,
-                            page: page
+                            page: page,
+                            show_duplicates:
+                            this.filterModel.show_duplicates
                         }
                     });
                 }else{
@@ -1073,7 +1093,9 @@
                             kw_anchor: this.filterModel.kw_anchor,
                             price_basis: this.filterModel.price_basis,
                             qc_validation: this.filterModel.qc_validation,
-                            page: page
+                            page: page,
+                            show_duplicates:
+                            this.filterModel.show_duplicates
                         }
                     });
                 }
@@ -1542,6 +1564,8 @@
                         kw_anchor: this.filterModel.kw_anchor,
                         price_basis: this.filterModel.price_basis,
                         qc_validation: this.filterModel.qc_validation,
+                        show_duplicates:
+                        this.filterModel.show_duplicates
                     }
                 });
             },
