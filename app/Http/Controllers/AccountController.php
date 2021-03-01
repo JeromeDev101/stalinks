@@ -140,7 +140,7 @@ class AccountController extends Controller
     public function edit(UpdateAccountRequest $request)
     {
         $response['success'] = false;
-        $input = $request->except('company_type');
+        $input = $request->except('company_type', 'user');
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
         unset($input['c_password']);
 
