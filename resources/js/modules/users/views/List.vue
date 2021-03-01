@@ -14,7 +14,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Search Username</label>
-                                <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Name">
+                                <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Username">
                             </div>
                         </div>
 
