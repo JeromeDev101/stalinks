@@ -221,6 +221,9 @@ Route::middleware('auth:api')->group(function () {
      //Notifications
     Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
     Route::name('notifications.seen')->put('/notifications/{user_id}', 'NotificationController@setUserNotificationsSeen');
+
+    //Continents
+    Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');
 });
 
 //Mailgun external

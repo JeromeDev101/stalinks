@@ -5,6 +5,8 @@ const PUBLISHER_LIST = 'PUBLISHER_LIST';
 const PUBLISHER_ERROR = 'PUBLISHER_ERROR';
 const MESSAGE_FORMS = 'PUBLISHER_MESSAGE_FORMS';
 const LIST_COUNTRY_ALL = 'LIST_COUNTRY_ALL';
+const LIST_COUNTRY_CONTINENT = 'LIST_COUNTRY_CONTINENT';
+const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_LANGUAGES = 'LIST_LANGUAGES';
 const LIST_SELLER = 'LIST_SELLER';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
@@ -15,6 +17,8 @@ const state = {
     summaryPublish:{ total: 0, data:[] },
     messageForms: { action: '', message: '', errors: {} },
     listCountryAll: { data: [], total: 0 },
+    listCountryContinent: { data: [], total: 0 },
+    listContinent: { data: [], total: 0 },
     listLanguages: { data: [], total: 0 },
     listSeller: { data:[] },
     tblPublisherOpt: {
@@ -39,6 +43,17 @@ const state = {
         org_keywords: true,
         org_traffic: true,
     },
+}
+
+const getters = {
+    getCountriesByContinentId: (state) => (continent_id) => {
+
+        let countries = state.listCountryAll.data
+
+        return continent_id
+            ? countries.filter(country => country.continent_id === continent_id)
+            : state.listCountryAll.data;
+    }
 }
 
 const mutations = {
@@ -74,6 +89,14 @@ const mutations = {
 
     [LIST_COUNTRY_ALL](state, listCountryAll) {
         state.listCountryAll = listCountryAll;
+    },
+
+    [LIST_COUNTRY_CONTINENT](state, listCountryContinent) {
+        state.listCountryContinent = listCountryContinent;
+    },
+
+    [LIST_CONTINENT](state, listContinent) {
+        state.listContinent = listContinent;
     },
 
     [LIST_LANGUAGES](state, listLanguages) {
@@ -216,6 +239,21 @@ const actions = {
         try {
             let response = await PublisherService.getListCountries(params);
             commit(LIST_COUNTRY_ALL, response.data );
+            commit(LIST_COUNTRY_CONTINENT, response.data );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListContinents({ commit }, params) {
+        try {
+            let response = await PublisherService.getListContinents(params);
+            commit(LIST_CONTINENT, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
@@ -274,6 +312,12 @@ const actions = {
         }
     },
 
+    actionGetCountriesByContinentId({commit, getters}, params){
+        let countries = getters.getCountriesByContinentId(params.continent_id);
+
+        commit(LIST_COUNTRY_CONTINENT, {data: countries, count: countries.length});
+    },
+
     clearMessageform({commit}) {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
@@ -281,6 +325,7 @@ const actions = {
 
 const storePublisher = {
     state,
+    getters,
     actions,
     mutations,
 };

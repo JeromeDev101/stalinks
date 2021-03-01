@@ -15,10 +15,22 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label for="">Continent</label>
+                                <select class="form-control" v-model="filterModel.continent_id" @change="getCountriesByContinent">
+                                    <option value="">All</option>
+                                    <option v-for="option in listContinent.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label for="">Country</label>
                                 <select class="form-control" v-model="filterModel.country_id">
                                     <option value="">All</option>
-                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
@@ -278,6 +290,7 @@
                                 <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th class="resize" v-show="tblPublisherOpt.language">Language</th>
                                 <th class="resize" v-show="tblPublisherOpt.country">Country</th>
+                                <th class="resize" v-show="tblPublisherOpt.country">Continent</th>
                                 <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>
                                 <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
                                 <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>
@@ -312,6 +325,7 @@
                                 <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.continent_name }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
@@ -897,6 +911,7 @@
                 isPopupLoading: false,
                 filterModel: {
                     country_id: this.$route.query.country_id || '',
+                    continent_id: parseInt(this.$route.query.continent_id) || '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
@@ -964,9 +979,10 @@
         },
 
         async created() {
-            this.getPublisherList();
+            // this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
+            this.getListContinents();
 
             // let countries = this.listCountries.data;
             // if( countries.length === 0 ){
@@ -985,6 +1001,7 @@
                 this.getListLanguages();
             }
 
+            this.clearSearch();
         },
 
         computed:{
@@ -993,12 +1010,14 @@
                 listPublish: state => state.storePublisher.listPublish,
                 messageForms: state => state.storePublisher.messageForms,
                 listCountryAll: state => state.storePublisher.listCountryAll,
+                listContinent: state => state.storePublisher.listContinent,
+                listCountryContinent: state => state.storePublisher.listCountryContinent,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
-            })
+            }),
         },
 
         methods: {
@@ -1056,6 +1075,7 @@
                     await this.$store.dispatch('getListPublisher', {
                         params: {
                             country_id: this.filterModel.country_id,
+                            continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -1079,6 +1099,7 @@
                     await this.$store.dispatch('getListPublisher', {
                         params: {
                             country_id: this.filterModel.country_id,
+                            continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
                             inc_article: this.filterModel.inc_article,
@@ -1410,6 +1431,7 @@
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.filterModel = {
+                    continent_id: '',
                     country_id: '',
                     search: '',
                     language_id: '',
@@ -1426,6 +1448,8 @@
                     price_basis: '',
                     qc_validation: '',
                 }
+
+                this.getCountriesByContinent();
 
                 this.getPublisherList({
                     params: this.filterModel
@@ -1448,6 +1472,10 @@
 
             async getListCountries(params) {
                 await this.$store.dispatch('actionGetListCountries', params);
+            },
+
+            async getListContinents(params) {
+                await this.$store.dispatch('actionGetListContinents', params);
             },
 
             async getAhrefs() {
@@ -1484,8 +1512,6 @@
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
                 let topic = '';
-
-                console.log(that)
 
                 if(that.topic != null && that.topic != '') {
                     let _topic = that.topic;
@@ -1550,6 +1576,7 @@
                 this.getPublisherList({
                     params: {
                         country_id: this.filterModel.country_id,
+                        continent_id: this.filterModel.continent_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
                         inc_article: this.filterModel.inc_article,
@@ -1591,6 +1618,12 @@
                         this.isEnableBtn = false;
                     }
                 }
+            },
+
+            getCountriesByContinent() {
+                this.$store.dispatch('actionGetCountriesByContinentId', {
+                    continent_id: this.filterModel.continent_id
+                })
             },
 
             clearMessageform() {
