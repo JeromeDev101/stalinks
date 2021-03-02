@@ -123,7 +123,7 @@
                                 <td v-if="isSeller">{{ incomes.publisher == null ? 'Record Deleted':incomes.publisher.user.name }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user == null ? '':incomes.user.name }}</td>
                                 <td>{{ incomes.publisher == null ? 'Record Deleted':replaceCharacters(incomes.publisher.url) }}</td>
-                                <td>$ {{ incomes.publisher == null ? 'Record Deleted':incomes.publisher.price }}</td>
+                                <td>{{ incomes.publisher == null ? 'Record Deleted':'$ ' + incomes.publisher.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>
                                 <td>{{ incomes.payment_status }}</td>
