@@ -91,11 +91,11 @@
                             </table>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <h5 class="box-title text-primary mt-4 ml-3">Seller List</h5>
-                
+
                 <div class="box-body custom-box">
                     <div class="row">
                         <div class="col-sm-12">
@@ -137,7 +137,7 @@
                 </div>
 
                 <div class="box-body custom-box">
-                   
+
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-hover tbl-custom">
@@ -150,8 +150,8 @@
                                         <th>Content Done <span class="text-primary">({{ backlink_seller.num_done }})</span></th>
                                         <th>Content Sent <span class="text-primary">({{ backlink_seller.num_sent }})</span></th>
                                         <th>Issue <span class="text-primary">({{ backlink_seller.num_issue }})</span></th>
-                                        <th>Live <span class="text-primary">({{ backlink_seller.num_live }})</span></th>
                                         <th>Live in Process <span class="text-primary">({{ backlink_seller.num_live_in_process }})</span></th>
+                                        <th>Live <span class="text-primary">({{ backlink_seller.num_live }})</span></th>
                                         <th>Canceled <span class="text-primary">({{ backlink_seller.num_canceled }})</span></th>
                                     </tr>
                                 </thead>
@@ -164,8 +164,8 @@
                                         <td>{{ seller.num_done }}</td>
                                         <td>{{ seller.num_sent }}</td>
                                         <td>{{ seller.num_issue }}</td>
-                                        <td>{{ seller.num_live }}</td>
                                         <td>{{ seller.num_live_in_process }}</td>
+                                        <td>{{ seller.num_live }}</td>
                                         <td>{{ seller.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -220,7 +220,7 @@
                 </div>
 
                 <div class="box-body custom-box">
-                   
+
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-hover tbl-custom">
@@ -233,8 +233,8 @@
                                         <th>Content Done <span class="text-primary">({{ backlink_buyer.num_done }})</span></th>
                                         <th>Content Sent <span class="text-primary">({{ backlink_buyer.num_sent }})</span></th>
                                         <th>Issue <span class="text-primary">({{ backlink_buyer.num_issue }})</span></th>
-                                        <th>Live <span class="text-primary">({{ backlink_buyer.num_live }})</span></th>
                                         <th>Live in Process<span class="text-primary">({{ backlink_buyer.num_live_in_process }})</span></th>
+                                        <th>Live <span class="text-primary">({{ backlink_buyer.num_live }})</span></th>
                                         <th>Canceled <span class="text-primary">({{ backlink_buyer.num_canceled }})</span></th>
                                     </tr>
                                 </thead>
@@ -247,8 +247,8 @@
                                         <td>{{ buyer.num_done }}</td>
                                         <td>{{ buyer.num_sent }}</td>
                                         <td>{{ buyer.num_issue }}</td>
-                                        <td>{{ buyer.num_live }}</td>
                                         <td>{{ buyer.num_live_in_process }}</td>
+                                        <td>{{ buyer.num_live }}</td>
                                         <td>{{ buyer.num_canceled }}</td>
                                     </tr>
                                 </tbody>
@@ -571,7 +571,7 @@ export default {
     .tbl-custom {
         text-align: left;
         position: relative;
-        border-collapse: collapse; 
+        border-collapse: collapse;
     }
     .tbl-custom thead tr th, .tbl-custom tbody tr td {
         padding: 0.8rem;
@@ -579,7 +579,7 @@ export default {
     .tbl-custom thead tr th {
         background: white;
         position: sticky;
-        top: 0; 
+        top: 0;
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
     }
 
