@@ -215,7 +215,7 @@
                     </div>
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button data-toggle="modal" @click="clearMessageform; checkSeller()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
@@ -1618,6 +1618,10 @@
                         this.isEnableBtn = false;
                     }
                 }
+            },
+
+            checkSeller(){
+                this.addModel.seller = this.user.role_id === 6 ? this.user.id : '';
             },
 
             getCountriesByContinent() {
