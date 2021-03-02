@@ -35,7 +35,7 @@ class IncomesController extends Controller
 
         $ext_seller_emails = Registration::select('email')->where('team_in_charge', $user->id)->where('status', 'active');
         
-        if( $ext_seller_emails->count() > 0 ) {
+        if( $ext_seller_emails->count() > 0 && $user->role_id != 6) {
             $seller_emails = $ext_seller_emails->pluck('email')->toArray();
             $ext_seller_ids = User::select('id')->whereIn('email', $seller_emails)->where('status', 'active')->pluck('id')->toArray();
             
@@ -44,7 +44,7 @@ class IncomesController extends Controller
             });
         }
 
-        if( $user->isOurs == 1 && $user->role_id == 6 ){
+        if( $user->isOurs == 1 && $user->role_id == 6 && !empty($publisher_ids)){
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
