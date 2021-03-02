@@ -44,7 +44,7 @@ class IncomesController extends Controller
             });
         }
 
-        if( $user->isOurs == 1 && $user->role_id == 6 && !empty($publisher_ids)){
+        if( $user->isOurs == 1 && $user->role_id == 6 && !empty($publisher_ids) && $user->type != 10){
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
