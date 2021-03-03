@@ -69,8 +69,8 @@ class DashboardController extends Controller
                     ->leftJoin('registration', 'A.email', '=', 'registration.email')
                     ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                     ->whereNotNull('A.id');
-                    
-  
+
+
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
             $list = $list->where('A.id', Auth::user()->id);
         }
@@ -137,14 +137,20 @@ class DashboardController extends Controller
                     ->where('backlinks.status', 'Live');
 
         if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
-            $list = $list->where('backlinks.user_id', Auth::user()->id);
+
+            /*
+            * Commented the code below for QC buyers to see all buyers
+            * Mar 03, 2021 - Adrian
+            */
+
+//            $list = $list->where('backlinks.user_id', Auth::user()->id);
         }
 
         if( Auth::user()->isOurs == 1 && Auth::user()->role_id == 5 ) {
             $list = $list->where('backlinks.user_id', Auth::user()->id)
                         ->orWhereIn('backlinks.user_id', $sub_buyer_ids);
         }
-            
+
         return $list->groupBy('backlinks.user_id', 'users.username')
                     ->orderBy('users.username', 'asc')
                     ->get();
@@ -162,14 +168,14 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Canceled" THEN 1 ELSE 0 END) AS num_canceled'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
             DB::raw('
-                SUM(CASE WHEN backlinks.status = "Live" 
-                OR backlinks.status = "Content Sent" 
-                OR backlinks.status = "Content Done" 
-                OR backlinks.status = "Content Writing" 
-                OR backlinks.status = "Processing"  
-                OR backlinks.status = "Canceled" 
-                OR backlinks.status = "Issue" 
-                OR backlinks.status = "Live in Process" 
+                SUM(CASE WHEN backlinks.status = "Live"
+                OR backlinks.status = "Content Sent"
+                OR backlinks.status = "Content Done"
+                OR backlinks.status = "Content Writing"
+                OR backlinks.status = "Processing"
+                OR backlinks.status = "Canceled"
+                OR backlinks.status = "Issue"
+                OR backlinks.status = "Live in Process"
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -217,14 +223,14 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Canceled" THEN 1 ELSE 0 END) AS num_canceled'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
             DB::raw('
-                SUM(CASE WHEN backlinks.status = "Live" 
-                OR backlinks.status = "Processing" 
-                OR backlinks.status = "Content In Writing" 
-                OR backlinks.status = "Content Done" 
-                OR backlinks.status = "Content Sent" 
-                OR backlinks.status = "Canceled" 
-                OR backlinks.status = "Issue" 
-                OR backlinks.status = "Live in Process" 
+                SUM(CASE WHEN backlinks.status = "Live"
+                OR backlinks.status = "Processing"
+                OR backlinks.status = "Content In Writing"
+                OR backlinks.status = "Content Done"
+                OR backlinks.status = "Content Sent"
+                OR backlinks.status = "Canceled"
+                OR backlinks.status = "Issue"
+                OR backlinks.status = "Live in Process"
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -239,14 +245,20 @@ class DashboardController extends Controller
         }
 
         if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 0 ){
-            $list = $list->where('backlinks.user_id', Auth::user()->id);
+
+            /*
+            * Commented the code below for QC buyers to see all buyers
+            * Mar 03, 2021 - Adrian
+            */
+
+//            $list = $list->where('backlinks.user_id', Auth::user()->id);
         }
 
         if( Auth::user()->isOurs == 1 && Auth::user()->role_id == 5 ) {
             $list = $list->where('backlinks.user_id', Auth::user()->id)
                         ->orWhereIn('backlinks.user_id', $sub_buyer_ids);
         }
-                    
+
         return $list->groupBy('backlinks.user_id', 'users.username')
                     ->orderBy('users.username', 'asc')
                     ->get();
@@ -267,17 +279,17 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN ext_domains.status = "100" THEN 1 ELSE 0 END) AS num_qualified'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "90" THEN 1 ELSE 0 END) AS num_unqualified'),
             DB::raw('
-                SUM(CASE WHEN ext_domains.status = "90" 
-                OR ext_domains.status = "10" 
-                OR ext_domains.status = "20" 
-                OR ext_domains.status = "30" 
-                OR ext_domains.status = "40" 
-                OR ext_domains.status = "50" 
-                OR ext_domains.status = "55" 
-                OR ext_domains.status = "60" 
-                OR ext_domains.status = "70" 
-                OR ext_domains.status = "100" 
-                OR ext_domains.status = "0" 
+                SUM(CASE WHEN ext_domains.status = "90"
+                OR ext_domains.status = "10"
+                OR ext_domains.status = "20"
+                OR ext_domains.status = "30"
+                OR ext_domains.status = "40"
+                OR ext_domains.status = "50"
+                OR ext_domains.status = "55"
+                OR ext_domains.status = "60"
+                OR ext_domains.status = "70"
+                OR ext_domains.status = "100"
+                OR ext_domains.status = "0"
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -319,9 +331,9 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_interested'),
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Purchased" THEN 1 ELSE 0 END) AS num_purchased'),
             DB::raw('
-                SUM(CASE WHEN buyer_purchased.status = "Not interested" 
-                OR buyer_purchased.status = "Interested" 
-                OR buyer_purchased.status = "Purchased" 
+                SUM(CASE WHEN buyer_purchased.status = "Not interested"
+                OR buyer_purchased.status = "Interested"
+                OR buyer_purchased.status = "Purchased"
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -336,10 +348,16 @@ class DashboardController extends Controller
                 ->where('publisher.ur', '!=', '0')
                 ->where('publisher.dr', '!=', '0');
 
-                
+
         if( Auth::user()->role_id == 5 && !empty($sub_buyer_ids)){
-            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
-                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+
+            /*
+            * Commented the code below for QC buyers to see all buyers
+            * Mar 03, 2021 - Adrian
+            */
+
+//            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+//                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
 
             // $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
             //     $query->where('buyer_purchased.user_id_buyer', $user_id)
