@@ -68,8 +68,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                 ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
                 ->leftJoin('continents', 'countries.continent_id', '=', 'continents.id')
-                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-                ->orderBy('created_at', 'desc');
+                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
             $list = $list->join(DB::raw('(
