@@ -25,6 +25,12 @@
                             &nbsp; -->
                             Credit: <strong>$ {{ money.credit }}</strong>
                         </a>
+                        <button
+                            v-if="user.registration.is_sub_account == 0"
+                            class="btn btn-round btn-success"
+                            data-toggle="modal" data-target="#modal-add-wallet"><i
+                            class="fa fa-plus"></i>
+                        </button>
                     </li>
 
                     <li style="margin-left:-50px;margin-bottom:-55px;">
@@ -126,6 +132,72 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- Modal Add Wallet -->
+            <div class="modal fade" id="modal-add-wallet"
+                 tabindex="-1" role="dialog"
+                 aria-labelledby="modelTitleId"
+                 aria-hidden="true" style="z-index: 9999">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Wallet Transaction</h5>
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <!--                                    <div class="col-md-12">-->
+                                <!--                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">-->
+                                <!--                                            <label for="">User Buyer</label>-->
+                                <!--                                            <select name="" class="form-control" v-model="updateModel.user_id_buyer">-->
+                                <!--                                                <option value="">Select Buyer</option>-->
+                                <!--                                                <option v-for="option in listBuyer.data" v-bind:value="option.id">-->
+                                <!--                                                    {{ 'ID: ' + option.id + ' - Name: ' + option.name }}-->
+                                <!--                                                </option>-->
+                                <!--                                            </select>-->
+                                <!--                                            <span v-if="messageForms.errors.user_id_buyer" v-for="err in messageForms.errors.user_id_buyer" class="text-danger">{{ err }}</span>-->
+                                <!--                                        </div>-->
+                                <!--                                    </div>-->
+                                <div class="col-md-6">
+                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
+                                        <label for="">Amount USD</label>
+                                        <input type="number" class="form-control" name="" placeholder="0.00" v-model="updateModel.amount_usd">
+                                        <span v-if="messageForms.errors.amount_usd" v-for="err in messageForms.errors.amount_usd" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
+                                        <label for="">Payment Via</label>
+                                        <select name="" class="form-control" v-model="updateModel.payment_type">
+                                            <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                                {{ option.type }}
+                                            </option>
+                                        </select>
+                                        <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
+                                        <label for="">Proof of Documents</label>
+                                        <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
+                                        <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small><br/>
+                                        <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Modal Add Wallet -->
         </nav>
     </header>
 </template>
@@ -150,12 +222,19 @@ export default {
                 total_purchased: "",
                 total_purchased_paid: "",
             },
+            isPopupLoading: false,
+            updateModel: {
+                user_id_buyer: '',
+                payment_type: '',
+                amount_usd: '',
+            },
         };
     },
 
     created() {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
+        this.getListPaymentType();
     },
 
     beforeMount() {
@@ -210,7 +289,10 @@ export default {
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
-            notifications: state => state.storeNotification.notifications
+            notifications: state =>
+                state.storeNotification.notifications,
+            messageForms: state => state.storeWalletTransaction.messageForms,
+            listPayment: state => state.storeWalletTransaction.listPayment,
         })
     },
 
@@ -220,6 +302,44 @@ export default {
             getNotifications: "getUserNotifications",
             seenNotifications: "seenUserNotifications"
         }),
+
+        async submitPay() {
+            this.formData = new FormData();
+            this.formData.append('file', this.$refs.proof.files[0]);
+            this.formData.append('payment_type', this.updateModel.payment_type);
+            this.formData.append('amount_usd', this.updateModel.amount_usd);
+            this.formData.append('user_id_buyer',
+                this.user.id);
+
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionAddWallet', this.formData)
+            this.isPopupLoading = false;
+
+            if( this.messageForms.action == 'success' ){
+
+                $("#modal-add-wallet").modal('hide');
+                this.updateModel = {
+                    user_id_buyer: '',
+                    payment_type: '',
+                    amount_usd: '',
+                }
+
+                this.$refs.proof.value = '';
+
+                swal.fire(
+                    'Success',
+                    'Successfully Added',
+                    'success'
+                )
+
+            }
+
+            this.liveGetWallet();
+        },
+
+        async getListPaymentType(params) {
+            await this.$store.dispatch('actionGetListPaymentType', params);
+        },
 
         calcSum(total, num) {
             return total + num;
@@ -280,3 +400,8 @@ export default {
     }
 };
 </script>
+<style>
+    .modal-backdrop {
+        z-index: -1;
+    }
+</style>
