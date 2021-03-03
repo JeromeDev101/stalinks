@@ -317,9 +317,12 @@ class DashboardController extends Controller
             'users.username',
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Not interested" THEN 1 ELSE 0 END) AS num_not_interested'),
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_interested'),
+            DB::raw('SUM(CASE WHEN buyer_purchased.status = "Purchased" THEN 1 ELSE 0 END) AS num_purchased'),
             DB::raw('
                 SUM(CASE WHEN buyer_purchased.status = "Not interested" 
-                OR buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_total
+                OR buyer_purchased.status = "Interested" 
+                OR buyer_purchased.status = "Purchased" 
+                THEN 1 ELSE 0 END) AS num_total
             '),
         ];
 
@@ -335,13 +338,13 @@ class DashboardController extends Controller
 
                 
         if( Auth::user()->role_id == 5 && !empty($sub_buyer_ids)){
-            // $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
-            //     ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
 
-            $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
-                $query->where('buyer_purchased.user_id_buyer', $user_id)
-                    ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-            });
+            // $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
+            //     $query->where('buyer_purchased.user_id_buyer', $user_id)
+            //         ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            // });
         }
 
         $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')
@@ -358,8 +361,7 @@ class DashboardController extends Controller
                 'num_new' => $new,
                 'num_not_interested' => $purchased['num_not_interested'],
                 'num_interested' => $purchased['num_interested'],
-                // 'num_purchased' => isset($purchase[0]->num_total) ? $purchase[0]->num_total : 0,
-                'num_purchased' => intval($publisher) - ( intval($new) + intval($purchased['num_total'])  ),
+                'num_purchased' => $purchased['num_purchased'],
                 'num_total' => intval($purchased['num_total']) + intval($new)
             ]);
         }
