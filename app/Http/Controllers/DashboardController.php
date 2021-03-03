@@ -349,15 +349,15 @@ class DashboardController extends Controller
                 ->where('publisher.dr', '!=', '0');
 
 
-        if( Auth::user()->role_id == 5 && !empty($sub_buyer_ids)){
+        if( Auth::user()->role_id == 5 && Auth::user()->isOurs == 1 && !empty($sub_buyer_ids)){
 
             /*
             * Commented the code below for QC buyers to see all buyers
             * Mar 03, 2021 - Adrian
             */
 
-//            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
-//                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
 
             // $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
             //     $query->where('buyer_purchased.user_id_buyer', $user_id)
