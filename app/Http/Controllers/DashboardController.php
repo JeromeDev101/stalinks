@@ -335,8 +335,13 @@ class DashboardController extends Controller
 
                 
         if( Auth::user()->role_id == 5 && !empty($sub_buyer_ids)){
-            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
-                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            // $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+            //     ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+
+            $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
+                $query->where('buyer_purchased.user_id_buyer', $user_id)
+                    ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            });
         }
 
         $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')
@@ -353,7 +358,8 @@ class DashboardController extends Controller
                 'num_new' => $new,
                 'num_not_interested' => $purchased['num_not_interested'],
                 'num_interested' => $purchased['num_interested'],
-                'num_purchased' => isset($purchase[0]->num_total) ? $purchase[0]->num_total : 0,
+                // 'num_purchased' => isset($purchase[0]->num_total) ? $purchase[0]->num_total : 0,
+                'num_purchased' => intval($publisher) - ( intval($new) + intval($purchased['num_total'])  ),
                 'num_total' => intval($purchased['num_total']) + intval($new)
             ]);
         }
