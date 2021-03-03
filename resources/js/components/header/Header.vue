@@ -26,6 +26,7 @@
                             Credit: <strong>$ {{ money.credit }}</strong>
                         </a>
                         <button
+                            v-if="user.registration.is_sub_account == 0"
                             class="btn btn-round btn-success"
                             data-toggle="modal" data-target="#modal-add-wallet"><i
                             class="fa fa-plus"></i>
