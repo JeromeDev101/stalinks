@@ -294,11 +294,23 @@ class DashboardController extends Controller
 
 
     private function backlinkToBuy() {
+        $user_id = Auth::user()->id;
 
         $publisher = Publisher::where('valid','valid')
                         ->where('publisher.ur', '!=', '0')
                         ->where('publisher.dr', '!=', '0')
                         ->count();
+
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
+            if ( isset($registered->team_in_charge) ) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
         $columns = [
             'users.id as id_user',
@@ -322,8 +334,9 @@ class DashboardController extends Controller
                 ->where('publisher.dr', '!=', '0');
 
                 
-        if( Auth::user()->role_id == 5 ){
-            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id);
+        if( Auth::user()->role_id == 5 && !empty($sub_buyer_ids)){
+            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
         }
 
         $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')

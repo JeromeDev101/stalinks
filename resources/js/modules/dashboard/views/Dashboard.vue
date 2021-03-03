@@ -273,17 +273,22 @@
                             <table class="table table-hover tbl-custom">
                                 <thead>
                                     <tr>
-                                        <th v-if="user.isAdmin">Buyer <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.total }})</span></th>
-                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>
-                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>
-                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>
-                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>
-                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>
+                                        <th>Buyer <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.total }})</span></th>
+<!--                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>-->
+                                        <th>New</th>
+<!--                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>-->
+                                        <th>Interested</th>
+<!--                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>-->
+                                        <th>Purchased</th>
+<!--                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>-->
+                                        <th>Not Interested</th>
+<!--                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>-->
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
-                                        <td v-if="user.isAdmin">{{ upperCase(buy.username) }}</td>
+                                        <td>{{ upperCase(buy.username) }}</td>
                                         <td>{{ buy.num_new }}</td>
                                         <td>{{ buy.num_interested }}</td>
                                         <td>{{ buy.num_purchased }}</td>
