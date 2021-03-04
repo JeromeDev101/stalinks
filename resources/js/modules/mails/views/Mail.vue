@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            
+
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
@@ -37,16 +37,16 @@
                                 <router-link :to="{path:'/mails/sent', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-mail-reply"></i>
                                     Sent
-                                </router-link> 
+                                </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Starred'}">
-                                <router-link :to="{path:'/mails/starred', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">                   
+                                <router-link :to="{path:'/mails/starred', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-star"></i>
                                     Starred
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
-                                <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">                   
+                                <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-envelope-o"></i>
                                     Mail Template
                                 </router-link>
@@ -63,18 +63,18 @@
 
                 <div class="box box-solid" v-show="$route.name != 'mail-template'">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Labels</h3>
+                        <h5 class="box-title">Default Labels</h5>
 
                         <!-- <div class="box-tools">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         </div> -->
-                        <div class="box-tools">
-                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" @click="clearLabelInputs" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>
-                        </div>
-
+<!--                        <div class="box-tools">-->
+<!--                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" @click="clearLabelInputs" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>-->
+<!--                        </div>-->
                     </div>
+
                     <div class="box-body no-padding">
-                        <ul class="list-group" v-for="(label, index) in listLabel" :key="index">
+                        <ul class="list-group" v-for="(label, index) in generalLabels" :key="index">
                             <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
                                 <a href="#" @click="setQueryLabel(label.id)" >
                                     <i class="fa fa-circle-o" :style="{'color': label.color}"></i> {{ label.name }}
@@ -83,7 +83,30 @@
                             </li>
                         </ul>
                     </div>
+                </div>
 
+                <div class="box box-solid" v-show="$route.name != 'mail-template'">
+                    <div class="box-header with-border">
+                        <h5 class="box-title">User Labels</h5>
+
+                        <!-- <div class="box-tools">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div> -->
+                        <div class="box-tools">
+                            <button type="button" class="btn btn-box-tool btn-sucess" title="Add Label" @click="clearLabelInputs" data-toggle="modal" data-target="#modal-add-label"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="box-body no-padding">
+                        <ul class="list-group" v-for="(label, index) in userLabels" :key="index">
+                            <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
+                                <a href="#" @click="setQueryLabel(label.id)" >
+                                    <i class="fa fa-circle-o" :style="{'color': label.color}"></i> {{ label.name }}
+                                </a>
+                                <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -117,7 +140,7 @@
                                     <compact-picker v-model="colors" @input="updateValue" />
                                  </div>
                             </div>
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -153,7 +176,7 @@ export default {
             listUserEmail: [],
             filterModel: {
                 user_email: this.$route.query.user_email || ''
-                    
+
             },
         }
     },
@@ -166,7 +189,15 @@ export default {
         ...mapState({
             user: state => state.storeAuth.currentUser,
             messageForms: state => state.storeMailgun.messageForms,
-        })
+        }),
+
+        generalLabels() {
+            return this.listLabel.filter(label => label.user_id === null)
+        },
+
+        userLabels() {
+            return this.listLabel.filter(label => label.user_id !== null)
+        }
     },
 
     mounted() {
@@ -255,7 +286,7 @@ export default {
         },
         getListEmails() {
             axios.get('/api/mail/get-mail-list').then((response) => {
-                
+
                 this.listUserEmail = response.data;
             });
         }

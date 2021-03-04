@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,7 +16,10 @@ class LabelController extends Controller
      */
     public function index()
     {
-        $labels = DB::table('labels')->get();
+        $labels = DB::table('labels')
+            ->where('user_id', null)
+            ->orWhere('user_id', Auth::user()->id)
+            ->get();
         return response()->json(['status'=> 200,'labels'=> $labels]);
     }
 
@@ -48,7 +52,8 @@ class LabelController extends Controller
 
         DB::table('labels')->insert([
             'name'  => $request->name,
-            'color' => $request->color
+            'color' => $request->color,
+            'user_id' => Auth::user()->id
         ]);
         return response()->json(['status'=> 200,'labels'=> $request->all()]);
     }
