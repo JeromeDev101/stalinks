@@ -168,7 +168,12 @@
                     <div class="modal-body relative">
 
                         <blockquote class="primary">
-                            <p>Note: You can send multiple email 'contact01|contact02|contact03'</p>
+                            <p>Note</p>
+                            <ul>
+                                <li>You can send an email to multiple recipients <strong>'contact01|contact02|contact03' or 'contact01,contact02,contact03'</strong></li>
+                                <li>For bulk sending, <strong>only 10 recipients are allowed per email</strong></li>
+                                <li>You can edit the tags by clicking it and pressing <strong>enter key</strong> afterwards</li>
+                            </ul>
                         </blockquote>
 
                         <form class="row" action="">
@@ -232,6 +237,8 @@
 
                                     <vue-tags-input
                                         v-model="tag"
+                                        :max-tags="10"
+                                        :allow-edit-tags="true"
                                         :separators="separators"
                                         :tags="emailContent.email"
                                         :class="{
