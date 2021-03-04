@@ -173,6 +173,7 @@
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th>Price</th>
+                                <th v-if="user.isAdmin">Prices</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
                                 <th>Date for Proccess</th>
                                 <th>Date Completed</th>
@@ -199,6 +200,7 @@
                                     </div>
                                 </td>
                                 <td>$ {{ convertPrice(backLink.price) }}</td>
+                                <td>$ {{ computePriceStalinks(backLink.price, backLink.publisher.inc_article) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
@@ -439,6 +441,7 @@
                 totalAmount: 0,
                 isSearching: false,
                 listSubAccounts: [],
+                updateFormula: {},
             }
         },
         async created() {
@@ -448,6 +451,7 @@
             this.getSellerList();
             this.getBuyerList();
             this.getSubAccount();
+            this.getFormula();
         },
 
         computed: {
@@ -459,6 +463,7 @@
                 messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
                 listSeller: state => state.storeAccount.listAccount,
                 listBuyer: state => state.storeFollowupSales.listBuyer,
+                formula: state => state.storeSystem.formula,
             }),
 
             openModalBackLink() {
@@ -483,6 +488,56 @@
         },
 
         methods: {
+            async getFormula() {
+                await this.$store.dispatch('actionGetFormula');
+                this.updateFormula = this.formula.data[0];
+            },
+
+            percentage(percent, total) {
+                return ((percent/ 100) * total).toFixed(2)
+            },
+
+            computePriceStalinks(price, article) {
+                let selling_price = price
+                let percent = parseFloat(this.formula.data[0].percentage);
+                let additional = parseFloat(this.formula.data[0].additional);
+
+                let commission = 'yes';
+
+                if( price != '' && price != null ){ // check if price has a value
+
+                        if( article == 'Yes' ){ //check if with article
+
+                            // if( commission == 'no' ){
+                            //     selling_price = price
+                            // }
+
+                            if( commission == 'yes' ){
+                                let percentage = this.percentage(percent, price)
+                                selling_price = parseFloat(percentage) + parseFloat(price)
+                            }
+                        }
+
+                        if( article == 'No' ){ //check if without article
+
+                            // if( commission == 'no' ){
+                            //     selling_price = parseFloat(price) + additional
+                            // }
+
+                            if( commission == 'yes' ){
+                                let percentage = this.percentage(percent, price)
+                                selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                            }
+
+                        }
+
+                }
+
+                selling_price = parseFloat(selling_price).toFixed(0);
+
+                return selling_price;
+            },
+
             getSubAccount() {
                 axios.get('/api/sub-account',{
                     params: {
@@ -524,10 +579,11 @@
                     { orderable: true, targets: 4 },
                     { orderable: true, targets: 5 },
                     { orderable: true, targets: 6, width: "200px" },
-                    { orderable: true, targets: 7, width: "200px" },
+                    { orderable: true, targets: 7 },
                     { orderable: true, targets: 8 },
                     { orderable: true, targets: 9 },
                     { orderable: true, targets: 10 },
+                    { orderable: true, targets: 11 },
                     { orderable: false, targets: '_all' }
                 ];
 
