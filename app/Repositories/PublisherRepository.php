@@ -31,24 +31,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $paginate = $filter['price_basis'] == '' ? $paginate:Publisher::count();
 
-        // $columns = [
-        //     'publisher.*',
-        //     'registration.username',
-        //     'A.name',
-        //     'A.username as user_name',
-        //     'A.isOurs',
-        //     'registration.company_name',
-        //     'countries.name AS country_name',
-        //     'B.username as in_charge'
-        // ];
-        // $list = Publisher::select($columns)
-        //         ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
-        //         ->leftJoin('registration', 'A.email', '=', 'registration.email')
-        //         ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
-        //         ->leftJoin('countries', 'publisher.language_id', '=', 'countries.id')
-        //         ->orderBy('created_at', 'desc');
-
-
         $columns = [
             'publisher.*',
             'registration.username',
@@ -71,10 +53,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
+            $validFilter = isset($filter['valid']) ? 'AND valid IN ('. implode(',', implode_array_to_strings($filter['valid'])) .')' : '';
+
             $list = $list->join(DB::raw('(
                     SELECT url
                     FROM publisher
                     WHERE deleted_at IS NULL
+                    '. $validFilter .'
                     GROUP BY url
                     HAVING COUNT(*) > 1
                     )temp'), 'publisher.url', 'temp.url')
