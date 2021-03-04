@@ -28,7 +28,7 @@
                         <button
                             v-if="user.registration.is_sub_account == 0"
                             class="btn btn-round btn-success"
-                            data-toggle="modal" data-target="#modal-add-wallet"><i
+                            data-toggle="modal" data-target="#modal-add-wallet-header"><i
                             class="fa fa-plus"></i>
                         </button>
                     </li>
@@ -134,7 +134,8 @@
             </div>
 
             <!-- Modal Add Wallet -->
-            <div class="modal fade" id="modal-add-wallet"
+            <div class="modal fade"
+                 id="modal-add-wallet-header"
                  tabindex="-1" role="dialog"
                  aria-labelledby="modelTitleId"
                  aria-hidden="true" style="z-index: 9999">
@@ -317,7 +318,7 @@ export default {
 
             if( this.messageForms.action == 'success' ){
 
-                $("#modal-add-wallet").modal('hide');
+                $("#modal-add-wallet-header").modal('hide');
                 this.updateModel = {
                     user_id_buyer: '',
                     payment_type: '',
