@@ -112,7 +112,7 @@ class WalletTransactionController extends Controller
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
             'proof_doc' => '/images/wallet_transaction/'.$new_name,
-            'admin_confirmation' => 'Paid',
+            'admin_confirmation' => 'Not Paid',
         ]);
 
         // $total_wallet = TotalWallet::where('user_id', $request->user_id_buyer)->first();

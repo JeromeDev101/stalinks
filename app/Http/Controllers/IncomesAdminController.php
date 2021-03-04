@@ -11,7 +11,8 @@ class IncomesAdminController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
 
-        $list = Backlink::where('status', 'Live');
+        $list = Backlink::where('status', 'Live')
+                ->with('publisher');
 
         if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
             $list = $list->where('id', $filter['backlink_id']);

@@ -58,9 +58,8 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
-                                <th v-show="tblOptIncomesAdmin.selling_price">Selling Price</th>
-                                <th v-show="tblOptIncomesAdmin.price">Price</th>
-                                <th v-show="tblOptIncomesAdmin.gross_income">Gross Incomes</th>
+                                <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
+                                <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
                                 <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
                                 <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
                                 <th v-show="tblOptIncomesAdmin.net_incomes">Net Incomes</th>
@@ -70,12 +69,12 @@
                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                <td>{{ index + 1 }}</td>
                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
-                               <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.selling_price == null ? number_format(incomes_admin.price) : number_format(incomes_admin.selling_price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.publisher == null ? 0 : number_format(incomes_admin.publisher.price) }}</td>
                                <td v-show="tblOptIncomesAdmin.price">$ {{ number_format(incomes_admin.price) }}</td>
-                               <td v-show="tblOptIncomesAdmin.gross_income">{{ computeGross(incomes_admin.selling_price, incomes_admin.price) }}</td>
                                <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
                                <td v-show="tblOptIncomesAdmin.content_charges">0</td>
-                               <td v-show="tblOptIncomesAdmin.net_incomes">0</td>
+                               <!-- static only -->
+                               <td v-show="tblOptIncomesAdmin.net_incomes">$ {{ incomes_admin.publisher == null ? 0 : number_format(incomes_admin.publisher.price) }}</td>
                            </tr>
                         </tbody>
                     </table>
