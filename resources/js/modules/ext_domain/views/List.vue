@@ -1859,6 +1859,8 @@
                    if (this.checkIds.length == 0) {
                         swal.fire('No Selected', 'Please select first', 'error');
 
+                   } else if(this.checkIds.length > 10) {
+                       swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                    } else {
                        this.openModalEmailElem();
                        var emails = [];
