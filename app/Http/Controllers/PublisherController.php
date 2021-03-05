@@ -107,7 +107,8 @@ class PublisherController extends Controller
             $publisher = Publisher::findOrFail($id);
             $publisher->update([
                 'language_id' => $request->language == '' ? $publisher->language_id : $request->language,
-                'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
+//                'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
+                'continent_id' => $request->continent_id == '' ? $publisher->continent_id : $request->continent_id,
                 'topic' => $request->topic == '' ? $publisher->topic : implode(",", $request->topic),
                 'casino_sites' => $request->casino_sites == '' ? $publisher->casino_sites : $request->casino_sites,
                 'kw_anchor' => $request->kw_anchor == '' ? $publisher->kw_anchor : $request->kw_anchor,

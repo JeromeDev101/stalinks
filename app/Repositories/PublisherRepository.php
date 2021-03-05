@@ -39,7 +39,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'A.isOurs',
             'registration.company_name',
             'countries.name AS country_name',
-            'continents.name AS continent_name',
+            'country_continent.name AS country_continent',
+            'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'B.username AS in_charge',
             'B.id AS team_in_charge',
@@ -49,7 +50,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->leftJoin('registration', 'A.email', '=', 'registration.email')
                 ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                 ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
-                ->leftJoin('continents', 'countries.continent_id', '=', 'continents.id')
+                ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
+                ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
                 ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
@@ -151,7 +153,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
-            $list = $list->where('countries.continent_id', $filter['continent_id']);
+            $list = $list->where(function ($query) use ($filter) {
+                $query->where('countries.continent_id', $filter['continent_id'])
+                    ->orWhere('publisher.continent_id', $filter['continent_id']);
+            });
         }
 
         if (isset($filter['country_id']) && !empty($filter['country_id'])) {
