@@ -58,7 +58,10 @@ class MailgunController extends Controller
         }
 
         // check if email is a string or json object
-        $request['email'] = json_decode($request->email, true) ?? $request->email;
+
+        if(!is_array($request->email)){
+            $request['email'] = json_decode($request->email, true) ?? $request->email;
+        }
 
         $emailRule = [];
 
