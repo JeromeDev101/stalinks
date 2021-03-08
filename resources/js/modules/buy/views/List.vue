@@ -283,7 +283,7 @@
                                 <td class="resize" v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
                                 <td class="resize" v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
                                 <td class="resize" v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
-                                <td class="resize" v-show="tblBuyOptions.continent">{{ buy.country_continent ? buy.country_continent : buy.publisher_continent }}</td>
+                                <td class="resize" v-show="tblBuyOptions.continent">{{ buy.publisher_continent ? buy.publisher_continent : buy.country_continent }}</td>
                                 <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
                                 <td class="resize" v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
@@ -449,64 +449,64 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6" v-if="user.role_id != 5 && user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller" @change="columnAdjust">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.topic ? 'checked':''" v-model="tblBuyOptions.topic">Topic</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.topic ? 'checked':''" v-model="tblBuyOptions.topic" @change="columnAdjust">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.casino_sites ? 'checked':''" v-model="tblBuyOptions.casino_sites">Casino & Betting Sites</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.casino_sites ? 'checked':''" v-model="tblBuyOptions.casino_sites" @change="columnAdjust">Casino & Betting Sites</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language">Language</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language" @change="columnAdjust">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country">Country</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country" @change="columnAdjust">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.continent ? 'checked':''" v-model="tblBuyOptions.continent">Continent</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.continent ? 'checked':''" v-model="tblBuyOptions.continent" @change="columnAdjust">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url">URL</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url" @change="columnAdjust">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ur ? 'checked':''" v-model="tblBuyOptions.ur">UR</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.ur ? 'checked':''" v-model="tblBuyOptions.ur" @change="columnAdjust">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.dr ? 'checked':''" v-model="tblBuyOptions.dr">DR</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.dr ? 'checked':''" v-model="tblBuyOptions.dr" @change="columnAdjust">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.backlinks ? 'checked':''" v-model="tblBuyOptions.backlinks">Backlinks</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.backlinks ? 'checked':''" v-model="tblBuyOptions.backlinks" @change="columnAdjust">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ref_domains ? 'checked':''" v-model="tblBuyOptions.ref_domains">Ref Domains</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.ref_domains ? 'checked':''" v-model="tblBuyOptions.ref_domains" @change="columnAdjust">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords" @change="columnAdjust">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ratio ? 'checked':''" v-model="tblBuyOptions.ratio">Ratio</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.ratio ? 'checked':''" v-model="tblBuyOptions.ratio" @change="columnAdjust">Ratio</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic" @change="columnAdjust">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price" @change="columnAdjust">{{ user.role_id == 5 ? 'Prices':'Price' }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.isAdmin">
-                                <label><input type="checkbox" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices">Prices</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices" @change="columnAdjust">Prices</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status" @change="columnAdjust">Status</label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.role_id != 5">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb" @change="columnAdjust">Code Combination</label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.role_id != 5">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price" @change="columnAdjust">Code Price</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis">Price Basis</label>
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis" @change="columnAdjust">Price Basis</label>
                             </div>
                         </div>
                     </div>
@@ -642,7 +642,7 @@
             this.getListContinents();
             this.checkCreditAuth();
             this.getListSeller();
-            // this.columnShow();
+            this.columnShow();
             // this.checkBuyerCommission();
 
             let language = this.listLanguages.data;
@@ -703,6 +703,12 @@
                 }
 
                 this.tblBuyOptions.country = false;
+            },
+
+            columnAdjust(){
+                this.$nextTick(() => {
+                    $('#tbl_buy_backlink').DataTable().columns.adjust()
+                });
             },
 
             formatPrice(value) {
@@ -806,8 +812,6 @@
                 });
 
                 table.columns.adjust().draw();
-
-                this.columnShow();
 
                 this.searchLoading = false;
                 this.isSearching = false;
