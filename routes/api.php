@@ -224,6 +224,10 @@ Route::middleware('auth:api')->group(function () {
 
     //Continents
     Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');
+
+    //Paypal Integration
+    Route::name('create-order')->post('/paypal/order/create', 'PayPalController@createOrder');
+    Route::name('capture-order')->post('/paypal/order/{id}/capture', 'PayPalController@captureOrder');
 });
 
 //Mailgun external
@@ -238,11 +242,6 @@ Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show
 
 //test pusher
 Route::name('pusher')->get('/test-pusher','PushController@test');
-
-//test paypal payment
-Route::get('payment', 'PayPalController@payment')->name('payment');
-Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
-Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
 //removing http,www,https
 Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');

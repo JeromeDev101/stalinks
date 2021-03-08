@@ -13,6 +13,7 @@
     <div class="wrapper">
         <div id="app"></div>
     </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=Aboxm5cBaVcp-uV_1pihXc5AQ1qNeAgxzZc6KqnewlGMgDavbMp2b_xIbv5PWMJYaqHYQFesKGz9uCZK&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
