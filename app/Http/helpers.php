@@ -18,3 +18,12 @@ if (!function_exists('implode_array_to_strings')) {
         return $result;
     }
 }
+
+if (! function_exists('divnum')) {
+
+    function divnum($numerator, $denominator)
+    {
+        return $denominator == 0 ? 0 : ($numerator / $denominator);
+    }
+
+}

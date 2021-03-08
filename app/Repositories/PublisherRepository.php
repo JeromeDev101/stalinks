@@ -272,7 +272,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }
