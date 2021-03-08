@@ -22,6 +22,7 @@ const state = {
     listLanguages: { data: [], total: 0 },
     listSeller: { data:[] },
     tblPublisherOpt: {
+        continent: true,
         country: true,
         created: true,
         uploaded: true,

@@ -35,6 +35,8 @@ class BuyController extends Controller
             'users.isOurs',
             'registration.company_name',
             'countries.name AS country_name',
+            'country_continent.name AS country_continent',
+            'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased'
         ];
@@ -43,6 +45,8 @@ class BuyController extends Controller
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+                ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
+                ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
                 ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
                 ->leftJoin('buyer_purchased', function($q) use ($user_id){
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
@@ -100,6 +104,20 @@ class BuyController extends Controller
                 $list->whereIn('publisher.country_id', $filter['country_id']);
             } else {
                 $list->where('publisher.country_id', $filter['country_id']);
+            }
+        }
+
+        if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
+            if (is_array($filter['continent_id'])) {
+                $list = $list->where(function ($query) use ($filter) {
+                    $query->whereIn('countries.continent_id', $filter['continent_id'])
+                        ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                });
+            } else {
+                $list = $list->where(function ($query) use ($filter) {
+                    $query->where('countries.continent_id', $filter['continent_id'])
+                        ->orWhere('publisher.continent_id', $filter['continent_id']);
+                });
             }
         }
 

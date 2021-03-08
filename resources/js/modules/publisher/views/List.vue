@@ -289,8 +289,8 @@
                                 <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
                                 <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th class="resize" v-show="tblPublisherOpt.language">Language</th>
-<!--                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>-->
-                                <th class="resize" v-show="tblPublisherOpt.country">Continent</th>
+                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>
+                                <th class="resize" style="width: 61px" v-show="tblPublisherOpt.continent">Continent</th>
                                 <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>
                                 <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
                                 <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>
@@ -324,8 +324,8 @@
                                 <td class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
-<!--                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>-->
-                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
@@ -673,6 +673,9 @@
                                 <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">Continent</label>
+                            </div>
+                            <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -891,7 +894,7 @@
         width: 100% !important;
     }
     #tbl-publisher .resize{
-        /* width: auto !important; */
+         /*width: auto !important;*/
         white-space: normal;
         text-overflow: initial;
         overflow: hidden;
@@ -1033,8 +1036,6 @@
                 this.getTeamInCharge();
             }
 
-            this.setDefaultSettings();
-
             let language = this.listLanguages.data;
             if ( language.length === 0 ) {
                 this.getListLanguages();
@@ -1093,6 +1094,8 @@
                     this.tblPublisherOpt.casino_sites = false;
                     this.tblPublisherOpt.in_charge = true;
                 }
+
+                this.tblPublisherOpt.country = false;
 
             },
 
@@ -1245,6 +1248,8 @@
 
                 this.searchLoading = false;
                 this.isSearching = false;
+
+                this.setDefaultSettings()
 
             },
 
