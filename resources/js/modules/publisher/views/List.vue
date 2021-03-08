@@ -325,7 +325,7 @@
                                 <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.publisher_continent ? publish.publisher_continent : publish.country_continent }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
@@ -661,67 +661,67 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">Uploaded</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created" @change="columnAdjust">Uploaded</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Updated</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded" @change="columnAdjust">Updated</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language" @change="columnAdjust">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country" @change="columnAdjust">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">Continent</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent" @change="columnAdjust">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic" @change="columnAdjust">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites">Casino & Betting Sites</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites" @change="columnAdjust">Casino & Betting Sites</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">In-charge</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge" @change="columnAdjust">In-charge</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">Seller</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller" @change="columnAdjust">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid">Valid</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid" @change="columnAdjust">Valid</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url" @change="columnAdjust">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price" @change="columnAdjust">Price</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis" @change="columnAdjust">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article" @change="columnAdjust">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor" @change="columnAdjust">Kw Anchor</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur" @change="columnAdjust">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr">DR</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr" @change="columnAdjust">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks" @change="columnAdjust">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain" @change="columnAdjust">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords" @change="columnAdjust">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
+                                <label><input type="checkbox" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic" @change="columnAdjust">Organic Traffic</label>
                             </div>
                         </div>
                     </div>
@@ -1040,6 +1040,8 @@
             if ( language.length === 0 ) {
                 this.getListLanguages();
             }
+
+            this.setDefaultSettings();
         },
 
         computed:{
@@ -1096,7 +1098,6 @@
                 }
 
                 this.tblPublisherOpt.country = false;
-
             },
 
             async getTeamInCharge(){
@@ -1244,13 +1245,16 @@
                     autoWidth: true,
                 });
 
-                table.columns.adjust().draw();
-
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                this.setDefaultSettings()
+                table.columns.adjust().draw();
+            },
 
+            columnAdjust(){
+                this.$nextTick(() => {
+                    $('#tbl-publisher').DataTable().columns.adjust()
+                });
             },
 
             async getListSeller(params) {
