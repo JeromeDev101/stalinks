@@ -16,7 +16,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Continent</label>
-                                <select class="form-control" v-model="filterModel.continent_id" @change="getCountriesByContinent">
+                                <select class="form-control" v-model="filterModel.continent_id">
                                     <option value="">All</option>
                                     <option v-for="option in listContinent.data" v-bind:value="option.id">
                                         {{ option.name }}
@@ -25,17 +25,17 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Country</label>
-                                <select class="form-control" v-model="filterModel.country_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="">Country</label>-->
+<!--                                <select class="form-control" v-model="filterModel.country_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -290,7 +290,7 @@
                                 <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
                                 <th class="resize" v-show="tblPublisherOpt.language">Language</th>
                                 <th class="resize" v-show="tblPublisherOpt.country">Country</th>
-                                <th class="resize" v-show="tblPublisherOpt.country">Continent</th>
+                                <th class="resize" style="width: 61px" v-show="tblPublisherOpt.continent">Continent</th>
                                 <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>
                                 <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
                                 <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>
@@ -325,7 +325,7 @@
                                 <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.continent_name }}</td>
+                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
                                 <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
@@ -405,12 +405,24 @@
                                 </div>
                             </div>
 
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="">Country</label>-->
+<!--                                    <select class="form-control" v-model="updateModel.country_id">-->
+<!--                                        <option value="">Select Country</option>-->
+<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
+<!--                                            {{ option.name }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Country</label>
-                                    <select class="form-control" v-model="updateModel.country_id">
-                                        <option value="">Select Country</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                    <label for="">Continent</label>
+                                    <select class="form-control" v-model="updateModel.continent_id">
+                                        <option value="">Select Continent</option>
+                                        <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -566,16 +578,29 @@
                                 </div>
                             </div>
 
+<!--                            <div class="col-md-6">-->
+<!--                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">-->
+<!--                                    <label for="">Country</label>-->
+<!--                                    <select class="form-control" v-model="addModel.country_id">-->
+<!--                                        <option value="">Select Country</option>-->
+<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
+<!--                                            {{ option.name }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label for="">Country</label>
-                                    <select class="form-control" v-model="addModel.country_id">
-                                        <option value="">Select Country</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.continent_id}" class="form-group">
+                                    <label for="">Continent</label>
+                                    <select class="form-control" v-model="addModel.continent_id">
+                                        <option value="">Select Continent</option>
+                                        <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                                    <span v-if="messageForms.errors.continent_id" v-for="err in messageForms.errors.continent_id" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -646,6 +671,9 @@
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
@@ -758,12 +786,23 @@
                                     </select>
                                 </div>
                             </div>
+<!--                            <div class="col-md-6">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>Country</label>-->
+<!--                                    <select class="form-control" v-model="updateMultiple.country">-->
+<!--                                        <option value=""></option>-->
+<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
+<!--                                            {{ option.name }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Country</label>
-                                    <select class="form-control" v-model="updateMultiple.country">
+                                    <label>Continent</label>
+                                    <select class="form-control" v-model="updateMultiple.continent">
                                         <option value=""></option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -855,7 +894,7 @@
         width: 100% !important;
     }
     #tbl-publisher .resize{
-        /* width: auto !important; */
+         /*width: auto !important;*/
         white-space: normal;
         text-overflow: initial;
         overflow: hidden;
@@ -878,7 +917,8 @@
                     kw_anchor: '',
                     casino_sites: '',
                     price: '',
-                    country: '',
+                    // country: '',
+                    continent: '',
                     language: '',
                     qc_validation: '',
                 },
@@ -901,7 +941,8 @@
                     casino_sites: '',
                     topic: '',
                     kw_anchor: '',
-                    country_id: '',
+                    // country_id: '',
+                    continent_id: '',
                     // team_in_charge: '',
                     // team_in_charge_old: '',
                     user_id: '',
@@ -910,7 +951,7 @@
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
-                    country_id: this.$route.query.country_id || '',
+                    // country_id: this.$route.query.country_id || '',
                     continent_id: parseInt(this.$route.query.continent_id) || '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
@@ -945,7 +986,8 @@
                     inc_article: '',
                     casino_sites: '',
                     topic: '',
-                    country_id: '',
+                    // country_id: '',
+                    continent_id: '',
                 },
                 topic: [
                     'Beauty',
@@ -979,7 +1021,7 @@
         },
 
         async created() {
-            // this.getPublisherList();
+            this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
             this.getListContinents();
@@ -994,14 +1036,10 @@
                 this.getTeamInCharge();
             }
 
-            this.setDefaultSettings();
-
             let language = this.listLanguages.data;
             if ( language.length === 0 ) {
                 this.getListLanguages();
             }
-
-            this.clearSearch();
         },
 
         computed:{
@@ -1057,6 +1095,8 @@
                     this.tblPublisherOpt.in_charge = true;
                 }
 
+                this.tblPublisherOpt.country = false;
+
             },
 
             async getTeamInCharge(){
@@ -1074,7 +1114,7 @@
 
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            country_id: this.filterModel.country_id,
+                            // country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -1098,7 +1138,7 @@
                 }else{
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            country_id: this.filterModel.country_id,
+                            // country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -1209,6 +1249,8 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
+                this.setDefaultSettings()
+
             },
 
             async getListSeller(params) {
@@ -1314,7 +1356,8 @@
                 axios.post('/api/update-multiple-publisher',{
                     ids: this.checkIds,
                     language: this.updateMultiple.language,
-                    country: this.updateMultiple.country,
+                    // country: this.updateMultiple.country,
+                    continent_id: this.updateMultiple.continent,
                     price: this.updateMultiple.price,
                     casino_sites: this.updateMultiple.casino_sites,
                     kw_anchor: this.updateMultiple.kw_anchor,
@@ -1376,7 +1419,8 @@
                         price: '',
                         casino_sites: '',
                         topic: '',
-                        country_id: '',
+                        // country_id: '',
+                        continent_id: '',
                     }
                 }
             },
@@ -1432,7 +1476,7 @@
 
                 this.filterModel = {
                     continent_id: '',
-                    country_id: '',
+                    // country_id: '',
                     search: '',
                     language_id: '',
                     inc_article: '',
@@ -1448,8 +1492,6 @@
                     price_basis: '',
                     qc_validation: '',
                 }
-
-                this.getCountriesByContinent();
 
                 this.getPublisherList({
                     params: this.filterModel
@@ -1541,7 +1583,8 @@
                     topic: topic,
                     casino_sites: that.casino_sites,
                     kw_anchor: that.kw_anchor,
-                    country_id: that.country_id,
+                    // country_id: that.country_id,
+                    continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
                     qc_validation: that.qc_validation,
@@ -1575,7 +1618,7 @@
 
                 this.getPublisherList({
                     params: {
-                        country_id: this.filterModel.country_id,
+                        // country_id: this.filterModel.country_id,
                         continent_id: this.filterModel.continent_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
@@ -1624,12 +1667,12 @@
                 this.addModel.seller = this.user.role_id === 6 ? this.user.id : '';
             },
 
-            getCountriesByContinent() {
-                this.filterModel.country_id = '';
-                this.$store.dispatch('actionGetCountriesByContinentId', {
-                    continent_id: this.filterModel.continent_id
-                })
-            },
+            // getCountriesByContinent() {
+            //     this.filterModel.country_id = '';
+            //     this.$store.dispatch('actionGetCountriesByContinentId', {
+            //         continent_id: this.filterModel.continent_id
+            //     })
+            // },
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');

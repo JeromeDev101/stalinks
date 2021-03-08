@@ -58,14 +58,26 @@ class MailgunController extends Controller
         }
 
         // check if email is a string or json object
-        $request['email'] = json_decode($request->email, true) ?? $request->email;
 
-        $request->validate([
-            'email'     => 'required',
+        if(!is_array($request->email)){
+            $request['email'] = json_decode($request->email, true) ?? $request->email;
+        }
+
+        $emailRule = [];
+
+        if(is_array($request->email)) {
+            $emailRule['email'] = 'required|array|max:10';
+        }else{
+            $emailRule['email'] = 'required';
+        }
+
+        $rules = [
             'email.*.text' => 'required|email',
             'title'     => 'required',
             'content'   => 'required',
-        ]);
+        ];
+
+        $request->validate(array_merge($emailRule, $rules));
 
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);

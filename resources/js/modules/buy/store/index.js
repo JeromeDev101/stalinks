@@ -4,6 +4,7 @@ const BUY_LIST = 'BUY_LIST';
 const SET_ERROR = 'BUY_SET_ERROR';
 const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const LIST_COUNTRY = 'LIST_COUNTRY';
+const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_SELLER = 'LIST_SELLER';
 
 const state = {
@@ -12,6 +13,7 @@ const state = {
     messageForms: { action: '', message: '', errors: {} },
     listCountries: { data: [], total: 0 },
     tblBuyOptions: {
+        continent: true,
         country: true,
         seller: true,
         topic: true,
@@ -42,7 +44,7 @@ const mutations = {
     [BUY_LIST] (state , data) {
         state.listBuy = data.listBuy;
     },
-    
+
     [LIST_SELLER] (state , data) {
         state.listSeller = data.listSeller;
     },
@@ -54,7 +56,11 @@ const mutations = {
     [LIST_COUNTRY](state, listCountries) {
         state.listCountries = listCountries;
     },
-} 
+
+    [LIST_CONTINENT](state, listContinent) {
+        state.listContinent = listContinent;
+    },
+}
 
 const actions = {
     async actionGetBuyList({ commit }, params){
@@ -99,7 +105,21 @@ const actions = {
         }
     },
 
-    async actionDislike({ commit }, params) { 
+    async actionGetListContinents({ commit }, params) {
+        try {
+            let response = await BuyService.getListContinents(params);
+            commit(LIST_CONTINENT, response.data );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionDislike({ commit }, params) {
         try{
             let response = await BuyService.updateDislike(params);
 
@@ -119,7 +139,7 @@ const actions = {
         }
     },
 
-    async actionLike({ commit }, params) { 
+    async actionLike({ commit }, params) {
         try{
             let response = await BuyService.updateLike(params);
 
@@ -139,7 +159,7 @@ const actions = {
         }
     },
 
-    async actionCheckCreditAuth({ commit }, params) { 
+    async actionCheckCreditAuth({ commit }, params) {
         try{
             let response = await BuyService.checkCreditAuth(params);
 
@@ -159,7 +179,7 @@ const actions = {
         }
     },
 
-    async actionUpdateBuy({ commit }, params) { 
+    async actionUpdateBuy({ commit }, params) {
         try{
             let response = await BuyService.updateBuy(params);
 

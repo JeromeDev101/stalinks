@@ -966,6 +966,27 @@
                             <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
                         </div>
                         </div> -->
+
+                      <div class="col-md-12" style="margin-top: 15px;">
+                          <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                              <label style="color: #333">Email</label>
+
+                              <vue-tags-input
+                                  v-model="email_to"
+                                  :disabled="true"
+                                  :separators="separators"
+                                  :tags="urlEmails"
+                                  :class="{'vue-tag-error': messageForms.errors.email}"
+                                  ref="urlTag"
+                                  placeholder=""
+
+                                  @tags-changed="newTags => urlEmails = newTags"
+                              />
+
+                              <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                          </div>
+                      </div>
+
                      <div class="col-md-12" style="margin-top: 15px;">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                            <label style="color: #333">Title</label>
@@ -1075,1054 +1096,1084 @@
    }
 </style>
 <script>
-   import { mapState } from 'vuex';
-   import axios from 'axios';
-   import DownloadCsv from '@/components/export-csv/Csv.vue'
-   import { async } from 'q';
-   export default {
-       name: 'ExtList',
-       data() {
-           return {
-               csvExport: {
-                   file_csv: 'baclink.csv',
-                   data_filled: {
-                       'Ext Domain': 'ext_domain.domain',
-                       'Int Domain': 'int_domain.domain',
-                       'Link': 'link',
-                       'Price': 'price',
-                       'Anchor Text': 'anchor_text',
-                       'Live Date': 'live_date',
-                       'Status': 'status',
-                       'User': 'user.name'
-                   },
-                   json_meta: [
-                       [{
-                           'key': 'charset',
-                           'value': 'utf-8'
-                       }]
-                   ]
-               },
-               dataTable: null,
-               filterModel: {
-                   id: this.$route.query.id || 0,
-                   id_temp: this.$route.query.id_temp || 0,
-                   country_id: this.$route.query.country_id || 0,
-                   country_id_temp: this.$route.query.country_id || '',
-                   countryList: { data: [], total: 0},
-                   domain: this.$route.query.domain || '',
-                   domain_temp: this.$route.query.domain_temp || '',
-                   email: this.$route.query.email || '',
-                   status: this.$route.query.status || -1,
-                   status_temp:
-                       this.$route.query.status_temp ||
-                       null,
-                   page: this.$route.query.page || 0,
-                   per_page: this.$route.query.per_page || 50,
-                   employee_id: this.$route.query.employee_id || '',
-                   required_email_temp: this.$route.query.required_email_temp || 0,
-                   required_email: this.$route.query.required_email || 0,
-                   sort_key: this.$route.query.sort_key || 'id',
-                   sort_value:
-                       this.$route.query.sort_value || 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
-               },
-               listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
-               extModel: {
-                   id: 0,
-                   domain: '',
-                   country_id: 0,
-                   alexa_created_at: 'N/A',
-                   alexa_rank: 0,
-                   ahrefs_rank: 0,
-                   no_backlinks: 0,
-                   url_rating: 0,
-                   domain_rating: 0,
-                   ref_domains: 0,
-                   organic_keywords: '',
-                   organic_traffic: '',
-                   facebook: '',
-                   email: '',
-                   phone: '',
-                   skype: '',
-                   info: '',
-                   // price: '',
-                   status: '',
-                   // inc_article: 'Yes',
-               },
-               mailInfo: {
-                   tpl: 0,
-                   ids: '',
-                   receiver_text: '',
-                   country: {
-                       id: 0,
-                       name: '',
-                       code: ''
-                   }
-               },
-               modelMail: {
-                   title: '',
-                   content: '',
-                   mail_name: '',
-               },
-               extBackLink: {},
-               extUpdate: {},
-               publisherAdd: {
-                   seller: '',
-                   language_id: '',
-                   inc_article: '',
-                   topic: '',
-                   casino_sites: '',
-                   url: '',
-                   price: '',
-               },
-               isUpdateMode: false,
-               isCrawling: false,
-               isLoadingTable: false,
-               isPopupLoading: false,
-               modalAddBackLink: false,
-               modelBaclink: {
-                   int_domain_id: 0,
-                   ext_name: ''
-               },
-               loadIntDomain: false,
-               allowSending: true,
-               listSortKey: [],
-               listSortValue: [],
-               checkIds: [],
-               showLang: false,
-               isEnableBtn: true,
-               updateStatus: {
-                   seller: '',
-                   status: '',
-               },
-               isQualified: false,
-               formAddUrl: false,
-               topic: [
-                   'Beauty',
-                   'Charity',
-                   'Cooking',
-                   'Education',
-                   'Fashion',
-                   'Finance',
-                   'Games',
-                   'Health',
-                   'History',
-                   'Job',
-                   'Movies & Music',
-                   'News',
-                   'Pet',
-                   'Photograph',
-                   'Real State',
-                   'Religion',
-                   'Shopping',
-                   'Sports',
-                   'Tech',
-                   'Unlisted',
-               ],
-               isEditable: false,
-               existingDomain: {
-                   total: 0,
-                   data:[]
-               },
-               email_to: '',
-               extDomain_id: '',
-               allSelected: false,
+
+import {mapState} from 'vuex';
+import axios from 'axios';
+import DownloadCsv from '@/components/export-csv/Csv.vue'
+import {createTags} from '@johmun/vue-tags-input';
+
+export default {
+    name: 'ExtList',
+    data() {
+        return {
+            csvExport: {
+                file_csv: 'baclink.csv',
+                data_filled: {
+                    'Ext Domain': 'ext_domain.domain',
+                    'Int Domain': 'int_domain.domain',
+                    'Link': 'link',
+                    'Price': 'price',
+                    'Anchor Text': 'anchor_text',
+                    'Live Date': 'live_date',
+                    'Status': 'status',
+                    'User': 'user.name'
+                },
+                json_meta: [
+                    [{
+                        'key': 'charset',
+                        'value': 'utf-8'
+                    }]
+                ]
+            },
+            dataTable: null,
+            filterModel: {
+                id: this.$route.query.id || 0,
+                id_temp: this.$route.query.id_temp || 0,
+                country_id: this.$route.query.country_id || 0,
+                country_id_temp: this.$route.query.country_id || '',
+                countryList: {data: [], total: 0},
+                domain: this.$route.query.domain || '',
+                domain_temp: this.$route.query.domain_temp || '',
+                email: this.$route.query.email || '',
+                status: this.$route.query.status || -1,
+                status_temp:
+                    this.$route.query.status_temp ||
+                    null,
+                page: this.$route.query.page || 0,
+                per_page: this.$route.query.per_page || 50,
+                employee_id: this.$route.query.employee_id || '',
+                required_email_temp: this.$route.query.required_email_temp || 0,
+                required_email: this.$route.query.required_email || 0,
+                sort_key: this.$route.query.sort_key || 'id',
+                sort_value:
+                    this.$route.query.sort_value || 'desc',
+                alexa_date_upload: {
+                    startDate: null,
+                    endDate: null
+                }
+            },
+            listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
+            extModel: {
+                id: 0,
+                domain: '',
+                country_id: 0,
+                alexa_created_at: 'N/A',
+                alexa_rank: 0,
+                ahrefs_rank: 0,
+                no_backlinks: 0,
+                url_rating: 0,
+                domain_rating: 0,
+                ref_domains: 0,
+                organic_keywords: '',
+                organic_traffic: '',
+                facebook: '',
+                email: '',
+                phone: '',
+                skype: '',
+                info: '',
+                // price: '',
+                status: '',
+                // inc_article: 'Yes',
+            },
+            mailInfo: {
+                tpl: 0,
+                ids: '',
+                receiver_text: '',
+                country: {
+                    id: 0,
+                    name: '',
+                    code: ''
+                }
+            },
+            modelMail: {
+                title: '',
+                content: '',
+                mail_name: '',
+            },
+            extBackLink: {},
+            extUpdate: {},
+            publisherAdd: {
+                seller: '',
+                language_id: '',
+                inc_article: '',
+                topic: '',
+                casino_sites: '',
+                url: '',
+                price: '',
+            },
+            isUpdateMode: false,
+            isCrawling: false,
+            isLoadingTable: false,
+            isPopupLoading: false,
+            modalAddBackLink: false,
+            modelBaclink: {
+                int_domain_id: 0,
+                ext_name: ''
+            },
+            loadIntDomain: false,
+            allowSending: true,
+            listSortKey: [],
+            listSortValue: [],
+            checkIds: [],
+            showLang: false,
+            isEnableBtn: true,
+            updateStatus: {
+                seller: '',
+                status: '',
+            },
+            isQualified: false,
+            formAddUrl: false,
+            topic: [
+                'Beauty',
+                'Charity',
+                'Cooking',
+                'Education',
+                'Fashion',
+                'Finance',
+                'Games',
+                'Health',
+                'History',
+                'Job',
+                'Movies & Music',
+                'News',
+                'Pet',
+                'Photograph',
+                'Real State',
+                'Religion',
+                'Shopping',
+                'Sports',
+                'Tech',
+                'Unlisted',
+            ],
+            isEditable: false,
+            existingDomain: {
+                total: 0,
+                data: []
+            },
+            email_to: '',
+            extDomain_id: '',
+            allSelected: false,
+            separators: [';', ',', '|', ' '],
+            urlEmails: []
+        };
+    },
+    async created() {
+        await this.$store.dispatch('actionCheckAdminCurrentUser', {vue: this});
+        this.updateUserPermission();
+        this.getUserList();
+        this.getListCountriesInt();
+        this.getExtList({
+            params: this.filterModel
+        });
+        this.fillterIntByCountry();
+        this.checkQualified();
+        this.getListExtSeller();
+
+        let seller = this.listSeller.data;
+        if (seller.length === 0) {
+            this.getListSeller();
+        }
+
+        let countries = this.listCountryAll.data;
+        if (countries.length === 0) {
+            this.getListCountries();
+        }
+
+        this.getListSellerTeam();
+        this.getListLanguages();
+    },
+    computed: {
+        ...mapState({
+            user: state => state.storeAuth.currentUser,
+            tableShow: state => state.storeExtDomain.tableExtShowOptions,
+            listExt: state => state.storeExtDomain.listExt,
+            listStatusText: state => state.storeExtDomain.listStatusText,
+            listUser: state => state.storeUser.listUser,
+            messageForms: state => state.storeExtDomain.messageForms,
+            messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
+            listInt: state => state.storeIntDomain.listInt,
+            listBackLink: state => state.storeBackLink.listBackLink,
+            filterBackLink: state => state.storeBackLink.fillter,
+            listCountriesInt: state => state.storeExtDomain.listCountriesInt,
+            listAhrefs: state => state.storeExtDomain.listAhrefs,
+            listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+            listExtSeller: state => state.storeExtDomain.listExtSeller,
+            listSeller: state => state.storePublisher.listSeller,
+            listCountryAll: state => state.storePublisher.listCountryAll,
+            listSellerTeam: state => state.storeExtDomain.listSellerTeam,
+            listLanguages: state => state.storePublisher.listLanguages,
+        }),
+        pagination() {
+            return {
+                props: {
+                    callMethod: ""
+                },
+                template: `<div class="paging_simple_numbers">${this.listExt.pagination}</div>`,
+                methods: {
+                    async goToPage(pageNum) {
+                        this.callMethod(pageNum);
+                    }
+                }
+            }
+        },
+        checkSelectIntDomain() {
+            if (this.modelBaclink.int_domain_id == 0) {
+                return true
+            }
+            return false
+        },
+        allowSendMail() {
+            if (this.allowSending = true) {
+                return true;
+            }
+            return false;
+        },
+        openModalBackLink() {
+            if (this.modalAddBackLink = true) {
+                return true
+            }
+            return false
+        },
+    },
+    mounted() {
+        let that = this;
+        $(this.$refs.modalBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
+        $('.freeze-table').on('click', '.clone-column-table-wrap *[data-action]', function (e) {
+            e.preventDefault();
+            var action = $(this).attr('data-action');
+            var index = $(this).attr('data-index');
+            if (action == "a1") {
+                that.doEditExtIndex(index);
+            } else if (action == "a2") {
+                that.doShowBackLinkIndex(index);
+            } else if (action == "a3") {
+                that.addBackLinkIndex(index);
+            } else if (action == "a4") {
+                that.doSendEmailIndex(index);
+            }
+        });
+        $('.freeze-table').on('click', '.clone-head-table-wrap th', function (e) {
+            e.preventDefault();
+            var index = $(this).attr('data-index');
+            $('#data-table th[data-index=' + index + ']').click();
+            var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
+            $(this).attr('class', m_class);
+        });
+    },
+    methods: {
+
+        selectAll() {
+            this.checkIds = [];
+            if (!this.allSelected) {
+                for (var ext in this.listExt.data) {
+                    this.checkIds.push(this.listExt.data[ext]);
+                }
+            }
+        },
+
+        async getListLanguages() {
+            await this.$store.dispatch('actionGetListLanguages');
+        },
+
+        async getListCountries(params) {
+            await this.$store.dispatch('actionGetListCountries', params);
+        },
+
+        showAddURL() {
+            this.formAddUrl = false;
+            if (this.extUpdate.status == 100) {
+                this.formAddUrl = true;
+                this.extUpdate.url = this.extUpdate.domain;
+            }
+        },
+
+        checkSellerAccess(seller_id) {
+            if (this.user.role_id == 6 && this.user.isOurs == 0) {
+                let check = false;
+                if (this.user.id == seller_id) {
+                    check = true;
+                }
+                return check;
+            } else {
+                return true;
+            }
+        },
+
+        async getListSeller(params) {
+            await this.$store.dispatch('actionGetListSeller', params);
+        },
+
+        async getListSellerTeam(params) {
+            await this.$store.dispatch('actionGetListSellerTeam', params);
+        },
+
+        async getListExtSeller() {
+            await this.$store.dispatch('actionGetListExtSeller');
+        },
+
+        checkQualified() {
+            let check = this.updateStatus.status
+            if (check == 100) {
+                this.isQualified = true;
+            } else {
+                this.isQualified = false;
+            }
+        },
+
+        // checkData() {
+        //     this.isEnableBtn = true;
+        //     if( this.$refs.language.value && this.$refs.status.value){
+        //         this.isEnableBtn = false;
+        //     }
+        // },
+
+        checkDataExcel() {
+            this.isEnableBtn = true;
+            if (this.$refs.excel.value) {
+                this.isEnableBtn = false;
+            }
+        },
+
+        doMultipleStatus() {
+            if (this.checkIds.length > 0) {
+                let element = this.$refs.modalMultipleStatus
+                $(element).modal('show')
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+        },
+
+        async deleteAll() {
+            if (this.checkIds.length > 0) {
+                if (confirm("Are you sure you want to delete selected records?")) {
+                    await this.$store.dispatch('actionDeleteExtDomain', {
+                        params: {
+                            id: this.checkIds,
+                        }
+                    });
+
+                    this.getExtList();
+                    this.checkIds = []
+                    swal.fire(
+                        'Saved!',
+                        'Successfully Updated.',
+                        'success'
+                    )
+                }
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+
+        },
+
+        async submitUpload() {
+
+            this.isEnableBtn = true;
+            this.formData = new FormData();
+            this.formData.append('file', this.$refs.excel.files[0]);
+            // this.formData.append('language', this.$refs.language.value);
+            // this.formData.append('status', this.$refs.status.value);
+
+            await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
+
+            if (this.messageForms.action === 'uploaded') {
+                this.getExtList();
+                this.$refs.excel.value = '';
+                // this.$refs.language.value = '';
+                // this.$refs.status.value = '';
+                this.isEnableBtn = true;
+                this.showLang = false;
+
+                // console.log(this.messageForms.errors.length)
+                let cnt_existing = this.messageForms.errors.length;
+                if (cnt_existing > 0) {
+                    for (let key in this.messageForms.errors) {
+                        this.existingDomain.data.push(this.messageForms.errors[key].message)
+                    }
+
+                    this.existingDomain.total = cnt_existing;
+                    $("#modal-existing-domain").modal('show')
+                }
+
+                console.log(this.existingDomain);
+            }
+        },
+
+        formatPrice(value) {
+            let val = (value / 1).toFixed(0)
+            return val;
+        },
+
+        checkSelected() {
+            this.isDisabled = true;
+            if (this.checkIds.length > 0) {
+                this.isDisabled = false;
+            }
+        },
+
+        async updateUserPermission() {
+            let that = this;
+            await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', {vue: this, userId: that.user.id});
+            this.initFilter();
+        },
+        clearExtModel() {
+            this.extModel = {
+                id: 0,
+                domain: '',
+                country_id: 0,
+                alexa_rank: 0,
+                ahrefs_rank: 0,
+                no_backlinks: 0,
+                url_rating: 0,
+                domain_rating: 0,
+                ref_domains: 0,
+                organic_keywords: '',
+                organic_traffic: '',
+                facebook: '',
+                email: '',
+                phone: '',
+                status: 0
+            }
+        },
+        initFilter() {
+            let that = this;
+            this.user.countries_ext_accessable.forEach(function (country) {
+                that.filterModel.countryList.data.push({id: country.id, name: country.name});
+            });
+            this.listSortKey = {
+                'id': {text: '----'},
+                'alexa_rank': {text: 'Alexa Rank'},
+                'ahrefs_rank': {text: 'Ahrefs Rank'},
+                'no_backlinks': {text: 'No Backlink'},
+                'url_rating': {text: 'URL Rating'},
+                'domain_rating': {text: 'Domain Rating'},
+                'ref_domains': {text: 'Ref Domains'},
+                'organic_keywords': {text: 'Organic keywords'},
+                'organic_traffic': {text: 'Organic traffic'},
+                'total_spent': {text: 'Total Spent'},
             };
-       },
-       async created() {
-           await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-           this.updateUserPermission();
-           this.getUserList();
-           this.getListCountriesInt();
-           this.getExtList({
-               params: this.filterModel
-           });
-           this.fillterIntByCountry();
-           this.checkQualified();
-           this.getListExtSeller();
-
-           let seller = this.listSeller.data;
-           if( seller.length === 0 ){
-               this.getListSeller();
-           }
-
-           let countries = this.listCountryAll.data;
-           if( countries.length === 0 ){
-               this.getListCountries();
-           }
-
-           this.getListSellerTeam();
-           this.getListLanguages();
-       },
-       computed: {
-           ...mapState({
-               user: state => state.storeAuth.currentUser,
-               tableShow: state => state.storeExtDomain.tableExtShowOptions,
-               listExt: state => state.storeExtDomain.listExt,
-               listStatusText: state => state.storeExtDomain.listStatusText,
-               listUser: state => state.storeUser.listUser,
-               messageForms: state => state.storeExtDomain.messageForms,
-               messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
-               listInt: state => state.storeIntDomain.listInt,
-               listBackLink: state => state.storeBackLink.listBackLink,
-               filterBackLink: state => state.storeBackLink.fillter,
-               listCountriesInt: state => state.storeExtDomain.listCountriesInt,
-               listAhrefs: state => state.storeExtDomain.listAhrefs,
-               listMailTemplate: state => state.storeExtDomain.listMailTemplate,
-               listExtSeller: state => state.storeExtDomain.listExtSeller,
-               listSeller: state => state.storePublisher.listSeller,
-               listCountryAll: state => state.storePublisher.listCountryAll,
-               listSellerTeam: state => state.storeExtDomain.listSellerTeam,
-               listLanguages: state => state.storePublisher.listLanguages,
-           }),
-           pagination() {
-               return {
-                   props: {
-                       callMethod: ""
-                   },
-                   template: `<div class="paging_simple_numbers">${this.listExt.pagination}</div>`,
-                   methods: {
-                       async goToPage(pageNum) {
-                           this.callMethod(pageNum);
-                       }
-                   }
-               }
-           },
-           checkSelectIntDomain () {
-               if (this.modelBaclink.int_domain_id == 0) {
-                   return true
-               }
-               return false
-           },
-           allowSendMail() {
-               if (this.allowSending = true) {
-                   return true;
-               }
-               return false;
-           },
-           openModalBackLink() {
-               if (this.modalAddBackLink = true) {
-                   return true
-               }
-               return false
-           },
-       },
-       mounted(){
-           let that = this;
-           $(this.$refs.modalBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
-           $('.freeze-table').on('click', '.clone-column-table-wrap *[data-action]', function(e) {
-               e.preventDefault();
-               var action = $(this).attr('data-action');
-               var index = $(this).attr('data-index');
-               if (action == "a1") {
-                   that.doEditExtIndex(index);
-               } else if (action == "a2") {
-                   that.doShowBackLinkIndex(index);
-               } else if (action == "a3") {
-                   that.addBackLinkIndex(index);
-               } else if (action == "a4") {
-                   that.doSendEmailIndex(index);
-               }
-           });
-           $('.freeze-table').on('click', '.clone-head-table-wrap th', function(e) {
-               e.preventDefault();
-               var index = $(this).attr('data-index');
-               $('#data-table th[data-index=' + index + ']').click();
-               var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
-               $(this).attr('class', m_class);
-           });
-       },
-       methods: {
-
-           selectAll() {
-               this.checkIds = [];
-               if (!this.allSelected) {
-                   for (var ext in this.listExt.data) {
-                       this.checkIds.push(this.listExt.data[ext]);
-                   }
-               }
-           },
-
-           async getListLanguages() {
-               await this.$store.dispatch('actionGetListLanguages');
-           },
-
-           async getListCountries(params) {
-               await this.$store.dispatch('actionGetListCountries', params);
-           },
-
-           showAddURL() {
-               this.formAddUrl = false;
-               if ( this.extUpdate.status == 100 ){
-                   this.formAddUrl = true;
-                   this.extUpdate.url = this.extUpdate.domain;
-               }
-           },
-
-           checkSellerAccess(seller_id) {
-               if( this.user.role_id == 6 && this.user.isOurs == 0 ){
-                   let check = false;
-                   if( this.user.id == seller_id ){
-                       check = true;
-                   }
-                   return check;
-               }else{
-                   return true;
-               }
-           },
-
-           async getListSeller(params) {
-               await this.$store.dispatch('actionGetListSeller', params);
-           },
-
-           async getListSellerTeam(params) {
-               await this.$store.dispatch('actionGetListSellerTeam', params);
-           },
-
-           async getListExtSeller() {
-               await this.$store.dispatch('actionGetListExtSeller');
-           },
-
-           checkQualified() {
-               let check = this.updateStatus.status
-               if( check == 100 ){
-                   this.isQualified = true;
-               }else{
-                   this.isQualified = false;
-               }
-           },
-
-           // checkData() {
-           //     this.isEnableBtn = true;
-           //     if( this.$refs.language.value && this.$refs.status.value){
-           //         this.isEnableBtn = false;
-           //     }
-           // },
-
-           checkDataExcel() {
-               this.isEnableBtn = true;
-               if( this.$refs.excel.value ){
-                   this.isEnableBtn = false;
-               }
-           },
-
-           doMultipleStatus() {
-               if( this.checkIds.length > 0 ){
-                   let element = this.$refs.modalMultipleStatus
-                   $(element).modal('show')
-               }else{
-                   swal.fire(
-                       'No item',
-                       'No selected item',
-                       'error'
-                   )
-               }
-           },
-
-           async deleteAll() {
-               if( this.checkIds.length > 0 ){
-                   if( confirm("Are you sure you want to delete selected records?") ){
-                       await this.$store.dispatch('actionDeleteExtDomain', {
-                           params: {
-                               id: this.checkIds,
-                           }
-                       });
-
-                       this.getExtList();
-                       this.checkIds = []
-                       swal.fire(
-                           'Saved!',
-                           'Successfully Updated.',
-                           'success'
-                       )
-                   }
-               }else{
-                   swal.fire(
-                       'No item',
-                       'No selected item',
-                       'error'
-                       )
-               }
-
-           },
-
-           async submitUpload() {
-
-               this.isEnableBtn = true;
-               this.formData = new FormData();
-               this.formData.append('file', this.$refs.excel.files[0]);
-               // this.formData.append('language', this.$refs.language.value);
-               // this.formData.append('status', this.$refs.status.value);
-
-               await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
-
-               if (this.messageForms.action === 'uploaded') {
-                   this.getExtList();
-                   this.$refs.excel.value = '';
-                   // this.$refs.language.value = '';
-                   // this.$refs.status.value = '';
-                   this.isEnableBtn = true;
-                   this.showLang = false;
-
-                   // console.log(this.messageForms.errors.length)
-                   let cnt_existing = this.messageForms.errors.length;
-                   if (cnt_existing > 0){
-                       for (let key in this.messageForms.errors ){
-                           this.existingDomain.data.push(this.messageForms.errors[key].message)
-                       }
-
-                       this.existingDomain.total = cnt_existing;
-                       $("#modal-existing-domain").modal('show')
-                   }
-
-                   console.log(this.existingDomain);
-               }
-           },
-
-           formatPrice(value) {
-               let val = (value/1).toFixed(0)
-               return val;
-           },
-
-           checkSelected() {
-               this.isDisabled = true;
-               if( this.checkIds.length > 0 ){
-                   this.isDisabled = false;
-               }
-           },
-
-           async updateUserPermission() {
-               let that = this;
-               await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
-               this.initFilter();
-           },
-           clearExtModel() {
-               this.extModel = {
-                   id: 0,
-                   domain: '',
-                   country_id: 0,
-                   alexa_rank: 0,
-                   ahrefs_rank: 0,
-                   no_backlinks: 0,
-                   url_rating: 0,
-                   domain_rating: 0,
-                   ref_domains: 0,
-                   organic_keywords: '',
-                   organic_traffic: '',
-                   facebook: '',
-                   email: '',
-                   phone: '',
-                   status: 0
-               }
-           },
-           initFilter() {
-               let that = this;
-               this.user.countries_ext_accessable.forEach(function(country) {
-                   that.filterModel.countryList.data.push({id: country.id, name: country.name});
-               });
-               this.listSortKey = {
-                   'id': { text: '----' },
-                   'alexa_rank': { text: 'Alexa Rank' },
-                   'ahrefs_rank': { text: 'Ahrefs Rank' },
-                   'no_backlinks': { text: 'No Backlink' },
-                   'url_rating': { text: 'URL Rating' },
-                   'domain_rating': { text: 'Domain Rating' },
-                   'ref_domains': { text: 'Ref Domains' },
-                   'organic_keywords': { text: 'Organic keywords' },
-                   'organic_traffic': { text: 'Organic traffic' },
-                   'total_spent': { text: 'Total Spent' },
-               };
-               this.listSortValue = {
-                   'asc': { text: 'Ascending ' },
-                   'desc': { text: 'Descending '}
-               };
-               this.filterModel.sort_value = 'desc';
-           },
-           async getUserList() {
-               await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-               if (this.user.isAdmin) {
-                   await this.$store.dispatch('actionGetUser', {
-                       vue: this,
-                       params: { params: { full_data: true } },
-                       showMainLoading: false
-                   });
-               }
-           },
-          async getListCountriesInt() {
-               await this.$store.dispatch('getListCountriesInt', { vue: this });
-           },
-           async getExtList(params) {
-               this.isLoadingTable = true;
-               if (this.dataTable != null) {
-                   this.dataTable.destroy();
-               }
-               await this.$store.dispatch('getListExt', params);
-               this.isLoadingTable = false;
-               $('.freeze-table').freezeTable({ 'columnNum': 4, 'shadow': true, 'scrollable': true });
-               this.dataTable = $('#data-table').DataTable({
-                   paging: false,
-                   searching: false,
-                   ordering: true,
-                   bDestroy: true
-               });
-           },
-           async doSearchList() {
-               let that = this;
-               that.filterModel.country_id = that.filterModel.country_id_temp;
-               that.filterModel.status = that.filterModel.status_temp;
-               that.filterModel.domain = that.filterModel.domain_temp;
-               that.filterModel.id = that.filterModel.id_temp;
-               that.filterModel.required_email = that.filterModel.required_email_temp;
-               that.filterModel.sort = that.filterModel.sort_key + ',' +  that.filterModel.sort_value;
-               this.$router.push({
-                   query: that.filterModel,
-               });
-               this.getExtList({
-                   params: {
-                       country_id: that.filterModel.country_id,
-                       status: that.filterModel.status,
-                       domain: that.filterModel.domain,
-                       email: that.filterModel.email,
-                       employee_id: that.filterModel.employee_id,
-                       required_email: that.filterModel.required_email,
-                       id: that.filterModel.id,
-                       sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
-                       per_page: that.filterModel.per_page,
-                       alexa_date_upload:
-                       that.filterModel.alexa_date_upload
-                   }
-               });
-           },
-           async goToPage(pageNum) {
-               let that = this;
-               this.$router.push({
-                   query: that.filterModel,
-               });
-               await this.getExtList({
-                   params: {
-                       page: pageNum,
-                       country_id: that.filterModel.country_id,
-                       status: that.filterModel.status,
-                       domain: that.filterModel.domain,
-                       id: that.filterModel.id,
-                       sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
-                       per_page: that.filterModel.per_page,
-                       employee_id: that.filterModel.employee_id,
-                       required_email: that.filterModel.required_email
-                   }
-               });
-           },
-           async doCrawlExtList() {
-               this.isCrawling = true;
-               var arrayIds = [];
-               if (this.listExt.data) {
-                   for (let key in this.listExt.data) {
-                       arrayIds.push(this.listExt.data[key].id);
-                   }
-               }
-               if (arrayIds.length == 0) return;
-               await this.$store.dispatch('crawlExtList', {
-                   params: {
-                       domain_ids: arrayIds.join(","),
-                       queue: false
-                   }
-               });
-               this.isCrawling = false;
-           },
-           async submitAdd() {
-               let that = this;
-               this.isPopupLoading = true;
-               await this.$store.dispatch('addExt', that.extModel);
-               this.isPopupLoading = false;
-               if (this.messageForms.action === 'saved_ext') {
-                   this.clearExtModel();
-                   //this.listExt.data.pop();
-                   //this.listExt.data.unshift(this.messageForms.obj);
-                   this.doSearchList();
-                   this.isEditable = true;
-               }
-           },
-           convertPrice(price) {
-               return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-           },
-           async submitUpdate() {
-               this.isPopupLoading = true;
-               await this.$store.dispatch('updateExt', {
-                   ext: this.extUpdate,
-                   pub: this.publisherAdd,
-               });
-               this.isPopupLoading = false;
-               if (this.messageForms.action === 'updated_ext') {
-                   for (var index in this.listExt.data) {
-                       if (this.listExt.data[index].id === this.extUpdate.id) {
-                           this.listExt.data[index] = this.extUpdate;
-                           break;
-                       }
-                   }
-               }
-           },
-           async doShowBackLink(extDomain) {
-               this.extBackLink = extDomain;
-               this.filterBackLink.ext= extDomain.id;
-               this.filterBackLink.full_data = true;
-               this.isPopupLoading = true;
-               await this.$store.dispatch('actionGetBackLink', {
-                   vue: this,
-                   params: this.filterBackLink
-               });
-               this.isPopupLoading = false;
-           },
-
-           async doShowBackLinkIndex(index) {
-               var extDomain = this.listExt.data[index];
-               this.doShowBackLinkIndex(extDomain);
-           },
-
-           doAddExt() {
-               this.$store.dispatch('clearMessageForm');
-           },
-
-           doEditExt(extDomain) {
-               this.formAddUrl = true;
-
-               this.$store.dispatch('clearMessageForm');
-               this.extUpdate = JSON.parse(JSON.stringify(extDomain))
-
-               if (this.extUpdate.status != 100){
-                   this.formAddUrl = false;
-               }
-
-               this.getPublisherInfo(this.extUpdate.domain).then(res => {
-                   var result = res.data
-                   if (res.data.success == true){
-                       this.publisherAdd.seller = result.data.user_id
-                       this.publisherAdd.inc_article = result.data.inc_article
-                       this.publisherAdd.url = result.data.url
-                       this.publisherAdd.language_id = result.data.language_id
-                       this.publisherAdd.topic = result.data.topic
-                       this.publisherAdd.casino_sites = result.data.casino_sites
-                       this.publisherAdd.price = result.data.price
-
-                       this.isEditable = true;
-                   } else {
-                       this.publisherAdd.seller = ''
-                       this.publisherAdd.inc_article = ''
-                       this.publisherAdd.url = this.extUpdate.domain;
-                       this.publisherAdd.language_id = ''
-                       this.publisherAdd.topic = ''
-                       this.publisherAdd.casino_sites = ''
-                       this.publisherAdd.price = ''
-
-                       this.isEditable = false;
-                   }
-
-               });
-
-           },
-
-           async getPublisherInfo(domain) {
-               try {
-                   const response = await axios.get('api/get-publisher-info', {
-                                           params: {
-                                               url: domain,
-                                           }
-                                       });
-                   return response;
-               } catch (error) {
-                   console.error(error);
-               }
-           },
-
-           doEditExtIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.doEditExt(extDomain);
-           },
-
-           hasBacklink(status) {
-               if (status == 70) {
-                   return true
-               }
-               return false
-           },
-           async addBackLink(ext) {
-               this.modalAddBackLink = true
-               this.modelBaclink.ext_domain_id = ext.id
-               this.modelBaclink.ext_name = ext.domain
-               let element = this.$refs.modalBacklink
-               $(element).modal('show')
-           },
-           async addBackLinkIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.addBackLink(extDomain);
-           },
-           async fillterIntByCountry (event) {
-               if (typeof event == 'undefined') {
-                   var countryID = 0
-               } else {
-                   var countryID = event.target.value
-               }
-               this.loadIntDomain =  true
-               await this.$store.dispatch('getListInt', {
-                   params: {
-                       country_id: countryID,
-                       full_page: true
-                   }
-               });
-               this.loadIntDomain = false
-           },
-           async submitAddBacklink () {
-               await this.$store.dispatch('actionSaveBacklink', {
-                   params: this.modelBaclink
-               })
-
-               if (this.messageForms.action === 'saved_backlink') {
-                   this.closeModalBacklink()
-               }
-           },
-           handleCloseBacklinkModal () {
-               this.modelBaclink = {
-                   int_domain_id: 0,
-                   ext_name: ''
-               }
-               this.$store.dispatch('clearMessageBacklinkForm')
-           },
-           closeModalBacklink() {
-               let element = this.$refs.modalBacklink
-               $(element).modal('hide')
-           },
-           closeModalEmail() {
-               let element = this.$refs.modalEmail
-               $(element).modal('hide')
-           },
-           async getAhrefs() {
-               var listInvalid = this.checkIds.some(ext => ext.status != 30);
-               if (listInvalid === true) {
-                   alert('List invalid: status diff with GotContacts');
-                   return;
-               }
-               var listIds = this.checkIds.map(ext => ext.id).join(',');
-               this.isLoadingTable = true;
-               await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
-               this.isLoadingTable = false;
-               var that = this;
-               this.checkIds.forEach(item => {
-                   if (that.listAhrefs.hasOwnProperty(item.id)) {
-                       let itemAherf = that.listAhrefs[item.id];
-                       item.ahrefs_rank = itemAherf.ahrefs_rank;
-                       item.no_backlinks = itemAherf.no_backlinks;
-                       item.url_rating = itemAherf.url_rating;
-                       item.domain_rating = itemAherf.domain_rating;
-                       item.organic_keywords = itemAherf.organic_keywords;
-                       item.organic_traffic = itemAherf.organic_traffic;
-                       item.ref_domains = itemAherf.ref_domains;
-                       item.status = itemAherf.status;
-                   }
-               });
-           },
-           async getAhrefsById(extId, extStatus) {
-               // if (extStatus != 30) {
-               //     alert('List invalid: status diff with GotContacts');
-               //     return;
-               // }
-               var listIds = extId;
-               this.isLoadingTable = true;
-               await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
-               this.isLoadingTable = false;
-               var that = this;
-               this.listExt.data.forEach(item => {
-                   if (that.listAhrefs.hasOwnProperty(item.id)) {
-                       let itemAherf = that.listAhrefs[item.id];
-                       item.ahrefs_rank = itemAherf.ahrefs_rank;
-                       item.no_backlinks = itemAherf.no_backlinks;
-                       item.url_rating = itemAherf.url_rating;
-                       item.domain_rating = itemAherf.domain_rating;
-                       item.organic_keywords = itemAherf.organic_keywords;
-                       item.organic_traffic = itemAherf.organic_traffic;
-                       item.ref_domains = itemAherf.ref_domains;
-                       item.status = itemAherf.status;
-                   }
-               });
-           },
-           openModalEmailElem() {
-               let element = this.$refs.modalEmail;
-               $(element).modal('show');
-               this.allowSending = true;
-           },
-
-           doSendEmail(ext, event) {
-               this.$store.dispatch('clearMessageForm');
-
-               if (ext == null) {
-                   if (this.checkIds.length == 0) {
-                        swal.fire('No Selected', 'Please select first', 'error');
-
-                   } else {
-                       this.openModalEmailElem();
-                       var emails = [];
-                       for (var index in this.checkIds) {
-                           if (this.checkIds[index].email != "") {
-                               emails.push(this.checkIds[index].email)
-                           }
-                       }
-                       this.email_to = emails.join('|')
-                   }
-                   // console.log(this.checkIds)
-                   // return false;
-               }
-
-               if (ext != null) {
-                   if (ext.status == 50) {
-                       swal.fire('Invalid', 'This is Already Contacted', 'error')
-                   }
-                   else if (ext.email == "") {
-                       swal.fire('No email', 'Please check if with email', 'error' )
-                   }
-                   else {
-                       this.openModalEmailElem();
-                       this.email_to = ext.email;
-                       this.extDomain_id = ext.id;
-                   }
-               }
-
-           },
-
-           getStatus() {
-               axios.get('/api/mail/status')
-                   .then((res) => {
-                       console.log(res.data)
-                   })
-           },
-
-
-           async submitSendMail() {
-               this.allowSending = false;
-               this.isPopupLoading = true;
-
-               await this.$store.dispatch('sendMailWithMailgun',{
-                   cc: '',
-                   email: this.email_to,
-                   title: this.modelMail.title,
-                   content: this.modelMail.content,
-                   attachment: 'undefined',
-               })
-
-               this.modelMail = {
-                   title: '',
-                   content: '',
-                   mail_name: '',
-               }
-
-               // this.getStatus();
-               let result = true;
-               if( this.extDomain_id == '' ) {
-                   result = false;
-                   this.updateStatus.status = 50;
-               }
-
-               this.doUpdateMultipleStatus(result, this.extDomain_id);
-               $("#modal-email").modal('hide')
-
-               this.isPopupLoading = false;
-           },
-
-
-           async doUpdateMultipleStatus(is_sending, id) {
-               await this.$store.dispatch('actionUpdateMultipleStatus', {
-                   id: is_sending ? id:this.checkIds,
-                   seller: this.updateStatus.seller,
-                   status: is_sending ? 50:this.updateStatus.status,
-               });
-
-               if( this.messageForms.action == 'updated' ){
-                   let element = this.$refs.modalMultipleStatus
-                   $(element).modal('hide')
-
-                   // this.getExtList();
-
-                   if(is_sending) {
-                       let obj = this.listExt.data.findIndex(o => o.id === id);
-                       this.listExt.data[obj].status = 50;
-                   } else {
-                       for(var index in this.checkIds) {
-                           var id = this.checkIds[index].id
-                           var obj = this.listExt.data.findIndex(o => o.id === id);
-                           this.listExt.data[obj].status = this.updateStatus.status;
-                       }
-                   }
-
-                   this.checkIds = []
-                   this.updateStatus.seller = '';
-                   this.updateStatus.status = '';
-                   let message = is_sending ? 'Email send' : 'Successfully Updated'
-                   swal.fire(
-                       'Done',
-                       message,
-                       'success'
-                   )
-               }
-           },
-
-
-           // async doSendEmail(ext, event) {
-           //     console.log(event);
-           //     this.$store.dispatch('clearMessageForm');
-           //     var ids = '';
-
-           //     if(ext != null) {
-           //         if (ext === -1) {
-           //             ids = this.listExt.data.map(item => item.id).join(",");
-           //             var ctemp = -1;
-           //             if (this.listExt.data.some(item => {
-           //                 if (ctemp === -1) ctemp = item.country;
-           //                 return item.country.id !== ctemp.id;
-           //             })) {
-           //                 alert("can't not handle with multiple countries");
-           //                 return;
-           //             }
-           //             if (this.listExt.data.some(item => {
-           //                 return (item.status != 30 && item.status != 40);
-           //             })) {
-           //                 alert("can't not handle with external domain not have contacts or was contacted");
-           //                 return;
-           //             }
-           //             if (this.listExt.data.some(item => {
-           //                 return (item.email === '' || item.email.split('|').length > 1);
-           //             })) {
-           //                 alert("can't not handle with external domain not have email or multiple emails");
-           //                 return;
-           //             }
-           //             this.mailInfo.ids = ids;
-           //             this.mailInfo.receiver_text = " all list";
-           //             this.mailInfo.country = ctemp;
-           //             this.fetchTemplateMail(this.mailInfo.country.id);
-           //             this.openModalEmailElem();
-           //             return;
-           //         }
-           //         if (ext.status != 30 && ext.status != 40) {
-           //             alert("can't not handle with external domain not have contacts or was contacted");
-           //             return;
-           //         }
-           //         if (ext.email === '' || ext.email.split('|').length > 1) {
-           //             alert("can't not handle with external domain not have email or multiple emails");
-           //             return;
-           //         }
-
-           //         this.mailInfo.ids = ext.id;
-           //         this.mailInfo.receiver_text = ext.domain;
-           //         this.mailInfo.country = ext.country;
-           //         this.fetchTemplateMail(this.mailInfo.country.id);
-           //         this.openModalEmailElem();
-           //     }
-
-
-           //     if(ext == null) {
-           //         var ext_id = [];
-           //         var ext_domain = [];
-           //         var ext_country = [];
-
-           //         var i =0;
-           //         this.checkIds.forEach(function(entry) {
-           //             if (entry.status != 30 && entry.status != 40) {
-           //                 alert("can't not handle with external domain not have contacts or was contacted");
-           //                 return;
-           //             }
-           //             if (entry.email === '' || entry.email.split('|').length > 1) {
-           //                 alert("can't not handle with external domain not have email or multiple emails");
-           //                 return;
-           //             }
-
-           //             ext_id[i] = entry.id;
-           //             ext_domain[i] = entry.domain;
-           //             ext_country[i] = entry.country;
-
-           //             i++;
-           //         });
-
-           //         ext_id = ext_id.join(", ");
-           //         ext_domain = ext_domain.join(", ");
-
-           //         this.mailInfo.ids = ext_id;
-           //         this.mailInfo.receiver_text = ext_domain;
-           //         this.mailInfo.country =ext_country[0];
-           //         this.fetchTemplateMail(this.mailInfo.country.id);
-           //         this.openModalEmailElem();
-           //     }
-           // },
-
-
-           async doSendEmailIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.doSendEmail(extDomain);
-           },
-           async fetchTemplateMail(countryId) {
-               this.isPopupLoading = true;
-               await this.$store.dispatch('getListMails', { params: { country_id: countryId, full_page: 1} });
-               this.isPopupLoading = false;
-           },
-           async doChangeEmailTemplate() {
-               let that = this;
-               this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
-           },
-           async doChangeEmailCountry() {
-               let that = this;
-               this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
-               this.fetchTemplateMail(this.mailInfo.country.id);
-           },
-
-           objectToArray(ob) {
-               let arr = [];
-               Object.keys(ob).forEach((key) => {
-                   ob[key]['id'] = key;
-                   arr.push(ob[key]);
-               });
-
-               return arr;
-           },
-
-           clearSearch() {
-               this.filterModel = {
-                   id: 0,
-                   id_temp: 0,
-                   country_id: 0,
-                   country_id_temp: '',
-                   countryList: { data: [], total: 0},
-                   domain: '',
-                   domain_temp: '',
-                   email: '',
-                   status: -1,
-                   status_temp: null,
-                   page: 0,
-                   per_page: 50,
-                   employee_id: '',
-                   required_email_temp: 0,
-                   required_email: 0,
-                   sort_key: 'id',
-                   sort_value: 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
-               };
-
-               this.getExtList({
-                   params: this.filterModel
-               });
-
-               this.$router.replace({'query': null});
-           },
-
-           // async submitSendMail() {
-           //     this.allowSending = false;
-           //     this.isPopupLoading = true;
-           //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
-           //     this.isPopupLoading = false;
-           // }
-       },
-       components: {
-           DownloadCsv
-       }
-   }
+            this.listSortValue = {
+                'asc': {text: 'Ascending '},
+                'desc': {text: 'Descending '}
+            };
+            this.filterModel.sort_value = 'desc';
+        },
+        async getUserList() {
+            await this.$store.dispatch('actionCheckAdminCurrentUser', {vue: this});
+            if (this.user.isAdmin) {
+                await this.$store.dispatch('actionGetUser', {
+                    vue: this,
+                    params: {params: {full_data: true}},
+                    showMainLoading: false
+                });
+            }
+        },
+        async getListCountriesInt() {
+            await this.$store.dispatch('getListCountriesInt', {vue: this});
+        },
+        async getExtList(params) {
+            this.isLoadingTable = true;
+            if (this.dataTable != null) {
+                this.dataTable.destroy();
+            }
+            await this.$store.dispatch('getListExt', params);
+            this.isLoadingTable = false;
+            $('.freeze-table').freezeTable({'columnNum': 4, 'shadow': true, 'scrollable': true});
+            this.dataTable = $('#data-table').DataTable({
+                paging: false,
+                searching: false,
+                ordering: true,
+                bDestroy: true
+            });
+        },
+        async doSearchList() {
+            let that = this;
+            that.filterModel.country_id = that.filterModel.country_id_temp;
+            that.filterModel.status = that.filterModel.status_temp;
+            that.filterModel.domain = that.filterModel.domain_temp;
+            that.filterModel.id = that.filterModel.id_temp;
+            that.filterModel.required_email = that.filterModel.required_email_temp;
+            that.filterModel.sort = that.filterModel.sort_key + ',' + that.filterModel.sort_value;
+            this.$router.push({
+                query: that.filterModel,
+            });
+            this.getExtList({
+                params: {
+                    country_id: that.filterModel.country_id,
+                    status: that.filterModel.status,
+                    domain: that.filterModel.domain,
+                    email: that.filterModel.email,
+                    employee_id: that.filterModel.employee_id,
+                    required_email: that.filterModel.required_email,
+                    id: that.filterModel.id,
+                    sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
+                    per_page: that.filterModel.per_page,
+                    alexa_date_upload:
+                    that.filterModel.alexa_date_upload
+                }
+            });
+        },
+        async goToPage(pageNum) {
+            let that = this;
+            this.$router.push({
+                query: that.filterModel,
+            });
+            await this.getExtList({
+                params: {
+                    page: pageNum,
+                    country_id: that.filterModel.country_id,
+                    status: that.filterModel.status,
+                    domain: that.filterModel.domain,
+                    id: that.filterModel.id,
+                    sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
+                    per_page: that.filterModel.per_page,
+                    employee_id: that.filterModel.employee_id,
+                    required_email: that.filterModel.required_email
+                }
+            });
+        },
+        async doCrawlExtList() {
+            this.isCrawling = true;
+            var arrayIds = [];
+            if (this.listExt.data) {
+                for (let key in this.listExt.data) {
+                    arrayIds.push(this.listExt.data[key].id);
+                }
+            }
+            if (arrayIds.length == 0) return;
+            await this.$store.dispatch('crawlExtList', {
+                params: {
+                    domain_ids: arrayIds.join(","),
+                    queue: false
+                }
+            });
+            this.isCrawling = false;
+        },
+        async submitAdd() {
+            let that = this;
+            this.isPopupLoading = true;
+            await this.$store.dispatch('addExt', that.extModel);
+            this.isPopupLoading = false;
+            if (this.messageForms.action === 'saved_ext') {
+                this.clearExtModel();
+                //this.listExt.data.pop();
+                //this.listExt.data.unshift(this.messageForms.obj);
+                this.doSearchList();
+                this.isEditable = true;
+            }
+        },
+        convertPrice(price) {
+            return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        },
+        async submitUpdate() {
+            this.isPopupLoading = true;
+            await this.$store.dispatch('updateExt', {
+                ext: this.extUpdate,
+                pub: this.publisherAdd,
+            });
+            this.isPopupLoading = false;
+            if (this.messageForms.action === 'updated_ext') {
+                for (var index in this.listExt.data) {
+                    if (this.listExt.data[index].id === this.extUpdate.id) {
+                        this.listExt.data[index] = this.extUpdate;
+                        break;
+                    }
+                }
+            }
+        },
+        async doShowBackLink(extDomain) {
+            this.extBackLink = extDomain;
+            this.filterBackLink.ext = extDomain.id;
+            this.filterBackLink.full_data = true;
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionGetBackLink', {
+                vue: this,
+                params: this.filterBackLink
+            });
+            this.isPopupLoading = false;
+        },
+
+        async doShowBackLinkIndex(index) {
+            var extDomain = this.listExt.data[index];
+            this.doShowBackLinkIndex(extDomain);
+        },
+
+        doAddExt() {
+            this.$store.dispatch('clearMessageForm');
+        },
+
+        doEditExt(extDomain) {
+            this.formAddUrl = true;
+
+            this.$store.dispatch('clearMessageForm');
+            this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+            if (this.extUpdate.status != 100) {
+                this.formAddUrl = false;
+            }
+
+            this.getPublisherInfo(this.extUpdate.domain).then(res => {
+                var result = res.data
+                if (res.data.success == true) {
+                    this.publisherAdd.seller = result.data.user_id
+                    this.publisherAdd.inc_article = result.data.inc_article
+                    this.publisherAdd.url = result.data.url
+                    this.publisherAdd.language_id = result.data.language_id
+                    this.publisherAdd.topic = result.data.topic
+                    this.publisherAdd.casino_sites = result.data.casino_sites
+                    this.publisherAdd.price = result.data.price
+
+                    this.isEditable = true;
+                } else {
+                    this.publisherAdd.seller = ''
+                    this.publisherAdd.inc_article = ''
+                    this.publisherAdd.url = this.extUpdate.domain;
+                    this.publisherAdd.language_id = ''
+                    this.publisherAdd.topic = ''
+                    this.publisherAdd.casino_sites = ''
+                    this.publisherAdd.price = ''
+
+                    this.isEditable = false;
+                }
+
+            });
+
+        },
+
+        async getPublisherInfo(domain) {
+            try {
+                const response = await axios.get('api/get-publisher-info', {
+                    params: {
+                        url: domain,
+                    }
+                });
+                return response;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        doEditExtIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.doEditExt(extDomain);
+        },
+
+        hasBacklink(status) {
+            if (status == 70) {
+                return true
+            }
+            return false
+        },
+        async addBackLink(ext) {
+            this.modalAddBackLink = true
+            this.modelBaclink.ext_domain_id = ext.id
+            this.modelBaclink.ext_name = ext.domain
+            let element = this.$refs.modalBacklink
+            $(element).modal('show')
+        },
+        async addBackLinkIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.addBackLink(extDomain);
+        },
+        async fillterIntByCountry(event) {
+            if (typeof event == 'undefined') {
+                var countryID = 0
+            } else {
+                var countryID = event.target.value
+            }
+            this.loadIntDomain = true
+            await this.$store.dispatch('getListInt', {
+                params: {
+                    country_id: countryID,
+                    full_page: true
+                }
+            });
+            this.loadIntDomain = false
+        },
+        async submitAddBacklink() {
+            await this.$store.dispatch('actionSaveBacklink', {
+                params: this.modelBaclink
+            })
+
+            if (this.messageForms.action === 'saved_backlink') {
+                this.closeModalBacklink()
+            }
+        },
+        handleCloseBacklinkModal() {
+            this.modelBaclink = {
+                int_domain_id: 0,
+                ext_name: ''
+            }
+            this.$store.dispatch('clearMessageBacklinkForm')
+        },
+        closeModalBacklink() {
+            let element = this.$refs.modalBacklink
+            $(element).modal('hide')
+        },
+        closeModalEmail() {
+            let element = this.$refs.modalEmail
+            $(element).modal('hide')
+        },
+        async getAhrefs() {
+            var listInvalid = this.checkIds.some(ext => ext.status != 30);
+            if (listInvalid === true) {
+                alert('List invalid: status diff with GotContacts');
+                return;
+            }
+            var listIds = this.checkIds.map(ext => ext.id).join(',');
+            this.isLoadingTable = true;
+            await this.$store.dispatch('getListAhrefs', {params: {domain_ids: listIds}});
+            this.isLoadingTable = false;
+            var that = this;
+            this.checkIds.forEach(item => {
+                if (that.listAhrefs.hasOwnProperty(item.id)) {
+                    let itemAherf = that.listAhrefs[item.id];
+                    item.ahrefs_rank = itemAherf.ahrefs_rank;
+                    item.no_backlinks = itemAherf.no_backlinks;
+                    item.url_rating = itemAherf.url_rating;
+                    item.domain_rating = itemAherf.domain_rating;
+                    item.organic_keywords = itemAherf.organic_keywords;
+                    item.organic_traffic = itemAherf.organic_traffic;
+                    item.ref_domains = itemAherf.ref_domains;
+                    item.status = itemAherf.status;
+                }
+            });
+        },
+        async getAhrefsById(extId, extStatus) {
+            // if (extStatus != 30) {
+            //     alert('List invalid: status diff with GotContacts');
+            //     return;
+            // }
+            var listIds = extId;
+            this.isLoadingTable = true;
+            await this.$store.dispatch('getListAhrefs', {params: {domain_ids: listIds}});
+            this.isLoadingTable = false;
+            var that = this;
+            this.listExt.data.forEach(item => {
+                if (that.listAhrefs.hasOwnProperty(item.id)) {
+                    let itemAherf = that.listAhrefs[item.id];
+                    item.ahrefs_rank = itemAherf.ahrefs_rank;
+                    item.no_backlinks = itemAherf.no_backlinks;
+                    item.url_rating = itemAherf.url_rating;
+                    item.domain_rating = itemAherf.domain_rating;
+                    item.organic_keywords = itemAherf.organic_keywords;
+                    item.organic_traffic = itemAherf.organic_traffic;
+                    item.ref_domains = itemAherf.ref_domains;
+                    item.status = itemAherf.status;
+                }
+            });
+        },
+        openModalEmailElem() {
+            let element = this.$refs.modalEmail;
+            $(element).modal('show');
+            this.allowSending = true;
+        },
+
+        doSendEmail(ext, event) {
+            this.$store.dispatch('clearMessageForm');
+            this.urlEmails = [];
+
+            if (ext == null) {
+                if (this.checkIds.length == 0) {
+                    swal.fire('No Selected', 'Please select first', 'error');
+
+                } else if (this.checkIds.length > 10) {
+                    swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                } else {
+                    let err = this.checkIds.some(function(items){
+                        return items.status == 50 | items.email == "";
+                    });
+
+                    if(err) {
+                        swal.fire(
+                            'Invalid Selection',
+                            'Some of the selected items may either be contacted already or have no email address',
+                            'error'
+                        );
+                    } else {
+                        this.openModalEmailElem();
+                        let emails = [];
+                        for (let index in this.checkIds) {
+                            if (this.checkIds[index].email != "") {
+                                emails.push(this.checkIds[index].email)
+                            }
+                        }
+
+                        this.urlEmails = createTags(emails)
+
+                        // this.email_to = emails.join('|')
+                    }
+                }
+                // console.log(this.checkIds)
+                // return false;
+            }
+
+            if (ext != null) {
+                if (ext.status == 50) {
+                    swal.fire('Invalid', 'This is Already Contacted', 'error')
+                } else if (ext.email == "") {
+                    swal.fire('No email', 'Please check if with email', 'error')
+                } else {
+                    this.openModalEmailElem();
+                    // this.email_to = ext.email;
+                    this.extDomain_id = ext.id;
+                    this.urlEmails = createTags(ext.email.split('|'))
+                }
+            }
+
+        },
+
+        getStatus() {
+            axios.get('/api/mail/status')
+                .then((res) => {
+                    console.log(res.data)
+                })
+        },
+
+
+        async submitSendMail() {
+            this.allowSending = false;
+            this.isPopupLoading = true;
+
+            await this.$store.dispatch('sendMailWithMailgun', {
+                cc: '',
+                email: this.urlEmails,
+                title: this.modelMail.title,
+                content: this.modelMail.content,
+                attachment: 'undefined',
+            })
+
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action == 'send_mail') {
+                this.modelMail = {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                }
+
+                // this.getStatus();
+                let result = true;
+                if (this.extDomain_id == '') {
+                    result = false;
+                    this.updateStatus.status = 50;
+                }
+
+                this.doUpdateMultipleStatus(result, this.extDomain_id);
+                $("#modal-email").modal('hide')
+            } else {
+                swal.fire(
+                    'Error',
+                    'There are some errors while sending the email',
+                    'error'
+                )
+                this.allowSending = true;
+            }
+        },
+
+
+        async doUpdateMultipleStatus(is_sending, id) {
+            await this.$store.dispatch('actionUpdateMultipleStatus', {
+                id: is_sending ? id : this.checkIds,
+                seller: this.updateStatus.seller,
+                status: is_sending ? 50 : this.updateStatus.status,
+            });
+
+            if (this.messageForms.action == 'updated') {
+                let element = this.$refs.modalMultipleStatus
+                $(element).modal('hide')
+
+                // this.getExtList();
+
+                if (is_sending) {
+                    let obj = this.listExt.data.findIndex(o => o.id === id);
+                    this.listExt.data[obj].status = 50;
+                } else {
+                    for (var index in this.checkIds) {
+                        var id = this.checkIds[index].id
+                        var obj = this.listExt.data.findIndex(o => o.id === id);
+                        this.listExt.data[obj].status = this.updateStatus.status;
+                    }
+                }
+
+                this.checkIds = []
+                this.updateStatus.seller = '';
+                this.updateStatus.status = '';
+                let message = is_sending ? 'Email send' : 'Successfully Updated'
+                swal.fire(
+                    'Done',
+                    message,
+                    'success'
+                )
+            }
+        },
+
+
+        // async doSendEmail(ext, event) {
+        //     console.log(event);
+        //     this.$store.dispatch('clearMessageForm');
+        //     var ids = '';
+
+        //     if(ext != null) {
+        //         if (ext === -1) {
+        //             ids = this.listExt.data.map(item => item.id).join(",");
+        //             var ctemp = -1;
+        //             if (this.listExt.data.some(item => {
+        //                 if (ctemp === -1) ctemp = item.country;
+        //                 return item.country.id !== ctemp.id;
+        //             })) {
+        //                 alert("can't not handle with multiple countries");
+        //                 return;
+        //             }
+        //             if (this.listExt.data.some(item => {
+        //                 return (item.status != 30 && item.status != 40);
+        //             })) {
+        //                 alert("can't not handle with external domain not have contacts or was contacted");
+        //                 return;
+        //             }
+        //             if (this.listExt.data.some(item => {
+        //                 return (item.email === '' || item.email.split('|').length > 1);
+        //             })) {
+        //                 alert("can't not handle with external domain not have email or multiple emails");
+        //                 return;
+        //             }
+        //             this.mailInfo.ids = ids;
+        //             this.mailInfo.receiver_text = " all list";
+        //             this.mailInfo.country = ctemp;
+        //             this.fetchTemplateMail(this.mailInfo.country.id);
+        //             this.openModalEmailElem();
+        //             return;
+        //         }
+        //         if (ext.status != 30 && ext.status != 40) {
+        //             alert("can't not handle with external domain not have contacts or was contacted");
+        //             return;
+        //         }
+        //         if (ext.email === '' || ext.email.split('|').length > 1) {
+        //             alert("can't not handle with external domain not have email or multiple emails");
+        //             return;
+        //         }
+
+        //         this.mailInfo.ids = ext.id;
+        //         this.mailInfo.receiver_text = ext.domain;
+        //         this.mailInfo.country = ext.country;
+        //         this.fetchTemplateMail(this.mailInfo.country.id);
+        //         this.openModalEmailElem();
+        //     }
+
+
+        //     if(ext == null) {
+        //         var ext_id = [];
+        //         var ext_domain = [];
+        //         var ext_country = [];
+
+        //         var i =0;
+        //         this.checkIds.forEach(function(entry) {
+        //             if (entry.status != 30 && entry.status != 40) {
+        //                 alert("can't not handle with external domain not have contacts or was contacted");
+        //                 return;
+        //             }
+        //             if (entry.email === '' || entry.email.split('|').length > 1) {
+        //                 alert("can't not handle with external domain not have email or multiple emails");
+        //                 return;
+        //             }
+
+        //             ext_id[i] = entry.id;
+        //             ext_domain[i] = entry.domain;
+        //             ext_country[i] = entry.country;
+
+        //             i++;
+        //         });
+
+        //         ext_id = ext_id.join(", ");
+        //         ext_domain = ext_domain.join(", ");
+
+        //         this.mailInfo.ids = ext_id;
+        //         this.mailInfo.receiver_text = ext_domain;
+        //         this.mailInfo.country =ext_country[0];
+        //         this.fetchTemplateMail(this.mailInfo.country.id);
+        //         this.openModalEmailElem();
+        //     }
+        // },
+
+
+        async doSendEmailIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.doSendEmail(extDomain);
+        },
+        async fetchTemplateMail(countryId) {
+            this.isPopupLoading = true;
+            await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
+            this.isPopupLoading = false;
+        },
+        async doChangeEmailTemplate() {
+            let that = this;
+            this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+        },
+        async doChangeEmailCountry() {
+            let that = this;
+            this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+            this.fetchTemplateMail(this.mailInfo.country.id);
+        },
+
+        objectToArray(ob) {
+            let arr = [];
+            Object.keys(ob).forEach((key) => {
+                ob[key]['id'] = key;
+                arr.push(ob[key]);
+            });
+
+            return arr;
+        },
+
+        clearSearch() {
+            this.filterModel = {
+                id: 0,
+                id_temp: 0,
+                country_id: 0,
+                country_id_temp: '',
+                countryList: {data: [], total: 0},
+                domain: '',
+                domain_temp: '',
+                email: '',
+                status: -1,
+                status_temp: null,
+                page: 0,
+                per_page: 50,
+                employee_id: '',
+                required_email_temp: 0,
+                required_email: 0,
+                sort_key: 'id',
+                sort_value: 'desc',
+                alexa_date_upload: {
+                    startDate: null,
+                    endDate: null
+                }
+            };
+
+            this.getExtList({
+                params: this.filterModel
+            });
+
+            this.$router.replace({'query': null});
+        },
+
+        // async submitSendMail() {
+        //     this.allowSending = false;
+        //     this.isPopupLoading = true;
+        //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
+        //     this.isPopupLoading = false;
+        // }
+    },
+    components: {
+        DownloadCsv
+    }
+}
 </script>

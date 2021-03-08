@@ -2,20 +2,26 @@ import axios from 'axios';
 
 export default class BuyService {
 
-    static getBuyList(params){ 
+    static getBuyList(params){
         return axios.get('api/buy', params)
             .then(response => response)
             .catch(error => error);
-    } 
+    }
 
     static checkCreditAuth(params){
         return axios.get('api/check-credit-auth', params)
             .then(response => response)
             .catch(error => error);
-    } 
+    }
 
     static getListCountries(params) {
         return axios.get('/api/countries', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static getListContinents(params) {
+        return axios.get('/api/continent-list', params)
             .then(response => response)
             .catch(error => error);
     }
