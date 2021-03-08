@@ -105,7 +105,7 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher == null ? 'Record Deleted':seller.publisher.user.username == null ? seller.publisher.user.name : seller.publisher.user.username }}</td>
-                                <td>{{ seller.publisher == null ? 'Record Deleted': '$ ' + formatPrice(seller.publisher.price) }}</td>
+                                <td>{{ seller.publisher == null ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
@@ -122,7 +122,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal View Docs -->
         <div class="modal fade" id="modal-view-docs" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -144,7 +144,7 @@
             </div>
         </div>
         <!-- End of Modal View Docs -->
-        
+
         <!-- Modal Payment -->
         <div class="modal fade" id="modal-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -186,7 +186,7 @@
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -197,7 +197,7 @@
             </div>
         </div>
         <!-- End of Modal Payment -->
-        
+
     </div>
 </template>
 
@@ -328,7 +328,7 @@
                         'error'
                     )
                 }
-                    
+
                 this.clearMessageform();
             },
 
@@ -344,11 +344,11 @@
                 let seller_billing = this.listSellerBilling.data
                 let total_price = [];
                 let total = 0;
-                
+
                 seller_billing.forEach(function(item, index){
                     if (typeof item.publisher.price !== 'undefined') {
                         total_price.push( parseFloat(item.publisher.price))
-                    } 
+                    }
                 })
 
                 if( total_price.length > 0 ){
