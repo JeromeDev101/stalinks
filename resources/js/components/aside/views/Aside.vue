@@ -124,7 +124,7 @@
 
                 <li
                     v-if="
-                        user.isAdmin || 
+                        user.isAdmin ||
                             (user.isOurs == 0 &&
                                 (isManager || isSeller || isPostingWriter))
                     "
@@ -161,7 +161,7 @@
                                 (isManager ||
                                     isSeller ||
                                     isBuyer ||
-                                    isPostingWriter))
+                                    isPostingWriter) || isQc)
                     "
                     class="custom-padding"
                     :class="{
@@ -205,7 +205,8 @@
                         </li>
 
                         <li
-                            v-if="user.isAdmin || isManager || isBuyer"
+                            v-if="user.isAdmin ||
+                            isManager || isBuyer || isQc"
                             :class="{
                                 active: $route.name == 'wallet-transaction'
                             }"
