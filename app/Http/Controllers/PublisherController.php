@@ -107,7 +107,7 @@ class PublisherController extends Controller
             $publisher = Publisher::findOrFail($id);
             $publisher->update([
                 'language_id' => $request->language == '' ? $publisher->language_id : $request->language,
-//                'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
+                'country_id' => $request->continent_id == '' ? $publisher->country_id : null,
                 'continent_id' => $request->continent_id == '' ? $publisher->continent_id : $request->continent_id,
                 'topic' => $request->topic == '' ? $publisher->topic : implode(",", $request->topic),
                 'casino_sites' => $request->casino_sites == '' ? $publisher->casino_sites : $request->casino_sites,
@@ -133,6 +133,11 @@ class PublisherController extends Controller
         ]);
 
         $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
+
+        if($input['continent_id']){
+            $input['country_id'] = null;
+        }
+
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
