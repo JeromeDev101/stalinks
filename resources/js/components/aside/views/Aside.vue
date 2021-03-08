@@ -161,7 +161,9 @@
                                 (isManager ||
                                     isSeller ||
                                     isBuyer ||
-                                    isPostingWriter) || isQc)
+                                    isPostingWriter ||
+                                    isQc || isQcSeller ||
+                                     isQcBilling))
                     "
                     class="custom-padding"
                     :class="{
@@ -206,7 +208,8 @@
 
                         <li
                             v-if="user.isAdmin ||
-                            isManager || isBuyer || isQc"
+                            isManager || isBuyer || isQc || isQcSeller ||
+                                     isQcBilling"
                             :class="{
                                 active: $route.name == 'wallet-transaction'
                             }"
@@ -463,7 +466,10 @@ export default {
             isBuyer: false,
             isManager: false,
             isPostingWriter: false,
-            isQc: false
+            isQc: false,
+            isQcBuyer: false,
+            isQcSeller: false,
+            isQcBilling: false,
         };
     },
     created() {
@@ -509,6 +515,14 @@ export default {
 
             if (that.role.id == 8) {
                 this.isQc = true;
+            }
+
+            if (that.role.id == 9) {
+                this.isQcBilling = true;
+            }
+
+            if (that.role.id == 10) {
+                this.isQcSeller = true;
             }
         }
     }
