@@ -43,17 +43,32 @@
                             </div>
                         </div>
 
+<!--                        <div class="col-md-2">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="">Country</label>-->
+<!--                                <v-select multiple-->
+<!--                                          v-model="filterModel.country_id" label="name" :options="listCountryAll.data" :reduce="country => country.id" :searchable="false" placeholder="All"/>-->
+<!--&lt;!&ndash;                                <select class="form-control" v-model="filterModel.country_id">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <option value="">All</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        {{ option.name }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </option>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </select>&ndash;&gt;-->
+<!--                            </div>-->
+<!--                        </div>-->
+
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="">Country</label>
-                                <v-select multiple
-                                          v-model="filterModel.country_id" label="name" :options="listCountryAll.data" :reduce="country => country.id" :searchable="false" placeholder="All"/>
-<!--                                <select class="form-control" v-model="filterModel.country_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
+                                <label for="">Continent</label>
+                                <v-select
+                                    v-model="filterModel.continent_id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :options="listContinent.data"
+                                    :reduce="continent => continent.id"
+                                    :searchable="false"
+                                />
                             </div>
                         </div>
 
@@ -235,6 +250,7 @@
                                 <th class="resize" v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
                                 <th class="resize" v-show="tblBuyOptions.language">Language</th>
                                 <th class="resize" v-show="tblBuyOptions.country">Country</th>
+                                <th class="resize" v-show="tblBuyOptions.continent">Continent</th>
                                 <th v-show="tblBuyOptions.url">URL</th>
                                 <th class="resize" v-show="tblBuyOptions.ur">UR</th>
                                 <th class="resize" v-show="tblBuyOptions.dr">DR</th>
@@ -267,6 +283,7 @@
                                 <td class="resize" v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
                                 <td class="resize" v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
                                 <td class="resize" v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
+                                <td class="resize" v-show="tblBuyOptions.continent">{{ buy.country_continent ? buy.country_continent : buy.publisher_continent }}</td>
                                 <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
                                 <td class="resize" v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
                                 <td class="resize" v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
@@ -447,6 +464,9 @@
                                 <label><input type="checkbox" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblBuyOptions.continent ? 'checked':''" v-model="tblBuyOptions.continent">Continent</label>
+                            </div>
+                            <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -541,6 +561,7 @@
                 },
                 isPopupLoading: false,
                 filterModel: {
+                    continent_id: '',
                     country_id: '',
                     search: this.$route.query.search || '',
                     language_id: '',
@@ -605,6 +626,7 @@
                 tblBuyOptions: state => state.storeBuy.tblBuyOptions,
                 listBuy: state => state.storeBuy.listBuy,
                 listCountryAll: state => state.storePublisher.listCountryAll,
+                listContinent: state => state.storePublisher.listContinent,
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
@@ -617,9 +639,10 @@
             this.getFormula();
             this.getBuyList();
             this.getListCountries();
+            this.getListContinents();
             this.checkCreditAuth();
             this.getListSeller();
-            this.columnShow();
+            // this.columnShow();
             // this.checkBuyerCommission();
 
             let language = this.listLanguages.data;
@@ -678,6 +701,8 @@
                     this.tblBuyOptions.code_comb = false;
                     this.tblBuyOptions.code_price = false;
                 }
+
+                this.tblBuyOptions.country = false;
             },
 
             formatPrice(value) {
@@ -701,6 +726,7 @@
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
+                        continent_id: this.filterModel.continent_id,
                         country_id: this.filterModel.country_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
@@ -781,6 +807,7 @@
 
                 table.columns.adjust().draw();
 
+                this.columnShow();
 
                 this.searchLoading = false;
                 this.isSearching = false;
@@ -817,6 +844,7 @@
                 $('#tbl_buy_backlink').DataTable().destroy();
 
                 this.filterModel = {
+                    continent_id: '',
                     country_id: '',
                     search: '',
                     language_id: '',
@@ -874,6 +902,7 @@
 
                 this.getBuyList({
                     params: {
+                        continent_id: this.filterModel.continent_id,
                         country_id: this.filterModel.country_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
@@ -1035,6 +1064,10 @@
 
             async getListCountries(params) {
                 await this.$store.dispatch('actionGetListCountries', params);
+            },
+
+            async getListContinents(params) {
+                await this.$store.dispatch('actionGetListContinents', params);
             },
 
             async submitBuy(params) {
