@@ -56,6 +56,20 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function importExcel($file)
     {
+
+        // Limit the CSV rows to 1000 only
+        $fp = file($file['file']->getPathName());
+        if( count($fp) > 1001) { // 1001 included the number of header
+            return [
+                "success" => false,
+                "message" => 'Invalid number of rows',
+                "errors" => [
+                    "file" => 'CSV is exceeded to 1000 rows',
+                ],
+                "exist" => [],
+            ];
+        }
+
         // $status = $file['status'];
         // $language = $file['language'];
         $csv_file = $file['file'];
