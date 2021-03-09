@@ -1106,7 +1106,7 @@
 
             async getPublisherList(page = 1) {
 
-                // $('#tbl-publisher').DataTable().destroy();
+                $('#tbl-publisher').DataTable().destroy();
 
                 this.searchLoading = true;
                 this.isSearching = true;
@@ -1238,14 +1238,16 @@
                     ]
                 }
 
-                // var table = $('#tbl-publisher').DataTable({
-                //     paging: false,
-                //     searching: false,
-                //     columnDefs: columnDefs,
-                //     autoWidth: true,
-                // });
-                //
-                // table.columns.adjust().draw();
+                var table = $('#tbl-publisher').DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: columnDefs,
+                    autoWidth: true,
+                    scrollY: 500,
+                    deferRender: true
+                });
+
+                table.columns.adjust().draw();
 
                 this.searchLoading = false;
                 this.isSearching = false;
