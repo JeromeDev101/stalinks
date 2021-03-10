@@ -1,5 +1,5 @@
 <template>
-    <aside class="main-sidebar-custom main-sidebar " style="position:fixed;">
+    <aside class="main-sidebar-custom main-sidebar " style="position:fixed; overflow-y: scroll; bottom: 0;">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar" style="height: auto;">
             <!-- sidebar menu: : style can be found in sidebar.less -->

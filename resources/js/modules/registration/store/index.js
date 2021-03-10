@@ -131,6 +131,25 @@ const actions= {
         }
     },
 
+    async actionVerifyAccount({commit}, params) {
+        try {
+            let response = await AccountService.verifyAccount(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'verified_account', message: 'Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionRegister({commit}, params) {
         try {
             let response = await AccountService.addRegister(params);

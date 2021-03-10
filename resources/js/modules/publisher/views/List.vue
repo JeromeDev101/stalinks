@@ -537,7 +537,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
-                                    <select class="form-control" v-model="addModel.seller">
+                                    <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
                                         <option value="">Select Seller</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}

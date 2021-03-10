@@ -142,6 +142,7 @@
                                 <th>Username</th>
                                 <th>Name</th>
                                 <th>Company Type</th>
+                                <th>Company URL</th>
                                 <th>Type</th>
                                 <th>Sub Account</th>
                                 <th>Under of Main Buyer</th>
@@ -157,6 +158,13 @@
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
+                                <td>
+                                    <a
+                                        :href="'http://' + account.company_url"
+                                        target="_blank">
+                                        {{ account.company_url }}
+                                    </a>
+                                </td>
                                 <td>{{ account.type }}</td>
                                 <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
                                 <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
@@ -288,6 +296,14 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company URL</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_url">
+                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
@@ -394,6 +410,7 @@
                             <div class="col-sm-6">
                                 <label>Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
+                                    <option value="">N/A</option>
                                     <option v-for="option in listTeamIncharge" v-bind:value="option.id">
                                         {{ option.username == null || option.username == '' ? option.name:option.username}}
                                     </option>
@@ -519,6 +536,14 @@
                                     <label>Company Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.company_name">
                                     <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-show="addCompanyName">
+                                <div class="form-group">
+                                    <label>Company URL</label>
+                                    <input type="text" class="form-control" v-model="accountModel.company_url">
+                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -663,6 +688,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',
@@ -700,6 +726,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',
@@ -751,23 +778,43 @@
         },
 
         methods: {
-            verifiedAccount() {
-                 axios.get('/api/verify-account',{
-                    params: {
-                        id: this.accountUpdate.id
-                    }
-                })
-                .then((res) => {
-                    if( res.data.success === true ) {
-                        this.isVerified = true;
+            async verifiedAccount() {
 
-                        swal.fire(
-                            'Verify',
-                            'Successfully Verified!',
-                            'success'
-                        );
-                    }
-                })
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
+
+                if (this.messageForms.action === 'verified_account') {
+                    this.isVerified = true;
+
+                    this.getAccountList();
+
+                    swal.fire(
+                        'Success',
+                        'Account Successfully Verified!',
+                        'success'
+                    );
+                } else {
+                    swal.fire(
+                        'Error',
+                        'Account Not Verified!',
+                        'error'
+                    );
+                }
+
+                this.isPopupLoading = false;
+
+                //  axios.post('/api/verify-account', this.accountUpdate)
+                // .then((res) => {
+                //     if( res.data.success === true ) {
+                //         this.isVerified = true;
+                //
+                //         swal.fire(
+                //             'Verify',
+                //             'Successfully Verified!',
+                //             'success'
+                //         );
+                //     }
+                // })
             },
 
             checkVerified() {
@@ -785,7 +832,7 @@
                     if( res.response.data.success === false ) {
                         this.isVerified = res.response.data.success
                     }
-                }) 
+                })
             },
 
             checkTeamIncharge(method) {
@@ -979,6 +1026,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',

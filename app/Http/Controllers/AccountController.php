@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendResetPasswordEmail;
+use App\Repositories\Contracts\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -26,6 +27,13 @@ use Illuminate\Support\Str;
 class AccountController extends Controller
 {
 
+    private $accountRepository;
+
+    public function __construct(AccountRepositoryInterface $accountRepository)
+    {
+        $this->accountRepository = $accountRepository;
+    }
+
     public function store(AccountRequest $request)
     {
         $input = $request->except('company_type');
@@ -34,6 +42,10 @@ class AccountController extends Controller
             $request->validate(['account_validation' => 'required']);
         } else {
             $input['account_validation'] = 'invalid';
+        }
+
+        if (isset($input['company_url']) && !empty($input['company_url'])) {
+            $input['company_url'] = $this->accountRepository->remove_http($input['company_url']);
         }
 
         $isTeamSeller = $this->checkTeamSeller();
@@ -139,74 +151,8 @@ class AccountController extends Controller
 
     public function edit(UpdateAccountRequest $request)
     {
-        $response['success'] = false;
-        $input = $request->except('company_type', 'user');
-        $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
-        unset($input['c_password']);
-
-        if (isset($input['password']) && $input['password'] != '') {
-            $input['password'] = Hash::make($input['password']);
-        } else {
-            unset($input['password']);
-        }
-
-        $account = Registration::find($input['id']);
-        if (!$account) {
-            return response()->json($response);
-        }
-
-        // ---------------------------------------------------
-
-        $user = User::where('email', $account->email);
-
-        if (isset($input['password']) && $input['password'] != '') {
-            $user->update(['password' => $input['password']]);
-        }
-
-        if (isset($input['credit_auth']) && $input['credit_auth'] != '') {
-            $user->update(['credit_auth' => $input['credit_auth']]);
-        }
-
-        if (isset($input['email']) && $input['email'] != '') {
-            $user->update(['email' => $input['email']]);
-        }
-
-        if (isset($input['username']) && $input['username'] != '') {
-            $user->update(['username' => $input['username']]);
-        }
-
-        if (isset($input['status']) && $input['status'] != '') {
-            $user->update(['status' => $input['status']]);
-        }
-
-        if (isset($input['name']) && $input['name'] != '') {
-            $user->update(['name' => $input['name']]);
-        }
-
-        if (isset($input['skype']) && $input['skype'] != '') {
-            $user->update(['skype' => $input['skype']]);
-        } else {
-            $user->update(['skype' => 'none']);
-        }
-
-        if (isset($input['id_payment_type']) && $input['id_payment_type'] != '') {
-            $user->update(['id_payment_type' => $input['id_payment_type']]);
-        }
-
-        // ---------------------------------------------------
-
-        $account->update($input);
-
-        $user = User::where('email', $input['email'])->first();
-
-        $dataUser = [
-            'username' => $request->username
-        ];
-
-        if(!is_null($user)) {
-            $user->update($dataUser);
-        }
-
+        $inputs = $request->all();
+        $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
         return response()->json($response);
     }
@@ -599,7 +545,7 @@ class AccountController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function verifyAccount(Request $request) {
+    public function verifyAccount(UpdateAccountRequest $request) {
         $registered = Registration::find($request->id);
 
         if (!$registered) {
@@ -609,6 +555,11 @@ class AccountController extends Controller
         $registered->update([
             'verification_code' => ''
         ]);
+
+        // update registration and user account
+
+        $inputs = $request->all();
+        $this->accountRepository->updateAccount($inputs);
 
         $role_id = 0;
         if( $registered->type == 'Seller' ){
