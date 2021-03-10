@@ -154,7 +154,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         fclose($csv);
-            
+
         return [
             "success" => $result,
             "message" => $message,
@@ -492,9 +492,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
      */
     public function getAhrefs($listIds, $configs)
     {
-        $statusGotContact = config('constant.EXT_STATUS_GOT_CONTACTS');
-        $extDomains = $this->model->whereIn('id', $listIds)
-            ->where('status', $statusGotContact)->get();
+//        $statusGotContact = config('constant.EXT_STATUS_GOT_CONTACTS');
+//        $extDomains = $this->model->whereIn('id', $listIds)
+//            ->where('status', $statusGotContact)->get();
+
+        $extDomains = $this->model->whereIn('id', $listIds)->get();
 
         if ($extDomains->count() == 0) {
             return [];

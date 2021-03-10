@@ -377,6 +377,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $language_excel = trim_excel_special_chars($line[5]);
                     $topic = trim_excel_special_chars($line[6]);
 
+                    $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
                     if (in_array($seller_id, $user_id_list)){
 
@@ -384,25 +385,34 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                             if (preg_grep("/".$topic."/i", $topic_list)){
 
-                                if( trim($url, " ") != '' ){
-                                    $url_remove_http = $this->remove_http($url);
-                                    $lang = $this->getCountry($language_excel);
-                                    $valid = $this->checkValid($url_remove_http);
-                                    Publisher::create([
-                                        'user_id' => $seller_id ,
-                                        'language_id' => $lang,
-                                        'url' => $url_remove_http,
-                                        'ur' => 0,
-                                        'dr' => 0,
-                                        'backlinks' => 0,
-                                        'ref_domain' => 0,
-                                        'org_keywords' => 0,
-                                        'org_traffic' => 0,
-                                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                        'valid' => $valid,
-                                        'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
-                                        'topic' => $topic,
+                                if (!$isCheckDuplicate) {
+                                    if( trim($url, " ") != '' ){
+                                        $url_remove_http = $this->remove_http($url);
+                                        $lang = $this->getCountry($language_excel);
+                                        $valid = $this->checkValid($url_remove_http);
+                                        Publisher::create([
+                                            'user_id' => $seller_id ,
+                                            'language_id' => $lang,
+                                            'url' => $url_remove_http,
+                                            'ur' => 0,
+                                            'dr' => 0,
+                                            'backlinks' => 0,
+                                            'ref_domain' => 0,
+                                            'org_keywords' => 0,
+                                            'org_traffic' => 0,
+                                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                            'valid' => $valid,
+                                            'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                            'topic' => $topic,
+                                        ]);
+                                    }
+                                } else {
+                                    $file_message = " URL and Seller ID already exist, Check in line ". (intval($ctr) + 1);
+                                    $result = true;
+
+                                    array_push($existing_datas, [
+                                        'message' => $file_message
                                     ]);
                                 }
 
@@ -451,6 +461,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ],
             "exist" => $existing_datas,
         ];
+    }
+
+    private function checkDuplicate($url, $seller_id) {
+        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->where('user_id', $seller_id);
+        return $publisher->count() > 0;
     }
 
     private function remove_http($url) {
