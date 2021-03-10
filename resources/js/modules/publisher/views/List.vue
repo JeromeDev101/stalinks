@@ -384,13 +384,15 @@
                         <template
                             slot-scope="scope"
                             slot="createdData">
-                            {{ displayDate(publish.created_at) }}
+                            {{
+                            displayDate(scope.row.created_at) }}
                         </template>
 
                         <template
                             slot-scope="scope"
                             slot="updatedData">
-                            {{ displayDate(publish.updated_at) }}
+                            {{
+                            displayDate(scope.row.updated_at) }}
                         </template>
 
                         <template
