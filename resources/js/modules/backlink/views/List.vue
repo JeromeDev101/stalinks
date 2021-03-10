@@ -606,7 +606,7 @@
                 $("#tbl_backlink").DataTable({
                     paging: false,
                     searching: false,
-                    columnDefs: columnDefs,
+                    columnDefs: columnDefs
                 });
 
                 this.getTotalAmount()

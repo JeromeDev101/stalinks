@@ -102,34 +102,32 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
     public function getBackLink($countryIds, $intDomains, $filters)
     {
         $paginate = $filters->paginate == '' ? 50:$filters->paginate;
-        // $user = Auth::user();
-        $user_id = Auth::user()->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $query = $this->model->orderBy('id', 'desc');
 
         if(isset($filters->sub_buyer_id) && $filters->sub_buyer_id != '') {
             $query->where('user_id', $filters->sub_buyer_id);
         }
 
-        $registered = Registration::where('email', Auth::user()->email)->first();
-        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
-            if ( isset($registered->team_in_charge) ) {
-                $user_model = User::where('id', $registered->team_in_charge)->first();
+        if ( isset($user->registration->is_sub_account) && $user->registration->is_sub_account == 1 ) {
+            if ( isset($user->registration->team_in_charge) ) {
+                $user_model = User::where('id', $user->registration->team_in_charge)->first();
                 $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
             }
         }
 
-
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
-        if( (isset($registered->type) && $registered->type == 'Buyer') || Auth::user()->role_id == 5){
+        if( (isset($user->registration->type) && $user->registration->type == 'Buyer') || $user->role_id == 5){
             $query->where('user_id', $user_id)
-                    ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                        return $query->orWhereIn('user_id', $sub_buyer_ids);
-                    });
+                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                });
         }
 
-        $backlink = $this->fillter($query, $filters);
+        $backlink = $this->filter($query, $filters);
 
         if ($filters->full_data === true) {
             $data = $backlink->with(['publisher' => function($query) {
@@ -156,7 +154,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
     }
 
-    protected function fillter($query, $filters)
+    protected function filter($query, $filters)
     {
         if (!empty($filters->querySearch)) {
             $query = $this->model

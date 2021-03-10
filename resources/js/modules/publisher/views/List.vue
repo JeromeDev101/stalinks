@@ -275,82 +275,211 @@
                 </div>
 
                 <div class="box-body no-padding"style="overflow:auto!important;">
+                    <div class="col-md-2 my-3">
+                        <button class="btn btn-default"
+                                @click="selectAll">{{
+                                                   allSelected
+                                                   ?
+                                                   "Deselect"
+                                                   : "Select"
+                                                   }} All
+                        </button>
+                    </div>
+
                     <span class="pagination-custom-footer-text">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
 
-                    <table id="tbl-publisher"  class="table table-hover table-bordered table-striped rlink-table">
-                        <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>
-                                    <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
-                                </th>
-                                <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>
-                                <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>
-                                <th class="resize" v-show="tblPublisherOpt.language">Language</th>
-                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>
-                                <th class="resize" style="width: 61px" v-show="tblPublisherOpt.continent">Continent</th>
-                                <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>
-                                <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>
-                                <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>
-                                <th class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>
-                                <th class="resize" v-show="tblPublisherOpt.valid">Valid</th>
-                                <th v-show="tblPublisherOpt.url">URL</th>
-                                <th class="resize" v-show="tblPublisherOpt.price">Price</th>
-                                <th class="resize" v-show="tblPublisherOpt.price_basis">Price Basis</th>
-                                <th class="resize" v-show="tblPublisherOpt.inc_article">Inc Article</th>
-                                <th class="resize" v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>
-                                <th class="resize" v-show="tblPublisherOpt.ur">UR</th>
-                                <th class="resize" v-show="tblPublisherOpt.dr">DR</th>
-                                <th class="resize" v-show="tblPublisherOpt.backlinks">Blinks</th>
-                                <th class="resize" v-show="tblPublisherOpt.ref_domain">Ref Domains</th>
-                                <th class="resize" v-show="tblPublisherOpt.org_keywords">Org Kwd</th>
-                                <th class="resize" v-show="tblPublisherOpt.org_traffic">Org Traffic</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(publish, index) in listPublish.data" :key="index">
-                                <td>{{ index + 1}}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default">
-                                            <!-- <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds"> -->
-                                            <input class="custom-checkbox" type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.publisher_continent ? publish.publisher_continent : publish.country_continent }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>
-                                <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>
-                                <td class="resize" v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>
-                                <td class="resize" v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+<!--                    <table-->
+<!--                        class="table table-hover table-bordered table-striped rlink-table">-->
+<!--                        <thead>-->
+<!--                            <tr class="label-primary">-->
+<!--                                <th>#</th>-->
+<!--                                <th>-->
+<!--                                    <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">-->
+<!--                                </th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.language">Language</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>-->
+<!--                                <th class="resize" style="width: 61px" v-show="tblPublisherOpt.continent">Continent</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.valid">Valid</th>-->
+<!--                                <th v-show="tblPublisherOpt.url">URL</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.price">Price</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.price_basis">Price Basis</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.inc_article">Inc Article</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.ur">UR</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.dr">DR</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.backlinks">Blinks</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.ref_domain">Ref Domains</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.org_keywords">Org Kwd</th>-->
+<!--                                <th class="resize" v-show="tblPublisherOpt.org_traffic">Org Traffic</th>-->
+<!--                                <th>Edit</th>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                            <tr v-for="(publish, index) in listPublish.data" :key="index">-->
+<!--                                <td>{{ index + 1}}</td>-->
+<!--                                <td>-->
+<!--                                    <div class="btn-group">-->
+<!--                                        <button class="btn btn-default">-->
+<!--                                            &lt;!&ndash; <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds"> &ndash;&gt;-->
+<!--                                            <input class="custom-checkbox" type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>-->
+<!--                                <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>-->
+<!--                                <td class="resize" v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>-->
+<!--                                <td>-->
+<!--                                    <div class="btn-group">-->
+<!--                                        <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
 
+                    <vue-virtual-table
+                        v-if="!tableLoading"
+                        width="100%"
+                        :height="600"
+                        :bordered="true"
+                        :item-height="60"
+                        :config="tableConfig"
+                        :data="listPublish.data">
+                        <template
+                            slot-scope="scope"
+                            slot="actionSelectRow">
+                            <input type="checkbox"
+                                   @click="checkSelected"
+                                   :id="scope.row.id"
+                                   :value="scope.row.id"
+                                   v-model="checkIds">
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="createdData">
+                            {{
+                            displayDate(scope.row.created_at) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="updatedData">
+                            {{
+                            displayDate(scope.row.updated_at) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="continentData">
+                            {{ scope.row.country_continent ?
+                            scope.row.country_continent :
+                            scope.row.publisher_continent }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="topicData">
+                            {{ scope.row.topic == null ?
+                            'N/A':scope.row.topic }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="inChargeData">
+                            {{ scope.row.in_charge == null ?
+                            'N/A':scope.row.in_charge }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="usernameData">
+                            {{ scope.row.username ?
+                            scope.row.username :
+                            scope.row.user_name   }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="urlData">
+                            {{
+                            replaceCharacters(scope.row.url) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="priceData">
+                            {{ scope.row.price == '' ||
+                            scope.row.price == null ?
+                            '':'$'}} {{
+                            scope.row.price }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="priceBasisData">
+                            <i
+                                v-if="scope.row.price_basis == 'Good'" class="fa fa-star"
+                                style="color: green;"></i>
+                            <i
+                                v-else-if="scope.row.price_basis == 'Average'" class="fa fa-star"
+                               style="color: orange;"></i>
+                            <i
+                                v-else-if="scope.row.price_basis == 'High'"
+                               class="fa fa-star"
+                               style="color: red;"></i>
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="orgKeywordData">
+                            {{
+                            formatPrice(scope.row.org_keywords) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="orgTrafficData">
+                            {{
+                            formatPrice(scope.row.org_traffic) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="actionButtons">
+                            <div class="btn-group">
+                                <button
+                                    data-toggle="modal"
+                                    @click="doUpdate(scope.row)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                            </div>
+                        </template>
+                    </vue-virtual-table>
                     <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
 
                 </div>
@@ -661,73 +790,152 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created" @change="columnAdjust">Uploaded</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(2,
+                                tblPublisherOpt.created)"  :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">Uploaded</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded" @change="columnAdjust">Updated</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(3,
+                                tblPublisherOpt.uploaded)"
+                                    :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Updated</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language" @change="columnAdjust">Language</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(4,
+                                tblPublisherOpt.language)"
+                                    :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country" @change="columnAdjust">Country</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(5,
+                                tblPublisherOpt.country)"
+                                    :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent" @change="columnAdjust">Continent</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(6,
+                                tblPublisherOpt.continent)"
+                                    :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic" @change="columnAdjust">Topic</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(7,
+                                tblPublisherOpt.topic)"
+                                    :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites" @change="columnAdjust">Casino & Betting Sites</label>
+                                <label><input
+                                    type="checkbox"@click="toggleColumn(8,
+                                tblPublisherOpt.casino_sites)"
+                                    :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites">Casino & Betting Sites</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge" @change="columnAdjust">In-charge</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(9,
+                                tblPublisherOpt.in_charge)"
+                                    :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">In-charge</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller" @change="columnAdjust">Seller</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(10,
+                                tblPublisherOpt.seller)"
+                                    :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid" @change="columnAdjust">Valid</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(11,
+                                tblPublisherOpt.valid)"
+                                    :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid">Valid</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url" @change="columnAdjust">URL</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(12,
+                                tblPublisherOpt.url)"
+                                    :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price" @change="columnAdjust">Price</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(13,
+                                tblPublisherOpt.price)"
+                                    :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis" @change="columnAdjust">Price Basis</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(14,
+                                tblPublisherOpt.price_basis)"  :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article" @change="columnAdjust">Inc Article</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(15,
+                                tblPublisherOpt.inc_article)"  :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor" @change="columnAdjust">Kw Anchor</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(16,
+                                tblPublisherOpt.kw_anchor)"
+                                    :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur" @change="columnAdjust">UR</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(17,
+                                tblPublisherOpt.ur)"
+                                    :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr" @change="columnAdjust">DR</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(18,
+                                tblPublisherOpt.dr)"
+                                    :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks" @change="columnAdjust">Backlinks</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(19,
+                                tblPublisherOpt.backlinks)"
+                                    :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain" @change="columnAdjust">Ref Domains</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(20,
+                                tblPublisherOpt.ref_domain)"
+                                    :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords" @change="columnAdjust">Organic Keywords</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(21,
+                                tblPublisherOpt.org_keywords)" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic" @change="columnAdjust">Organic Traffic</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(22,
+                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="button"
+                                class="btn btn-primary" @click="saveColumnSetting" data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>
@@ -902,11 +1110,14 @@
 </style>
 
 <script>
-
     import { mapState } from 'vuex';
     import axios from 'axios';
+    import VueVirtualTable from 'vue-virtual-table';
 
     export default {
+        components: {
+            VueVirtualTable,
+        },
         name: '',
         data(){
             return {
@@ -978,6 +1189,7 @@
                 isSeller: false,
                 allSelected: false,
                 isSearching: false,
+                tableLoading: false,
                 addModel: {
                     seller: '',
                     url: '',
@@ -1040,8 +1252,6 @@
             if ( language.length === 0 ) {
                 this.getListLanguages();
             }
-
-            this.setDefaultSettings();
         },
 
         computed:{
@@ -1058,30 +1268,230 @@
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            tableConfig() {
+                return [
+                    {
+                        prop : '_index',
+                        name : '#',
+                        width : '50',
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : ' ',
+                        actionName : 'actionSelectRow',
+                        width: '50',
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Uploaded',
+                        actionName : 'createdData',
+                        width: 100,
+                        isHidden: !this.user.isAdmin ||
+                            this.user.isOurs != 0 ||
+                            this.user.role_id != 6
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Updated',
+                        actionName : 'updatedData',
+                        width: 100,
+                        isHidden: !this.user.isAdmin ||
+                            this.user.isOurs != 0
+                    },
+                    {
+                        prop : 'language_name',
+                        name : 'Language',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'country_name',
+                        name : 'Country',
+                        sortable: true,
+                        width: 100,
+                        isHidden: true
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Continent',
+                        actionName : 'continentData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Topic',
+                        actionName : 'topicData',
+                        width: 100,
+                        isHidden: true
+                    },
+                    {
+                        prop : 'casino_sites',
+                        name : 'Casino & Betting Sites',
+                        sortable: true,
+                        width: 100,
+                        isHidden: true
+                    },
+                    {
+                        prop : '_action',
+                        name : 'In-charge',
+                        actionName : 'inChargeData',
+                        width: 100,
+                        isHidden: true
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Seller',
+                        actionName : 'usernameData',
+                        width: 100,
+                        isHidden: !this.user.isAdmin ||
+                            this.user.isOurs != 0
+                    },
+                    {
+                        prop : 'valid',
+                        name : 'Valid',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'URL',
+                        actionName : 'urlData',
+                        width: 150,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Price',
+                        actionName : 'priceData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Price Basis',
+                        actionName : 'priceBasisData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'inc_article',
+                        name : 'Inc Article',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'kw_anchor',
+                        name : 'KW Anchor',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'ur',
+                        name : 'UR',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'dr',
+                        name : 'DR',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'backlinks',
+                        name : 'Backlinks',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'ref_domain',
+                        name : 'Ref Domain',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Org Keywords',
+                        actionName : 'orgKeywordData',
+                        width: 120,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Org Traffic',
+                        actionName : 'orgTrafficData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Action',
+                        actionName : 'actionButtons',
+                        width : '150',
+                        isHidden: false
+                    },
+                ];
+            }
         },
 
         methods: {
+            async saveColumnSetting() {
+                let loader = this.$loading.show();
+                this.toggleTableLoading();
+
+                await new Promise(resolve => {
+                    setTimeout(resolve, 2000)
+                })
+
+                this.toggleTableLoading();
+                loader.hide();
+            },
+
+            toggleColumn(index, columnState) {
+                this.tableConfig[index].isHidden =
+                    columnState;
+            },
+
+            toggleTableLoading() {
+                if (this.tableLoading) {
+                    this.tableLoading = false;
+                } else {
+                    this.tableLoading = true;
+                }
+            },
 
             async getListLanguages() {
                 await this.$store.dispatch('actionGetListLanguages');
             },
 
-            displayStar(price_basis) {
-                let star = '';
-                if( price_basis == 'Good'  ){
-                    star = '<i class="fa fa-star" style="color: green;"></i>';
-                }
-
-                if( price_basis == 'High'  ){
-                    star = '<i class="fa fa-star" style="color: red;"></i>';
-                }
-
-                if( price_basis == 'Average'  ){
-                    star = '<i class="fa fa-star" style="color: orange;"></i>';
-                }
-
-                return star;
-            },
+            // displayStar(price_basis) {
+            //     let star = '';
+            //     if( price_basis == 'Good'  ){
+            //         star = '<i class="fa fa-star" style="color: green;"></i>';
+            //     }
+            //
+            //     if( price_basis == 'High'  ){
+            //         star = '<i class="fa fa-star" style="color: red;"></i>';
+            //     }
+            //
+            //     if( price_basis == 'Average'  ){
+            //         star = '<i class="fa fa-star" style="color: orange;"></i>';
+            //     }
+            //
+            //     return star;
+            // },
 
             setDefaultSettings() {
                 if( this.user.isOurs == 0 ){
@@ -1098,6 +1508,7 @@
                 }
 
                 this.tblPublisherOpt.country = false;
+
             },
 
             async getTeamInCharge(){
@@ -1105,9 +1516,7 @@
             },
 
             async getPublisherList(page = 1) {
-
-                $('#tbl-publisher').DataTable().destroy();
-
+                let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
                 if(this.filterModel.paginate == 'All')
@@ -1238,23 +1647,12 @@
                     ]
                 }
 
-                var table = $('#tbl-publisher').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: columnDefs,
-                    autoWidth: true,
-                });
-
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                table.columns.adjust().draw();
-            },
+                this.setDefaultSettings()
 
-            columnAdjust(){
-                this.$nextTick(() => {
-                    $('#tbl-publisher').DataTable().columns.adjust()
-                });
+                loader.hide();
             },
 
             async getListSeller(params) {
@@ -1282,6 +1680,9 @@
 
                     }
                     this.isDisabled = false;
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
                 }
             },
 
@@ -1596,6 +1997,10 @@
                 }
 
                 this.updateModel.company_name = that.isOurs == '0' ? 'Stalinks':that.company_name;
+
+                $('#modal-update-publisher').modal({
+                    show: true
+                });
             },
 
             async doDelete(id){
