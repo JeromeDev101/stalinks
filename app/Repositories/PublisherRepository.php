@@ -70,9 +70,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list->orderBy('created_at', 'desc');
         }
 
-        $registered = Registration::where('email', $user->email)->first();
-
-        if( $user->type != 10 && isset($registered->type) && $registered->type == 'Seller' ){
+        if( $user->type != 10 && isset($user->registration->type) && $user->registration->type == 'Seller' ){
             $list->where('publisher.user_id', $user->id);
         }
 
@@ -171,6 +169,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $result = $list->paginate($paginate);
         }
 
+        $priceCollection = Pricelist::all();
 
         foreach($result as $key => $value) {
 
@@ -180,7 +179,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
             $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
 
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
+            $price_list = $priceCollection->where('code', strtoupper($combineALl));
 
             $count_letter_a = substr_count($combineALl, 'A');
 
@@ -272,7 +271,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }
