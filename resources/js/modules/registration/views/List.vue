@@ -8,9 +8,19 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
+                    <button
+                        type="button"
+                        aria-expanded="false"
+                        data-toggle="collapse"
+                        class="btn btn-primary ml-5"
+                        data-target="#collapseFilterRegistration"
+                        aria-controls="collapseFilterRegistration">
+
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
                 </div>
 
-                <div class="box-body m-3">
+                <div class="box-body m-3 collapse" id="collapseFilterRegistration">
                     <div class="row">
 
                         <div class="col-md-3">
