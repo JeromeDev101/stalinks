@@ -14,9 +14,18 @@ class Publisher extends Model
 
     protected $fillable
         = [
+            'url',
+            'language_id',
             'code_comb',
             'price_basis',
-            'code_price'
+            'code_price',
+            'continent_id',
+            'price',
+            'inc_article',
+            'casino_sites',
+            'topic',
+            'kw_anchor',
+            'qc_validation'
         ];
 
     public function user() {
