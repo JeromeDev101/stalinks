@@ -375,7 +375,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
-                                   @click="checkSelected"
+                                   @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
                                    v-model="checkIds">
@@ -1740,6 +1740,7 @@
             checkSelected() {
                 this.isDisabled = true;
                 if( this.checkIds.length > 0 ){
+                    console.log(this.checkIds.length);
                     this.isDisabled = false;
                 }
             },
