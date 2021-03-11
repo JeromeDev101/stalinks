@@ -184,6 +184,7 @@
                         </select>
                     </div>
 
+                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                     <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
                 <div class="box-body no-padding relative">
@@ -196,18 +197,18 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Date Registered</th>
-                                <th>In-charge</th>
-                                <th>User ID</th>
-                                <th>Username</th>
-                                <th>Name</th>
-                                <th>Company Type</th>
-                                <th>Company Name</th>
-                                <th>Company URL</th>
-                                <th>Type</th>
-                                <th>Sub Account</th>
-                                <th>Under of Main Buyer</th>
-                                <th>Account Validation</th>
+                                <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
+                                <th v-show="tblAccountsOpt.in_charge">In-charge</th>
+                                <th v-show="tblAccountsOpt.user_id">User ID</th>
+                                <th v-show="tblAccountsOpt.username">Username</th>
+                                <th v-show="tblAccountsOpt.name">Name</th>
+                                <th v-show="tblAccountsOpt.company_type">Company Type</th>
+                                <th v-show="tblAccountsOpt.company_name">Company Name</th>
+                                <th v-show="tblAccountsOpt.company_url">Company URL</th>
+                                <th v-show="tblAccountsOpt.type">Type</th>
+                                <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
+                                <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
+                                <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -215,24 +216,24 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{ account.created_at }}</td>
-                                <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
-                                <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
-                                <td>{{ account.username }}</td>
-                                <td>{{ account.name }}</td>
-                                <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
-                                <td>{{ account.company_name }}</td>
-                                <td>
+                                <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
+                                <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
+                                <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
+                                <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
+                                <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
+                                <td v-show="tblAccountsOpt.company_url">
                                     <a
                                         :href="'http://' + account.company_url"
                                         target="_blank">
                                         {{ account.company_url }}
                                     </a>
                                 </td>
-                                <td>{{ account.type }}</td>
-                                <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
-                                <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
-                                <td>{{ account.account_validation }}</td>
+                                <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
+                                <td v-show="tblAccountsOpt.sub_account">{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
+                                <td v-show="tblAccountsOpt.under_of_main_buyer">{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -734,6 +735,37 @@
         </div>
         <!-- End of Modal Registration -->
 
+        <!-- Modal Settings -->
+        <div class="modal fade" id="modal-setting" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-6" v-for="(opt, key) in tblAccountsOpt" :key="key">
+                                <label>
+                                    <input
+                                        v-model="tblAccountsOpt[key]"
+                                        type="checkbox"
+                                        :checked="key ? 'checked':''"
+
+                                        @change="columnAdjust">
+
+                                    {{ humanize(key) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Settings -->
+
     </div>
 </template>
 
@@ -840,6 +872,7 @@
 
         computed: {
             ...mapState({
+                tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
                 messageForms: state => state.storeAccount.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
@@ -1130,6 +1163,22 @@
                     country_id: '',
                 };
             },
+
+            columnAdjust(){
+                this.$nextTick(() => {
+                    $('#tbl_account').DataTable().columns.adjust()
+                });
+            },
+
+            humanize(string) {
+                let i, frags = string.split('_');
+
+                for (i=0; i < frags.length; i++) {
+                    frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+                }
+
+                return frags.join(' ');
+            }
         }
     }
 </script>

@@ -11,6 +11,21 @@ const state = {
     listAccount: { data: [] },
     listPayment: { data: [] },
     listIncharge: { data: [] },
+    tblAccountsOpt: {
+        date_registered: true,
+        in_charge: true,
+        user_id: true,
+        username: true,
+        name: true,
+        company_type: true,
+        company_name: false,
+        company_url: false,
+        type: true,
+        sub_account: true,
+        under_of_main_buyer: true,
+        account_validation: true,
+        status: true
+    },
 }
 
 const mutations = {
