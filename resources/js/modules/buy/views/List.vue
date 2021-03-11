@@ -232,90 +232,146 @@
                     </div>
                 </div>
 
+                <div class="col-md-2 my-3">
+                    <button class="btn btn-default"
+                            @click="selectAll">{{
+                                               allSelected
+                                               ?
+                                               "Deselect"
+                                               : "Select"
+                                               }} All
+                    </button>
+                </div>
+
                 <div class="box-body no-padding relative" >
 
                     <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
                         <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
                     </span>
 
-                    <table id="tbl_buy_backlink" class="table table-hover table-bordered table-striped rlink-table">
-                        <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>
-                                    <input type="checkbox" @click="selectAll" v-model="allSelected">
-                                </th>
-                                <th class="resize" v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1">Seller</th>
-                                <th class="resize" v-show="tblBuyOptions.topic">Topic</th>
-                                <th class="resize" v-show="tblBuyOptions.casino_sites">Casino & Betting Sites</th>
-                                <th class="resize" v-show="tblBuyOptions.language">Language</th>
-                                <th class="resize" v-show="tblBuyOptions.country">Country</th>
-                                <th class="resize" v-show="tblBuyOptions.continent">Continent</th>
-                                <th v-show="tblBuyOptions.url">URL</th>
-                                <th class="resize" v-show="tblBuyOptions.ur">UR</th>
-                                <th class="resize" v-show="tblBuyOptions.dr">DR</th>
-                                <th class="resize" v-show="tblBuyOptions.backlinks">Blinks</th>
-                                <th class="resize" v-show="tblBuyOptions.ref_domains">Ref Domain</th>
-                                <th class="resize" v-show="tblBuyOptions.org_keywords">Org Kw</th>
-                                <th class="resize" v-show="tblBuyOptions.ratio">Ratio</th>
-                                <th class="resize" v-show="tblBuyOptions.org_traffic">Org Traffic</th>
-                                <th class="resize" v-show="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</th>
-                                <th class="resize" v-show="tblBuyOptions.prices && user.isAdmin">Prices</th>
-                                <th class="resize" v-show="tblBuyOptions.status">Status</th>
-                                <th class="resize" v-show="tblBuyOptions.code_comb">Code Comb</th>
-                                <th class="resize" v-show="tblBuyOptions.code_price">Code Price</th>
-                                <th class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">Price Basis</th>
-                                <th>Buy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(buy, index) in listBuy.data" :key="index">
-                                <td>{{ index + 1}}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default">
-                                            <input type="checkbox" v-on:change="checkSelected" :id="buy.id" :value="buy.id" v-model="checkIds">
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="resize" v-show="tblBuyOptions.seller" v-if="user.role_id != 5 && user.isOurs != 1" >{{ buy.username ? buy.username : buy.user_name}}</td>
-                                <td class="resize" v-show="tblBuyOptions.topic">{{ buy.topic == null ? 'N/A':buy.topic }}</td>
-                                <td class="resize" v-show="tblBuyOptions.casino_sites">{{ buy.casino_sites == null ? 'N/A':buy.casino_sites }}</td>
-                                <td class="resize" v-show="tblBuyOptions.language">{{ buy.language_name }}</td>
-                                <td class="resize" v-show="tblBuyOptions.country">{{ buy.country_name }}</td>
-                                <td class="resize" v-show="tblBuyOptions.continent">{{ buy.publisher_continent ? buy.publisher_continent : buy.country_continent }}</td>
-                                <td v-show="tblBuyOptions.url">{{ replaceCharacters(buy.url) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.ur">{{ buy.ur }}</td>
-                                <td class="resize" v-show="tblBuyOptions.dr">{{ buy.dr }}</td>
-                                <td class="resize" v-show="tblBuyOptions.backlinks">{{ buy.backlinks }}</td>
-                                <td class="resize" v-show="tblBuyOptions.ref_domains">{{ buy.ref_domain }}</td>
-                                <td class="resize" v-show="tblBuyOptions.org_keywords">{{ formatPrice(buy.org_keywords) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.ratio">{{ getRatio(buy.org_keywords, buy.org_traffic) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.org_traffic">{{ formatPrice(buy.org_traffic) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.price">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePrice(buy.price, buy.inc_article) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.prices && user.isAdmin">{{ buy.price == '' || buy.price == null ? '':'$'}} {{ computePriceStalinks(buy.price, buy.inc_article) }}</td>
-                                <td class="resize" v-show="tblBuyOptions.status">{{ buy.status_purchased == null ? 'New':buy.status_purchased}}</td>
-                                <td class="resize text-center font-weight-bold" v-show="tblBuyOptions.code_comb" >{{ buy.code_combination}}</td>
-                                <td class="resize" v-show="tblBuyOptions.code_price" > $ {{ buy.code_price}}</td>
-                                <td class="resize" v-show="tblBuyOptions.price_basis" v-if="isExtBuyerWithCommission">{{ buy.price_basis }}</td>
-                                <td>
-                                    <div class="btn-group" ref="text">
-                                        <button v-if="buy.price != '' && buy.price != null" :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(buy)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
-                                        <button :disabled="buy.status_purchased == 'Interested'" @click="doLike(buy.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
-                                        <button :disabled="buy.status_purchased == 'Not interested'" @click="doDislike(buy.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <vue-virtual-table
+                        v-if="!tableLoading"
+                        width="100%"
+                        :height="600"
+                        :bordered="true"
+                        :item-height="60"
+                        :config="tableConfig"
+                        :data="listBuy.data">
+                        <template
+                            slot-scope="scope"
+                            slot="actionSelectRow">
+                            <input type="checkbox"
+                                   @change="checkSelected"
+                                   :id="scope.row.id"
+                                   :value="scope.row.id"
+                                   v-model="checkIds">
+                       </template>
 
-                    <!-- <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination> -->
-                </div>
-            </div>
+                        <template
+                            slot-scope="scope"
+                            slot="topicData">
+                            {{ scope.row.topic == null ?
+                            'N/A' : scope.row.topic }}
+                        </template>
 
-        </div>
+                        <template
+                            slot-scope="scope"
+                            slot="casinoSiteData">
+                            {{ scope.row.casino_sites ==
+                            null ?
+                            'N/A' :
+                            scope.row.casino_sites }}
+                        </template>
 
-        <!-- Modal Buy -->
+                        <template
+                            slot-scope="scope"
+                            slot="continentData">
+                            {{ scope.row.country_continent ?
+                            scope.row.country_continent :
+                            scope.row.publisher_continent }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="urlData">
+                            {{
+                            replaceCharacters(scope.row.url) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="orgKeywordData">
+                            {{
+                            formatPrice(scope.row.org_keywords) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="ratioData">
+                            {{
+                            getRatio(scope.row.org_keywords,
+                            scope.row.org_traffic) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="orgTrafficData">
+                            {{
+                            formatPrice(scope.row.org_traffic) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="priceData">
+                            {{ scope.row.price == '' ||
+                            scope.row.price
+                            == null ? '':'$'}} {{
+                            computePrice(scope.row.price,
+                            scope.row.inc_article) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="pricesData">
+                            {{ scope.row.price == '' ||
+                            scope.row.price
+                            == null ? '':'$'}} {{
+                            computePriceStalinks(scope.row.price,
+                            scope.row.inc_article) }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="statusData">
+                            {{ scope.row.status_purchased ==
+                            null
+                            ?
+                            'New':scope.row.status_purchased}}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="actionButtons">
+                            <div class="btn-group" ref="text">
+                                <button
+                                    v-if="scope.row.price
+                                 != '' && scope.row.price
+                                  != null"
+                                    :disabled="isCreditAuth" title="Buy" data-target="#modal-buy-update" @click="doUpdate(scope.row)" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-dollar"></i></button>
+                                <button
+                                    :disabled="scope.row.status_purchased == 'Interested'" @click="doLike(scope.row.id)" title="Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
+                                <button
+                                    :disabled="scope.row.status_purchased == 'Not interested'" @click="doDislike(scope.row.id)" title="Not Interested" class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
+                            </div>
+                      </template>
+                 </vue-virtual-table>
+              <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination>
+              </div>
+          </div>
+
+      </div>
+
+      <!-- Modal Buy -->
         <div class="modal fade" id="modal-buy-update" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -449,70 +505,118 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6" v-if="user.role_id != 5 && user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller" @change="columnAdjust">Seller</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(2, tblBuyOptions.seller)"
+                                    :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.topic ? 'checked':''" v-model="tblBuyOptions.topic" @change="columnAdjust">Topic</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(3, tblBuyOptions.topic)" :checked="tblBuyOptions.topic ? 'checked':''" v-model="tblBuyOptions.topic">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.casino_sites ? 'checked':''" v-model="tblBuyOptions.casino_sites" @change="columnAdjust">Casino & Betting Sites</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(4, tblBuyOptions.casino_sites)" :checked="tblBuyOptions.casino_sites ? 'checked':''" v-model="tblBuyOptions.casino_sites">Casino & Betting Sites</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language" @change="columnAdjust">Language</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(5, tblBuyOptions.language)" :checked="tblBuyOptions.language ? 'checked':''" v-model="tblBuyOptions.language">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country" @change="columnAdjust">Country</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(6, tblBuyOptions.country)" :checked="tblBuyOptions.country ? 'checked':''" v-model="tblBuyOptions.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.continent ? 'checked':''" v-model="tblBuyOptions.continent" @change="columnAdjust">Continent</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(7, tblBuyOptions.continent)" :checked="tblBuyOptions.continent ? 'checked':''" v-model="tblBuyOptions.continent">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url" @change="columnAdjust">URL</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(8, tblBuyOptions.url)" :checked="tblBuyOptions.url ? 'checked':''" v-model="tblBuyOptions.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ur ? 'checked':''" v-model="tblBuyOptions.ur" @change="columnAdjust">UR</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(9, tblBuyOptions.ur)" :checked="tblBuyOptions.ur ? 'checked':''" v-model="tblBuyOptions.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.dr ? 'checked':''" v-model="tblBuyOptions.dr" @change="columnAdjust">DR</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(10, tblBuyOptions.dr)" :checked="tblBuyOptions.dr ? 'checked':''" v-model="tblBuyOptions.dr">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.backlinks ? 'checked':''" v-model="tblBuyOptions.backlinks" @change="columnAdjust">Backlinks</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(11, tblBuyOptions.backlinks)" :checked="tblBuyOptions.backlinks ? 'checked':''" v-model="tblBuyOptions.backlinks">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ref_domains ? 'checked':''" v-model="tblBuyOptions.ref_domains" @change="columnAdjust">Ref Domains</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(12, tblBuyOptions.ref_domains)" :checked="tblBuyOptions.ref_domains ? 'checked':''" v-model="tblBuyOptions.ref_domains">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords" @change="columnAdjust">Organic Keywords</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(13, tblBuyOptions.org_keywords)" :checked="tblBuyOptions.org_keywords ? 'checked':''" v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.ratio ? 'checked':''" v-model="tblBuyOptions.ratio" @change="columnAdjust">Ratio</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(14, tblBuyOptions.ratio)" :checked="tblBuyOptions.ratio ? 'checked':''" v-model="tblBuyOptions.ratio">Ratio</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic" @change="columnAdjust">Organic Traffic</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(15, tblBuyOptions.org_traffic)" :checked="tblBuyOptions.org_traffic ? 'checked':''" v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price" @change="columnAdjust">{{ user.role_id == 5 ? 'Prices':'Price' }}</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(16, tblBuyOptions.price)" :checked="tblBuyOptions.price ? 'checked':''" v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices':'Price' }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.isAdmin">
-                                <label><input type="checkbox" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices" @change="columnAdjust">Prices</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(17, tblBuyOptions.prices)" :checked="tblBuyOptions.prices ? 'checked':''" v-model="tblBuyOptions.prices">Prices</label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status" @change="columnAdjust">Status</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(18, tblBuyOptions.status)" :checked="tblBuyOptions.status ? 'checked':''" v-model="tblBuyOptions.status">Status</label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.role_id != 5">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb" @change="columnAdjust">Code Combination</label>
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(19, tblBuyOptions.code_comb)" :checked="tblBuyOptions.code_comb ? 'checked':''" v-model="tblBuyOptions.code_comb">Code Combination</label>
                             </div>
-                            <div class="checkbox col-md-6" v-show="user.role_id != 5">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price" @change="columnAdjust">Code Price</label>
+                            <div
+                                class="checkbox col-md-6"
+                                @click="toggleColumn(20,
+                                tblBuyOptions.code_price)"
+                                v-show="user.role_id != 5">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.code_price">Code Price</label>
                             </div>
-                            <div class="checkbox col-md-6" v-if="isExtBuyerWithCommission">
-                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis" @change="columnAdjust">Price Basis</label>
+                            <div
+                                class="checkbox col-md-6"
+                                @click="toggleColumn(21,
+                                tblBuyOptions.code_price)"
+                                v-if="isExtBuyerWithCommission">
+                                <label><input type="checkbox" :checked="tblBuyOptions.code_price ? 'checked':''" v-model="tblBuyOptions.price_basis">Price Basis</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="button"
+                                class="btn btn-primary"
+                                @click="saveColumnSetting"
+                                data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>
@@ -546,8 +650,12 @@
 
 <script>
     import { mapState } from 'vuex';
+    import VueVirtualTable from 'vue-virtual-table';
 
     export default {
+        components: {
+            VueVirtualTable,
+        },
         data() {
             return {
                 paginate: [50,150,250,350,500,'All'],
@@ -559,6 +667,7 @@
                     link: '',
                     url_advertiser: '',
                 },
+                tableLoading: false,
                 isPopupLoading: false,
                 filterModel: {
                     continent_id: '',
@@ -633,6 +742,173 @@
                 formula: state => state.storeSystem.formula,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            tableConfig() {
+                return [
+                    {
+                        prop : '_index',
+                        name : '#',
+                        width : '50',
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : ' ',
+                        actionName : 'actionSelectRow',
+                        width: '50',
+                        isHidden: false
+                    },
+                    {
+                        prop : 'user_name',
+                        name : 'Seller',
+                        sortable: true,
+                        width: 100,
+                        isHidden: this.user.role_id == 5 &&
+                            this.user.isOurs == 1
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Topic',
+                        actionName: 'topicData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Casino & Betting sites',
+                        actionName: 'casinoSiteData',
+                        width: 175,
+                        isHidden: true
+                    },
+                    {
+                        prop : 'language_name',
+                        name : 'Language',
+                        sortable: true,
+                        width: 110,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'country_name',
+                        name : 'Country',
+                        sortable: true,
+                        width: 120,
+                        isHidden: true
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Continent',
+                        actionName : 'continentData',
+                        width: 150,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'URL',
+                        actionName: 'urlData',
+                        width: 175,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'ur',
+                        name : 'UR',
+                        sortable: true,
+                        width: 50,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'dr',
+                        name : 'DR',
+                        sortable: true,
+                        width: 50,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'backlinks',
+                        name: 'Blinks',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'ref_domain',
+                        name : 'Ref Domain',
+                        sortable: true,
+                        width: 125,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Org Kw',
+                        actionName : 'orgKeywordData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Ratio',
+                        actionName : 'ratioData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Org Traffic',
+                        actionName : 'orgTrafficData',
+                        width: 120,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Price',
+                        actionName : 'priceData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Prices',
+                        actionName : 'pricesData',
+                        width: 100,
+                        isHidden: !this.user.isAdmin
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Status',
+                        actionName : 'statusData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'code_comb',
+                        name : 'Code Comb',
+                        sortable: true,
+                        width: 125,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'code_price',
+                        name : 'Code Price',
+                        sortable: true,
+                        width: 120,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'price_basis',
+                        name : 'Price Basis',
+                        sortable: true,
+                        width: 120,
+                        isHidden:
+                            !this.isExtBuyerWithCommission
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Action',
+                        actionName : 'actionButtons',
+                        width : '200',
+                        isHidden: false
+                    },
+                ];
+            }
         },
 
         async created() {
@@ -642,7 +918,7 @@
             this.getListContinents();
             this.checkCreditAuth();
             this.getListSeller();
-            this.columnShow();
+            // this.columnShow();
             // this.checkBuyerCommission();
 
             let language = this.listLanguages.data;
@@ -652,6 +928,39 @@
         },
 
         methods: {
+            async saveColumnSetting() {
+                let loader = this.$loading.show();
+                this.toggleTableLoading();
+
+                await new Promise(resolve => {
+                    setTimeout(resolve, 2000)
+                })
+
+                this.toggleTableLoading();
+                loader.hide();
+            },
+
+            toggleColumn(index, columnState) {
+                this.tableConfig[index].isHidden =
+                    columnState;
+            },
+
+            toggleTableLoading() {
+                if (this.tableLoading) {
+                    this.tableLoading = false;
+                } else {
+                    this.tableLoading = true;
+                }
+            },
+
+            toggleSearchLoading() {
+                if (this.searchLoading) {
+                    this.searchLoading = false;
+                } else {
+                    this.searchLoading = true;
+                }
+            },
+
             getRatio(org_kw, org_traffic) {
                 let result = 0;
 
@@ -705,12 +1014,6 @@
                 this.tblBuyOptions.country = false;
             },
 
-            columnAdjust(){
-                this.$nextTick(() => {
-                    $('#tbl_buy_backlink').DataTable().columns.adjust()
-                });
-            },
-
             formatPrice(value) {
                 let val = (value/1).toFixed(0)
                 return val;
@@ -725,10 +1028,8 @@
             },
 
             async getBuyList(page = 1) {
-
-                $('#tbl_buy_backlink').DataTable().destroy();
-
-                this.searchLoading = true;
+                let loader = this.$loading.show();
+                this.toggleSearchLoading();
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
@@ -804,17 +1105,11 @@
                     ];
                 }
 
-                var table = $('#tbl_buy_backlink').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: columnsOrder,
-                    autoWidth: true,
-                });
+                this.columnShow();
 
-                table.columns.adjust().draw();
-
-                this.searchLoading = false;
                 this.isSearching = false;
+                this.toggleSearchLoading();
+                loader.hide();
             },
 
             async getListSeller(params) {
@@ -839,8 +1134,10 @@
                         this.checkIds.push(this.listBuy.data[buy].id);
                     }
                     this.isDisabled = false;
+                    this.allSelected = true;
                 } else {
                     this.isDisabled = true;
+                    this.allSelected = false;
                 }
             },
 
@@ -935,6 +1232,10 @@
 
                 this.updateModel = that
                 this.updateModel.price = this.computePrice(that.price, that.inc_article);
+
+                $('#modal-buy-update').modal({
+                    show: true
+                });
             },
 
             async doDislike(id) {

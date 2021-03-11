@@ -24,7 +24,7 @@ class BuyController extends Controller
     public function getList(Request $request){
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
-        $user_id = Auth::user()->id;
+        $user = Auth::user();
         $credit = 0;
 
         $columns = [
@@ -48,13 +48,11 @@ class BuyController extends Controller
                 ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
                 ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
                 ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-                ->leftJoin('buyer_purchased', function($q) use ($user_id){
+                ->leftJoin('buyer_purchased', function($q) use ($user){
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user_id);
+                        ->where('buyer_purchased.user_id_buyer', $user->id);
                 })
                 ->where('publisher.valid', 'valid');
-
-        $registered = Registration::where('email', Auth::user()->email)->first();
 
         // if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
         //     $list->where('publisher.valid', 'valid');
@@ -157,6 +155,21 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list->whereIn('publisher.price_basis', $filter['price_basis']);
+            } else {
+                $list->where('publisher.price_basis', $filter['price_basis']);
+            }
+        }
+
+        if (isset($filter['code'])) {
+            $list->whereRaw('ROUND(
+                           (
+                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+        }
+
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
                 $list->where(function ($query) use ($filter) {
@@ -184,28 +197,27 @@ class BuyController extends Controller
         }
 
         // Getting credit left
-
-        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
-            if ( isset($registered->team_in_charge) ) {
-                $user_model = User::where('id', $registered->team_in_charge)->first();
-                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+        if ( isset($user->registration->is_sub_account) && $user->registration->is_sub_account == 1 ) {
+            if ( isset($user->registration->team_in_charge) ) {
+                $user_model = User::where('id', $user->registration->team_in_charge)->first();
+                $user->id = isset($user_model->id) ? $user_model->id : $user->id;
             }
         }
 
-        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
         $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
-                                ->where('user_id', $user_id)
-                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
-                                })
-                                ->get();
+            ->where('user_id', $user->id)
+            ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                return $query->orWhereIn('user_id', $sub_buyer_ids);
+            })
+            ->get();
 
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
-                    ->where('user_id', $user_id)
-                    ->get();
+            ->where('user_id', $user->id)
+            ->get();
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
             if (isset($total_purchased[0]['total_purchased'])) {
@@ -214,94 +226,7 @@ class BuyController extends Controller
                 $credit = floatval($wallet_transaction[0]['amount_usd']);
             }
         }
-
         // End of Getting credit left
-
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-            // Filtering of Code A's
-            if( isset($filter['code']) && !empty($filter['code']) ){
-                $code = substr($filter['code'],0,1);
-
-                if( $code == $count_letter_a ){
-                    $value['code_combination'] = $combineALl;
-                    $value['code_price'] = $price_list['price'];
-                }else{
-                    $result->forget($key);
-                }
-
-            }else{
-                $value['code_combination'] = $combineALl;
-                $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-            }
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if (is_array($filter['price_basis'])) {
-                    foreach ($filter['price_basis'] as $price) {
-                        if(in_array($price_basis, $filter['price_basis']) ){
-                            $value['price_basis'] = $price_basis;
-                        }else{
-                            $result->forget($key);
-                        }
-                    }
-                } else {
-                    if( $filter['price_basis'] == $price_basis ){
-                        $value['price_basis'] = $price_basis;
-                    }else{
-                        $result->forget($key);
-                    }
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-
-        }
-
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -312,11 +237,9 @@ class BuyController extends Controller
         }else{
             $custom_credit = collect(['credit' => round($credit)]);
             $result = $custom_credit->merge($result);
-            // dd($result);
 
             return $result;
         }
-
     }
 
     /**
@@ -448,7 +371,7 @@ class BuyController extends Controller
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }

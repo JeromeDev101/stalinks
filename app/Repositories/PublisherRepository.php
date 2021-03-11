@@ -70,9 +70,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list->orderBy('created_at', 'desc');
         }
 
-        $registered = Registration::where('email', $user->email)->first();
-
-        if( $user->type != 10 && isset($registered->type) && $registered->type == 'Seller' ){
+        if( $user->type != 10 && isset($user->registration->type) && $user->registration->type == 'Seller' ){
             $list->where('publisher.user_id', $user->id);
         }
 
@@ -170,70 +168,71 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }else{
             $result = $list->paginate($paginate);
         }
-
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-
-            $value['code_combination'] = $combineALl;
-            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if( $filter['price_basis'] == $price_basis ){
-                    $value['price_basis'] = $price_basis;
-                }else{
-                    $result->forget($key);
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-
-        }
+//
+//        $priceCollection = Pricelist::all();
+//
+//        foreach($result as $key => $value) {
+//
+//            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+//            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+//            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+//            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+//            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+//
+//            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+//
+//            $count_letter_a = substr_count($combineALl, 'A');
+//
+//
+//            $value['code_combination'] = $combineALl;
+//            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+//
+//
+//            // Price Basis
+//            $result_1 = 0;
+//            $result_2 = 0;
+//
+//            $price_basis = '-';
+//            if( !empty($value['code_price']) ){
+//
+//                $var_a = floatVal($value->price);
+//                $var_b = floatVal($value['code_price']);
+//
+//                $result_1 = number_format($var_b * 0.7,2);
+//                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+//
+//                if( $result_1 != 0 && $result_2 != 0 ){
+//                    if( $var_a <= $result_1 ){
+//                        $price_basis = 'Good';
+//                    }
+//
+//                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+//                        $price_basis = 'Average';
+//                    }
+//
+//                    if( $var_a > $result_2 ){
+//                        $price_basis = 'High';
+//                    }
+//                }
+//            }
+//
+//            if( $value['code_price'] == 0 && $value->price > 0){
+//                $price_basis = 'High';
+//            }
+//
+//
+//            // Filtering of Price Basis
+//            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
+//                if( $filter['price_basis'] == $price_basis ){
+//                    $value['price_basis'] = $price_basis;
+//                }else{
+//                    $result->forget($key);
+//                }
+//            }else{
+//                $value['price_basis'] = $price_basis;
+//            }
+//
+//        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -272,7 +271,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }
@@ -377,6 +376,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $language_excel = trim_excel_special_chars($line[5]);
                     $topic = trim_excel_special_chars($line[6]);
 
+                    $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
                     if (in_array($seller_id, $user_id_list)){
 
@@ -384,25 +384,34 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                             if (preg_grep("/".$topic."/i", $topic_list)){
 
-                                if( trim($url, " ") != '' ){
-                                    $url_remove_http = $this->remove_http($url);
-                                    $lang = $this->getCountry($language_excel);
-                                    $valid = $this->checkValid($url_remove_http);
-                                    Publisher::create([
-                                        'user_id' => $seller_id ,
-                                        'language_id' => $lang,
-                                        'url' => $url_remove_http,
-                                        'ur' => 0,
-                                        'dr' => 0,
-                                        'backlinks' => 0,
-                                        'ref_domain' => 0,
-                                        'org_keywords' => 0,
-                                        'org_traffic' => 0,
-                                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                        'valid' => $valid,
-                                        'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
-                                        'topic' => $topic,
+                                if (!$isCheckDuplicate) {
+                                    if( trim($url, " ") != '' ){
+                                        $url_remove_http = $this->remove_http($url);
+                                        $lang = $this->getCountry($language_excel);
+                                        $valid = $this->checkValid($url_remove_http);
+                                        Publisher::create([
+                                            'user_id' => $seller_id ,
+                                            'language_id' => $lang,
+                                            'url' => $url_remove_http,
+                                            'ur' => 0,
+                                            'dr' => 0,
+                                            'backlinks' => 0,
+                                            'ref_domain' => 0,
+                                            'org_keywords' => 0,
+                                            'org_traffic' => 0,
+                                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                            'valid' => $valid,
+                                            'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                            'topic' => $topic,
+                                        ]);
+                                    }
+                                } else {
+                                    $file_message = " URL and Seller ID already exist, Check in line ". (intval($ctr) + 1);
+                                    $result = true;
+
+                                    array_push($existing_datas, [
+                                        'message' => $file_message
                                     ]);
                                 }
 
@@ -451,6 +460,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ],
             "exist" => $existing_datas,
         ];
+    }
+
+    private function checkDuplicate($url, $seller_id) {
+        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->where('user_id', $seller_id);
+        return $publisher->count() > 0;
     }
 
     private function remove_http($url) {
@@ -509,7 +523,67 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $ahrefsInstant = new Ahref($configs);
         $data = $ahrefsInstant->getAhrefsPublisherAsync($publishers);
+        $this->updateAhrefData($data);
+
+
         return $data;
+    }
+
+    public function updateAhrefData($publisher)
+    {
+        $priceCollection = Pricelist::all();
+
+        foreach($publisher as $key => $value) {
+            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+
+            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+
+            $value['code_combination'] = $combineALl;
+            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+
+
+            // Price Basis
+            $result_1 = 0;
+            $result_2 = 0;
+
+            $price_basis = '-';
+            if( !empty($value['code_price']) ){
+
+                $var_a = floatVal($value->price);
+                $var_b = floatVal($value['code_price']);
+
+                $result_1 = number_format($var_b * 0.7,2);
+                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+
+                if( $result_1 != 0 && $result_2 != 0 ){
+                    if( $var_a <= $result_1 ){
+                        $price_basis = 'Good';
+                    }
+
+                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+                        $price_basis = 'Average';
+                    }
+
+                    if( $var_a > $result_2 ){
+                        $price_basis = 'High';
+                    }
+                }
+            }
+
+            if( $value['code_price'] == 0 && $value->price > 0){
+                $price_basis = 'High';
+            }
+
+            Publisher::find($value->id)->update([
+                'code_comb' => $value['code_combination'],
+                'code_price' => $value['code_price'],
+                'price_basis' => $price_basis
+            ]);
+        }
     }
 
     /**
