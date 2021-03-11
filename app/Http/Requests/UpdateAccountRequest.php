@@ -28,9 +28,9 @@ class UpdateAccountRequest extends FormRequest
     {
         return [
             'name' => [ 'required' ],
-            // 'username' => [
-            //     Rule::unique('registration')->ignore($this->id),
-            // ],
+             'username' => [
+                 Rule::unique('registration')->ignore($this->id),
+             ],
             'email' => [
                 'required',
                 'between:6,60',
