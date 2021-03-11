@@ -164,10 +164,10 @@ class BuyController extends Controller
         }
 
         if (isset($filter['code'])) {
-            switch ($filter['code']) {
-                case '4A':
-                    $list->where('publisher.code_comb', 'like', '%AAAA%');
-            }
+            $list->whereRaw('ROUND(
+                           (
+                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
