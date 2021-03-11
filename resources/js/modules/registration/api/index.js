@@ -33,6 +33,12 @@ export default class AccountService {
             .catch(error => error);
     }
 
+    static verifyAccount(params) {
+        return axios.post('/api/verify-account', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static checkVerificationCode(params) {
         return axios.get(`/api/check-verification-code?code=${params.code}`, params)
             .then(response => response)

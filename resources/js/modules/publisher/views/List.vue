@@ -215,16 +215,16 @@
                     </div>
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button data-toggle="modal" @click="clearMessageform; checkSeller()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="input-group">
-                                        <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
+                                        <input type="file" class="form-control" v-on:change="checkDataExcel(); checkAccountValidity()" enctype="multipart/form-data" ref="excel" name="file">
                                         <div class="input-group-btn">
-                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn || checkAccountValidity()" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
                                         </div>
                                     </div>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -266,6 +266,24 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-12">
+                            <div
+                                v-if="checkAccountValidity() && showLang"
+                                class="alert alert-error">
+
+                                <p class="mb-0">
+                                    <strong>Unable to add URL because of the following:</strong>
+                                </p>
+
+                                <ul class="font-italic">
+                                    <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
+                                    <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                </ul>
+
+                                <p class="mb-0">{{ accountValidityMessage }}</p>
+                            </div>
+                        </div>
+
                         <div class="col-sm-12">
                             <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
                             <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
@@ -663,10 +681,28 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-md-12">
+                                <div
+                                    v-if="checkAccountValidity()"
+                                    class="alert alert-error">
+
+                                    <p class="mb-0">
+                                        <strong>Unable to add URL because of the following:</strong>
+                                    </p>
+
+                                    <ul class="font-italic">
+                                        <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
+                                        <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                    </ul>
+
+                                    <p class="mb-0">{{ accountValidityMessage }}</p>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
-                                    <select class="form-control" v-model="addModel.seller">
+                                    <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
                                         <option value="">Select Seller</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
@@ -1229,6 +1265,8 @@
                     total: 0,
                     message: [],
                 },
+                isAccountInvalid: false,
+                isAccountPaymentNotComplete: false,
             }
         },
 
@@ -1268,6 +1306,18 @@
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            accountValidityMessage() {
+                if (this.isAccountPaymentNotComplete && !this.isAccountInvalid) {
+                    return 'Please complete your payment information in profile settings. Logout to complete the process.'
+                } else if (!this.isAccountPaymentNotComplete && this.isAccountInvalid) {
+                    return 'Please contact an administrator or person in charge to request for validation.' +
+                        ' Logout to complete the process.'
+                } else {
+                    return 'Please complete your payment information in profile settings and contact an administrator' +
+                        ' or person in charge for validation. Logout to complete the process.'
+                }
+            },
 
             tableConfig() {
                 return [
@@ -1508,7 +1558,6 @@
                 }
 
                 this.tblPublisherOpt.country = false;
-
             },
 
             async getTeamInCharge(){
@@ -1804,6 +1853,8 @@
             },
 
             async submitAdd() {
+                this.addModel.account_valid = this.checkAccountValidity();
+
                 await this.$store.dispatch('actionAddUrl', this.addModel);
 
                 if (this.messageForms.action === 'saved'){
@@ -1828,6 +1879,12 @@
                         // country_id: '',
                         continent_id: '',
                     }
+                } else {
+                    swal.fire(
+                        'Failed!',
+                        'URL has not been saved.',
+                        'error'
+                    )
                 }
             },
 
@@ -1837,6 +1894,7 @@
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
                 this.formData.append('language', this.$refs.language.value);
+                this.formData.append('account_valid', this.checkAccountValidity());
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
 
@@ -1865,6 +1923,13 @@
                         this.failedUpload.total = cnt_failed;
                         $("#modal-failed-upload").modal('show')
                     }
+                } else {
+                    swal.fire(
+                        'Failed!',
+                        'Upload Failed.',
+                        'error'
+                    )
+
                 }
             },
 
@@ -2075,6 +2140,24 @@
 
             checkSeller(){
                 this.addModel.seller = this.user.role_id === 6 ? this.user.id : '';
+            },
+
+            checkAccountValidity(){
+                if (this.user.role_id == 6 && this.user.isOurs == 1) {
+                    if (this.user.id_payment_type == null) {
+                        this.isAccountPaymentNotComplete = true;
+                    }
+
+                    if (this.user.user_type) {
+                        if (this.user.user_type.account_validation == 'invalid') {
+                            this.isAccountInvalid = true;
+                        }
+                    }
+
+                    return this.user.id_payment_type == null || this.isAccountInvalid;
+                } else {
+                    return false;
+                }
             },
 
             // getCountriesByContinent() {
