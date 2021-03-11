@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendResetPasswordEmail;
 use App\Repositories\Contracts\AccountRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
@@ -99,6 +100,11 @@ class AccountController extends Controller
         $country = $request->country;
         $commission = $request->commission;
         $credit_auth = $request->credit_auth;
+        $company_type = $request->company_type;
+        $company_name = $request->company_name;
+        $company_url = $request->company_url;
+        $account_validation = $request->account_validation;
+        $created_at = json_decode($request->created_at);
         $isTeamSeller = $this->checkTeamSeller();
 
         $list = Registration::when( $status, function($query) use ($status){
@@ -106,9 +112,15 @@ class AccountController extends Controller
         })->when( $type, function($query) use ($type){
             return $query->where( 'type', $type );
         })->when( $search, function($query) use ($search){
-            return $query->where( 'name', 'LIKE', '%'.$search.'%' )
-                ->orWhere( 'email', 'LIKE', '%'.$search.'%' )
-                ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
+//            return $query->where( 'name', 'LIKE', '%'.$search.'%' )
+//                ->orWhere( 'email', 'LIKE', '%'.$search.'%' )
+//                ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
+
+            return $query->where(function ($queryPar) use ($search) {
+                $queryPar->where( 'name', 'LIKE', '%'.$search.'%' )
+                    ->orWhere( 'email', 'LIKE', '%'.$search.'%' )
+                    ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
+            });
         })->when( $team_in_charge, function($query) use ($team_in_charge){
             return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {
                 $subquery->where('team_in_charge', $team_in_charge);
@@ -119,6 +131,17 @@ class AccountController extends Controller
             return $query->where( 'commission', $commission );
         })->when( $credit_auth, function($query) use ($credit_auth){
             return $query->where( 'credit_auth', $credit_auth );
+        })->when( $company_type, function($query) use ($company_type){
+            return $query->where( 'is_freelance', $company_type );
+        })->when( $company_name, function($query) use ($company_name){
+            return $query->where( 'company_name', 'like', '%' . $company_name . '%' );
+        })->when( $company_url, function($query) use ($company_url){
+            return $query->where( 'company_url', 'like', '%' . $company_url . '%' );
+        })->when( $account_validation, function($query) use ($account_validation){
+            return $query->where( 'account_validation', $account_validation);
+        })->when( $created_at->startDate, function($query) use ($created_at){
+            return $query->where('created_at', '>=', Carbon::create($created_at->startDate)->format('Y-m-d'))
+                ->where('created_at', '<=', Carbon::create($created_at->endDate)->format('Y-m-d'));
         })->when( $isTeamSeller, function($query) use ($user_id){
             return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
                 $subquery->where('team_in_charge', $user_id);

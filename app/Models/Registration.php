@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Registration extends Model
@@ -15,5 +16,10 @@ class Registration extends Model
 
     public function user() {
         return $this->belongsTo('App\Models\User', 'email', 'email');
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($this->attributes['created_at'])->format('Y-m-d');
     }
 }

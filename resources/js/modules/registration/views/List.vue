@@ -102,6 +102,55 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input
+                                    v-model="filterModel.company_name"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company URL</label>
+                                <input
+                                    v-model="filterModel.company_url"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Validation</label>
+                                <select class="form-control" v-model="filterModel.account_validation">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Date of Registration</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        v-model="filterModel.created_at"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.created_at"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        ref="picker"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -137,15 +186,18 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>Date Registered</th>
                                 <th>In-charge</th>
                                 <th>User ID</th>
                                 <th>Username</th>
                                 <th>Name</th>
                                 <th>Company Type</th>
+                                <th>Company Name</th>
                                 <th>Company URL</th>
                                 <th>Type</th>
                                 <th>Sub Account</th>
                                 <th>Under of Main Buyer</th>
+                                <th>Account Validation</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -153,11 +205,13 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>{{ account.created_at }}</td>
                                 <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.name }}</td>
                                 <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
+                                <td>{{ account.company_name }}</td>
                                 <td>
                                     <a
                                         :href="'http://' + account.company_url"
@@ -168,6 +222,7 @@
                                 <td>{{ account.type }}</td>
                                 <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
                                 <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
+                                <td>{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -715,6 +770,13 @@
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
                     company_type: this.$route.query.company_type || '',
+                    company_name: this.$route.query.company_name || '',
+                    company_url: this.$route.query.company_url || '',
+                    account_validation: this.$route.query.account_validation || '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    }
                 },
 
                 accountUpdate: {
@@ -955,6 +1017,10 @@
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
                         company_type: this.filterModel.company_type,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
                     }
                 });
                 this.isLoadingTable = false;
@@ -974,6 +1040,10 @@
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -989,6 +1059,13 @@
                     company_type: '',
                     commission: '',
                     credit_auth: '',
+                    company_name: '',
+                    company_url: '',
+                    account_validation: '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getAccountList({
@@ -1010,9 +1087,14 @@
                         type: this.filterModel.type,
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
+                        country: this.filterModel.country,
                         company_type: this.filterModel.company_type,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
                     }
                 });
             },
