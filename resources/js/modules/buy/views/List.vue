@@ -261,7 +261,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
-                                   @click="checkSelected"
+                                   @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
                                    v-model="checkIds">
