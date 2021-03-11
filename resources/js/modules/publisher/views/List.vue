@@ -268,8 +268,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div
-                                v-if="user.role_id == 6 && user.isOurs == 1"
-                                v-show="checkAccountValidity() && showLang"
+                                v-if="checkAccountValidity() && showLang"
                                 class="alert alert-error">
 
                                 <p class="mb-0">
@@ -555,8 +554,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div
-                                    v-if="user.role_id == 6 && user.isOurs == 1"
-                                    v-show="checkAccountValidity()"
+                                    v-if="checkAccountValidity()"
                                     class="alert alert-error">
 
                                     <p class="mb-0">
@@ -1740,17 +1738,21 @@
             },
 
             checkAccountValidity(){
-                if (this.user.id_payment_type == null) {
-                    this.isAccountPaymentNotComplete = true
-                }
-
-                if (this.user.user_type) {
-                    if (this.user.user_type.account_validation == 'invalid') {
-                        this.isAccountInvalid = true
+                if (this.user.role_id == 6 && this.user.isOurs == 1) {
+                    if (this.user.id_payment_type == null) {
+                        this.isAccountPaymentNotComplete = true;
                     }
-                }
 
-                return this.user.id_payment_type == null || this.isAccountInvalid
+                    if (this.user.user_type) {
+                        if (this.user.user_type.account_validation == 'invalid') {
+                            this.isAccountInvalid = true;
+                        }
+                    }
+
+                    return this.user.id_payment_type == null || this.isAccountInvalid;
+                } else {
+                    return false;
+                }
             },
 
             // getCountriesByContinent() {
