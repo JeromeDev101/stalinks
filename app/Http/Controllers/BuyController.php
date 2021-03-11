@@ -155,6 +155,21 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list->whereIn('publisher.price_basis', $filter['price_basis']);
+            } else {
+                $list->where('publisher.price_basis', $filter['price_basis']);
+            }
+        }
+
+        if (isset($filter['code'])) {
+            $list->whereRaw('ROUND(
+                           (
+                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+        }
+
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
                 $list->where(function ($query) use ($filter) {
