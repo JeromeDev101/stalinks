@@ -168,71 +168,71 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }else{
             $result = $list->paginate($paginate);
         }
-
-        $priceCollection = Pricelist::all();
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = $priceCollection->where('code', strtoupper($combineALl));
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-
-            $value['code_combination'] = $combineALl;
-            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if( $filter['price_basis'] == $price_basis ){
-                    $value['price_basis'] = $price_basis;
-                }else{
-                    $result->forget($key);
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-
-        }
+//
+//        $priceCollection = Pricelist::all();
+//
+//        foreach($result as $key => $value) {
+//
+//            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+//            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+//            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+//            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+//            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+//
+//            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+//
+//            $count_letter_a = substr_count($combineALl, 'A');
+//
+//
+//            $value['code_combination'] = $combineALl;
+//            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+//
+//
+//            // Price Basis
+//            $result_1 = 0;
+//            $result_2 = 0;
+//
+//            $price_basis = '-';
+//            if( !empty($value['code_price']) ){
+//
+//                $var_a = floatVal($value->price);
+//                $var_b = floatVal($value['code_price']);
+//
+//                $result_1 = number_format($var_b * 0.7,2);
+//                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+//
+//                if( $result_1 != 0 && $result_2 != 0 ){
+//                    if( $var_a <= $result_1 ){
+//                        $price_basis = 'Good';
+//                    }
+//
+//                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+//                        $price_basis = 'Average';
+//                    }
+//
+//                    if( $var_a > $result_2 ){
+//                        $price_basis = 'High';
+//                    }
+//                }
+//            }
+//
+//            if( $value['code_price'] == 0 && $value->price > 0){
+//                $price_basis = 'High';
+//            }
+//
+//
+//            // Filtering of Price Basis
+//            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
+//                if( $filter['price_basis'] == $price_basis ){
+//                    $value['price_basis'] = $price_basis;
+//                }else{
+//                    $result->forget($key);
+//                }
+//            }else{
+//                $value['price_basis'] = $price_basis;
+//            }
+//
+//        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -523,7 +523,67 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $ahrefsInstant = new Ahref($configs);
         $data = $ahrefsInstant->getAhrefsPublisherAsync($publishers);
+        $this->updateAhrefData($data);
+
+
         return $data;
+    }
+
+    public function updateAhrefData($publisher)
+    {
+        $priceCollection = Pricelist::all();
+
+        foreach($publisher as $key => $value) {
+            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+
+            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+
+            $value['code_combination'] = $combineALl;
+            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+
+
+            // Price Basis
+            $result_1 = 0;
+            $result_2 = 0;
+
+            $price_basis = '-';
+            if( !empty($value['code_price']) ){
+
+                $var_a = floatVal($value->price);
+                $var_b = floatVal($value['code_price']);
+
+                $result_1 = number_format($var_b * 0.7,2);
+                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+
+                if( $result_1 != 0 && $result_2 != 0 ){
+                    if( $var_a <= $result_1 ){
+                        $price_basis = 'Good';
+                    }
+
+                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+                        $price_basis = 'Average';
+                    }
+
+                    if( $var_a > $result_2 ){
+                        $price_basis = 'High';
+                    }
+                }
+            }
+
+            if( $value['code_price'] == 0 && $value->price > 0){
+                $price_basis = 'High';
+            }
+
+            Publisher::find($value->id)->update([
+                'code_comb' => $value['code_combination'],
+                'code_price' => $value['code_price'],
+                'price_basis' => $price_basis
+            ]);
+        }
     }
 
     /**

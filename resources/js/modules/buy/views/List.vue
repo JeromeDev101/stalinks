@@ -879,7 +879,7 @@
                         isHidden: false
                     },
                     {
-                        prop : 'code_combination',
+                        prop : 'code_comb',
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,

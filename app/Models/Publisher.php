@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Publisher extends Model
 {
     use SoftDeletes;
-    
+
     protected $guarded = [];
     protected $table = 'publisher';
+
+    protected $fillable
+        = [
+            'code_comb',
+            'price_basis',
+            'code_price'
+        ];
 
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id');
