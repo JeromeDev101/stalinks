@@ -238,6 +238,7 @@ class AccountController extends Controller
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
         $input['credit_auth'] = 'No';
+        $input['account_validation'] = 'invalid';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL

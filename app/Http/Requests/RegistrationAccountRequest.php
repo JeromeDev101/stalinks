@@ -28,7 +28,11 @@ class RegistrationAccountRequest extends FormRequest
     {
         return [
             'name' => [ 'required' ],
-            'username' => [ 'required' ],
+            'username' => [ 
+                'required',
+                Rule::unique('registration')->ignore($this->id), 
+                Rule::unique('users')->ignore($this->id),
+            ],
             'email' => [
                 'unique:users,email',
                 'required',
