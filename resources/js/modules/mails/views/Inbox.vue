@@ -149,7 +149,10 @@
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply" data-target="#modal-email-reply"><i class="fa fa-reply"></i> Reply</button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply" data-target="#modal-email-reply">
+                                <i class="fa fa-reply"></i>
+                                {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
+                            </button>
                         </div>
                         <button type="button" class="btn btn-default" v-show="viewContent.deleted_at == null" @click="deleteMessage(viewContent.id, viewContent.index, false)"><i class="fa fa-trash-o"></i> Delete</button>
                     </div>
@@ -237,6 +240,7 @@
 
                                     <vue-tags-input
                                         v-model="tag"
+                                        placeholder=""
                                         :max-tags="10"
                                         :allow-edit-tags="true"
                                         :separators="separators"
@@ -245,7 +249,6 @@
                                             'vue-tag-error': messageForms.errors.email
                                             || checkEmailValidationError(messageForms.errors)
                                         }"
-                                        placeholder=""
 
                                         @tags-changed="newTags => emailContent.email = newTags"
                                     />
@@ -377,12 +380,13 @@
 
                                     <vue-tags-input
                                         v-model="tag"
-                                        :disabled="true"
-                                        :separators="separators"
-                                        :tags="replyContent.email"
-                                        :class="{'vue-tag-error': messageForms.errors.email}"
                                         ref="replyTag"
                                         placeholder=""
+                                        :allow-edit-tags="true"
+                                        :separators="separators"
+                                        :tags="replyContent.email"
+                                        :disabled="viewContent.is_sent !== 1"
+                                        :class="{'vue-tag-error': messageForms.errors.email}"
 
                                         @tags-changed="newTags => replyContent.email = newTags"
                                     />
@@ -471,7 +475,7 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
-import { createTag } from '@johmun/vue-tags-input';
+import { createTag, createTags } from '@johmun/vue-tags-input';
 
 export default {
     name: 'AppInbox',
@@ -607,8 +611,17 @@ export default {
             this.replyContent.title = this.viewContent.subject;
 
             // add email
-            let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
-            this.$refs.replyTag.addTag(tag);
+
+            if (this.viewContent.is_sent === 1) {
+                this.replyContent.email = createTags(this.viewContent.received.replace(/\s/g, '')
+                    .split(/[|,]/g)
+                    .filter(function (email) {
+                        return email !== '';
+                    }))
+            } else {
+                let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
+                this.$refs.replyTag.addTag(tag);
+            }
 
             axios.post('/api/mail/get-reply', {
                 email: this.viewContent.from_mail,
