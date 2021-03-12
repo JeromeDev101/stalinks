@@ -192,113 +192,138 @@
                <span v-if="listExt.total > 10" class="pagination-custom-footer-text">
                <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
                </span>
-               <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
-                  <thead>
-                     <tr class="label-primary">
-                        <th>Action</th>
-                        <th>
-                           <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
-                        </th>
-                        <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
-                        <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
-                        <th class="sorting"
-                            data-index="2"
-                            v-show="tableShow.alexa_created_at">
-                            Alexa Date Upload</th>
-                        <th class="sorting"
-                            data-index="3" v-show="tableShow.country">Country</th>
-                        <th class="sorting"
-                            data-index="4" v-show="tableShow.domain">Domain</th>
-                        <th class="sorting"
-                            data-index="5" v-show="tableShow.email">Emails</th>
-                        <th class="sorting"
-                            data-index="6" v-show="tableShow.facebook">Facebook</th>
-                        <th class="sorting"
-                            data-index="7" v-show="tableShow.phone">Phone</th>
-                        <th class="sorting"
-                            data-index="8"
-                            v-show="tableShow.rank">
-                            Alexa Rank</th>
-                        <th class="sorting"
-                            data-index="9" v-show="tableShow.status">Status</th>
-                        <th class="sorting"
-                            data-index="10"
-                            v-show="tableShow.total_spent">Total Spent</th>
-                        <th class="sorting"
-                            data-index="11" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
-                        <th class="sorting"
-                            data-index="12" v-show="tableShow.no_backlinks">No Backlinks</th>
-                        <th class="sorting"
-                            data-index="13" v-show="tableShow.url_rating">UR</th>
-                        <th class="sorting"
-                            data-index="14" v-show="tableShow.domain_rating">DR</th>
-                        <th class="sorting"
-                            data-index="15" v-show="tableShow.ref_domains">Ref Domains</th>
-                        <th class="sorting"
-                            data-index="16" v-show="tableShow.organic_keywords">Organic Keywords</th>
-                        <th class="sorting"
-                            data-index="17" v-show="tableShow.organic_traffic">Organic Traffic</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr v-for="(ext, index) in listExt.data" :key="index">
-                        <td>
-                           <div class="btn-group" v-if="checkSellerAccess(ext.users == null ? null:ext.users.id)">
-                              <button data-action="a1" :data-index="index" @click="doEditExt(ext)" data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
-                              <button data-action="a2" :data-index="index" v-if="hasBacklink(ext.status)" @click="doShowBackLink(ext)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
-                              <button data-action="a4" :data-index="index" @click="doSendEmail(ext, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                              <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
-                              <button type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
-                           </div>
-                           <!--                                <router-link class="btn btn-success" :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i> View</router-link>-->
-                        </td>
-                        <td>
-                           <div class="btn-group">
-                              <button class="btn btn-default">
-                              <input type="checkbox" class="custom-checkbox" v-on:change="checkSelected" :id="ext.id" :value="ext" v-model="checkIds">
-                              </button>
-                           </div>
-                        </td>
-                        <td v-show="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
-                        <td v-show="tableShow.employee">{{ ext.users == null ? 'N/A':ext.users.username }}</td>
-                        <td v-show="tableShow.alexa_created_at">{{
-                                                 ext.alexa_created_at }}</td>
-                        <td v-show="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
-                        <td v-show="tableShow.domain" title="Domain" ><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
-                        <td v-show="tableShow.email" title="Emails" style="max-width: 200px;">
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.email"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.email" class="pl-15">
-                              <li v-for="item in ext.email.split('|')">{{ item }}</li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.facebook" title="Facebook" style="max-width: 200px;" >
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.facebook"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.facebook" class="pl-15">
-                              <li v-for="item in ext.facebook.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.phone" title="Phone" style="max-width: 200px;" >
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.phone"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.phone" class="pl-15">
-                              <li v-for="item in ext.phone.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.rank" title="Rank">{{ ext.alexa_rank }}</td>
-                        <td v-show="tableShow.status" title="Status"><span :class="['label', 'label-' + (listStatusText[ext.status] ? listStatusText[ext.status].label : 'warning')]">{{ listStatusText[ext.status] ? listStatusText[ext.status].text : 'undefined' }}</span></td>
-                        <td v-show="tableShow.total_spent" title="Total Spent">{{ convertPrice(ext.total_spent) }}$</td>
-                        <td v-show="tableShow.ahrefs_rank" title="Aherfs Rank">{{ ext.ahrefs_rank }}</td>
-                        <td v-show="tableShow.no_backlinks" title="No Backlinks">{{ ext.no_backlinks }}</td>
-                        <td v-show="tableShow.url_rating" title="URL Rating">{{ ext.url_rating }}</td>
-                        <td v-show="tableShow.domain_rating" title="Domain Rating">{{ ext.domain_rating }}</td>
-                        <td v-show="tableShow.ref_domains" title="Ref domains">{{ ext.ref_domains }}</td>
-                        <td v-show="tableShow.organic_keywords" title="Organic keywords">{{ formatPrice(ext.organic_keywords) }}</td>
-                        <td v-show="tableShow.organic_traffic" title="Organic traffic">{{ formatPrice(ext.organic_traffic) }}</td>
-                     </tr>
-                  </tbody>
-               </table>
-               <div class="overlay" v-if="isLoadingTable">
-                  <i class="fa fa-refresh fa-spin"></i>
-               </div>
+
+                <vue-virtual-table
+                    v-if="!tableLoading"
+                    width="100%"
+                    :height="600"
+                    :bordered="true"
+                    :item-height="60"
+                    :config="tableConfig"
+                    :data="listExt.data">
+                    <template
+                        slot-scope="scope"
+                        slot="actionButtons">
+                       <div class="btn-group"
+                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id)">
+                          <button data-action="a1"
+                                  :data-index="scope.index"
+                                  @click="doEditExt(scope.row)"
+                                  data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                          <button data-action="a2"
+                                  :data-index="scope.index"
+                                  v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
+                          <button data-action="a4"
+                                  :data-index="scope.index"
+                                  @click="doSendEmail(scope.row,
+                                  $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
+                          <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
+                          <button type="submit"
+                                  title="Get Ahrefs"
+                                  @click="getAhrefsById(scope.row.id, scope.row.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
+                       </div>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="actionCheckbox">
+                       <div class="btn-group">
+                          <button class="btn btn-default">
+                          <input type="checkbox"
+                                 class="custom-checkbox"
+                                 v-on:change="checkSelected" :id="scope.row.id" :value="scope.row" v-model="checkIds">
+                          </button>
+                       </div>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="employeeData">
+                        {{ scope.row.users == null ?
+                        'N/A':scope.row.users.username }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="emailsData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.email"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.email"
+                            class="pl-15">
+                          <li v-for="item in
+                          scope.row.email.split('|')">{{
+                                                     item
+                                               }}</li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="facebookData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.facebook"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.facebook"
+                            class="pl-15">
+                          <li v-for="item in
+                          scope.row.facebook.split('|')"><a
+                              target="_blank" :href="item">{{ item }}<br/></a></li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="phoneData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.phone"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.phone"
+                            class="pl-15">
+                           <li v-for="item in
+                           scope.row.phone.split('|')"><a
+                               target="_blank" :href="item">{{ item }}<br/></a></li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="statusData">
+                        <span :class="['label', 'label-'
+                        + (listStatusText[scope.row.status] ?
+                        listStatusText[scope.row.status].label :
+                        'warning')]">{{
+                                     listStatusText[scope.row.status] ? listStatusText[scope.row.status].text : 'undefined' }}</span>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="totalSpentData">
+                        {{
+                        convertPrice(scope.row.total_spent) }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="organicKwData">
+                        {{
+                        formatPrice(scope.row.organic_keywords) }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="organicTrafficData">
+                        {{
+                        formatPrice(scope.row.organic_traffic) }}
+                    </template>
+
+                </vue-virtual-table>
             </div>
             <!-- <div class="box-footer clearfix">
                <component :is="pagination" :callMethod="goToPage"></component>
@@ -787,62 +812,98 @@
                <div class="modal-body relative">
                   <div class="form-group row">
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.id ? 'checked':''" v-model="tableShow.id">#</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(2, tableShow.id)"
+                                      :checked="tableShow.id ? 'checked':''" v-model="tableShow.id">#</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(3, tableShow.employee)"
+                                      :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">Country</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(5, tableShow.country)"
+                                      :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">Country</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox"  :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">Domain</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(6, tableShow.domain)"
+                                      :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">Domain</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">Email</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(7, tableShow.email)"
+                                      :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">Email</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">Facebook</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(8, tableShow.facebook)"
+                                      :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">Facebook</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.rank ? 'checked':''" v-model="tableShow.rank">Rank</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(10, tableShow.rank)"
+                                      :checked="tableShow.rank ? 'checked':''" v-model="tableShow.rank">Rank</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(11, tableShow.status)"
+                                      :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.total_spent ? 'checked':''" v-model="tableShow.total_spent">Total Spent</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(12, tableShow.total_spent)"
+                                      :checked="tableShow.total_spent ? 'checked':''" v-model="tableShow.total_spent">Total Spent</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.ahrefs_rank ? 'checked':''" v-model="tableShow.ahrefs_rank">Ahrefs Rank</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(13, tableShow.ahrefs_rank)"
+                                      :checked="tableShow.ahrefs_rank ? 'checked':''" v-model="tableShow.ahrefs_rank">Ahrefs Rank</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.no_backlinks ? 'checked':''" v-model="tableShow.no_backlinks">No Backlinks</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(14, tableShow.no_backlinks)"
+                                      :checked="tableShow.no_backlinks ? 'checked':''" v-model="tableShow.no_backlinks">No Backlinks</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">UR</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(15, tableShow.url_rating)"
+                                      :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">UR</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">DR</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(16, tableShow.domain_rating)"
+                                      :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">DR</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.ref_domains ? 'checked':''" v-model="tableShow.ref_domains">Ref Domains</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(17, tableShow.ref_domains)"
+                                      :checked="tableShow.ref_domains ? 'checked':''" v-model="tableShow.ref_domains">Ref Domains</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.organic_keywords ? 'checked':''" v-model="tableShow.organic_keywords">Organic Keywords</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(18, tableShow.organic_keywords)"
+                                      :checked="tableShow.organic_keywords ? 'checked':''" v-model="tableShow.organic_keywords">Organic Keywords</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.organic_traffic ? 'checked':''" v-model="tableShow.organic_traffic">Organic Traffic</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(19, tableShow.organic_traffic)"
+                                      :checked="tableShow.organic_traffic ? 'checked':''" v-model="tableShow.organic_traffic">Organic Traffic</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(9, tableShow.phone)"
+                                      :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
                      </div>
                   </div>
                   <div class="overlay" v-if="isPopupLoading"></div>
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="button" @click="submitUpdate" data-dismiss="modal" class="btn btn-primary">Save</button>
+                  <button type="button"
+                          @click="submitUpdate"
+                          data-dismiss="modal" class="btn btn-primary">Save</button>
                </div>
             </div>
          </div>
@@ -1101,8 +1162,13 @@ import {mapState} from 'vuex';
 import axios from 'axios';
 import DownloadCsv from '@/components/export-csv/Csv.vue'
 import {createTags} from '@johmun/vue-tags-input';
+import VueVirtualTable from 'vue-virtual-table';
 
 export default {
+    components: {
+        DownloadCsv,
+        VueVirtualTable
+    },
     name: 'ExtList',
     data() {
         return {
@@ -1254,7 +1320,8 @@ export default {
             extDomain_id: '',
             allSelected: false,
             separators: [';', ',', '|', ' '],
-            urlEmails: []
+            urlEmails: [],
+            tableLoading: false,
         };
     },
     async created() {
@@ -1334,6 +1401,152 @@ export default {
             }
             return false
         },
+
+        tableConfig() {
+            return [
+                {
+                    prop : '_action',
+                    name : 'Action',
+                    actionName : 'actionButtons',
+                    width: 200,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : ' ',
+                    actionName : 'actionCheckbox',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'id',
+                    name : '#',
+                    sortable: true,
+                    width: 75,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Employee',
+                    actionName : 'employeeData',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'alexa_created_at',
+                    name : 'Alexa Date Upload',
+                    sortable: true,
+                    width: 150,
+                    isHidden: false
+                },
+                {
+                    prop : 'country.name',
+                    name : 'Country',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'domain',
+                    name : 'Domain',
+                    sortable: true,
+                    width: 150,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Email',
+                    actionName : 'emailsData',
+                    width: 200,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Facebook',
+                    actionName : 'facebookData',
+                    width: 200,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Phone',
+                    actionName : 'phoneData',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'alexa_rank',
+                    name : 'Alexa Rank',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Status',
+                    actionName : 'statusData',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Total Spent',
+                    actionName : 'totalSpentData',
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'ahrefs_rank',
+                    name : 'Ahrefs Rank',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'no_backlinks',
+                    name : 'No Backlinks',
+                    sortable: true,
+                    width: 105,
+                    isHidden: true
+                },
+                {
+                    prop : 'url_rating',
+                    name : 'UR',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'domain_rating',
+                    name : 'DR',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'ref_domains',
+                    name : 'Ref Domains',
+                    sortable: true,
+                    width: 105,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Organic Keywords',
+                    actionName : 'organicKwData',
+                    width: 110,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Organic Traffic',
+                    actionName : 'organicTrafficData',
+                    width: 110,
+                    isHidden: false
+                }
+            ];
+        }
     },
     mounted() {
         let that = this;
@@ -1361,6 +1574,30 @@ export default {
         });
     },
     methods: {
+        async saveColumnSetting() {
+            let loader = this.$loading.show();
+            this.toggleTableLoading();
+
+            await new Promise(resolve => {
+                setTimeout(resolve, 2000)
+            })
+
+            this.toggleTableLoading();
+            loader.hide();
+        },
+
+        toggleColumn(index, columnState) {
+            this.tableConfig[index].isHidden =
+                !columnState;
+        },
+
+        toggleTableLoading() {
+            if (this.tableLoading) {
+                this.tableLoading = false;
+            } else {
+                this.tableLoading = true;
+            }
+        },
 
         selectAll() {
             this.checkIds = [];
@@ -1580,19 +1817,12 @@ export default {
             await this.$store.dispatch('getListCountriesInt', {vue: this});
         },
         async getExtList(params) {
+            let loader = this.$loading.show();
             this.isLoadingTable = true;
-            if (this.dataTable != null) {
-                this.dataTable.destroy();
-            }
             await this.$store.dispatch('getListExt', params);
             this.isLoadingTable = false;
             $('.freeze-table').freezeTable({'columnNum': 4, 'shadow': true, 'scrollable': true});
-            this.dataTable = $('#data-table').DataTable({
-                paging: false,
-                searching: false,
-                ordering: true,
-                bDestroy: true
-            });
+            loader.hide();
         },
         async doSearchList() {
             let that = this;
@@ -1674,6 +1904,8 @@ export default {
             return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         },
         async submitUpdate() {
+            let loader = this.$loading.show();
+            this.toggleTableLoading();
             this.isPopupLoading = true;
             await this.$store.dispatch('updateExt', {
                 ext: this.extUpdate,
@@ -1688,6 +1920,8 @@ export default {
                     }
                 }
             }
+            this.toggleTableLoading();
+            loader.hide();
         },
         async doShowBackLink(extDomain) {
             this.extBackLink = extDomain;
@@ -1745,6 +1979,8 @@ export default {
                 }
 
             });
+
+            $('#modal-update').modal('show');
 
         },
 
@@ -2187,8 +2423,5 @@ export default {
         //     this.isPopupLoading = false;
         // }
     },
-    components: {
-        DownloadCsv
-    }
 }
 </script>
