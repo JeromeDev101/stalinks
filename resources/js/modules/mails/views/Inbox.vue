@@ -614,7 +614,7 @@ export default {
 
             if (this.viewContent.is_sent === 1) {
                 this.replyContent.email = createTags(this.viewContent.received.replace(/\s/g, '')
-                    .split(',')
+                    .split(/[|,]/g)
                     .filter(function (email) {
                         return email !== '';
                     }))
