@@ -155,6 +155,21 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list->whereIn('publisher.price_basis', $filter['price_basis']);
+            } else {
+                $list->where('publisher.price_basis', $filter['price_basis']);
+            }
+        }
+
+        if (isset($filter['code'])) {
+            $list->whereRaw('ROUND(
+                           (
+                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+        }
+
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
                 $list->where(function ($query) use ($filter) {
@@ -212,90 +227,6 @@ class BuyController extends Controller
             }
         }
         // End of Getting credit left
-
-        $priceCollection = Pricelist::all();
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = $priceCollection->where('code', strtoupper($combineALl));
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-            // Filtering of Code A's
-            if( isset($filter['code']) && !empty($filter['code']) ){
-                $code = substr($filter['code'],0,1);
-
-                if( $code == $count_letter_a ){
-                    $value['code_combination'] = $combineALl;
-                    $value['code_price'] = $price_list['price'];
-                }else{
-                    $result->forget($key);
-                }
-
-            }else{
-                $value['code_combination'] = $combineALl;
-                $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-            }
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if (is_array($filter['price_basis'])) {
-                    foreach ($filter['price_basis'] as $price) {
-                        if(in_array($price_basis, $filter['price_basis']) ){
-                            $value['price_basis'] = $price_basis;
-                        }else{
-                            $result->forget($key);
-                        }
-                    }
-                } else {
-                    if( $filter['price_basis'] == $price_basis ){
-                        $value['price_basis'] = $price_basis;
-                    }else{
-                        $result->forget($key);
-                    }
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([

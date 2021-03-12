@@ -37,6 +37,7 @@ class PublisherController extends Controller
     public function importExcel(Request $request){
         if (Auth::user()->isOurs == 1){
             $request->validate([
+                'account_valid' => 'required|in:false',
                 'file' => 'bail|required|mimes:csv,txt',
                 'language' => 'required',
             ]);
@@ -62,6 +63,7 @@ class PublisherController extends Controller
     public function store(Request $request){
         $valid = 'valid';
         $request->validate([
+            'account_valid' => 'required|in:' . false,
             'seller' => 'required',
             'inc_article' => 'required',
             'url' => 'required',

@@ -27,7 +27,10 @@ class AccountRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'username' => [ 'required' ],
+            'username' => [
+                'unique:registration,username',
+                'required'
+            ],
             'name' => [ 'required' ],
             'email' => [
                 'unique:users,email',

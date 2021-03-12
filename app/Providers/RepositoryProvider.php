@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\AccountRepository;
+use App\Repositories\Contracts\AccountRepositoryInterface;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\NotificationRepository;
@@ -56,7 +58,8 @@ class RepositoryProvider extends ServiceProvider
         ConfigRepositoryInterface::class => ConfigRepository::class,
         MailRepositoryInterface::class => MailRepository::class,
         PublisherRepositoryInterface::class => PublisherRepository::class,
-        NotificationInterface::class => NotificationRepository::class
+        NotificationInterface::class => NotificationRepository::class,
+        AccountRepositoryInterface::class => AccountRepository::class,
     ];
     /**
      * Register services.

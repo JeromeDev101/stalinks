@@ -261,7 +261,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
-                                   @click="checkSelected"
+                                   @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
                                    v-model="checkIds">
@@ -879,7 +879,7 @@
                         isHidden: false
                     },
                     {
-                        prop : 'code_combination',
+                        prop : 'code_comb',
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,
