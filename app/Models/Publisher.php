@@ -14,6 +14,7 @@ class Publisher extends Model
 
     protected $fillable
         = [
+            'user_id',
             'url',
             'language_id',
             'code_comb',
