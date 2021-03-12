@@ -1823,29 +1823,45 @@ export default {
             $(element).modal('hide')
         },
         async getAhrefs() {
-            var listInvalid = this.checkIds.some(ext => ext.status != 30);
-            if (listInvalid === true) {
-                alert('List invalid: status diff with GotContacts');
-                return;
-            }
-            var listIds = this.checkIds.map(ext => ext.id).join(',');
+            // var listInvalid = this.checkIds.some(ext => ext.status != 30);
+            // if (listInvalid === true) {
+            //     alert('List invalid: status diff with GotContacts');
+            //     return;
+            // }
+            let listIds = this.checkIds.map(ext => ext.id).join(',');
             this.isLoadingTable = true;
             await this.$store.dispatch('getListAhrefs', {params: {domain_ids: listIds}});
             this.isLoadingTable = false;
-            var that = this;
-            this.checkIds.forEach(item => {
-                if (that.listAhrefs.hasOwnProperty(item.id)) {
-                    let itemAherf = that.listAhrefs[item.id];
-                    item.ahrefs_rank = itemAherf.ahrefs_rank;
-                    item.no_backlinks = itemAherf.no_backlinks;
-                    item.url_rating = itemAherf.url_rating;
-                    item.domain_rating = itemAherf.domain_rating;
-                    item.organic_keywords = itemAherf.organic_keywords;
-                    item.organic_traffic = itemAherf.organic_traffic;
-                    item.ref_domains = itemAherf.ref_domains;
-                    item.status = itemAherf.status;
-                }
-            });
+            let that = this;
+
+            if (that.listAhrefs.length !== 0) {
+
+                this.checkIds.forEach(item => {
+                    if (that.listAhrefs.hasOwnProperty(item.id)) {
+                        let itemAherf = that.listAhrefs[item.id];
+                        item.ahrefs_rank = itemAherf.ahrefs_rank;
+                        item.no_backlinks = itemAherf.no_backlinks;
+                        item.url_rating = itemAherf.url_rating;
+                        item.domain_rating = itemAherf.domain_rating;
+                        item.organic_keywords = itemAherf.organic_keywords;
+                        item.organic_traffic = itemAherf.organic_traffic;
+                        item.ref_domains = itemAherf.ref_domains;
+                        item.status = itemAherf.status;
+                    }
+                });
+
+                swal.fire(
+                    'Success',
+                    'Url Prospect Updated',
+                    'success'
+                )
+            } else {
+                swal.fire(
+                    'Error',
+                    'Get Ahref Failed',
+                    'error'
+                )
+            }
         },
         async getAhrefsById(extId, extStatus) {
             // if (extStatus != 30) {
