@@ -143,8 +143,17 @@ class AccountController extends Controller
             return $query->where('created_at', '>=', Carbon::create($created_at->startDate)->format('Y-m-d'))
                 ->where('created_at', '<=', Carbon::create($created_at->endDate)->format('Y-m-d'));
         })->when( $isTeamSeller, function($query) use ($user_id){
-            return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
-                $subquery->where('team_in_charge', $user_id);
+//            return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
+//                $subquery->where('team_in_charge', $user_id);
+//            });
+
+            return $query->where(function ($query2) use ($user_id) {
+                $query2->whereHas('team_in_charge', function ($sub) use( $user_id ) {
+                    $sub->where('team_in_charge', $user_id);
+                })->orWhere(function($query) {
+                    $query->whereNull('team_in_charge')
+                        ->where('type', 'Seller');
+                });
             });
         })
         ->with('team_in_charge:id,name,username')
@@ -163,13 +172,8 @@ class AccountController extends Controller
     }
 
     private function checkTeamSeller() {
-        $result = false;
         $user = Auth::user();
-
-        if( $user->role_id == 6 && $user->isOurs == 0 ){
-            $result = true;
-        }
-        return $result;
+        return ($user->role_id == 6 && $user->isOurs == 0);
     }
 
     public function edit(UpdateAccountRequest $request)
