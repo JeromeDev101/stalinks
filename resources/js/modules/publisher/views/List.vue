@@ -285,10 +285,7 @@
                                         <span v-if="this.isAccountPaymentNotComplete">
                                             Please
                                             <router-link :to="{ path: `/profile/${user.id}` }">
-                                                <a
-                                                    href="#">
-                                                    Click here
-                                                </a>
+                                                Click here
                                             </router-link>
                                             to complete your payment information in profile settings.
                                         </span>
@@ -720,10 +717,7 @@
                                             <span v-if="this.isAccountPaymentNotComplete">
                                                 Please
                                                 <router-link :to="{ path: `/profile/${user.id}` }">
-                                                    <a
-                                                        href="#">
-                                                        Click here
-                                                    </a>
+                                                    Click here
                                                 </router-link>
                                                 to complete your payment information in profile settings.
                                             </span>
