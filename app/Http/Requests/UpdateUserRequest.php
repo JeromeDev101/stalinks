@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'id' => [
                 'required'
             ],
@@ -71,5 +71,29 @@ class UpdateUserRequest extends FormRequest
                 'required'
             ]
         ];
+
+        $external_rules = [];
+
+        if ($this->input('isOurs') === 1) {
+            $external_rules = [
+                'user_type.company_name' => [
+                    'required_if:user_type.company_type,==,Company'
+                ],
+                'id_payment_type' => [
+                    'required'
+                ],
+                'user_type.paypal_account' => [
+                    'required_if:id_payment_type,==,1'
+                ],
+                'user_type.btc_account' => [
+                    'required_if:id_payment_type,==,3'
+                ],
+                'user_type.skrill_account' => [
+                    'required_if:id_payment_type,==,2'
+                ],
+            ];
+        }
+
+        return array_merge($rules, $external_rules);
     }
 }
