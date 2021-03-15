@@ -102,12 +102,16 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1">
+                                <tr>
                                     <td><b>Skype</b></td>
-                                    <td v-if="user.user_type">
+                                    <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                            <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
-                                            <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                            <input type="text" v-model="user.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
+                                            <span
+                                                v-if="messageForms.errors.skype"
+                                                class="text-danger">
+                                                The skype field is required when user is internal.
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -711,6 +715,12 @@ export default {
 
                 this.new_password = '';
                 this.c_password = '';
+            } else {
+                swal.fire(
+                    'Failed!',
+                    'Information not updated.',
+                    'error'
+                )
             }
         },
 
