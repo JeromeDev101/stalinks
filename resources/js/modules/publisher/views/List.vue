@@ -1283,42 +1283,44 @@
                         name : 'Language',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.language
                     },
                     {
                         prop : 'country_name',
                         name : 'Country',
                         sortable: true,
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.country
                     },
                     {
                         prop : '_action',
                         name : 'Continent',
                         actionName : 'continentData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.continent
                     },
                     {
                         prop : '_action',
                         name : 'Topic',
                         actionName : 'topicData',
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.topic
                     },
                     {
                         prop : 'casino_sites',
                         name : 'Casino & Betting Sites',
                         sortable: true,
                         width: 100,
-                        isHidden: true
+                        isHidden:
+                            !this.tblPublisherOpt.casino_sites
                     },
                     {
                         prop : '_action',
                         name : 'In-charge',
                         actionName : 'inChargeData',
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
                         prop : '_action',
@@ -1333,84 +1335,87 @@
                         name : 'Valid',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.valid
                     },
                     {
                         prop : '_action',
                         name : 'URL',
                         actionName : 'urlData',
                         width: 150,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.url
                     },
                     {
                         prop : '_action',
                         name : 'Price',
                         actionName : 'priceData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.price
                     },
                     {
                         prop : '_action',
                         name : 'Price Basis',
                         actionName : 'priceBasisData',
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.price_basis
                     },
                     {
                         prop : 'inc_article',
                         name : 'Inc Article',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.inc_article
                     },
                     {
                         prop : 'kw_anchor',
                         name : 'KW Anchor',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.kw_anchor
                     },
                     {
                         prop : 'ur',
                         name : 'UR',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.ur
                     },
                     {
                         prop : 'dr',
                         name : 'DR',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.dr
                     },
                     {
                         prop : 'backlinks',
                         name : 'Backlinks',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.backlinks
                     },
                     {
                         prop : 'ref_domain',
                         name : 'Ref Domain',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.ref_domain
                     },
                     {
                         prop : '_action',
                         name : 'Org Keywords',
                         actionName : 'orgKeywordData',
                         width: 120,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.org_keywords
                     },
                     {
                         prop : '_action',
                         name : 'Org Traffic',
                         actionName : 'orgTrafficData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.org_traffic
                     },
                     {
                         prop : '_action',
