@@ -158,10 +158,7 @@ class ArticlesController extends Controller
         }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-            return response()->json([
-                'data' => $list,
-                'total' => $list->count(),
-            ],200);
+            return $list->paginate(9999999);
         }else{
             $paginate = intval($paginate);
             return $list->paginate($paginate);
