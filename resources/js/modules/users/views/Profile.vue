@@ -82,9 +82,13 @@
                                 <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
                                     <td><b>Company Name</b></td>
                                     <td v-if="user.user_type">
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
+                                        <div :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.company_name')}" class="form-group">
                                             <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Company Name">
-                                            <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('user_type.company_name')"
+                                                class="text-danger">
+                                                The company name field is required when company type is 'Company'
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -161,42 +165,99 @@
                         Please provide at least one payment solution to be able to upload URL's.
                     </div>
 
+                    <span
+                        v-if="messageForms.errors.id_payment_type"
+                        class="text-danger mx-2">
+                        Please provide at least one payment type.
+                    </span>
+
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tbody>
                                 <tr>
                                     <td><b>Paypal Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="1" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="1"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.paypal_account" class="form-control" value="" required="required" placeholder="Enter Paypal Account">
-                                            <!-- <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.paypal_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.paypal_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter Paypal Account">
+
+                                             <span
+                                                 v-if="messageForms.errors.hasOwnProperty('user_type.paypal_account')"
+                                                 class="text-danger">
+                                                 The paypal account field is required when you have selected paypal
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>Skrill Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="2" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="2"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.skrill_account" class="form-control" value="" required="required" placeholder="Enter Skrill Account">
-                                            <!-- <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.skrill_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.skrill_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter Skrill Account">
+
+                                             <span
+                                                 v-if="messageForms.errors.hasOwnProperty('user_type.skrill_account')"
+                                                 class="text-danger">
+                                                 The skrill account field is required when you have selected skill
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>BTC Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="3" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="3"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.btc_account" class="form-control" value="" required="required" placeholder="Enter BTC Account">
-                                            <!-- <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.btc_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.btc_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter BTC Account">
+
+                                             <span
+                                                 v-if="messageForms.errors.hasOwnProperty('user_type.btc_account')"
+                                                 class="text-danger">
+                                                 The BTC account field is required when you have selected BTC
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
