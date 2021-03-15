@@ -154,7 +154,13 @@
                     <h3 class="box-title">Billing</h3>
                 </div>
 
-                <div class="box-body no-padding" >
+                <div class="box-body no-padding">
+
+                    <div class="alert alert-info m-2">
+                        <i class="fa fa-info-circle"></i>
+                        Please provide at least one payment solution to be able to upload URL's.
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table no-margin">
                             <tbody>
