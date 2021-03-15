@@ -276,11 +276,31 @@
                                 </p>
 
                                 <ul class="font-italic">
-                                    <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
-                                    <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                    <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
+                                    <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
                                 </ul>
 
-                                <p class="mb-0">{{ accountValidityMessage }}</p>
+                                <div class="mb-0">
+                                    <span>
+                                        <span v-if="this.isAccountPaymentNotComplete">
+                                            Please
+                                            <router-link :to="{ path: `/profile/${user.id}` }">
+                                                <a
+                                                    href="#">
+                                                    Click here
+                                                </a>
+                                            </router-link>
+                                            to complete your payment information in profile settings.
+                                        </span>
+
+                                        <span v-if="this.isAccountInvalid">
+                                            Contact an administrator or person in charge to request
+                                            for validation.
+                                        </span>
+
+                                        Logout to complete the process.
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -691,11 +711,31 @@
                                     </p>
 
                                     <ul class="font-italic">
-                                        <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                        <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
+                                        <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
                                     </ul>
 
-                                    <p class="mb-0">{{ accountValidityMessage }}</p>
+                                    <div class="mb-0">
+                                        <span>
+                                            <span v-if="this.isAccountPaymentNotComplete">
+                                                Please
+                                                <router-link :to="{ path: `/profile/${user.id}` }">
+                                                    <a
+                                                        href="#">
+                                                        Click here
+                                                    </a>
+                                                </router-link>
+                                                to complete your payment information in profile settings.
+                                            </span>
+
+                                            <span v-if="this.isAccountInvalid">
+                                                Contact an administrator or person in charge to request
+                                                for validation.
+                                            </span>
+
+                                            Logout to complete the process.
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1306,18 +1346,6 @@
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
-
-            accountValidityMessage() {
-                if (this.isAccountPaymentNotComplete && !this.isAccountInvalid) {
-                    return 'Please complete your payment information in profile settings. Logout to complete the process.'
-                } else if (!this.isAccountPaymentNotComplete && this.isAccountInvalid) {
-                    return 'Please contact an administrator or person in charge to request for validation.' +
-                        ' Logout to complete the process.'
-                } else {
-                    return 'Please complete your payment information in profile settings and contact an administrator' +
-                        ' or person in charge for validation. Logout to complete the process.'
-                }
-            },
 
             tableConfig() {
                 return [
