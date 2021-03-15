@@ -75,7 +75,6 @@ class AuthController extends Controller
     }
 
     public function edit(UpdateUserRequest $request) {
-        // dd($request->all());
         $response = ['success' => false];
         $input = $request->except(
             'avatar',
@@ -89,7 +88,8 @@ class AuthController extends Controller
             'wallet_transaction',
             'purchased',
             'total_wallet',
-            'registration'
+            'registration',
+            'isOurs'
         );
 
         unset($input['c_password']);

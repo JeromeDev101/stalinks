@@ -371,7 +371,11 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
                                     <label style="color: #333">Skype</label>
                                     <input autocomplete="off" type="text" v-model="userUpdate.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    <span
+                                        v-if="messageForms.errors.skype"
+                                        class="text-danger">
+                                        The skype field is required.
+                                    </span>
                                 </div>
                             </div>
 
@@ -965,6 +969,7 @@ export default {
 
         async submitUpdate() {
             this.isPopupLoading = true;
+            this.userUpdate.isOurs = this.user.isOurs;
             await this.$store.dispatch('actionUpdateUser', this.userUpdate);
             this.isPopupLoading = false;
 
