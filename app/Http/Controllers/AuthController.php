@@ -128,7 +128,7 @@ class AuthController extends Controller
             $registered = Registration::where('email', $input['email'])->first();
 
             $dataRegistered = [
-                'skype' => $request->user_type['skype'],
+                'skype' => $request->skype,
                 'company_name' => $request->user_type['company_name'],
                 'company_url' => $request->user_type['company_url'],
                 'username' => $request->username,
