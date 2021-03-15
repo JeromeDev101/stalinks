@@ -130,6 +130,7 @@ class AuthController extends Controller
             $dataRegistered = [
                 'skype' => $request->user_type['skype'],
                 'company_name' => $request->user_type['company_name'],
+                'company_url' => $request->user_type['company_url'],
                 'username' => $request->username,
                 'paypal_account' => $request->user_type['paypal_account'],
                 'btc_account' => $request->user_type['btc_account'],
@@ -161,5 +162,5 @@ class AuthController extends Controller
         return response()->json(['success' => $request->user()->token()->revoke()]);
     }
 
-   
+
 }

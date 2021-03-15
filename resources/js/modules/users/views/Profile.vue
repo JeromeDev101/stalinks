@@ -19,7 +19,7 @@
                             <button class="btn btn-block btn-default btn-sm">Upload photo</button>
                         </li>
                     </ul>
-                    
+
                 </div>
             </div>
         </div>
@@ -85,6 +85,15 @@
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
                                             <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Company Name">
                                             <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
+                                    <td><b>Company URL</b></td>
+                                    <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_url}" class="form-group">
+                                            <input type="text" v-model="user.user_type.company_url" class="form-control" value="" required="required" placeholder="Enter Company URL">
+                                            <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -270,10 +279,10 @@
                         </tbody>
                     </table>
                 </div>
-                    
+
             </div>
         </div>
-        
+
         <!-- Modal Edit Sub Account -->
         <div class="modal fade" id="modal-edit-sub-account" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -614,7 +623,7 @@ export default {
 
             this.user.password = this.new_password;
             this.user.c_password = this.c_password;
-            
+
             await this.$store.dispatch('actionUpdateUser', this.user);
             this.isPopupLoading = false;
 
