@@ -337,6 +337,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
+                                   class="custom-checkbox"
                                    @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
