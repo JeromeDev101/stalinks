@@ -307,10 +307,14 @@
                     }
 
                     for( var index in this.checkIds ){
-                        if( this.checkIds[index].publisher != null ){
-                            if( this.checkIds[index].publisher.price != null ){
-                                total += parseInt(this.checkIds[index].publisher.price);
-                            }
+                        // if( this.checkIds[index].publisher != null ){
+                        //     if( this.checkIds[index].publisher.price != null ){
+                        //         total += parseInt(this.checkIds[index].publisher.price);
+                        //     }
+                        // }
+
+                        if( this.checkIds[index].price != null ){
+                            total += parseInt(this.checkIds[index].price);
                         }
                     }
 
