@@ -182,6 +182,20 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Price</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button
+                                            class="btn btn-outline-secondary" type="button" @click="buttonState.price = buttonState.price === 'Above' ? 'Below' : 'Above'">{{ buttonState.price }}</button>
+                                    </div>
+                                    <input type="text"
+                                           class="form-control" placeholder="Type here" aria-label="" aria-describedby="basic-addon1" v-model="filterModel.price">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -684,13 +698,16 @@
                     ur: this.$route.query.ur || 0,
                     dr: this.$route.query.dr || 0,
                     org_kw: this.$route.query.org_kw || 0,
-                    org_traffic: this.$route.query.org_traffic || 0,
+                    org_traffic:
+                        this.$route.query.org_traffic || 0,
+                    price: this.$route.query.price || 0
                 },
                 buttonState: {
                     ur : 'Above',
                     dr : 'Above',
                     org_kw : 'Above',
-                    org_traffic : 'Above'
+                    org_traffic : 'Above',
+                    price: 'Above'
                 },
                 searchLoading: false,
                 dataTable: null,
@@ -1051,7 +1068,11 @@
                         org_kw: this.filterModel.org_kw,
                         org_kw_direction: this.buttonState.org_kw,
                         org_traffic: this.filterModel.org_traffic,
-                        org_traffic_direction: this.buttonState.org_traffic,
+                        org_traffic_direction:
+                        this.buttonState.org_traffic,
+                        price: this.filterModel.price,
+                        price_direction:
+                        this.buttonState.price,
                         page: page,
                     }
                 });

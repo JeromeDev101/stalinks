@@ -121,43 +121,110 @@
                         <b>Showing {{ listArticles.from }} to {{ listArticles.to }} of {{ listArticles.total }} entries.</b>
                     </span>
 
-                    <table id="tbl_articles" class="table table-hover table-bordered table-striped rlink-table">
-                        <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>ID Article</th>
-                                <th>ID Backlink</th>
-                                <th>Language</th>
-                                <th>Writer</th>
-                                <th>Topic</th>
-                                <th>Accept Casino & Betting Sites</th>
-                                <th>Date Start</th>
-                                <th>Date Completed</th>
-                                <th>Status</th>
-                                <th>Content</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(article, index) in listArticles.data" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ article.id }}</td>
-                                <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.country == null ? 'N/A': article.country.name }}</td>
-                                <td>{{ article.writer }}</td>
-                                <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>
-                                <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>
-                                <td>{{ article.date_start == null ? '-':article.date_start }}</td>
-                                <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>
-                                <td>{{ article.status_writer == null ? 'Queue':article.status_writer  }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+<!--                    <table id="tbl_articles" class="table table-hover table-bordered table-striped rlink-table">-->
+<!--                        <thead>-->
+<!--                            <tr class="label-primary">-->
+<!--                                <th>#</th>-->
+<!--                                <th>ID Article</th>-->
+<!--                                <th>ID Backlink</th>-->
+<!--                                <th>Language</th>-->
+<!--                                <th>Writer</th>-->
+<!--                                <th>Topic</th>-->
+<!--                                <th>Accept Casino & Betting Sites</th>-->
+<!--                                <th>Date Start</th>-->
+<!--                                <th>Date Completed</th>-->
+<!--                                <th>Status</th>-->
+<!--                                <th>Content</th>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                            <tr v-for="(article, index) in listArticles.data" :key="index">-->
+<!--                                <td>{{ index + 1 }}</td>-->
+<!--                                <td>{{ article.id }}</td>-->
+<!--                                <td>{{ article.id_backlink }}</td>-->
+<!--                                <td>{{ article.country == null ? 'N/A': article.country.name }}</td>-->
+<!--                                <td>{{ article.writer }}</td>-->
+<!--                                <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>-->
+<!--                                <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>-->
+<!--                                <td>{{ article.date_start == null ? '-':article.date_start }}</td>-->
+<!--                                <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>-->
+<!--                                <td>{{ article.status_writer == null ? 'Queue':article.status_writer  }}</td>-->
+<!--                                <td>-->
+<!--                                    <div class="btn-group">-->
+<!--                                        <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+                    <vue-virtual-table
+                        v-if="!tableLoading"
+                        width="100%"
+                        :height="600"
+                        :bordered="true"
+                        :item-height="60"
+                        :config="tableConfig"
+                        :data="listArticles.data">
+                        <template
+                            slot-scope="scope"
+                            slot="actionButton">
+                            <div class="btn-group">
+                                <button :id="'article-' +
+                                 scope.row.id"
+                                        @click="doUpdate(scope.row.backlinks, scope.row)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
+                            </div>
+                        </template>
 
+                        <template
+                            slot-scope="scope"
+                            slot="languageData">
+                            {{ scope.row.country == null ?
+                            'N/A':
+                            scope.row.country.name }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="topicData">
+                            {{ scope.row.topic == null ?
+                            'N/A' :
+                            scope.row.topic }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="casinoSiteData">
+                            {{ scope.row.casino_sites ==
+                            null ?
+                            'N/A' :
+                            scope.row.casino_sites }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="dateStartData">
+                            {{ scope.row.date_start == null ?
+                            '-':scope.row.date_start }}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="dateCompleteData">
+                            {{ scope.row.date_complete ==
+                            null ?
+                            '-':scope.row.date_complete}}
+                        </template>
+
+                        <template
+                            slot-scope="scope"
+                            slot="statusData">
+                            {{ scope.row.status_writer ==
+                            null ?
+                            'Queue':scope.row.status_writer
+                            }}
+                        </template>
+
+                    </vue-virtual-table>
                 </div>
             </div>
         </div>
@@ -339,8 +406,12 @@
 <script>
     import { mapState } from 'vuex';
     import 'tinymce/skins/lightgray/skin.min.css';
+    import VueVirtualTable from 'vue-virtual-table';
 
     export default {
+        components: {
+            VueVirtualTable,
+        },
         data() {
             return {
                 paginate: ['50','150','250','350','All'],
@@ -391,6 +462,7 @@
                 },
 
                 searchLoading: false,
+                tableLoading: false,
                 isTeam: false,
                 id_article: this.$route.query.id || '',
                 topic: [
@@ -439,7 +511,89 @@
                 listCountries: state => state.storeArticles.listCountries,
                 user: state => state.storeAuth.currentUser,
                 listWriter: state => state.storeArticles.listWriter,
-            })
+            }),
+
+            tableConfig() {
+                return [
+                    {
+                        prop : '_index',
+                        name : '#',
+                        width : '50',
+                        isHidden: false
+                    },
+                    {
+                        prop : 'id',
+                        name : 'ID Article',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'id_backlink',
+                        name : 'Language',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Language',
+                        actionName : 'languageData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'writer',
+                        name : 'Writer',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Topic',
+                        actionName : 'topicData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name :
+                            'Accept Casino & Betting Sites',
+                        actionName : 'casinoSiteData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Date Start',
+                        actionName : 'dateStartData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Date Complete',
+                        actionName : 'dateCompleteData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Status',
+                        actionName : 'statusData',
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : '_action',
+                        name : 'Action',
+                        actionName : 'actionButton',
+                        width: 100,
+                        isHidden: false
+                    }
+                ];
+            }
         },
 
         methods: {
@@ -449,21 +603,15 @@
 
 
             async getListArticles(params){
-                $('#tbl_articles').DataTable().destroy();
-
+                let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetListArticle', params);
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                $('#tbl_articles').DataTable({
-                    paging: false,
-                    searching: false,
-                });
-
-
                 this.viewArticle();
+                loader.hide();
             },
 
             async getListBacklinks(params){
@@ -516,6 +664,8 @@
                 this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
                 this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
+
+                $('#modal-content-edit').modal('show');
             },
 
             doSearch() {

@@ -155,6 +155,14 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['price']) && !empty($filter['price'])) {
+            if ($filter['price_direction'] === 'Above') {
+                $list->where('publisher.price' , '>=', intval($filter['price']));
+            } else {
+                $list->where('publisher.price', '<=', intval($filter['price']));
+            }
+        }
+
         if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
             if (is_array($filter['price_basis'])) {
                 $list->whereIn('publisher.price_basis', $filter['price_basis']);

@@ -75,7 +75,6 @@ class AuthController extends Controller
     }
 
     public function edit(UpdateUserRequest $request) {
-        // dd($request->all());
         $response = ['success' => false];
         $input = $request->except(
             'avatar',
@@ -89,7 +88,8 @@ class AuthController extends Controller
             'wallet_transaction',
             'purchased',
             'total_wallet',
-            'registration'
+            'registration',
+            'isOurs'
         );
 
         unset($input['c_password']);
@@ -128,8 +128,9 @@ class AuthController extends Controller
             $registered = Registration::where('email', $input['email'])->first();
 
             $dataRegistered = [
-                'skype' => $request->user_type['skype'],
+                'skype' => $request->skype,
                 'company_name' => $request->user_type['company_name'],
+                'company_url' => $request->user_type['company_url'],
                 'username' => $request->username,
                 'paypal_account' => $request->user_type['paypal_account'],
                 'btc_account' => $request->user_type['btc_account'],
@@ -161,5 +162,5 @@ class AuthController extends Controller
         return response()->json(['success' => $request->user()->token()->revoke()]);
     }
 
-   
+
 }

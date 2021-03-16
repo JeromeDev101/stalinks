@@ -1,40 +1,41 @@
 <template>
-    <div class="row">
-        <div class="col-sm-3">
-            <!-- USERS LIST -->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Avatar</h3>
-                </div>
-                <div class="box-body no-padding">
-                    <ul class="users-list avatar clearfix">
-                        <li>
-                            <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image">
-                        </li>
-                        <li>
-                            <label>Username</label>
-                            <h3>{{ user.username }}</h3>
-                        </li>
-                        <li>
-                            <button class="btn btn-block btn-default btn-sm">Upload photo</button>
-                        </li>
-                    </ul>
-                    
+    <div>
+        <div class="row">
+            <div class="col-sm-3">
+                <!-- USERS LIST -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Avatar</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="users-list avatar clearfix">
+                            <li>
+                                <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image">
+                            </li>
+                            <li>
+                                <label>Username</label>
+                                <h3>{{ user.username }}</h3>
+                            </li>
+                            <li>
+                                <button class="btn btn-block btn-default btn-sm">Upload photo</button>
+                            </li>
+                        </ul>
+
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-sm-9">
-            <div class="box box-primary table-user">
-                <div class="box-header">
-                    <h3 class="box-title">Information</h3>
-                    <h3 class="box-title"  v-if="currentUser.isOurs == 0">[Team]</h3>
-                    <h3 class="box-title"  v-if="currentUser.isOurs == 1">[Registration Account]</h3>
-                </div>
-                <div class="box-body no-padding">
-                    <div class="table-responsive">
-                        <table class="table no-margin">
-                            <tbody>
+            <div class="col-sm-9">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Information</h3>
+                        <h3 class="box-title"  v-if="currentUser.isOurs == 0">[Team]</h3>
+                        <h3 class="box-title"  v-if="currentUser.isOurs == 1">[Registration Account]</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <tbody>
                                 <tr>
                                     <td><b>Name</b></td>
                                     <td>
@@ -82,18 +83,35 @@
                                 <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
                                     <td><b>Company Name</b></td>
                                     <td v-if="user.user_type">
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}" class="form-group">
+                                        <div :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.company_name')}" class="form-group">
                                             <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Company Name">
-                                            <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('user_type.company_name')"
+                                                class="text-danger">
+                                                The company name field is required when company type is 'Company'
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1">
-                                    <td><b>Skype</b></td>
+                                <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
+                                    <td><b>Company URL</b></td>
                                     <td v-if="user.user_type">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.company_url}" class="form-group">
+                                            <input type="text" v-model="user.user_type.company_url" class="form-control" value="" required="required" placeholder="Enter Company URL">
+                                            <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Skype</b></td>
+                                    <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                            <input type="text" v-model="user.user_type.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
-                                            <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                            <input type="text" v-model="user.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
+                                            <span
+                                                v-if="messageForms.errors.skype"
+                                                class="text-danger">
+                                                The skype field is required when user is internal.
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -102,7 +120,7 @@
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
                                             <select name="" class="form-control" v-model="country_id">
-                                                    <option v-for="option in countryList" v-bind:value="option.id">
+                                                <option v-for="option in countryList" v-bind:value="option.id">
                                                     {{ option.name }}
                                                 </option>
                                             </select>
@@ -132,83 +150,147 @@
                                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-12" v-if="currentUser.isOurs == 1">
-            <div class="box box-primary table-user">
-                <div class="box-header"  >
-                    <h3 class="box-title">Billing</h3>
-                </div>
+        <div class="row" v-if="currentUser.isOurs === 1">
+            <div class="col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Billing</h3>
+                    </div>
 
-                <div class="box-body no-padding" >
-                    <div class="table-responsive">
-                        <table class="table no-margin">
-                            <tbody>
+                    <div class="box-body no-padding">
+
+                        <div class="alert alert-info m-2">
+                            <i class="fa fa-info-circle"></i>
+                            Please provide at least one payment solution to be able to upload URL's.
+                        </div>
+
+                        <span
+                            v-if="messageForms.errors.id_payment_type"
+                            class="text-danger mx-2">
+                        Please provide at least one payment type.
+                    </span>
+
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <tbody>
                                 <tr>
                                     <td><b>Paypal Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="1" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="1"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.paypal_account" class="form-control" value="" required="required" placeholder="Enter Paypal Account">
-                                            <!-- <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.paypal_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.paypal_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter Paypal Account">
+
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('user_type.paypal_account')"
+                                                class="text-danger">
+                                                 The paypal account field is required when you have selected paypal
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>Skrill Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="2" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="2"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.skrill_account" class="form-control" value="" required="required" placeholder="Enter Skrill Account">
-                                            <!-- <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.skrill_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.skrill_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter Skrill Account">
+
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('user_type.skrill_account')"
+                                                class="text-danger">
+                                                 The skrill account field is required when you have selected skill
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>BTC Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
-                                        <input name="payment_default" v-bind:value="3" v-model="billing.payment_default" type="radio">
+                                        <input
+                                            v-bind:value="3"
+                                            v-model="billing.payment_default"
+                                            type="radio"
+                                            name="payment_default"
+                                            style="width: 20px; height: 20px">
                                     </td>
                                     <td>
-                                        <div class="form-group">
-                                            <input type="text" v-model="billing.btc_account" class="form-control" value="" required="required" placeholder="Enter BTC Account">
-                                            <!-- <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span> -->
+                                        <div
+                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.btc_account')}"
+                                            class="form-group">
+                                            <input
+                                                v-model="billing.btc_account"
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Enter BTC Account">
+
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('user_type.btc_account')"
+                                                class="text-danger">
+                                                 The BTC account field is required when you have selected BTC
+                                                 as a payment solution.
+                                             </span>
                                         </div>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ml-3">
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-
-                <div class="col-lg-8">
-                    <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
-                </div>
-
-
             </div>
         </div>
 
+        <div class="row" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
+            <div class="col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header"  >
+                        <h3 class="box-title">Add Sub Account</h3>
+                    </div>
 
-        <div class="col-sm-12" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
-            <div class="box box-primary table-user">
-                <div class="box-header"  >
-                    <h3 class="box-title">Add Sub Account</h3>
-                </div>
-
-                <div class="box-body no-padding" >
-                    <div class="table-responsive">
-                        <table class="table no-margin">
-                            <tbody>
+                    <div class="box-body no-padding" >
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <tbody>
                                 <tr>
                                     <td><b>Username</b></td>
                                     <td>
@@ -236,26 +318,26 @@
                                         </div>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-8">
-                    <button type="button" @click="addSubAccount" class="btn btn-primary">Add Sub Account</button>
-                </div>
+                    <div class="col-lg-8">
+                        <button type="button" @click="addSubAccount" class="btn btn-primary">Add Sub Account</button>
+                    </div>
 
-                <div class="col-md-12">
-                    <table class="table table-condensed table-hover table-bordered mt-4">
-                        <thead>
+                    <div class="col-md-12">
+                        <table class="table table-condensed table-hover table-bordered mt-4">
+                            <thead>
                             <tr class="label-primary">
                                 <th >Username</th>
                                 <th>Email</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr v-for="(account, index) in ListSubAccounts" :key="index">
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.email }}</td>
@@ -267,59 +349,59 @@
                                     <button class="btn btn-default" title="Delete" @click="deleteSubAccount(account.id)"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                    
             </div>
         </div>
-        
+
         <!-- Modal Edit Sub Account -->
         <div class="modal fade" id="modal-edit-sub-account" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Account</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Username</label>
+                                    <label>Username</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.username" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Name</label>
+                                    <label>Name</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.name" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Password</label>
+                                    <label>Password</label>
                                     <input type="password" class="form-control" v-model="updateModelSubAccount.password">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageErrors.c_password != ''}" class="form-group">
-                                    <label for="">Confirm Password</label>
+                                    <label>Confirm Password</label>
                                     <input type="password" class="form-control" v-model="updateModelSubAccount.c_password">
                                     <span v-show="messageErrors.c_password != ''" class="text-danger">{{ messageErrors.c_password }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Email</label>
+                                    <label>Email</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.email" :disabled="true">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>Status</label>
                                     <select class="form-control" v-model="updateModelSubAccount.status">
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
@@ -336,7 +418,6 @@
             </div>
         </div>
         <!-- End of Modal Edit Sub Account -->
-
     </div>
 </template>
 
@@ -614,7 +695,7 @@ export default {
 
             this.user.password = this.new_password;
             this.user.c_password = this.c_password;
-            
+
             await this.$store.dispatch('actionUpdateUser', this.user);
             this.isPopupLoading = false;
 
@@ -634,6 +715,12 @@ export default {
 
                 this.new_password = '';
                 this.c_password = '';
+            } else {
+                swal.fire(
+                    'Failed!',
+                    'Information not updated.',
+                    'error'
+                )
             }
         },
 

@@ -276,11 +276,28 @@
                                 </p>
 
                                 <ul class="font-italic">
-                                    <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
-                                    <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                    <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
+                                    <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
                                 </ul>
 
-                                <p class="mb-0">{{ accountValidityMessage }}</p>
+                                <div class="mb-0">
+                                    <span>
+                                        <span v-if="this.isAccountPaymentNotComplete">
+                                            Please
+                                            <router-link :to="{ path: `/profile/${user.id}` }">
+                                                Click here
+                                            </router-link>
+                                            to complete your payment information in profile settings.
+                                        </span>
+
+                                        <span v-if="this.isAccountInvalid">
+                                            Contact an administrator or person in charge to request
+                                            for validation.
+                                        </span>
+
+                                        Logout to complete the process.
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -307,79 +324,6 @@
                     <span class="pagination-custom-footer-text">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
-
-<!--                    <table-->
-<!--                        class="table table-hover table-bordered table-striped rlink-table">-->
-<!--                        <thead>-->
-<!--                            <tr class="label-primary">-->
-<!--                                <th>#</th>-->
-<!--                                <th>-->
-<!--                                    <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">-->
-<!--                                </th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">Uploaded</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">Updated</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.language">Language</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.country">Country</th>-->
-<!--                                <th class="resize" style="width: 61px" v-show="tblPublisherOpt.continent">Continent</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.topic">Topic</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.casino_sites">Casino & Betting Sites</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.in_charge">In-charge</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">Seller</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.valid">Valid</th>-->
-<!--                                <th v-show="tblPublisherOpt.url">URL</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.price">Price</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.price_basis">Price Basis</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.inc_article">Inc Article</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.kw_anchor">Kw Anchor</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.ur">UR</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.dr">DR</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.backlinks">Blinks</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.ref_domain">Ref Domains</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.org_keywords">Org Kwd</th>-->
-<!--                                <th class="resize" v-show="tblPublisherOpt.org_traffic">Org Traffic</th>-->
-<!--                                <th>Edit</th>-->
-<!--                            </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                            <tr v-for="(publish, index) in listPublish.data" :key="index">-->
-<!--                                <td>{{ index + 1}}</td>-->
-<!--                                <td>-->
-<!--                                    <div class="btn-group">-->
-<!--                                        <button class="btn btn-default">-->
-<!--                                            &lt;!&ndash; <input type="checkbox" :disabled="checkAhref(publish)" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds"> &ndash;&gt;-->
-<!--                                            <input class="custom-checkbox" type="checkbox" v-on:change="checkSelected" :id="publish.id" :value="publish.id" v-model="checkIds">-->
-<!--                                        </button>-->
-<!--                                    </div>-->
-<!--                                </td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.created" v-if="user.isAdmin || user.isOurs == 0 || user.role_id == 6">{{ displayDate(publish.created_at) }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.uploaded" v-if="user.isAdmin || user.isOurs == 0">{{ displayDate(publish.updated_at) }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.language">{{ publish.language_name }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.country">{{ publish.country_name }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.continent">{{ publish.country_continent ? publish.country_continent : publish.publisher_continent }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.topic">{{ publish.topic == null ? 'N/A':publish.topic }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.casino_sites">{{ publish.casino_sites }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.in_charge">{{ publish.in_charge == null ? 'N/A':publish.in_charge }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.seller" v-if="user.isAdmin || user.isOurs == 0">{{ publish.username ? publish.username : publish.user_name   }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.valid">{{ publish.valid }}</td>-->
-<!--                                <td v-show="tblPublisherOpt.url">{{ replaceCharacters(publish.url) }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.price">{{ publish.price == '' || publish.price == null ? '':'$'}} {{ publish.price }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.price_basis" :data-sort="publish.price_basis" v-html="displayStar(publish.price_basis)"></td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.inc_article">{{ publish.inc_article }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.kw_anchor">{{ publish.kw_anchor }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.ur">{{ publish.ur }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.dr">{{ publish.dr }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.backlinks">{{ publish.backlinks }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.ref_domain">{{ publish.ref_domain }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.org_keywords">{{ formatPrice(publish.org_keywords) }}</td>-->
-<!--                                <td class="resize" v-show="tblPublisherOpt.org_traffic">{{ formatPrice(publish.org_traffic) }}</td>-->
-<!--                                <td>-->
-<!--                                    <div class="btn-group">-->
-<!--                                        <button data-toggle="modal" @click="doUpdate(publish)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>-->
-<!--                                    </div>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
 
                     <vue-virtual-table
                         v-if="!tableLoading"
@@ -691,11 +635,28 @@
                                     </p>
 
                                     <ul class="font-italic">
-                                        <li v-if="isAccountPaymentNotComplete">Account <strong><u>payment information</u></strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is <strong><u>invalid</u></strong>.</li>
+                                        <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
+                                        <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
                                     </ul>
 
-                                    <p class="mb-0">{{ accountValidityMessage }}</p>
+                                    <div class="mb-0">
+                                        <span>
+                                            <span v-if="this.isAccountPaymentNotComplete">
+                                                Please
+                                                <router-link :to="{ path: `/profile/${user.id}` }">
+                                                    Click here
+                                                </router-link>
+                                                to complete your payment information in profile settings.
+                                            </span>
+
+                                            <span v-if="this.isAccountInvalid">
+                                                Contact an administrator or person in charge to request
+                                                for validation.
+                                            </span>
+
+                                            Logout to complete the process.
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1307,18 +1268,6 @@
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
 
-            accountValidityMessage() {
-                if (this.isAccountPaymentNotComplete && !this.isAccountInvalid) {
-                    return 'Please complete your payment information in profile settings. Logout to complete the process.'
-                } else if (!this.isAccountPaymentNotComplete && this.isAccountInvalid) {
-                    return 'Please contact an administrator or person in charge to request for validation.' +
-                        ' Logout to complete the process.'
-                } else {
-                    return 'Please complete your payment information in profile settings and contact an administrator' +
-                        ' or person in charge for validation. Logout to complete the process.'
-                }
-            },
-
             tableConfig() {
                 return [
                     {
@@ -1356,42 +1305,44 @@
                         name : 'Language',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.language
                     },
                     {
                         prop : 'country_name',
                         name : 'Country',
                         sortable: true,
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.country
                     },
                     {
                         prop : '_action',
                         name : 'Continent',
                         actionName : 'continentData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.continent
                     },
                     {
                         prop : '_action',
                         name : 'Topic',
                         actionName : 'topicData',
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.topic
                     },
                     {
                         prop : 'casino_sites',
                         name : 'Casino & Betting Sites',
                         sortable: true,
                         width: 100,
-                        isHidden: true
+                        isHidden:
+                            !this.tblPublisherOpt.casino_sites
                     },
                     {
                         prop : '_action',
                         name : 'In-charge',
                         actionName : 'inChargeData',
                         width: 100,
-                        isHidden: true
+                        isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
                         prop : '_action',
@@ -1406,84 +1357,87 @@
                         name : 'Valid',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.valid
                     },
                     {
                         prop : '_action',
                         name : 'URL',
                         actionName : 'urlData',
                         width: 150,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.url
                     },
                     {
                         prop : '_action',
                         name : 'Price',
                         actionName : 'priceData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.price
                     },
                     {
                         prop : '_action',
                         name : 'Price Basis',
                         actionName : 'priceBasisData',
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.price_basis
                     },
                     {
                         prop : 'inc_article',
                         name : 'Inc Article',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.inc_article
                     },
                     {
                         prop : 'kw_anchor',
                         name : 'KW Anchor',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.kw_anchor
                     },
                     {
                         prop : 'ur',
                         name : 'UR',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.ur
                     },
                     {
                         prop : 'dr',
                         name : 'DR',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.dr
                     },
                     {
                         prop : 'backlinks',
                         name : 'Backlinks',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.backlinks
                     },
                     {
                         prop : 'ref_domain',
                         name : 'Ref Domain',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden:
+                            !this.tblPublisherOpt.ref_domain
                     },
                     {
                         prop : '_action',
                         name : 'Org Keywords',
                         actionName : 'orgKeywordData',
                         width: 120,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.org_keywords
                     },
                     {
                         prop : '_action',
                         name : 'Org Traffic',
                         actionName : 'orgTrafficData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblPublisherOpt.org_traffic
                     },
                     {
                         prop : '_action',
