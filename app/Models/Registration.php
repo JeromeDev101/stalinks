@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
     protected $table = 'registration';
 
