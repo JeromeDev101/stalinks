@@ -94,6 +94,7 @@
                                 <label>Team In-charge</label>
                                 <select class="form-control" v-model="filterModel.team_in_charge">
                                     <option value="">All</option>
+                                    <option value="none">None</option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username}}
                                     </option>

@@ -122,9 +122,13 @@ class AccountController extends Controller
                     ->orWhere( 'username', 'LIKE', '%'.$search.'%' );
             });
         })->when( $team_in_charge, function($query) use ($team_in_charge){
-            return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {
-                $subquery->where('team_in_charge', $team_in_charge);
-            });
+            if($team_in_charge == 'none') {
+                return $query->where('team_in_charge', null);
+            } else {
+                return $query->whereHas('team_in_charge', function ($subquery) use( $team_in_charge ) {
+                    $subquery->where('team_in_charge', $team_in_charge);
+                });
+            }
         })->when( $country, function($query) use ($country){
             return $query->where( 'country_id', $country );
         })->when( $commission, function($query) use ($commission){
