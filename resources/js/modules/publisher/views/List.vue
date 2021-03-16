@@ -245,24 +245,6 @@
 
                         </div>
 
-                        <div class="col-md-2 my-3">
-                            <div class="input-group">
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Selected Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
-                                        <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-                                        <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>
-                                        <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>
-                                        <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="row">
@@ -309,16 +291,33 @@
 
                 </div>
 
-                <div class="box-body no-padding"style="overflow:auto!important;">
+                <div class="box-body no-padding" style="overflow:auto!important;">
                     <div class="col-md-2 my-3">
-                        <button class="btn btn-default"
+
+                        <div class="input-group">
+                            <button class="btn btn-default mr-2"
                                 @click="selectAll">{{
                                                    allSelected
                                                    ?
                                                    "Deselect"
                                                    : "Select"
                                                    }} All
-                        </button>
+                            </button>
+
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Selected Action
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
+                                    <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
+                                    <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>
+                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>
+                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1697,21 +1696,24 @@
 
                 if( this.messageForms.action === 'saved' ){
 
-                    this.getPublisherList();
-
                     if (this.messageForms.errors) {
 
                         let html = '';
-
                         for (var index in this.messageForms.errors) {
-                            html += 'Success <b>' + this.messageForms.errors[index].url + '</b> action has been done.';
+                            var txt = this.messageForms.errors[index].message == 'existing' ? '<b style="color:red;">Invalid</b> URL has already existing Valid URL ':'<b style="color:green;">Successfully validated</b> '
+
+                            html += txt +'<b>' + this.messageForms.errors[index].url + '</b> <br/>';
                         }
+                       
                         swal.fire({
-                            icon: 'success',
-                            title: "Success",
+                            icon: '',
+                            title: " ",
                             html: html,
                             confirmButtonText: "Ok",
                         });
+
+                        this.getPublisherList();
+                        
                     }
                 }
 
