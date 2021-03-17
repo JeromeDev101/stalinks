@@ -379,10 +379,51 @@
                         </div>
                      </div>
                      <div class="col-md-6">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extModel.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
+<!--                           <textarea-->
+<!--                               v-model="extModel.email"-->
+<!--                               type="text"-->
+<!--                               class="form-control"-->
+<!--                               placeholder="Enter Email">-->
+
+<!--                           </textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :tags="extModel.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTag"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extModel.email = newTags"
+                            />
+
                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -1233,7 +1274,7 @@ export default {
                 organic_keywords: '',
                 organic_traffic: '',
                 facebook: '',
-                email: '',
+                email: [],
                 phone: '',
                 skype: '',
                 info: '',
@@ -1317,6 +1358,7 @@ export default {
                 data: []
             },
             email_to: '',
+            email_add: '',
             extDomain_id: '',
             allSelected: false,
             separators: [';', ',', '|', ' '],
@@ -2438,6 +2480,18 @@ export default {
         //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
         //     this.isPopupLoading = false;
         // }
+
+        checkEmailValidationError(error){
+            let obj = error;
+            return Object.keys(obj)
+                .filter(function (er){
+                    return er.includes('email.');
+                })
+                .map(function(key) {
+                    return obj[key];
+                })
+                .flat();
+        }
     },
 }
 </script>

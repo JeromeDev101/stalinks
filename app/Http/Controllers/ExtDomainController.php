@@ -351,10 +351,21 @@ class ExtDomainController extends Controller
             if (!isset($input[$key])) $input[$key] = '';
         }
 
+        // handle email
+        $input['email'] = array_column($input['email'], 'text');
+
+        $customMessages = [];
+
+        foreach ($input['email'] as $key => $value) {
+            $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+            $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        }
+
         $newStatus = 0;
 
         Validator::make($input, [
             'domain' => 'required|max:255',
+            'email.*' => 'email|unique:ext_domains,email',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -362,7 +373,8 @@ class ExtDomainController extends Controller
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0'
-        ])->validate();
+        ],
+        $customMessages)->validate();
 
         $url_remove_http = $this->remove_http($input['domain']);
 
@@ -424,9 +436,9 @@ class ExtDomainController extends Controller
         $input['status'] = $request->status == "" ? config('constant.EXT_STATUS_NEW'):intval($request->status);
         $hasContactInfo = $this->isInputContactInfo($input);
         $validateRule = [];
-        if ($input['email'] != '') {
-            $validateRule['email'] = ['string', new ExtListEmail()];
-        }
+//        if ($input['email'] != '') {
+//            $validateRule['email'] = ['string', new ExtListEmail()];
+//        }
 
         if ($input['facebook'] != '') {
             $validateRule['facebook'] = ['string', new ExtListLink()];
@@ -457,9 +469,11 @@ class ExtDomainController extends Controller
             return response()->json(false);
         }
 
+        $input['email'] = implode ('|', $input['email'] );
 
         $newExtDomain = $this->extDomainRepository->create($input);
         $newExtDomain->country;
+
         return response()->json(['success' => true, 'data' => $newExtDomain]);
     }
 
