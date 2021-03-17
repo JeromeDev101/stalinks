@@ -185,9 +185,14 @@
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
-                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username }}</td>
+                                <td v-if="(user.isOurs ==
+                                 0 && !user.isAdmin) ||
+                                 user.isAdmin">{{
+                                               backLink.publisher == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username) }}</td>
                                 <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
-                                <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
+                                <td>{{ backLink.publisher
+                                    == null ? 'N/A' : replaceCharacters(backLink.publisher.url)
+                                    }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>
                                     <div class="dont-break-out">
@@ -200,7 +205,9 @@
                                     </div>
                                 </td>
                                 <td>{{ backLink.publisher == null ? '':'$ '+ convertPrice(backLink.publisher.price) }}</td>
-                                <td>$ {{ computePriceStalinks(backLink.publisher.price, backLink.publisher.inc_article) }}</td>
+                                <td>$ {{
+                                    backLink.publisher ==
+                                    null ? 'N/A' : computePriceStalinks(backLink.publisher.price, backLink.publisher.inc_article) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
