@@ -397,6 +397,7 @@
 
                             <vue-tags-input
                                 v-model="email_add"
+                                :max-tags="10"
                                 :tags="extModel.email"
                                 :allow-edit-tags="true"
                                 :separators="separators"
@@ -410,6 +411,15 @@
 
                                 @tags-changed="newTags => extModel.email = newTags"
                             />
+
+                            <p
+                                v-if="extModel.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extModel.email = []">
+                                Remove all emails
+                            </p>
 
                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
 

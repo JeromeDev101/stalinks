@@ -368,6 +368,7 @@ class ExtDomainController extends Controller
         Validator::make($input, [
             'domain' => 'required|max:255',
 //            'email.*' => 'email|unique:ext_domains,email',
+            'email' => 'array|max:10',
             'email.*' => ['email', new EmailPipe],
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
