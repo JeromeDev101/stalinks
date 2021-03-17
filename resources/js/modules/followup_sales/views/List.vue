@@ -171,7 +171,7 @@
                                 <td v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
                                 <td v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
                                 <td v-show="tblOptions.url">{{ replaceCharacters(sales.publisher.url) }}</td>
-                                <td v-show="tblOptions.price">$ {{ sales.price }}</td>
+                                <td v-show="tblOptions.price">{{ sales.publisher == null ? '':'$ ' + sales.publisher.price }}</td>
                                 <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
                                         {{ sales.link_from }}
