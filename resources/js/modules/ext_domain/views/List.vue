@@ -2212,11 +2212,11 @@ export default {
                         let emails = [];
                         for (let index in this.checkIds) {
                             if (this.checkIds[index].email != "") {
-                                emails.push(this.checkIds[index].email)
+                                emails.push(this.checkIds[index].email.split('|'))
                             }
                         }
 
-                        this.urlEmails = createTags(emails)
+                        this.urlEmails = createTags(emails.flat())
 
                         // this.email_to = emails.join('|')
                     }
