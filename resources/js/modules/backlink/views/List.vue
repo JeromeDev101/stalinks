@@ -199,8 +199,8 @@
                                         <a href="backLink.link">{{ backLink.link }}</a>
                                     </div>
                                 </td>
-                                <td>$ {{ convertPrice(backLink.price) }}</td>
-                                <td>$ {{ computePriceStalinks(backLink.price, backLink.publisher.inc_article) }}</td>
+                                <td>{{ backLink.publisher == null ? '':'$ '+ convertPrice(backLink.publisher.price) }}</td>
+                                <td>$ {{ computePriceStalinks(backLink.publisher.price, backLink.publisher.inc_article) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
