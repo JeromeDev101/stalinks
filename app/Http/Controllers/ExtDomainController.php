@@ -369,7 +369,7 @@ class ExtDomainController extends Controller
             'domain' => 'required|max:255',
 //            'email.*' => 'email|unique:ext_domains,email',
             'email' => 'array|max:10',
-            'email.*' => ['email', new EmailPipe],
+            'email.*' => ['email', new EmailPipe('add')],
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -473,7 +473,12 @@ class ExtDomainController extends Controller
             return response()->json(false);
         }
 
-        $input['email'] = implode ('|', $input['email'] );
+        if (!empty($input['email'])) {
+
+            $input['email'] = implode ('|', $input['email'] );
+        } else {
+            $input['email'] = null;
+        }
 
         $newExtDomain = $this->extDomainRepository->create($input);
         $newExtDomain->country;
@@ -550,6 +555,8 @@ class ExtDomainController extends Controller
         $input['organic_traffic']  = $request->ext['organic_traffic'];
         $input['country_id']  = $request->ext['country_id'];
 
+        $input['email'] = array_column($input['email'], 'text');
+
         if ( $request->ext['status'] == 100){
             $request->validate([
                 'pub.seller' => 'required',
@@ -585,9 +592,9 @@ class ExtDomainController extends Controller
             array_push($listStatusExclude, config('constant.EXT_STATUS_IN_TOUCHED'));
         }
 
-        if ($input['email'] != '') {
-            $validateRule['email'] = ['string', new ExtListEmail()];
-        }
+//        if ($input['email'] != '') {
+//            $validateRule['email'] = ['string', new ExtListEmail()];
+//        }
 
         if ($input['facebook'] != '') {
             $validateRule['facebook'] = ['string', new ExtListLink()];
@@ -622,14 +629,23 @@ class ExtDomainController extends Controller
             $input['domain'] = 'http://'.$input['domain'];
         }
 
+        $customMessages = [];
+
+        foreach ($input['email'] as $key => $value) {
+            $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+            $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        }
+
         Validator::make($input, [
+            'email' => 'array|max:10',
+            'email.*' => ['email', new EmailPipe('edit', $input['id'])],
             'domain' => 'required|url|max:255',
             'ahrefs_rank' => 'required|integer|gte:0',
             'no_backlinks' => 'required|integer|gte:0',
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0',
-        ])->validate();
+        ], $customMessages)->validate();
 
         // if( $input['status'] === '100'){
         //     Publisher::create([
@@ -670,6 +686,12 @@ class ExtDomainController extends Controller
 //            return response()->json(['success' => false, 'message' => 'status invalid']);
 //        }
 
+        if (!empty($input['email'])) {
+
+            $input['email'] = implode ('|', $input['email'] );
+        } else {
+            $input['email'] = null;
+        }
 
         $result = $this->extDomainRepository->updateData($input, $countryIds);
         return response()->json(['success' => $result]);

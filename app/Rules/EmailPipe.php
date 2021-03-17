@@ -13,11 +13,12 @@ class EmailPipe implements Rule
      * @return void
      */
 
-    public $value;
+    public $mod, $id, $value;
 
-    public function __construct()
+    public function __construct($mod, $id = null)
     {
-        //
+        $this->mod = $mod;
+        $this->id = $id;
     }
 
     /**
@@ -30,9 +31,11 @@ class EmailPipe implements Rule
     public function passes($attribute, $value)
     {
         $this->value = $value;
-        $result = ExtDomain::whereRaw("find_in_set('$value',replace(email,'|',','))")->count();
+        $result = $this->mod === 'add'
+            ? ExtDomain::whereRaw("find_in_set('$value',replace(email,'|',','))")
+            : ExtDomain::whereRaw("find_in_set('$value',replace(email,'|',','))")->where('id','!=', $this->id);
 
-        return $result ? false : true;
+        return $result->count() === 0;
     }
 
     /**

@@ -666,10 +666,55 @@
                         </div>
                      </div>
                      <div class="col-md-12">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
-                           <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+<!--                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :max-tags="10"
+                                :tags="extUpdate.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTagUpdate"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extUpdate.email = newTags"
+                            />
+
+                            <p
+                                v-if="extUpdate.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extUpdate.email = []">
+                                Remove all emails
+                            </p>
+
+                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -1308,7 +1353,9 @@ export default {
                 mail_name: '',
             },
             extBackLink: {},
-            extUpdate: {},
+            extUpdate: {
+                email: []
+            },
             publisherAdd: {
                 seller: '',
                 language_id: '',
@@ -1827,7 +1874,7 @@ export default {
                 organic_keywords: '',
                 organic_traffic: '',
                 facebook: '',
-                email: '',
+                email: [],
                 phone: '',
                 status: 0
             }
@@ -1998,9 +2045,18 @@ export default {
 
         doEditExt(extDomain) {
             this.formAddUrl = true;
+            this.extUpdate.email = [];
 
             this.$store.dispatch('clearMessageForm');
             this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+            let emails = [];
+
+            if (this.extUpdate.email) {
+                emails = this.extUpdate.email.split('|')
+            }
+
+            this.extUpdate.email = createTags(emails)
 
             if (this.extUpdate.status != 100) {
                 this.formAddUrl = false;
@@ -2208,7 +2264,7 @@ export default {
                     swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                 } else {
                     let err = this.checkIds.some(function(items){
-                        return items.status == 50 | items.email == "";
+                        return items.status == 50 | items.email == "" | items.email == null;
                     });
 
                     if(err) {
@@ -2221,7 +2277,7 @@ export default {
                         this.openModalEmailElem();
                         let emails = [];
                         for (let index in this.checkIds) {
-                            if (this.checkIds[index].email != "") {
+                            if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
                                 emails.push(this.checkIds[index].email.split('|'))
                             }
                         }
@@ -2238,13 +2294,13 @@ export default {
             if (ext != null) {
                 if (ext.status == 50) {
                     swal.fire('Invalid', 'This is Already Contacted', 'error')
-                } else if (ext.email == "") {
+                } else if (ext.email == "" || ext.email == null) {
                     swal.fire('No email', 'Please check if with email', 'error')
                 } else {
                     this.openModalEmailElem();
                     // this.email_to = ext.email;
                     this.extDomain_id = ext.id;
-                    this.urlEmails = createTags(ext.email.split('|'))
+                    this.urlEmails = ext.email ? createTags(ext.email.split('|')) : [];
                 }
             }
 
