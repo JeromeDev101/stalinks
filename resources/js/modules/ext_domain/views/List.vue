@@ -2012,6 +2012,7 @@ export default {
             });
             this.isPopupLoading = false;
             if (this.messageForms.action === 'updated_ext') {
+                console.log(this.extUpdate)
                 for (var index in this.listExt.data) {
                     if (this.listExt.data[index].id === this.extUpdate.id) {
                         this.listExt.data[index] = this.extUpdate;
@@ -2050,10 +2051,14 @@ export default {
             this.$store.dispatch('clearMessageForm');
             this.extUpdate = JSON.parse(JSON.stringify(extDomain))
 
+            this.extUpdate.email = this.extUpdate.email === null ? [] : this.extUpdate.email;
+
             let emails = [];
 
-            if (this.extUpdate.email) {
+            if (typeof(this.extUpdate.email) === "string") {
                 emails = this.extUpdate.email.split('|')
+            } else {
+                emails = this.extUpdate.email.map(a => a.text);
             }
 
             this.extUpdate.email = createTags(emails)
@@ -2278,7 +2283,11 @@ export default {
                         let emails = [];
                         for (let index in this.checkIds) {
                             if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
-                                emails.push(this.checkIds[index].email.split('|'))
+                                if (typeof(this.checkIds[index].email) === "string") {
+                                    emails.push(this.checkIds[index].email.split('|'))
+                                } else {
+                                    emails.push(this.checkIds[index].email.map(a => a.text))
+                                }
                             }
                         }
 
@@ -2294,13 +2303,22 @@ export default {
             if (ext != null) {
                 if (ext.status == 50) {
                     swal.fire('Invalid', 'This is Already Contacted', 'error')
-                } else if (ext.email == "" || ext.email == null) {
+                } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
                     swal.fire('No email', 'Please check if with email', 'error')
                 } else {
                     this.openModalEmailElem();
                     // this.email_to = ext.email;
                     this.extDomain_id = ext.id;
-                    this.urlEmails = ext.email ? createTags(ext.email.split('|')) : [];
+
+                    let emails = [];
+
+                    if (typeof(ext.email) === "string") {
+                        emails = ext.email.split('|')
+                    } else {
+                        emails = ext.email.map(a => a.text);
+                    }
+
+                    this.urlEmails = emails ? createTags(emails) : [];
                 }
             }
 
