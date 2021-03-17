@@ -407,7 +407,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Price</label>
+                                    <label for="">Prices</label>
                                     <input type="number" class="form-control" v-model="updateModel.price" name="" aria-describedby="helpId" placeholder="" disabled>
                                 </div>
                             </div>
@@ -1252,7 +1252,9 @@
                 let that = JSON.parse(JSON.stringify(buy))
 
                 this.updateModel = that
-                this.updateModel.price = this.computePrice(that.price, that.inc_article);
+                this.updateModel.seller_price = that.price;
+                this.updateModel.price = this.computePriceStalinks(that.price, that.inc_article);
+                this.updateModel.prices = this.updateModel.price
 
                 $('#modal-buy-update').modal({
                     show: true

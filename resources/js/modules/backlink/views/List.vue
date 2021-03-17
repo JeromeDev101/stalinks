@@ -172,8 +172,8 @@
                                 <th v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
-                                <th>Price</th>
-                                <th v-if="user.isAdmin">Prices</th>
+                                <th v-if="user.isAdmin">Price</th>
+                                <th>Prices</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
                                 <th>Date for Proccess</th>
                                 <th>Date Completed</th>
@@ -204,10 +204,8 @@
                                         <a href="backLink.link">{{ backLink.link }}</a>
                                     </div>
                                 </td>
-                                <td>{{ backLink.publisher == null ? '':'$ '+ convertPrice(backLink.publisher.price) }}</td>
-                                <td>$ {{
-                                    backLink.publisher ==
-                                    null ? 'N/A' : computePriceStalinks(backLink.publisher.price, backLink.publisher.inc_article) }}</td>
+                                <td v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ backLink.price }}</td>
+                                <td>{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + backLink.prices }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
@@ -274,12 +272,21 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.isAdmin">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label>Price</label>
                                         <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live' || user.role_id == 8" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label>Prices</label>
+                                        <input type="number" v-model="modelBaclink.prices" :disabled="true" class="form-control" value="" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -721,6 +728,8 @@
             editBackLink(baclink) {
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
+
+                console.log(that)
                 this.withArticle = that.publisher.inc_article == "No" ? true:false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher.id
@@ -729,6 +738,7 @@
                 this.modelBaclink.username = that.publisher.user.username
                 this.modelBaclink.anchor_text = that.anchor_text
                 this.modelBaclink.price = that.price
+                this.modelBaclink.prices = that.prices
                 this.modelBaclink.link = that.link
                 this.modelBaclink.link_from = that.link_from
                 this.modelBaclink.live_date = that.live_date

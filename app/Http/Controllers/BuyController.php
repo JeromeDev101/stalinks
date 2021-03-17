@@ -264,7 +264,8 @@ class BuyController extends Controller
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
 
         $backlink = Backlink::create([
-            'price' => $request->price,
+            'prices' => $request->prices,
+            'price' => $request->seller_price,
             'url_advertiser' => $request->url_advertiser,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
@@ -289,7 +290,7 @@ class BuyController extends Controller
         broadcast(new BuyEvent($user->id));
         broadcast(new SellerReceivesOrderEvent($publisher->user_id));
 
-        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
+        if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
             Article::create([
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,

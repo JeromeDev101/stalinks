@@ -69,12 +69,12 @@
                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                <td>{{ index + 1 }}</td>
                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
-                               <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.publisher == null ? 0 : number_format(incomes_admin.publisher.price) }}</td>
-                               <td v-show="tblOptIncomesAdmin.price">$ {{ number_format(incomes_admin.price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.price">{{ incomes_admin.prices == '' || incomes_admin.prices == null ? 0:'$ ' + number_format(incomes_admin.prices) }}</td>
                                <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
                                <td v-show="tblOptIncomesAdmin.content_charges">0</td>
                                <!-- static only -->
-                               <td v-show="tblOptIncomesAdmin.net_incomes">$ {{ incomes_admin.publisher == null ? 0 : number_format(incomes_admin.publisher.price) }}</td>
+                               <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
                            </tr>
                         </tbody>
                     </table>
@@ -159,6 +159,10 @@
         },
 
         methods: {
+            computeNetIncomes(incomes) {
+                return 0;
+            },
+
             computeGross(selling_price, price){
                 let p1 = parseFloat(selling_price);
                 let p2 = parseFloat(price);

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use League\OAuth2\Server\RequestEvent;
 use App\Models\User;
 use App\Models\Registration;
+use App\Models\Backlink;
+use App\Models\Formula;
 
 class PublisherController extends Controller
 {
@@ -250,5 +252,117 @@ class PublisherController extends Controller
         }
 
         return response()->json(['success'=> true],200);
+    }
+
+    /** 
+     * Updating Prices
+     * 
+     */
+    // public function updatePrice() {
+    //     $list = Backlink::select('id', 'price')->where('status', 'Live')->get();
+
+    //     $result = [];
+    //     foreach( $list as $backlink) {
+    //         $backlinks = Backlink::find($backlink->id);
+
+    //         $result[] = $backlinks->update([
+    //             'prices' => $backlink->price
+    //         ]);
+
+    //     }
+
+    //     return response()->json(['success' => true, 'data' => $result], 200);
+    // }
+
+
+    public function getPrice(){
+        $backlinks = Backlink::select('publisher_id', 'id')->where('status', 'Live')->get();
+
+        $test = [];
+        foreach($backlinks as $back) {
+            $publisher = Publisher::find($back->publisher_id);
+
+            if($publisher) {
+                $backlink = Backlink::find($back->id);
+                
+                $test[] = $backlink->update([
+                    'price' => $publisher->price,
+                    'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
+                ]);
+
+                // array_push($test,[
+                //     'backlink_id' => $back->id,
+                //     'publisher_id' => $back->publisher_id,
+                //     'price' => $publisher->price,
+                //     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
+                // ]);
+
+            } 
+            
+            else {
+
+                $backlink = Backlink::find($back->id);
+                
+                $test[] = $backlink->update([
+                    'price' => 0,
+                    'prices' => 0,
+                ]);
+
+                // array_push($test,[
+                //     'backlink_id' => $back->id,
+                //     'publisher_id' => $back->publisher_id,
+                //     'price' => 0,
+                //     'prices' => 0,
+                // ]);
+            }
+        }
+
+
+
+        return response()->json($test);
+    }
+
+    private function getStalinksPrices($price, $article) {
+
+        $formula = Formula::all();
+
+        $additional = floatVal($formula[0]->additional);
+        $percent = floatVal($formula[0]->percentage);
+        $selling_price = $price;
+
+        if( $price != '' && $price != null ){ // check if price has a value
+
+            if( strtolower($article) == 'yes' ){ //check if with article
+
+                // if( commission == 'no' ){
+                //     selling_price = price
+                // }
+
+                // if( commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatVal($percentage) + floatVal($price);
+                // }
+            }
+
+            if( strtolower($article) == 'no' ){ //check if without article
+
+                // if( commission == 'no' ){
+                //     selling_price = parseFloat(price) + additional
+                // }
+
+                // if( commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatVal($percentage) + floatVal($price) + $additional;
+                // }
+
+            }
+
+        }
+
+        return $selling_price;
+    }
+
+    private function percentage($percent, $total) {
+        return (($percent/ 100) * $total);
     }
 }
