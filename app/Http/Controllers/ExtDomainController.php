@@ -7,6 +7,7 @@ use App\Libs\Alexa;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
+use App\Rules\EmailPipe;
 use App\Rules\ExtListEmail;
 use App\Rules\ExtListLink;
 use App\Rules\ExtListPhone;
@@ -24,6 +25,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\ExtDomain;
 use League\OAuth2\Server\RequestEvent;
+use PharIo\Manifest\Email;
 
 class ExtDomainController extends Controller
 {
@@ -365,7 +367,8 @@ class ExtDomainController extends Controller
 
         Validator::make($input, [
             'domain' => 'required|max:255',
-            'email.*' => 'email|unique:ext_domains,email',
+//            'email.*' => 'email|unique:ext_domains,email',
+            'email.*' => ['email', new EmailPipe],
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
