@@ -224,6 +224,9 @@ Route::middleware('auth:api')->group(function () {
 
     //Continents
     Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');
+
+    //Compute for best price
+    Route::name('generate-best-price')->post('generate-best-price', 'PublisherController@generateBestPrice');
 });
 
 //Mailgun external
