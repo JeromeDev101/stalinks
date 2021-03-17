@@ -163,14 +163,18 @@
                         <tbody>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td v-show="tblOptions.pub_id">{{ sales.publisher.id }}</td>
+                                <td
+                                    v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
                                 <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                 <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td v-show="tblOptions.country">{{ sales.publisher.country == null ? 'N/A' : sales.publisher.country.name }}</td>
+                                <td
+                                    v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
                                 <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
+                                <td
+                                    v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username) }}</td>
                                 <td v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
-                                <td v-show="tblOptions.url">{{ replaceCharacters(sales.publisher.url) }}</td>
+                                <td
+                                    v-show="tblOptions.url">{{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}</td>
                                 <td v-show="tblOptions.price">{{ sales.publisher == null ? '':'$ ' + sales.publisher.price }}</td>
                                 <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
@@ -696,7 +700,10 @@
                 let total_price = [];
                 let total = 0;
                 sales.forEach(function(item, index){
-                    if (typeof item.publisher.price !== 'undefined') {
+                    if (item.publisher !==
+                        null && typeof item.publisher.price
+                        !==
+                        'undefined') {
                         total_price.push( parseFloat(item.publisher.price))
                     }
                 })
