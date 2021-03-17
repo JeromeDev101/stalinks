@@ -276,7 +276,7 @@ class PublisherController extends Controller
 
 
     public function getPrice(){
-        $backlinks = Backlink::select('publisher_id', 'id')->where('status', 'Live')->get();
+        $backlinks = Backlink::select('publisher_id', 'id')->get();
 
         $test = [];
         foreach($backlinks as $back) {
