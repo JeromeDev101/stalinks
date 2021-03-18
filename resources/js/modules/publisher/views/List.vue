@@ -224,7 +224,22 @@
                                     <div class="input-group">
                                         <input type="file" class="form-control" v-on:change="checkDataExcel(); checkAccountValidity()" enctype="multipart/form-data" ref="excel" name="file">
                                         <div class="input-group-btn">
-                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn || checkAccountValidity()" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                            <button
+                                                title="Upload CSV File"
+                                                class="btn btn-primary btn-flat"
+                                                :disabled="isEnableBtn || checkAccountValidity()"
+
+                                                @click="submitUpload">
+                                                <i class="fa fa-upload"></i>
+                                            </button>
+
+                                            <button
+                                                title="Download CSV Template"
+                                                class="btn btn-primary btn-flat"
+
+                                                @click="downloadTemplate">
+                                                <i class="fa fa-download"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -1111,12 +1126,14 @@
     import { mapState } from 'vuex';
     import axios from 'axios';
     import VueVirtualTable from 'vue-virtual-table';
+    import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
     export default {
         components: {
             VueVirtualTable,
         },
         name: '',
+        mixins: [csvTemplateMixin],
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
@@ -2125,6 +2142,13 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            downloadTemplate() {
+                const headers = [
+                    ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
+                ];
+                this.downloadCsvTemplate(headers, 'list_publisher_csv_template');
+            }
         }
 
     }
