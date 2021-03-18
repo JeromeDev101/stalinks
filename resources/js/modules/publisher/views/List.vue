@@ -2144,9 +2144,14 @@
             },
 
             downloadTemplate() {
-                const headers = [
-                    ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
-                ];
+                let headers = [];
+
+                let rows = this.user.isOurs === 0
+                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
+                    : ['URL', 'Price', 'Inc Article']
+
+                headers.push(rows);
+
                 this.downloadCsvTemplate(headers, 'list_publisher_csv_template');
             }
         }
