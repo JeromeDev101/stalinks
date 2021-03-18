@@ -1809,7 +1809,9 @@ export default {
                         }
                     });
 
-                    this.getExtList();
+                    this.getExtList({
+                        params: this.filterModel
+                    });
                     this.checkIds = []
                     swal.fire(
                         'Saved!',
@@ -1838,7 +1840,11 @@ export default {
             await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
 
             if (this.messageForms.action === 'uploaded') {
-                this.getExtList();
+                // this.getExtList();
+                this.getExtList({
+                    params: this.filterModel
+                });
+
                 this.$refs.excel.value = '';
                 // this.$refs.language.value = '';
                 // this.$refs.status.value = '';
