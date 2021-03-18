@@ -204,8 +204,8 @@
                                         <a href="backLink.link">{{ backLink.link }}</a>
                                     </div>
                                 </td>
-                                <td v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ backLink.price }}</td>
-                                <td>{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + backLink.prices }}</td>
+                                <td v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>
+                                <td>{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + formatPrice(backLink.prices) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
@@ -509,6 +509,11 @@
 
             percentage(percent, total) {
                 return ((percent/ 100) * total).toFixed(2)
+            },
+
+            formatPrice(value) {
+                let val = (value/1).toFixed(0)
+                return val;
             },
 
             computePriceStalinks(price, article) {
