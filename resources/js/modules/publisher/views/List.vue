@@ -224,7 +224,22 @@
                                     <div class="input-group">
                                         <input type="file" class="form-control" v-on:change="checkDataExcel(); checkAccountValidity()" enctype="multipart/form-data" ref="excel" name="file">
                                         <div class="input-group-btn">
-                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn || checkAccountValidity()" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                            <button
+                                                title="Upload CSV File"
+                                                class="btn btn-primary btn-flat"
+                                                :disabled="isEnableBtn || checkAccountValidity()"
+
+                                                @click="submitUpload">
+                                                <i class="fa fa-upload"></i>
+                                            </button>
+
+                                            <button
+                                                title="Download CSV Template"
+                                                class="btn btn-primary btn-flat"
+
+                                                @click="downloadTemplate">
+                                                <i class="fa fa-download"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -303,7 +318,7 @@
 
                         <div class="col-sm-12">
                             <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
-                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article and KW Anchor. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
                         </div>
                     </div>
 
@@ -1111,12 +1126,14 @@
     import { mapState } from 'vuex';
     import axios from 'axios';
     import VueVirtualTable from 'vue-virtual-table';
+    import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
     export default {
         components: {
             VueVirtualTable,
         },
         name: '',
+        mixins: [csvTemplateMixin],
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
@@ -2125,6 +2142,18 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            downloadTemplate() {
+                let headers = [];
+
+                let rows = this.user.isOurs === 0
+                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
+                    : ['URL', 'Price', 'Inc Article', 'KW Anchor'];
+
+                headers.push(rows);
+
+                this.downloadCsvTemplate(headers, 'list_publisher_csv_template');
+            }
         }
 
     }
