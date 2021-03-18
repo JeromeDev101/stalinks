@@ -724,12 +724,30 @@
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
-
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                    <div class="modal-footer d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="mb-0">
+                                <input
+                                    type="checkbox"
+                                    v-model="btnTermsAndConditions"
+                                    @change="isDisableSubmit =  !isDisableSubmit">
+                                I've read and accept the
+
+                                <a
+                                    href="#"
+                                    data-toggle="modal"
+                                    data-target="#modalTermsAndCondition">
+                                    Terms and Condition
+                                </a>
+                            </p>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -767,14 +785,17 @@
         </div>
         <!-- End of Modal Settings -->
 
+        <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
     import axios from 'axios';
+    import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 
     export default {
+        components: {TermsAndConditions},
         data() {
             return {
                 paginate: [15,25,50,100,200,250,'All'],
@@ -859,6 +880,8 @@
                 updateCompanyName: true,
                 listTeamIncharge: [],
                 isVerified: true,
+                btnTermsAndConditions: false,
+                isDisableSubmit: true,
             }
         },
 
@@ -987,6 +1010,9 @@
                         'Successfully Added!',
                         'success'
                     );
+
+                    this.isDisableSubmit = true;
+                    this.btnTermsAndConditions = false;
                 }
             },
 
