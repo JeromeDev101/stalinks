@@ -128,7 +128,22 @@
                         <div class="input-group">
                            <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
                            <div class="input-group-btn">
-                              <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                              <button
+                                  title="Upload CSV File"
+                                  class="btn btn-primary btn-flat"
+                                  :disabled="isEnableBtn"
+
+                                  @click="submitUpload">
+                                  <i class="fa fa-upload"></i>
+                              </button>
+
+                               <button
+                                   title="Download CSV Template"
+                                   class="btn btn-primary btn-flat"
+
+                                   @click="downloadTemplate">
+                                   <i class="fa fa-download"></i>
+                               </button>
                            </div>
                         </div>
                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -1259,6 +1274,7 @@ import axios from 'axios';
 import DownloadCsv from '@/components/export-csv/Csv.vue'
 import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
+import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
 export default {
     components: {
@@ -1266,6 +1282,7 @@ export default {
         VueVirtualTable
     },
     name: 'ExtList',
+    mixins: [csvTemplateMixin],
     data() {
         return {
             csvExport: {
@@ -2575,6 +2592,14 @@ export default {
                     return obj[key];
                 })
                 .flat();
+        },
+
+        downloadTemplate() {
+            let headers = [
+                ['Domain', 'Status', 'Country', 'Email']
+            ];
+
+            this.downloadCsvTemplate(headers, 'url_prospect_csv_template');
         }
     },
 }
