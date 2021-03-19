@@ -189,7 +189,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
                             <div class="form-group">
                                 <label>Account Validation</label>
                                 <select class="form-control" v-model="filterModel.account_validation">
