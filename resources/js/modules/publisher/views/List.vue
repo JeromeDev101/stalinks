@@ -410,7 +410,16 @@
                             slot="usernameData">
                             {{ scope.row.username ?
                             scope.row.username :
-                            scope.row.user_name   }}
+                            scope.row.user_name }}
+
+                            <span
+                                v-if="scope.row.user_account_validation === 'invalid'
+                                && (user.isAdmin
+                                || user.role_id === 8
+                                || user.role_id === 6)"
+                                class="badge badge-danger">
+                                Invalid
+                            </span>
                         </template>
 
                         <template

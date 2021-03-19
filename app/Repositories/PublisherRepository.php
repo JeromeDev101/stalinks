@@ -34,6 +34,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $columns = [
             'publisher.*',
             'registration.username',
+            'registration.account_validation as user_account_validation',
             'A.name',
             'A.username as user_name',
             'A.isOurs',
