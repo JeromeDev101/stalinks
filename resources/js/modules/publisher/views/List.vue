@@ -226,6 +226,9 @@
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                     <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button v-if="user.isAdmin ||
+                    user.role_id == 8"
+                        class="btn btn-primary float-right" @click="generateBestPrices">Generate Best Prices</button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
@@ -1291,6 +1294,25 @@
             }
         },
 
+        mounted() {
+            pusher.logToConsole = true;
+
+            const channel = pusher.subscribe('private-user.' +
+                this.user.id);
+
+            channel.bind('prices.generate', (e) => {
+                this.getPublisherList();
+
+                swal.fire({
+                    icon: 'success',
+                    title: "Success",
+                    text:
+                        'Best Price generation has been completed..',
+                    confirmButtonText: "Ok",
+                });
+            });
+        },
+
         computed:{
             ...mapState({
                 tblPublisherOpt: state => state.storePublisher.tblPublisherOpt,
@@ -1489,6 +1511,19 @@
         },
 
         methods: {
+            async generateBestPrices() {
+                await
+                    this.$store.dispatch('generateBestPrices');
+
+                swal.fire({
+                    icon: 'success',
+                    title: "Success",
+                    text:
+                        'The system is now generating best prices, please wait...',
+                    confirmButtonText: "Ok",
+                });
+            },
+
             async saveColumnSetting() {
                 let loader = this.$loading.show();
                 this.toggleTableLoading();

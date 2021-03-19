@@ -748,6 +748,17 @@
             }
         },
 
+        mounted() {
+            pusher.logToConsole = true;
+
+            const channel = pusher.subscribe('private-user.' +
+                this.user.id);
+
+            channel.bind('buyer.bought', (e) => {
+                this.getBuyList();
+            });
+        },
+
         computed: {
             ...mapState({
                 tblBuyOptions: state => state.storeBuy.tblBuyOptions,
