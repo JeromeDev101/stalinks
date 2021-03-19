@@ -189,6 +189,16 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Validation</label>
+                                <select class="form-control" v-model="filterModel.account_validation">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -1195,7 +1205,8 @@
                     qc_validation: this.$route.query.qc_validation || '',
                     show_duplicates:
                         this.$route.query.show_duplicates
-                        || 'no'
+                        || 'no',
+                    account_validation: this.$route.query.account_validation || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1563,7 +1574,8 @@
                             qc_validation: this.filterModel.qc_validation,
                             page: page,
                             show_duplicates:
-                            this.filterModel.show_duplicates
+                            this.filterModel.show_duplicates,
+                            account_validation: this.filterModel.account_validation
                         }
                     });
                 }else{
@@ -1587,7 +1599,8 @@
                             qc_validation: this.filterModel.qc_validation,
                             page: page,
                             show_duplicates:
-                            this.filterModel.show_duplicates
+                            this.filterModel.show_duplicates,
+                            account_validation: this.filterModel.account_validation
                         }
                     });
                 }
@@ -1934,6 +1947,7 @@
                     kw_anchor: '',
                     price_basis: '',
                     qc_validation: '',
+                    account_validation: ''
                 }
 
                 this.getPublisherList({
@@ -2082,7 +2096,8 @@
                         price_basis: this.filterModel.price_basis,
                         qc_validation: this.filterModel.qc_validation,
                         show_duplicates:
-                        this.filterModel.show_duplicates
+                        this.filterModel.show_duplicates,
+                        account_validation: this.filterModel.account_validation
                     }
                 });
             },
