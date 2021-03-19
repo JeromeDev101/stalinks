@@ -3,6 +3,7 @@
 namespace App\Repositories\Traits;
 
 use App\Events\Buyer\BuyEvent;
+use App\Events\GenerateBestPricesDone;
 use App\Events\SellerReceivesOrderEvent;
 use App\Models\Notif;
 
@@ -26,5 +27,10 @@ trait NotificationTrait
         ]);
 
         broadcast(new SellerReceivesOrderEvent($userId));
+    }
+
+    public function generateBestPricesDoneNotification($userId)
+    {
+        broadcast(new GenerateBestPricesDone($userId));
     }
 }

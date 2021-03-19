@@ -259,7 +259,7 @@ class PublisherController extends Controller
 
     public function generateBestPrice()
     {
-        GenerateBestPrice::dispatch()->onQueue('high');
+        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
 
         return response()->json('success');
     }
