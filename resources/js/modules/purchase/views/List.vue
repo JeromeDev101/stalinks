@@ -126,7 +126,7 @@
                                 <th v-show="user.isAdmin || user.isOurs === 0">User Seller</th>
                                 <th>User Buyer</th>
                                 <th>URL Publisher</th>
-                                <th>Price</th>
+                                <th>Prices</th>
                                 <th>Date Completed</th>
                                 <th>Status</th>
                                 <th>Status Payment</th>
@@ -139,7 +139,7 @@
                                 <td v-show="user.isAdmin || user.isOurs === 0">{{ purchase.publisher == null ? 'Record Deleted':purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
                                 <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
                                 <td>{{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}</td>
-                                <td>$ {{ formatPrice(purchase.price) }}</td>
+                                <td>$ {{ formatPrice(purchase.prices) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
                                 <td>{{ purchase.payment_status }}</td>
@@ -359,8 +359,12 @@
                 let total_price = [];
                 let total = 0;
                 incomes.forEach(function(item, index){
-                    total_price.push( parseFloat(item.price))
+                    if( item.price != null && item.price != '' ) {
+                        total_price.push( parseFloat(item.price))
+                    }
                 })
+
+                console.log(total_price)
 
                 if( total_price.length > 0 ){
                     total = total_price.reduce(this.calcSum)

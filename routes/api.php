@@ -250,3 +250,8 @@ Route::get('payment/success', 'PayPalController@success')->name('payment.success
 
 //removing http,www,https
 Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
+
+
+// updating prices
+// Route::name('updating-price')->get('/update-price', 'PublisherController@updatePrice');
+Route::name('get-price-from-publisher')->get('/get-price-from-publisher', 'PublisherController@getPrice');

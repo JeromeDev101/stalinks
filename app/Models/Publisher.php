@@ -26,7 +26,8 @@ class Publisher extends Model
             'casino_sites',
             'topic',
             'kw_anchor',
-            'qc_validation'
+            'qc_validation',
+            'valid',
         ];
 
     public function user() {
