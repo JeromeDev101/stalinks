@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\BestPriceGenerator;
+use App\Events\BestPriceGenerationStart;
 use App\Models\Publisher;
 use App\Repositories\Traits\NotificationTrait;
 use Illuminate\Bus\Queueable;
@@ -33,6 +35,13 @@ class GenerateBestPrice implements ShouldQueue
      */
     public function handle()
     {
+        BestPriceGenerator::create([
+            'user_id' => $this->userId,
+            'status' => 'start'
+        ]);
+
+        $this->generateBestPriceStart();
+
         $duplicates = Publisher::select('url')->groupBy('url')->havingRaw('count(*) > 1')->get()->pluck('url');
 
         //Loop through each duplicate url
@@ -122,6 +131,15 @@ class GenerateBestPrice implements ShouldQueue
                 }
             }
         }
+
+        BestPriceGenerator::create([
+            'user_id' => $this->userId,
+            'status' => 'end'
+        ]);
+
+
+        //Notify buyers
+        $this->generateBestPriceEnd();
 
         //Notify admin
         $this->generateBestPricesDoneNotification($this->userId);

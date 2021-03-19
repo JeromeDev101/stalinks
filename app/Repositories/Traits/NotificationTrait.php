@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Traits;
 
+use App\Events\BestPriceGenerationEnd;
+use App\Events\BestPriceGenerationStart;
 use App\Events\Buyer\BuyEvent;
 use App\Events\GenerateBestPricesDone;
 use App\Events\SellerReceivesOrderEvent;
@@ -32,5 +34,16 @@ trait NotificationTrait
     public function generateBestPricesDoneNotification($userId)
     {
         broadcast(new GenerateBestPricesDone($userId));
+    }
+
+    public function generateBestPriceStart()
+    {
+        broadcast(new BestPriceGenerationStart());
+    }
+
+    public function generateBestPriceEnd()
+    {
+        broadcast(new BestPriceGenerationEnd());
+
     }
 }
