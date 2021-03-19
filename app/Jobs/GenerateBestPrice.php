@@ -37,11 +37,12 @@ class GenerateBestPrice implements ShouldQueue
 
         //Loop through each duplicate url
         foreach ($duplicates as $url) {
+            $url = preg_replace('/\s+/', '', $url);
             $publisher = Publisher::with('user.registration')->where('url', 'like', '%' . $url . '%')->get();
 
             //If duplicates has both Yes and No in inc_article field
             if (in_array('Yes', $publisher->pluck('inc_article')->toArray()) && in_array('No', $publisher->pluck('inc_article')->toArray())) {
-                //Add 15 to price if inc_article is YES
+                //Add 15 to price if inc_article is NO
                 $publisher->map(function ($item, $key) use ($publisher) {
                     if ($item->inc_article == 'No') {
                         $item->price += 15;
@@ -61,19 +62,21 @@ class GenerateBestPrice implements ShouldQueue
                         $bestPrice = $publisher->where('price', $bestPrice->price)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('created_at')->first();
                     }
 
-                    //Filter out best price to other URLs
-                    $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
+                    if ($bestPrice) {
+                        //Filter out best price to other URLs
+                        $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
 
-                    //Set non-best price to invalid
-                    Publisher::whereIn('id', $invalidIds)->update([
-                        'valid' => 'invalid'
-                    ]);
-
-                    //If best priced URL is not valid, update..
-                    if ($bestPrice->valid != 'valid') {
-                        Publisher::where('id', $bestPrice->id)->update([
-                            'valid' => 'valid'
+                        //Set non-best price to invalid
+                        Publisher::whereIn('id', $invalidIds)->update([
+                            'valid' => 'invalid'
                         ]);
+
+                        //If best priced URL is not valid, update..
+                        if ($bestPrice->valid != 'valid') {
+                            Publisher::where('id', $bestPrice->id)->update([
+                                'valid' => 'valid'
+                            ]);
+                        }
                     }
                 } else {
                     //Filter out best price to other URLs
@@ -92,21 +95,30 @@ class GenerateBestPrice implements ShouldQueue
                     }
                 }
             } else {
-                //Get best price among URLs
-                $bestPrice = $publisher->where('price', '!=', null)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('price')->first();
-                //Filter out best price to other URLs
-                $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
+                if ($publisher) {
+                    //Get best price among URLs
+                    $bestPrice = $publisher->where('price', '!=', null)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('price')->first();
 
-                //Set non-best price to invalid
-                Publisher::whereIn('id', $invalidIds)->update([
-                    'valid' => 'invalid'
-                ]);
+                    if ($bestPrice) {
+                        //Filter out best price to other URLs
+                        $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
 
-                //If best priced URL is not valid, update..
-                if ($bestPrice->valid != 'valid') {
-                    Publisher::where('id', $bestPrice->id)->update([
-                        'valid' => 'valid'
-                    ]);
+                        if ($url == 'clementcycling.com') {
+                            \Log::debug('HIT: ' . $publisher);
+                        }
+
+                        //Set non-best price to invalid
+                        Publisher::whereIn('id', $invalidIds)->update([
+                            'valid' => 'invalid'
+                        ]);
+
+                        //If best priced URL is not valid, update..
+                        if ($bestPrice->valid != 'valid') {
+                            Publisher::where('id', $bestPrice->id)->update([
+                                'valid' => 'valid'
+                            ]);
+                        }
+                    }
                 }
             }
         }
