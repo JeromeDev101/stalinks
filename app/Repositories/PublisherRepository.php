@@ -70,6 +70,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list->orderBy('created_at', 'desc');
         }
 
+        if( isset($filter['account_validation']) && !empty($filter['account_validation']) ){
+            $list = $list->where('registration.account_validation', $filter['account_validation']);
+        }
+
         if( $user->type != 10 && isset($user->registration->type) && $user->registration->type == 'Seller' ){
             $list->where('publisher.user_id', $user->id);
         }
