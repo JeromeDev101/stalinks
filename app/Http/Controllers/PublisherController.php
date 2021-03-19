@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GenerateBestPrice;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
@@ -254,5 +255,12 @@ class PublisherController extends Controller
         }
 
         return response()->json(['success'=> true],200);
+    }
+
+    public function generateBestPrice()
+    {
+        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+
+        return response()->json('success');
     }
 }

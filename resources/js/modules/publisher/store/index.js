@@ -322,6 +322,10 @@ const actions = {
     clearMessageform({commit}) {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
+
+    async generateBestPrices({commit}) {
+        await PublisherService.generateBestPrices();
+    }
 }
 
 const storePublisher = {

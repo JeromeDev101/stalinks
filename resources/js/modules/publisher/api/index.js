@@ -86,4 +86,10 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static generateBestPrices() {
+        return axios.post('/api/generate-best-price')
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }
