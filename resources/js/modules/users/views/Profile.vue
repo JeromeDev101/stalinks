@@ -19,6 +19,17 @@
                             <li>
                                 <button class="btn btn-block btn-default btn-sm">Upload photo</button>
                             </li>
+                            <li>
+                                <p>
+                                    By registering with us, you have read and accepted the
+                                    <a
+                                        href="#"
+                                        data-toggle="modal"
+                                        data-target="#modalTermsAndCondition">
+                                        Terms and Conditions
+                                    </a>
+                                </p>
+                            </li>
                         </ul>
 
                     </div>
@@ -418,6 +429,8 @@
             </div>
         </div>
         <!-- End of Modal Edit Sub Account -->
+
+        <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
 
@@ -426,10 +439,11 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
+import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 
 export default {
     name: 'Profile',
-
+    components: {TermsAndConditions},
     data() {
         return {
             modelAddSubAccount: {

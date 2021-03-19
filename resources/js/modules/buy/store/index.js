@@ -60,6 +60,7 @@ const mutations = {
     [LIST_CONTINENT](state, listContinent) {
         state.listContinent = listContinent;
     },
+
 }
 
 const actions = {

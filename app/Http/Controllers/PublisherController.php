@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\BestPriceGenerator;
+use App\Events\BestPriceGenerationStart;
+use App\Jobs\GenerateBestPrice;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
@@ -254,27 +257,6 @@ class PublisherController extends Controller
         return response()->json(['success'=> true],200);
     }
 
-    /** 
-     * Updating Prices
-     * 
-     */
-    // public function updatePrice() {
-    //     $list = Backlink::select('id', 'price')->where('status', 'Live')->get();
-
-    //     $result = [];
-    //     foreach( $list as $backlink) {
-    //         $backlinks = Backlink::find($backlink->id);
-
-    //         $result[] = $backlinks->update([
-    //             'prices' => $backlink->price
-    //         ]);
-
-    //     }
-
-    //     return response()->json(['success' => true, 'data' => $result], 200);
-    // }
-
-
     public function getPrice(){
         $backlinks = Backlink::select('publisher_id', 'id')->get();
 
@@ -364,5 +346,19 @@ class PublisherController extends Controller
 
     private function percentage($percent, $total) {
         return (($percent/ 100) * $total);
+    }
+
+    public function generateBestPrice()
+    {
+        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+
+        return response()->json('success');
+    }
+
+    public function bestPricesGenerationLog()
+    {
+        $log = BestPriceGenerator::orderBy('created_at', 'DESC')->get();
+
+        return response()->json($log);
     }
 }
