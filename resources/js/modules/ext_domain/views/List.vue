@@ -128,7 +128,22 @@
                         <div class="input-group">
                            <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
                            <div class="input-group-btn">
-                              <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                              <button
+                                  title="Upload CSV File"
+                                  class="btn btn-primary btn-flat"
+                                  :disabled="isEnableBtn"
+
+                                  @click="submitUpload">
+                                  <i class="fa fa-upload"></i>
+                              </button>
+
+                               <button
+                                   title="Download CSV Template"
+                                   class="btn btn-primary btn-flat"
+
+                                   @click="downloadTemplate">
+                                   <i class="fa fa-download"></i>
+                               </button>
                            </div>
                         </div>
                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -379,10 +394,61 @@
                         </div>
                      </div>
                      <div class="col-md-6">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extModel.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
+<!--                           <textarea-->
+<!--                               v-model="extModel.email"-->
+<!--                               type="text"-->
+<!--                               class="form-control"-->
+<!--                               placeholder="Enter Email">-->
+
+<!--                           </textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :max-tags="10"
+                                :tags="extModel.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTag"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extModel.email = newTags"
+                            />
+
+                            <p
+                                v-if="extModel.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extModel.email = []">
+                                Remove all emails
+                            </p>
+
                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -615,10 +681,55 @@
                         </div>
                      </div>
                      <div class="col-md-12">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
-                           <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+<!--                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :max-tags="10"
+                                :tags="extUpdate.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTagUpdate"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extUpdate.email = newTags"
+                            />
+
+                            <p
+                                v-if="extUpdate.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extUpdate.email = []">
+                                Remove all emails
+                            </p>
+
+                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -1163,6 +1274,7 @@ import axios from 'axios';
 import DownloadCsv from '@/components/export-csv/Csv.vue'
 import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
+import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
 export default {
     components: {
@@ -1170,6 +1282,7 @@ export default {
         VueVirtualTable
     },
     name: 'ExtList',
+    mixins: [csvTemplateMixin],
     data() {
         return {
             csvExport: {
@@ -1233,7 +1346,7 @@ export default {
                 organic_keywords: '',
                 organic_traffic: '',
                 facebook: '',
-                email: '',
+                email: [],
                 phone: '',
                 skype: '',
                 info: '',
@@ -1257,7 +1370,9 @@ export default {
                 mail_name: '',
             },
             extBackLink: {},
-            extUpdate: {},
+            extUpdate: {
+                email: []
+            },
             publisherAdd: {
                 seller: '',
                 language_id: '',
@@ -1317,6 +1432,7 @@ export default {
                 data: []
             },
             email_to: '',
+            email_add: '',
             extDomain_id: '',
             allSelected: false,
             separators: [';', ',', '|', ' '],
@@ -1693,7 +1809,9 @@ export default {
                         }
                     });
 
-                    this.getExtList();
+                    this.getExtList({
+                        params: this.filterModel
+                    });
                     this.checkIds = []
                     swal.fire(
                         'Saved!',
@@ -1722,7 +1840,11 @@ export default {
             await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
 
             if (this.messageForms.action === 'uploaded') {
-                this.getExtList();
+                // this.getExtList();
+                this.getExtList({
+                    params: this.filterModel
+                });
+
                 this.$refs.excel.value = '';
                 // this.$refs.language.value = '';
                 // this.$refs.status.value = '';
@@ -1775,7 +1897,7 @@ export default {
                 organic_keywords: '',
                 organic_traffic: '',
                 facebook: '',
-                email: '',
+                email: [],
                 phone: '',
                 status: 0
             }
@@ -1913,6 +2035,7 @@ export default {
             });
             this.isPopupLoading = false;
             if (this.messageForms.action === 'updated_ext') {
+                console.log(this.extUpdate)
                 for (var index in this.listExt.data) {
                     if (this.listExt.data[index].id === this.extUpdate.id) {
                         this.listExt.data[index] = this.extUpdate;
@@ -1946,9 +2069,22 @@ export default {
 
         doEditExt(extDomain) {
             this.formAddUrl = true;
+            this.extUpdate.email = [];
 
             this.$store.dispatch('clearMessageForm');
             this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+            this.extUpdate.email = this.extUpdate.email === null ? [] : this.extUpdate.email;
+
+            let emails = [];
+
+            if (typeof(this.extUpdate.email) === "string") {
+                emails = this.extUpdate.email.split('|')
+            } else {
+                emails = this.extUpdate.email.map(a => a.text);
+            }
+
+            this.extUpdate.email = createTags(emails)
 
             if (this.extUpdate.status != 100) {
                 this.formAddUrl = false;
@@ -2156,7 +2292,7 @@ export default {
                     swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                 } else {
                     let err = this.checkIds.some(function(items){
-                        return items.status == 50 | items.email == "";
+                        return items.status == 50 | items.email == "" | items.email == null;
                     });
 
                     if(err) {
@@ -2169,12 +2305,16 @@ export default {
                         this.openModalEmailElem();
                         let emails = [];
                         for (let index in this.checkIds) {
-                            if (this.checkIds[index].email != "") {
-                                emails.push(this.checkIds[index].email)
+                            if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
+                                if (typeof(this.checkIds[index].email) === "string") {
+                                    emails.push(this.checkIds[index].email.split('|'))
+                                } else {
+                                    emails.push(this.checkIds[index].email.map(a => a.text))
+                                }
                             }
                         }
 
-                        this.urlEmails = createTags(emails)
+                        this.urlEmails = createTags(emails.flat())
 
                         // this.email_to = emails.join('|')
                     }
@@ -2186,13 +2326,22 @@ export default {
             if (ext != null) {
                 if (ext.status == 50) {
                     swal.fire('Invalid', 'This is Already Contacted', 'error')
-                } else if (ext.email == "") {
+                } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
                     swal.fire('No email', 'Please check if with email', 'error')
                 } else {
                     this.openModalEmailElem();
                     // this.email_to = ext.email;
                     this.extDomain_id = ext.id;
-                    this.urlEmails = createTags(ext.email.split('|'))
+
+                    let emails = [];
+
+                    if (typeof(ext.email) === "string") {
+                        emails = ext.email.split('|')
+                    } else {
+                        emails = ext.email.map(a => a.text);
+                    }
+
+                    this.urlEmails = emails ? createTags(emails) : [];
                 }
             }
 
@@ -2438,6 +2587,26 @@ export default {
         //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
         //     this.isPopupLoading = false;
         // }
+
+        checkEmailValidationError(error){
+            let obj = error;
+            return Object.keys(obj)
+                .filter(function (er){
+                    return er.includes('email.');
+                })
+                .map(function(key) {
+                    return obj[key];
+                })
+                .flat();
+        },
+
+        downloadTemplate() {
+            let headers = [
+                ['Domain', 'Status', 'Country', 'Email']
+            ];
+
+            this.downloadCsvTemplate(headers, 'url_prospect_csv_template');
+        }
     },
 }
 </script>

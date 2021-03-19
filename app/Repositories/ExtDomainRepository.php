@@ -101,50 +101,59 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                 $email = trim_excel_special_chars($line[3]);
 
                 $isExistDomain = $this->checkDomain($url);
+                $isExistEmail = $this->checkEmail($email);
 
                 if( trim($url, " ") != '' ){
 
-                    if (preg_grep("/".$country."/i", $country_name_list)){
+                    if (!$isExistEmail) {
 
-                        if (preg_grep("/".$status."/i", $status_list)){
+                        if (preg_grep("/".$country."/i", $country_name_list)){
 
-                            if ($isExistDomain){
+                            if (preg_grep("/".$status."/i", $status_list)){
 
-                                $lang = $this->getCountry($country);
-                                $status = $this->getStatusCode($status);
+                                if ($isExistDomain){
 
-                                ExtDomain::create([
-                                    'user_id' => $id,
-                                    'domain' => $this->remove_http($url),
-                                    'country_id' => $lang,
-                                    'ahrefs_rank' => 0,
-                                    'no_backlinks' => 0,
-                                    'url_rating' => 0,
-                                    'domain_rating' => 0,
-                                    'organic_keywords' => '',
-                                    'organic_traffic' => '',
-                                    'alexa_rank' => 0,
-                                    'ref_domains' => 0,
-                                    'status' => $status,
-                                    'email' => $email,
-                                ]);
+                                    $lang = $this->getCountry($country);
+                                    $status = $this->getStatusCode($status);
+
+                                    ExtDomain::create([
+                                        'user_id' => $id,
+                                        'domain' => $this->remove_http($url),
+                                        'country_id' => $lang,
+                                        'ahrefs_rank' => 0,
+                                        'no_backlinks' => 0,
+                                        'url_rating' => 0,
+                                        'domain_rating' => 0,
+                                        'organic_keywords' => '',
+                                        'organic_traffic' => '',
+                                        'alexa_rank' => 0,
+                                        'ref_domains' => 0,
+                                        'status' => $status,
+                                        'email' => $email,
+                                    ]);
+
+                                }else{
+
+                                    array_push($existing_datas, [
+                                        'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
+                                    ]);
+                                }
 
                             }else{
-
                                 array_push($existing_datas, [
-                                    'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
+                                    'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
                                 ]);
                             }
 
                         }else{
                             array_push($existing_datas, [
-                                'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
+                                'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
                             ]);
                         }
 
-                    }else{
+                    } else {
                         array_push($existing_datas, [
-                            'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
+                            'message' => 'Existing Email '.$email. ". Check in line ". (intval($ctr) + 1),
                         ]);
                     }
                 }
@@ -212,6 +221,10 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         return $result;
+    }
+
+    private function checkEmail($email) {
+        return ExtDomain::whereRaw("find_in_set('$email',replace(email,'|',','))")->count() !== 0;
     }
 
     private function getCountry($country){

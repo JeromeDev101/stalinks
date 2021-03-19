@@ -10,6 +10,7 @@ const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_LANGUAGES = 'LIST_LANGUAGES';
 const LIST_SELLER = 'LIST_SELLER';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
+const LIST_BEST_PRICE_LOG = 'LIST_BEST_PRICE_LOG';
 
 const state = {
     totalPublish: 0,
@@ -44,6 +45,8 @@ const state = {
         org_keywords: true,
         org_traffic: true,
     },
+    bestPriceGeneratorOn: false,
+    bestPriceLogs: {}
 }
 
 const getters = {
@@ -111,6 +114,11 @@ const mutations = {
     [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
         state.listAhrefsPublisher = listAhrefsPublisher;
     },
+
+    [LIST_BEST_PRICE_LOG](state, listLog) {
+        state.bestPriceLogs = listLog;
+        state.bestPriceGeneratorOn = listLog[0].status === 'start';
+    }
 }
 
 const actions = {
@@ -322,6 +330,18 @@ const actions = {
     clearMessageform({commit}) {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
+
+    async generateBestPrices({commit}) {
+        await PublisherService.generateBestPrices();
+    },
+
+    async getGeneratorLogs({commit}) {
+        try {
+            let response = await PublisherService.getGeneratorLogsApi();
+            commit(LIST_BEST_PRICE_LOG, response.data);
+        } catch (e) {
+        }
+    }
 }
 
 const storePublisher = {

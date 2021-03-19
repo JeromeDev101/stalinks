@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\Buyer\BuyEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Jobs\BuyLink;
+use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\PublisherRepositoryInterface;
+use App\Repositories\Traits\BuyTrait;
+use App\Repositories\Traits\NotificationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
 use App\Models\Backlink;
-use App\Models\Pricelist;
-use App\Models\BuyerPurchased;
-use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Registration;
@@ -21,6 +22,16 @@ use App\Events\NotificationEvent;
 
 class BuyController extends Controller
 {
+    use BuyTrait, NotificationTrait;
+
+    protected $publisherRepository, $backlinkRepository;
+
+    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository)
+    {
+        $this->publisherRepository = $publisherRepository;
+        $this->backlinkRepository = $backLinkRepository;
+    }
+
     public function getList(Request $request){
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
@@ -333,21 +344,6 @@ class BuyController extends Controller
         }
 
         return response()->json(['success'=> true], 200);
-    }
-
-    private function updateStatus($id, $status, $id_publisher) {
-        $user = Auth::user();
-        $buyer_purchased = BuyerPurchased::where('publisher_id',$id)->where('user_id_buyer', $user->id)->first();
-
-        if( !$buyer_purchased ){
-            BuyerPurchased::create([
-                'user_id_buyer' => $user->id,
-                'publisher_id' => $id_publisher,
-                'status' => $status,
-            ]);
-        }else{
-            $buyer_purchased->update(['status' => $status]);
-        }
     }
 
     public function checkCreditAuth() {

@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12" ref="buyerBody">
 
             <div class="box">
                 <div class="box-header">
@@ -257,7 +257,7 @@
                     </button>
                 </div>
 
-                <div class="box-body no-padding relative" >
+                <div class="box-body no-padding relative">
 
                     <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
                         <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
@@ -275,6 +275,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
+                                   class="custom-checkbox"
                                    @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
@@ -744,7 +745,37 @@
 
                 isExtBuyerWithCommission: true,
                 updateFormula: {},
+                generatorLoader: null
             }
+        },
+
+        mounted() {
+            pusher.logToConsole = true;
+
+            const channel = pusher.subscribe('private-user.' +
+                this.user.id);
+
+            const channel2 =
+                pusher.subscribe('BestPriceChannel');
+
+            channel.bind('buyer.bought', (e) => {
+                this.getBuyList();
+            });
+
+            channel2.bind('bestprices.start', (e) => {
+                $('.modal').modal('hide');
+                this.generatorLoader = this.$loading.show({
+                    container: this.$refs.buyerBody
+                },{
+                    default:
+                        'We are generating the URLs\' best prices, please wait...'
+                });
+            });
+
+            channel2.bind('bestprices.end', (e) => {
+                this.getBuyList();
+                this.generatorLoader.hide();
+            });
         },
 
         computed: {
@@ -758,6 +789,8 @@
                 listSeller: state => state.storeBuy.listSeller,
                 formula: state => state.storeSystem.formula,
                 listLanguages: state => state.storePublisher.listLanguages,
+                isGeneratorOn: state =>
+                    state.storePublisher.bestPriceGeneratorOn
             }),
 
             tableConfig() {
@@ -1045,9 +1078,23 @@
             },
 
             async getBuyList(page = 1) {
+                await
+                    this.$store.dispatch('getGeneratorLogs');
+
+                if (this.isGeneratorOn) {
+                    this.generatorLoader = this.$loading.show({
+                        container: this.$refs.buyerBody
+                    },{
+                        default:
+                            'We are generating the URLs\' best prices, please wait...'
+                    });
+                    return;
+                }
+
                 let loader = this.$loading.show();
                 this.toggleSearchLoading();
                 this.isSearching = true;
+
                 await this.$store.dispatch('actionGetBuyList', {
                     params: {
                         continent_id: this.filterModel.continent_id,
@@ -1075,56 +1122,7 @@
                         this.buttonState.price,
                         page: page,
                     }
-                });
-
-
-                var columnsOrder = [];
-
-                if(this.user.isOurs == 0 || this.user.isAdmin) {
-                    columnsOrder = [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
-                        { orderable: true, targets: 10 },
-                        { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
-                        { orderable: true, targets: 13 },
-                        { orderable: true, targets: 14 },
-                        { orderable: true, targets: 15 },
-                        { orderable: true, targets: 16 },
-                        { orderable: true, targets: 17 },
-                        { orderable: true, targets: 18 },
-                        { orderable: true, targets: 19 },
-                        { orderable: true, targets: 20 },
-                        { orderable: false, targets: '_all' }
-                    ];
-                } else {
-                    columnsOrder = [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: true, targets: 8 },
-                        { orderable: true, targets: 9 },
-                        { orderable: true, targets: 10 },
-                        { orderable: true, targets: 11 },
-                        { orderable: true, targets: 12 },
-                        { orderable: true, targets: 13 },
-                        { orderable: true, targets: 14 },
-                        { orderable: true, targets: 15 },
-                        { orderable: true, targets: 16 },
-                        { orderable: false, targets: '_all' }
-                    ];
-                }
+                })
 
                 this.columnShow();
 

@@ -189,6 +189,16 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
+                            <div class="form-group">
+                                <label>Account Validation</label>
+                                <select class="form-control" v-model="filterModel.account_validation">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -216,6 +226,9 @@
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                     <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button v-if="user.isAdmin ||
+                    user.role_id == 8"
+                        class="btn btn-primary float-right" @click="generateBestPrices">Generate Best Prices</button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
@@ -224,7 +237,22 @@
                                     <div class="input-group">
                                         <input type="file" class="form-control" v-on:change="checkDataExcel(); checkAccountValidity()" enctype="multipart/form-data" ref="excel" name="file">
                                         <div class="input-group-btn">
-                                            <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn || checkAccountValidity()" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                                            <button
+                                                title="Upload CSV File"
+                                                class="btn btn-primary btn-flat"
+                                                :disabled="isEnableBtn || checkAccountValidity()"
+
+                                                @click="submitUpload">
+                                                <i class="fa fa-upload"></i>
+                                            </button>
+
+                                            <button
+                                                title="Download CSV Template"
+                                                class="btn btn-primary btn-flat"
+
+                                                @click="downloadTemplate">
+                                                <i class="fa fa-download"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -285,7 +313,7 @@
 
                         <div class="col-sm-12">
                             <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
-                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price and Inc Article. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No . Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article and KW Anchor. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
                         </div>
                     </div>
 
@@ -336,6 +364,7 @@
                             slot-scope="scope"
                             slot="actionSelectRow">
                             <input type="checkbox"
+                                   class="custom-checkbox"
                                    @change="checkSelected"
                                    :id="scope.row.id"
                                    :value="scope.row.id"
@@ -383,7 +412,16 @@
                             slot="usernameData">
                             {{ scope.row.username ?
                             scope.row.username :
-                            scope.row.user_name   }}
+                            scope.row.user_name }}
+
+                            <span
+                                v-if="scope.row.user_account_validation === 'invalid'
+                                && (user.isAdmin
+                                || user.role_id === 8
+                                || user.role_id === 6)"
+                                class="badge badge-danger">
+                                Invalid
+                            </span>
                         </template>
 
                         <template
@@ -1109,12 +1147,14 @@
     import { mapState } from 'vuex';
     import axios from 'axios';
     import VueVirtualTable from 'vue-virtual-table';
+    import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
     export default {
         components: {
             VueVirtualTable,
         },
         name: '',
+        mixins: [csvTemplateMixin],
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
@@ -1176,7 +1216,8 @@
                     qc_validation: this.$route.query.qc_validation || '',
                     show_duplicates:
                         this.$route.query.show_duplicates
-                        || 'no'
+                        || 'no',
+                    account_validation: this.$route.query.account_validation || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1250,6 +1291,25 @@
             if ( language.length === 0 ) {
                 this.getListLanguages();
             }
+        },
+
+        mounted() {
+            pusher.logToConsole = true;
+
+            const channel = pusher.subscribe('private-user.' +
+                this.user.id);
+
+            channel.bind('prices.generate', (e) => {
+                this.getPublisherList();
+
+                swal.fire({
+                    icon: 'success',
+                    title: "Success",
+                    text:
+                        'Best Price generation has been completed..',
+                    confirmButtonText: "Ok",
+                });
+            });
         },
 
         computed:{
@@ -1450,6 +1510,19 @@
         },
 
         methods: {
+            async generateBestPrices() {
+                await
+                    this.$store.dispatch('generateBestPrices');
+
+                swal.fire({
+                    icon: 'success',
+                    title: "Success",
+                    text:
+                        'The system is now generating best prices, please wait...',
+                    confirmButtonText: "Ok",
+                });
+            },
+
             async saveColumnSetting() {
                 let loader = this.$loading.show();
                 this.toggleTableLoading();
@@ -1544,7 +1617,8 @@
                             qc_validation: this.filterModel.qc_validation,
                             page: page,
                             show_duplicates:
-                            this.filterModel.show_duplicates
+                            this.filterModel.show_duplicates,
+                            account_validation: this.filterModel.account_validation
                         }
                     });
                 }else{
@@ -1568,7 +1642,8 @@
                             qc_validation: this.filterModel.qc_validation,
                             page: page,
                             show_duplicates:
-                            this.filterModel.show_duplicates
+                            this.filterModel.show_duplicates,
+                            account_validation: this.filterModel.account_validation
                         }
                     });
                 }
@@ -1918,6 +1993,7 @@
                     kw_anchor: '',
                     price_basis: '',
                     qc_validation: '',
+                    account_validation: ''
                 }
 
                 this.getPublisherList({
@@ -2066,7 +2142,8 @@
                         price_basis: this.filterModel.price_basis,
                         qc_validation: this.filterModel.qc_validation,
                         show_duplicates:
-                        this.filterModel.show_duplicates
+                        this.filterModel.show_duplicates,
+                        account_validation: this.filterModel.account_validation
                     }
                 });
             },
@@ -2126,6 +2203,18 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            downloadTemplate() {
+                let headers = [];
+
+                let rows = this.user.isOurs === 0
+                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
+                    : ['URL', 'Price', 'Inc Article', 'KW Anchor'];
+
+                headers.push(rows);
+
+                this.downloadCsvTemplate(headers, 'list_publisher_csv_template');
+            }
         }
 
     }
