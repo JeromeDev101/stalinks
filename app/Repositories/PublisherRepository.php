@@ -34,6 +34,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $columns = [
             'publisher.*',
             'registration.username',
+            'registration.account_validation as user_account_validation',
             'A.name',
             'A.username as user_name',
             'A.isOurs',
@@ -68,6 +69,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 ->orderBy('url', 'asc');
         } else {
             $list->orderBy('created_at', 'desc');
+        }
+
+        if( isset($filter['account_validation']) && !empty($filter['account_validation']) ){
+            $list = $list->where('registration.account_validation', $filter['account_validation']);
         }
 
         if( $user->type != 10 && isset($user->registration->type) && $user->registration->type == 'Seller' ){
