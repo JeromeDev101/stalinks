@@ -11,8 +11,12 @@ if (!function_exists('implode_array_to_strings')) {
     function implode_array_to_strings($arrInput)
     {
         $result = [];
-        foreach ($arrInput as $arr) {
-            $result[] .= "'". $arr ."'";
+        if (is_array($arrInput)) {
+            foreach ($arrInput as $arr) {
+                $result[] .= "'". $arr ."'";
+            }
+        } else {
+            $result[] .= "'". $arrInput ."'";
         }
 
         return $result;
