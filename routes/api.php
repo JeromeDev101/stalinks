@@ -112,6 +112,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
     Route::name('publisher-get-summary')->get('/publisher/summary', 'PublisherController@getSummary');
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
+    Route::name('best-price-log')->get('publisher/best-prices/log', 'PublisherController@bestPricesGenerationLog');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');

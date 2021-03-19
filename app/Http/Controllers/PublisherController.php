@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\BestPriceGenerator;
+use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
@@ -262,5 +264,12 @@ class PublisherController extends Controller
         GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
 
         return response()->json('success');
+    }
+
+    public function bestPricesGenerationLog()
+    {
+        $log = BestPriceGenerator::orderBy('created_at', 'DESC')->get();
+
+        return response()->json($log);
     }
 }

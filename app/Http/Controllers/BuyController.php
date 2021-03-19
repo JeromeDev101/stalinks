@@ -268,8 +268,51 @@ class BuyController extends Controller
      * @param NotificationInterface $notification
      * @return response
      */
-    public function update(Request $request) {
-        BuyLink::dispatch($request->all(), auth()->user()->id);
+    public function update(Request $request, NotificationInterface $notification) {
+        $publisher = Publisher::find($request->id);
+        $user = Auth::user();
+
+        $this->updateStatus($request->id, 'Purchased', $publisher->id);
+
+        $backlink = Backlink::create([
+            'prices' => $request->prices,
+            'price' => $request->seller_price,
+            'url_advertiser' => $request->url_advertiser,
+            'anchor_text' => $request->anchor_text,
+            'link' => $request->link,
+            'publisher_id' => $publisher->id,
+            'user_id' => $user->id,
+            'status' => 'Processing',
+            'date_process' => date('Y-m-d'),
+            'ext_domain_id' => 0,
+            'int_domain_id' => 0,
+        ]);
+
+        $notification->create([
+            'user_id' => $user->id,
+            'notification' => 'You have purchased from '. $request->url_advertiser .' on '. date('Y-m-d') . ' at $'. $request->price . ' follow up with Backlink ID '. $backlink->id,
+        ]);
+
+        $notification->create([
+            'user_id' => $publisher->user_id,
+            'notification' => 'You have received an order for ' . $request->url_advertise . ' on ' . date('Y-m-d') . ' follow up with Backlink ID ' . $backlink->id,
+        ]);
+
+        broadcast(new BuyEvent($user->id));
+        broadcast(new SellerReceivesOrderEvent($publisher->user_id));
+
+        if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
+            Article::create([
+                'id_backlink' => $backlink->id,
+                'id_language' => $backlink->publisher->language_id,
+            ]);
+            $users = User::where('status','active')->where('role_id',4)->get();
+            foreach($users as $user)
+            {
+                event(new NotificationEvent("New Article to be write today!", $user->id));
+            }
+
+        }
 
         return response()->json(['success'=> true], 200);
     }

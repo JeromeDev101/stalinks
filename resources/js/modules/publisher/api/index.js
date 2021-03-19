@@ -92,4 +92,10 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getGeneratorLogsApi() {
+        return axios.get('/api/publisher/best-prices/log')
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

@@ -76,7 +76,7 @@ class BuyLink implements ShouldQueue
         $this->sellerReceivesOrderNotification($publisher->user_id, $backlink);
 
         //Create new article if URL doesnt include article
-        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
+        if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
             Article::create([
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
