@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\BuyerDebited;
 use App\Events\SellerPaid;
 use App\Repositories\Contracts\NotificationInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
@@ -37,6 +38,17 @@ class SellerBillingController extends Controller
             }else{
                 $list = $list->whereNull('billing.admin_confirmation');
             }
+        }
+
+        if (isset($filter['date_completed'])) {
+            $filter['date_completed'] = json_decode($filter['date_completed']);
+        }
+
+        if( isset($filter['date_completed']) && !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
+            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+                ->format('Y-m-d'));
+            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
         }
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){

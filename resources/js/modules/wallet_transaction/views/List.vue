@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Buyer</label>
                                 <select name="" class="form-control" v-model="filterModel.buyer">
@@ -22,7 +22,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Payment Type</label>
                                 <select name="" class="form-control" v-model="filterModel.payment_type">
@@ -34,10 +34,27 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="">Date</label>-->
+<!--                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Date</label>
-                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">
+                                <label>Date</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -103,7 +120,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal Show proof -->
         <div class="modal fade" id="modal-wallet-docs" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -128,7 +145,7 @@
             </div>
         </div>
         <!-- End of Modal Show proof -->
-        
+
         <!-- Modal Add Wallet -->
         <div class="modal fade" id="modal-add-wallet" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -298,7 +315,10 @@
                 filterModel: {
                     buyer: this.$route.query.buyer || '',
                     payment_type: this.$route.query.payment_type || '',
-                    date: this.$route.query.date || '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
                 },
                 searchLoading: false,
             }
@@ -369,7 +389,10 @@
                 this.filterModel = {
                     buyer: '',
                     payment_type: '',
-                    date: '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.getWalletTransactionList({
@@ -410,7 +433,7 @@
                     this.$refs.proof_edit.value = '';
                     this.getWalletTransactionList();
                 }
- 
+
             },
 
             async submitPay() {
