@@ -15,13 +15,21 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Continent</label>
-                                <select class="form-control" v-model="filterModel.continent_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listContinent.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                                <label>Continent</label>
+<!--                                <select class="form-control" v-model="filterModel.continent_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listContinent.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+                                <v-select
+                                    v-model="filterModel.continent_id"
+                                    :searchable="false"
+                                    :options="listContinent.data"
+                                    :reduce="continent => continent.id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"/>
                             </div>
                         </div>
 
