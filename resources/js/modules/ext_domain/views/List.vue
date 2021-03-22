@@ -85,9 +85,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label
-                                style="color: #333">Alexa
-                                                    Date
-                                                    Upload
+                                style="color: #333">Date Upload
                             </label>
                             <div class="input-group">
                                 <date-range-picker
@@ -1549,8 +1547,8 @@ export default {
                     isHidden: false
                 },
                 {
-                    prop : 'alexa_created_at',
-                    name : 'Alexa Date Upload',
+                    prop : 'created_at',
+                    name : 'Date Upload',
                     sortable: true,
                     width: 150,
                     isHidden: false
