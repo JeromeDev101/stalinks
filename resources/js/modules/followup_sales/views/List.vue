@@ -98,6 +98,42 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Process Date
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.process_date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.process_date"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -505,6 +541,14 @@
                     article: this.$route.query.article || '',
                     in_charge: this.$route.query.in_charge || '',
                     country_id: this.$route.query.country_id || '',
+                    process_date : {
+                        startDate : '',
+                        endDate: ''
+                    },
+                    date_completed: {
+                        startDate: '',
+                        endDate: ''
+                    }
                 },
                 searchLoading: false,
                 isLive: false,
@@ -611,6 +655,10 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
+                            date_completed:
+                            this.filterModel.date_completed,
+                            process_date:
+                            this.filterModel.process_date,
                         }
 
                     });
@@ -628,12 +676,15 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
+                            date_completed:
+                            this.filterModel.date_completed,
+                            process_date:
+                            this.filterModel.process_date,
                         }
 
                     });
                 }
 
-                    console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
@@ -754,6 +805,10 @@
                         article: this.filterModel.article,
                         country_id: this.filterModel.country_id,
                         in_charge: this.filterModel.in_charge,
+                        process_date:
+                        this.filterModel.process_date,
+                        date_completed:
+                        this.filterModel.date_completed
                     }
                 });
 
