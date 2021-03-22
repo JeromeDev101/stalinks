@@ -170,8 +170,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
             $list = $list->where(function ($query) use ($filter) {
-                $query->whereIn('countries.continent_id', $filter['continent_id'])
-                    ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                $query->where('countries.continent_id', $filter['continent_id'])
+                    ->orWhere('publisher.continent_id', $filter['continent_id']);
             });
         }
 
