@@ -122,7 +122,7 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher == null ? 'Record Deleted': seller.publisher.user == null ? 'Record Deleted' : seller.publisher.user.username }}</td>
-                                <td>{{ seller.publisher == null ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
+                                <td>{{ seller.price == null || seller.price == '' ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
@@ -371,8 +371,8 @@
                 let total = 0;
 
                 seller_billing.forEach(function(item, index){
-                    if (typeof item.publisher.price !== 'undefined') {
-                        total_price.push( parseFloat(item.publisher.price))
+                    if (typeof item.price !== 'undefined') {
+                        total_price.push( parseFloat(item.price))
                     }
                 })
 
