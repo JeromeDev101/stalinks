@@ -121,7 +121,7 @@
                                     </div>
                                 </td>
                                 <td>{{ seller.id }}</td>
-                                <td>{{ seller.publisher == null && seller.publisher.user == null ? 'Record Deleted':seller.publisher.user.username == null ? seller.publisher.user.name : seller.publisher.user.username }}</td>
+                                <td>{{ seller.publisher == null ? 'Record Deleted': seller.publisher.user == null ? 'Record Deleted' : seller.publisher.user.username }}</td>
                                 <td>{{ seller.publisher == null ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
