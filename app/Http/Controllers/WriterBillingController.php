@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\WriterPaid;
 use App\Repositories\Contracts\NotificationInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\User;
@@ -32,6 +33,28 @@ class WriterBillingController extends Controller
 
         if( isset($filter['writer'] ) && $filter['writer'] ){
             $list->where('article.id_writer', $filter['writer']);
+        }
+
+        if (isset($filter['date_completed'])) {
+            $filter['date_completed'] = json_decode($filter['date_completed']);
+        }
+
+        if( isset($filter['date_completed']) && !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
+            $list->where('date_complete', '>=', Carbon::create($filter['date_completed']->startDate)
+                ->format('Y-m-d'));
+            $list->where('date_complete', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
+        }
+
+        if (isset($filter['date_created'])) {
+            $filter['date_created'] = json_decode($filter['date_created']);
+        }
+
+        if( isset($filter['date_created']) && !empty($filter['date_created']) && $filter['date_created']->startDate != ''){
+            $list->where('article.created_at', '>=', Carbon::create($filter['date_created']->startDate)
+                ->format('Y-m-d'));
+            $list->where('article.created_at', '<=', Carbon::create($filter['date_created']->endDate)
+                ->format('Y-m-d'));
         }
 
         return [
