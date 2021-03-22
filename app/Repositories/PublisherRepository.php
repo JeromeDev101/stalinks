@@ -166,6 +166,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.country_id', $filter['country_id']);
         }
 
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list = $list->whereIn('price_basis', $filter['price_basis']);
+            } else {
+                $list = $list->where('price_basis', $filter['price_basis']);
+            }
+        }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 
