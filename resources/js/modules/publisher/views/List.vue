@@ -1228,7 +1228,9 @@
                 isPopupLoading: false,
                 filterModel: {
                     // country_id: this.$route.query.country_id || '',
-                    continent_id: parseInt(this.$route.query.continent_id) || '',
+                    continent_id: this.$route.query.continent_id.map(function (val) {
+                        return parseInt(val, 10);
+                    }) || '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
