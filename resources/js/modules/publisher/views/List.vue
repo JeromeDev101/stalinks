@@ -181,12 +181,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Price Basis</label>
-                                <select name="" class="form-control" v-model="filterModel.price_basis">
-                                    <option value="">All</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Average">Average</option>
-                                    <option value="High">High</option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.price_basis" :options="['Good', 'Average', 'High']" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
