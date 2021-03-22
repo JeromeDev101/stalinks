@@ -16,12 +16,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Continent</label>
-                                <select class="form-control" v-model="filterModel.continent_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listContinent.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                                <v-select
+                                    v-model="filterModel.continent_id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :options="listContinent.data"
+                                    :searchable="false"
+                                    :reduce="continent => continent.id"/>
                             </div>
                         </div>
 
@@ -1150,9 +1152,9 @@
         margin: 20px;
         margin-top: -40px;
     }
-    #vs1__combobox {
-        height: 38px;
-    }
+    /*#vs1__combobox {*/
+    /*    height: 38px;*/
+    /*}*/
 
     #tbl-publisher {
         table-layout: fixed;
@@ -1222,7 +1224,11 @@
                 isPopupLoading: false,
                 filterModel: {
                     // country_id: this.$route.query.country_id || '',
-                    continent_id: parseInt(this.$route.query.continent_id) || '',
+                    continent_id: this.$route.query.continent_id
+                        ? this.$route.query.continent_id.map(function (val) {
+                            return parseInt(val, 10);
+                        })
+                        : '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
                     inc_article: this.$route.query.inc_article || '',
