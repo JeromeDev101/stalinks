@@ -104,8 +104,35 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Date</label>
-                                <input type="date" class="form-control" v-model="filterModel.date">
+                                <label for="">Updated
+                                </label>
+<!--                                <input type="date" class="form-control" v-model="filterModel.date">-->
+                                <date-range-picker
+                                    ref="picker"
+                                    v-model="filterModel.date"
+                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                    :dateRange="filterModel.date"
+                                    :linkedCalendars="true"
+                                    opens="left"
+                                    style="width: 100%"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Uploaded
+                                </label>
+                                <!--                                <input type="date" class="form-control" v-model="filterModel.date">-->
+                                <date-range-picker
+                                    ref="picker"
+                                    v-model="filterModel.uploaded"
+                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                    :dateRange="filterModel.uploaded"
+                                    :linkedCalendars="true"
+                                    opens="left"
+                                    style="width: 100%"
+                                />
                             </div>
                         </div>
 
@@ -1206,7 +1233,14 @@
                     seller: this.$route.query.seller || '',
                     paginate: this.$route.query.paginate || 50,
                     got_ahref: this.$route.query.got_ahref || '',
-                    date: this.$route.query.date || '',
+                    date: {
+                        startDate: '',
+                        endDate: ''
+                    },
+                    uploaded: {
+                        startDate: '',
+                        endDate: ''
+                    },
                     valid: this.$route.query.valid || '',
                     in_charge: this.$route.query.in_charge || '',
                     casino_sites: this.$route.query.casino_sites || '',
@@ -1347,9 +1381,8 @@
                         name : 'Uploaded',
                         actionName : 'createdData',
                         width: 100,
-                        isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0 ||
-                            this.user.role_id != 6
+                        isHidden:
+                            !this.tblPublisherOpt.created
                     },
                     {
                         prop : '_action',
@@ -1608,6 +1641,8 @@
                             paginate: 1000000,
                             got_ahref: this.filterModel.got_ahref,
                             date: this.filterModel.date,
+                            uploaded:
+                            this.filterModel.uploaded,
                             valid: this.filterModel.valid,
                             in_charge: this.filterModel.in_charge,
                             casino_sites: this.filterModel.casino_sites,
@@ -1633,6 +1668,8 @@
                             paginate: this.filterModel.paginate,
                             got_ahref: this.filterModel.got_ahref,
                             date: this.filterModel.date,
+                            uploaded:
+                            this.filterModel.uploaded,
                             valid: this.filterModel.valid,
                             in_charge: this.filterModel.in_charge,
                             casino_sites: this.filterModel.casino_sites,
@@ -1779,7 +1816,7 @@
 
                             html += txt +'<b>' + this.messageForms.errors[index].url + '</b> <br/>';
                         }
-                       
+
                         swal.fire({
                             icon: '',
                             title: " ",
@@ -1788,7 +1825,7 @@
                         });
 
                         this.getPublisherList();
-                        
+
                     }
                 }
 
@@ -2134,6 +2171,7 @@
                         paginate: this.filterModel.paginate,
                         got_ahref: this.filterModel.got_ahref,
                         date: this.filterModel.date,
+                        uploaded: this.filterModel.uploaded,
                         valid: this.filterModel.valid,
                         in_charge: this.filterModel.in_charge,
                         casino_sites: this.filterModel.casino_sites,

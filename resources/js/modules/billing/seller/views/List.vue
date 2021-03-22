@@ -18,7 +18,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Status Billing </label>
                                 <select name="" class="form-control" v-model="filterModel.status_billing">
@@ -29,7 +29,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Seller </label>
                                 <select name="" class="form-control" v-model="filterModel.seller">
@@ -41,6 +41,23 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -218,6 +235,10 @@
                     search: this.$route.query.search || '',
                     status_billing: this.$route.query.status_billing || '',
                     seller: this.$route.query.seller || '',
+                    date_completed : {
+                        startDate: null,
+                        endDate: null
+                    }
                 },
                 searchLoading: false,
                 totalAmount: 0,
@@ -383,6 +404,7 @@
                         search: this.filterModel.search,
                         status_billing: this.filterModel.status_billing,
                         seller: this.filterModel.seller,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
             },
@@ -401,6 +423,10 @@
                     search: '',
                     status_billing: '',
                     seller: '',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getSellerBilling({

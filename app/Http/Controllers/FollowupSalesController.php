@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\BacklinkStatusChangedEvent;
 use App\Repositories\Contracts\NotificationInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,22 @@ class FollowupSalesController extends Controller
 
         if( isset($filter['search']) && !empty($filter['search']) ){
             $list->where('publisher.url', 'like','%'.$filter['search'].'%' );
+        }
+
+        if (isset($filter['process_date'])) {
+            $filter['process_date'] = \GuzzleHttp\json_decode($filter['process_date'], true);
+            if (!empty($filter['process_date']) && $filter['process_date']['startDate'] != null) {
+                $list->where('date_process', '>=', Carbon::create($filter['process_date']['startDate'])->format('Y-m-d'));
+                $list->where('date_process', '<=', Carbon::create($filter['process_date']['endDate'])->format('Y-m-d'));
+            }
+        }
+
+        if (isset($filter['date_completed'])) {
+            $filter['date_completed'] = \GuzzleHttp\json_decode($filter['date_completed'], true);
+            if (!empty($filter['date_completed']) && $filter['date_completed']['startDate'] != null) {
+                $list->where('live_date', '>=', Carbon::create($filter['date_completed']['startDate'])->format('Y-m-d'));
+                $list->where('live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
+            }
         }
 
         $data = $list->paginate($paginate);
