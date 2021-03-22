@@ -15,21 +15,15 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Continent</label>
-<!--                                <select class="form-control" v-model="filterModel.continent_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listContinent.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
+                                <label for="">Continent</label>
                                 <v-select
                                     v-model="filterModel.continent_id"
-                                    :searchable="false"
-                                    :options="listContinent.data"
-                                    :reduce="continent => continent.id"
                                     multiple
                                     label="name"
-                                    placeholder="All"/>
+                                    placeholder="All"
+                                    :options="listContinent.data"
+                                    :searchable="false"
+                                    :reduce="continent => continent.id"/>
                             </div>
                         </div>
 
@@ -1162,9 +1156,9 @@
         margin: 20px;
         margin-top: -40px;
     }
-    #vs1__combobox {
-        height: 38px;
-    }
+    /*#vs1__combobox {*/
+    /*    height: 38px;*/
+    /*}*/
 
     #tbl-publisher {
         table-layout: fixed;
