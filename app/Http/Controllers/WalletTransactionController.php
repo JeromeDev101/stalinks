@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\WalletTransaction;
 use App\Models\User;
@@ -33,8 +34,19 @@ class WalletTransactionController extends Controller
             $list->where('wallet_transactions.payment_via_id', $filter['payment_type']);
         }
 
-        if( isset($filter['date']) && !empty($filter['date']) ){
-            $list->where('wallet_transactions.date', $filter['date']);
+//        if( isset($filter['date']) && !empty($filter['date']) ){
+//            $list->where('wallet_transactions.date', $filter['date']);
+//        }
+
+        if (isset($filter['date'])) {
+            $filter['date'] = json_decode($filter['date']);
+        }
+
+        if( isset($filter['date']) && !empty($filter['date']) && $filter['date']->startDate != ''){
+            $list->where('wallet_transactions.date', '>=', Carbon::create($filter['date']->startDate)
+                ->format('Y-m-d'));
+            $list->where('wallet_transactions.date', '<=', Carbon::create($filter['date']->endDate)
+                ->format('Y-m-d'));
         }
 
         $list = $list->get();
