@@ -1241,8 +1241,14 @@
                     seller: this.$route.query.seller || '',
                     paginate: this.$route.query.paginate || 50,
                     got_ahref: this.$route.query.got_ahref || '',
-                    date: '',
-                    uploaded: '',
+                    date: {
+                        startDate: '',
+                        endDate: ''
+                    },
+                    uploaded: {
+                        startDate: '',
+                        endDate: ''
+                    },
                     valid: this.$route.query.valid || '',
                     in_charge: this.$route.query.in_charge || '',
                     casino_sites: this.$route.query.casino_sites || '',

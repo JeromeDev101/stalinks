@@ -78,7 +78,7 @@
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="fillter.process_date"
                                         :linkedCalendars="true"
-                                        opens="right"
+                                        opens="left"
                                         style="width: 100%"
                                     />
                                 </div>
@@ -96,7 +96,7 @@
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="fillter.date_completed"
                                         :linkedCalendars="true"
-                                        opens="right"
+                                        opens="left"
                                         style="width: 100%"
                                     />
                                 </div>
