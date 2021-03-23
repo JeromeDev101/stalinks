@@ -317,6 +317,7 @@
 
                                 <div class="mb-0">
                                     <span>
+                                        Logout and re-login to complete the process.
                                         <span v-if="this.isAccountPaymentNotComplete">
                                             Please
                                             <router-link :to="{ path: `/profile/${user.id}` }">
@@ -327,10 +328,8 @@
 
                                         <span v-if="this.isAccountInvalid">
                                             Contact an administrator or person in charge to request
-                                            for validation.
+                                            for account validation.
                                         </span>
-
-                                        Logout to complete the process.
                                     </span>
                                 </div>
                             </div>
@@ -703,6 +702,7 @@
 
                                     <div class="mb-0">
                                         <span>
+                                            Logout and re-login to complete the process.
                                             <span v-if="this.isAccountPaymentNotComplete">
                                                 Please
                                                 <router-link :to="{ path: `/profile/${user.id}` }">
@@ -713,10 +713,8 @@
 
                                             <span v-if="this.isAccountInvalid">
                                                 Contact an administrator or person in charge to request
-                                                for validation.
+                                                for account validation.
                                             </span>
-
-                                            Logout to complete the process.
                                         </span>
                                     </div>
                                 </div>
