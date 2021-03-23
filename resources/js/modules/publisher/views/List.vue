@@ -2013,8 +2013,6 @@
             },
 
             clearSearch() {
-                $('#tbl-publisher').DataTable().destroy();
-
                 this.filterModel = {
                     continent_id: '',
                     // country_id: '',
@@ -2024,7 +2022,6 @@
                     seller: '',
                     paginate: 50,
                     got_ahref: '',
-                    date: '',
                     valid: '',
                     in_charge: '',
                     casino_sites: '',
@@ -2032,7 +2029,15 @@
                     kw_anchor: '',
                     price_basis: '',
                     qc_validation: '',
-                    account_validation: ''
+                    account_validation: '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    uploaded: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.getPublisherList({
