@@ -829,6 +829,14 @@
                     article: '',
                     in_charge: '',
                     country_id: '',
+                    process_date : {
+                        startDate : null,
+                        endDate: null
+                    },
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getListSales({

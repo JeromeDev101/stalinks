@@ -675,11 +675,11 @@
                 this.fillter.status = ''
                 this.fillter.paginate = '50'
 
-                this.process_date = {
+                this.fillter.process_date = {
                     startDate: null,
                     endDate: null
                 },
-                this.date_completed = {
+                this.fillter.date_completed = {
                     startDate: null,
                     endDate: null
                 }
