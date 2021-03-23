@@ -281,12 +281,12 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 if( $ctr > 0 ){
-                    $url = trim_excel_special_chars($line[0]);
-                    $price = trim_excel_special_chars($line[1]);
-                    $article = trim_excel_special_chars($line[2]);
-                    $accept = trim_excel_special_chars($line[3]);
-                    $kw_anchor = trim_excel_special_chars($line[4]);
-                    $language_excel = trim_excel_special_chars($line[5]);
+                    $url = trim_special_characters($line[0]);
+                    $price = trim_special_characters($line[1]);
+                    $article = trim_special_characters($line[2]);
+                    $accept = trim_special_characters($line[3]);
+                    $kw_anchor = trim_special_characters($line[4]);
+                    $language_excel = trim_special_characters($line[5]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
@@ -346,13 +346,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 if( $ctr > 0 ){
-                    $url = trim_excel_special_chars($line[0]);
-                    $price = trim_excel_special_chars($line[1]);
-                    $article = trim_excel_special_chars($line[2]);
-                    $seller_id = trim_excel_special_chars($line[3]);
-                    $accept = trim_excel_special_chars($line[4]);
-                    $language_excel = trim_excel_special_chars($line[5]);
-                    $topic = trim_excel_special_chars($line[6]);
+                    $url = trim_special_characters($line[0]);
+                    $price = trim_special_characters($line[1]);
+                    $article = trim_special_characters($line[2]);
+                    $seller_id = trim_special_characters($line[3]);
+                    $accept = trim_special_characters($line[4]);
+                    $language_excel = trim_special_characters($line[5]);
+                    $topic = trim_special_characters($line[6]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
