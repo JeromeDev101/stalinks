@@ -106,19 +106,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){
             if( $filter['got_ahref'] == 'Without' ){
-                $list = $list->where('publisher.ur', 0)
-                ->where('publisher.dr', 0)
-                ->where('publisher.backlinks', 0)
-                ->where('publisher.ref_domain', 0)
-                ->where('publisher.org_keywords', 0)
-                ->where('publisher.org_traffic', 0);
+                $list = $list->whereNull('publisher.href_fetched_at');
             }
 
             if( $filter['got_ahref'] == 'With' ){
-                $list = $list->where('publisher.ur', '!=', '0')
-                ->where('publisher.dr', '!=', '0')
-                ->where('publisher.backlinks', '!=', '0')
-                ->where('publisher.ref_domain', '!=', '0');
+                $list = $list->whereNotNull('publisher.href_fetched_at');
             }
         }
 
@@ -567,7 +559,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             Publisher::find($value->id)->update([
                 'code_comb' => $value['code_combination'],
                 'code_price' => $value['code_price'],
-                'price_basis' => $price_basis
+                'price_basis' => $price_basis,
+                'href_fetched_at' => Carbon::now()
             ]);
         }
     }
