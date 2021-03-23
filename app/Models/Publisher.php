@@ -28,6 +28,7 @@ class Publisher extends Model
             'kw_anchor',
             'qc_validation',
             'valid',
+            'href_fetched_at'
         ];
 
     public function user() {
