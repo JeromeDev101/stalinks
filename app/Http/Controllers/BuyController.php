@@ -63,7 +63,9 @@ class BuyController extends Controller
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user->id);
                 })
-                ->where('publisher.valid', 'valid');
+                ->where('publisher.valid', 'valid')
+                ->where('publisher.qc_validation', 'yes')
+                ->whereNotNull('publisher.href_fetched_at');
 
         // if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
         //     $list->where('publisher.valid', 'valid');
@@ -136,8 +138,6 @@ class BuyController extends Controller
             } else {
                 $list->where('publisher.ur', '<=', intval($filter['ur']));
             }
-        } else {
-            $list->where('publisher.ur', '!=', 0);
         }
 
         if (isset($filter['dr']) && !empty($filter['dr'])) {
@@ -146,8 +146,6 @@ class BuyController extends Controller
             } else {
                 $list->where('publisher.dr', '<=', intval($filter['dr']));
             }
-        } else {
-            $list->where('publisher.dr', '!=', 0);
         }
 
         if (isset($filter['org_kw']) && !empty($filter['org_kw'])) {
