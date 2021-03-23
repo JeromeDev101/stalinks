@@ -285,17 +285,16 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-3" v-show="showLang">
-                                <div class="col-sm-12">
-                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">
-                                        <option value="">Select language</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
+<!--                            <div class="row mt-3" v-show="showLang">-->
+<!--                                <div class="col-sm-12">-->
+<!--                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">-->
+<!--                                        <option value="">Select language</option>-->
+<!--                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">-->
+<!--                                            {{ option.name }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
 
                     </div>
@@ -1961,7 +1960,7 @@
 
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
-                this.formData.append('language', this.$refs.language.value);
+                // this.formData.append('language', this.$refs.language.value);
                 this.formData.append('account_valid', this.checkAccountValidity());
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
@@ -2201,8 +2200,10 @@
             checkDataExcel() {
                 if( this.user.isOurs == 1 ){
                     this.showLang = false;
+                    this.isEnableBtn = true;
                     if (this.$refs.excel.value){
                         this.showLang = true;
+                        this.isEnableBtn = false;
                     }
                 }
 
@@ -2252,7 +2253,7 @@
 
                 let rows = this.user.isOurs === 0
                     ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
-                    : ['URL', 'Price', 'Inc Article', 'KW Anchor'];
+                    : ['URL', 'Price', 'Inc Article', 'KW Anchor', 'Language'];
 
                 headers.push(rows);
 

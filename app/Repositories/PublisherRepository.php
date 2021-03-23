@@ -263,7 +263,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
         $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
-        $language = $file['language'];
+//        $language = $file['language'];
         $csv_file = $file['file'];
 
         $result = true;
@@ -281,8 +281,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 4 || count($line) < 4){
-                    $message = "Please check the header: Url, Price, Inc Article and KW Anchor only.";
+                if(count($line) > 5 || count($line) < 5){
+                    $message = "Please check the header: Url, Price, Inc Article, KW Anchor and Language only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -293,14 +293,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $price = trim_excel_special_chars($line[1]);
                     $article = trim_excel_special_chars($line[2]);
                     $casinoSites = trim_excel_special_chars($line[3]);
+                    $language_excel = trim_excel_special_chars($line[4]);
 
                     if( trim($url, " ") != '' ){
                         $url_remove_http = $this->remove_http($url);
+                        $lang = $this->getCountry($language_excel);
                         $valid = $this->checkValid($url_remove_http);
 
                         Publisher::create([
                             'user_id' => $id,
-                            'language_id' => $language,
+                            'language_id' => $lang,
                             'url' => $url_remove_http,
                             'ur' => 0,
                             'dr' => 0,

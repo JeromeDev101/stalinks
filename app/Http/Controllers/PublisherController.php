@@ -44,7 +44,7 @@ class PublisherController extends Controller
             $request->validate([
                 'account_valid' => 'required|in:false',
                 'file' => 'bail|required|mimes:csv,txt',
-                'language' => 'required',
+//                'language' => 'required',
             ]);
         } else{
             $request->validate([
@@ -266,7 +266,7 @@ class PublisherController extends Controller
 
             if($publisher) {
                 $backlink = Backlink::find($back->id);
-                
+
                 $test[] = $backlink->update([
                     'price' => $publisher->price,
                     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
@@ -279,12 +279,12 @@ class PublisherController extends Controller
                 //     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
                 // ]);
 
-            } 
-            
+            }
+
             else {
 
                 $backlink = Backlink::find($back->id);
-                
+
                 $test[] = $backlink->update([
                     'price' => 0,
                     'prices' => 0,
