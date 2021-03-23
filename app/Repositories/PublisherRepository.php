@@ -255,7 +255,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
         $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
-        $language = $file['language'];
+//        $language = $file['language'];
         $csv_file = $file['file'];
 
         $result = true;
@@ -273,8 +273,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 4 || count($line) < 4){
-                    $message = "Please check the header: Url, Price, Inc Article and KW Anchor only.";
+                if(count($line) > 6 || count($line) < 6){
+                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor and Language only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -284,27 +284,54 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $url = trim_excel_special_chars($line[0]);
                     $price = trim_excel_special_chars($line[1]);
                     $article = trim_excel_special_chars($line[2]);
-                    $casinoSites = trim_excel_special_chars($line[3]);
+                    $accept = trim_excel_special_chars($line[3]);
+                    $kw_anchor = trim_excel_special_chars($line[4]);
+                    $language_excel = trim_excel_special_chars($line[5]);
 
-                    if( trim($url, " ") != '' ){
-                        $url_remove_http = $this->remove_http($url);
-                        $valid = $this->checkValid($url_remove_http);
+                    $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
-                        Publisher::create([
-                            'user_id' => $id,
-                            'language_id' => $language,
-                            'url' => $url_remove_http,
-                            'ur' => 0,
-                            'dr' => 0,
-                            'backlinks' => 0,
-                            'ref_domain' => 0,
-                            'org_keywords' => 0,
-                            'org_traffic' => 0,
-                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                            'valid' => $valid,
-                            'casino_sites' => $casinoSites ? $casinoSites : 'yes',
-                            'topic' => null
+                    if (preg_grep("/".$language_excel."/i", $language_name_list)){
+
+                        if (!$isCheckDuplicate) {
+
+                            if( trim($url, " ") != '' ){
+                                $url_remove_http = $this->remove_http($url);
+                                $lang = $this->getCountry($language_excel);
+                                $valid = $this->checkValid($url_remove_http);
+
+                                Publisher::create([
+                                    'user_id' => $id,
+                                    'language_id' => $lang,
+                                    'url' => $url_remove_http,
+                                    'ur' => 0,
+                                    'dr' => 0,
+                                    'backlinks' => 0,
+                                    'ref_domain' => 0,
+                                    'org_keywords' => 0,
+                                    'org_traffic' => 0,
+                                    'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                    'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                    'valid' => $valid,
+                                    'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                    'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
+                                    'topic' => null
+                                ]);
+                            }
+                        } else {
+                            $file_message = "You have already uploaded this url: " . $url . ", Check in line ". (intval($ctr) + 1);
+                            $result = true;
+
+                            array_push($existing_datas, [
+                                'message' => $file_message
+                            ]);
+                        }
+
+                    } else {
+                        $file_message = "No Language name of ". $language_excel . $message . ". Check in line ". (intval($ctr) + 1);
+                        $result = true;
+
+                        array_push($existing_datas, [
+                            'message' => $file_message
                         ]);
                     }
                 }
