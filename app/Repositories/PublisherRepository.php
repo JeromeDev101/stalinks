@@ -281,8 +281,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 5 || count($line) < 5){
-                    $message = "Please check the header: Url, Price, Inc Article, KW Anchor and Language only.";
+                if(count($line) > 6 || count($line) < 6){
+                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor and Language only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -292,8 +292,9 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $url = trim_excel_special_chars($line[0]);
                     $price = trim_excel_special_chars($line[1]);
                     $article = trim_excel_special_chars($line[2]);
-                    $casinoSites = trim_excel_special_chars($line[3]);
-                    $language_excel = trim_excel_special_chars($line[4]);
+                    $accept = trim_excel_special_chars($line[3]);
+                    $kw_anchor = trim_excel_special_chars($line[4]);
+                    $language_excel = trim_excel_special_chars($line[5]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
@@ -319,7 +320,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     'price' => preg_replace('/[^0-9.\-]/', '', $price),
                                     'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
                                     'valid' => $valid,
-                                    'casino_sites' => $casinoSites ? $casinoSites : 'yes',
+                                    'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                    'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
                                     'topic' => null
                                 ]);
                             }

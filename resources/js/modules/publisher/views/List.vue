@@ -336,7 +336,7 @@
 
                         <div class="col-sm-12">
                             <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
-                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, KW Anchor and Language. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Accept, KW Anchor and Language. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
                         </div>
                     </div>
 
@@ -809,6 +809,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6" v-if="user.role_id === 6 && user.isOurs === 1">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.kw_anchor}" class="form-group">
+                                    <label for="">KW Anchor</label>
+                                    <select class="form-control" v-model="addModel.kw_anchor">
+                                        <option value="">Select KW Anchor</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.kw_anchor" v-for="err in messageForms.errors.kw_anchor" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
                                     <label for="">Topic</label>
@@ -1270,6 +1282,7 @@
                     topic: '',
                     // country_id: '',
                     continent_id: '',
+                    kw_anchor: '',
                 },
                 topic: [
                     'Beauty',
@@ -1945,6 +1958,7 @@
                         topic: '',
                         // country_id: '',
                         continent_id: '',
+                        kw_anchor: '',
                     }
                 } else {
                     swal.fire(
@@ -2253,7 +2267,7 @@
 
                 let rows = this.user.isOurs === 0
                     ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
-                    : ['URL', 'Price', 'Inc Article', 'KW Anchor', 'Language'];
+                    : ['URL', 'Price', 'Inc Article', 'Accept', 'KW Anchor', 'Language'];
 
                 headers.push(rows);
 

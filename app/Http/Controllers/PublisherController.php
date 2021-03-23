@@ -10,6 +10,7 @@ use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use League\OAuth2\Server\RequestEvent;
 use App\Models\User;
 use App\Models\Registration;
@@ -76,6 +77,9 @@ class PublisherController extends Controller
             'price' => 'required',
             'casino_sites' => 'required',
             'topic' => 'required',
+            'kw_anchor' => Rule::requiredIf(function () use ($request) {
+                return Auth::user()->isOurs == 1;
+            }),
         ]);
 
         $url_copy = $this->remove_http($request->url);
