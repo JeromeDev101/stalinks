@@ -285,17 +285,16 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-3" v-show="showLang">
-                                <div class="col-sm-12">
-                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">
-                                        <option value="">Select language</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
+<!--                            <div class="row mt-3" v-show="showLang">-->
+<!--                                <div class="col-sm-12">-->
+<!--                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">-->
+<!--                                        <option value="">Select language</option>-->
+<!--                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">-->
+<!--                                            {{ option.name }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
 
                     </div>
@@ -317,6 +316,7 @@
 
                                 <div class="mb-0">
                                     <span>
+                                        Logout and re-login to complete the process.
                                         <span v-if="this.isAccountPaymentNotComplete">
                                             Please
                                             <router-link :to="{ path: `/profile/${user.id}` }">
@@ -327,10 +327,8 @@
 
                                         <span v-if="this.isAccountInvalid">
                                             Contact an administrator or person in charge to request
-                                            for validation.
+                                            for account validation.
                                         </span>
-
-                                        Logout to complete the process.
                                     </span>
                                 </div>
                             </div>
@@ -338,7 +336,7 @@
 
                         <div class="col-sm-12">
                             <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
-                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article and KW Anchor. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Accept, KW Anchor and Language. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
                         </div>
                     </div>
 
@@ -703,6 +701,7 @@
 
                                     <div class="mb-0">
                                         <span>
+                                            Logout and re-login to complete the process.
                                             <span v-if="this.isAccountPaymentNotComplete">
                                                 Please
                                                 <router-link :to="{ path: `/profile/${user.id}` }">
@@ -713,10 +712,8 @@
 
                                             <span v-if="this.isAccountInvalid">
                                                 Contact an administrator or person in charge to request
-                                                for validation.
+                                                for account validation.
                                             </span>
-
-                                            Logout to complete the process.
                                         </span>
                                     </div>
                                 </div>
@@ -809,6 +806,18 @@
                                         <option value="no">No</option>
                                     </select>
                                     <span v-if="messageForms.errors.casino_sites" v-for="err in messageForms.errors.casino_sites" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" v-if="user.role_id === 6 && user.isOurs === 1">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.kw_anchor}" class="form-group">
+                                    <label for="">KW Anchor</label>
+                                    <select class="form-control" v-model="addModel.kw_anchor">
+                                        <option value="">Select KW Anchor</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.kw_anchor" v-for="err in messageForms.errors.kw_anchor" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -1273,6 +1282,7 @@
                     topic: '',
                     // country_id: '',
                     continent_id: '',
+                    kw_anchor: '',
                 },
                 topic: [
                     'Beauty',
@@ -1948,6 +1958,7 @@
                         topic: '',
                         // country_id: '',
                         continent_id: '',
+                        kw_anchor: '',
                     }
                 } else {
                     swal.fire(
@@ -1963,7 +1974,7 @@
 
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
-                this.formData.append('language', this.$refs.language.value);
+                // this.formData.append('language', this.$refs.language.value);
                 this.formData.append('account_valid', this.checkAccountValidity());
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
@@ -1973,7 +1984,7 @@
                 if (this.messageForms.action === 'uploaded') {
                     this.getPublisherList();
                     this.$refs.excel.value = '';
-                    this.$refs.language.value = '';
+                    // this.$refs.language.value = '';
                     this.showLang = false;
 
                     swal.fire(
@@ -2203,8 +2214,10 @@
             checkDataExcel() {
                 if( this.user.isOurs == 1 ){
                     this.showLang = false;
+                    this.isEnableBtn = true;
                     if (this.$refs.excel.value){
                         this.showLang = true;
+                        this.isEnableBtn = false;
                     }
                 }
 
@@ -2254,7 +2267,7 @@
 
                 let rows = this.user.isOurs === 0
                     ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
-                    : ['URL', 'Price', 'Inc Article', 'KW Anchor'];
+                    : ['URL', 'Price', 'Inc Article', 'Accept', 'KW Anchor', 'Language'];
 
                 headers.push(rows);
 

@@ -95,10 +95,10 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             }
 
             if( $ctr > 0 ){
-                $url = trim_excel_special_chars($line[0]);
-                $status = trim_excel_special_chars($line[1]);
-                $country = trim_excel_special_chars($line[2]);
-                $email = trim_excel_special_chars($line[3]);
+                $url = trim_special_characters($line[0]);
+                $status = trim_special_characters($line[1]);
+                $country = trim_special_characters($line[2]);
+                $email = trim_special_characters($line[3]);
 
                 $isExistDomain = $this->checkDomain($url);
                 $isExistEmail = $this->checkEmail($email);

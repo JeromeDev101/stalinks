@@ -75,6 +75,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Wallet Transaction</h3>
                     <span class="ml-5 text-primary" v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
+                    <span class="ml-5 text-primary">Total amount: <b>${{ totalAmount }}</b></span>
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
@@ -321,6 +322,7 @@
                     },
                 },
                 searchLoading: false,
+                totalAmount: 0,
             }
         },
 
@@ -361,6 +363,8 @@
                         { orderable: false, targets: '_all' }
                     ],
                 });
+
+                this.getTotalAmount()
             },
 
             async getListBuyer(params) {
@@ -472,6 +476,27 @@
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
+            },
+
+            getTotalAmount() {
+                let wallet_transaction = this.listWallet.data
+                let total_price = [];
+                let total = 0;
+
+                wallet_transaction.forEach(function(item){
+                    if (typeof item.amount_usd !== 'undefined') {
+                        total_price.push( parseFloat(item.amount_usd))
+                    }
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total.toFixed(2);
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
         },
 
