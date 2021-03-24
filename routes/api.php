@@ -108,7 +108,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');
     Route::name('publisher-update-multiple')->post('/update-multiple-publisher', 'PublisherController@updateMultiple');
     Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');
-    Route::name('publisher-get-ahrefs')->get('/publisher/ahrefs', 'PublisherController@getAhrefs');
+    Route::name('publisher-get-ahrefs')->put('/publisher/ahrefs', 'PublisherController@getAhrefs');
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
     Route::name('publisher-get-summary')->get('/publisher/summary', 'PublisherController@getSummary');
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
@@ -116,7 +116,7 @@ Route::middleware('auth:api')->group(function () {
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
-    Route::name('ext-get-ahrefs')->get('/ext/ahrefs', 'ExtDomainController@getAhrefs');
+    Route::name('ext-get-ahrefs')->put('/ext/ahrefs', 'ExtDomainController@getAhrefs');
     Route::name('ext-get')->get('/ext', 'ExtDomainController@getList');
     Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
