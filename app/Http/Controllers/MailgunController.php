@@ -217,11 +217,20 @@ class MailgunController extends Controller
                     ->orderBy('id', 'desc');
 
         if (isset($request->search_mail) && $request->search_mail != ''){
-            $inbox = $inbox->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
-                            ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
-                            ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
-                            ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
-                            ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
+
+            $inbox = $inbox->where(function ($query) use ($request) {
+                $query->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
+                    ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
+                    ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
+                    ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
+                    ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
+            });
+
+//            $inbox = $inbox->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
+//                            ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
+//                            ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
+//                            ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
+//                            ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
         }
 
         if (isset($request->label_id) && $request->label_id != ''){
