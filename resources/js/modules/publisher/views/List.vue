@@ -734,12 +734,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.isOurs == 0">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
                                     <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
                                         <option value="">Select Seller</option>
-                                        <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        <option v-for="option in computedListSeller" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
                                     </select>
@@ -1336,6 +1336,7 @@
             this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
+            this.getListSellerIncharge();
             this.getListContinents();
 
             // let countries = this.listCountries.data;
@@ -1383,10 +1384,17 @@
                 listCountryContinent: state => state.storePublisher.listCountryContinent,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
+                listSellerIncharge: state => state.storePublisher.listSellerIncharge,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            computedListSeller() {
+                return this.user.role_id == 6 && this.user.isOurs == 0
+                    ? this.listSellerIncharge.data
+                    : this.listSeller.data;
+            },
 
             tableConfig() {
                 return [
@@ -1798,6 +1806,10 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            async getListSellerIncharge() {
+                await this.$store.dispatch('actionGetListSellerIncharge', this.user.id);
             },
 
             checkAhref( publish ) {

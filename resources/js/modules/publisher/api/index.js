@@ -26,6 +26,12 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getListSellerIncharge(params) {
+        return axios.get('/api/seller-incharge/' + params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static addUrl(params) {
         return axios.post('/api/publisher', params)
             .then(response => response)

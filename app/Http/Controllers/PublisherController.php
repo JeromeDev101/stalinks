@@ -182,6 +182,16 @@ class PublisherController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+    public function getListSellerIncharge($userId) {
+        $data = User::select('users.*', 'registration.id as register_id', 'registration.team_in_charge')
+            ->leftJoin('registration', 'users.email', '=', 'registration.email')
+            ->where('registration.team_in_charge', $userId)
+            ->orWhere('users.id', $userId)
+            ->get();
+
+        return compact('data');
+    }
+
     public function getAhrefs(Request $request) {
         $input = $request->all();
 
