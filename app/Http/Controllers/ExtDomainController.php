@@ -196,10 +196,15 @@ class ExtDomainController extends Controller
         ];
 
         $emp_ids = [];
+        $empty_emp_id = false;
         if( is_array($request->employee_id) && count($request->employee_id) > 0 ){
             foreach( $request->employee_id as $name){
-                $user = User::where('username', 'like', '%'.$name.'%')->first();
-                $emp_ids[] = $user->id;
+                if ($name == 'N/A') {
+                    $empty_emp_id[] = true;
+                } else {
+                    $user = User::where('username', 'like', '%'.$name.'%')->first();
+                    $emp_ids[] = $user->id;
+                }
             }
         }
 
@@ -232,9 +237,11 @@ class ExtDomainController extends Controller
         $filters = [
             'whereIn' => [],
             'where' => [],
+            'orWhere' => [],
             'other' => [
                 'whereIn' => [],
                 'where' => [],
+                'orWhere' => [],
             ]
         ];
 
@@ -273,8 +280,14 @@ class ExtDomainController extends Controller
 
         if (count($emp_ids) > 0){
             $filters['whereIn'][] = ['user_id', $emp_ids];
+            if ($empty_emp_id) {
+                $filters['orWhere'][] = ['user_id', null];
+            }
+        } else {
+            if ($empty_emp_id) {
+                $filters['where'][] = ['user_id', null];
+            }
         }
-
 
         $filters['other']['whereIn'][] = ['country_id', $countryIds];
         $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
@@ -554,6 +567,7 @@ class ExtDomainController extends Controller
         $input['organic_keywords']  = $request->ext['organic_keywords'];
         $input['organic_traffic']  = $request->ext['organic_traffic'];
         $input['country_id']  = $request->ext['country_id'];
+        $input['user_id'] = $request->ext['user_id'];
 
         $input['email'] = array_column($input['email'], 'text');
 
