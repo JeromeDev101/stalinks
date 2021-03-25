@@ -183,7 +183,11 @@ class PublisherController extends Controller
     }
 
     public function getListSellerIncharge($userId) {
-        $data = Registration::where('team_in_charge', $userId)->where('type', 'Seller')->get();
+        $data = User::select('users.*', 'registration.id as register_id', 'registration.team_in_charge')
+            ->leftJoin('registration', 'users.email', '=', 'registration.email')
+            ->where('registration.team_in_charge', $userId)
+            ->orWhere('users.id', $userId)
+            ->get();
 
         return compact('data');
     }

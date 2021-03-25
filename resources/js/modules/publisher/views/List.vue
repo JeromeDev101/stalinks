@@ -739,7 +739,7 @@
                                     <label for="">Seller</label>
                                     <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
                                         <option value="">Select Seller</option>
-                                        <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        <option v-for="option in computedListSeller" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
                                     </select>
@@ -1389,6 +1389,12 @@
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            computedListSeller() {
+                return this.user.role_id == 6 && this.user.isOurs == 0
+                    ? this.listSellerIncharge.data
+                    : this.listSeller.data;
+            },
 
             tableConfig() {
                 return [

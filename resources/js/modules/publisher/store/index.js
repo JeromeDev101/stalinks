@@ -114,7 +114,7 @@ const mutations = {
     },
 
     [LIST_SELLER_INCHARGE](state, dataSet) {
-        state.listSellerIncharge = dataSet.listSeller;
+        state.listSellerIncharge = dataSet.listSellerIncharge;
     },
 
     [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
