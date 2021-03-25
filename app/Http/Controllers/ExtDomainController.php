@@ -779,11 +779,11 @@ class ExtDomainController extends Controller
     public function getAhrefs(Request $request) {
         $input = $request->all();
 
-        if (!isset($input['domain_ids'])) {
+        if (!isset($input['params']['domain_ids'])) {
             return response()->json(['success' => false, 'message' => 'id domains is empty']);
         }
 
-        $listId = explode(",", $input['domain_ids']);
+        $listId = explode(",", $input['params']['domain_ids']);
         $configs = $this->configRepository->getConfigs('ahrefs');
         $data = $this->extDomainRepository->getAhrefs($listId, $configs);
         return response()->json($data);
