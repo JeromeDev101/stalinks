@@ -91,7 +91,7 @@ export default class ExtDomainService {
     }
 
     static getListAhrefs(params) {
-        return axios.get('/api/ext/ahrefs', params)
+        return axios.put('/api/ext/ahrefs', params)
 
             .then(response => response)
             .catch(error => error);

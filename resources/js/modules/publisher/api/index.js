@@ -81,7 +81,7 @@ export default class PublisherService {
     }
 
     static getListAhrefsPublisher(params) {
-        return axios.get('/api/publisher/ahrefs', params)
+        return axios.put('/api/publisher/ahrefs', params)
             .then(response => response)
             .catch(error => error);
     }
