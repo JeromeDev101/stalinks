@@ -78,7 +78,8 @@
                                <option value="0">Select Employee</option>
                                <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
                                </select> -->
-                            <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
+                            <v-select multiple
+                                      v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
                         </div>
                     </div>
 
@@ -94,6 +95,7 @@
                                     :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                     :dateRange="filterModel.alexa_date_upload"
                                     :linkedCalendars="true"
+                                    style="width: 100%"
                                 />
                             </div>
                         </div>
@@ -218,7 +220,7 @@
                         slot-scope="scope"
                         slot="actionButtons">
                        <div class="btn-group"
-                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id)">
+                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null)">
                           <button data-action="a1"
                                   :data-index="scope.index"
                                   @click="doEditExt(scope.row)"
@@ -640,6 +642,26 @@
                            <li>Example: abc@gmail.com|xyz@yahoo.com</li>
                         </ul>
                      </div>
+                      <div class="col-md-6">
+                          <div :class="{'form-group':
+                          true, 'has-error':
+                          messageForms.errors.user_id}"
+                               class="form-group">
+                              <label style="color: #333">
+                                  In-Charge</label>
+                              <select type="text"
+                                      v-model="extUpdate.user_id" class="form-control" value="" required="required">
+                                  <option v-for="(option,
+                                   key) in
+                                   listSellerTeam.data"
+                                          v-bind:value="option.id" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                      {{ option.username }}
+                                  </option>
+                              </select>
+                              <span
+                                  v-if="messageForms.errors.user_id" v-for="err in messageForms.errors.user_id" class="text-danger">{{ err }}</span>
+                          </div>
+                      </div>
                      <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.domain}" class="form-group">
                            <label style="color: #333">Domain</label>
@@ -1484,6 +1506,7 @@ export default {
             listSellerTeam: state => state.storeExtDomain.listSellerTeam,
             listLanguages: state => state.storePublisher.listLanguages,
         }),
+
         pagination() {
             return {
                 props: {
@@ -1738,12 +1761,17 @@ export default {
             }
         },
 
-        checkSellerAccess(seller_id) {
+        checkSellerAccess(seller_id, in_charge) {
             if (this.user.role_id == 6 && this.user.isOurs == 0) {
                 let check = false;
                 if (this.user.id == seller_id) {
                     check = true;
                 }
+
+                if (!in_charge) {
+                    check = true;
+                }
+
                 return check;
             } else {
                 return true;

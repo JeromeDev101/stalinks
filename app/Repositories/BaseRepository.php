@@ -205,6 +205,8 @@ class BaseRepository extends BaseLogRepository
                     if (!$this->isExisted($excepts, $filterNotIn[0]))
                         $queryBuilder = $queryBuilder->whereNotIn($filterNotIn[0], $filterNotIn[1]);
                 }
+            } else if ($operator == 'orWhere'){
+                $queryBuilder = $queryBuilder->orWhere($filter);
             }
         }
 
