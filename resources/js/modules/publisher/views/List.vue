@@ -1336,6 +1336,7 @@
             this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
+            this.getListSellerIncharge();
             this.getListContinents();
 
             // let countries = this.listCountries.data;
@@ -1383,6 +1384,7 @@
                 listCountryContinent: state => state.storePublisher.listCountryContinent,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
+                listSellerIncharge: state => state.storePublisher.listSellerIncharge,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
@@ -1798,6 +1800,10 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            async getListSellerIncharge() {
+                await this.$store.dispatch('actionGetListSellerIncharge', this.user.id);
             },
 
             checkAhref( publish ) {

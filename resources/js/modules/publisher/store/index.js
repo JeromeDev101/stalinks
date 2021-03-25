@@ -9,6 +9,7 @@ const LIST_COUNTRY_CONTINENT = 'LIST_COUNTRY_CONTINENT';
 const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_LANGUAGES = 'LIST_LANGUAGES';
 const LIST_SELLER = 'LIST_SELLER';
+const LIST_SELLER_INCHARGE = 'LIST_SELLER_INCHARGE';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 const LIST_BEST_PRICE_LOG = 'LIST_BEST_PRICE_LOG';
 
@@ -22,6 +23,7 @@ const state = {
     listContinent: { data: [], total: 0 },
     listLanguages: { data: [], total: 0 },
     listSeller: { data:[] },
+    listSellerIncharge: { data:[] },
     tblPublisherOpt: {
         continent: true,
         country: true,
@@ -109,6 +111,10 @@ const mutations = {
 
     [LIST_SELLER](state, dataSet) {
         state.listSeller = dataSet.listSeller;
+    },
+
+    [LIST_SELLER_INCHARGE](state, dataSet) {
+        state.listSellerIncharge = dataSet.listSeller;
     },
 
     [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
@@ -234,6 +240,20 @@ const actions = {
         try {
             let response = await PublisherService.getListSeller(params);
             commit(LIST_SELLER, { listSeller: response.data } );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListSellerIncharge({ commit }, params) {
+        try {
+            let response = await PublisherService.getListSellerIncharge(params);
+            commit(LIST_SELLER_INCHARGE, { listSellerIncharge: response.data } );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {
