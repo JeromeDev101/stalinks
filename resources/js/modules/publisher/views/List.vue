@@ -2138,6 +2138,7 @@
             doUpdate(publish) {
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
+                
                 let topic = '';
 
                 if(that.topic != null && that.topic != '') {
@@ -2166,7 +2167,7 @@
                     link: that.link,
                     inc_article: that.inc_article,
                     topic: topic,
-                    casino_sites: that.casino_sites,
+                    casino_sites: that.casino_sites.toLowerCase(),
                     kw_anchor: that.kw_anchor,
                     // country_id: that.country_id,
                     continent_id: that.continent_id,
