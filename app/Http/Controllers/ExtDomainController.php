@@ -285,7 +285,7 @@ class ExtDomainController extends Controller
             }
         } else {
             if ($empty_emp_id) {
-                $filters['orWhere'][] = ['user_id', null];
+                $filters['where'][] = ['user_id', null];
             }
         }
 
