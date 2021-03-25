@@ -335,8 +335,23 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <small v-show="user.isOurs == 0" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Seller ID, Accept, Language and Topic. The columns should be separated using comma (,). Price are in USD. Inc Article and Accept value is Yes /No . Do not forget to select the language of the site.</small>
-                            <small v-show="user.isOurs == 1" class="text-secondary">Reminder: The uploaded data is for Seller -List Publisher. The columns for the CSV file are URL, Price, Inc Article, Accept, KW Anchor and Language. The columns should be separated using comma. (,) If you only have URL and Price is fine too. Price are in USD. Inc Article value is Yes /No. KW Anchor value is Yes/No. Do not forget to select the language of the site.</small>
+                            <small v-show="user.isOurs == 0" class="text-secondary">
+                                Reminder: The uploaded data is for Seller -List Publisher.
+                                The columns for the CSV file are URL, Price, Inc Article, Seller ID,
+                                Accept C&B, Language and Topic. The columns should be separated using comma (,).
+                                Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
+                                Keyword Anchor yes if accept KW no if only |URL|.
+                                Select the main language of the site for the language.
+                            </small>
+
+                            <small v-show="user.isOurs == 1" class="text-secondary">
+                                Reminder: The uploaded data is for Seller -List Publisher.
+                                The columns for the CSV file are URL, Price, Inc Article, Accept C&B, KW Anchor
+                                and Language. The columns should be separated using comma (,).
+                                If you only have URL and Price is fine too. Price are in USD.
+                                Inc Article value is Yes/No. Keyword Anchor yes if accept KW no if only |URL|.
+                                Select the main language of the site for the language.
+                            </small>
                         </div>
                     </div>
 
@@ -2266,8 +2281,8 @@
                 let headers = [];
 
                 let rows = this.user.isOurs === 0
-                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept','Language', 'Topic']
-                    : ['URL', 'Price', 'Inc Article', 'Accept', 'KW Anchor', 'Language'];
+                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept C&B','Language', 'Topic']
+                    : ['URL', 'Price', 'Inc Article', 'Accept C&B', 'KW Anchor', 'Language'];
 
                 headers.push(rows);
 
