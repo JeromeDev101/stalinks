@@ -97,6 +97,13 @@ const mutations = {
     },
 
     [EXT_SELLER_TEAM](state, listSellerTeam) {
+        const data = {
+            id : 0,
+            username : 'N/A'
+        };
+
+        listSellerTeam.data.push(data);
+
         state.listSellerTeam = listSellerTeam;
     },
 
