@@ -734,7 +734,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.isOurs == 0">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
                                     <label for="">Seller</label>
                                     <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
