@@ -254,21 +254,23 @@ class ExtDomainController extends Controller
         }
 
         //init filter
-        $countryIds = [];
-        if (isset($input['country_id']) && $input['country_id'] > 0) {
-            $countryAll = $input['country_id'];
-            $countryIds = $this->countryRepository->validCountryIdList($countryAll, $userId, true);
-            $findAllExt = false;
-            $countriesExceptIds = array_diff($countryAll, $countryIds);
-        } else {
-            $countryIds = $this->countryRepository->getListCountriesAccess($userId, true);
-        }
+//        $countryIds = [];
+//        if (isset($input['country_id']) && $input['country_id'] > 0) {
+//            $countryAll = $input['country_id'];
+//            $countryIds = $this->countryRepository->validCountryIdList($countryAll, $userId, true);
+//            $findAllExt = false;
+//            $countriesExceptIds = array_diff($countryAll, $countryIds);
+//        } else {
+//            $countryIds = $this->countryRepository->getListCountriesAccess($userId, true);
+//        }
+//
+//        // to display the list of extdomain to non employee (jerome) - 7/3/20
+//        $non_employee = $this->giveAccessToNonEmployees($userId);
+//        if( $non_employee ){
+//            $countryIds = $non_employee;
+//        }
 
-        // to display the list of extdomain to non employee (jerome) - 7/3/20
-        $non_employee = $this->giveAccessToNonEmployees($userId);
-        if( $non_employee ){
-            $countryIds = $non_employee;
-        }
+        $countryIds = Country::pluck('id')->toArray();
 
         $countryIdsInt = $this->countryRepository->getListCountriesAccess($userId);
 
@@ -289,8 +291,8 @@ class ExtDomainController extends Controller
             }
         }
 
-        $filters['other']['whereIn'][] = ['country_id', $countryIds];
-        $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
+//        $filters['other']['whereIn'][] = ['country_id', $countryIds];
+//        $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
 
         if( isset($input['status_multiple']) ){
             $filters['whereIn'][] = ['status', $input['status_multiple']];
