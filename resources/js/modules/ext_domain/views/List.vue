@@ -225,9 +225,9 @@
                                   :data-index="scope.index"
                                   @click="doEditExt(scope.row)"
                                   data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
-                          <button data-action="a2"
+                          <!-- <button data-action="a2"
                                   :data-index="scope.index"
-                                  v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
+                                  v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button> -->
                           <button data-action="a4"
                                   :data-index="scope.index"
                                   @click="doSendEmail(scope.row,
