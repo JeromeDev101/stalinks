@@ -654,7 +654,7 @@
                                   <option v-for="(option,
                                    key) in
                                    listSellerTeam.data"
-                                          v-bind:value="option.id" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                          v-bind:value="option.id" v-if="option.username != 'N/A' && option.status == 'active'" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
                                       {{ option.username }}
                                   </option>
                               </select>
