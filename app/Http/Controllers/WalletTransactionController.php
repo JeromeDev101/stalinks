@@ -87,7 +87,7 @@ class WalletTransactionController extends Controller
     }
 
     public function getListSellerTeam() {
-        $list = User::select('id', 'username')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
+        $list = User::select('id', 'username', 'status')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];

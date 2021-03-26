@@ -99,7 +99,8 @@ const mutations = {
     [EXT_SELLER_TEAM](state, listSellerTeam) {
         const data = {
             id : 0,
-            username : 'N/A'
+            username : 'N/A',
+            status : 'active'
         };
 
         listSellerTeam.data.push(data);
