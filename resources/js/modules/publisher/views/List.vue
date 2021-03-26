@@ -132,7 +132,7 @@
                                     :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                     :dateRange="filterModel.uploaded"
                                     :linkedCalendars="true"
-                                    opens="left"
+                                    opens="right"
                                     style="width: 100%"
                                 />
                             </div>
@@ -2138,7 +2138,7 @@
             doUpdate(publish) {
                 this.clearMessageform()
                 let that = JSON.parse(JSON.stringify(publish))
-                
+
                 let topic = '';
 
                 if(that.topic != null && that.topic != '') {
