@@ -199,6 +199,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
+                                <th v-show="user.isAdmin">Payment Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
@@ -218,6 +219,7 @@
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
+                                <td v-show="user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
@@ -907,6 +909,18 @@
         },
 
         methods: {
+
+            displayEmailPayment(account) {
+                let paypal_email = account.payment_account == null || account.payment_account == '' ? '':account.payment_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
+                let btc_email = account.btc_account == null || account.btc_account == '' ? '':account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
+                let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '':account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
+                let email = '';
+
+                email = paypal_email + btc_email + skrill_email;
+
+                return email;
+            },
+
             async verifiedAccount() {
 
                 this.isPopupLoading = true;
@@ -1114,6 +1128,7 @@
                         { orderable: true, targets: 10 },
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
