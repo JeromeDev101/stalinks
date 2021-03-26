@@ -933,14 +933,16 @@
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,
-                        isHidden: false
+                        isHidden: this.user.role_id == 5 &&
+                            this.user.isOurs == 1
                     },
                     {
                         prop : 'code_price',
                         name : 'Code Price',
                         sortable: true,
                         width: 120,
-                        isHidden: false
+                        isHidden: this.user.role_id == 5 &&
+                            this.user.isOurs == 1
                     },
                     {
                         prop : 'price_basis',
