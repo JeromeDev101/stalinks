@@ -184,7 +184,7 @@ class PurchaseController extends Controller
         }
 
 
-        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%http%')->get();
+        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%www.%')->get();
 
         return $publishers;
     }
