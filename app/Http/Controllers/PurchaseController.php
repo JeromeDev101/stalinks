@@ -172,7 +172,7 @@ class PurchaseController extends Controller
     }
 
     public function testRemoveHttp() {
-        $publishers = Publisher::where('url', 'like', '%www.%')->take(100)->get();
+        $publishers = Publisher::where('url', 'like', '%/%')->take(100)->get();
 
         foreach($publishers as $publisher) {
             $url_copy = $this->remove_http($publisher->url);
@@ -184,7 +184,7 @@ class PurchaseController extends Controller
         }
 
 
-        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%www.%')->get();
+        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%/%')->get();
 
         return $publishers;
     }
