@@ -175,7 +175,8 @@ class ArticlesController extends Controller
 
     private function getBacklinksForBuyer() {
         $user = Auth::user();
-        $backlinks_ids = Backlink::where('user_id', $user->id)->pluck('id')->toArray();
+        $subBuyer = Registration::select('users.id AS id')->join('users', 'registration.email', 'users.email')->where('registration.team_in_charge', $user->id)->get()->pluck('id');
+        $backlinks_ids = Backlink::where('user_id', $user->id)->orWhereIn('user_id', $subBuyer)->pluck('id')->toArray();
 
         return $backlinks_ids;
     }
