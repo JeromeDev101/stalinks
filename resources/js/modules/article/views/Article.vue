@@ -225,6 +225,7 @@
                         </template>
 
                     </vue-virtual-table>
+                    <pagination :data="listArticles" @pagination-change-page="getListArticles" :limit="8"></pagination>
                 </div>
             </div>
         </div>
@@ -602,11 +603,23 @@
             },
 
 
-            async getListArticles(params){
+            async getListArticles(page = 1){
                 let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
-                await this.$store.dispatch('actionGetListArticle', params);
+                await this.$store.dispatch('actionGetListArticle', {
+                    params: {
+                        page: page,
+                        paginate: this.filterModel.paginate,
+                        search_backlink: this.filterModel.search_backlink,
+                        search_article: this.filterModel.search_article,
+                        language_id: this.filterModel.language_id,
+                        status: this.filterModel.status,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
+                        writer: this.filterModel.writer,
+                    }
+                });
                 this.searchLoading = false;
                 this.isSearching = false;
 
