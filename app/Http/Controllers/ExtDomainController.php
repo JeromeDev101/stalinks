@@ -337,16 +337,16 @@ class ExtDomainController extends Controller
         return response()->json($this->addPaginationRaw($data));
     }
 
-    private function giveAccessToNonEmployees($userId) {
-        $user = User::find($userId);
-        $result = false;
-        if( isset( $user->isOurs ) ){
-            if( $user->isOurs == 1 ){
-                $result = Country::pluck('id')->toArray();
-            }
-        }
-        return $result;
-    }
+    // private function giveAccessToNonEmployees($userId) {
+    //     $user = User::find($userId);
+    //     $result = false;
+    //     if( isset( $user->isOurs ) ){
+    //         if( $user->isOurs == 1 ){
+    //             $result = Country::pluck('id')->toArray();
+    //         }
+    //     }
+    //     return $result;
+    // }
 
     private function remove_http($url) {
         $disallowed = array('http://', 'https://', 'www.', '/');
@@ -371,20 +371,21 @@ class ExtDomainController extends Controller
         // handle email
         $input['email'] = array_column($input['email'], 'text');
 
-        $customMessages = [];
+        // $customMessages = [];
 
-        foreach ($input['email'] as $key => $value) {
-            $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
-            $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
-        }
+        // foreach ($input['email'] as $key => $value) {
+        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        // }
 
         $newStatus = 0;
 
         Validator::make($input, [
             'domain' => 'required|max:255',
 //            'email.*' => 'email|unique:ext_domains,email',
-            'email' => 'array|max:10',
-            'email.*' => ['email', new EmailPipe('add')],
+            // 'email' => 'array|max:10',
+            // 'email.*' => ['email', new EmailPipe('add')],
+            'email' => 'email',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -392,8 +393,7 @@ class ExtDomainController extends Controller
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0'
-        ],
-        $customMessages)->validate();
+        ])->validate();
 
         $url_remove_http = $this->remove_http($input['domain']);
 
@@ -645,23 +645,24 @@ class ExtDomainController extends Controller
             $input['domain'] = 'http://'.$input['domain'];
         }
 
-        $customMessages = [];
+        // $customMessages = [];
 
-        foreach ($input['email'] as $key => $value) {
-            $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
-            $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
-        }
+        // foreach ($input['email'] as $key => $value) {
+        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        // }
 
         Validator::make($input, [
-            'email' => 'array|max:10',
-            'email.*' => ['email', new EmailPipe('edit', $input['id'])],
+            // 'email' => 'array|max:10',
+            // 'email.*' => ['email', new EmailPipe('edit', $input['id'])],
+            'email' => 'email',
             'domain' => 'required|url|max:255',
             'ahrefs_rank' => 'required|integer|gte:0',
             'no_backlinks' => 'required|integer|gte:0',
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0',
-        ], $customMessages)->validate();
+        ])->validate();
 
         // if( $input['status'] === '100'){
         //     Publisher::create([
