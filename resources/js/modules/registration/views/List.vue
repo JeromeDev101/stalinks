@@ -199,7 +199,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
-                                <th v-show="user.isAdmin">Payment Email</th>
+                                <th v-show="user.isAdmin">Payment Account Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
@@ -911,7 +911,7 @@
         methods: {
 
             displayEmailPayment(account) {
-                let paypal_email = account.payment_account == null || account.payment_account == '' ? '':account.payment_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
+                let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '':account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
                 let btc_email = account.btc_account == null || account.btc_account == '' ? '':account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
                 let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '':account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
                 let email = '';
