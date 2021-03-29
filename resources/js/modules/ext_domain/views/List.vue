@@ -2100,7 +2100,7 @@ export default {
             this.$store.dispatch('clearMessageForm');
             this.extUpdate = JSON.parse(JSON.stringify(extDomain))
 
-            this.extUpdate.email = this.extUpdate.email === null ? [] : this.extUpdate.email;
+            this.extUpdate.email = (this.extUpdate.email === null || this.extUpdate.email === '') ? [] : this.extUpdate.email;
 
             let emails = [];
 
