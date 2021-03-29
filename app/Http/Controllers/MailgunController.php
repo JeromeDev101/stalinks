@@ -390,11 +390,11 @@ class MailgunController extends Controller
         // dd($r_attachment);
 
         if( isset($input['In-Reply-To']) && $input['In-Reply-To'] ){
-            $in_reply_to = $input['In-Reply-To'];
+            $in_reply_to = preg_replace("/[<>]/", "", $input['In-Reply-To']);
         }
 
         if( isset($input['References']) && $input['References'] ){
-            $references = $input['References'];
+            $references = preg_replace("/[<>]/", "", $input['References']);
         }
 
 
