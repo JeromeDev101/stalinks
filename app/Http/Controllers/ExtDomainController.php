@@ -655,7 +655,7 @@ class ExtDomainController extends Controller
         Validator::make($input, [
             // 'email' => 'array|max:10',
             // 'email.*' => ['email', new EmailPipe('edit', $input['id'])],
-            'email' => 'email',
+            // 'email' => 'email',
             'domain' => 'required|url|max:255',
             'ahrefs_rank' => 'required|integer|gte:0',
             'no_backlinks' => 'required|integer|gte:0',
@@ -692,9 +692,9 @@ class ExtDomainController extends Controller
             $input['domain'] = explode('http://', $input['domain'])[1];
         }
 
-        Validator::make($input, [
-            'domain' => Rule::unique('ext_domains')->ignore($input['id']),
-        ])->validate();
+        // Validator::make($input, [
+        //     'domain' => Rule::unique('ext_domains')->ignore($input['id']),
+        // ])->validate();
 
         // Validator::make($input, $validateRule)->validate();
 
