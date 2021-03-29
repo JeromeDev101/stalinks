@@ -14,7 +14,7 @@ interface ExtDomainRepositoryInterface extends RepositoryInterface
 
     public function getContacts($listIdExtDomains);
 
-    public function paginate($page, $perPage, $filter, $countriesId, $countriesIdInt, $countriesExceptIds, $allExtFilter, $sort, $extDomainAdditionIds = []);
+    public function paginate($input);
 
     public function updateStatus($listIds, $newStatus, $countryIdsFilter);
 
