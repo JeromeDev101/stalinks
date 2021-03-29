@@ -223,12 +223,12 @@ class ExtDomainController extends Controller
         // handle email
         $input['email'] = array_column($input['email'], 'text');
 
-        // $customMessages = [];
+         $customMessages = [];
 
-        // foreach ($input['email'] as $key => $value) {
-        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
-        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
-        // }
+         foreach ($input['email'] as $key => $value) {
+//             $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+             $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+         }
 
         $newStatus = 0;
 
@@ -236,8 +236,13 @@ class ExtDomainController extends Controller
             'domain' => 'required|max:255',
 //            'email.*' => 'email|unique:ext_domains,email',
             // 'email' => 'array|max:10',
+<<<<<<< HEAD
             // 'email.*' => ['email', new EmailPipe('add')],
             // 'email' => 'email',
+=======
+             'email.*' => 'email',
+//            'email' => 'email',
+>>>>>>> master
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -245,7 +250,7 @@ class ExtDomainController extends Controller
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0'
-        ])->validate();
+        ], $customMessages)->validate();
 
         $url_remove_http = $this->remove_http($input['domain']);
 
