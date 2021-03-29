@@ -528,26 +528,33 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
 
-        // if( $input['status'] === '100'){
-        //     Publisher::create([
-        //         'user_id' => $request->pub['seller'],
-        //         'url' => $request->pub['url'],
-        //         'ur' => $input['url_rating'],
-        //         'dr' => $input['domain_rating'],
-        //         'backlinks' => $input['no_backlinks'],
-        //         'ref_domain' => $input['ref_domains'],
-        //         'org_keywords' => $input['organic_keywords'],
-        //         'org_traffic' => $input['organic_traffic'],
-        //         'price' => $request->pub['price'],
-        //         'language_id' => $request->pub['language_id'],
-        //         'inc_article' => $request->pub['inc_article'],
-        //         'topic' => $request->pub['topic'],
-        //         'casino_sites' => $request->pub['casino_sites'],
-        //         'valid' => 'unchecked',
-        //     ]);
+        // check if status is 'Qualified'
+        if( $input['status'] === '100'){
+            $url = $this->remove_http($request->pub['url']);
+            $publisher = Publisher::where('url', 'like', '%'.$url.'%')->count();
 
-        //     $input['user_id'] = $id;
-        // }
+            // create a copy if unique URl in list publisher
+            if( $publisher == 0 ) {
+                Publisher::create([
+                    'user_id' => $request->pub['seller'],
+                    'url' => $request->pub['url'],
+                    'ur' => $input['url_rating'],
+                    'dr' => $input['domain_rating'],
+                    'backlinks' => $input['no_backlinks'],
+                    'ref_domain' => $input['ref_domains'],
+                    'org_keywords' => $input['organic_keywords'],
+                    'org_traffic' => $input['organic_traffic'],
+                    'price' => $request->pub['price'],
+                    'language_id' => $request->pub['language_id'],
+                    'inc_article' => $request->pub['inc_article'],
+                    'topic' => $request->pub['topic'],
+                    'casino_sites' => $request->pub['casino_sites'],
+                    'valid' => 'valid',
+                ]);
+            }
+
+            $input['user_id'] = $id;
+        }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];
