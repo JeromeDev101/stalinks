@@ -385,7 +385,7 @@ class ExtDomainController extends Controller
 //            'email.*' => 'email|unique:ext_domains,email',
             // 'email' => 'array|max:10',
             // 'email.*' => ['email', new EmailPipe('add')],
-            'email' => 'email',
+            // 'email' => 'email',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -537,9 +537,21 @@ class ExtDomainController extends Controller
     }
 
     private function isInputContactInfo($input) {
+        $email = true;
+        if(is_array($input['email'])){
+            if(count($input['email']) > 0) {
+                $email = true;
+            }else{
+                $email = false;
+            }
+        } else{
+            $email  = $input['email'] != '' ? true:false;
+        }
+
+
         if ($input['facebook'] != '' ||
             $input['phone'] != '' ||
-            $input['email'] != '' ) {
+            $email ) {
             return true;
         }
 
