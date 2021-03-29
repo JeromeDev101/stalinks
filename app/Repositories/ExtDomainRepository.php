@@ -8,9 +8,11 @@ use App\Libs\Ahref;
 use App\Models\Country;
 use App\Models\ExtDomain;
 use App\Models\Publisher;
+use App\Models\User;
 use App\Repositories\BaseRepository;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
+use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -356,49 +358,90 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         // TODO: Implement getContacts() method.
     }
 
-    public function paginate($page, $perPage, $filters, $countriesId, $countriesIdInt, $countriesExceptIds, $allExtFilter, $sort, $extDomainAdditionIds = [])
+    public function paginate($input)
     {
-        $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $dataAddExt = $this->getExtDomainFromCountryInt($allExtFilter, $countriesId, $countriesIdInt, $countriesExceptIds);
+        $query = $this->model->newQuery();
+        $page = 0;
+        $perPage = 50;
 
-        foreach($dataAddExt as $item) {
-            $extDomainAdditionIds[] = $item->id;
-        }
+        // Employee Filter
+        if (isset($input['employee_id']) && !empty($input['employee_id'])) {
+            if (is_array($input['employee_id'])) {
+                $query->where(function ($q) use ($input) {
+                    foreach ($input['employee_id'] as $name) {
+                        if ($name == 'N/A') {
+                            $q->orWhere('user_id', null);
+                        } else {
+                            $user = User::where('username', 'like', '%' . $name . '%')->first();
 
-        $queryBuilder = $queryBuilder->orWhere(function($query) use ($allExtFilter, $filters, $countriesId, $countriesExceptIds, $extDomainAdditionIds) {
-            $query->whereIn('id', $extDomainAdditionIds);
-            $this->buildSimpleFilterQueryBuilder($query, $filters, ['country_id']);
-
-            if ($allExtFilter === false) {
-                $query->where(function($queryIn) use ($countriesId, $countriesExceptIds, $filters) {
-                    $this->buildSimpleFilterQueryBuilder($queryIn, $filters['other']);
+                            $q->orWhere('user_id', $user->id);
+                        }
+                    }
                 });
             }
-        })
-        ->with(['country' => function($query) {
+        }
+
+        // Set page
+        if (isset($input['page'])) {
+            $page = $input['page'];
+        }
+
+        // Set per_page
+        if (isset($input['per_page'])) {
+            $perPage = $input['per_page'];
+        }
+
+        // Email Filter
+        if (isset($input['email'])) {
+            $query->where('email', 'like', '%' . $input['email'] . '%');
+        }
+
+        // Country Filter
+        if (isset($input['country_id']) && $input['country_id'] != '0') {
+            if (is_array($input['country_id'])) {
+                $countryIds = Country::whereIn('name', $input['country_id'])->get()->pluck('id');
+                $query->whereIn('country_id', $countryIds);
+            } else {
+                $countryId = Country::where('name', $input['country_id'])->first()->id;
+                $query->where('country_id', $countryId);
+            }
+        }
+
+        // Email Required filter
+        if (isset($input['required_email']) && $input['required_email'] > 0) {
+            $query->where('email', '!=', '');
+        }
+
+        // Domain Filter
+        if (isset($input['domain'])) {
+            $query->where('domain', 'like', '%' . $input['domain'] . '%');
+        }
+
+        // Status Filter
+        if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
+            if (is_array($input['status'])) {
+                $query->whereIn('status', $input['status']);
+            } else {
+                $query->where('status', $input['status']);
+            }
+        }
+
+        // Date upload filter
+        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
+
+        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
+            $query->where('created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+            $query->where('created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+        }
+
+        // Include relationships
+        $query->with(['country' => function($query) {
             $query->select(['id', 'name', 'code']);
-        }, 'backlinks' => function($query) {
-            $query->select('ext_domain_id', 'price');
         }, 'users' => function($query) {
             $query->select('id','username');
         }]);
 
-        if ($sort[0] === 'ext_domains.total_spent') {
-            $queryBuilder->select("*",
-                DB::raw('(SELECT SUM(price) FROM backlinks WHERE ext_domains.id = backlinks.ext_domain_id) as sum_price'))
-                ->orderBy('sum_price', $sort[1]);
-        } else {
-            $queryBuilder->orderBy($sort[0], $sort[1]);
-        }
-
-        $data = $queryBuilder->paginate($perPage, ['*'], 'page', $page);
-
-        foreach($data as &$item) {
-            $item['total_spent'] = collect($item['backlinks'])->sum('price');
-            unset($item['backlinks']);
-        }
-
-        return $data;
+        return $query->paginate($perPage, ['*'], 'page', $page);
     }
 
     private function getExtDomainFromCountryInt($allExtFilter, $countriesId, $countriesIdInt, $countriesExceptIds) {
