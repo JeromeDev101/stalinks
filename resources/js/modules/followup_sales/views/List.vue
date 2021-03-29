@@ -31,10 +31,10 @@
                             <div class="form-group">
                                 <label for="">Status</label>
                                 <v-select multiple
-                                          v-model="filterModel.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+                                          v-model="filterModel.status" :options="statusBacklinkQc" :searchable="false" placeholder="All"/>
 <!--                                <select name="" class="form-control" v-model="filterModel.status">-->
 <!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
+<!--                                    <option v-for="status in statusBacklinkQc" v-bind:value="status">{{ status }}</option>-->
 <!--                                </select>-->
                             </div>
                         </div>
@@ -349,9 +349,27 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status Sales</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive && user.role_id != 8" @change="checkStatus()">
-                                            <option v-show="user.role_id != 8 && user.role_id != 3 && user.role_id != 1" v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                            <option v-show="user.role_id == 8 || user.role_id == 3 || user.role_id == 1" v-for="status in statusBaclinkQc" v-bind:value="status">{{ status }}</option>
+                                        <select
+                                            v-model="updateModel.status"
+                                            style="height: 37px;"
+                                            class="form-control pull-right"
+                                            :disabled="isLive && user.role_id != 8"
+
+                                            @change="checkStatus()">
+
+                                            <option
+                                                v-bind:value="status"
+                                                v-for="status in statusBacklink"
+                                                v-show="user.role_id != 8 && !user.isAdmin">
+                                                {{ status }}
+                                            </option>
+
+                                            <option
+                                                v-bind:value="status"
+                                                v-for="status in statusBacklinkQc"
+                                                v-show="user.role_id == 8 || user.isAdmin">
+                                                {{ status }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -505,12 +523,25 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing',
-                                'Content In Writing',
-                                'Content Done',
-                                'Content sent', 'Live',
-                                'Live in Process', 'Issue', 'Canceled'],
-                statusBaclinkQc: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process', 'Issue', 'Canceled'],
+                statusBacklink: [
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live in Process',
+                    'Issue',
+                    'Canceled'
+                ],
+                statusBacklinkQc: [
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live',
+                    'Live in Process',
+                    'Issue',
+                    'Canceled'
+                ],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
