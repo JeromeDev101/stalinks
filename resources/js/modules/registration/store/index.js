@@ -26,7 +26,8 @@ const state = {
         sub_account: true,
         under_of_main_buyer: true,
         account_validation: true,
-        status: true
+        status: true,
+        email: true,
     },
 }
 
