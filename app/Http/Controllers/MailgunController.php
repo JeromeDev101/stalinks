@@ -336,6 +336,8 @@ class MailgunController extends Controller
 
         $message_id = $request->only('Message-Id');
         $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
+        $in_reply_to = null;
+        $references = null;
 
         $aw = $this->mg->events()->get('stalinks.com');
         // $r_attachment = '';
@@ -375,7 +377,9 @@ class MailgunController extends Controller
         }
 
 
-        DB::table('test_replies')->insert(['alldata' => json_encode($request->all())]);
+        $input = $request->all();
+
+        DB::table('test_replies')->insert(['alldata' => json_encode($input)]);
 
         // if( $request->has('attachments') )
         // {
@@ -384,6 +388,14 @@ class MailgunController extends Controller
         // }
 
         // dd($r_attachment);
+
+        if( isset($input['In-Reply-To']) && $input['In-Reply-To'] ){
+            $in_reply_to = preg_replace("/[<>]/", "", $input['In-Reply-To']);
+        }
+
+        if( isset($input['References']) && $input['References'] ){
+            $references = preg_replace("/[<>]/", "", $input['References']);
+        }
 
 
         $data = [
@@ -394,7 +406,9 @@ class MailgunController extends Controller
             // 'attachment'        => '',
             'from_mail'         => $request->from,
             'date'              => '',
-            'message_id'        => '',
+            'message_id'        => $message_id,
+            'in_reply_to'       => $in_reply_to,
+            'references'        => $references,
             'received'          => $request->recipient,
             'references_mail'   => '',
             'label_id'          => 0,
