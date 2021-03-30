@@ -39,8 +39,8 @@ class SendReminderEmail implements ShouldQueue
     {
         if ($this->subAccount) {
             Mail::to($this->notification->email)->send(new SendReminderToLeadEmail($this->subAccount->username));
+        } else {
+            Mail::to($this->notification->email)->send(new RegistrationReminderEmail($this->notification->verification_code));
         }
-
-        Mail::to($this->notification->email)->send(new RegistrationReminderEmail($this->notification->verification_code));
     }
 }

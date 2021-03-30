@@ -29,6 +29,6 @@ class RegistrationReminderEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('verification_reminder');
+        return $this->view('verification_reminder')->subject('Registration Reminder');
     }
 }
