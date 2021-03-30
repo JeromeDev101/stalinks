@@ -43,7 +43,7 @@ class SendRegistrationReminder extends Command
     {
         $notifications = Registration::whereNotNull('verification_code')
             ->whereNull('reminded_at')
-            ->where('created_at', '<=', Carbon::now()->addDay())->get();
+            ->where('created_at', '<=', Carbon::now()->subDay())->get();
 
         if (!$notifications->count()) {
             $this->info('No Scheduled Notifications need to be sent.');
