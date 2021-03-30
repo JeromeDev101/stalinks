@@ -29,6 +29,6 @@ class SendReminderToLeadEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('verification_reminder_qc');
+        return $this->view('verification_reminder_qc')->subject('Registration Reminder');
     }
 }
