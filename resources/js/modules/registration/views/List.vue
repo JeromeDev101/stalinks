@@ -202,6 +202,7 @@
                                 <th v-show="user.isAdmin">Payment Account Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
+                                <th v-show="tblAccountsOpt.email">Email</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
                                 <th v-show="tblAccountsOpt.company_type">Company Type</th>
@@ -222,6 +223,7 @@
                                 <td v-show="user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
+                                <td v-show="tblAccountsOpt.email">{{ account.email }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
