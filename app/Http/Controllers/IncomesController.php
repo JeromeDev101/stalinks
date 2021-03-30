@@ -33,8 +33,10 @@ class IncomesController extends Controller
         
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
+
         $ext_seller_emails = Registration::select('email')->where('team_in_charge', $user->id)->where('status', 'active');
-        
+
+        // to display the records of his/her external sellers
         if( $ext_seller_emails->count() > 0 && $user->role_id == 6) {
             $seller_emails = $ext_seller_emails->pluck('email')->toArray();
             $ext_seller_ids = User::select('id')->whereIn('email', $seller_emails)->where('status', 'active')->pluck('id')->toArray();
@@ -44,7 +46,8 @@ class IncomesController extends Controller
             });
         }
 
-        if( $user->isOurs == 1 && $user->role_id == 6 && !empty($publisher_ids) && $user->type != 10){
+        // for external seller filter
+        if( $user->isOurs == 1 && $user->role_id == 6 && $user->type != 10){
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
