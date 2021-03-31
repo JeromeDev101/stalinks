@@ -13,7 +13,35 @@ class Registration extends Model
     protected $guarded = [];
     protected $table = 'registration';
 
-    protected $fillable = ['reminded_at'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'phone',
+        'company_name',
+        'company_url',
+        'type',
+        'is_sub_account',
+        'skype',
+        'status',
+        'is_freelance',
+        'account_validation',
+        'info',
+        'address',
+        'country_id',
+        'id_payment_type',
+        'payment_email',
+        'payment_account',
+        'commission',
+        'verification_code',
+        'credit_auth',
+        'team_in_charge',
+        'username',
+        'paypal_account',
+        'btc_account',
+        'skrill_account',
+        'reminded_at',
+        ];
 
     public function team_in_charge() {
         return $this->belongsTo('App\Models\User', 'team_in_charge');
