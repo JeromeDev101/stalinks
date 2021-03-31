@@ -526,7 +526,7 @@ class MailgunController extends Controller
             $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
         }
 
-        $mail_logs = $mail_logs->get();
+        $mail_logs = $mail_logs->orderBy('created_at', 'desc')->get();
 
 
         $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();
