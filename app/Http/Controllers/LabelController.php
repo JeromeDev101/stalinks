@@ -27,12 +27,19 @@ class LabelController extends Controller
 
     public function getLabels($email)
     {
-        $user = User::select('id')->where('work_mail', $email)->first();
+        $user = $email !== 'all'
+            ? User::select('id')->where('work_mail', $email)->first()
+            : null;
 
-        $labels = DB::table('labels')
-            ->where('user_id', null)
-            ->orWhere('user_id', $user->id)
-            ->get();
+        $labels = DB::table('labels')->where('user_id', null);
+
+        if ($email !== 'all') {
+            $labels = $labels->orWhere('user_id', $user->id);
+        } else {
+            $labels = $labels->orWhere('user_id', '!=', null);
+        }
+
+        $labels = $labels->get();
 
         return response()->json(['status'=> 200,'labels'=> $labels]);
     }

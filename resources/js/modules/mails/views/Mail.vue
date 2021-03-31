@@ -9,7 +9,7 @@
                     <div class="form-group">
                         <label for="">Login As:</label>
                         <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
-                            <option value="">All</option>
+                            <option value="all">All</option>
                             <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
                                 {{ option.work_mail }}
                             </option>
@@ -210,6 +210,7 @@ export default {
 
     methods: {
         selectWorkMail() {
+            this.setQueryLabel(null)
             this.$children[5].getInbox()
             this.getListLabels()
         },
