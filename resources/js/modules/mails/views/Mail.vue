@@ -5,16 +5,16 @@
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
-                <div class="col-md-2" v-if="user.role_id == 1">
-                            <div class="form-group">
-                                <label for="">Login As: {{user.work_mail}}</label>
-                                <select class="form-control" v-model="user.work_mail">
-                                    <option value="">All</option>
-                                    <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
-                                        {{ option.work_mail }}
-                                    </option>
-                                </select>
-                            </div>
+                <div v-if="user.isAdmin">
+                    <div class="form-group">
+                        <label for="">Login As:</label>
+                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
+                            <option value="">All</option>
+                            <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
+                                {{ option.work_mail }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <div class="box box-solid">
                     <div class="box-header with-border">
@@ -202,13 +202,18 @@ export default {
 
     mounted() {
         this.displayInboxCnt = this.$children[5]._data.inboxCount;
+        this.setQueryLabel(null)
         // console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
         this.getListEmails();
-        console.log(this.user.work_mail);
     },
 
     methods: {
+        selectWorkMail() {
+            this.$children[5].getInbox()
+            this.getListLabels()
+        },
+
         clearQueryLabel() {
             this.$router.replace({ query: null})
         },
@@ -235,7 +240,7 @@ export default {
         },
 
         getListLabels() {
-            axios.get('/api/label')
+            axios.get('/api/label_list/' + this.user.work_mail)
                 .then((res) => {
                     this.listLabel = res.data.labels
                 })
