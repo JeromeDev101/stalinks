@@ -121,9 +121,20 @@ class BuyController extends Controller
         if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
             if (is_array($filter['continent_id'])) {
                 $list = $list->where(function ($query) use ($filter) {
-                    $query->whereIn('countries.continent_id', $filter['continent_id'])
-                        ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                    if (($key = array_search(0, $filter['continent_id'])) !== false) {
+                        unset($filter['continent_id'][$key]);
+                        $query->orWhere(function ($subs) {
+                            $subs->orWhere('publisher.continent_id', null)
+                                ->where('publisher.country_id', null);
+                        });
+                    }
+
+                    if(!empty($filter['continent_id'])){
+                        $query->orWhereIn('countries.continent_id', $filter['continent_id'])
+                            ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                    }
                 });
+
             } else {
                 $list = $list->where(function ($query) use ($filter) {
                     $query->where('countries.continent_id', $filter['continent_id'])
