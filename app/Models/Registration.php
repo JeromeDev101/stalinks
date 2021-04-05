@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Loggable;
 
     protected $guarded = [];
     protected $table = 'registration';

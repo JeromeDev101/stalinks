@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
+    use Loggable;
+
     protected $guarded = [];
     protected $table = 'replies';
 
