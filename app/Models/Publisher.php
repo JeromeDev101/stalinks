@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Publisher extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Loggable;
 
     protected $guarded = [];
     protected $table = 'publisher';

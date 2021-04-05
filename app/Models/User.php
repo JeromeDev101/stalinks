@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\HostingProvider;
 use App\Models\DomainProvider;
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,7 @@ use App\Models\Publisher;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable, SoftDeletes, Loggable;
 
     /**
      * The attributes that are mass assignable.

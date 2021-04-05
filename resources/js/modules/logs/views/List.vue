@@ -29,7 +29,7 @@
                         <tbody>
                         <tr class="label-primary">
                             <th>#</th>
-                            <th>User Email</th>
+                            <th>Username</th>
                             <th>Table</th>
                             <th>Action</th>
                             <th>Time</th>
@@ -78,8 +78,11 @@
                         </tr>
                         <tr v-for="(item, index) in listLogs.data" :key="index">
                             <td class="center-content">{{ index + 1 }}</td>
-                            <td>{{ item.user.email }}</td>
-                            <td>{{ listTable[item.table] ? listTable[item.table] : ''}}</td>
+                            <td>{{ item.user.username
+                                }}</td>
+                            <td>{{ listTable[item.table]
+                                ? listTable[item.table] :
+                                item.table }}</td>
                             <td>{{ listAction[item.action] ? listAction[item.action] : '' }}</td>
                             <td>{{ item.created_at }}</td>
                         </tr>

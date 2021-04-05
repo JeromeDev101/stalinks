@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 
 class BuyerPurchased extends Model
 {
+    use Loggable;
+
     protected $guarded = [];
     protected $table = 'buyer_purchased';
 
