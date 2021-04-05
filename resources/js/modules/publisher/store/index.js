@@ -102,6 +102,16 @@ const mutations = {
     },
 
     [LIST_CONTINENT](state, listContinent) {
+        const data = {
+            id : 0,
+            code : 'N/A',
+            name: 'N/A',
+            created_at : null,
+            updated_at: null
+        };
+
+        listContinent.data.push(data);
+
         state.listContinent = listContinent;
     },
 
