@@ -340,9 +340,9 @@
 
                 </vue-virtual-table>
             </div>
-            <!-- <div class="box-footer clearfix">
-               <component :is="pagination" :callMethod="goToPage"></component>
-               </div> -->
+            <div class="box-footer clearfix">
+                <component :is="pagination" :callMethod="goToPage"></component>
+            </div>
          </div>
       </div>
       <!-- Modal Add -->
@@ -2014,7 +2014,10 @@ export default {
                     sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
                     per_page: that.filterModel.per_page,
                     employee_id: that.filterModel.employee_id,
-                    required_email: that.filterModel.required_email
+                    required_email:
+                    that.filterModel.required_email,
+                    alexa_date_upload:
+                    that.filterModel.alexa_date_upload
                 }
             });
         },

@@ -16,6 +16,8 @@ const state = {
         in_charge: true,
         user_id: true,
         username: true,
+        email: true,
+        payment_account_email: true,
         name: true,
         company_type: true,
         company_name: false,

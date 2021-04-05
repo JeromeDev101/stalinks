@@ -223,12 +223,12 @@ class ExtDomainController extends Controller
         // handle email
         $input['email'] = array_column($input['email'], 'text');
 
-         $customMessages = [];
+        //  $customMessages = [];
 
-         foreach ($input['email'] as $key => $value) {
-//             $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
-             $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
-         }
+        //  foreach ($input['email'] as $key => $value) {
+        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        //  }
 
         $newStatus = 0;
 
@@ -236,8 +236,8 @@ class ExtDomainController extends Controller
             'domain' => 'required|max:255',
 //            'email.*' => 'email|unique:ext_domains,email',
             // 'email' => 'array|max:10',
-             'email.*' => 'email',
-//            'email' => 'email',
+            // 'email.*' => ['email', new EmailPipe('add')],
+            // 'email' => 'email',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -245,7 +245,7 @@ class ExtDomainController extends Controller
             'url_rating' => 'required|integer|gte:0',
             'domain_rating' => 'required|integer|gte:0',
             'ref_domains' => 'required|integer|gte:0'
-        ], $customMessages)->validate();
+        ])->validate();
 
         $url_remove_http = $this->remove_http($input['domain']);
 
@@ -389,9 +389,21 @@ class ExtDomainController extends Controller
     }
 
     private function isInputContactInfo($input) {
+        $email = true;
+        if(is_array($input['email'])){
+            if(count($input['email']) > 0) {
+                $email = true;
+            }else{
+                $email = false;
+            }
+        } else{
+            $email  = $input['email'] != '' ? true:false;
+        }
+
+
         if ($input['facebook'] != '' ||
             $input['phone'] != '' ||
-            $input['email'] != '' ) {
+            $email ) {
             return true;
         }
 
@@ -425,6 +437,7 @@ class ExtDomainController extends Controller
 
         $input['email'] = array_column($input['email'], 'text');
 
+
         if ( $request->ext['status'] == 100){
             $request->validate([
                 'pub.seller' => 'required',
@@ -436,8 +449,6 @@ class ExtDomainController extends Controller
                 'pub.price' => 'required',
             ]);
         }
-
-        // dd($input);
 
         foreach($input as $key => $value) {
             if (!isset($input[$key])) $input[$key] = '';
@@ -516,26 +527,33 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
 
-        // if( $input['status'] === '100'){
-        //     Publisher::create([
-        //         'user_id' => $request->pub['seller'],
-        //         'url' => $request->pub['url'],
-        //         'ur' => $input['url_rating'],
-        //         'dr' => $input['domain_rating'],
-        //         'backlinks' => $input['no_backlinks'],
-        //         'ref_domain' => $input['ref_domains'],
-        //         'org_keywords' => $input['organic_keywords'],
-        //         'org_traffic' => $input['organic_traffic'],
-        //         'price' => $request->pub['price'],
-        //         'language_id' => $request->pub['language_id'],
-        //         'inc_article' => $request->pub['inc_article'],
-        //         'topic' => $request->pub['topic'],
-        //         'casino_sites' => $request->pub['casino_sites'],
-        //         'valid' => 'unchecked',
-        //     ]);
+        // check if status is 'Qualified'
+        if( $input['status'] === '100'){
+            $url = $this->remove_http($request->pub['url']);
+            $publisher = Publisher::where('url', 'like', '%'.$url.'%')->count();
 
-        //     $input['user_id'] = $id;
-        // }
+            // create a copy if unique URl in list publisher
+            if( $publisher == 0 ) {
+                Publisher::create([
+                    'user_id' => $request->pub['seller'],
+                    'url' => $request->pub['url'],
+                    'ur' => $input['url_rating'],
+                    'dr' => $input['domain_rating'],
+                    'backlinks' => $input['no_backlinks'],
+                    'ref_domain' => $input['ref_domains'],
+                    'org_keywords' => $input['organic_keywords'],
+                    'org_traffic' => $input['organic_traffic'],
+                    'price' => $request->pub['price'],
+                    'language_id' => $request->pub['language_id'],
+                    'inc_article' => $request->pub['inc_article'],
+                    'topic' => $request->pub['topic'],
+                    'casino_sites' => $request->pub['casino_sites'],
+                    'valid' => 'valid',
+                ]);
+            }
+
+            $input['user_id'] = $id;
+        }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];

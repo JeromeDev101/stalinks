@@ -199,7 +199,8 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
-                                <th v-show="user.isAdmin">Payment Account Email</th>
+                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Account Email</th>
+                                <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.email">Email</th>
@@ -220,7 +221,8 @@
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
-                                <td v-show="user.isAdmin" v-html="displayEmailPayment(account)"></td>
+                                <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
+                                <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
                                 <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.email">{{ account.email }}</td>
