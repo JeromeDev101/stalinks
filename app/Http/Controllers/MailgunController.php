@@ -289,46 +289,52 @@ class MailgunController extends Controller
     public function status_mail()
     {
 
-     $aw = $this->mg->events()->get('stalinks.com');
+        $arr = $this->mg->events()->get('stalinks.com', [
+            'limit' => 300,
+            'event' => 'delivered',
+        ]);
 
-     //get all eventsitems
-     foreach($aw->getItems() as $kwe)
-     {
+        $delivered = [];
 
-        //all all message sent/received
-      foreach( $kwe->getMessage() as $wa)
-      {
-        //check if data is array some is not we need to make sure
-        if(is_array($wa))
-        {
-            //check if mesage_id property exist before using it as condition
-            if (array_key_exists("message-id",$wa))
-            {
-                $pending = Reply::where('status_code',0)->get();
-
-                foreach($pending as $get)
-                {
-                    if($wa['message-id'] == $get->message_id)
-                    {
-                        $get->update([
-                            'status_code'       => $kwe->getDeliveryStatus()['code'],
-                            'message_status'    => $kwe->getDeliveryStatus()['message']
-                        ]);
-
-
-                    }
+        foreach ($arr->getItems() as $item) {
+            if ($item->getDeliveryStatus()['code'] === 250) {
+                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
+                    $delivered[] = $item->getMessage()['headers']['message-id'];
                 }
-
-
             }
         }
 
+        Reply::where('is_sent', 1)
+            ->whereIn('message_id', $delivered)->update([
+                'status_code' => 250,
+                'message_status' => 'OK'
+            ]);
 
-      }
-
-     }
-
-
+//        $aw = $this->mg->events()->get('stalinks.com');
+//
+//        //get all eventsitems
+//        foreach ($aw->getItems() as $kwe) {
+//            //all all message sent/received
+//            foreach ( $kwe->getMessage() as $wa) {
+//                //check if data is array some is not we need to make sure
+//                if (is_array($wa)) {
+//                    //check if mesage_id property exist before using it as condition
+//                    if (array_key_exists("message-id",$wa)) {
+//                        $pending = Reply::where('status_code',0)->get();
+//
+//                        foreach($pending as $get) {
+//                            if($wa['message-id'] == $get->message_id)
+//                            {
+//                                $get->update([
+//                                'status_code'       => $kwe->getDeliveryStatus()['code'],
+//                                'message_status'    => $kwe->getDeliveryStatus()['message']
+//                                ]);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     public function post_reply(Request $request)
