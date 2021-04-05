@@ -194,6 +194,7 @@
                                 <label for="">QC Validation</label>
                                 <select name="" class="form-control" v-model="filterModel.qc_validation">
                                     <option value="">All</option>
+                                    <option value="na">N/A</option>
                                     <option value="yes">Yes</option>
                                     <option value="no">No</option>
                                 </select>
@@ -656,6 +657,7 @@
                                 <div class="form-group">
                                     <label for="">QC Validation</label>
                                     <select class="form-control" v-model="updateModel.qc_validation">
+                                        <option value="">N/A</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -2173,7 +2175,7 @@
                     continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
-                    qc_validation: that.qc_validation,
+                    qc_validation: that.qc_validation == null ? '':that.qc_validation,
                     // team_in_charge_old: that.team_in_charge,
                 }
 
