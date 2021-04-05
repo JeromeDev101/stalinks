@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ class LabelController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param $email
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -20,6 +22,25 @@ class LabelController extends Controller
             ->where('user_id', null)
             ->orWhere('user_id', Auth::user()->id)
             ->get();
+        return response()->json(['status'=> 200,'labels'=> $labels]);
+    }
+
+    public function getLabels($email)
+    {
+        $user = $email !== 'all'
+            ? User::select('id')->where('work_mail', $email)->first()
+            : null;
+
+        $labels = DB::table('labels')->where('user_id', null);
+
+        if ($email !== 'all') {
+            $labels = $labels->orWhere('user_id', $user->id);
+        } else {
+            $labels = $labels->orWhere('user_id', '!=', null);
+        }
+
+        $labels = $labels->get();
+
         return response()->json(['status'=> 200,'labels'=> $labels]);
     }
 

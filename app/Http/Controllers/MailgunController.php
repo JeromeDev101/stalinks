@@ -240,7 +240,7 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
-                    if($request->email == 'jess@stalinks.com'){
+                    if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
                         $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                     }else{
                         $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
@@ -248,7 +248,7 @@ class MailgunController extends Controller
 
                     break;
                 case 'Sent':
-                     if($request->email == 'jess@stalinks.com'){
+                     if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
                         $inbox = $inbox->where('replies.is_sent', 1);
                      }else{
                         $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
@@ -258,7 +258,7 @@ class MailgunController extends Controller
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
-                    if($request->email == 'jess@stalinks.com'){
+                    if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
                         $inbox = $inbox->where('replies.deleted_at','!=',1);
                     }else{
                         $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
@@ -266,7 +266,7 @@ class MailgunController extends Controller
 
                     break;
                 case 'Starred':
-                     if($request->email == 'jess@stalinks.com'){
+                     if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
                         $inbox = $inbox->where('replies.is_starred', 1);
                      }else{
                         $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
@@ -289,46 +289,76 @@ class MailgunController extends Controller
     public function status_mail()
     {
 
-     $aw = $this->mg->events()->get('stalinks.com');
+        $arr = $this->mg->events()->get('stalinks.com', [
+            'limit' => 300,
+            'event' => 'delivered',
+        ]);
 
-     //get all eventsitems
-     foreach($aw->getItems() as $kwe)
-     {
+        $arr_failed = $this->mg->events()->get('stalinks.com', [
+            'limit' => 300,
+            'event' => 'failed',
+        ]);
 
-        //all all message sent/received
-      foreach( $kwe->getMessage() as $wa)
-      {
-        //check if data is array some is not we need to make sure
-        if(is_array($wa))
-        {
-            //check if mesage_id property exist before using it as condition
-            if (array_key_exists("message-id",$wa))
-            {
-                $pending = Reply::where('status_code',0)->get();
+        $delivered = [];
+        $failed = [];
 
-                foreach($pending as $get)
-                {
-                    if($wa['message-id'] == $get->message_id)
-                    {
-                        $get->update([
-                            'status_code'       => $kwe->getDeliveryStatus()['code'],
-                            'message_status'    => $kwe->getDeliveryStatus()['message']
-                        ]);
-
-
-                    }
+        //get failed
+        foreach ($arr_failed->getItems() as $item) {
+            if ($item->getEvent() === 'failed') {
+                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
+                    $failed[] = $item->getMessage()['headers']['message-id'];
                 }
-
-
             }
         }
 
+        //update failed
+        Reply::where('is_sent', 1)
+            ->whereIn('message_id', $failed)->update([
+                'status_code' => 552,
+                'message_status' => 'FAILED'
+            ]);
 
-      }
+        //get delivered
+        foreach ($arr->getItems() as $item) {
+            if ($item->getDeliveryStatus()['code'] === 250) {
+                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
+                    $delivered[] = $item->getMessage()['headers']['message-id'];
+                }
+            }
+        }
 
-     }
+        // update delivered
+        Reply::where('is_sent', 1)
+            ->whereIn('message_id', $delivered)->update([
+                'status_code' => 250,
+                'message_status' => 'OK'
+            ]);
 
-
+//        $aw = $this->mg->events()->get('stalinks.com');
+//
+//        //get all eventsitems
+//        foreach ($aw->getItems() as $kwe) {
+//            //all all message sent/received
+//            foreach ( $kwe->getMessage() as $wa) {
+//                //check if data is array some is not we need to make sure
+//                if (is_array($wa)) {
+//                    //check if mesage_id property exist before using it as condition
+//                    if (array_key_exists("message-id",$wa)) {
+//                        $pending = Reply::where('status_code',0)->get();
+//
+//                        foreach($pending as $get) {
+//                            if($wa['message-id'] == $get->message_id)
+//                            {
+//                                $get->update([
+//                                'status_code'       => $kwe->getDeliveryStatus()['code'],
+//                                'message_status'    => $kwe->getDeliveryStatus()['message']
+//                                ]);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     public function post_reply(Request $request)
@@ -526,7 +556,7 @@ class MailgunController extends Controller
             $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
         }
 
-        $mail_logs = $mail_logs->get();
+        $mail_logs = $mail_logs->orderBy('created_at', 'desc')->get();
 
 
         $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();

@@ -171,9 +171,9 @@
         },
 
         mounted() {
-            this.getMaillogs();
-            this.getStatus();
+            // this.getMaillogs();
             this.getListUserEmails();
+            this.getStatus();
         },
 
         methods: {
@@ -251,12 +251,19 @@
                         searching: false,
                     });
                 })
-
             },
             getStatus() {
+                let loader = this.$loading.show();
                 axios.get('/api/mail/status')
                     .then((res) => {
-                        console.log("success check all message status")
+                        console.log("success check all message status");
+                        this.getMaillogs()
+                        loader.hide();
+                    })
+                    .catch((err) => {
+                        console.log("Update status failed");
+                        this.getMaillogs()
+                        loader.hide();
                     })
             },
         },

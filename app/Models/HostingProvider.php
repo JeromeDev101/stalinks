@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 
 class HostingProvider extends Model
 {
+    use Loggable;
+
     protected $table = 'hosting_providers';
     protected $guarded = [];
 

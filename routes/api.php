@@ -218,7 +218,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
     });
 
-     Route::name('labels')->resource('/label','LabelController');
+    Route::name('labels')->resource('/label','LabelController');
+    Route::name('labels')->get('/label_list/{email}','LabelController@getLabels');
 
      //Notifications
     Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
