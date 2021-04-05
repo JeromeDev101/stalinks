@@ -1251,9 +1251,11 @@
                 filterModel: {
                     // country_id: this.$route.query.country_id || '',
                     continent_id: this.$route.query.continent_id
-                        ? this.$route.query.continent_id.map(function (val) {
-                            return parseInt(val, 10);
-                        })
+                        ? Array.isArray(this.$route.query.continent_id)
+                            ? this.$route.query.continent_id.map(function (val) {
+                                return parseInt(val, 10);
+                            })
+                            : [parseInt(this.$route.query.continent_id)]
                         : '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',

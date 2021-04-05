@@ -685,7 +685,13 @@
                 tableLoading: false,
                 isPopupLoading: false,
                 filterModel: {
-                    continent_id: '',
+                    continent_id: this.$route.query.continent_id
+                        ? Array.isArray(this.$route.query.continent_id)
+                            ? this.$route.query.continent_id.map(function (val) {
+                                return parseInt(val, 10);
+                            })
+                            : [parseInt(this.$route.query.continent_id)]
+                        : '',
                     country_id: '',
                     search: this.$route.query.search || '',
                     language_id: '',
