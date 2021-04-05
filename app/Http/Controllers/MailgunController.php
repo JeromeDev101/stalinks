@@ -294,8 +294,31 @@ class MailgunController extends Controller
             'event' => 'delivered',
         ]);
 
-        $delivered = [];
+        $arr_failed = $this->mg->events()->get('stalinks.com', [
+            'limit' => 300,
+            'event' => 'failed',
+        ]);
 
+        $delivered = [];
+        $failed = [];
+
+        //get failed
+        foreach ($arr_failed->getItems() as $item) {
+            if ($item->getEvent() === 'failed') {
+                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
+                    $failed[] = $item->getMessage()['headers']['message-id'];
+                }
+            }
+        }
+
+        //update failed
+        Reply::where('is_sent', 1)
+            ->whereIn('message_id', $failed)->update([
+                'status_code' => 552,
+                'message_status' => 'FAILED'
+            ]);
+
+        //get delivered
         foreach ($arr->getItems() as $item) {
             if ($item->getDeliveryStatus()['code'] === 250) {
                 if (array_key_exists('message-id', $item->getMessage()['headers'])) {
@@ -304,6 +327,7 @@ class MailgunController extends Controller
             }
         }
 
+        // update delivered
         Reply::where('is_sent', 1)
             ->whereIn('message_id', $delivered)->update([
                 'status_code' => 250,
