@@ -101,7 +101,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['qc_validation']) && !empty($filter['qc_validation']) ){
-            $list = $list->where('publisher.qc_validation', $filter['qc_validation']);
+            if( $filter['qc_validation'] == 'na' ) {
+                $list = $list->whereNull('publisher.qc_validation');
+            } else {
+                $list = $list->where('publisher.qc_validation', $filter['qc_validation']);
+            }
         }
 
         if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){
