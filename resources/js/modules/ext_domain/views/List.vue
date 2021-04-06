@@ -2562,9 +2562,21 @@ export default {
             let that = this;
             this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
         },
-        async doChangeEmailCountry() {
-            let that = this;
-            this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+        doChangeEmailCountry() {
+            let that = this, data = {};
+            let list = this.listLanguages.data
+            // this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+
+             list.forEach(function (item) {
+                 if (item.id === that.mailInfo.country.id) {
+                     data = item;
+                 }
+            });
+
+            this.mailInfo.country.id = data.id;
+            this.mailInfo.country.name = data.name;
+            this.mailInfo.country.code = data.code;
+
             this.fetchTemplateMail(this.mailInfo.country.id);
         },
 
