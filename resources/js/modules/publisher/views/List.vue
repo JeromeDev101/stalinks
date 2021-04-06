@@ -254,7 +254,15 @@
                     <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
                     <button v-if="user.isAdmin ||
                     user.role_id == 8"
-                        class="btn btn-primary float-right" @click="generateBestPrices">Generate Best Prices</button>
+                        class="btn btn-primary float-right" :disabled="isGenerating" @click="generateBestPrices">
+                        <span v-if="isGenerating">
+                            <i
+                                class="fa fa-spin fa-cog"></i> Generating...
+                        </span>
+                        <span v-else>
+                            Generate Best Price
+                        </span>
+                    </button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
@@ -1331,10 +1339,17 @@
                 },
                 isAccountInvalid: false,
                 isAccountPaymentNotComplete: false,
+                isGenerating: false
             }
         },
 
         async created() {
+            await
+                this.$store.dispatch('getGeneratorLogs');
+            if (this.isGeneratorOn) {
+                this.isGenerating = true;
+            }
+
             this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
@@ -1363,6 +1378,19 @@
             const channel = pusher.subscribe('private-user.' +
                 this.user.id);
 
+            if (this.user.isAdmin || this.user.role_id == 8) {
+                const channel2 =
+                    pusher.subscribe('BestPriceChannel');
+
+                channel2.bind('bestprices.start', (e) => {
+                    this.isGenerating = true;
+                });
+
+                channel2.bind('bestprices.end', (e) => {
+                    this.isGenerating = false;
+                });
+            }
+
             channel.bind('prices.generate', (e) => {
                 this.getPublisherList();
 
@@ -1374,6 +1402,8 @@
                     confirmButtonText: "Ok",
                 });
             });
+
+
         },
 
         computed:{
@@ -1390,6 +1420,8 @@
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
+                isGeneratorOn: state =>
+                    state.storePublisher.bestPriceGeneratorOn
             }),
 
             computedListSeller() {

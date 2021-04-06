@@ -364,7 +364,15 @@ class PublisherController extends Controller
 
     public function generateBestPrice()
     {
-        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+        $log = BestPriceGenerator::orderBy('created_at', 'DESC')->first();
+
+        if ($log->status == 'end') {
+            GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+        } else {
+            return response()->json([
+                'error' => 'Someone is already generating, please try again later..'
+            ], 500);
+        }
 
         return response()->json('success');
     }
