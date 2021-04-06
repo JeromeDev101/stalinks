@@ -82,7 +82,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-if="!isQc">
                             <div class="form-group">
                                 <label for="">Include Article</label>
                                 <select class="form-control" v-model="filterModel.inc_article">
@@ -104,7 +104,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-if="!isQc">
                             <div class="form-group">
                                 <label for="">Updated
                                 </label>
@@ -145,7 +145,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-if="!isQc">
                             <div class="form-group">
                                 <label for="">Accept Casino & Betting Sites</label>
                                 <select class="form-control" v-model="filterModel.casino_sites">
@@ -169,7 +169,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-if="!isQc">
                             <div class="form-group">
                                 <label for="">Keyword Anchor</label>
                                 <select class="form-control" v-model="filterModel.kw_anchor">
@@ -1393,6 +1393,11 @@
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
             }),
+
+            isQc() {
+                let qcRoleIds = [5, 8, 9, 10];
+                return qcRoleIds.includes(this.user.role_id);
+            },
 
             computedListSeller() {
                 return this.user.role_id == 6 && this.user.isOurs == 0
