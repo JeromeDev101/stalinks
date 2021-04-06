@@ -450,6 +450,16 @@
                         </li>
                     </ul>
                 </li>
+
+                <li :class="{ active: $route.name == 'Help' }">
+                    <router-link
+                        class="page-sidebar__item"
+                        :to="{ path: '/help' }"
+                    >
+                        <i class="fa fa-question-circle"></i>
+                        <span>Help</span>
+                    </router-link>
+                </li>
             </ul>
         </section>
         <!-- /.sidebar -->

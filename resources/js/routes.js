@@ -32,6 +32,7 @@ import WalletTransaction from '@/modules/wallet_transaction/views/List.vue';
 import ArticleList from '@/modules/article/views/List.vue';
 import Article from '@/modules/article/views/Article.vue';
 import Mails from '@/modules/mails/views/Mail.vue';
+import Help from '@/modules/help/views/help.vue';
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue';
 import ResetPassword from '@/modules/reset_password/views/List.vue';
 // import SentMails from '@/modules/mail_sent/views/Sent.vue';
@@ -85,6 +86,11 @@ const routes = [{
         path: '/users',
         name: 'List User',
         component: ListUser,
+    },
+    {
+        path: '/help',
+        name: 'Help',
+        component: Help,
     },
     {
         path: '/dashboard',
