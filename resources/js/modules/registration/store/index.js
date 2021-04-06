@@ -11,6 +11,24 @@ const state = {
     listAccount: { data: [] },
     listPayment: { data: [] },
     listIncharge: { data: [] },
+    tblAccountsOpt: {
+        date_registered: true,
+        in_charge: true,
+        user_id: true,
+        username: true,
+        email: true,
+        payment_account_email: true,
+        name: true,
+        company_type: true,
+        company_name: false,
+        company_url: false,
+        type: true,
+        sub_account: true,
+        under_of_main_buyer: true,
+        account_validation: true,
+        status: true,
+        email: true,
+    },
 }
 
 const mutations = {
@@ -117,6 +135,25 @@ const actions= {
             let response = await AccountService.updateAccount(params);
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'updated_account', message: 'Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionVerifyAccount({commit}, params) {
+        try {
+            let response = await AccountService.verifyAccount(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'verified_account', message: 'Saved !', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

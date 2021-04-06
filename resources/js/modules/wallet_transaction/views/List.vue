@@ -10,7 +10,7 @@
                 <div class="box-body m-3">
 
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Buyer</label>
                                 <select name="" class="form-control" v-model="filterModel.buyer">
@@ -22,7 +22,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Payment Type</label>
                                 <select name="" class="form-control" v-model="filterModel.payment_type">
@@ -34,10 +34,27 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="">Date</label>-->
+<!--                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Date</label>
-                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">
+                                <label>Date</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -58,6 +75,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Wallet Transaction</h3>
                     <span class="ml-5 text-primary" v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
+                    <span class="ml-5 text-primary">Total amount: <b>${{ totalAmount }}</b></span>
                     <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
@@ -310,9 +328,13 @@
                 filterModel: {
                     buyer: this.$route.query.buyer || '',
                     payment_type: this.$route.query.payment_type || '',
-                    date: this.$route.query.date || '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
                 },
                 searchLoading: false,
+                totalAmount: 0,
                 walletStep: 0
             }
         },
@@ -404,6 +426,8 @@
                         { orderable: false, targets: '_all' }
                     ],
                 });
+
+                this.getTotalAmount()
             },
 
             async getListBuyer(params) {
@@ -432,7 +456,10 @@
                 this.filterModel = {
                     buyer: '',
                     payment_type: '',
-                    date: '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.getWalletTransactionList({
@@ -519,6 +546,27 @@
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
+            },
+
+            getTotalAmount() {
+                let wallet_transaction = this.listWallet.data
+                let total_price = [];
+                let total = 0;
+
+                wallet_transaction.forEach(function(item){
+                    if (typeof item.amount_usd !== 'undefined') {
+                        total_price.push( parseFloat(item.amount_usd))
+                    }
+                })
+
+                if( total_price.length > 0 ){
+                    total = total_price.reduce(this.calcSum)
+                }
+                this.totalAmount = total.toFixed(2);
+            },
+
+            calcSum(total, num) {
+                return total + num
             },
         },
 

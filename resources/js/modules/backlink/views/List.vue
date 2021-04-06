@@ -78,7 +78,7 @@
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="fillter.process_date"
                                         :linkedCalendars="true"
-                                        opens="right"
+                                        opens="left"
                                         style="width: 100%"
                                     />
                                 </div>
@@ -96,7 +96,7 @@
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="fillter.date_completed"
                                         :linkedCalendars="true"
-                                        opens="right"
+                                        opens="left"
                                         style="width: 100%"
                                     />
                                 </div>
@@ -172,8 +172,8 @@
                                 <th v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
                                 <th>Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
-                                <th>Price</th>
-                                <th v-if="user.isAdmin">Prices</th>
+                                <th v-if="user.isAdmin">Price</th>
+                                <th>Prices</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
                                 <th>Date for Proccess</th>
                                 <th>Date Completed</th>
@@ -185,9 +185,14 @@
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
-                                <td v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username }}</td>
+                                <td v-if="(user.isOurs ==
+                                 0 && !user.isAdmin) ||
+                                 user.isAdmin">{{
+                                               backLink.publisher == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username) }}</td>
                                 <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
-                                <td>{{ replaceCharacters(backLink.publisher.url) }}</td>
+                                <td>{{ backLink.publisher
+                                    == null ? 'N/A' : replaceCharacters(backLink.publisher.url)
+                                    }}</td>
                                 <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
                                 <td>
                                     <div class="dont-break-out">
@@ -199,8 +204,8 @@
                                         <a href="backLink.link">{{ backLink.link }}</a>
                                     </div>
                                 </td>
-                                <td>$ {{ convertPrice(backLink.price) }}</td>
-                                <td>$ {{ computePriceStalinks(backLink.price, backLink.publisher.inc_article) }}</td>
+                                <td v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>
+                                <td>{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + formatPrice(backLink.prices) }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
                                 <td>{{ backLink.date_process }}</td>
                                 <td>{{ backLink.live_date }}</td>
@@ -267,12 +272,21 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.isAdmin">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
                                         <label>Price</label>
                                         <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live' || user.role_id == 8" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div>
+                                        <label>Prices</label>
+                                        <input type="number" v-model="modelBaclink.prices" :disabled="true" class="form-control" value="" required="required" >
                                     </div>
                                 </div>
                             </div>
@@ -497,6 +511,11 @@
                 return ((percent/ 100) * total).toFixed(2)
             },
 
+            formatPrice(value) {
+                let val = (value/1).toFixed(0)
+                return val;
+            },
+
             computePriceStalinks(price, article) {
                 let selling_price = price
                 let percent = parseFloat(this.formula.data[0].percentage);
@@ -606,7 +625,7 @@
                 $("#tbl_backlink").DataTable({
                     paging: false,
                     searching: false,
-                    columnDefs: columnDefs,
+                    columnDefs: columnDefs
                 });
 
                 this.getTotalAmount()
@@ -656,11 +675,11 @@
                 this.fillter.status = ''
                 this.fillter.paginate = '50'
 
-                this.process_date = {
+                this.fillter.process_date = {
                     startDate: null,
                     endDate: null
                 },
-                this.date_completed = {
+                this.fillter.date_completed = {
                     startDate: null,
                     endDate: null
                 }
@@ -714,6 +733,8 @@
             editBackLink(baclink) {
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
+
+                console.log(that)
                 this.withArticle = that.publisher.inc_article == "No" ? true:false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher.id
@@ -722,6 +743,7 @@
                 this.modelBaclink.username = that.publisher.user.username
                 this.modelBaclink.anchor_text = that.anchor_text
                 this.modelBaclink.price = that.price
+                this.modelBaclink.prices = that.prices
                 this.modelBaclink.link = that.link
                 this.modelBaclink.link_from = that.link_from
                 this.modelBaclink.live_date = that.live_date

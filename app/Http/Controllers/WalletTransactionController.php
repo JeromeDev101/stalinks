@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Http\Requests\WalletTransaction\AddWalletRequest;
 use Illuminate\Http\Request;
 use App\Models\WalletTransaction;
@@ -34,8 +35,19 @@ class WalletTransactionController extends Controller
             $list->where('wallet_transactions.payment_via_id', $filter['payment_type']);
         }
 
-        if( isset($filter['date']) && !empty($filter['date']) ){
-            $list->where('wallet_transactions.date', $filter['date']);
+//        if( isset($filter['date']) && !empty($filter['date']) ){
+//            $list->where('wallet_transactions.date', $filter['date']);
+//        }
+
+        if (isset($filter['date'])) {
+            $filter['date'] = json_decode($filter['date']);
+        }
+
+        if( isset($filter['date']) && !empty($filter['date']) && $filter['date']->startDate != ''){
+            $list->where('wallet_transactions.date', '>=', Carbon::create($filter['date']->startDate)
+                ->format('Y-m-d'));
+            $list->where('wallet_transactions.date', '<=', Carbon::create($filter['date']->endDate)
+                ->format('Y-m-d'));
         }
 
         $list = $list->get();
@@ -76,7 +88,7 @@ class WalletTransactionController extends Controller
     }
 
     public function getListSellerTeam() {
-        $list = User::select('id', 'username')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
+        $list = User::select('id', 'username', 'status')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];

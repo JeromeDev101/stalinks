@@ -83,7 +83,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('delete-sub-account')->get('/delete-sub-account', 'AccountController@deleteSubAccount');
     Route::name('update-sub-account')->get('/update-sub-account', 'AccountController@updateSubAccount');
     Route::name('get-verified-account')->get('/get-verified-account', 'AccountController@checkVerifiedAccount');
-    Route::name('verify-account')->get('/verify-account', 'AccountController@verifyAccount');
+    Route::name('verify-account')->post('/verify-account', 'AccountController@verifyAccount');
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
@@ -108,14 +108,16 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-update')->put('/publisher', 'PublisherController@update');
     Route::name('publisher-update-multiple')->post('/update-multiple-publisher', 'PublisherController@updateMultiple');
     Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');
-    Route::name('publisher-get-ahrefs')->get('/publisher/ahrefs', 'PublisherController@getAhrefs');
+    Route::name('publisher-get-ahrefs')->put('/publisher/ahrefs', 'PublisherController@getAhrefs');
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
     Route::name('publisher-get-summary')->get('/publisher/summary', 'PublisherController@getSummary');
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
+    Route::name('best-price-log')->get('publisher/best-prices/log', 'PublisherController@bestPricesGenerationLog');
+    Route::name('seller-incharge')->get('/seller-incharge/{user_id}', 'PublisherController@getListSellerIncharge');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
-    Route::name('ext-get-ahrefs')->get('/ext/ahrefs', 'ExtDomainController@getAhrefs');
+    Route::name('ext-get-ahrefs')->put('/ext/ahrefs', 'ExtDomainController@getAhrefs');
     Route::name('ext-get')->get('/ext', 'ExtDomainController@getList');
     Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
@@ -216,7 +218,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
     });
 
-     Route::name('labels')->resource('/label','LabelController');
+    Route::name('labels')->resource('/label','LabelController');
+    Route::name('labels')->get('/label_list/{email}','LabelController@getLabels');
 
      //Notifications
     Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
@@ -224,6 +227,9 @@ Route::middleware('auth:api')->group(function () {
 
     //Continents
     Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');
+
+    //Compute for best price
+    Route::name('generate-best-price')->post('generate-best-price', 'PublisherController@generateBestPrice');
 
     //Paypal Integration
     Route::name('create-order')->post('/paypal/order/create', 'PayPalController@createOrder');
@@ -245,3 +251,8 @@ Route::name('pusher')->get('/test-pusher','PushController@test');
 
 //removing http,www,https
 Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
+
+
+// updating prices
+// Route::name('updating-price')->get('/update-price', 'PublisherController@updatePrice');
+Route::name('get-price-from-publisher')->get('/get-price-from-publisher', 'PublisherController@getPrice');

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Billing extends Model
 {
+    use Loggable;
+
     protected $table = 'billing';
     protected $guarded = [];
 }

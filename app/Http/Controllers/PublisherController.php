@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\BestPriceGenerator;
+use App\Events\BestPriceGenerationStart;
+use App\Jobs\GenerateBestPrice;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use League\OAuth2\Server\RequestEvent;
 use App\Models\User;
 use App\Models\Registration;
+use App\Models\Backlink;
+use App\Models\Formula;
 
 class PublisherController extends Controller
 {
@@ -37,8 +43,9 @@ class PublisherController extends Controller
     public function importExcel(Request $request){
         if (Auth::user()->isOurs == 1){
             $request->validate([
+                'account_valid' => 'required|in:false',
                 'file' => 'bail|required|mimes:csv,txt',
-                'language' => 'required',
+//                'language' => 'required',
             ]);
         } else{
             $request->validate([
@@ -62,6 +69,7 @@ class PublisherController extends Controller
     public function store(Request $request){
         $valid = 'valid';
         $request->validate([
+            'account_valid' => 'required|in:' . false,
             'seller' => 'required',
             'inc_article' => 'required',
             'url' => 'required',
@@ -69,6 +77,9 @@ class PublisherController extends Controller
             'price' => 'required',
             'casino_sites' => 'required',
             'topic' => 'required',
+            'kw_anchor' => Rule::requiredIf(function () use ($request) {
+                return Auth::user()->isOurs == 1;
+            }),
         ]);
 
         $url_copy = $this->remove_http($request->url);
@@ -107,7 +118,7 @@ class PublisherController extends Controller
             $publisher = Publisher::findOrFail($id);
             $publisher->update([
                 'language_id' => $request->language == '' ? $publisher->language_id : $request->language,
-//                'country_id' => $request->country == '' ? $publisher->country_id : $request->country,
+                'country_id' => $request->continent_id == '' ? $publisher->country_id : null,
                 'continent_id' => $request->continent_id == '' ? $publisher->continent_id : $request->continent_id,
                 'topic' => $request->topic == '' ? $publisher->topic : implode(",", $request->topic),
                 'casino_sites' => $request->casino_sites == '' ? $publisher->casino_sites : $request->casino_sites,
@@ -133,6 +144,11 @@ class PublisherController extends Controller
         ]);
 
         $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
+
+        if($input['continent_id']){
+            $input['country_id'] = null;
+        }
+
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
         $publisher = Publisher::findOrFail($input['id']);
         $publisher->update($input);
@@ -166,14 +182,24 @@ class PublisherController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+    public function getListSellerIncharge($userId) {
+        $data = User::select('users.*', 'registration.id as register_id', 'registration.team_in_charge')
+            ->leftJoin('registration', 'users.email', '=', 'registration.email')
+            ->where('registration.team_in_charge', $userId)
+            ->orWhere('users.id', $userId)
+            ->get();
+
+        return compact('data');
+    }
+
     public function getAhrefs(Request $request) {
         $input = $request->all();
 
-        if (!isset($input['domain_ids'])) {
+        if (!isset($input['params']['domain_ids'])) {
             return response()->json(['success' => false, 'message' => 'id domains is empty']);
         }
 
-        $listId = explode(",", $input['domain_ids']);
+        $listId = explode(",", $input['params']['domain_ids']);
         $configs = $this->configRepository->getConfigs('ahrefs');
         $data = $this->publisherRepository->getAhrefs($listId, $configs);
         return response()->json($data);
@@ -193,20 +219,16 @@ class PublisherController extends Controller
         foreach( $request->ids AS $id ){
             $publisher = Publisher::findOrfail($id);
 
-            // if( $request->valid == 'valid' && $publisher->valid != 'valid'){
-                $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
+            $check = Publisher::where('valid', 'valid')->where('url', 'like', '%'.$publisher->url.'%');
 
-                if( $check->count() > 0 && $publisher->valid != 'valid' && $request->valid == 'valid'){
+            if( $check->count() > 0 && $publisher->valid != 'valid' && $request->valid == 'valid'){
 
-                    array_push($result,[
-                        'id' => $publisher->id,
-                        'message' => 'existing',
-                        'url' => $publisher->url
-                    ]);
-                }
-
-            // }
-            else {
+                array_push($result,[
+                    'id' => $publisher->id,
+                    'message' => 'existing',
+                    'url' => $publisher->url
+                ]);
+            } else {
                 array_push($result,[
                     'id' => $publisher->id,
                     'message' => 'validated',
@@ -247,5 +269,110 @@ class PublisherController extends Controller
         }
 
         return response()->json(['success'=> true],200);
+    }
+
+    public function getPrice(){
+        $backlinks = Backlink::select('publisher_id', 'id')->get();
+
+        $test = [];
+        foreach($backlinks as $back) {
+            $publisher = Publisher::find($back->publisher_id);
+
+            if($publisher) {
+                $backlink = Backlink::find($back->id);
+
+                $test[] = $backlink->update([
+                    'price' => $publisher->price,
+                    'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
+                ]);
+
+                // array_push($test,[
+                //     'backlink_id' => $back->id,
+                //     'publisher_id' => $back->publisher_id,
+                //     'price' => $publisher->price,
+                //     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
+                // ]);
+
+            }
+
+            else {
+
+                $backlink = Backlink::find($back->id);
+
+                $test[] = $backlink->update([
+                    'price' => 0,
+                    'prices' => 0,
+                ]);
+
+                // array_push($test,[
+                //     'backlink_id' => $back->id,
+                //     'publisher_id' => $back->publisher_id,
+                //     'price' => 0,
+                //     'prices' => 0,
+                // ]);
+            }
+        }
+
+
+
+        return response()->json($test);
+    }
+
+    private function getStalinksPrices($price, $article) {
+
+        $formula = Formula::all();
+
+        $additional = floatVal($formula[0]->additional);
+        $percent = floatVal($formula[0]->percentage);
+        $selling_price = $price;
+
+        if( $price != '' && $price != null ){ // check if price has a value
+
+            if( strtolower($article) == 'yes' ){ //check if with article
+
+                // if( commission == 'no' ){
+                //     selling_price = price
+                // }
+
+                // if( commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatVal($percentage) + floatVal($price);
+                // }
+            }
+
+            if( strtolower($article) == 'no' ){ //check if without article
+
+                // if( commission == 'no' ){
+                //     selling_price = parseFloat(price) + additional
+                // }
+
+                // if( commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatVal($percentage) + floatVal($price) + $additional;
+                // }
+
+            }
+
+        }
+
+        return $selling_price;
+    }
+
+    private function percentage($percent, $total) {
+        return (($percent/ 100) * $total);
+    }
+
+    public function generateBestPrice()
+    {
+        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+
+        return response()->json('success');
+    }
+
+    public function bestPricesGenerationLog()
+    {
+        $log = BestPriceGenerator::orderBy('created_at', 'DESC')->get();
+
+        return response()->json($log);
     }
 }

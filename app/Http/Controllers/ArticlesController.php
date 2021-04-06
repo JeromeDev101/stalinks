@@ -158,10 +158,7 @@ class ArticlesController extends Controller
         }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-            return response()->json([
-                'data' => $list,
-                'total' => $list->count(),
-            ],200);
+            return $list->paginate(9999999);
         }else{
             $paginate = intval($paginate);
             return $list->paginate($paginate);
@@ -178,7 +175,8 @@ class ArticlesController extends Controller
 
     private function getBacklinksForBuyer() {
         $user = Auth::user();
-        $backlinks_ids = Backlink::where('user_id', $user->id)->pluck('id')->toArray();
+        $subBuyer = Registration::select('users.id AS id')->join('users', 'registration.email', 'users.email')->where('registration.team_in_charge', $user->id)->get()->pluck('id');
+        $backlinks_ids = Backlink::where('user_id', $user->id)->orWhereIn('user_id', $subBuyer)->pluck('id')->toArray();
 
         return $backlinks_ids;
     }

@@ -8,9 +8,19 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Filter</h3>
+                    <button
+                        type="button"
+                        aria-expanded="false"
+                        data-toggle="collapse"
+                        class="btn btn-primary ml-5"
+                        data-target="#collapseFilterRegistration"
+                        aria-controls="collapseFilterRegistration">
+
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
                 </div>
 
-                <div class="box-body m-3">
+                <div class="box-body m-3 collapse" id="collapseFilterRegistration">
                     <div class="row">
 
                         <div class="col-md-3">
@@ -84,6 +94,7 @@
                                 <label>Team In-charge</label>
                                 <select class="form-control" v-model="filterModel.team_in_charge">
                                     <option value="">All</option>
+                                    <option value="none">None</option>
                                     <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                         {{ option.username == null ? option.name:option.username}}
                                     </option>
@@ -102,6 +113,55 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input
+                                    v-model="filterModel.company_name"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company URL</label>
+                                <input
+                                    v-model="filterModel.company_url"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Validation</label>
+                                <select class="form-control" v-model="filterModel.account_validation">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Date of Registration</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        v-model="filterModel.created_at"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.created_at"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        ref="picker"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -125,6 +185,7 @@
                         </select>
                     </div>
 
+                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
                     <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
                 <div class="box-body no-padding relative">
@@ -137,14 +198,21 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>In-charge</th>
-                                <th>User ID</th>
-                                <th>Username</th>
-                                <th>Name</th>
-                                <th>Company Type</th>
-                                <th>Type</th>
-                                <th>Sub Account</th>
-                                <th>Under of Main Buyer</th>
+                                <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
+                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Account Email</th>
+                                <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
+                                <th v-show="tblAccountsOpt.in_charge">In-charge</th>
+                                <th v-show="tblAccountsOpt.user_id">User ID</th>
+                                <th v-show="tblAccountsOpt.email">Email</th>
+                                <th v-show="tblAccountsOpt.username">Username</th>
+                                <th v-show="tblAccountsOpt.name">Name</th>
+                                <th v-show="tblAccountsOpt.company_type">Company Type</th>
+                                <th v-show="tblAccountsOpt.company_name">Company Name</th>
+                                <th v-show="tblAccountsOpt.company_url">Company URL</th>
+                                <th v-show="tblAccountsOpt.type">Type</th>
+                                <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
+                                <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
+                                <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -152,14 +220,27 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
-                                <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
-                                <td>{{ account.username }}</td>
-                                <td>{{ account.name }}</td>
-                                <td>{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
-                                <td>{{ account.type }}</td>
-                                <td>{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
-                                <td>{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
+                                <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
+                                <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
+                                <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
+                                <td v-show="tblAccountsOpt.email">{{ account.email }}</td>
+                                <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
+                                <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
+                                <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
+                                <td v-show="tblAccountsOpt.company_url">
+                                    <a
+                                        :href="'http://' + account.company_url"
+                                        target="_blank">
+                                        {{ account.company_url }}
+                                    </a>
+                                </td>
+                                <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
+                                <td v-show="tblAccountsOpt.sub_account">{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
+                                <td v-show="tblAccountsOpt.under_of_main_buyer">{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -288,6 +369,14 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company URL</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_url">
+                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
@@ -394,6 +483,7 @@
                             <div class="col-sm-6">
                                 <label>Team In-charge</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
+                                    <option value="">N/A</option>
                                     <option v-for="option in listTeamIncharge" v-bind:value="option.id">
                                         {{ option.username == null || option.username == '' ? option.name:option.username}}
                                     </option>
@@ -522,6 +612,14 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12" v-show="addCompanyName">
+                                <div class="form-group">
+                                    <label>Company URL</label>
+                                    <input type="text" class="form-control" v-model="accountModel.company_url">
+                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Country</label>
@@ -632,26 +730,78 @@
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
-
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                    <div class="modal-footer d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="mb-0">
+                                <input
+                                    type="checkbox"
+                                    v-model="btnTermsAndConditions"
+                                    @change="isDisableSubmit =  !isDisableSubmit">
+                                I've read and accept the
+
+                                <a
+                                    href="#"
+                                    data-toggle="modal"
+                                    data-target="#modalTermsAndCondition">
+                                    Terms and Condition
+                                </a>
+                            </p>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- End of Modal Registration -->
 
+        <!-- Modal Settings -->
+        <div class="modal fade" id="modal-setting" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-6" v-for="(opt, key) in tblAccountsOpt" :key="key">
+                                <label>
+                                    <input
+                                        v-model="tblAccountsOpt[key]"
+                                        type="checkbox"
+                                        :checked="key ? 'checked':''"
+
+                                        @change="columnAdjust">
+
+                                    {{ humanize(key) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Settings -->
+
+        <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
     import axios from 'axios';
+    import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 
     export default {
+        components: {TermsAndConditions},
         data() {
             return {
                 paginate: [15,25,50,100,200,250,'All'],
@@ -663,6 +813,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',
@@ -689,6 +840,13 @@
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
                     company_type: this.$route.query.company_type || '',
+                    company_name: this.$route.query.company_name || '',
+                    company_url: this.$route.query.company_url || '',
+                    account_validation: this.$route.query.account_validation || '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    }
                 },
 
                 accountUpdate: {
@@ -700,6 +858,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',
@@ -727,6 +886,8 @@
                 updateCompanyName: true,
                 listTeamIncharge: [],
                 isVerified: true,
+                btnTermsAndConditions: false,
+                isDisableSubmit: true,
             }
         },
 
@@ -741,6 +902,7 @@
 
         computed: {
             ...mapState({
+                tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
                 messageForms: state => state.storeAccount.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
@@ -751,23 +913,55 @@
         },
 
         methods: {
-            verifiedAccount() {
-                 axios.get('/api/verify-account',{
-                    params: {
-                        id: this.accountUpdate.id
-                    }
-                })
-                .then((res) => {
-                    if( res.data.success === true ) {
-                        this.isVerified = true;
 
-                        swal.fire(
-                            'Verify',
-                            'Successfully Verified!',
-                            'success'
-                        );
-                    }
-                })
+            displayEmailPayment(account) {
+                let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '':account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
+                let btc_email = account.btc_account == null || account.btc_account == '' ? '':account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
+                let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '':account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
+                let email = '';
+
+                email = paypal_email + btc_email + skrill_email;
+
+                return email;
+            },
+
+            async verifiedAccount() {
+
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
+
+                if (this.messageForms.action === 'verified_account') {
+                    this.isVerified = true;
+
+                    this.getAccountList();
+
+                    swal.fire(
+                        'Success',
+                        'Account Successfully Verified!',
+                        'success'
+                    );
+                } else {
+                    swal.fire(
+                        'Error',
+                        'Account Not Verified!',
+                        'error'
+                    );
+                }
+
+                this.isPopupLoading = false;
+
+                //  axios.post('/api/verify-account', this.accountUpdate)
+                // .then((res) => {
+                //     if( res.data.success === true ) {
+                //         this.isVerified = true;
+                //
+                //         swal.fire(
+                //             'Verify',
+                //             'Successfully Verified!',
+                //             'success'
+                //         );
+                //     }
+                // })
             },
 
             checkVerified() {
@@ -785,7 +979,7 @@
                     if( res.response.data.success === false ) {
                         this.isVerified = res.response.data.success
                     }
-                }) 
+                })
             },
 
             checkTeamIncharge(method) {
@@ -834,6 +1028,9 @@
                         'Successfully Added!',
                         'success'
                     );
+
+                    this.isDisableSubmit = true;
+                    this.btnTermsAndConditions = false;
                 }
             },
 
@@ -908,6 +1105,10 @@
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
                         company_type: this.filterModel.company_type,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
                     }
                 });
                 this.isLoadingTable = false;
@@ -927,6 +1128,11 @@
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -942,6 +1148,13 @@
                     company_type: '',
                     commission: '',
                     credit_auth: '',
+                    company_name: '',
+                    company_url: '',
+                    account_validation: '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getAccountList({
@@ -963,9 +1176,14 @@
                         type: this.filterModel.type,
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
+                        country: this.filterModel.country,
                         company_type: this.filterModel.company_type,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
                     }
                 });
             },
@@ -979,6 +1197,7 @@
                     c_password: '',
                     type: '',
                     company_name: '',
+                    company_url: '',
                     skype: '',
                     id_payment_type: '',
                     payment_email: '',
@@ -990,6 +1209,22 @@
                     country_id: '',
                 };
             },
+
+            columnAdjust(){
+                this.$nextTick(() => {
+                    $('#tbl_account').DataTable().columns.adjust()
+                });
+            },
+
+            humanize(string) {
+                let i, frags = string.split('_');
+
+                for (i=0; i < frags.length; i++) {
+                    frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+                }
+
+                return frags.join(' ');
+            }
         }
     }
 </script>

@@ -6,7 +6,7 @@
             <div class="col-md-5">
                 <div class="card mt-5 pb-3">
                     <div class="card-body mx-5">
-                        <h4>Registration</h4> 
+                        <h4>Registration</h4>
                         <hr class="mb-4"/>
 
                         <div class="alert alert-success" v-if="isVerifiedEmail">
@@ -67,50 +67,16 @@
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                            
-                            <!-- <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
-                                    <label for="">Phone</label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.phone" name="" aria-describedby="helpId" placeholder="Enter your Phone">
-                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
 
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}">
-                                    <label for="">Country</label>
-                                    <select name="" class="form-control" v-model="RegisterModel.country_id">
-                                        <option value="">Select Country</option>
-                                        <option v-for="option in countryList" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                    </select>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
-                                </div>
+                            <div class="col-md-6 mt-4">
+                                <p>
+                                    <input type="checkbox" v-model="BtnAccept" @change="isEnableSubmit =  isEnableSubmit ? false:true">
+                                    I've read and accept the <a href="#" data-toggle="modal" data-target="#modalTermsAndCondition">Terms and Condition</a>
+                                </p>
                             </div>
-
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
-                                    <label for="">Company Type</label>
-                                    <select class="form-control" v-model="RegisterModel.company_type" @change="checkType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" v-show="isCompany">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.company_name}">
-                                    <label for="">Company Name</label>
-                                    <input type="text" class="form-control" name="" v-model="RegisterModel.company_name" aria-describedby="helpId" placeholder="Enter your Company Name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div> -->
 
                             <div class="col-md-12 mt-4">
-                                <button @click="submitForm" type="submit" class="btn btn-primary btn-flat pull-right">Submit <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
-                                <!-- <button @click="loginPage" class="btn btn-default btn-flat">Login</button> -->
+                                <button @click="submitForm" :disabled="isEnableSubmit" type="submit" class="btn btn-primary btn-flat pull-right">Submit <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
                             </div>
 
                         </div>
@@ -122,14 +88,17 @@
 
         </div>
 
+        <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex';
     import axios from 'axios';
+    import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 
     export default {
+        components: {TermsAndConditions},
         data() {
             return {
                 accountType: ['Seller', 'Buyer', 'Writer'],
@@ -148,41 +117,23 @@
                 isVerifiedEmail: false,
                 isCompany: true,
                 isCompanySelected: false,
+                isEnableSubmit: true,
                 // countryList: [],
+                BtnAccept: false
             }
         },
 
         created() {
-            // this.getListCountry();
+            //
         },
 
         computed: {
             ...mapState({
                 messageForms: state => state.storeAccount.messageForms,
-                // messageFormsMailgun: state => state.storeMailgun.messageForms,
             }),
         },
 
         methods: {
-            // getListCountry() {
-            //     axios.get('/api/registration-country-list')
-            //         .then((res) => {
-            //             this.countryList = res.data.data;
-            //         })
-            // },
-
-            // checkType() {
-            //     if (this.RegisterModel.company_type == 'Company') {
-            //         this.isCompany = true;
-            //         this.isCompanySelected = false;
-            //         this.RegisterModel.type = ''
-            //     } else {
-            //         this.isCompany = false;
-            //         this.isCompanySelected = true;
-            //         this.RegisterModel.type = 'Freelance'
-            //     }
-            // },
-
             loginPage() {
                 this.$router.push('login')
             },
@@ -193,7 +144,7 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'registration_success') {
-                
+
                     // Send Email Validation
                     axios.post('/api/registration-email-validation',{
                         email: this.RegisterModel.email,
@@ -202,6 +153,8 @@
 
                     this.clearRegistrationModel();
                     this.isVerifiedEmail = true;
+                    this.isEnableSubmit = true;
+                    this.BtnAccept = false;
 
                 }
             },

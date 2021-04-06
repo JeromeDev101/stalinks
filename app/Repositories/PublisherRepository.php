@@ -8,6 +8,7 @@ use App\Models\ExtDomain;
 use App\Models\Publisher;
 use App\Models\Registration;
 use App\Libs\Ahref;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $columns = [
             'publisher.*',
             'registration.username',
+            'registration.account_validation as user_account_validation',
             'A.name',
             'A.username as user_name',
             'A.isOurs',
@@ -70,9 +72,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list->orderBy('created_at', 'desc');
         }
 
-        $registered = Registration::where('email', $user->email)->first();
+        if( isset($filter['account_validation']) && !empty($filter['account_validation']) ){
+            $list = $list->where('registration.account_validation', $filter['account_validation']);
+        }
 
-        if( $user->type != 10 && isset($registered->type) && $registered->type == 'Seller' ){
+        if( $user->type != 10 && isset($user->registration->type) && $user->registration->type == 'Seller' ){
             $list->where('publisher.user_id', $user->id);
         }
 
@@ -97,29 +101,37 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['qc_validation']) && !empty($filter['qc_validation']) ){
-            $list = $list->where('publisher.qc_validation', $filter['qc_validation']);
+            if( $filter['qc_validation'] == 'na' ) {
+                $list = $list->whereNull('publisher.qc_validation');
+            } else {
+                $list = $list->where('publisher.qc_validation', $filter['qc_validation']);
+            }
         }
 
         if( isset($filter['got_ahref']) && !empty($filter['got_ahref']) ){
             if( $filter['got_ahref'] == 'Without' ){
-                $list = $list->where('publisher.ur', 0)
-                ->where('publisher.dr', 0)
-                ->where('publisher.backlinks', 0)
-                ->where('publisher.ref_domain', 0)
-                ->where('publisher.org_keywords', 0)
-                ->where('publisher.org_traffic', 0);
+                $list = $list->whereNull('publisher.href_fetched_at');
             }
 
             if( $filter['got_ahref'] == 'With' ){
-                $list = $list->where('publisher.ur', '!=', '0')
-                ->where('publisher.dr', '!=', '0')
-                ->where('publisher.backlinks', '!=', '0')
-                ->where('publisher.ref_domain', '!=', '0');
+                $list = $list->whereNotNull('publisher.href_fetched_at');
             }
         }
 
-        if( isset($filter['date']) && !empty($filter['date']) ){
-            $list = $list->where('publisher.updated_at', 'like', '%'.$filter['date'].'%');
+        if (isset($filter['date'])) {
+            $filter['date'] = \GuzzleHttp\json_decode($filter['date'], true);
+            if ($filter['date']['startDate'] != null && $filter['date']['endDate'] != null) {
+                $list = $list->where('publisher.updated_at', '>=', Carbon::create( $filter['date']['startDate'])->format('Y-m-d'));
+                $list = $list->where('publisher.updated_at', '<=', Carbon::create($filter['date']['endDate'])->format('Y-m-d'));
+            }
+        }
+
+        if (isset($filter['uploaded'])) {
+            $filter['uploaded'] = \GuzzleHttp\json_decode($filter['uploaded'], true);
+            if ($filter['uploaded']['startDate'] != null && $filter['uploaded']['endDate'] != null) {
+                $list = $list->where('publisher.created_at', '>=', Carbon::create( $filter['uploaded']['startDate'])->format('Y-m-d'));
+                $list = $list->where('publisher.created_at', '<=', Carbon::create($filter['uploaded']['endDate'])->format('Y-m-d'));
+            }
         }
 
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
@@ -154,13 +166,31 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
             $list = $list->where(function ($query) use ($filter) {
-                $query->where('countries.continent_id', $filter['continent_id'])
-                    ->orWhere('publisher.continent_id', $filter['continent_id']);
+                if (($key = array_search(0, $filter['continent_id'])) !== false) {
+                    unset($filter['continent_id'][$key]);
+                    $query->orWhere(function ($subs) {
+                        $subs->orWhere('publisher.continent_id', null)
+                            ->where('publisher.country_id', null);
+                    });
+                }
+
+                if(!empty($filter['continent_id'])){
+                    $query->orWhereIn('countries.continent_id', $filter['continent_id'])
+                        ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                }
             });
         }
 
         if (isset($filter['country_id']) && !empty($filter['country_id'])) {
             $list = $list->where('publisher.country_id', $filter['country_id']);
+        }
+
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list = $list->whereIn('price_basis', $filter['price_basis']);
+            } else {
+                $list = $list->where('price_basis', $filter['price_basis']);
+            }
         }
 
 
@@ -171,70 +201,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $result = $list->paginate($paginate);
         }
 
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-
-            $value['code_combination'] = $combineALl;
-            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if( $filter['price_basis'] == $price_basis ){
-                    $value['price_basis'] = $price_basis;
-                }else{
-                    $result->forget($key);
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-
-        }
-
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
                 'data' => $result,
@@ -243,8 +209,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }else{
             return $result;
         }
-
-
     }
 
     /**
@@ -272,7 +236,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }
@@ -305,7 +269,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
         $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
-        $language = $file['language'];
+//        $language = $file['language'];
         $csv_file = $file['file'];
 
         $result = true;
@@ -323,38 +287,65 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 4 || count($line) < 4){
-                    $message = "Please check the header: Url, Price, Inc Article and KW Anchor only.";
+                if(count($line) > 6 || count($line) < 6){
+                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor and Language only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
                 }
 
                 if( $ctr > 0 ){
-                    $url = trim_excel_special_chars($line[0]);
-                    $price = trim_excel_special_chars($line[1]);
-                    $article = trim_excel_special_chars($line[2]);
-                    $casinoSites = trim_excel_special_chars($line[3]);
+                    $url = trim_special_characters($line[0]);
+                    $price = trim_special_characters($line[1]);
+                    $article = trim_special_characters($line[2]);
+                    $accept = trim_special_characters($line[3]);
+                    $kw_anchor = trim_special_characters($line[4]);
+                    $language_excel = trim_special_characters($line[5]);
 
-                    if( trim($url, " ") != '' ){
-                        $url_remove_http = $this->remove_http($url);
-                        $valid = $this->checkValid($url_remove_http);
+                    $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
-                        Publisher::create([
-                            'user_id' => $id,
-                            'language_id' => $language,
-                            'url' => $url_remove_http,
-                            'ur' => 0,
-                            'dr' => 0,
-                            'backlinks' => 0,
-                            'ref_domain' => 0,
-                            'org_keywords' => 0,
-                            'org_traffic' => 0,
-                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                            'valid' => $valid,
-                            'casino_sites' => $casinoSites ? $casinoSites : 'yes',
-                            'topic' => null
+                    if (preg_grep("/".$language_excel."/i", $language_name_list)){
+
+                        if (!$isCheckDuplicate) {
+
+                            if( trim($url, " ") != '' ){
+                                $url_remove_http = $this->remove_http($url);
+                                $lang = $this->getCountry($language_excel);
+                                $valid = $this->checkValid($url_remove_http);
+
+                                Publisher::create([
+                                    'user_id' => $id,
+                                    'language_id' => $lang,
+                                    'url' => $url_remove_http,
+                                    'ur' => 0,
+                                    'dr' => 0,
+                                    'backlinks' => 0,
+                                    'ref_domain' => 0,
+                                    'org_keywords' => 0,
+                                    'org_traffic' => 0,
+                                    'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                    'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                    'valid' => $valid,
+                                    'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                    'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
+                                    'topic' => null
+                                ]);
+                            }
+                        } else {
+                            $file_message = "You have already uploaded this url: " . $url . ", Check in line ". (intval($ctr) + 1);
+                            $result = true;
+
+                            array_push($existing_datas, [
+                                'message' => $file_message
+                            ]);
+                        }
+
+                    } else {
+                        $file_message = "No Language name of ". $language_excel . $message . ". Check in line ". (intval($ctr) + 1);
+                        $result = true;
+
+                        array_push($existing_datas, [
+                            'message' => $file_message
                         ]);
                     }
                 }
@@ -369,14 +360,15 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 if( $ctr > 0 ){
-                    $url = trim_excel_special_chars($line[0]);
-                    $price = trim_excel_special_chars($line[1]);
-                    $article = trim_excel_special_chars($line[2]);
-                    $seller_id = trim_excel_special_chars($line[3]);
-                    $accept = trim_excel_special_chars($line[4]);
-                    $language_excel = trim_excel_special_chars($line[5]);
-                    $topic = trim_excel_special_chars($line[6]);
+                    $url = trim_special_characters($line[0]);
+                    $price = trim_special_characters($line[1]);
+                    $article = trim_special_characters($line[2]);
+                    $seller_id = trim_special_characters($line[3]);
+                    $accept = trim_special_characters($line[4]);
+                    $language_excel = trim_special_characters($line[5]);
+                    $topic = trim_special_characters($line[6]);
 
+                    $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
                     if (in_array($seller_id, $user_id_list)){
 
@@ -384,25 +376,34 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                             if (preg_grep("/".$topic."/i", $topic_list)){
 
-                                if( trim($url, " ") != '' ){
-                                    $url_remove_http = $this->remove_http($url);
-                                    $lang = $this->getCountry($language_excel);
-                                    $valid = $this->checkValid($url_remove_http);
-                                    Publisher::create([
-                                        'user_id' => $seller_id ,
-                                        'language_id' => $lang,
-                                        'url' => $url_remove_http,
-                                        'ur' => 0,
-                                        'dr' => 0,
-                                        'backlinks' => 0,
-                                        'ref_domain' => 0,
-                                        'org_keywords' => 0,
-                                        'org_traffic' => 0,
-                                        'price' => preg_replace('/[^0-9.\-]/', '', $price),
-                                        'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
-                                        'valid' => $valid,
-                                        'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
-                                        'topic' => $topic,
+                                if (!$isCheckDuplicate) {
+                                    if( trim($url, " ") != '' ){
+                                        $url_remove_http = $this->remove_http($url);
+                                        $lang = $this->getCountry($language_excel);
+                                        $valid = $this->checkValid($url_remove_http);
+                                        Publisher::create([
+                                            'user_id' => $seller_id ,
+                                            'language_id' => $lang,
+                                            'url' => $url_remove_http,
+                                            'ur' => 0,
+                                            'dr' => 0,
+                                            'backlinks' => 0,
+                                            'ref_domain' => 0,
+                                            'org_keywords' => 0,
+                                            'org_traffic' => 0,
+                                            'price' => preg_replace('/[^0-9.\-]/', '', $price),
+                                            'inc_article' => ucwords( strtolower( trim($article, " ") ) ),
+                                            'valid' => $valid,
+                                            'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
+                                            'topic' => $topic,
+                                        ]);
+                                    }
+                                } else {
+                                    $file_message = " URL and Seller ID already exist, Check in line ". (intval($ctr) + 1);
+                                    $result = true;
+
+                                    array_push($existing_datas, [
+                                        'message' => $file_message
                                     ]);
                                 }
 
@@ -451,6 +452,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ],
             "exist" => $existing_datas,
         ];
+    }
+
+    private function checkDuplicate($url, $seller_id) {
+        $publisher = Publisher::where('url', 'like', '%'.$url.'%')->where('user_id', $seller_id);
+        return $publisher->count() > 0;
     }
 
     private function remove_http($url) {
@@ -509,7 +515,68 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $ahrefsInstant = new Ahref($configs);
         $data = $ahrefsInstant->getAhrefsPublisherAsync($publishers);
+        $this->updateAhrefData($data);
+
+
         return $data;
+    }
+
+    public function updateAhrefData($publisher)
+    {
+        $priceCollection = Pricelist::all();
+
+        foreach($publisher as $key => $value) {
+            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
+            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
+            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
+            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
+            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
+
+            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+
+            $value['code_combination'] = $combineALl;
+            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+
+
+            // Price Basis
+            $result_1 = 0;
+            $result_2 = 0;
+
+            $price_basis = '-';
+            if( !empty($value['code_price']) ){
+
+                $var_a = floatVal($value->price);
+                $var_b = floatVal($value['code_price']);
+
+                $result_1 = number_format($var_b * 0.7,2);
+                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
+
+                if( $result_1 != 0 && $result_2 != 0 ){
+                    if( $var_a <= $result_1 ){
+                        $price_basis = 'Good';
+                    }
+
+                    if( $var_a > $result_1 && $result_1 < $result_2 ){
+                        $price_basis = 'Average';
+                    }
+
+                    if( $var_a > $result_2 ){
+                        $price_basis = 'High';
+                    }
+                }
+            }
+
+            if( $value['code_price'] == 0 && $value->price > 0){
+                $price_basis = 'High';
+            }
+
+            Publisher::find($value->id)->update([
+                'code_comb' => $value['code_combination'],
+                'code_price' => $value['code_price'],
+                'price_basis' => $price_basis,
+                'href_fetched_at' => Carbon::now()
+            ]);
+        }
     }
 
     /**

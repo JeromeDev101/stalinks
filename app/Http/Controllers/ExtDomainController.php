@@ -7,6 +7,7 @@ use App\Libs\Alexa;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
+use App\Rules\EmailPipe;
 use App\Rules\ExtListEmail;
 use App\Rules\ExtListLink;
 use App\Rules\ExtListPhone;
@@ -24,6 +25,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\ExtDomain;
 use League\OAuth2\Server\RequestEvent;
+use PharIo\Manifest\Email;
 
 class ExtDomainController extends Controller
 {
@@ -180,156 +182,23 @@ class ExtDomainController extends Controller
     }
 
     public function getList(Request $request) {
-       // $input = $request->except('status');
+        $input = $request->all();
 
-        $input = $request->except('employee_id', 'country_id');
-        $page = 0;
-        $perPage =  50;
-        $userId = Auth::id();
-        $findAllExt = true;
-        $countriesExceptIds = [];
-        $requireEmail = false;
-        $sort = [
-            'id', 'desc'
-        ];
+        $data = $this->extDomainRepository->paginate($input);
 
-        $emp_ids = [];
-        if( is_array($request->employee_id) && count($request->employee_id) > 0 ){
-            foreach( $request->employee_id as $name){
-                $user = User::where('username', 'like', '%'.$name.'%')->first();
-                $emp_ids[] = $user->id;
-            }
-        }
-
-        $cntry_ids = [];
-        if( is_array($request->country_id) && count($request->country_id) > 0 ){
-            foreach( $request->country_id as $name){
-                $cntry = Country::where('name', 'like', '%'.$name.'%')->first();
-                $cntry_ids[] = $cntry->id;
-            }
-        }
-        if (count($cntry_ids) > 0){
-            $input['country_id'] = $cntry_ids;
-        }else{
-            $input['country_id'] = null;
-        }
-
-        // dd($input);
-
-        // if (isset($input['employee_id'])) {
-        //     $userId = $this->userService->checkUserId($input['employee_id']);
-        // }
-
-        if (isset($input['sort'])) {
-            $sortTemp = explode(",", $input['sort']);
-            $sort = [];
-            $sort[] = 'ext_domains.'.$sortTemp[0];
-            $sort[1] = $sortTemp[1];
-        }
-
-        $filters = [
-            'whereIn' => [],
-            'where' => [],
-            'other' => [
-                'whereIn' => [],
-                'where' => [],
-            ]
-        ];
-
-        if (isset($input['page'])) {
-            $page = $input['page'];
-        }
-
-        if (isset($input['per_page'])) {
-            $perPage = $input['per_page'];
-        }
-
-        //init filter
-        $countryIds = [];
-        if (isset($input['country_id']) && $input['country_id'] > 0) {
-            $countryAll = $input['country_id'];
-            $countryIds = $this->countryRepository->validCountryIdList($countryAll, $userId, true);
-            $findAllExt = false;
-            $countriesExceptIds = array_diff($countryAll, $countryIds);
-        } else {
-            $countryIds = $this->countryRepository->getListCountriesAccess($userId, true);
-        }
-
-        // to display the list of extdomain to non employee (jerome) - 7/3/20
-        $non_employee = $this->giveAccessToNonEmployees($userId);
-        if( $non_employee ){
-            $countryIds = $non_employee;
-        }
-
-        $countryIdsInt = $this->countryRepository->getListCountriesAccess($userId);
-
-        if (isset($input['email'])) {
-            $filters['where'][] = ['email', $input['email']];
-        }
-
-        $filters['whereIn'][] = ['country_id', $countryIds];
-
-        if (count($emp_ids) > 0){
-            $filters['whereIn'][] = ['user_id', $emp_ids];
-        }
-
-
-        $filters['other']['whereIn'][] = ['country_id', $countryIds];
-        $filters['other']['orWhereIn'][] = ['country_id', $countriesExceptIds];
-
-        if( isset($input['status_multiple']) ){
-            $filters['whereIn'][] = ['status', $input['status_multiple']];
-        }
-
-        if (isset($input['country_id']) && $input['country_id'] != '') {
-            $filters['whereIn'][] = ['country_id', $input['country_id']];
-        }
-
-        if (isset($input['required_email']) && $input['required_email'] > 0) {
-            $filters['where'][] = ['email', '!=', ''];
-        }
-
-        if (isset($input['email'])) {
-            $filters['where'][] = ['email', 'like', '%'.$input['email'].'%'];
-        }
-
-
-        if (isset($input['domain']) && $input['domain'] != '') {
-            $filters['where'][] = ['domain', 'like', '%'.$input['domain'].'%'];
-        }
-
-        if (isset($input['status']) && $input['status'] >= 0 ) {
-            if (!is_array($input['status'])) {
-                $filters['where'][] = ['status', $input['status']];
-            } else {
-                $filters['whereIn'][] = ['status', $input['status']];
-            }
-        }
-
-        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
-
-        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
-            $filters['where'][] = ['created_at', '>=', Carbon::create( $input['alexa_date_upload']['startDate'])->format('Y-m-d')];
-            $filters['where'][] = ['created_at', '<=', Carbon::create( $input['alexa_date_upload']['endDate'])->format('Y-m-d')];
-            $filters['where'][] = ['alexa_rank', '!=', 0];
-        }
-
-        $extDomainIds = $this->userService->findExtDomainIdsFromInt($userId);
-
-        $data = $this->extDomainRepository->paginate($page, $perPage, $filters,  $countryIds, $countryIdsInt, $countriesExceptIds, $findAllExt, $sort, $extDomainIds);
         return response()->json($this->addPaginationRaw($data));
     }
 
-    private function giveAccessToNonEmployees($userId) {
-        $user = User::find($userId);
-        $result = false;
-        if( isset( $user->isOurs ) ){
-            if( $user->isOurs == 1 ){
-                $result = Country::pluck('id')->toArray();
-            }
-        }
-        return $result;
-    }
+    // private function giveAccessToNonEmployees($userId) {
+    //     $user = User::find($userId);
+    //     $result = false;
+    //     if( isset( $user->isOurs ) ){
+    //         if( $user->isOurs == 1 ){
+    //             $result = Country::pluck('id')->toArray();
+    //         }
+    //     }
+    //     return $result;
+    // }
 
     private function remove_http($url) {
         $disallowed = array('http://', 'https://', 'www.', '/');
@@ -351,10 +220,24 @@ class ExtDomainController extends Controller
             if (!isset($input[$key])) $input[$key] = '';
         }
 
+        // handle email
+        $input['email'] = array_column($input['email'], 'text');
+
+        //  $customMessages = [];
+
+        //  foreach ($input['email'] as $key => $value) {
+        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        //  }
+
         $newStatus = 0;
 
         Validator::make($input, [
             'domain' => 'required|max:255',
+//            'email.*' => 'email|unique:ext_domains,email',
+            // 'email' => 'array|max:10',
+            // 'email.*' => ['email', new EmailPipe('add')],
+            // 'email' => 'email',
             'country_id' => 'required|integer|not_in:0',
             'alexa_rank' => 'required|integer|gte:0',
             'ahrefs_rank' => 'required|integer|gte:0',
@@ -424,9 +307,9 @@ class ExtDomainController extends Controller
         $input['status'] = $request->status == "" ? config('constant.EXT_STATUS_NEW'):intval($request->status);
         $hasContactInfo = $this->isInputContactInfo($input);
         $validateRule = [];
-        if ($input['email'] != '') {
-            $validateRule['email'] = ['string', new ExtListEmail()];
-        }
+//        if ($input['email'] != '') {
+//            $validateRule['email'] = ['string', new ExtListEmail()];
+//        }
 
         if ($input['facebook'] != '') {
             $validateRule['facebook'] = ['string', new ExtListLink()];
@@ -457,9 +340,16 @@ class ExtDomainController extends Controller
             return response()->json(false);
         }
 
+        if (!empty($input['email'])) {
+
+            $input['email'] = implode ('|', $input['email'] );
+        } else {
+            $input['email'] = null;
+        }
 
         $newExtDomain = $this->extDomainRepository->create($input);
         $newExtDomain->country;
+
         return response()->json(['success' => true, 'data' => $newExtDomain]);
     }
 
@@ -499,9 +389,21 @@ class ExtDomainController extends Controller
     }
 
     private function isInputContactInfo($input) {
+        $email = true;
+        if(is_array($input['email'])){
+            if(count($input['email']) > 0) {
+                $email = true;
+            }else{
+                $email = false;
+            }
+        } else{
+            $email  = $input['email'] != '' ? true:false;
+        }
+
+
         if ($input['facebook'] != '' ||
             $input['phone'] != '' ||
-            $input['email'] != '' ) {
+            $email ) {
             return true;
         }
 
@@ -531,6 +433,10 @@ class ExtDomainController extends Controller
         $input['organic_keywords']  = $request->ext['organic_keywords'];
         $input['organic_traffic']  = $request->ext['organic_traffic'];
         $input['country_id']  = $request->ext['country_id'];
+        $input['user_id'] = $request->ext['user_id'];
+
+        $input['email'] = array_column($input['email'], 'text');
+
 
         if ( $request->ext['status'] == 100){
             $request->validate([
@@ -543,8 +449,6 @@ class ExtDomainController extends Controller
                 'pub.price' => 'required',
             ]);
         }
-
-        // dd($input);
 
         foreach($input as $key => $value) {
             if (!isset($input[$key])) $input[$key] = '';
@@ -567,9 +471,9 @@ class ExtDomainController extends Controller
             array_push($listStatusExclude, config('constant.EXT_STATUS_IN_TOUCHED'));
         }
 
-        if ($input['email'] != '') {
-            $validateRule['email'] = ['string', new ExtListEmail()];
-        }
+//        if ($input['email'] != '') {
+//            $validateRule['email'] = ['string', new ExtListEmail()];
+//        }
 
         if ($input['facebook'] != '') {
             $validateRule['facebook'] = ['string', new ExtListLink()];
@@ -604,7 +508,17 @@ class ExtDomainController extends Controller
             $input['domain'] = 'http://'.$input['domain'];
         }
 
+        // $customMessages = [];
+
+        // foreach ($input['email'] as $key => $value) {
+        //     $customMessages['email.' . $key . '.unique'] = $value . ' is already taken.';
+        //     $customMessages['email.' . $key . '.email'] = $value . ' is not a valid email.';
+        // }
+
         Validator::make($input, [
+            // 'email' => 'array|max:10',
+            // 'email.*' => ['email', new EmailPipe('edit', $input['id'])],
+            // 'email' => 'email',
             'domain' => 'required|url|max:255',
             'ahrefs_rank' => 'required|integer|gte:0',
             'no_backlinks' => 'required|integer|gte:0',
@@ -613,26 +527,33 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0',
         ])->validate();
 
-        // if( $input['status'] === '100'){
-        //     Publisher::create([
-        //         'user_id' => $request->pub['seller'],
-        //         'url' => $request->pub['url'],
-        //         'ur' => $input['url_rating'],
-        //         'dr' => $input['domain_rating'],
-        //         'backlinks' => $input['no_backlinks'],
-        //         'ref_domain' => $input['ref_domains'],
-        //         'org_keywords' => $input['organic_keywords'],
-        //         'org_traffic' => $input['organic_traffic'],
-        //         'price' => $request->pub['price'],
-        //         'language_id' => $request->pub['language_id'],
-        //         'inc_article' => $request->pub['inc_article'],
-        //         'topic' => $request->pub['topic'],
-        //         'casino_sites' => $request->pub['casino_sites'],
-        //         'valid' => 'unchecked',
-        //     ]);
+        // check if status is 'Qualified'
+        if( $input['status'] === '100'){
+            $url = $this->remove_http($request->pub['url']);
+            $publisher = Publisher::where('url', 'like', '%'.$url.'%')->count();
 
-        //     $input['user_id'] = $id;
-        // }
+            // create a copy if unique URl in list publisher
+            if( $publisher == 0 ) {
+                Publisher::create([
+                    'user_id' => $request->pub['seller'],
+                    'url' => $request->pub['url'],
+                    'ur' => $input['url_rating'],
+                    'dr' => $input['domain_rating'],
+                    'backlinks' => $input['no_backlinks'],
+                    'ref_domain' => $input['ref_domains'],
+                    'org_keywords' => $input['organic_keywords'],
+                    'org_traffic' => $input['organic_traffic'],
+                    'price' => $request->pub['price'],
+                    'language_id' => $request->pub['language_id'],
+                    'inc_article' => $request->pub['inc_article'],
+                    'topic' => $request->pub['topic'],
+                    'casino_sites' => $request->pub['casino_sites'],
+                    'valid' => 'valid',
+                ]);
+            }
+
+            $input['user_id'] = $id;
+        }
 
         if ($this->startsWith($input['domain'], 'https://')) {
             $input['domain'] = explode('https://', $input['domain'])[1];
@@ -641,9 +562,9 @@ class ExtDomainController extends Controller
             $input['domain'] = explode('http://', $input['domain'])[1];
         }
 
-        Validator::make($input, [
-            'domain' => Rule::unique('ext_domains')->ignore($input['id']),
-        ])->validate();
+        // Validator::make($input, [
+        //     'domain' => Rule::unique('ext_domains')->ignore($input['id']),
+        // ])->validate();
 
         // Validator::make($input, $validateRule)->validate();
 
@@ -652,6 +573,12 @@ class ExtDomainController extends Controller
 //            return response()->json(['success' => false, 'message' => 'status invalid']);
 //        }
 
+        if (!empty($input['email'])) {
+
+            $input['email'] = implode ('|', $input['email'] );
+        } else {
+            $input['email'] = null;
+        }
 
         $result = $this->extDomainRepository->updateData($input, $countryIds);
         return response()->json(['success' => $result]);
@@ -739,11 +666,11 @@ class ExtDomainController extends Controller
     public function getAhrefs(Request $request) {
         $input = $request->all();
 
-        if (!isset($input['domain_ids'])) {
+        if (!isset($input['params']['domain_ids'])) {
             return response()->json(['success' => false, 'message' => 'id domains is empty']);
         }
 
-        $listId = explode(",", $input['domain_ids']);
+        $listId = explode(",", $input['params']['domain_ids']);
         $configs = $this->configRepository->getConfigs('ahrefs');
         $data = $this->extDomainRepository->getAhrefs($listId, $configs);
         return response()->json($data);

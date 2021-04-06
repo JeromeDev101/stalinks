@@ -78,16 +78,15 @@
                                <option value="0">Select Employee</option>
                                <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
                                </select> -->
-                            <v-select multiple v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
+                            <v-select multiple
+                                      v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
                             <label
-                                style="color: #333">Alexa
-                                                    Date
-                                                    Upload
+                                style="color: #333">Date Upload
                             </label>
                             <div class="input-group">
                                 <date-range-picker
@@ -96,6 +95,7 @@
                                     :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                     :dateRange="filterModel.alexa_date_upload"
                                     :linkedCalendars="true"
+                                    style="width: 100%"
                                 />
                             </div>
                         </div>
@@ -128,7 +128,22 @@
                         <div class="input-group">
                            <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
                            <div class="input-group-btn">
-                              <button title="Upload CSV File" @click="submitUpload" :disabled="isEnableBtn" class="btn btn-primary btn-flat"><i class="fa fa-upload"></i></button>
+                              <button
+                                  title="Upload CSV File"
+                                  class="btn btn-primary btn-flat"
+                                  :disabled="isEnableBtn"
+
+                                  @click="submitUpload">
+                                  <i class="fa fa-upload"></i>
+                              </button>
+
+                               <button
+                                   title="Download CSV Template"
+                                   class="btn btn-primary btn-flat"
+
+                                   @click="downloadTemplate">
+                                   <i class="fa fa-download"></i>
+                               </button>
                            </div>
                         </div>
                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -192,117 +207,142 @@
                <span v-if="listExt.total > 10" class="pagination-custom-footer-text">
                <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
                </span>
-               <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table">
-                  <thead>
-                     <tr class="label-primary">
-                        <th>Action</th>
-                        <th>
-                           <input class="custom-checkbox" style="margin-left:5px;" type="checkbox" @click="selectAll" v-model="allSelected">
-                        </th>
-                        <th class="sorting" data-index="0" v-show="tableShow.id">#</th>
-                        <th class="sorting" data-index="1" v-show="tableShow.employee">Employee</th>
-                        <th class="sorting"
-                            data-index="2"
-                            v-show="tableShow.alexa_created_at">
-                            Alexa Date Upload</th>
-                        <th class="sorting"
-                            data-index="3" v-show="tableShow.country">Country</th>
-                        <th class="sorting"
-                            data-index="4" v-show="tableShow.domain">Domain</th>
-                        <th class="sorting"
-                            data-index="5" v-show="tableShow.email">Emails</th>
-                        <th class="sorting"
-                            data-index="6" v-show="tableShow.facebook">Facebook</th>
-                        <th class="sorting"
-                            data-index="7" v-show="tableShow.phone">Phone</th>
-                        <th class="sorting"
-                            data-index="8"
-                            v-show="tableShow.rank">
-                            Alexa Rank</th>
-                        <th class="sorting"
-                            data-index="9" v-show="tableShow.status">Status</th>
-                        <th class="sorting"
-                            data-index="10"
-                            v-show="tableShow.total_spent">Total Spent</th>
-                        <th class="sorting"
-                            data-index="11" v-show="tableShow.ahrefs_rank">Ahreafs Rank</th>
-                        <th class="sorting"
-                            data-index="12" v-show="tableShow.no_backlinks">No Backlinks</th>
-                        <th class="sorting"
-                            data-index="13" v-show="tableShow.url_rating">UR</th>
-                        <th class="sorting"
-                            data-index="14" v-show="tableShow.domain_rating">DR</th>
-                        <th class="sorting"
-                            data-index="15" v-show="tableShow.ref_domains">Ref Domains</th>
-                        <th class="sorting"
-                            data-index="16" v-show="tableShow.organic_keywords">Organic Keywords</th>
-                        <th class="sorting"
-                            data-index="17" v-show="tableShow.organic_traffic">Organic Traffic</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr v-for="(ext, index) in listExt.data" :key="index">
-                        <td>
-                           <div class="btn-group" v-if="checkSellerAccess(ext.users == null ? null:ext.users.id)">
-                              <button data-action="a1" :data-index="index" @click="doEditExt(ext)" data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
-                              <button data-action="a2" :data-index="index" v-if="hasBacklink(ext.status)" @click="doShowBackLink(ext)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button>
-                              <button data-action="a4" :data-index="index" @click="doSendEmail(ext, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                              <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
-                              <button type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
-                           </div>
-                           <!--                                <router-link class="btn btn-success" :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i> View</router-link>-->
-                        </td>
-                        <td>
-                           <div class="btn-group">
-                              <button class="btn btn-default">
-                              <input type="checkbox" class="custom-checkbox" v-on:change="checkSelected" :id="ext.id" :value="ext" v-model="checkIds">
-                              </button>
-                           </div>
-                        </td>
-                        <td v-show="tableShow.id" title="Index" class="center-content">{{ index + 1 }}</td>
-                        <td v-show="tableShow.employee">{{ ext.users == null ? 'N/A':ext.users.username }}</td>
-                        <td v-show="tableShow.alexa_created_at">{{
-                                                 ext.alexa_created_at }}</td>
-                        <td v-show="tableShow.country" title="Country"  >{{ ext.country.name }}</td>
-                        <td v-show="tableShow.domain" title="Domain" ><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
-                        <td v-show="tableShow.email" title="Emails" style="max-width: 200px;">
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.email"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.email" class="pl-15">
-                              <li v-for="item in ext.email.split('|')">{{ item }}</li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.facebook" title="Facebook" style="max-width: 200px;" >
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.facebook"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.facebook" class="pl-15">
-                              <li v-for="item in ext.facebook.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.phone" title="Phone" style="max-width: 200px;" >
-                           <div style="width: 100%; text-align: center;" v-if="isCrawling && !ext.phone"><img src="/images/row-loading.gif" alt="crawling"></div>
-                           <ol v-if="ext.phone" class="pl-15">
-                              <li v-for="item in ext.phone.split('|')"><a target="_blank" :href="item">{{ item }}<br/></a></li>
-                           </ol>
-                        </td>
-                        <td v-show="tableShow.rank" title="Rank">{{ ext.alexa_rank }}</td>
-                        <td v-show="tableShow.status" title="Status"><span :class="['label', 'label-' + (listStatusText[ext.status] ? listStatusText[ext.status].label : 'warning')]">{{ listStatusText[ext.status] ? listStatusText[ext.status].text : 'undefined' }}</span></td>
-                        <td v-show="tableShow.total_spent" title="Total Spent">{{ convertPrice(ext.total_spent) }}$</td>
-                        <td v-show="tableShow.ahrefs_rank" title="Aherfs Rank">{{ ext.ahrefs_rank }}</td>
-                        <td v-show="tableShow.no_backlinks" title="No Backlinks">{{ ext.no_backlinks }}</td>
-                        <td v-show="tableShow.url_rating" title="URL Rating">{{ ext.url_rating }}</td>
-                        <td v-show="tableShow.domain_rating" title="Domain Rating">{{ ext.domain_rating }}</td>
-                        <td v-show="tableShow.ref_domains" title="Ref domains">{{ ext.ref_domains }}</td>
-                        <td v-show="tableShow.organic_keywords" title="Organic keywords">{{ formatPrice(ext.organic_keywords) }}</td>
-                        <td v-show="tableShow.organic_traffic" title="Organic traffic">{{ formatPrice(ext.organic_traffic) }}</td>
-                     </tr>
-                  </tbody>
-               </table>
-               <div class="overlay" v-if="isLoadingTable">
-                  <i class="fa fa-refresh fa-spin"></i>
-               </div>
+
+                <vue-virtual-table
+                    v-if="!tableLoading"
+                    width="100%"
+                    :height="600"
+                    :bordered="true"
+                    :item-height="60"
+                    :config="tableConfig"
+                    :data="listExt.data">
+                    <template
+                        slot-scope="scope"
+                        slot="actionButtons">
+                       <div class="btn-group"
+                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null)">
+                          <button data-action="a1"
+                                  :data-index="scope.index"
+                                  @click="doEditExt(scope.row)"
+                                  data-toggle="modal" data-target="#modal-update" class="btn btn-default" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                          <!-- <button data-action="a2"
+                                  :data-index="scope.index"
+                                  v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button> -->
+                          <button data-action="a4"
+                                  :data-index="scope.index"
+                                  @click="doSendEmail(scope.row,
+                                  $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
+                          <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
+                          <button type="submit"
+                                  title="Get Ahrefs"
+                                  @click="getAhrefsById(scope.row.id, scope.row.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
+                       </div>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="actionCheckbox">
+                       <div class="btn-group">
+                          <button class="btn btn-default">
+                          <input type="checkbox"
+                                 class="custom-checkbox"
+                                 v-on:change="checkSelected" :id="scope.row.id" :value="scope.row" v-model="checkIds">
+                          </button>
+                       </div>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="employeeData">
+                        {{ scope.row.users == null ?
+                        'N/A':scope.row.users.username }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="emailsData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.email"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.email"
+                            class="pl-15">
+                          <li v-for="item in
+                          scope.row.email.split('|')">{{
+                                                     item
+                                               }}</li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="facebookData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.facebook"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.facebook"
+                            class="pl-15">
+                          <li v-for="item in
+                          scope.row.facebook.split('|')"><a
+                              target="_blank" :href="item">{{ item }}<br/></a></li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="phoneData">
+                        <div style="width: 100%;
+                        text-align: center;"
+                             v-if="isCrawling &&
+                             !scope.row.phone"><img
+                            src="/images/row-loading.gif" alt="crawling"></div>
+                        <ol v-if="scope.row.phone"
+                            class="pl-15">
+                           <li v-for="item in
+                           scope.row.phone.split('|')"><a
+                               target="_blank" :href="item">{{ item }}<br/></a></li>
+                        </ol>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="statusData">
+                        <span :class="['label', 'label-'
+                        + (listStatusText[scope.row.status] ?
+                        listStatusText[scope.row.status].label :
+                        'warning')]">{{
+                                     listStatusText[scope.row.status] ? listStatusText[scope.row.status].text : 'undefined' }}</span>
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="totalSpentData">
+                        {{
+                        convertPrice(scope.row.total_spent) }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="organicKwData">
+                        {{
+                        formatPrice(scope.row.organic_keywords) }}
+                    </template>
+
+                    <template
+                        slot-scope="scope"
+                        slot="organicTrafficData">
+                        {{
+                        formatPrice(scope.row.organic_traffic) }}
+                    </template>
+
+                </vue-virtual-table>
             </div>
-            <!-- <div class="box-footer clearfix">
-               <component :is="pagination" :callMethod="goToPage"></component>
-               </div> -->
+            <div class="box-footer clearfix">
+                <component :is="pagination" :callMethod="goToPage"></component>
+            </div>
          </div>
       </div>
       <!-- Modal Add -->
@@ -354,10 +394,61 @@
                         </div>
                      </div>
                      <div class="col-md-6">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extModel.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
+<!--                           <textarea-->
+<!--                               v-model="extModel.email"-->
+<!--                               type="text"-->
+<!--                               class="form-control"-->
+<!--                               placeholder="Enter Email">-->
+
+<!--                           </textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :max-tags="10"
+                                :tags="extModel.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTag"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extModel.email = newTags"
+                            />
+
+                            <p
+                                v-if="extModel.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extModel.email = []">
+                                Remove all emails
+                            </p>
+
                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -551,6 +642,26 @@
                            <li>Example: abc@gmail.com|xyz@yahoo.com</li>
                         </ul>
                      </div>
+                      <div class="col-md-6">
+                          <div :class="{'form-group':
+                          true, 'has-error':
+                          messageForms.errors.user_id}"
+                               class="form-group">
+                              <label style="color: #333">
+                                  In-Charge</label>
+                              <select type="text"
+                                      v-model="extUpdate.user_id" class="form-control" value="" required="required">
+                                  <option v-for="(option,
+                                   key) in
+                                   listSellerTeam.data"
+                                          v-bind:value="option.id" v-if="option.username != 'N/A' && option.status == 'active'" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                      {{ option.username }}
+                                  </option>
+                              </select>
+                              <span
+                                  v-if="messageForms.errors.user_id" v-for="err in messageForms.errors.user_id" class="text-danger">{{ err }}</span>
+                          </div>
+                      </div>
                      <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.domain}" class="form-group">
                            <label style="color: #333">Domain</label>
@@ -590,10 +701,55 @@
                         </div>
                      </div>
                      <div class="col-md-12">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                        <div
+                            :class="{
+                                'has-error': messageForms.errors.email
+                                || checkEmailValidationError(messageForms.errors).length !== 0
+                            }"
+                            class="form-group">
+
                            <label style="color: #333">Email</label>
-                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>
-                           <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+<!--                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>-->
+
+                            <vue-tags-input
+                                v-model="email_add"
+                                :max-tags="10"
+                                :tags="extUpdate.email"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :class="{
+                                    'vue-tag-error': messageForms.errors.email
+                                    || checkEmailValidationError(messageForms.errors).length !== 0
+                                }"
+                                class="mt-0"
+                                ref="emailTagUpdate"
+                                placeholder="Enter Email"
+
+                                @tags-changed="newTags => extUpdate.email = newTags"
+                            />
+
+                            <p
+                                v-if="extUpdate.email.length"
+                                class="text-primary small mb-0"
+                                style="cursor: pointer"
+
+                                @click="extUpdate.email = []">
+                                Remove all emails
+                            </p>
+
+                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+
+                            <div
+                                v-if="checkEmailValidationError(messageForms.errors).length !== 0"
+                                class="text-danger">
+                                <ul
+                                    v-for="emailErrors in checkEmailValidationError(messageForms.errors)"
+                                    class="m-0 p-0">
+                                    <li>
+                                        {{ emailErrors }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -787,62 +943,98 @@
                <div class="modal-body relative">
                   <div class="form-group row">
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.id ? 'checked':''" v-model="tableShow.id">#</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(2, tableShow.id)"
+                                      :checked="tableShow.id ? 'checked':''" v-model="tableShow.id">#</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(3, tableShow.employee)"
+                                      :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">Country</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(5, tableShow.country)"
+                                      :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">Country</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox"  :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">Domain</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(6, tableShow.domain)"
+                                      :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">Domain</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">Email</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(7, tableShow.email)"
+                                      :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">Email</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">Facebook</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(8, tableShow.facebook)"
+                                      :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">Facebook</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.rank ? 'checked':''" v-model="tableShow.rank">Rank</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(10, tableShow.rank)"
+                                      :checked="tableShow.rank ? 'checked':''" v-model="tableShow.rank">Rank</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(11, tableShow.status)"
+                                      :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.total_spent ? 'checked':''" v-model="tableShow.total_spent">Total Spent</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(12, tableShow.total_spent)"
+                                      :checked="tableShow.total_spent ? 'checked':''" v-model="tableShow.total_spent">Total Spent</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.ahrefs_rank ? 'checked':''" v-model="tableShow.ahrefs_rank">Ahrefs Rank</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(13, tableShow.ahrefs_rank)"
+                                      :checked="tableShow.ahrefs_rank ? 'checked':''" v-model="tableShow.ahrefs_rank">Ahrefs Rank</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.no_backlinks ? 'checked':''" v-model="tableShow.no_backlinks">No Backlinks</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(14, tableShow.no_backlinks)"
+                                      :checked="tableShow.no_backlinks ? 'checked':''" v-model="tableShow.no_backlinks">No Backlinks</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">UR</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(15, tableShow.url_rating)"
+                                      :checked="tableShow.url_rating ? 'checked':''" v-model="tableShow.url_rating">UR</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">DR</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(16, tableShow.domain_rating)"
+                                      :checked="tableShow.domain_rating ? 'checked':''" v-model="tableShow.domain_rating">DR</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.ref_domains ? 'checked':''" v-model="tableShow.ref_domains">Ref Domains</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(17, tableShow.ref_domains)"
+                                      :checked="tableShow.ref_domains ? 'checked':''" v-model="tableShow.ref_domains">Ref Domains</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.organic_keywords ? 'checked':''" v-model="tableShow.organic_keywords">Organic Keywords</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(18, tableShow.organic_keywords)"
+                                      :checked="tableShow.organic_keywords ? 'checked':''" v-model="tableShow.organic_keywords">Organic Keywords</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.organic_traffic ? 'checked':''" v-model="tableShow.organic_traffic">Organic Traffic</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(19, tableShow.organic_traffic)"
+                                      :checked="tableShow.organic_traffic ? 'checked':''" v-model="tableShow.organic_traffic">Organic Traffic</label>
                      </div>
                      <div class="checkbox col-md-4">
-                        <label><input type="checkbox" :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
+                        <label><input type="checkbox"
+                                      @change="toggleColumn(9, tableShow.phone)"
+                                      :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
                      </div>
                   </div>
                   <div class="overlay" v-if="isPopupLoading"></div>
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="button" @click="submitUpdate" data-dismiss="modal" class="btn btn-primary">Save</button>
+                  <button type="button"
+                          @click="submitUpdate"
+                          data-dismiss="modal" class="btn btn-primary">Save</button>
                </div>
             </div>
          </div>
@@ -966,6 +1158,27 @@
                             <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
                         </div>
                         </div> -->
+
+                      <div class="col-md-12" style="margin-top: 15px;">
+                          <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                              <label style="color: #333">Email</label>
+
+                              <vue-tags-input
+                                  v-model="email_to"
+                                  :disabled="true"
+                                  :separators="separators"
+                                  :tags="urlEmails"
+                                  :class="{'vue-tag-error': messageForms.errors.email}"
+                                  ref="urlTag"
+                                  placeholder=""
+
+                                  @tags-changed="newTags => urlEmails = newTags"
+                              />
+
+                              <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                          </div>
+                      </div>
+
                      <div class="col-md-12" style="margin-top: 15px;">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                            <label style="color: #333">Title</label>
@@ -1075,1056 +1288,1354 @@
    }
 </style>
 <script>
-   import { mapState } from 'vuex';
-   import axios from 'axios';
-   import DownloadCsv from '@/components/export-csv/Csv.vue'
-   import { async } from 'q';
-   export default {
-       name: 'ExtList',
-       data() {
-           return {
-               csvExport: {
-                   file_csv: 'baclink.csv',
-                   data_filled: {
-                       'Ext Domain': 'ext_domain.domain',
-                       'Int Domain': 'int_domain.domain',
-                       'Link': 'link',
-                       'Price': 'price',
-                       'Anchor Text': 'anchor_text',
-                       'Live Date': 'live_date',
-                       'Status': 'status',
-                       'User': 'user.name'
-                   },
-                   json_meta: [
-                       [{
-                           'key': 'charset',
-                           'value': 'utf-8'
-                       }]
-                   ]
-               },
-               dataTable: null,
-               filterModel: {
-                   id: this.$route.query.id || 0,
-                   id_temp: this.$route.query.id_temp || 0,
-                   country_id: this.$route.query.country_id || 0,
-                   country_id_temp: this.$route.query.country_id || '',
-                   countryList: { data: [], total: 0},
-                   domain: this.$route.query.domain || '',
-                   domain_temp: this.$route.query.domain_temp || '',
-                   email: this.$route.query.email || '',
-                   status: this.$route.query.status || -1,
-                   status_temp:
-                       this.$route.query.status_temp ||
-                       null,
-                   page: this.$route.query.page || 0,
-                   per_page: this.$route.query.per_page || 50,
-                   employee_id: this.$route.query.employee_id || '',
-                   required_email_temp: this.$route.query.required_email_temp || 0,
-                   required_email: this.$route.query.required_email || 0,
-                   sort_key: this.$route.query.sort_key || 'id',
-                   sort_value:
-                       this.$route.query.sort_value || 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
-               },
-               listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
-               extModel: {
-                   id: 0,
-                   domain: '',
-                   country_id: 0,
-                   alexa_created_at: 'N/A',
-                   alexa_rank: 0,
-                   ahrefs_rank: 0,
-                   no_backlinks: 0,
-                   url_rating: 0,
-                   domain_rating: 0,
-                   ref_domains: 0,
-                   organic_keywords: '',
-                   organic_traffic: '',
-                   facebook: '',
-                   email: '',
-                   phone: '',
-                   skype: '',
-                   info: '',
-                   // price: '',
-                   status: '',
-                   // inc_article: 'Yes',
-               },
-               mailInfo: {
-                   tpl: 0,
-                   ids: '',
-                   receiver_text: '',
-                   country: {
-                       id: 0,
-                       name: '',
-                       code: ''
-                   }
-               },
-               modelMail: {
-                   title: '',
-                   content: '',
-                   mail_name: '',
-               },
-               extBackLink: {},
-               extUpdate: {},
-               publisherAdd: {
-                   seller: '',
-                   language_id: '',
-                   inc_article: '',
-                   topic: '',
-                   casino_sites: '',
-                   url: '',
-                   price: '',
-               },
-               isUpdateMode: false,
-               isCrawling: false,
-               isLoadingTable: false,
-               isPopupLoading: false,
-               modalAddBackLink: false,
-               modelBaclink: {
-                   int_domain_id: 0,
-                   ext_name: ''
-               },
-               loadIntDomain: false,
-               allowSending: true,
-               listSortKey: [],
-               listSortValue: [],
-               checkIds: [],
-               showLang: false,
-               isEnableBtn: true,
-               updateStatus: {
-                   seller: '',
-                   status: '',
-               },
-               isQualified: false,
-               formAddUrl: false,
-               topic: [
-                   'Beauty',
-                   'Charity',
-                   'Cooking',
-                   'Education',
-                   'Fashion',
-                   'Finance',
-                   'Games',
-                   'Health',
-                   'History',
-                   'Job',
-                   'Movies & Music',
-                   'News',
-                   'Pet',
-                   'Photograph',
-                   'Real State',
-                   'Religion',
-                   'Shopping',
-                   'Sports',
-                   'Tech',
-                   'Unlisted',
-               ],
-               isEditable: false,
-               existingDomain: {
-                   total: 0,
-                   data:[]
-               },
-               email_to: '',
-               extDomain_id: '',
-               allSelected: false,
+
+import {mapState} from 'vuex';
+import axios from 'axios';
+import DownloadCsv from '@/components/export-csv/Csv.vue'
+import {createTags} from '@johmun/vue-tags-input';
+import VueVirtualTable from 'vue-virtual-table';
+import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+
+export default {
+    components: {
+        DownloadCsv,
+        VueVirtualTable
+    },
+    name: 'ExtList',
+    mixins: [csvTemplateMixin],
+    data() {
+        return {
+            csvExport: {
+                file_csv: 'baclink.csv',
+                data_filled: {
+                    'Ext Domain': 'ext_domain.domain',
+                    'Int Domain': 'int_domain.domain',
+                    'Link': 'link',
+                    'Price': 'price',
+                    'Anchor Text': 'anchor_text',
+                    'Live Date': 'live_date',
+                    'Status': 'status',
+                    'User': 'user.name'
+                },
+                json_meta: [
+                    [{
+                        'key': 'charset',
+                        'value': 'utf-8'
+                    }]
+                ]
+            },
+            dataTable: null,
+            filterModel: {
+                id: this.$route.query.id || 0,
+                id_temp: this.$route.query.id_temp || 0,
+                country_id: this.$route.query.country_id || 0,
+                country_id_temp: this.$route.query.country_id || '',
+                countryList: {data: [], total: 0},
+                domain: this.$route.query.domain || '',
+                domain_temp: this.$route.query.domain_temp || '',
+                email: this.$route.query.email || '',
+                status: this.$route.query.status || -1,
+                status_temp:
+                    this.$route.query.status_temp ||
+                    null,
+                page: this.$route.query.page || 0,
+                per_page: this.$route.query.per_page || 50,
+                employee_id: this.$route.query.employee_id || '',
+                required_email_temp: this.$route.query.required_email_temp || 0,
+                required_email: this.$route.query.required_email || 0,
+                sort_key: this.$route.query.sort_key || 'id',
+                sort_value:
+                    this.$route.query.sort_value || 'desc',
+                alexa_date_upload: {
+                    startDate: null,
+                    endDate: null
+                }
+            },
+            listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
+            extModel: {
+                id: 0,
+                domain: '',
+                country_id: 0,
+                alexa_created_at: 'N/A',
+                alexa_rank: 0,
+                ahrefs_rank: 0,
+                no_backlinks: 0,
+                url_rating: 0,
+                domain_rating: 0,
+                ref_domains: 0,
+                organic_keywords: '',
+                organic_traffic: '',
+                facebook: '',
+                email: [],
+                phone: '',
+                skype: '',
+                info: '',
+                // price: '',
+                status: '',
+                // inc_article: 'Yes',
+            },
+            mailInfo: {
+                tpl: 0,
+                ids: '',
+                receiver_text: '',
+                country: {
+                    id: 0,
+                    name: '',
+                    code: ''
+                }
+            },
+            modelMail: {
+                title: '',
+                content: '',
+                mail_name: '',
+            },
+            extBackLink: {},
+            extUpdate: {
+                email: []
+            },
+            publisherAdd: {
+                seller: '',
+                language_id: '',
+                inc_article: '',
+                topic: '',
+                casino_sites: '',
+                url: '',
+                price: '',
+            },
+            isUpdateMode: false,
+            isCrawling: false,
+            isLoadingTable: false,
+            isPopupLoading: false,
+            modalAddBackLink: false,
+            modelBaclink: {
+                int_domain_id: 0,
+                ext_name: ''
+            },
+            loadIntDomain: false,
+            allowSending: true,
+            listSortKey: [],
+            listSortValue: [],
+            checkIds: [],
+            showLang: false,
+            isEnableBtn: true,
+            updateStatus: {
+                seller: '',
+                status: '',
+            },
+            isQualified: false,
+            formAddUrl: false,
+            topic: [
+                'Beauty',
+                'Charity',
+                'Cooking',
+                'Education',
+                'Fashion',
+                'Finance',
+                'Games',
+                'Health',
+                'History',
+                'Job',
+                'Movies & Music',
+                'News',
+                'Pet',
+                'Photograph',
+                'Real State',
+                'Religion',
+                'Shopping',
+                'Sports',
+                'Tech',
+                'Unlisted',
+            ],
+            isEditable: false,
+            existingDomain: {
+                total: 0,
+                data: []
+            },
+            email_to: '',
+            email_add: '',
+            extDomain_id: '',
+            allSelected: false,
+            separators: [';', ',', '|', ' '],
+            urlEmails: [],
+            tableLoading: false,
+        };
+    },
+    async created() {
+        await this.$store.dispatch('actionCheckAdminCurrentUser', {vue: this});
+        this.updateUserPermission();
+        this.getUserList();
+        this.getListCountriesInt();
+        this.getExtList({
+            params: this.filterModel
+        });
+        this.fillterIntByCountry();
+        this.checkQualified();
+        this.getListExtSeller();
+
+        let seller = this.listSeller.data;
+        if (seller.length === 0) {
+            this.getListSeller();
+        }
+
+        let countries = this.listCountryAll.data;
+        if (countries.length === 0) {
+            this.getListCountries();
+        }
+
+        this.getListSellerTeam();
+        this.getListLanguages();
+    },
+    computed: {
+        ...mapState({
+            user: state => state.storeAuth.currentUser,
+            tableShow: state => state.storeExtDomain.tableExtShowOptions,
+            listExt: state => state.storeExtDomain.listExt,
+            listStatusText: state => state.storeExtDomain.listStatusText,
+            listUser: state => state.storeUser.listUser,
+            messageForms: state => state.storeExtDomain.messageForms,
+            messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
+            listInt: state => state.storeIntDomain.listInt,
+            listBackLink: state => state.storeBackLink.listBackLink,
+            filterBackLink: state => state.storeBackLink.fillter,
+            listCountriesInt: state => state.storeExtDomain.listCountriesInt,
+            listAhrefs: state => state.storeExtDomain.listAhrefs,
+            listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+            listExtSeller: state => state.storeExtDomain.listExtSeller,
+            listSeller: state => state.storePublisher.listSeller,
+            listCountryAll: state => state.storePublisher.listCountryAll,
+            listSellerTeam: state => state.storeExtDomain.listSellerTeam,
+            listLanguages: state => state.storePublisher.listLanguages,
+        }),
+
+        pagination() {
+            return {
+                props: {
+                    callMethod: ""
+                },
+                template: `<div class="paging_simple_numbers">${this.listExt.pagination}</div>`,
+                methods: {
+                    async goToPage(pageNum) {
+                        this.callMethod(pageNum);
+                    }
+                }
+            }
+        },
+        checkSelectIntDomain() {
+            if (this.modelBaclink.int_domain_id == 0) {
+                return true
+            }
+            return false
+        },
+        allowSendMail() {
+            if (this.allowSending = true) {
+                return true;
+            }
+            return false;
+        },
+        openModalBackLink() {
+            if (this.modalAddBackLink = true) {
+                return true
+            }
+            return false
+        },
+
+        tableConfig() {
+            return [
+                {
+                    prop : '_action',
+                    name : 'Action',
+                    actionName : 'actionButtons',
+                    width: 200,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : ' ',
+                    actionName : 'actionCheckbox',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'id',
+                    name : '#',
+                    sortable: true,
+                    width: 75,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Employee',
+                    actionName : 'employeeData',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'created_at',
+                    name : 'Date Upload',
+                    sortable: true,
+                    width: 150,
+                    isHidden: false
+                },
+                {
+                    prop : 'country.name',
+                    name : 'Country',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'domain',
+                    name : 'Domain',
+                    sortable: true,
+                    width: 150,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Email',
+                    actionName : 'emailsData',
+                    width: 200,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Facebook',
+                    actionName : 'facebookData',
+                    width: 200,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Phone',
+                    actionName : 'phoneData',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : 'alexa_rank',
+                    name : 'Alexa Rank',
+                    sortable: true,
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Status',
+                    actionName : 'statusData',
+                    width: 100,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Total Spent',
+                    actionName : 'totalSpentData',
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'ahrefs_rank',
+                    name : 'Ahrefs Rank',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'no_backlinks',
+                    name : 'No Backlinks',
+                    sortable: true,
+                    width: 105,
+                    isHidden: true
+                },
+                {
+                    prop : 'url_rating',
+                    name : 'UR',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'domain_rating',
+                    name : 'DR',
+                    sortable: true,
+                    width: 100,
+                    isHidden: true
+                },
+                {
+                    prop : 'ref_domains',
+                    name : 'Ref Domains',
+                    sortable: true,
+                    width: 105,
+                    isHidden: true
+                },
+                {
+                    prop : '_action',
+                    name : 'Organic Keywords',
+                    actionName : 'organicKwData',
+                    width: 110,
+                    isHidden: false
+                },
+                {
+                    prop : '_action',
+                    name : 'Organic Traffic',
+                    actionName : 'organicTrafficData',
+                    width: 110,
+                    isHidden: false
+                }
+            ];
+        }
+    },
+    mounted() {
+        let that = this;
+        $(this.$refs.modalBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
+        $('.freeze-table').on('click', '.clone-column-table-wrap *[data-action]', function (e) {
+            e.preventDefault();
+            var action = $(this).attr('data-action');
+            var index = $(this).attr('data-index');
+            if (action == "a1") {
+                that.doEditExtIndex(index);
+            } else if (action == "a2") {
+                that.doShowBackLinkIndex(index);
+            } else if (action == "a3") {
+                that.addBackLinkIndex(index);
+            } else if (action == "a4") {
+                that.doSendEmailIndex(index);
+            }
+        });
+        $('.freeze-table').on('click', '.clone-head-table-wrap th', function (e) {
+            e.preventDefault();
+            var index = $(this).attr('data-index');
+            $('#data-table th[data-index=' + index + ']').click();
+            var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
+            $(this).attr('class', m_class);
+        });
+    },
+    methods: {
+        async saveColumnSetting() {
+            let loader = this.$loading.show();
+            this.toggleTableLoading();
+
+            await new Promise(resolve => {
+                setTimeout(resolve, 2000)
+            })
+
+            this.toggleTableLoading();
+            loader.hide();
+        },
+
+        toggleColumn(index, columnState) {
+            this.tableConfig[index].isHidden =
+                !columnState;
+        },
+
+        toggleTableLoading() {
+            if (this.tableLoading) {
+                this.tableLoading = false;
+            } else {
+                this.tableLoading = true;
+            }
+        },
+
+        selectAll() {
+            this.checkIds = [];
+            if (!this.allSelected) {
+                for (var ext in this.listExt.data) {
+                    this.checkIds.push(this.listExt.data[ext]);
+                }
+            }
+        },
+
+        async getListLanguages() {
+            await this.$store.dispatch('actionGetListLanguages');
+        },
+
+        async getListCountries(params) {
+            await this.$store.dispatch('actionGetListCountries', params);
+        },
+
+        showAddURL() {
+            this.formAddUrl = false;
+            if (this.extUpdate.status == 100) {
+                this.formAddUrl = true;
+                this.extUpdate.url = this.extUpdate.domain;
+            }
+        },
+
+        checkSellerAccess(seller_id, in_charge) {
+            if (this.user.role_id == 6 && this.user.isOurs == 0) {
+                let check = false;
+                if (this.user.id == seller_id) {
+                    check = true;
+                }
+
+                if (!in_charge) {
+                    check = true;
+                }
+
+                return check;
+            } else {
+                return true;
+            }
+        },
+
+        async getListSeller(params) {
+            await this.$store.dispatch('actionGetListSeller', params);
+        },
+
+        async getListSellerTeam(params) {
+            await this.$store.dispatch('actionGetListSellerTeam', params);
+        },
+
+        async getListExtSeller() {
+            await this.$store.dispatch('actionGetListExtSeller');
+        },
+
+        checkQualified() {
+            let check = this.updateStatus.status
+            if (check == 100) {
+                this.isQualified = true;
+            } else {
+                this.isQualified = false;
+            }
+        },
+
+        // checkData() {
+        //     this.isEnableBtn = true;
+        //     if( this.$refs.language.value && this.$refs.status.value){
+        //         this.isEnableBtn = false;
+        //     }
+        // },
+
+        checkDataExcel() {
+            this.isEnableBtn = true;
+            if (this.$refs.excel.value) {
+                this.isEnableBtn = false;
+            }
+        },
+
+        doMultipleStatus() {
+            if (this.checkIds.length > 0) {
+                let element = this.$refs.modalMultipleStatus
+                $(element).modal('show')
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+        },
+
+        async deleteAll() {
+            if (this.checkIds.length > 0) {
+                if (confirm("Are you sure you want to delete selected records?")) {
+                    await this.$store.dispatch('actionDeleteExtDomain', {
+                        params: {
+                            id: this.checkIds,
+                        }
+                    });
+
+                    this.getExtList({
+                        params: this.filterModel
+                    });
+                    this.checkIds = []
+                    swal.fire(
+                        'Saved!',
+                        'Successfully Updated.',
+                        'success'
+                    )
+                }
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+
+        },
+
+        async submitUpload() {
+
+            this.isEnableBtn = true;
+            this.formData = new FormData();
+            this.formData.append('file', this.$refs.excel.files[0]);
+            // this.formData.append('language', this.$refs.language.value);
+            // this.formData.append('status', this.$refs.status.value);
+
+            await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
+
+            if (this.messageForms.action === 'uploaded') {
+                // this.getExtList();
+                this.getExtList({
+                    params: this.filterModel
+                });
+
+                this.$refs.excel.value = '';
+                // this.$refs.language.value = '';
+                // this.$refs.status.value = '';
+                this.isEnableBtn = true;
+                this.showLang = false;
+
+                // console.log(this.messageForms.errors.length)
+                let cnt_existing = this.messageForms.errors.length;
+                if (cnt_existing > 0) {
+                    for (let key in this.messageForms.errors) {
+                        this.existingDomain.data.push(this.messageForms.errors[key].message)
+                    }
+
+                    this.existingDomain.total = cnt_existing;
+                    $("#modal-existing-domain").modal('show')
+                }
+
+                console.log(this.existingDomain);
+            }
+        },
+
+        formatPrice(value) {
+            let val = (value / 1).toFixed(0)
+            return val;
+        },
+
+        checkSelected() {
+            this.isDisabled = true;
+            if (this.checkIds.length > 0) {
+                this.isDisabled = false;
+            }
+        },
+
+        async updateUserPermission() {
+            let that = this;
+            await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', {vue: this, userId: that.user.id});
+            this.initFilter();
+        },
+        clearExtModel() {
+            this.extModel = {
+                id: 0,
+                domain: '',
+                country_id: 0,
+                alexa_rank: 0,
+                ahrefs_rank: 0,
+                no_backlinks: 0,
+                url_rating: 0,
+                domain_rating: 0,
+                ref_domains: 0,
+                organic_keywords: '',
+                organic_traffic: '',
+                facebook: '',
+                email: [],
+                phone: '',
+                status: 0
+            }
+        },
+        initFilter() {
+            let that = this;
+            this.user.countries_ext_accessable.forEach(function (country) {
+                that.filterModel.countryList.data.push({id: country.id, name: country.name});
+            });
+            this.listSortKey = {
+                'id': {text: '----'},
+                'alexa_rank': {text: 'Alexa Rank'},
+                'ahrefs_rank': {text: 'Ahrefs Rank'},
+                'no_backlinks': {text: 'No Backlink'},
+                'url_rating': {text: 'URL Rating'},
+                'domain_rating': {text: 'Domain Rating'},
+                'ref_domains': {text: 'Ref Domains'},
+                'organic_keywords': {text: 'Organic keywords'},
+                'organic_traffic': {text: 'Organic traffic'},
+                'total_spent': {text: 'Total Spent'},
             };
-       },
-       async created() {
-           await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-           this.updateUserPermission();
-           this.getUserList();
-           this.getListCountriesInt();
-           this.getExtList({
-               params: this.filterModel
-           });
-           this.fillterIntByCountry();
-           this.checkQualified();
-           this.getListExtSeller();
-
-           let seller = this.listSeller.data;
-           if( seller.length === 0 ){
-               this.getListSeller();
-           }
-
-           let countries = this.listCountryAll.data;
-           if( countries.length === 0 ){
-               this.getListCountries();
-           }
-
-           this.getListSellerTeam();
-           this.getListLanguages();
-       },
-       computed: {
-           ...mapState({
-               user: state => state.storeAuth.currentUser,
-               tableShow: state => state.storeExtDomain.tableExtShowOptions,
-               listExt: state => state.storeExtDomain.listExt,
-               listStatusText: state => state.storeExtDomain.listStatusText,
-               listUser: state => state.storeUser.listUser,
-               messageForms: state => state.storeExtDomain.messageForms,
-               messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
-               listInt: state => state.storeIntDomain.listInt,
-               listBackLink: state => state.storeBackLink.listBackLink,
-               filterBackLink: state => state.storeBackLink.fillter,
-               listCountriesInt: state => state.storeExtDomain.listCountriesInt,
-               listAhrefs: state => state.storeExtDomain.listAhrefs,
-               listMailTemplate: state => state.storeExtDomain.listMailTemplate,
-               listExtSeller: state => state.storeExtDomain.listExtSeller,
-               listSeller: state => state.storePublisher.listSeller,
-               listCountryAll: state => state.storePublisher.listCountryAll,
-               listSellerTeam: state => state.storeExtDomain.listSellerTeam,
-               listLanguages: state => state.storePublisher.listLanguages,
-           }),
-           pagination() {
-               return {
-                   props: {
-                       callMethod: ""
-                   },
-                   template: `<div class="paging_simple_numbers">${this.listExt.pagination}</div>`,
-                   methods: {
-                       async goToPage(pageNum) {
-                           this.callMethod(pageNum);
-                       }
-                   }
-               }
-           },
-           checkSelectIntDomain () {
-               if (this.modelBaclink.int_domain_id == 0) {
-                   return true
-               }
-               return false
-           },
-           allowSendMail() {
-               if (this.allowSending = true) {
-                   return true;
-               }
-               return false;
-           },
-           openModalBackLink() {
-               if (this.modalAddBackLink = true) {
-                   return true
-               }
-               return false
-           },
-       },
-       mounted(){
-           let that = this;
-           $(this.$refs.modalBacklink).on("hidden.bs.modal", this.handleCloseBacklinkModal)
-           $('.freeze-table').on('click', '.clone-column-table-wrap *[data-action]', function(e) {
-               e.preventDefault();
-               var action = $(this).attr('data-action');
-               var index = $(this).attr('data-index');
-               if (action == "a1") {
-                   that.doEditExtIndex(index);
-               } else if (action == "a2") {
-                   that.doShowBackLinkIndex(index);
-               } else if (action == "a3") {
-                   that.addBackLinkIndex(index);
-               } else if (action == "a4") {
-                   that.doSendEmailIndex(index);
-               }
-           });
-           $('.freeze-table').on('click', '.clone-head-table-wrap th', function(e) {
-               e.preventDefault();
-               var index = $(this).attr('data-index');
-               $('#data-table th[data-index=' + index + ']').click();
-               var m_class = $('#data-table th[data-index=' + index + ']').attr('class');
-               $(this).attr('class', m_class);
-           });
-       },
-       methods: {
-
-           selectAll() {
-               this.checkIds = [];
-               if (!this.allSelected) {
-                   for (var ext in this.listExt.data) {
-                       this.checkIds.push(this.listExt.data[ext]);
-                   }
-               }
-           },
-
-           async getListLanguages() {
-               await this.$store.dispatch('actionGetListLanguages');
-           },
-
-           async getListCountries(params) {
-               await this.$store.dispatch('actionGetListCountries', params);
-           },
-
-           showAddURL() {
-               this.formAddUrl = false;
-               if ( this.extUpdate.status == 100 ){
-                   this.formAddUrl = true;
-                   this.extUpdate.url = this.extUpdate.domain;
-               }
-           },
-
-           checkSellerAccess(seller_id) {
-               if( this.user.role_id == 6 && this.user.isOurs == 0 ){
-                   let check = false;
-                   if( this.user.id == seller_id ){
-                       check = true;
-                   }
-                   return check;
-               }else{
-                   return true;
-               }
-           },
-
-           async getListSeller(params) {
-               await this.$store.dispatch('actionGetListSeller', params);
-           },
-
-           async getListSellerTeam(params) {
-               await this.$store.dispatch('actionGetListSellerTeam', params);
-           },
-
-           async getListExtSeller() {
-               await this.$store.dispatch('actionGetListExtSeller');
-           },
-
-           checkQualified() {
-               let check = this.updateStatus.status
-               if( check == 100 ){
-                   this.isQualified = true;
-               }else{
-                   this.isQualified = false;
-               }
-           },
-
-           // checkData() {
-           //     this.isEnableBtn = true;
-           //     if( this.$refs.language.value && this.$refs.status.value){
-           //         this.isEnableBtn = false;
-           //     }
-           // },
-
-           checkDataExcel() {
-               this.isEnableBtn = true;
-               if( this.$refs.excel.value ){
-                   this.isEnableBtn = false;
-               }
-           },
-
-           doMultipleStatus() {
-               if( this.checkIds.length > 0 ){
-                   let element = this.$refs.modalMultipleStatus
-                   $(element).modal('show')
-               }else{
-                   swal.fire(
-                       'No item',
-                       'No selected item',
-                       'error'
-                   )
-               }
-           },
-
-           async deleteAll() {
-               if( this.checkIds.length > 0 ){
-                   if( confirm("Are you sure you want to delete selected records?") ){
-                       await this.$store.dispatch('actionDeleteExtDomain', {
-                           params: {
-                               id: this.checkIds,
-                           }
-                       });
-
-                       this.getExtList();
-                       this.checkIds = []
-                       swal.fire(
-                           'Saved!',
-                           'Successfully Updated.',
-                           'success'
-                       )
-                   }
-               }else{
-                   swal.fire(
-                       'No item',
-                       'No selected item',
-                       'error'
-                       )
-               }
-
-           },
-
-           async submitUpload() {
-
-               this.isEnableBtn = true;
-               this.formData = new FormData();
-               this.formData.append('file', this.$refs.excel.files[0]);
-               // this.formData.append('language', this.$refs.language.value);
-               // this.formData.append('status', this.$refs.status.value);
-
-               await this.$store.dispatch('actionUploadCsvExtDomain', this.formData);
-
-               if (this.messageForms.action === 'uploaded') {
-                   this.getExtList();
-                   this.$refs.excel.value = '';
-                   // this.$refs.language.value = '';
-                   // this.$refs.status.value = '';
-                   this.isEnableBtn = true;
-                   this.showLang = false;
-
-                   // console.log(this.messageForms.errors.length)
-                   let cnt_existing = this.messageForms.errors.length;
-                   if (cnt_existing > 0){
-                       for (let key in this.messageForms.errors ){
-                           this.existingDomain.data.push(this.messageForms.errors[key].message)
-                       }
-
-                       this.existingDomain.total = cnt_existing;
-                       $("#modal-existing-domain").modal('show')
-                   }
-
-                   console.log(this.existingDomain);
-               }
-           },
-
-           formatPrice(value) {
-               let val = (value/1).toFixed(0)
-               return val;
-           },
-
-           checkSelected() {
-               this.isDisabled = true;
-               if( this.checkIds.length > 0 ){
-                   this.isDisabled = false;
-               }
-           },
-
-           async updateUserPermission() {
-               let that = this;
-               await this.$store.dispatch('actionUpdateCurrentUserCountriesExt', { vue: this, userId: that.user.id });
-               this.initFilter();
-           },
-           clearExtModel() {
-               this.extModel = {
-                   id: 0,
-                   domain: '',
-                   country_id: 0,
-                   alexa_rank: 0,
-                   ahrefs_rank: 0,
-                   no_backlinks: 0,
-                   url_rating: 0,
-                   domain_rating: 0,
-                   ref_domains: 0,
-                   organic_keywords: '',
-                   organic_traffic: '',
-                   facebook: '',
-                   email: '',
-                   phone: '',
-                   status: 0
-               }
-           },
-           initFilter() {
-               let that = this;
-               this.user.countries_ext_accessable.forEach(function(country) {
-                   that.filterModel.countryList.data.push({id: country.id, name: country.name});
-               });
-               this.listSortKey = {
-                   'id': { text: '----' },
-                   'alexa_rank': { text: 'Alexa Rank' },
-                   'ahrefs_rank': { text: 'Ahrefs Rank' },
-                   'no_backlinks': { text: 'No Backlink' },
-                   'url_rating': { text: 'URL Rating' },
-                   'domain_rating': { text: 'Domain Rating' },
-                   'ref_domains': { text: 'Ref Domains' },
-                   'organic_keywords': { text: 'Organic keywords' },
-                   'organic_traffic': { text: 'Organic traffic' },
-                   'total_spent': { text: 'Total Spent' },
-               };
-               this.listSortValue = {
-                   'asc': { text: 'Ascending ' },
-                   'desc': { text: 'Descending '}
-               };
-               this.filterModel.sort_value = 'desc';
-           },
-           async getUserList() {
-               await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
-               if (this.user.isAdmin) {
-                   await this.$store.dispatch('actionGetUser', {
-                       vue: this,
-                       params: { params: { full_data: true } },
-                       showMainLoading: false
-                   });
-               }
-           },
-          async getListCountriesInt() {
-               await this.$store.dispatch('getListCountriesInt', { vue: this });
-           },
-           async getExtList(params) {
-               this.isLoadingTable = true;
-               if (this.dataTable != null) {
-                   this.dataTable.destroy();
-               }
-               await this.$store.dispatch('getListExt', params);
-               this.isLoadingTable = false;
-               $('.freeze-table').freezeTable({ 'columnNum': 4, 'shadow': true, 'scrollable': true });
-               this.dataTable = $('#data-table').DataTable({
-                   paging: false,
-                   searching: false,
-                   ordering: true,
-                   bDestroy: true
-               });
-           },
-           async doSearchList() {
-               let that = this;
-               that.filterModel.country_id = that.filterModel.country_id_temp;
-               that.filterModel.status = that.filterModel.status_temp;
-               that.filterModel.domain = that.filterModel.domain_temp;
-               that.filterModel.id = that.filterModel.id_temp;
-               that.filterModel.required_email = that.filterModel.required_email_temp;
-               that.filterModel.sort = that.filterModel.sort_key + ',' +  that.filterModel.sort_value;
-               this.$router.push({
-                   query: that.filterModel,
-               });
-               this.getExtList({
-                   params: {
-                       country_id: that.filterModel.country_id,
-                       status: that.filterModel.status,
-                       domain: that.filterModel.domain,
-                       email: that.filterModel.email,
-                       employee_id: that.filterModel.employee_id,
-                       required_email: that.filterModel.required_email,
-                       id: that.filterModel.id,
-                       sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
-                       per_page: that.filterModel.per_page,
-                       alexa_date_upload:
-                       that.filterModel.alexa_date_upload
-                   }
-               });
-           },
-           async goToPage(pageNum) {
-               let that = this;
-               this.$router.push({
-                   query: that.filterModel,
-               });
-               await this.getExtList({
-                   params: {
-                       page: pageNum,
-                       country_id: that.filterModel.country_id,
-                       status: that.filterModel.status,
-                       domain: that.filterModel.domain,
-                       id: that.filterModel.id,
-                       sort: that.filterModel.sort_key + ',' +  that.filterModel.sort_value,
-                       per_page: that.filterModel.per_page,
-                       employee_id: that.filterModel.employee_id,
-                       required_email: that.filterModel.required_email
-                   }
-               });
-           },
-           async doCrawlExtList() {
-               this.isCrawling = true;
-               var arrayIds = [];
-               if (this.listExt.data) {
-                   for (let key in this.listExt.data) {
-                       arrayIds.push(this.listExt.data[key].id);
-                   }
-               }
-               if (arrayIds.length == 0) return;
-               await this.$store.dispatch('crawlExtList', {
-                   params: {
-                       domain_ids: arrayIds.join(","),
-                       queue: false
-                   }
-               });
-               this.isCrawling = false;
-           },
-           async submitAdd() {
-               let that = this;
-               this.isPopupLoading = true;
-               await this.$store.dispatch('addExt', that.extModel);
-               this.isPopupLoading = false;
-               if (this.messageForms.action === 'saved_ext') {
-                   this.clearExtModel();
-                   //this.listExt.data.pop();
-                   //this.listExt.data.unshift(this.messageForms.obj);
-                   this.doSearchList();
-                   this.isEditable = true;
-               }
-           },
-           convertPrice(price) {
-               return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-           },
-           async submitUpdate() {
-               this.isPopupLoading = true;
-               await this.$store.dispatch('updateExt', {
-                   ext: this.extUpdate,
-                   pub: this.publisherAdd,
-               });
-               this.isPopupLoading = false;
-               if (this.messageForms.action === 'updated_ext') {
-                   for (var index in this.listExt.data) {
-                       if (this.listExt.data[index].id === this.extUpdate.id) {
-                           this.listExt.data[index] = this.extUpdate;
-                           break;
-                       }
-                   }
-               }
-           },
-           async doShowBackLink(extDomain) {
-               this.extBackLink = extDomain;
-               this.filterBackLink.ext= extDomain.id;
-               this.filterBackLink.full_data = true;
-               this.isPopupLoading = true;
-               await this.$store.dispatch('actionGetBackLink', {
-                   vue: this,
-                   params: this.filterBackLink
-               });
-               this.isPopupLoading = false;
-           },
-
-           async doShowBackLinkIndex(index) {
-               var extDomain = this.listExt.data[index];
-               this.doShowBackLinkIndex(extDomain);
-           },
-
-           doAddExt() {
-               this.$store.dispatch('clearMessageForm');
-           },
-
-           doEditExt(extDomain) {
-               this.formAddUrl = true;
-
-               this.$store.dispatch('clearMessageForm');
-               this.extUpdate = JSON.parse(JSON.stringify(extDomain))
-
-               if (this.extUpdate.status != 100){
-                   this.formAddUrl = false;
-               }
-
-               this.getPublisherInfo(this.extUpdate.domain).then(res => {
-                   var result = res.data
-                   if (res.data.success == true){
-                       this.publisherAdd.seller = result.data.user_id
-                       this.publisherAdd.inc_article = result.data.inc_article
-                       this.publisherAdd.url = result.data.url
-                       this.publisherAdd.language_id = result.data.language_id
-                       this.publisherAdd.topic = result.data.topic
-                       this.publisherAdd.casino_sites = result.data.casino_sites
-                       this.publisherAdd.price = result.data.price
-
-                       this.isEditable = true;
-                   } else {
-                       this.publisherAdd.seller = ''
-                       this.publisherAdd.inc_article = ''
-                       this.publisherAdd.url = this.extUpdate.domain;
-                       this.publisherAdd.language_id = ''
-                       this.publisherAdd.topic = ''
-                       this.publisherAdd.casino_sites = ''
-                       this.publisherAdd.price = ''
-
-                       this.isEditable = false;
-                   }
-
-               });
-
-           },
-
-           async getPublisherInfo(domain) {
-               try {
-                   const response = await axios.get('api/get-publisher-info', {
-                                           params: {
-                                               url: domain,
-                                           }
-                                       });
-                   return response;
-               } catch (error) {
-                   console.error(error);
-               }
-           },
-
-           doEditExtIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.doEditExt(extDomain);
-           },
-
-           hasBacklink(status) {
-               if (status == 70) {
-                   return true
-               }
-               return false
-           },
-           async addBackLink(ext) {
-               this.modalAddBackLink = true
-               this.modelBaclink.ext_domain_id = ext.id
-               this.modelBaclink.ext_name = ext.domain
-               let element = this.$refs.modalBacklink
-               $(element).modal('show')
-           },
-           async addBackLinkIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.addBackLink(extDomain);
-           },
-           async fillterIntByCountry (event) {
-               if (typeof event == 'undefined') {
-                   var countryID = 0
-               } else {
-                   var countryID = event.target.value
-               }
-               this.loadIntDomain =  true
-               await this.$store.dispatch('getListInt', {
-                   params: {
-                       country_id: countryID,
-                       full_page: true
-                   }
-               });
-               this.loadIntDomain = false
-           },
-           async submitAddBacklink () {
-               await this.$store.dispatch('actionSaveBacklink', {
-                   params: this.modelBaclink
-               })
-
-               if (this.messageForms.action === 'saved_backlink') {
-                   this.closeModalBacklink()
-               }
-           },
-           handleCloseBacklinkModal () {
-               this.modelBaclink = {
-                   int_domain_id: 0,
-                   ext_name: ''
-               }
-               this.$store.dispatch('clearMessageBacklinkForm')
-           },
-           closeModalBacklink() {
-               let element = this.$refs.modalBacklink
-               $(element).modal('hide')
-           },
-           closeModalEmail() {
-               let element = this.$refs.modalEmail
-               $(element).modal('hide')
-           },
-           async getAhrefs() {
-               var listInvalid = this.checkIds.some(ext => ext.status != 30);
-               if (listInvalid === true) {
-                   alert('List invalid: status diff with GotContacts');
-                   return;
-               }
-               var listIds = this.checkIds.map(ext => ext.id).join(',');
-               this.isLoadingTable = true;
-               await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
-               this.isLoadingTable = false;
-               var that = this;
-               this.checkIds.forEach(item => {
-                   if (that.listAhrefs.hasOwnProperty(item.id)) {
-                       let itemAherf = that.listAhrefs[item.id];
-                       item.ahrefs_rank = itemAherf.ahrefs_rank;
-                       item.no_backlinks = itemAherf.no_backlinks;
-                       item.url_rating = itemAherf.url_rating;
-                       item.domain_rating = itemAherf.domain_rating;
-                       item.organic_keywords = itemAherf.organic_keywords;
-                       item.organic_traffic = itemAherf.organic_traffic;
-                       item.ref_domains = itemAherf.ref_domains;
-                       item.status = itemAherf.status;
-                   }
-               });
-           },
-           async getAhrefsById(extId, extStatus) {
-               // if (extStatus != 30) {
-               //     alert('List invalid: status diff with GotContacts');
-               //     return;
-               // }
-               var listIds = extId;
-               this.isLoadingTable = true;
-               await this.$store.dispatch('getListAhrefs', { params: { domain_ids: listIds } });
-               this.isLoadingTable = false;
-               var that = this;
-               this.listExt.data.forEach(item => {
-                   if (that.listAhrefs.hasOwnProperty(item.id)) {
-                       let itemAherf = that.listAhrefs[item.id];
-                       item.ahrefs_rank = itemAherf.ahrefs_rank;
-                       item.no_backlinks = itemAherf.no_backlinks;
-                       item.url_rating = itemAherf.url_rating;
-                       item.domain_rating = itemAherf.domain_rating;
-                       item.organic_keywords = itemAherf.organic_keywords;
-                       item.organic_traffic = itemAherf.organic_traffic;
-                       item.ref_domains = itemAherf.ref_domains;
-                       item.status = itemAherf.status;
-                   }
-               });
-           },
-           openModalEmailElem() {
-               let element = this.$refs.modalEmail;
-               $(element).modal('show');
-               this.allowSending = true;
-           },
-
-           doSendEmail(ext, event) {
-               this.$store.dispatch('clearMessageForm');
-
-               if (ext == null) {
-                   if (this.checkIds.length == 0) {
-                        swal.fire('No Selected', 'Please select first', 'error');
-
-                   } else if(this.checkIds.length > 10) {
-                       swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
-                   } else {
-                       this.openModalEmailElem();
-                       var emails = [];
-                       for (var index in this.checkIds) {
-                           if (this.checkIds[index].email != "") {
-                               emails.push(this.checkIds[index].email)
-                           }
-                       }
-                       this.email_to = emails.join('|')
-                   }
-                   // console.log(this.checkIds)
-                   // return false;
-               }
-
-               if (ext != null) {
-                   if (ext.status == 50) {
-                       swal.fire('Invalid', 'This is Already Contacted', 'error')
-                   }
-                   else if (ext.email == "") {
-                       swal.fire('No email', 'Please check if with email', 'error' )
-                   }
-                   else {
-                       this.openModalEmailElem();
-                       this.email_to = ext.email;
-                       this.extDomain_id = ext.id;
-                   }
-               }
-
-           },
-
-           getStatus() {
-               axios.get('/api/mail/status')
-                   .then((res) => {
-                       console.log(res.data)
-                   })
-           },
-
-
-           async submitSendMail() {
-               this.allowSending = false;
-               this.isPopupLoading = true;
-
-               await this.$store.dispatch('sendMailWithMailgun',{
-                   cc: '',
-                   email: this.email_to,
-                   title: this.modelMail.title,
-                   content: this.modelMail.content,
-                   attachment: 'undefined',
-               })
-
-               this.modelMail = {
-                   title: '',
-                   content: '',
-                   mail_name: '',
-               }
-
-               // this.getStatus();
-               let result = true;
-               if( this.extDomain_id == '' ) {
-                   result = false;
-                   this.updateStatus.status = 50;
-               }
-
-               this.doUpdateMultipleStatus(result, this.extDomain_id);
-               $("#modal-email").modal('hide')
-
-               this.isPopupLoading = false;
-           },
-
-
-           async doUpdateMultipleStatus(is_sending, id) {
-               await this.$store.dispatch('actionUpdateMultipleStatus', {
-                   id: is_sending ? id:this.checkIds,
-                   seller: this.updateStatus.seller,
-                   status: is_sending ? 50:this.updateStatus.status,
-               });
-
-               if( this.messageForms.action == 'updated' ){
-                   let element = this.$refs.modalMultipleStatus
-                   $(element).modal('hide')
-
-                   // this.getExtList();
-
-                   if(is_sending) {
-                       let obj = this.listExt.data.findIndex(o => o.id === id);
-                       this.listExt.data[obj].status = 50;
-                   } else {
-                       for(var index in this.checkIds) {
-                           var id = this.checkIds[index].id
-                           var obj = this.listExt.data.findIndex(o => o.id === id);
-                           this.listExt.data[obj].status = this.updateStatus.status;
-                       }
-                   }
-
-                   this.checkIds = []
-                   this.updateStatus.seller = '';
-                   this.updateStatus.status = '';
-                   let message = is_sending ? 'Email send' : 'Successfully Updated'
-                   swal.fire(
-                       'Done',
-                       message,
-                       'success'
-                   )
-               }
-           },
-
-
-           // async doSendEmail(ext, event) {
-           //     console.log(event);
-           //     this.$store.dispatch('clearMessageForm');
-           //     var ids = '';
-
-           //     if(ext != null) {
-           //         if (ext === -1) {
-           //             ids = this.listExt.data.map(item => item.id).join(",");
-           //             var ctemp = -1;
-           //             if (this.listExt.data.some(item => {
-           //                 if (ctemp === -1) ctemp = item.country;
-           //                 return item.country.id !== ctemp.id;
-           //             })) {
-           //                 alert("can't not handle with multiple countries");
-           //                 return;
-           //             }
-           //             if (this.listExt.data.some(item => {
-           //                 return (item.status != 30 && item.status != 40);
-           //             })) {
-           //                 alert("can't not handle with external domain not have contacts or was contacted");
-           //                 return;
-           //             }
-           //             if (this.listExt.data.some(item => {
-           //                 return (item.email === '' || item.email.split('|').length > 1);
-           //             })) {
-           //                 alert("can't not handle with external domain not have email or multiple emails");
-           //                 return;
-           //             }
-           //             this.mailInfo.ids = ids;
-           //             this.mailInfo.receiver_text = " all list";
-           //             this.mailInfo.country = ctemp;
-           //             this.fetchTemplateMail(this.mailInfo.country.id);
-           //             this.openModalEmailElem();
-           //             return;
-           //         }
-           //         if (ext.status != 30 && ext.status != 40) {
-           //             alert("can't not handle with external domain not have contacts or was contacted");
-           //             return;
-           //         }
-           //         if (ext.email === '' || ext.email.split('|').length > 1) {
-           //             alert("can't not handle with external domain not have email or multiple emails");
-           //             return;
-           //         }
-
-           //         this.mailInfo.ids = ext.id;
-           //         this.mailInfo.receiver_text = ext.domain;
-           //         this.mailInfo.country = ext.country;
-           //         this.fetchTemplateMail(this.mailInfo.country.id);
-           //         this.openModalEmailElem();
-           //     }
-
-
-           //     if(ext == null) {
-           //         var ext_id = [];
-           //         var ext_domain = [];
-           //         var ext_country = [];
-
-           //         var i =0;
-           //         this.checkIds.forEach(function(entry) {
-           //             if (entry.status != 30 && entry.status != 40) {
-           //                 alert("can't not handle with external domain not have contacts or was contacted");
-           //                 return;
-           //             }
-           //             if (entry.email === '' || entry.email.split('|').length > 1) {
-           //                 alert("can't not handle with external domain not have email or multiple emails");
-           //                 return;
-           //             }
-
-           //             ext_id[i] = entry.id;
-           //             ext_domain[i] = entry.domain;
-           //             ext_country[i] = entry.country;
-
-           //             i++;
-           //         });
-
-           //         ext_id = ext_id.join(", ");
-           //         ext_domain = ext_domain.join(", ");
-
-           //         this.mailInfo.ids = ext_id;
-           //         this.mailInfo.receiver_text = ext_domain;
-           //         this.mailInfo.country =ext_country[0];
-           //         this.fetchTemplateMail(this.mailInfo.country.id);
-           //         this.openModalEmailElem();
-           //     }
-           // },
-
-
-           async doSendEmailIndex(index) {
-               let extDomain = this.listExt.data[index];
-               this.doSendEmail(extDomain);
-           },
-           async fetchTemplateMail(countryId) {
-               this.isPopupLoading = true;
-               await this.$store.dispatch('getListMails', { params: { country_id: countryId, full_page: 1} });
-               this.isPopupLoading = false;
-           },
-           async doChangeEmailTemplate() {
-               let that = this;
-               this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
-           },
-           async doChangeEmailCountry() {
-               let that = this;
-               this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
-               this.fetchTemplateMail(this.mailInfo.country.id);
-           },
-
-           objectToArray(ob) {
-               let arr = [];
-               Object.keys(ob).forEach((key) => {
-                   ob[key]['id'] = key;
-                   arr.push(ob[key]);
-               });
-
-               return arr;
-           },
-
-           clearSearch() {
-               this.filterModel = {
-                   id: 0,
-                   id_temp: 0,
-                   country_id: 0,
-                   country_id_temp: '',
-                   countryList: { data: [], total: 0},
-                   domain: '',
-                   domain_temp: '',
-                   email: '',
-                   status: -1,
-                   status_temp: null,
-                   page: 0,
-                   per_page: 50,
-                   employee_id: '',
-                   required_email_temp: 0,
-                   required_email: 0,
-                   sort_key: 'id',
-                   sort_value: 'desc',
-                   alexa_date_upload: {
-                       startDate : null,
-                       endDate: null
-                   }
-               };
-
-               this.getExtList({
-                   params: this.filterModel
-               });
-
-               this.$router.replace({'query': null});
-           },
-
-           // async submitSendMail() {
-           //     this.allowSending = false;
-           //     this.isPopupLoading = true;
-           //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
-           //     this.isPopupLoading = false;
-           // }
-       },
-       components: {
-           DownloadCsv
-       }
-   }
+            this.listSortValue = {
+                'asc': {text: 'Ascending '},
+                'desc': {text: 'Descending '}
+            };
+            this.filterModel.sort_value = 'desc';
+        },
+        async getUserList() {
+            await this.$store.dispatch('actionCheckAdminCurrentUser', {vue: this});
+            if (this.user.isAdmin) {
+                await this.$store.dispatch('actionGetUser', {
+                    vue: this,
+                    params: {params: {full_data: true}},
+                    showMainLoading: false
+                });
+            }
+        },
+        async getListCountriesInt() {
+            await this.$store.dispatch('getListCountriesInt', {vue: this});
+        },
+        async getExtList(params) {
+            let loader = this.$loading.show();
+            this.isLoadingTable = true;
+            await this.$store.dispatch('getListExt', params);
+            this.isLoadingTable = false;
+            $('.freeze-table').freezeTable({'columnNum': 4, 'shadow': true, 'scrollable': true});
+            loader.hide();
+        },
+        async doSearchList() {
+            let that = this;
+            that.filterModel.country_id = that.filterModel.country_id_temp;
+            that.filterModel.status = that.filterModel.status_temp;
+            that.filterModel.domain = that.filterModel.domain_temp;
+            that.filterModel.id = that.filterModel.id_temp;
+            that.filterModel.required_email = that.filterModel.required_email_temp;
+            that.filterModel.sort = that.filterModel.sort_key + ',' + that.filterModel.sort_value;
+            this.$router.push({
+                query: that.filterModel,
+            });
+            this.getExtList({
+                params: {
+                    country_id: that.filterModel.country_id,
+                    status: that.filterModel.status,
+                    domain: that.filterModel.domain,
+                    email: that.filterModel.email,
+                    employee_id: that.filterModel.employee_id,
+                    required_email: that.filterModel.required_email,
+                    id: that.filterModel.id,
+                    sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
+                    per_page: that.filterModel.per_page,
+                    alexa_date_upload:
+                    that.filterModel.alexa_date_upload
+                }
+            });
+        },
+        async goToPage(pageNum) {
+            let that = this;
+            this.$router.push({
+                query: that.filterModel,
+            });
+            await this.getExtList({
+                params: {
+                    page: pageNum,
+                    country_id: that.filterModel.country_id,
+                    status: that.filterModel.status,
+                    domain: that.filterModel.domain,
+                    id: that.filterModel.id,
+                    sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
+                    per_page: that.filterModel.per_page,
+                    employee_id: that.filterModel.employee_id,
+                    required_email:
+                    that.filterModel.required_email,
+                    alexa_date_upload:
+                    that.filterModel.alexa_date_upload
+                }
+            });
+        },
+        async doCrawlExtList() {
+            this.isCrawling = true;
+            var arrayIds = [];
+            if (this.listExt.data) {
+                for (let key in this.listExt.data) {
+                    arrayIds.push(this.listExt.data[key].id);
+                }
+            }
+            if (arrayIds.length == 0) return;
+            await this.$store.dispatch('crawlExtList', {
+                params: {
+                    domain_ids: arrayIds.join(","),
+                    queue: false
+                }
+            });
+            this.isCrawling = false;
+        },
+        async submitAdd() {
+            let that = this;
+            this.isPopupLoading = true;
+            await this.$store.dispatch('addExt', that.extModel);
+            this.isPopupLoading = false;
+            if (this.messageForms.action === 'saved_ext') {
+                this.clearExtModel();
+                //this.listExt.data.pop();
+                //this.listExt.data.unshift(this.messageForms.obj);
+                this.doSearchList();
+                this.isEditable = true;
+            }
+        },
+        convertPrice(price) {
+            return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        },
+        async submitUpdate() {
+            let loader = this.$loading.show();
+            this.toggleTableLoading();
+            this.isPopupLoading = true;
+            await this.$store.dispatch('updateExt', {
+                ext: this.extUpdate,
+                pub: this.publisherAdd,
+            });
+            this.isPopupLoading = false;
+            if (this.messageForms.action === 'updated_ext') {
+                console.log(this.extUpdate)
+                for (var index in this.listExt.data) {
+                    if (this.listExt.data[index].id === this.extUpdate.id) {
+                        this.listExt.data[index] = this.extUpdate;
+                        break;
+                    }
+                }
+            }
+            this.toggleTableLoading();
+            loader.hide();
+        },
+        async doShowBackLink(extDomain) {
+            this.extBackLink = extDomain;
+            this.filterBackLink.ext = extDomain.id;
+            this.filterBackLink.full_data = true;
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionGetBackLink', {
+                vue: this,
+                params: this.filterBackLink
+            });
+            this.isPopupLoading = false;
+        },
+
+        async doShowBackLinkIndex(index) {
+            var extDomain = this.listExt.data[index];
+            this.doShowBackLinkIndex(extDomain);
+        },
+
+        doAddExt() {
+            this.$store.dispatch('clearMessageForm');
+        },
+
+        doEditExt(extDomain) {
+            this.formAddUrl = true;
+            this.extUpdate.email = [];
+
+            this.$store.dispatch('clearMessageForm');
+            this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+            this.extUpdate.email = (this.extUpdate.email === null || this.extUpdate.email === '') ? [] : this.extUpdate.email;
+
+            let emails = [];
+
+            if (typeof(this.extUpdate.email) === "string") {
+                emails = this.extUpdate.email.split('|')
+            } else {
+                emails = this.extUpdate.email.map(a => a.text);
+            }
+
+            this.extUpdate.email = createTags(emails)
+
+            if (this.extUpdate.status != 100) {
+                this.formAddUrl = false;
+            }
+
+            this.getPublisherInfo(this.extUpdate.domain).then(res => {
+                var result = res.data
+                if (res.data.success == true) {
+                    this.publisherAdd.seller = result.data.user_id
+                    this.publisherAdd.inc_article = result.data.inc_article
+                    this.publisherAdd.url = result.data.url
+                    this.publisherAdd.language_id = result.data.language_id
+                    this.publisherAdd.topic = result.data.topic
+                    this.publisherAdd.casino_sites = result.data.casino_sites
+                    this.publisherAdd.price = result.data.price
+
+                    this.isEditable = true;
+                } else {
+                    this.publisherAdd.seller = ''
+                    this.publisherAdd.inc_article = ''
+                    this.publisherAdd.url = this.extUpdate.domain;
+                    this.publisherAdd.language_id = ''
+                    this.publisherAdd.topic = ''
+                    this.publisherAdd.casino_sites = ''
+                    this.publisherAdd.price = ''
+
+                    this.isEditable = false;
+                }
+
+            });
+
+            $('#modal-update').modal('show');
+
+        },
+
+        async getPublisherInfo(domain) {
+            try {
+                const response = await axios.get('api/get-publisher-info', {
+                    params: {
+                        url: domain,
+                    }
+                });
+                return response;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        doEditExtIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.doEditExt(extDomain);
+        },
+
+        hasBacklink(status) {
+            if (status == 70) {
+                return true
+            }
+            return false
+        },
+        async addBackLink(ext) {
+            this.modalAddBackLink = true
+            this.modelBaclink.ext_domain_id = ext.id
+            this.modelBaclink.ext_name = ext.domain
+            let element = this.$refs.modalBacklink
+            $(element).modal('show')
+        },
+        async addBackLinkIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.addBackLink(extDomain);
+        },
+        async fillterIntByCountry(event) {
+            if (typeof event == 'undefined') {
+                var countryID = 0
+            } else {
+                var countryID = event.target.value
+            }
+            this.loadIntDomain = true
+            await this.$store.dispatch('getListInt', {
+                params: {
+                    country_id: countryID,
+                    full_page: true
+                }
+            });
+            this.loadIntDomain = false
+        },
+        async submitAddBacklink() {
+            await this.$store.dispatch('actionSaveBacklink', {
+                params: this.modelBaclink
+            })
+
+            if (this.messageForms.action === 'saved_backlink') {
+                this.closeModalBacklink()
+            }
+        },
+        handleCloseBacklinkModal() {
+            this.modelBaclink = {
+                int_domain_id: 0,
+                ext_name: ''
+            }
+            this.$store.dispatch('clearMessageBacklinkForm')
+        },
+        closeModalBacklink() {
+            let element = this.$refs.modalBacklink
+            $(element).modal('hide')
+        },
+        closeModalEmail() {
+            let element = this.$refs.modalEmail
+            $(element).modal('hide')
+        },
+        async getAhrefs() {
+            // var listInvalid = this.checkIds.some(ext => ext.status != 30);
+            // if (listInvalid === true) {
+            //     alert('List invalid: status diff with GotContacts');
+            //     return;
+            // }
+            let listIds = this.checkIds.map(ext => ext.id).join(',');
+            this.isLoadingTable = true;
+            await this.$store.dispatch('getListAhrefs', {params: {domain_ids: listIds}});
+            this.isLoadingTable = false;
+            let that = this;
+
+            if (that.listAhrefs.length !== 0) {
+
+                this.checkIds.forEach(item => {
+                    if (that.listAhrefs.hasOwnProperty(item.id)) {
+                        let itemAherf = that.listAhrefs[item.id];
+                        item.ahrefs_rank = itemAherf.ahrefs_rank;
+                        item.no_backlinks = itemAherf.no_backlinks;
+                        item.url_rating = itemAherf.url_rating;
+                        item.domain_rating = itemAherf.domain_rating;
+                        item.organic_keywords = itemAherf.organic_keywords;
+                        item.organic_traffic = itemAherf.organic_traffic;
+                        item.ref_domains = itemAherf.ref_domains;
+                        item.status = itemAherf.status;
+                    }
+                });
+
+                swal.fire(
+                    'Success',
+                    'Url Prospect Updated',
+                    'success'
+                )
+            } else {
+                swal.fire(
+                    'Error',
+                    'Get Ahref Failed',
+                    'error'
+                )
+            }
+        },
+        async getAhrefsById(extId, extStatus) {
+            // if (extStatus != 30) {
+            //     alert('List invalid: status diff with GotContacts');
+            //     return;
+            // }
+            var listIds = extId;
+            this.isLoadingTable = true;
+            await this.$store.dispatch('getListAhrefs', {params: {domain_ids: listIds}});
+            this.isLoadingTable = false;
+            var that = this;
+
+            if (that.listAhrefs.length !== 0) {
+                this.listExt.data.forEach(item => {
+                    if (that.listAhrefs.hasOwnProperty(item.id)) {
+                        let itemAherf = that.listAhrefs[item.id];
+                        item.ahrefs_rank = itemAherf.ahrefs_rank;
+                        item.no_backlinks = itemAherf.no_backlinks;
+                        item.url_rating = itemAherf.url_rating;
+                        item.domain_rating = itemAherf.domain_rating;
+                        item.organic_keywords = itemAherf.organic_keywords;
+                        item.organic_traffic = itemAherf.organic_traffic;
+                        item.ref_domains = itemAherf.ref_domains;
+                        item.status = itemAherf.status;
+                    }
+                });
+
+                swal.fire(
+                    'Success',
+                    'Url Prospect Updated',
+                    'success'
+                )
+            } else {
+                swal.fire(
+                    'Error',
+                    'Get Ahref Failed',
+                    'error'
+                )
+            }
+        },
+        openModalEmailElem() {
+            let element = this.$refs.modalEmail;
+            $(element).modal('show');
+            this.allowSending = true;
+        },
+
+        doSendEmail(ext, event) {
+            this.$store.dispatch('clearMessageForm');
+            this.urlEmails = [];
+
+            if (ext == null) {
+                if (this.checkIds.length == 0) {
+                    swal.fire('No Selected', 'Please select first', 'error');
+
+                } else if (this.checkIds.length > 10) {
+                    swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                } else {
+                    let err = this.checkIds.some(function(items){
+                        return items.status == 50 | items.email == "" | items.email == null;
+                    });
+
+                    if(err) {
+                        swal.fire(
+                            'Invalid Selection',
+                            'Some of the selected items may either be contacted already or have no email address',
+                            'error'
+                        );
+                    } else {
+                        this.openModalEmailElem();
+                        let emails = [];
+                        for (let index in this.checkIds) {
+                            if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
+                                if (typeof(this.checkIds[index].email) === "string") {
+                                    emails.push(this.checkIds[index].email.split('|'))
+                                } else {
+                                    emails.push(this.checkIds[index].email.map(a => a.text))
+                                }
+                            }
+                        }
+
+                        this.urlEmails = createTags(emails.flat())
+
+                        // this.email_to = emails.join('|')
+                    }
+                }
+                // console.log(this.checkIds)
+                // return false;
+            }
+
+            if (ext != null) {
+                if (ext.status == 50) {
+                    swal.fire('Invalid', 'This is Already Contacted', 'error')
+                } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
+                    swal.fire('No email', 'Please check if with email', 'error')
+                } else {
+                    this.openModalEmailElem();
+                    // this.email_to = ext.email;
+                    this.extDomain_id = ext.id;
+
+                    let emails = [];
+
+                    if (typeof(ext.email) === "string") {
+                        emails = ext.email.split('|')
+                    } else {
+                        emails = ext.email.map(a => a.text);
+                    }
+
+                    this.urlEmails = emails ? createTags(emails) : [];
+                }
+            }
+
+        },
+
+        getStatus() {
+            axios.get('/api/mail/status')
+                .then((res) => {
+                    console.log(res.data)
+                })
+        },
+
+
+        async submitSendMail() {
+            this.allowSending = false;
+            this.isPopupLoading = true;
+
+            await this.$store.dispatch('sendMailWithMailgun', {
+                cc: '',
+                email: this.urlEmails,
+                title: this.modelMail.title,
+                content: this.modelMail.content,
+                attachment: 'undefined',
+            })
+
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action == 'send_mail') {
+                this.modelMail = {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                }
+
+                // this.getStatus();
+                let result = true;
+                if (this.extDomain_id == '') {
+                    result = false;
+                    this.updateStatus.status = 50;
+                }
+
+                this.doUpdateMultipleStatus(result, this.extDomain_id);
+                $("#modal-email").modal('hide')
+            } else {
+                swal.fire(
+                    'Error',
+                    'There are some errors while sending the email',
+                    'error'
+                )
+                this.allowSending = true;
+            }
+        },
+
+
+        async doUpdateMultipleStatus(is_sending, id) {
+            await this.$store.dispatch('actionUpdateMultipleStatus', {
+                id: is_sending ? id : this.checkIds,
+                seller: this.updateStatus.seller,
+                status: is_sending ? 50 : this.updateStatus.status,
+            });
+
+            if (this.messageForms.action == 'updated') {
+                let element = this.$refs.modalMultipleStatus
+                $(element).modal('hide')
+
+                // this.getExtList();
+
+                if (is_sending) {
+                    let obj = this.listExt.data.findIndex(o => o.id === id);
+                    this.listExt.data[obj].status = 50;
+                } else {
+                    for (var index in this.checkIds) {
+                        var id = this.checkIds[index].id
+                        var obj = this.listExt.data.findIndex(o => o.id === id);
+                        this.listExt.data[obj].status = this.updateStatus.status;
+                    }
+                }
+
+                this.checkIds = []
+                this.updateStatus.seller = '';
+                this.updateStatus.status = '';
+                let message = is_sending ? 'Email send' : 'Successfully Updated'
+                swal.fire(
+                    'Done',
+                    message,
+                    'success'
+                )
+            }
+        },
+
+
+        // async doSendEmail(ext, event) {
+        //     console.log(event);
+        //     this.$store.dispatch('clearMessageForm');
+        //     var ids = '';
+
+        //     if(ext != null) {
+        //         if (ext === -1) {
+        //             ids = this.listExt.data.map(item => item.id).join(",");
+        //             var ctemp = -1;
+        //             if (this.listExt.data.some(item => {
+        //                 if (ctemp === -1) ctemp = item.country;
+        //                 return item.country.id !== ctemp.id;
+        //             })) {
+        //                 alert("can't not handle with multiple countries");
+        //                 return;
+        //             }
+        //             if (this.listExt.data.some(item => {
+        //                 return (item.status != 30 && item.status != 40);
+        //             })) {
+        //                 alert("can't not handle with external domain not have contacts or was contacted");
+        //                 return;
+        //             }
+        //             if (this.listExt.data.some(item => {
+        //                 return (item.email === '' || item.email.split('|').length > 1);
+        //             })) {
+        //                 alert("can't not handle with external domain not have email or multiple emails");
+        //                 return;
+        //             }
+        //             this.mailInfo.ids = ids;
+        //             this.mailInfo.receiver_text = " all list";
+        //             this.mailInfo.country = ctemp;
+        //             this.fetchTemplateMail(this.mailInfo.country.id);
+        //             this.openModalEmailElem();
+        //             return;
+        //         }
+        //         if (ext.status != 30 && ext.status != 40) {
+        //             alert("can't not handle with external domain not have contacts or was contacted");
+        //             return;
+        //         }
+        //         if (ext.email === '' || ext.email.split('|').length > 1) {
+        //             alert("can't not handle with external domain not have email or multiple emails");
+        //             return;
+        //         }
+
+        //         this.mailInfo.ids = ext.id;
+        //         this.mailInfo.receiver_text = ext.domain;
+        //         this.mailInfo.country = ext.country;
+        //         this.fetchTemplateMail(this.mailInfo.country.id);
+        //         this.openModalEmailElem();
+        //     }
+
+
+        //     if(ext == null) {
+        //         var ext_id = [];
+        //         var ext_domain = [];
+        //         var ext_country = [];
+
+        //         var i =0;
+        //         this.checkIds.forEach(function(entry) {
+        //             if (entry.status != 30 && entry.status != 40) {
+        //                 alert("can't not handle with external domain not have contacts or was contacted");
+        //                 return;
+        //             }
+        //             if (entry.email === '' || entry.email.split('|').length > 1) {
+        //                 alert("can't not handle with external domain not have email or multiple emails");
+        //                 return;
+        //             }
+
+        //             ext_id[i] = entry.id;
+        //             ext_domain[i] = entry.domain;
+        //             ext_country[i] = entry.country;
+
+        //             i++;
+        //         });
+
+        //         ext_id = ext_id.join(", ");
+        //         ext_domain = ext_domain.join(", ");
+
+        //         this.mailInfo.ids = ext_id;
+        //         this.mailInfo.receiver_text = ext_domain;
+        //         this.mailInfo.country =ext_country[0];
+        //         this.fetchTemplateMail(this.mailInfo.country.id);
+        //         this.openModalEmailElem();
+        //     }
+        // },
+
+
+        async doSendEmailIndex(index) {
+            let extDomain = this.listExt.data[index];
+            this.doSendEmail(extDomain);
+        },
+        async fetchTemplateMail(countryId) {
+            this.isPopupLoading = true;
+            await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
+            this.isPopupLoading = false;
+        },
+        async doChangeEmailTemplate() {
+            let that = this;
+            this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+        },
+        async doChangeEmailCountry() {
+            let that = this;
+            this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+            this.fetchTemplateMail(this.mailInfo.country.id);
+        },
+
+        objectToArray(ob) {
+            let arr = [];
+            Object.keys(ob).forEach((key) => {
+                ob[key]['id'] = key;
+                arr.push(ob[key]);
+            });
+
+            return arr;
+        },
+
+        clearSearch() {
+            this.filterModel = {
+                id: 0,
+                id_temp: 0,
+                country_id: 0,
+                country_id_temp: '',
+                countryList: {data: [], total: 0},
+                domain: '',
+                domain_temp: '',
+                email: '',
+                status: -1,
+                status_temp: null,
+                page: 0,
+                per_page: 50,
+                employee_id: '',
+                required_email_temp: 0,
+                required_email: 0,
+                sort_key: 'id',
+                sort_value: 'desc',
+                alexa_date_upload: {
+                    startDate: null,
+                    endDate: null
+                }
+            };
+
+            this.getExtList({
+                params: this.filterModel
+            });
+
+            this.$router.replace({'query': null});
+        },
+
+        // async submitSendMail() {
+        //     this.allowSending = false;
+        //     this.isPopupLoading = true;
+        //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
+        //     this.isPopupLoading = false;
+        // }
+
+        checkEmailValidationError(error){
+            let obj = error;
+            return Object.keys(obj)
+                .filter(function (er){
+                    return er.includes('email.');
+                })
+                .map(function(key) {
+                    return obj[key];
+                })
+                .flat();
+        },
+
+        downloadTemplate() {
+            let headers = [
+                ['Domain', 'Status', 'Country', 'Email']
+            ];
+
+            this.downloadCsvTemplate(headers, 'url_prospect_csv_template');
+        }
+    },
+}
 </script>

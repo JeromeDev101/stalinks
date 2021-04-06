@@ -104,19 +104,34 @@ class LogController extends Controller
     }
 
     public function getTables() {
-        $data = [
-            'App\Models\ExtDomain' => 'External Domain',
-            'App\Models\IntDomain' => 'Internal Domain',
-            'App\Models\Backlink' => 'Back link',
-            'App\Models\HostingProvider' => 'Hosting Provider',
-            'App\Models\DomainProvider' => 'Domain Provider',
-            'App\Models\User' => 'User',
-            'App\Models\Country' => 'Country',
-            'App\Models\MailContent' => 'Mail Template',
-            'App\Models\UserCountry' => 'Country for IntDomain',
-            'App\Models\UserCountryExt' => 'Country for ExtDomain',
-            'App\Models\UserIntDomain' => 'IntDomain Permission',
-        ];
+        $path = app_path('Models');
+
+        $models = $this->logRepository->getModels($path);
+
+
+        foreach ($models as $model) {
+            $data[$model] = with(new $model())->getTable();
+        }
+
+//        $data = [
+//            'App\Models\Article' => 'Article',
+//            'App\Models\Billing' => 'Billing',
+//            'App\Models\BillingWriter' => 'Billing Writer',
+//            'App\Models\BuyerPurchased' => 'Buyer Purchased',
+//            'App\Models\Config' => 'Config',
+//            'App\Models\Config' => 'Continent',
+//            'App\Models\ExtDomain' => 'External Domain',
+//            'App\Models\IntDomain' => 'Internal Domain',
+//            'App\Models\Backlink' => 'Back link',
+//            'App\Models\HostingProvider' => 'Hosting Provider',
+//            'App\Models\DomainProvider' => 'Domain Provider',
+//            'App\Models\User' => 'User',
+//            'App\Models\Country' => 'Country',
+//            'App\Models\MailContent' => 'Mail Template',
+//            'App\Models\UserCountry' => 'Country for IntDomain',
+//            'App\Models\UserCountryExt' => 'Country for ExtDomain',
+//            'App\Models\UserIntDomain' => 'IntDomain Permission',
+//        ];
 
         return response()->json($data);
     }

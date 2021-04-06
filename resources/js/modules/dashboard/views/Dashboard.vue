@@ -19,7 +19,8 @@
                             <div>
                                 <table class="table table-hover tbl-custom">
                                     <thead>
-                                        <tr class="white">
+                                        <tr
+                                            class="white text-center">
                                             <th>Team In-charge <span class="text-primary">({{ ext_domain.total }})</span></th>
                                             <th>Total <span class="text-primary">({{ ext_domain.num_total }})</span></th>
                                             <th>New <span class="text-primary">({{ ext_domain.num_new }})</span></th>
@@ -33,8 +34,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(ext_domain, index) in listData.ext_domain" :key="index">
-                                            <td>{{ upperCase(ext_domain.username) }}</td>
+                                        <tr
+                                            v-for="(ext_domain, index) in listData.ext_domain" :key="index" class="text-right">
+                                            <td
+                                                class="text-center">{{
+                                                 upperCase(ext_domain.username) }}</td>
                                             <td>{{ ext_domain.num_total }}</td>
                                             <td>{{ ext_domain.num_new }}</td>
                                             <td>{{ ext_domain.num_got_contact }}</td>

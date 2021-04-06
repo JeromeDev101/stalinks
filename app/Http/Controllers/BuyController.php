@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\Buyer\BuyEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Jobs\BuyLink;
+use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\PublisherRepositoryInterface;
+use App\Repositories\Traits\BuyTrait;
+use App\Repositories\Traits\NotificationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Publisher;
 use App\Models\Backlink;
-use App\Models\Pricelist;
-use App\Models\BuyerPurchased;
-use Illuminate\Cache\RetrievesMultipleKeys;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Registration;
@@ -21,10 +22,20 @@ use App\Events\NotificationEvent;
 
 class BuyController extends Controller
 {
+    use BuyTrait, NotificationTrait;
+
+    protected $publisherRepository, $backlinkRepository;
+
+    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository)
+    {
+        $this->publisherRepository = $publisherRepository;
+        $this->backlinkRepository = $backLinkRepository;
+    }
+
     public function getList(Request $request){
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
-        $user_id = Auth::user()->id;
+        $user = Auth::user();
         $credit = 0;
 
         $columns = [
@@ -35,6 +46,8 @@ class BuyController extends Controller
             'users.isOurs',
             'registration.company_name',
             'countries.name AS country_name',
+            'country_continent.name AS country_continent',
+            'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased'
         ];
@@ -43,14 +56,16 @@ class BuyController extends Controller
                 ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
                 ->leftJoin('registration', 'users.email', '=', 'registration.email')
                 ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+                ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
+                ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
                 ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-                ->leftJoin('buyer_purchased', function($q) use ($user_id){
+                ->leftJoin('buyer_purchased', function($q) use ($user){
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user_id);
+                        ->where('buyer_purchased.user_id_buyer', $user->id);
                 })
-                ->where('publisher.valid', 'valid');
-
-        $registered = Registration::where('email', Auth::user()->email)->first();
+                ->where('publisher.valid', 'valid')
+                ->where('publisher.qc_validation', 'yes')
+                ->whereNotNull('publisher.href_fetched_at');
 
         // if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
         //     $list->where('publisher.valid', 'valid');
@@ -103,14 +118,37 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['continent_id']) && !empty($filter['continent_id'])) {
+            if (is_array($filter['continent_id'])) {
+                $list = $list->where(function ($query) use ($filter) {
+                    if (($key = array_search(0, $filter['continent_id'])) !== false) {
+                        unset($filter['continent_id'][$key]);
+                        $query->orWhere(function ($subs) {
+                            $subs->orWhere('publisher.continent_id', null)
+                                ->where('publisher.country_id', null);
+                        });
+                    }
+
+                    if(!empty($filter['continent_id'])){
+                        $query->orWhereIn('countries.continent_id', $filter['continent_id'])
+                            ->orWhereIn('publisher.continent_id', $filter['continent_id']);
+                    }
+                });
+
+            } else {
+                $list = $list->where(function ($query) use ($filter) {
+                    $query->where('countries.continent_id', $filter['continent_id'])
+                        ->orWhere('publisher.continent_id', $filter['continent_id']);
+                });
+            }
+        }
+
         if (isset($filter['ur']) && !empty($filter['ur'])) {
             if ($filter['ur_direction'] === 'Above') {
                 $list->where('publisher.ur' , '>=', intval($filter['ur']));
             } else {
                 $list->where('publisher.ur', '<=', intval($filter['ur']));
             }
-        } else {
-            $list->where('publisher.ur', '!=', 0);
         }
 
         if (isset($filter['dr']) && !empty($filter['dr'])) {
@@ -119,8 +157,6 @@ class BuyController extends Controller
             } else {
                 $list->where('publisher.dr', '<=', intval($filter['dr']));
             }
-        } else {
-            $list->where('publisher.dr', '!=', 0);
         }
 
         if (isset($filter['org_kw']) && !empty($filter['org_kw'])) {
@@ -137,6 +173,29 @@ class BuyController extends Controller
             } else {
                 $list->where('publisher.org_traffic', '<=', intval($filter['org_traffic']));
             }
+        }
+
+        if (isset($filter['price']) && !empty($filter['price'])) {
+            if ($filter['price_direction'] === 'Above') {
+                $list->where('publisher.price' , '>=', intval($filter['price']));
+            } else {
+                $list->where('publisher.price', '<=', intval($filter['price']));
+            }
+        }
+
+        if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
+            if (is_array($filter['price_basis'])) {
+                $list->whereIn('publisher.price_basis', $filter['price_basis']);
+            } else {
+                $list->where('publisher.price_basis', $filter['price_basis']);
+            }
+        }
+
+        if (isset($filter['code'])) {
+            $list->whereRaw('ROUND(
+                           (
+                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
@@ -166,28 +225,28 @@ class BuyController extends Controller
         }
 
         // Getting credit left
-
-        if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
-            if ( isset($registered->team_in_charge) ) {
-                $user_model = User::where('id', $registered->team_in_charge)->first();
-                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+        if ( isset($user->registration->is_sub_account) && $user->registration->is_sub_account == 1 ) {
+            if ( isset($user->registration->team_in_charge) ) {
+                $user_model = User::where('id', $user->registration->team_in_charge)->first();
+                $user->id = isset($user_model->id) ? $user_model->id : $user->id;
             }
         }
 
-        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
         $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
-                                ->where('user_id', $user_id)
-                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
-                                })
-                                ->get();
+            ->where('user_id', $user->id)
+            ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                return $query->orWhereIn('user_id', $sub_buyer_ids);
+            })
+            ->get();
 
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
-                    ->where('user_id', $user_id)
-                    ->get();
+            ->where('user_id', $user->id)
+            ->where('admin_confirmation', '!=', 'Not Paid')
+            ->get();
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
             if (isset($total_purchased[0]['total_purchased'])) {
@@ -196,94 +255,7 @@ class BuyController extends Controller
                 $credit = floatval($wallet_transaction[0]['amount_usd']);
             }
         }
-
         // End of Getting credit left
-
-
-        foreach($result as $key => $value) {
-
-            $codeCombiURDR = $this->getCodeCombination($value->ur, $value->dr, 'value1');
-            $codeCombiBlRD = $this->getCodeCombination($value->backlinks, $value->ref_domain, 'value2');
-            $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
-            $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
-            $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
-
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
-
-            $count_letter_a = substr_count($combineALl, 'A');
-
-            // Filtering of Code A's
-            if( isset($filter['code']) && !empty($filter['code']) ){
-                $code = substr($filter['code'],0,1);
-
-                if( $code == $count_letter_a ){
-                    $value['code_combination'] = $combineALl;
-                    $value['code_price'] = $price_list['price'];
-                }else{
-                    $result->forget($key);
-                }
-
-            }else{
-                $value['code_combination'] = $combineALl;
-                $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
-            }
-
-            // Price Basis
-            $result_1 = 0;
-            $result_2 = 0;
-
-            $price_basis = '-';
-            if( !empty($value['code_price']) ){
-
-                $var_a = floatVal($value->price);
-                $var_b = floatVal($value['code_price']);
-
-                $result_1 = number_format($var_b * 0.7,2);
-                $result_2 = number_format( ($var_b * 0.1) + $var_b, 2);
-
-                if( $result_1 != 0 && $result_2 != 0 ){
-                    if( $var_a <= $result_1 ){
-                        $price_basis = 'Good';
-                    }
-
-                    if( $var_a > $result_1 && $result_1 < $result_2 ){
-                        $price_basis = 'Average';
-                    }
-
-                    if( $var_a > $result_2 ){
-                        $price_basis = 'High';
-                    }
-                }
-            }
-
-            if( $value['code_price'] == 0 && $value->price > 0){
-                $price_basis = 'High';
-            }
-
-
-            // Filtering of Price Basis
-            if( isset($filter['price_basis']) && !empty($filter['price_basis']) ){
-                if (is_array($filter['price_basis'])) {
-                    foreach ($filter['price_basis'] as $price) {
-                        if(in_array($price_basis, $filter['price_basis']) ){
-                            $value['price_basis'] = $price_basis;
-                        }else{
-                            $result->forget($key);
-                        }
-                    }
-                } else {
-                    if( $filter['price_basis'] == $price_basis ){
-                        $value['price_basis'] = $price_basis;
-                    }else{
-                        $result->forget($key);
-                    }
-                }
-            }else{
-                $value['price_basis'] = $price_basis;
-            }
-
-        }
-
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -294,11 +266,9 @@ class BuyController extends Controller
         }else{
             $custom_credit = collect(['credit' => round($credit)]);
             $result = $custom_credit->merge($result);
-            // dd($result);
 
             return $result;
         }
-
     }
 
     /**
@@ -315,7 +285,8 @@ class BuyController extends Controller
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
 
         $backlink = Backlink::create([
-            'price' => $request->price,
+            'prices' => $request->prices,
+            'price' => $request->seller_price,
             'url_advertiser' => $request->url_advertiser,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
@@ -340,7 +311,7 @@ class BuyController extends Controller
         broadcast(new BuyEvent($user->id));
         broadcast(new SellerReceivesOrderEvent($publisher->user_id));
 
-        if( isset($backlink->publisher->inc_article) &&  $backlink->publisher->inc_article == "No"){
+        if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
             Article::create([
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
@@ -385,21 +356,6 @@ class BuyController extends Controller
         return response()->json(['success'=> true], 200);
     }
 
-    private function updateStatus($id, $status, $id_publisher) {
-        $user = Auth::user();
-        $buyer_purchased = BuyerPurchased::where('publisher_id',$id)->where('user_id_buyer', $user->id)->first();
-
-        if( !$buyer_purchased ){
-            BuyerPurchased::create([
-                'user_id_buyer' => $user->id,
-                'publisher_id' => $id_publisher,
-                'status' => $status,
-            ]);
-        }else{
-            $buyer_purchased->update(['status' => $status]);
-        }
-    }
-
     public function checkCreditAuth() {
         $data = Auth::user()->credit_auth;
         return response()->json(['success' => true, 'data' => $data], 200);
@@ -430,7 +386,7 @@ class BuyController extends Controller
                 if($a == 0){
                     return '';
                 }
-                $score = number_format( floatVal($a / $b) , 2, '.', '');
+                $score = number_format( floatVal(divnum($a, $b)) , 2, '.', '');
                 $val = '';
                 if( $score >= 1 && $score < 3){  $val = 'A'; }
                 else if( $score >= 3 && $score < 8){ $val = 'C'; }

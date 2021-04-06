@@ -52,9 +52,24 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
         }
 
         $queryBuilder = $queryBuilder->with(['user' => function($query) {
-            $query->select(['id', 'email']);
+            $query->select(['id', 'email', 'username']);
         }])->orderBy('id', 'desc');
 
         return $queryBuilder;
+    }
+
+    public function getModels($path){
+        $out = [];
+        $results = scandir($path);
+        foreach ($results as $result) {
+            if ($result === '.' or $result === '..') continue;
+            $filename = 'App\\Models' . '\\' . $result;
+            if (is_dir($filename)) {
+                $out = array_merge($out, getModels($filename));
+            }else{
+                $out[] = substr($filename,0,-4);
+            }
+        }
+        return $out;
     }
 }

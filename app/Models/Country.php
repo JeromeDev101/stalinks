@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\IntDomain;
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Country extends Model
 {
+    use Loggable;
+
     protected $table = 'countries';
     protected $guarded = [];
 

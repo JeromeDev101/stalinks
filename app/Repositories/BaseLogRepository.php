@@ -89,14 +89,14 @@ abstract class BaseLogRepository implements RepositoryInterface
 
 
     protected function addLog(string $action, $payload = []) {
-        $payload['is_admin'] = Auth::user()->isAdmin();
+//        $payload['is_admin'] = optional(Auth::user())->isAdmin();
 
-        Log::create([
-            'table' => $this->model(),
-            'action' => $action,
-            'user_id' => Auth::id(),
-            'payload' => json_encode($payload)
-        ]);
+//        Log::create([
+//            'table' => $this->model(),
+//            'action' => $action,
+//            'user_id' => Auth::id(),
+//            'payload' => json_encode($payload)
+//        ]);
     }
 
     protected function isDirty(Model $model,  array $attributes = []) {

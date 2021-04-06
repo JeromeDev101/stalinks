@@ -148,6 +148,7 @@ class Ahref {
             foreach ($publishers as $publisher) {
                 foreach($getFrom as $from) {
                     $url = $this->remove_http($publisher->url);
+                    $url = trim_special_characters($url);
 
                     yield $guzzleClient->requestAsync('GET', $this->getApiUrl($url, $from))
                         ->then(function(ResponseInterface $response) use ($publisher) {

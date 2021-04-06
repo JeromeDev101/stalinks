@@ -26,6 +26,12 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getListSellerIncharge(params) {
+        return axios.get('/api/seller-incharge/' + params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static addUrl(params) {
         return axios.post('/api/publisher', params)
             .then(response => response)
@@ -81,7 +87,19 @@ export default class PublisherService {
     }
 
     static getListAhrefsPublisher(params) {
-        return axios.get('/api/publisher/ahrefs', params)
+        return axios.put('/api/publisher/ahrefs', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static generateBestPrices() {
+        return axios.post('/api/generate-best-price')
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static getGeneratorLogsApi() {
+        return axios.get('/api/publisher/best-prices/log')
             .then(response => response)
             .catch(error => error);
     }

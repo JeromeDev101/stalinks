@@ -8,9 +8,11 @@ use App\Libs\Ahref;
 use App\Models\Country;
 use App\Models\ExtDomain;
 use App\Models\Publisher;
+use App\Models\User;
 use App\Repositories\BaseRepository;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
+use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +58,20 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function importExcel($file)
     {
+
+        // Limit the CSV rows to 1000 only
+        $fp = file($file['file']->getPathName());
+        if( count($fp) > 1001) { // 1001 included the number of header
+            return [
+                "success" => false,
+                "message" => 'Invalid number of rows',
+                "errors" => [
+                    "file" => 'CSV is exceeded to 1000 rows',
+                ],
+                "exist" => [],
+            ];
+        }
+
         // $status = $file['status'];
         // $language = $file['language'];
         $csv_file = $file['file'];
@@ -81,56 +97,65 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             }
 
             if( $ctr > 0 ){
-                $url = trim_excel_special_chars($line[0]);
-                $status = trim_excel_special_chars($line[1]);
-                $country = trim_excel_special_chars($line[2]);
-                $email = trim_excel_special_chars($line[3]);
+                $url = trim_special_characters($line[0]);
+                $status = trim_special_characters($line[1]);
+                $country = trim_special_characters($line[2]);
+                $email = trim_special_characters($line[3]);
 
                 $isExistDomain = $this->checkDomain($url);
+                $isExistEmail = $this->checkEmail($email);
 
                 if( trim($url, " ") != '' ){
 
-                    if (preg_grep("/".$country."/i", $country_name_list)){
+                    if (!$isExistEmail) {
 
-                        if (preg_grep("/".$status."/i", $status_list)){
+                        if (preg_grep("/".$country."/i", $country_name_list)){
 
-                            if ($isExistDomain){
+                            if (preg_grep("/".$status."/i", $status_list)){
 
-                                $lang = $this->getCountry($country);
-                                $status = $this->getStatusCode($status);
+                                if ($isExistDomain){
 
-                                ExtDomain::create([
-                                    'user_id' => $id,
-                                    'domain' => $this->remove_http($url),
-                                    'country_id' => $lang,
-                                    'ahrefs_rank' => 0,
-                                    'no_backlinks' => 0,
-                                    'url_rating' => 0,
-                                    'domain_rating' => 0,
-                                    'organic_keywords' => '',
-                                    'organic_traffic' => '',
-                                    'alexa_rank' => 0,
-                                    'ref_domains' => 0,
-                                    'status' => $status,
-                                    'email' => $email,
-                                ]);
+                                    $lang = $this->getCountry($country);
+                                    $status = $this->getStatusCode($status);
+
+                                    ExtDomain::create([
+                                        'user_id' => $id,
+                                        'domain' => $this->remove_http($url),
+                                        'country_id' => $lang,
+                                        'ahrefs_rank' => 0,
+                                        'no_backlinks' => 0,
+                                        'url_rating' => 0,
+                                        'domain_rating' => 0,
+                                        'organic_keywords' => '',
+                                        'organic_traffic' => '',
+                                        'alexa_rank' => 0,
+                                        'ref_domains' => 0,
+                                        'status' => $status,
+                                        'email' => $email,
+                                    ]);
+
+                                }else{
+
+                                    array_push($existing_datas, [
+                                        'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
+                                    ]);
+                                }
 
                             }else{
-
                                 array_push($existing_datas, [
-                                    'message' => 'Existing Domain '.$url. ". Check in line ". (intval($ctr) + 1),
+                                    'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
                                 ]);
                             }
 
                         }else{
                             array_push($existing_datas, [
-                                'message' => "No Status name of ". $status . $message . ". Check in line ". (intval($ctr) + 1),
+                                'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
                             ]);
                         }
 
-                    }else{
+                    } else {
                         array_push($existing_datas, [
-                            'message' => "No Country name of ". $country . $message . ". Check in line ". (intval($ctr) + 1),
+                            'message' => 'Existing Email '.$email. ". Check in line ". (intval($ctr) + 1),
                         ]);
                     }
                 }
@@ -140,7 +165,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         fclose($csv);
-            
+
         return [
             "success" => $result,
             "message" => $message,
@@ -198,6 +223,10 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         return $result;
+    }
+
+    private function checkEmail($email) {
+        return ExtDomain::whereRaw("find_in_set('$email',replace(email,'|',','))")->count() !== 0;
     }
 
     private function getCountry($country){
@@ -329,49 +358,90 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         // TODO: Implement getContacts() method.
     }
 
-    public function paginate($page, $perPage, $filters, $countriesId, $countriesIdInt, $countriesExceptIds, $allExtFilter, $sort, $extDomainAdditionIds = [])
+    public function paginate($input)
     {
-        $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $dataAddExt = $this->getExtDomainFromCountryInt($allExtFilter, $countriesId, $countriesIdInt, $countriesExceptIds);
+        $query = $this->model->newQuery();
+        $page = 0;
+        $perPage = 50;
 
-        foreach($dataAddExt as $item) {
-            $extDomainAdditionIds[] = $item->id;
-        }
+        // Employee Filter
+        if (isset($input['employee_id']) && !empty($input['employee_id'])) {
+            if (is_array($input['employee_id'])) {
+                $query->where(function ($q) use ($input) {
+                    foreach ($input['employee_id'] as $name) {
+                        if ($name == 'N/A') {
+                            $q->orWhere('user_id', null);
+                        } else {
+                            $user = User::where('username', 'like', '%' . $name . '%')->first();
 
-        $queryBuilder = $queryBuilder->orWhere(function($query) use ($allExtFilter, $filters, $countriesId, $countriesExceptIds, $extDomainAdditionIds) {
-            $query->whereIn('id', $extDomainAdditionIds);
-            $this->buildSimpleFilterQueryBuilder($query, $filters, ['country_id']);
-
-            if ($allExtFilter === false) {
-                $query->where(function($queryIn) use ($countriesId, $countriesExceptIds, $filters) {
-                    $this->buildSimpleFilterQueryBuilder($queryIn, $filters['other']);
+                            $q->orWhere('user_id', $user->id);
+                        }
+                    }
                 });
             }
-        })
-        ->with(['country' => function($query) {
+        }
+
+        // Set page
+        if (isset($input['page'])) {
+            $page = $input['page'];
+        }
+
+        // Set per_page
+        if (isset($input['per_page'])) {
+            $perPage = $input['per_page'];
+        }
+
+        // Email Filter
+        if (isset($input['email'])) {
+            $query->where('email', 'like', '%' . $input['email'] . '%');
+        }
+
+        // Country Filter
+        if (isset($input['country_id']) && $input['country_id'] != '0') {
+            if (is_array($input['country_id'])) {
+                $countryIds = Country::whereIn('name', $input['country_id'])->get()->pluck('id');
+                $query->whereIn('country_id', $countryIds);
+            } else {
+                $countryId = Country::where('name', $input['country_id'])->first()->id;
+                $query->where('country_id', $countryId);
+            }
+        }
+
+        // Email Required filter
+        if (isset($input['required_email']) && $input['required_email'] > 0) {
+            $query->where('email', '!=', '');
+        }
+
+        // Domain Filter
+        if (isset($input['domain'])) {
+            $query->where('domain', 'like', '%' . $input['domain'] . '%');
+        }
+
+        // Status Filter
+        if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
+            if (is_array($input['status'])) {
+                $query->whereIn('status', $input['status']);
+            } else {
+                $query->where('status', $input['status']);
+            }
+        }
+
+        // Date upload filter
+        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
+
+        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
+            $query->where('created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+            $query->where('created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+        }
+
+        // Include relationships
+        $query->with(['country' => function($query) {
             $query->select(['id', 'name', 'code']);
-        }, 'backlinks' => function($query) {
-            $query->select('ext_domain_id', 'price');
         }, 'users' => function($query) {
             $query->select('id','username');
         }]);
 
-        if ($sort[0] === 'ext_domains.total_spent') {
-            $queryBuilder->select("*",
-                DB::raw('(SELECT SUM(price) FROM backlinks WHERE ext_domains.id = backlinks.ext_domain_id) as sum_price'))
-                ->orderBy('sum_price', $sort[1]);
-        } else {
-            $queryBuilder->orderBy($sort[0], $sort[1]);
-        }
-
-        $data = $queryBuilder->paginate($perPage, ['*'], 'page', $page);
-
-        foreach($data as &$item) {
-            $item['total_spent'] = collect($item['backlinks'])->sum('price');
-            unset($item['backlinks']);
-        }
-
-        return $data;
+        return $query->paginate($perPage, ['*'], 'page', $page);
     }
 
     private function getExtDomainFromCountryInt($allExtFilter, $countriesId, $countriesIdInt, $countriesExceptIds) {
@@ -429,9 +499,10 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
     public function create(array $attributes)
     {
         $newExt = parent::create($attributes); // TODO: Change the autogenerated stub
-        if ($newExt->status === config('constant.EXT_STATUS_NEW')) {
-            return $this->crawlContact([$newExt->id], false)->first();
-        }
+        
+        // if ($newExt->status === config('constant.EXT_STATUS_NEW')) {
+        //     return $this->crawlContact([$newExt->id], false)->first();
+        // }
 
         return $newExt;
     }
@@ -478,9 +549,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
      */
     public function getAhrefs($listIds, $configs)
     {
-        $statusGotContact = config('constant.EXT_STATUS_GOT_CONTACTS');
-        $extDomains = $this->model->whereIn('id', $listIds)
-            ->where('status', $statusGotContact)->get();
+//        $statusGotContact = config('constant.EXT_STATUS_GOT_CONTACTS');
+//        $extDomains = $this->model->whereIn('id', $listIds)
+//            ->where('status', $statusGotContact)->get();
+
+        $extDomains = $this->model->whereIn('id', $listIds)->get();
 
         if ($extDomains->count() == 0) {
             return [];

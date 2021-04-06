@@ -9,7 +9,9 @@ const LIST_COUNTRY_CONTINENT = 'LIST_COUNTRY_CONTINENT';
 const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_LANGUAGES = 'LIST_LANGUAGES';
 const LIST_SELLER = 'LIST_SELLER';
+const LIST_SELLER_INCHARGE = 'LIST_SELLER_INCHARGE';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
+const LIST_BEST_PRICE_LOG = 'LIST_BEST_PRICE_LOG';
 
 const state = {
     totalPublish: 0,
@@ -21,7 +23,9 @@ const state = {
     listContinent: { data: [], total: 0 },
     listLanguages: { data: [], total: 0 },
     listSeller: { data:[] },
+    listSellerIncharge: { data:[] },
     tblPublisherOpt: {
+        continent: true,
         country: true,
         created: true,
         uploaded: true,
@@ -43,6 +47,8 @@ const state = {
         org_keywords: true,
         org_traffic: true,
     },
+    bestPriceGeneratorOn: false,
+    bestPriceLogs: {}
 }
 
 const getters = {
@@ -96,6 +102,16 @@ const mutations = {
     },
 
     [LIST_CONTINENT](state, listContinent) {
+        const data = {
+            id : 0,
+            code : 'N/A',
+            name: 'N/A',
+            created_at : null,
+            updated_at: null
+        };
+
+        listContinent.data.push(data);
+
         state.listContinent = listContinent;
     },
 
@@ -107,9 +123,18 @@ const mutations = {
         state.listSeller = dataSet.listSeller;
     },
 
+    [LIST_SELLER_INCHARGE](state, dataSet) {
+        state.listSellerIncharge = dataSet.listSellerIncharge;
+    },
+
     [PUBLISHER_DOMAIN_SET_LIST_AHERFS](state, listAhrefsPublisher) {
         state.listAhrefsPublisher = listAhrefsPublisher;
     },
+
+    [LIST_BEST_PRICE_LOG](state, listLog) {
+        state.bestPriceLogs = listLog;
+        state.bestPriceGeneratorOn = listLog[0].status === 'start';
+    }
 }
 
 const actions = {
@@ -235,6 +260,20 @@ const actions = {
         }
     },
 
+    async actionGetListSellerIncharge({ commit }, params) {
+        try {
+            let response = await PublisherService.getListSellerIncharge(params);
+            commit(LIST_SELLER_INCHARGE, { listSellerIncharge: response.data } );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetListCountries({ commit }, params) {
         try {
             let response = await PublisherService.getListCountries(params);
@@ -321,6 +360,18 @@ const actions = {
     clearMessageform({commit}) {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
+
+    async generateBestPrices({commit}) {
+        await PublisherService.generateBestPrices();
+    },
+
+    async getGeneratorLogs({commit}) {
+        try {
+            let response = await PublisherService.getGeneratorLogsApi();
+            commit(LIST_BEST_PRICE_LOG, response.data);
+        } catch (e) {
+        }
+    }
 }
 
 const storePublisher = {

@@ -31,10 +31,10 @@
                             <div class="form-group">
                                 <label for="">Status</label>
                                 <v-select multiple
-                                          v-model="filterModel.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+                                          v-model="filterModel.status" :options="statusBacklinkQc" :searchable="false" placeholder="All"/>
 <!--                                <select name="" class="form-control" v-model="filterModel.status">-->
 <!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
+<!--                                    <option v-for="status in statusBacklinkQc" v-bind:value="status">{{ status }}</option>-->
 <!--                                </select>-->
                             </div>
                         </div>
@@ -98,6 +98,42 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Process Date
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.process_date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.process_date"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row mb-3">
@@ -138,7 +174,7 @@
                     </span>
 
                     <table id="tbl-followupsales"
-                           class="table table-hover table-bordered table-striped rlink-table table-responsive" style="height: 650px;">
+                           class="table table-hover table-bordered table-striped rlink-table" style="height: 650px;">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -163,15 +199,20 @@
                         <tbody>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
-                                <td v-show="tblOptions.pub_id">{{ sales.publisher.id }}</td>
+                                <td
+                                    v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
                                 <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                 <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td v-show="tblOptions.country">{{ sales.publisher.country == null ? 'N/A' : sales.publisher.country.name }}</td>
+                                <td
+                                    v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
                                 <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username }}</td>
-                                <td v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user.username == null ? sales.user.name : sales.user.username }}</td>
-                                <td v-show="tblOptions.url">{{ replaceCharacters(sales.publisher.url) }}</td>
-                                <td v-show="tblOptions.price">$ {{ sales.publisher.price }}</td>
+                                <td
+                                    v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
+                                <td
+                                    v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
+                                <td
+                                    v-show="tblOptions.url">{{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}</td>
+                                <td v-show="tblOptions.price">{{ sales.publisher == null ? '':'$ ' + sales.publisher.price }}</td>
                                 <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
                                         {{ sales.link_from }}
@@ -308,9 +349,27 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Status Sales</label>
-                                        <select  class="form-control pull-right" v-model="updateModel.status" style="height: 37px;" :disabled="isLive && user.role_id != 8" @change="checkStatus()">
-                                            <option v-show="user.role_id != 8 && user.role_id != 3 && user.role_id != 1" v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
-                                            <option v-show="user.role_id == 8 || user.role_id == 3 || user.role_id == 1" v-for="status in statusBaclinkQc" v-bind:value="status">{{ status }}</option>
+                                        <select
+                                            v-model="updateModel.status"
+                                            style="height: 37px;"
+                                            class="form-control pull-right"
+                                            :disabled="isLive && user.role_id != 8"
+
+                                            @change="checkStatus()">
+
+                                            <option
+                                                v-bind:value="status"
+                                                v-for="status in statusBacklink"
+                                                v-show="user.role_id != 8 && !user.isAdmin">
+                                                {{ status }}
+                                            </option>
+
+                                            <option
+                                                v-bind:value="status"
+                                                v-for="status in statusBacklinkQc"
+                                                v-show="user.role_id == 8 || user.isAdmin">
+                                                {{ status }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -464,12 +523,25 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
-                statusBaclink: ['Processing',
-                                'Content In Writing',
-                                'Content Done',
-                                'Content sent', 'Live',
-                                'Live in Process', 'Issue', 'Canceled'],
-                statusBaclinkQc: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process', 'Issue', 'Canceled'],
+                statusBacklink: [
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live in Process',
+                    'Issue',
+                    'Canceled'
+                ],
+                statusBacklinkQc: [
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live',
+                    'Live in Process',
+                    'Issue',
+                    'Canceled'
+                ],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {
                     id: '',
@@ -501,6 +573,14 @@
                     article: this.$route.query.article || '',
                     in_charge: this.$route.query.in_charge || '',
                     country_id: this.$route.query.country_id || '',
+                    process_date : {
+                        startDate : '',
+                        endDate: ''
+                    },
+                    date_completed: {
+                        startDate: '',
+                        endDate: ''
+                    }
                 },
                 searchLoading: false,
                 isLive: false,
@@ -607,6 +687,10 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
+                            date_completed:
+                            this.filterModel.date_completed,
+                            process_date:
+                            this.filterModel.process_date,
                         }
 
                     });
@@ -624,12 +708,15 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
+                            date_completed:
+                            this.filterModel.date_completed,
+                            process_date:
+                            this.filterModel.process_date,
                         }
 
                     });
                 }
 
-                    console.log(this.filterModel.paginate);
                 let columnDefs = [
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
@@ -696,7 +783,10 @@
                 let total_price = [];
                 let total = 0;
                 sales.forEach(function(item, index){
-                    if (typeof item.publisher.price !== 'undefined') {
+                    if (item.publisher !==
+                        null && typeof item.publisher.price
+                        !==
+                        'undefined') {
                         total_price.push( parseFloat(item.publisher.price))
                     }
                 })
@@ -747,6 +837,10 @@
                         article: this.filterModel.article,
                         country_id: this.filterModel.country_id,
                         in_charge: this.filterModel.in_charge,
+                        process_date:
+                        this.filterModel.process_date,
+                        date_completed:
+                        this.filterModel.date_completed
                     }
                 });
 
@@ -766,6 +860,14 @@
                     article: '',
                     in_charge: '',
                     country_id: '',
+                    process_date : {
+                        startDate : null,
+                        endDate: null
+                    },
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getListSales({

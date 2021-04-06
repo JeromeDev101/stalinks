@@ -1,5 +1,5 @@
 <template>
-    <aside class="main-sidebar-custom main-sidebar " style="position:fixed;">
+    <aside class="main-sidebar-custom main-sidebar " style="position:fixed; overflow-y: scroll; bottom: 0;">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar" style="height: auto;">
             <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -124,7 +124,7 @@
 
                 <li
                     v-if="
-                        user.isAdmin || 
+                        user.isAdmin ||
                             (user.isOurs == 0 &&
                                 (isManager || isSeller || isPostingWriter))
                     "
@@ -161,7 +161,9 @@
                                 (isManager ||
                                     isSeller ||
                                     isBuyer ||
-                                    isPostingWriter))
+                                    isPostingWriter ||
+                                    isQc || isQcSeller ||
+                                     isQcBilling))
                     "
                     class="custom-padding"
                     :class="{
@@ -205,7 +207,9 @@
                         </li>
 
                         <li
-                            v-if="user.isAdmin || isManager || isBuyer"
+                            v-if="user.isAdmin ||
+                            isManager || isBuyer || isQc || isQcSeller ||
+                                     isQcBilling"
                             :class="{
                                 active: $route.name == 'wallet-transaction'
                             }"
@@ -462,7 +466,10 @@ export default {
             isBuyer: false,
             isManager: false,
             isPostingWriter: false,
-            isQc: false
+            isQc: false,
+            isQcBuyer: false,
+            isQcSeller: false,
+            isQcBilling: false,
         };
     },
     created() {
@@ -508,6 +515,14 @@ export default {
 
             if (that.role.id == 8) {
                 this.isQc = true;
+            }
+
+            if (that.role.id == 9) {
+                this.isQcBilling = true;
+            }
+
+            if (that.role.id == 10) {
+                this.isQcSeller = true;
             }
         }
     }

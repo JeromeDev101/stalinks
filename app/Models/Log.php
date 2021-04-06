@@ -9,6 +9,13 @@ class Log extends Model
     protected $table = 'logs';
     protected $guarded = [];
 
+    protected $fillable = [
+        'table',
+        'action',
+        'user_id',
+        'payload',
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id');

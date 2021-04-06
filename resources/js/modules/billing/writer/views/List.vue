@@ -11,14 +11,14 @@
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" name="" v-model="filterModel.search_backlink" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Writer</label>
                                 <select name="" class="form-control" v-model="filterModel.writer">
@@ -30,6 +30,41 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Created
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_created"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_created"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -70,6 +105,8 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>Select</th>
+                                <th>Date Completed</th>
+                                <th>Date Created</th>
                                 <th>ID Backlink</th>
                                 <th>Writer</th>
                                 <th>Price for writer</th>
@@ -87,6 +124,8 @@
                                         </button>
                                     </div>
                                 </td>
+                                <td>{{ article.date_complete }}</td>
+                                <td>{{ article.created_at }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
                                 <td>$ 15</td>
@@ -104,7 +143,7 @@
             </div>
         </div>
 
-        
+
         <!-- Modal Payment -->
         <div class="modal fade" id="modal-payment" tabindex="-1" role="dialog" ref="modal_payment" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -159,7 +198,7 @@
                                     <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                 </div>
                             </div> -->
-                                
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -170,7 +209,7 @@
             </div>
         </div>
         <!-- End of Modal Payment -->
-        
+
         <!-- Modal Proof Doc -->
         <div class="modal fade" id="modal-view-docs" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -211,6 +250,14 @@
                 filterModel: {
                     search_backlink: this.$route.query.search_backlink || '',
                     writer: this.$route.query.writer || '',
+                    date_completed : {
+                        startDate: null,
+                        endDate: null
+                    },
+                    date_created : {
+                        startDate: null,
+                        endDate: null
+                    }
                 },
                 searchLoading: false,
                 info: {
@@ -289,7 +336,7 @@
                         'error'
                     )
                 }
-   
+
             },
 
             doShow(src) {
@@ -298,7 +345,7 @@
 
             async getListArticles(params) {
                $("#tbl_writer_billing").DataTable().destroy();
-               
+
                 this.searchLoading = true;
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetListArticle', params);
@@ -352,6 +399,8 @@
                     params: {
                         search_backlink: this.filterModel.search_backlink,
                         writer: this.filterModel.writer,
+                        date_completed: this.filterModel.date_completed,
+                        date_created: this.filterModel.date_created,
                     }
                 });
             },
@@ -360,6 +409,14 @@
                 this.filterModel = {
                     search_backlink: '',
                     writer: '',
+                    date_completed : {
+                        startDate: null,
+                        endDate: null
+                    },
+                    date_created : {
+                        startDate: null,
+                        endDate: null
+                    }
                 }
 
                 this.getListArticles({
