@@ -46,7 +46,14 @@
                                {{ option.name }}
                            </option>
                            </select> -->
-                        <v-select multiple v-model="filterModel.country_id_temp" :options="listCountryAll.data" :reduce="name => name.name" label="name" :searchable="false" placeholder="All"/>
+                        <v-select
+                            v-model="filterModel.country_id_temp"
+                            multiple
+                            label="name"
+                            placeholder="All"
+                            :options="listCountryAll.data"
+                            :reduce="name => name.name"
+                            :searchable="true"/>
                      </div>
                   </div>
                   <div v-if="tableShow.domain" class="col-md-2">
