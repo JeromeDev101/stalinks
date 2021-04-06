@@ -917,6 +917,7 @@
                         prop : '_action',
                         name : 'Price',
                         actionName : 'priceData',
+                        sortable: true,
                         width: 100,
                         isHidden: false
                     },
@@ -924,6 +925,7 @@
                         prop : '_action',
                         name : 'Prices',
                         actionName : 'pricesData',
+                        sortable: true,
                         width: 100,
                         isHidden: !this.user.isAdmin
                     },
