@@ -188,7 +188,7 @@
                                 <td v-if="(user.isOurs ==
                                  0 && !user.isAdmin) ||
                                  user.isAdmin">{{
-                                               backLink.publisher == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username) }}</td>
+                                               backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
                                 <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
                                 <td>{{ backLink.publisher
                                     == null ? 'N/A' : replaceCharacters(backLink.publisher.url)
