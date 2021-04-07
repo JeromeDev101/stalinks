@@ -60,14 +60,14 @@ you must prepare a CSV Excel file first containing the details of the URL’s (U
 We have made a template for you 
 
                   </p>
-                  <img src="../../../../../images/seller-guide/seller-guide-4.png"/>
+                  <!-- <img src="../../../../../images/seller-guide/seller-guide-4.png"/> -->
               
 
                 <p>When your CSV is ready 
 Click “Choose File” then click the upload icon.
 </p>
 
- <img src="../../../../../images/seller-guide/seller-guide-5.png"/>
+ <!-- <img src="../../../../../images/seller-guide/seller-guide-5.png"/> -->
  <p>
      You always can edit or delete urls info 
 We are the on to generate ahref score for you 
