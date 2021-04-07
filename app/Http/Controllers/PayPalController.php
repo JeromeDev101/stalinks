@@ -16,7 +16,7 @@ class PayPalController extends Controller
 
     public function createOrder(Request $request)
     {
-        return $this->paypalRepository->createOrder($request->get('amount'));
+        return $this->paypalRepository->createOrder($request->all());
     }
 
     public function captureOrder($id)

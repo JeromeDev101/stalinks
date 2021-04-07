@@ -15,10 +15,10 @@ class PaypalRepository implements PaypalInterface
         $this->paypal = new PaypalClient();
     }
 
-    public function createOrder($amount)
+    public function createOrder($request)
     {
         $this->paypal->getAccessToken();
-        $this->paypal->createOrder(self::buildRequestBody($amount));
+        $this->paypal->createOrder(self::buildRequestBody($request));
 
         return $this->paypal;
     }
@@ -28,18 +28,26 @@ class PaypalRepository implements PaypalInterface
         return $this->paypal->captureAuthorizedPayment($id);
     }
 
-    private static function buildRequestBody($amount)
+    private static function buildRequestBody($request)
     {
-        return [
+        $requestBody = [
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 0 => [
                     'amount' => [
                         'currency_code' => 'USD',
-                        'value' => $amount
-                    ]
+                        'value' => $request['amount']
+                    ],
                 ]
             ]
         ];
+
+        if (isset($request['email'])) {
+            $requestBody['purchase_units']['payee'] = [
+                'email_address' => $request['email']
+            ];
+        }
+
+        return $requestBody;
     }
 }
