@@ -451,7 +451,14 @@
                     </ul>
                 </li>
 
-                <li :class="{ active: $route.name == 'Help' }">
+                <li :class="{ 
+                    active: 
+                        $route.name == 'help' || 
+                        $route.name == 'seller-guide-1' ||
+                        $route.name == 'seller-guide-2' ||
+                        $route.name == 'seller-guide-3' ||
+                        $route.name == 'seller-guide-4'
+                }">
                     <router-link
                         class="page-sidebar__item"
                         :to="{ path: '/help' }"

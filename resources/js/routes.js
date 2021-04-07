@@ -44,8 +44,13 @@ import TestPush from '@/modules/article/views/Test.vue'
 
 // Guide
 import Help from '@/modules/help/help.vue'
+
 // sellers guide
-import SellerGuide from '@/modules/help/seller_guide/views/FirstHelp.vue'
+import SellerGuide1 from '@/modules/help/seller_guide/views/FirstHelp.vue'
+import SellerGuide2 from '@/modules/help/seller_guide/views/Help_2.vue'
+import SellerGuide3 from '@/modules/help/seller_guide/views/help_3.vue'
+import SellerGuide4 from '@/modules/help/seller_guide/views/help_4.vue'
+
 const routes = [
   {
     path: '/login',
@@ -94,14 +99,29 @@ const routes = [
         component: ListUser
       },
       {
-        path: 'help',
+        path: '/help',
         name: 'help',
         component: Help,
         children: [
           {
-            path: '/seller-guide',
-            name: 'seller-guide',
-            component: SellerGuide
+            path: 'seller-guide-1',
+            name: 'seller-guide-1',
+            component: SellerGuide1
+          },
+          {
+            path: 'seller-guide-2',
+            name: 'seller-guide-2',
+            component: SellerGuide2
+          },
+          {
+            path: 'seller-guide-3',
+            name: 'seller-guide-3',
+            component: SellerGuide3
+          },
+          {
+            path: 'seller-guide-4',
+            name: 'seller-guide-4',
+            component: SellerGuide4
           }
         ]
       },
