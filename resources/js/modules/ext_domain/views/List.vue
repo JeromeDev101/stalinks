@@ -227,7 +227,7 @@
                         slot-scope="scope"
                         slot="actionButtons">
                        <div class="btn-group"
-                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null)">
+                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null) || (scope.row.users == null ? false:scope.row.users.status == 'inactive' ? true:false)">
                           <button data-action="a1"
                                   :data-index="scope.index"
                                   @click="doEditExt(scope.row)"

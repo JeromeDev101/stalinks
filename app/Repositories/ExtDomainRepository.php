@@ -438,7 +438,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $query->with(['country' => function($query) {
             $query->select(['id', 'name', 'code']);
         }, 'users' => function($query) {
-            $query->select('id','username');
+            $query->select('id','username', 'status');
         }]);
 
         return $query->paginate($perPage, ['*'], 'page', $page);
