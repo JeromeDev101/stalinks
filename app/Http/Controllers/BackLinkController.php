@@ -147,7 +147,10 @@ class BackLinkController extends Controller
                     ->first();
 
         $response = ['update_success' => false];
-        $input = $request->only('publisher_id', 'link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser', 'title');
+        $input = $request->only('link', 'price', 'anchor_text', 'live_date', 'status', 'user_id', 'url_advertiser', 'title');
+        if (isset($request->publisher_id) && $request->publisher_id != null) {
+            $input['publisher_id'] = $request->publisher_id;
+        }
         $backlink = $this->backLinkRepository->findById($id);
 
         if( isset($input['status']) && !empty($input['status']) && $input['status'] == 'Live'){
@@ -166,7 +169,7 @@ class BackLinkController extends Controller
             return response()->json($response);
         }
 
-        event(new ArticleEvent("Article is now LIVE", $seller->user_id));
+//        event(new ArticleEvent("Article is now LIVE", $seller->user_id));
 
         $this->backLinkRepository->update($backlink, $input);
         $response['update_success'] = true;
