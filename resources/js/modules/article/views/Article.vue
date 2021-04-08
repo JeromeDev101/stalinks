@@ -60,6 +60,8 @@
                                     <option value="Queue">Queue</option>
                                     <option value="In Writing">In Writing</option>
                                     <option value="Done">Done</option>
+                                    <option value="Canceled">Canceled</option>
+                                    <option value="Issue">Issue</option>
                                 </select>
                             </div>
                         </div>
@@ -220,7 +222,7 @@
                             slot="statusData">
                             {{ scope.row.status_writer ==
                             null ?
-                            'Queue':scope.row.status_writer
+                            scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue' :scope.row.status_writer
                             }}
                         </template>
 
@@ -316,7 +318,7 @@
                     <div class="modal-footer">
                         <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
                         <button @click="clearQuery" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button @click="submitSave"  type="button" class="btn btn-primary">Save</button>
+                        <button @click="submitSave" v-show="contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue'" type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -677,6 +679,7 @@
                 this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
                 this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
+                this.contentModel.backlink_status = article.backlink_status;
 
                 $('#modal-content-edit').modal('show');
             },
