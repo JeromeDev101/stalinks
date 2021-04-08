@@ -134,13 +134,15 @@ class FollowupSalesController extends Controller
             $input['live_date'] = date('Y-m-d');
         }
 
-        $notification->create([
-            'user_id' => $backlink->publisher->user_id,
-            'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
-        ]);
+        if( isset($backlink->publisher->user_id) ) {
+            $notification->create([
+                'user_id' => $backlink->publisher->user_id,
+                'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
+            ]);
 
-        broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
-
+            broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
+        }
+            
         $backlink->update($input);
         return response()->json(['success'=> true], 200);
     }
