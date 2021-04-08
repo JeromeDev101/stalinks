@@ -24,7 +24,7 @@ class UpdateBacklinkRequest extends FormRequest
     public function rules()
     {
         return [
-            'publisher_id' => 'required',
+//            'publisher_id' => 'required',
            // 'link' => 'required|url',
             'price' => 'required',
             'anchor_text' => 'required',

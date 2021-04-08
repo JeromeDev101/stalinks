@@ -735,12 +735,17 @@
                 let that = Object.assign({}, baclink)
 
                 console.log(that)
-                this.withArticle = that.publisher.inc_article == "No" ? true:false;
+                this.withArticle = that.publisher == null ? false : that.publisher.inc_article == "No" ? true : false;
                 this.modelBaclink.id = that.id
-                this.modelBaclink.publisher_id = that.publisher.id
-                this.modelBaclink.ext_domain.domain = that.publisher == null ? that.ext_domain.domain:that.publisher.url
+                this.modelBaclink.publisher_id = that.publisher == null ? null : that.publisher.id
+                this.modelBaclink.ext_domain.domain = that.publisher == null ? 'N/A' : that.publisher.url
                 this.modelBaclink.int_domain.domain = that.int_domain == null ? '':that.int_domain.domain
-                this.modelBaclink.username = that.publisher.user.username
+                this.modelBaclink.username = that.publisher == null ? 'N/A'
+                    : (that.publisher.user == null
+                        ? 'N/A'
+                        : (that.publisher.user.username == null
+                            ? that.publisher.user.name
+                            : that.publisher.user.username))
                 this.modelBaclink.anchor_text = that.anchor_text
                 this.modelBaclink.price = that.price
                 this.modelBaclink.prices = that.prices
@@ -753,7 +758,12 @@
                 this.modelBaclink.date_process = that.date_process
                 this.modelBaclink.url_advertiser = that.url_advertiser
 
-                this.modelBaclink.seller = that.publisher.user.name
+                this.modelBaclink.seller = that.publisher == null ? 'N/A'
+                    : (that.publisher.user == null
+                        ? 'N/A'
+                        : (that.publisher.user.username == null
+                            ? that.publisher.user.name
+                            : that.publisher.user.username))
                 this.modelBaclink.id_article = that.article == null ? '':that.article.id
 
                 let element = this.$refs.modalEditBacklink
