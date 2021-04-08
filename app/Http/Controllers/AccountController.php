@@ -153,14 +153,15 @@ class AccountController extends Controller
 
             return $query->where(function ($query2) use ($user_id) {
                 $query2->whereHas('team_in_charge', function ($sub) use( $user_id ) {
-                    $sub->where('team_in_charge', $user_id);
+                    $sub->where('team_in_charge', $user_id)
+                    ->orWhere('status', 'inactive');
                 })->orWhere(function($query) {
                     $query->whereNull('team_in_charge')
                         ->where('type', 'Seller');
                 });
             });
         })
-        ->with('team_in_charge:id,name,username')
+        ->with('team_in_charge:id,name,username,status')
         ->with('user:id,email')
         ->orderBy('id', 'desc');
 
