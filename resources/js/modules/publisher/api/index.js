@@ -55,6 +55,12 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static qcValidationUpdate(params) {
+        return axios.post('/api/publisher/qc-validation', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static updatePublisher(params) {
         return axios.put('/api/publisher', params)
             .then(response => response)

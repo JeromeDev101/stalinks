@@ -246,6 +246,26 @@ const actions = {
         }
     },
 
+    async actionQcValidationUpdate({ commit }, params) {
+        try {
+            let response = await PublisherService.qcValidationUpdate(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: response.data.data });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetListSeller({ commit }, params) {
         try {
             let response = await PublisherService.getListSeller(params);
