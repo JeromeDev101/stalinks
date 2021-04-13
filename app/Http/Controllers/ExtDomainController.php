@@ -320,7 +320,10 @@ class ExtDomainController extends Controller
         }
 
         Validator::make($input, $validateRule)->validate();
-        if ($hasContactInfo && empty($request->status)) {
+
+        if ($input['email'] != '' || $input['email'] > 0) {
+            $input['status'] = config('constant.EXT_STATUS_GOT_EMAIL');
+        } else if ($hasContactInfo && empty($request->status)) {
             $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
         }
 
