@@ -194,16 +194,16 @@
                         <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
                     </span>
 
-                    <table id="tbl_account" class="table table-striped table-bordered">
+                    <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
-                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Account Email</th>
+                                <th>Action</th>
+                                <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
+                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
                                 <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
-                                <th v-show="tblAccountsOpt.email">Email</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
                                 <th v-show="tblAccountsOpt.company_type">Company Type</th>
@@ -214,18 +214,41 @@
                                 <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
                                 <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
                                 <th>Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button
+                                            title="Edit"
+                                            data-toggle="modal"
+                                            class="btn btn-default"
+                                            data-target="#modal-update-registration"
+
+                                            @click="doUpdateAccount(account)">
+
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            title="Send Email"
+                                            data-toggle="modal"
+                                            class="btn btn-default"
+
+                                            @click="doSendEmail(account)">
+
+                                            <i class="fa fa-fw fa-envelope-o"></i>
+                                        </button>
+                                    </div>
+                                </td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
                                 <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
                                 <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
-                                <td v-show="tblAccountsOpt.email">{{ account.email }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
@@ -242,13 +265,6 @@
                                 <td v-show="tblAccountsOpt.under_of_main_buyer">{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdateAccount(account)" data-target="#modal-update-registration" title="Edit" class="btn btn-default">
-                                            <i class="fa fa-fw fa-edit"></i>
-                                        </button>
-                                    </div>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -791,6 +807,148 @@
         </div>
         <!-- End of Modal Settings -->
 
+        <!-- Modal Send Email -->
+        <div id="modal-email-registration" class="modal fade" ref="modalEmailRegistration" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Send email</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                            <span
+                                v-if="messageForms.message != ''"
+                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="modal-body relative">
+                        <form class="row" action="">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="color: #333">Language</label>
+                                        <div>
+                                            <select
+                                                v-model="mailInfo.country.id"
+                                                class="form-control pull-right"
+
+                                                @change="doChangeEmailCountry">
+
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div  class="form-group">
+                                            <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
+                                            <div>
+                                                <select
+                                                    v-model="mailInfo.tpl"
+                                                    class="form-control pull-right"
+
+                                                    @change="doChangeEmailTemplate">
+
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
+                                                        {{ option.mail_name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                                    <label style="color: #333">Email</label>
+
+                                    <vue-tags-input
+                                        v-model="email_to"
+                                        :disabled="true"
+                                        :separators="separators"
+                                        :tags="registrationEmails"
+                                        :class="{'vue-tag-error': messageForms.errors.email}"
+                                        ref="registrationTag"
+                                        placeholder=""
+
+                                        @tags-changed="newTags => registrationEmails = newTags"
+                                    />
+
+                                    <span
+                                        v-if="messageForms.errors.email"
+                                        v-for="err in messageForms.errors.email"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                                    <label style="color: #333">Title</label>
+
+                                    <input type="text" v-model="modelMail.title" class="form-control" value="" required="required">
+
+                                    <span
+                                        v-if="messageForms.errors.title"
+                                        v-for="err in messageForms.errors.title"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
+                                    <label style="color: #333">Content</label>
+
+                                    <textarea
+                                        v-model="modelMail.content"
+                                        value=""
+                                        rows="10"
+                                        type="text"
+                                        required="required"
+                                        class="form-control">
+
+                                    </textarea>
+
+                                    <span
+                                        v-if="messageForms.errors.content"
+                                        v-for="err in messageForms.errors.content"
+                                        class="text-danger">
+
+                                        { err }}
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="overlay" v-if="isPopupLoading"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="!allowSending"
+
+                            @click="submitSendMail">
+
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Send Email -->
+
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
@@ -799,6 +957,7 @@
     import { mapState } from 'vuex';
     import axios from 'axios';
     import TermsAndConditions from "../../../components/terms/TermsAndConditions";
+    import {createTags} from "@johmun/vue-tags-input";
 
     export default {
         components: {TermsAndConditions},
@@ -888,6 +1047,28 @@
                 isVerified: true,
                 btnTermsAndConditions: false,
                 isDisableSubmit: true,
+                allowSending: false,
+
+                // for email sending
+                mailInfo: {
+                    tpl: 0,
+                    ids: '',
+                    receiver_text: '',
+                    country: {
+                        id: 0,
+                        name: '',
+                        code: ''
+                    }
+                },
+
+                modelMail: {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                },
+                email_to: '',
+                registrationEmails: [],
+                separators: [';', ',', '|', ' '],
             }
         },
 
@@ -898,21 +1079,111 @@
             this.getTeamInCharge();
             this.checkTeamSeller();
             this.getListCountries();
+            this.getListLanguages();
         },
 
         computed: {
             ...mapState({
                 tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
                 messageForms: state => state.storeAccount.messageForms,
+                messageFormsExt: state => state.storeExtDomain.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
                 listIncharge: state => state.storeAccount.listIncharge,
                 user: state => state.storeAuth.currentUser,
                 listCountryAll: state => state.storePublisher.listCountryAll,
+                listLanguages: state => state.storePublisher.listLanguages,
+                listMailTemplate: state => state.storeExtDomain.listMailTemplate,
             }),
         },
 
         methods: {
+            doSendEmail(data) {
+                console.log(data)
+                let emails = [];
+
+                if (typeof(data.email) === "string") {
+                    emails = data.email.split('|')
+                } else {
+                    emails = data.email.map(a => a.text);
+                }
+
+                this.registrationEmails = emails ? createTags(emails) : [];
+
+                this.openSendEmailModal();
+            },
+
+            openSendEmailModal() {
+                let element = this.$refs.modalEmailRegistration;
+                $(element).modal('show');
+                this.allowSending = true;
+            },
+
+            doChangeEmailCountry() {
+                let that = this, data = {};
+                let list = this.listLanguages.data
+
+                list.forEach(function (item) {
+                    if (item.id === that.mailInfo.country.id) {
+                        data = item;
+                    }
+                });
+
+                this.mailInfo.country.id = data.id;
+                this.mailInfo.country.name = data.name;
+                this.mailInfo.country.code = data.code;
+
+                this.fetchTemplateMail(this.mailInfo.country.id);
+            },
+
+            async fetchTemplateMail(countryId) {
+                await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
+            },
+
+            async doChangeEmailTemplate() {
+                let that = this;
+                this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+            },
+
+            async submitSendMail() {
+                this.allowSending = false;
+
+                await this.$store.dispatch('sendMailWithMailgun', {
+                    cc: '',
+                    email: this.registrationEmails,
+                    title: this.modelMail.title,
+                    content: this.modelMail.content,
+                    attachment: 'undefined',
+                })
+
+                if (this.messageFormsExt.action === 'send_mail') {
+                    this.modelMail = {
+                        title: '',
+                        content: '',
+                        mail_name: '',
+                    }
+
+                    $("#modal-email-registration").modal('hide')
+
+                    await swal.fire(
+                        'Success',
+                        'Email successfully sent',
+                        'success'
+                    )
+                    this.allowSending = true;
+                } else {
+                    await swal.fire(
+                        'Error',
+                        'There are some errors while sending the email',
+                        'error'
+                    )
+                    this.allowSending = true;
+                }
+            },
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
             displayEmailPayment(account) {
                 let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '':account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
