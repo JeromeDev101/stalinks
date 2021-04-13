@@ -12,6 +12,7 @@ return [
     'EXT_STATUS_UNDEFINED' => 80,
     'UNQUALIFIED' => 90,
     'EXT_STATUS_QUALIFIED' => 100,
+    'EXT_STATUS_GOT_EMAIL' => 110,
 
     //user type
     'USER_TYPE_NORMAL' => 0,
