@@ -132,7 +132,7 @@ class MailgunController extends Controller
             $params['bcc'] = $request->cc;
         }
 
-    	$sender = $this->mg->messages()->send('stalinks.com', $params);
+        $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
         $attac_object = '';
         if($request->attachment != "undefined" )
