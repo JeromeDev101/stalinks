@@ -387,9 +387,11 @@
                                     <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
                                     <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
                                     <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>
-                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>
-                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
+<!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
+<!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
+<!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
+                                    <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
+                                    <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
                                 </div>
                             </div>
                         </div>
@@ -1907,6 +1909,33 @@
                         this.getPublisherList();
 
                     }
+                }
+
+                this.checkIds = [];
+            },
+
+            async qcValidationUpdate(value){
+                await this.$store.dispatch('actionQcValidationUpdate', {
+                    qc_validation: value,
+                    ids: this.checkIds,
+                });
+
+                if( this.messageForms.action === 'saved' ){
+                    await swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'QC Validation successfully updated',
+                        confirmButtonText: "Ok",
+                    });
+
+                    await this.getPublisherList();
+                } else {
+                    await swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was an error upon updating the QC Validation',
+                        confirmButtonText: "Ok",
+                    });
                 }
 
                 this.checkIds = [];
