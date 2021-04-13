@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Events\BuyerDebited;
 use App\Events\SellerPaid;
+use App\Http\Requests\SellerPayRequest;
 use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\PaypalInterface;
+use App\Repositories\Traits\NotificationTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\Billing;
 use App\Models\TotalWallet;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class SellerBillingController extends Controller
 {
+    use NotificationTrait;
+
     public function getList(Request $request) {
         $filter = $request->all();
 
@@ -65,65 +71,66 @@ class SellerBillingController extends Controller
         ];
     }
 
-    public function payBilling(Request $request, NotificationInterface $notification) {
-        $request->validate([
-            'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $ids = json_decode($request->ids);
-
-        $image = $request->file;
-        $new_name = time() . '-billing.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images/billing'), $new_name);
-        $backlink_ids = [];
-        $totalBacklinkAmount = 0;
-        foreach( $ids as $data ){
-            $backlink_id = $data->id;
-            $user_id_seller = $data->publisher->user->id;
-            $seller_price = $data->publisher->price;
-            $backlink_ids[] = $backlink_id;
-            $totalBacklinkAmount += $seller_price;
-
-            $backlink = Backlink::find($backlink_id);
-            $backlink->update(['payment_status' => 'Paid']);
-
-            Billing::create([
-                'id_backlink' => $backlink_id,
-                'id_user' => $user_id_seller,
-                'seller_price' => $seller_price,
-                'id_payment_via' => intVal($request->payment_id),
-                'date_billing' => date('Y-m-d'),
-                'proof_doc_path' => '/images/billing/'.$new_name,
-                'admin_confirmation' => 1
-            ]);
+    public function payBilling(SellerPayRequest $request, NotificationInterface $notification, PaypalInterface $paypal) {
+        // Disregard file upload if payment type is paypal
+        if ($request->get('payment_id') != 1) {
+            $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
+            move_file_to_storage($request->file, 'images/billing', $filename);
         }
 
-        // update the total wallet of a buyer
-        $total = TotalWallet::select('user_id')->get();
-        foreach( $total as $buyer ) {
-            $amount_paid = $this->getTotal($backlink_ids, $buyer->user_id);
+        $paypalResult = null;
 
-            if($amount_paid != ""){
-                $wallet = TotalWallet::where('user_id',$buyer->user_id)->first();
-                $total_amount = floatval($wallet['total_wallet']) - floatval($amount_paid);
-                $wallet->update(['total_wallet' => $total_amount]);
+        DB::transaction(function () use ($request, $paypal, &$paypalResult) {
+            $ids = json_decode($request->ids);
+
+            $seller = '';
+            $backlink_ids = [];
+            $totalBacklinkAmount = 0;
+            foreach( $ids as $data ){
+                $backlink_id = $data->id;
+                $seller = User::find($data->publisher->user->id);
+                $seller_price = $data->publisher->price;
+                $backlink_ids[] = $backlink_id;
+                $totalBacklinkAmount += $seller_price;
+
+                $backlink = Backlink::find($backlink_id);
+                $backlink->update(['payment_status' => 'Paid']);
+
+                Billing::create([
+                    'id_backlink' => $backlink_id,
+                    'id_user' => $seller->id,
+                    'seller_price' => $seller_price,
+                    'id_payment_via' => intVal($request->payment_id),
+                    'date_billing' => date('Y-m-d'),
+                    'proof_doc_path' => '/images/billing/',
+                    'admin_confirmation' => 1
+                ]);
             }
-        }
 
-        $notification->create([
-            'user_id' => $backlink->user_id,
-            'notification' => 'Your account has been debited of '. $totalBacklinkAmount .' for the different order '. implode(', ', $backlink_ids) .' thanks'
-        ]);
+            $paypalResult = $paypal->createPayout([
+                'email' => $seller->email,
+                'amount' => $totalBacklinkAmount
+            ]);
 
-        $notification->create([
-            'user_id' => $user_id_seller,
-            'notification' => 'Your account has been credited of '. $totalBacklinkAmount .' for the different order '. implode(', ', $backlink_ids) .' thanks'
-        ]);
+            // update the total wallet of a buyer
+            $total = TotalWallet::select('user_id')->get();
+            foreach( $total as $buyer ) {
+                $amount_paid = $this->getTotal($backlink_ids, $buyer->user_id);
 
-        broadcast(new BuyerDebited($backlink->user_id));
-        broadcast(new SellerPaid($user_id_seller));
+                if($amount_paid != ""){
+                    $wallet = TotalWallet::where('user_id',$buyer->user_id)->first();
+                    $total_amount = floatval($wallet['total_wallet']) - floatval($amount_paid);
+                    $wallet->update(['total_wallet' => $total_amount]);
+                }
+            }
 
-        return response()->json(['success' => true], 200);
+            $this->buyerDebittedNotification($backlink, $totalBacklinkAmount, $backlink_ids);
+            $this->sellerPaidNotification($seller->id, $totalBacklinkAmount, $backlink_ids);
+        });
+
+        $payout = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
+
+        return response()->json(['success' => true, 'data' => $payout], 200);
     }
 
     private function getTotal($backlink_ids = [], $buyer_id){

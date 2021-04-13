@@ -31,3 +31,12 @@ if (! function_exists('divnum')) {
     }
 
 }
+
+if (!function_exists('move_file_to_storage')) {
+    function move_file_to_storage($file, $storagePath, $filename)
+    {
+        $file->move(public_path($storagePath), $filename);
+
+        return $filename;
+    }
+}

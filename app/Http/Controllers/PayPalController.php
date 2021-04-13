@@ -16,11 +16,11 @@ class PayPalController extends Controller
 
     public function createOrder(Request $request)
     {
-        return $this->paypalRepository->createOrder($request->all());
+        return response()->json($this->paypalRepository->createOrder($request->all()));
     }
 
     public function captureOrder($id)
     {
-        return $this->paypalRepository->captureOrder($id);
+        return response()->json($this->paypalRepository->captureOrder($id));
     }
 }

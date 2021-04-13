@@ -3,8 +3,12 @@
 namespace App\Repositories;
 
 use App\Repositories\Contracts\PaypalInterface;
+use App\Services\PayPalClient;
 use Illuminate\Http\Request;
-use Srmklive\PayPal\Services\PayPal as PaypalClient;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
+use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PaypalPayoutsSDK\Payouts\PayoutsGetRequest;
+use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
 
 class PaypalRepository implements PaypalInterface
 {
@@ -12,23 +16,41 @@ class PaypalRepository implements PaypalInterface
 
     public function __construct()
     {
-        $this->paypal = new PaypalClient();
+        $this->paypal = PayPalClient::client();
     }
 
     public function createOrder($request)
     {
-        $this->paypal->getAccessToken();
-        $this->paypal->createOrder(self::buildRequestBody($request));
+        $payload = new OrdersCreateRequest();
+        $payload->prefer('return=representation');
+        $payload->body = self::buildOrderRequestBody($request);
 
-        return $this->paypal;
+        return $this->paypal->execute($payload);
+    }
+
+    public function createPayout($request)
+    {
+        $payload = new PayoutsPostRequest();
+        $payload->body = self::buildPayoutRequestBody($request);
+
+        return $this->paypal->execute($payload);
     }
 
     public function captureOrder($id)
     {
-        return $this->paypal->captureAuthorizedPayment($id);
+        $payload = new OrdersCaptureRequest($id);
+
+        return $this->paypal->execute($payload);
     }
 
-    private static function buildRequestBody($request)
+    public function fetchPayout($id)
+    {
+        $payload = new PayoutsGetRequest($id);
+
+        return $this->paypal->execute($payload);
+    }
+
+    private static function buildOrderRequestBody($request)
     {
         $requestBody = [
             'intent' => 'CAPTURE',
@@ -43,10 +65,35 @@ class PaypalRepository implements PaypalInterface
         ];
 
         if (isset($request['email'])) {
-            $requestBody['purchase_units']['payee'] = [
+            $requestBody['purchase_units'][0]['payee'] = [
                 'email_address' => $request['email']
             ];
         }
+
+        return $requestBody;
+    }
+
+    private static function buildPayoutRequestBody($request)
+    {
+        $requestBody = json_decode(
+            '{
+                "sender_batch_header":
+                {
+                  "email_subject": "StaLinks Payout"
+                },
+                "items": [
+                {
+                  "recipient_type": "EMAIL",
+                  "receiver": "'. $request['email'] .'",
+                  "sender_item_id": '. rand(1, 10).',
+                  "amount":
+                  {
+                    "currency": "USD",
+                    "value": "'. $request['amount'] .'"
+                  }
+                }]
+              }',
+            true);
 
         return $requestBody;
     }

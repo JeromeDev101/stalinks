@@ -223,7 +223,7 @@
                     == 0">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button"
-                                @click="nextPage"
+                                @click="doPay"
                                 class="btn btn-primary" :disabled="isDisabledPay">Pay</button>
                     </div>
                 </div>
@@ -302,28 +302,43 @@
                     createOrder : function (data, actions) {
                         return axios.post('/api/paypal/order/create', {
                             email: vm.info.account,
-                            amount: vm.info.amount
-                        });
+                            amount: vm.info.amount,
+                            entity: 'seller'
+                        })
+                            .then(response => {
+                                return response.data.result;
+                            })
+                            .then(data => {
+                                return data.id;
+                            });
                     },
 
                     onApprove : function (data, actions) {
-                        return vm.$store.dispatch('captureOrder')
+                        return axios.post('/api/paypal/order/'+
+                            data.orderID
+                            +'/capture')
                             .then(response => {
-                                $("#modal-add-wallet").modal('hide');
-                                vm.updateModel = {
-                                    user_id_buyer : '',
-                                    payment_type : '',
-                                    amount_usd : '',
-                                };
-
-                                swal.fire(
-                                    'Success',
-                                    'Successfully Added',
-                                    'success'
-                                );
-
-                                vm.getWalletTransactionList();
+                                this.doPay();
                             });
+
+
+                        // return vm.$store.dispatch('captureOrder')
+                        //     .then(response => {
+                        //         $("#modal-add-wallet").modal('hide');
+                        //         vm.updateModel = {
+                        //             user_id_buyer : '',
+                        //             payment_type : '',
+                        //             amount_usd : '',
+                        //         };
+                        //
+                        //         swal.fire(
+                        //             'Success',
+                        //             'Successfully Added',
+                        //             'success'
+                        //         );
+                        //
+                        //         vm.getWalletTransactionList();
+                        //     });
                     },
 
                     onError : function (err) {
@@ -512,7 +527,6 @@
             },
 
             async doPay() {
-
                 $('#tbl_seller_billing').DataTable().destroy();
 
                 let ids = this.checkIds
