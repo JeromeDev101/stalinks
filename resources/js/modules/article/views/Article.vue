@@ -410,6 +410,7 @@
     import { mapState } from 'vuex';
     import 'tinymce/skins/lightgray/skin.min.css';
     import VueVirtualTable from 'vue-virtual-table';
+    import axios from 'axios';
 
     export default {
         components: {
@@ -643,21 +644,43 @@
                 }
             },
 
-            viewArticle() {
-                let id = this.id_article;
-                let articles = this.listArticles.data;
-                let article = '';
+            async getArticleInfo() {
+                const res = await axios.get('/api/article-list', {
+                    params: {
+                        search_article: this.id_article
+                    }
+                }).then(response => response.data);
 
-                articles.forEach(function(item, index){
-                    if( item.id == id){
-                        article = item;
+                return res;
+            },
+
+            viewArticle() {
+                // let id = this.id_article;
+                // let articles = this.listArticles.data;
+                // let article = '';
+
+                // console.log(this.getArticleInfo())
+
+                this.getArticleInfo().then((res) => {
+                    var article = res.data[0];
+
+                    if( article ){
+                        this.doUpdate(article.backlinks, article);
+                        $("#modal-content-edit").modal('show')
                     }
                 })
+                
 
-                if( id ){
-                    this.doUpdate(article.backlinks, article);
-                    $("#modal-content-edit").modal('show')
-                }
+                // articles.forEach(function(item, index){
+                //     if( item.id == id){
+                //         article = item;
+                //     }
+                // })
+
+                // if( article ){
+                //     this.doUpdate(article.backlinks, article);
+                //     $("#modal-content-edit").modal('show')
+                // }
             },
 
             clearQuery() {
