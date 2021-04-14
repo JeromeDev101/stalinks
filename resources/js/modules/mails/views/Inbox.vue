@@ -118,7 +118,16 @@
 
                         <div class="mailbox-read-message">
 <!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
-                            <div v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>
+<!--                            <div v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe
+                                    id="emailIframe"
+                                    class="embed-responsive-item"
+                                    frameborder="0"
+                                    :srcdoc="viewContent.strippedHtml">
+
+                                </iframe>
+                            </div>
                         </div>
                     </div>
 
@@ -864,6 +873,8 @@ export default {
                 reply_to = spl.slice(0, -1);
             }
 
+            content = '<pre style="white-space: pre-line;">' + content + '</pre>'
+
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
@@ -1040,5 +1051,4 @@ export default {
 .vue-tag-error {
     border-color: red !important;
 }
-
 </style>
