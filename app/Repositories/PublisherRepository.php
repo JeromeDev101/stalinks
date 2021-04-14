@@ -135,7 +135,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
-            $list = $list->where('publisher.language_id', $filter['language_id']);
+            if( $filter['language_id'] === 'na' ) {
+                $list = $list->whereNull('publisher.language_id');
+            } else {
+                $list = $list->where('publisher.language_id', $filter['language_id']);
+            }
         }
 
         if( isset($filter['casino_sites']) && !empty($filter['casino_sites']) ){
@@ -144,9 +148,24 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
-                foreach($filter['topic'] as $topic) {
-                    $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
-                }
+                // foreach($filter['topic'] as $topic) {
+
+                    // $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+
+                    $list = $list->where(function($query) use ($filter) {
+                        if( in_array('N/A', $filter['topic']) ) {
+                            foreach($filter['topic'] as $topic) {
+                                $query->orWhere('publisher.topic', 'like', '%'.$topic.'%')
+                                    ->orWhereNull('publisher.topic');
+                            }
+                        } else {
+                            foreach($filter['topic'] as $topic) {
+                                $query->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+                            }
+                        }
+                    });
+
+                // }
             } else {
                 $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
             }

@@ -44,6 +44,7 @@
                                 <label for="">Language</label>
                                 <select class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
+                                    <option value="na">N/A</option>
                                     <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
@@ -165,7 +166,7 @@
                                         {{ option }}
                                     </option>
                                 </select> -->
-                                <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                <v-select multiple v-model="filterModel.topic" :options="topicFilter" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -420,7 +421,7 @@
                                    v-model="checkIds">
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="createdData">
                             {{
@@ -432,15 +433,15 @@
                             slot="updatedData">
                             {{
                             displayDate(scope.row.updated_at) }}
-                        </template>
+                        </template> -->
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="continentData">
                             {{ scope.row.country_continent ?
                             scope.row.country_continent :
                             scope.row.publisher_continent }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
@@ -456,7 +457,7 @@
                             'N/A':scope.row.in_charge }}
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="usernameData">
                             {{ scope.row.username ?
@@ -471,23 +472,23 @@
                                 class="badge badge-danger">
                                 Invalid
                             </span>
-                        </template>
+                        </template> -->
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="urlData">
                             {{
                             replaceCharacters(scope.row.url) }}
-                        </template>
+                        </template> -->
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="priceData">
                             {{ scope.row.price == '' ||
                             scope.row.price == null ?
                             '':'$'}} {{
                             scope.row.price }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
@@ -1313,6 +1314,31 @@
                     continent_id: '',
                     kw_anchor: '',
                 },
+                topicFilter: [
+                    'N/A',
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Crypto',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'Movies & Music',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real State',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Travel',
+                    'Unlisted',
+                ],
                 topic: [
                     'Beauty',
                     'Charity',
@@ -1455,18 +1481,20 @@
                         isHidden: false
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_created',
                         name : 'Uploaded',
-                        actionName : 'createdData',
+                        // actionName : 'createdData',
                         width: 100,
+                        sortable: true,
                         isHidden:
                             !this.tblPublisherOpt.created
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_updated',
                         name : 'Updated',
-                        actionName : 'updatedData',
+                        // actionName : 'updatedData',
                         width: 100,
+                        sortable: true,
                         isHidden: !this.user.isAdmin ||
                             this.user.isOurs != 0
                     },
@@ -1486,9 +1514,10 @@
                         isHidden: !this.tblPublisherOpt.country
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_continent',
                         name : 'Continent',
-                        actionName : 'continentData',
+                        sortable: true,
+                        // actionName : 'continentData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.continent
                     },
@@ -1515,9 +1544,10 @@
                         isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_username',
                         name : 'Seller',
-                        actionName : 'usernameData',
+                        // actionName : 'usernameData',
+                        sortable: true,
                         width: 100,
                         isHidden: !this.user.isAdmin ||
                             this.user.isOurs != 0
@@ -1530,17 +1560,20 @@
                         isHidden: !this.tblPublisherOpt.valid
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_url',
                         name : 'URL',
-                        actionName : 'urlData',
+                        // actionName : 'urlData',
                         width: 150,
+                        sortable: true,
                         isHidden: !this.tblPublisherOpt.url
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_price',
                         name : 'Price',
-                        actionName : 'priceData',
+                        // actionName : 'priceData',
                         width: 100,
+                        sortable: true,
+                        prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
                     },
                     {
