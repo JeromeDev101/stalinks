@@ -59,33 +59,85 @@
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
                             <i class="fa fa-refresh fa-spin mr-3"></i> loading messages
                         </div>
-                        <table class="table table-condensed table-hover tbl-custom" style="table-layout: fixed;">
-                            <tbody>
+                        <div class="table-responsive">
+                            <table class="table table-condensed table-hover" style="table-layout: auto; width: 100%">
+                                <tbody>
                                 <tr v-show="paginate.total == 0">
                                     <td class="text-muted text-center">No {{ $route.name }} record</td>
                                 </tr>
-                                <tr v-for="(inbox, index) in records.data" :key="index" :class="{'active': viewContent.id == inbox.id,'font-weight-bold': inbox.is_viewed == 0, 'text-muted': inbox.is_viewed == 1}">
+
+                                <tr
+                                    v-for="(inbox, index) in records.data"
+                                    :key="index"
+                                    :class="{
+                                        'text-muted': inbox.is_viewed == 1,
+                                        'active': viewContent.id == inbox.id,
+                                        'font-weight-bold': inbox.is_viewed == 0
+                                    }">
                                     <td style="width:30px;">
-                                        <input type="checkbox" v-on:change="checkSelected" :id="inbox.id" :value="inbox" v-model="checkIds">
+                                        <input
+                                            v-model="checkIds"
+                                            :id="inbox.id"
+                                            :value="inbox"
+                                            type="checkbox"
+
+                                            @change="checkSelected">
                                     </td>
+
                                     <td @click="viewMessage(inbox, index)">
-                                        <i v-show="inbox.label_id != 0" class="fa fa-tag mr-3" :style="{'color': inbox.label_color}"></i>
-                                        {{ inbox.is_sent == 1 ? 'To: ' + checkEmail(inbox.received) : inbox.from_mail}}
+                                        <i
+                                            v-show="inbox.label_id != 0"
+                                            :style="{'color': inbox.label_color}"
+                                            class="fa fa-tag mr-3">
+                                        </i>
+                                        {{
+                                            $route.name == 'Inbox'
+                                                ? inbox.thread
+                                                    ? displayInboxNameAndThreadCount(inbox.thread)
+                                                    : inbox.sender
+                                                : inbox.is_sent == 1
+                                                    ? 'To: ' + checkEmail(inbox.received)
+                                                    : inbox.from_mail
+                                        }}
+
+                                        <span
+                                            v-if="inbox.thread && $route.name == 'Inbox'"
+                                            class="badge badge-pill badge-secondary">
+
+                                            {{ inbox.thread.length }}
+                                        </span>
                                     </td>
+
                                     <td @click="viewMessage(inbox, index)">{{inbox.subject}}</td>
+
                                     <td style="width:30px;" class="text-right">
-                                        <i :class="{'orange': true,'fa': true,'fa-fw': true, 'pointer': true, 'fa-star-o': inbox.is_starred == 0, 'fa-star': inbox.is_starred == 1}"
+                                        <i
+                                            :class="{
+                                                'fa': true,
+                                                'fa-fw': true,
+                                                'orange': true,
+                                                'pointer': true,
+                                                'fa-star': inbox.is_starred == 1,
+                                                'fa-star-o': inbox.is_starred == 0
+                                            }"
                                             title="Starred"
+
                                             @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
                                         </i>
                                     </td>
-                                    <td @click="viewMessage(inbox, index)"><i class="fa fa-fw fa-paperclip" v-show="inbox.attachment != ''"></i></td>
-                                    <td
-                                        @click="viewMessage(inbox, index)" class="text-right">{{inbox.clean_date}}</td>
-                                </tr>
 
-                            </tbody>
-                        </table>
+                                    <td @click="viewMessage(inbox, index)">
+                                        <i
+                                            v-show="inbox.attachment != '' && inbox.attachment != '[]'"
+                                            class="fa fa-fw fa-paperclip">
+                                        </i>
+                                    </td>
+
+                                    <td @click="viewMessage(inbox, index)" class="text-right">{{inbox.clean_date}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -575,6 +627,12 @@ export default {
     },
 
     methods: {
+        displayInboxNameAndThreadCount(thread) {
+            let senders = thread.map(a => a.sender === this.user.work_mail ? 'me' : a.sender);
+            senders = senders.filter((item, index) => senders.indexOf(item) === index);
+            return senders.join(', ');
+        },
+
         clearViewing() {
             this.cardInbox = true;
             this.cardReadMessage = false;
