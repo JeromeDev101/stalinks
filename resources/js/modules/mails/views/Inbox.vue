@@ -70,9 +70,17 @@
                                     v-for="(inbox, index) in records.data"
                                     :key="index"
                                     :class="{
-                                        'text-muted': inbox.is_viewed == 1,
+                                        'text-muted': $route.name == 'Inbox'
+                                            ? inbox.thread
+                                                ? !checkIsViewedForThreads(inbox.thread)
+                                                : false
+                                            : inbox.is_viewed == 1,
+                                        'font-weight-bold': $route.name == 'Inbox'
+                                            ? inbox.thread
+                                                ? checkIsViewedForThreads(inbox.thread)
+                                                : false
+                                            : inbox.is_viewed == 0,
                                         'active': viewContent.id == inbox.id,
-                                        'font-weight-bold': inbox.is_viewed == 0
                                     }">
                                     <td style="width:30px;">
                                         <input
@@ -627,6 +635,10 @@ export default {
     },
 
     methods: {
+        checkIsViewedForThreads(thread) {
+            return thread.some(el => el.is_viewed === 0)
+        },
+
         displayInboxNameAndThreadCount(thread) {
             let senders = thread.map(a => a.sender === this.user.work_mail ? 'me' : a.sender);
             senders = senders.filter((item, index) => senders.indexOf(item) === index);

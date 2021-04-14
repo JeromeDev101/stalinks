@@ -223,7 +223,7 @@ class MailgunController extends Controller
                         MAX(replies.label_id) as label_id,
                         MIN(replies.created_at) as created_at,
                         MIN(replies.attachment) as attachment,
-                        MIN(replies.is_starred) as is_starred,
+                        MAX(replies.is_starred) as is_starred,
                         CONCAT("Re: ", replies.subject) AS con_sub,
                         REPLACE(replies.subject, "Re: ", "") AS re_sub
                     ')
