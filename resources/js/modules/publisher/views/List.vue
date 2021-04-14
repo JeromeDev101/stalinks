@@ -443,12 +443,12 @@
                             scope.row.publisher_continent }}
                         </template> -->
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="topicData">
                             {{ scope.row.topic == null ?
                             'N/A':scope.row.topic }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
@@ -1522,9 +1522,10 @@
                         isHidden: !this.tblPublisherOpt.continent
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_topic',
                         name : 'Topic',
-                        actionName : 'topicData',
+                        // actionName : 'topicData',
+                        sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.topic
                     },

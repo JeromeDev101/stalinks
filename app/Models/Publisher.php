@@ -19,7 +19,8 @@ class Publisher extends Model
         'custom_url',
         'custom_continent',
         'custom_price',
-        'custom_username'
+        'custom_username',
+        'custom_topic'
     ];
 
     protected $fillable
@@ -48,6 +49,10 @@ class Publisher extends Model
 
     public function getCustomUsernameAttribute() {
         return isset($this->user->username) ? $this->user->username:null;
+    }
+
+    public function getCustomTopicAttribute() {
+        return isset($this->topic) ? $this->topic:null;
     }
 
     public function getCustomContinentAttribute() {
