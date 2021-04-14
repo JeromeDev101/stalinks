@@ -117,7 +117,8 @@
                         </div>
 
                         <div class="mailbox-read-message">
-                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>
+<!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
+                            <div v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>
                         </div>
                     </div>
 
@@ -814,7 +815,16 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            let content = JSON.parse(inbox.body);
+
+            let body = JSON.parse(inbox.body);
+            let body_html = JSON.parse(inbox.body_html);
+            let stripped_html = JSON.parse(inbox.stripped_html);
+
+            let content = body_html
+                ? body_html['body-html']
+                : stripped_html
+                    ? stripped_html['stripped-html']
+                    : body['body-plain']
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
@@ -857,7 +867,7 @@ export default {
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = content['body-plain'];
+            this.viewContent.strippedHtml = content;
             this.viewContent.date = inbox.full_clean_date;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;
@@ -872,10 +882,8 @@ export default {
                 this.records.data[index].is_viewed = 1
             }
 
-
             this.cardInbox = false;
             this.cardReadMessage = true;
-
         },
 
         async sendEmail(type) {
