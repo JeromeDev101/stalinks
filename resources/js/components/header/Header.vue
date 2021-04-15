@@ -181,7 +181,8 @@
                                         <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12"
+                                     v-if="updateModel.payment_type != 1">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                         <label for="">Proof of Documents</label>
                                         <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">

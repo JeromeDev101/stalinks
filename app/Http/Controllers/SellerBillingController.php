@@ -112,6 +112,12 @@ class SellerBillingController extends Controller
                 'amount' => $totalBacklinkAmount
             ]);
 
+            $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
+
+            Billing::where('id_backlink', $ids[0]->id)->update([
+                'fee' => $payoutResult->result->items[0]->payout_item_fee->value
+            ]);
+
             // update the total wallet of a buyer
             $total = TotalWallet::select('user_id')->get();
             foreach( $total as $buyer ) {
