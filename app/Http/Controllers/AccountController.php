@@ -42,7 +42,7 @@ class AccountController extends Controller
         if( Auth::user()->role_id == 8 || Auth::user()->role_id == 1 || Auth::user()->role_id == 3 ) {
             $request->validate(['account_validation' => 'required']);
         } else {
-            $input['account_validation'] = 'invalid';
+            $input['account_validation'] = 'processing';
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {
@@ -243,7 +243,7 @@ class AccountController extends Controller
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
         $input['credit_auth'] = 'No';
-        $input['account_validation'] = 'invalid';
+        $input['account_validation'] = 'processing';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL

@@ -142,6 +142,7 @@
                                     <option value="">All</option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                             </div>
                         </div>
@@ -511,6 +512,7 @@
                                 <select class="form-control" name="" v-model="accountUpdate.account_validation">
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                             </div>
 
