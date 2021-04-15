@@ -118,13 +118,13 @@
 
                         <div class="mailbox-read-message">
 <!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
-<!--                            <div v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
-                            <div class="embed-responsive embed-responsive-16by9">
+<!--                            <div id="htmlDiv" v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
+                            <div>
                                 <iframe
-                                    id="emailIframe"
-                                    class="embed-responsive-item"
+                                    ref="iframe"
+                                    width="100%"
                                     frameborder="0"
-                                    :srcdoc="viewContent.strippedHtml">
+                                    scrolling="no">
 
                                 </iframe>
                             </div>
@@ -873,7 +873,7 @@ export default {
                 reply_to = spl.slice(0, -1);
             }
 
-            content = '<pre style="white-space: pre-line;">' + content + '</pre>'
+            content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
 
             this.selectedMessage = false;
             this.MessageDisplay = true;
@@ -895,6 +895,22 @@ export default {
 
             this.cardInbox = false;
             this.cardReadMessage = true;
+
+            this.iFrameLoader(this.viewContent.strippedHtml)
+        },
+
+        iFrameLoader(iframeBody){
+            const iFrameEl = this.$refs.iframe
+            const doc = iFrameEl.contentWindow.document
+            doc.open()
+            doc.write(iframeBody)
+            doc.close()
+            iFrameEl.onload = () => {
+                iFrameEl.style.height = "0"
+                this.$nextTick(() => {
+                    iFrameEl.style.height = doc.body.scrollHeight + 'px';
+                });
+            }
         },
 
         async sendEmail(type) {
