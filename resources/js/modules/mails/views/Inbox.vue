@@ -92,7 +92,7 @@
                                             @change="checkSelected">
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index)">
+                                    <td @click="viewMessage(inbox, index, $route.name)">
                                         <i
                                             v-show="inbox.label_id != 0"
                                             :style="{'color': inbox.label_color}"
@@ -116,7 +116,7 @@
                                         </span>
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index)">{{inbox.subject}}</td>
+                                    <td @click="viewMessage(inbox, index, $route.name)">{{inbox.subject}}</td>
 
                                     <td style="width:30px;" class="text-right">
                                         <i
@@ -134,14 +134,14 @@
                                         </i>
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index)">
+                                    <td @click="viewMessage(inbox, index, $route.name)">
                                         <i
                                             v-show="inbox.attachment != '' && inbox.attachment != '[]'"
                                             class="fa fa-fw fa-paperclip">
                                         </i>
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index)" class="text-right">{{inbox.clean_date}}</td>
+                                    <td @click="viewMessage(inbox, index, $route.name)" class="text-right">{{inbox.clean_date}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -224,6 +224,79 @@
                             </button>
                         </div>
                         <button type="button" class="btn btn-default" v-show="viewContent.deleted_at == null" @click="deleteMessage(viewContent.id, viewContent.index, false)"><i class="fa fa-trash-o"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" v-show="cardReadMessageThread">
+                <div class="box box-primary">
+                    <!-- email header -->
+                    <div v-show="MessageDisplay" class="box-header with-border">
+                        <h3 class="box-title">
+                            <button
+                                type="button"
+                                title="Back"
+                                class="btn btn-default btn-sm mr-3"
+
+                                @click="clearViewing()">
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+
+                            Read Mail
+                        </h3>
+                    </div>
+
+                    <!-- email subject -->
+                    <div v-show="MessageDisplay" class="box-body no-padding">
+                        <div class="mailbox-read-info">
+                            <h3>{{ viewContentThread.inbox.subject }}</h3>
+                        </div>
+                    </div>
+
+                    <!-- email contents -->
+                    <div v-show="MessageDisplay" v-for="email in viewContentThread.thread" class="box-body no-padding">
+                        <!-- email recipients/sender and date -->
+                        <div class="mailbox-read-info">
+                            <h6 class="font-weight-bold mb-0">
+                                {{ email.from_mail }}
+                                <span class="mailbox-read-time pull-right">{{ email.full_clean_date }}</span>
+                            </h6>
+
+                            <small class="text-muted">
+                                To: {{ user.work_mail === email.received ? 'Me' : checkEmail(email.received) }}
+                            </small>
+                        </div>
+
+                        <!-- email body -->
+                        <div class="mailbox-read-message">
+                            <div>
+                                <iframe
+                                    :ref="'iframe' + email.id"
+                                    width="100%"
+                                    frameborder="0">
+
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <hr>
+                    </div>
+
+                    <!-- email footer buttons -->
+                    <div v-show="MessageDisplay" class="box-footer">
+                        <div class="pull-right">
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#modal-email-reply"
+
+                                @click="doReply">
+
+                                <i class="fa fa-reply"></i>
+                                Reply
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -580,6 +653,10 @@ export default {
                     name: '',
                 },
             },
+            viewContentThread: {
+                inbox: {},
+                thread: [],
+            },
             records: [],
             loadingMessage: false,
             selectedMessage: true,
@@ -605,6 +682,7 @@ export default {
             },
             cardInbox: true,
             cardReadMessage: false,
+            cardReadMessageThread: false,
 
             // for tag input component
             tag: '',
@@ -657,6 +735,7 @@ export default {
         clearViewing() {
             this.cardInbox = true;
             this.cardReadMessage = false;
+            this.cardReadMessageThread = false;
         },
 
         async getListLanguages() {
@@ -892,42 +971,126 @@ export default {
             return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
         },
 
-        viewMessage(inbox, index) {
+        viewMessage(inbox, index, route) {
+            if (route === 'Inbox') {
+                this.viewMessageThread(inbox)
+            } else {
+                let body = JSON.parse(inbox.body);
+                let body_html = JSON.parse(inbox.body_html);
+                let stripped_html = JSON.parse(inbox.stripped_html);
 
-            let body = JSON.parse(inbox.body);
-            let body_html = JSON.parse(inbox.body_html);
-            let stripped_html = JSON.parse(inbox.stripped_html);
+                let content = body_html
+                    ? body_html['body-html']
+                    : stripped_html
+                        ? stripped_html['stripped-html']
+                        : body['body-plain']
+                let from_mail = inbox.from_mail;
+                let is_sent = inbox.is_sent;
+                let reply_to = '';
 
-            let content = body_html
-                ? body_html['body-html']
-                : stripped_html
-                    ? stripped_html['stripped-html']
-                    : body['body-plain']
-            let from_mail = inbox.from_mail;
-            let is_sent = inbox.is_sent;
-            let reply_to = '';
+                if(inbox.attachment != '' && inbox.attachment != '[]') {
+                    let attach = JSON.parse(inbox.attachment);
+                    this.viewContent.attachment  = attach;
 
-            if(inbox.attachment != '' && inbox.attachment != '[]') {
-                let attach = JSON.parse(inbox.attachment);
-                this.viewContent.attachment  = attach;
+                    if (is_sent == 0) {
+                        for(let index in attach) {
+                            axios.post('/api/mail/show-attachment', {
+                                url: attach[index]['url']
+                            },{ responseType: 'arraybuffer' })
+                                .then((res) => {
 
-                if (is_sent == 0) {
-                    for(var index in attach) {
-                        axios.post('/api/mail/show-attachment', {
-                            url: attach[index]['url']
-                        },{ responseType: 'arraybuffer' })
-                        .then((res) => {
+                                    let blob = new Blob([res.data], { type: res.headers['content-type'] })
+                                    var res = res.headers['content-type'].split("/");
 
-                            let blob = new Blob([res.data], { type: res.headers['content-type'] })
-                            var res = res.headers['content-type'].split("/");
+                                    let link = document.getElementById( 'link-download-href-' + index );
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = attach[index]['name'];
+                                })
+                        }
+                    }
 
-                            let link = document.getElementById( 'link-download-href-' + index );
-                            link.href = window.URL.createObjectURL(blob);
-                            link.download = attach[index]['name'];
-                        })
+                } else {
+                    this.viewContent.attachment = {
+                        url: '',
+                        size: '',
+                        name: '',
                     }
                 }
 
+
+                if (from_mail.search("<") > 0) {
+                    let spl = from_mail.split("<")[1]
+                    reply_to = spl.slice(0, -1);
+                }
+
+                content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
+
+                this.selectedMessage = false;
+                this.MessageDisplay = true;
+                this.viewContent.from = inbox.from_mail;
+                this.viewContent.strippedHtml = content;
+                this.viewContent.date = inbox.full_clean_date;
+                this.viewContent.subject = inbox.subject;
+                this.viewContent.index = index;
+                this.viewContent.id = inbox.id;
+                this.viewContent.deleted_at = inbox.deleted_at;
+                this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
+                this.viewContent.is_sent = is_sent;
+                this.viewContent.received = inbox.received;
+
+                if (inbox.is_viewed == 0){
+                    axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
+                    this.records.data[index].is_viewed = 1
+                }
+
+                this.cardInbox = false;
+                this.cardReadMessage = true;
+
+                this.iFrameLoader(this.viewContent.strippedHtml)
+            }
+        },
+
+        viewMessageThread(inbox) {
+            let self = this;
+
+            self.cardInbox = false;
+            self.MessageDisplay = true;
+            self.cardReadMessageThread = true;
+
+            self.viewContentThread.inbox = inbox
+            self.viewContentThread.thread = inbox.thread
+
+            // load email body in iframe
+            self.iFrameLoaderThread(self.viewContentThread.thread)
+
+            // thread.forEach(function (email, index) {
+            //     self.emailAttachmentSorter(email, email.attachment, index)
+            // });
+        },
+
+        emailAttachmentSorter(inbox, attachments, index) {
+            if(attachments !== '' && attachments !== '[]') {
+                let attach = JSON.parse(attachments);
+                this.viewContentThread[index].attachment  = attach;
+
+                if (inbox.is_sent === 0) {
+                    attach.forEach(function (att, index) {
+                        console.log(att.url)
+                        axios.post('/api/mail/show-attachment', {
+                            url: att.url
+                        },{ responseType: 'arraybuffer' })
+                            .then((res) => {
+                                let blob = new Blob([res.data], { type: res.headers['content-type'] })
+                                let cont = res.headers['content-type'].split("/");
+
+                                console.log(blob)
+
+                                // let link = document.getElementById( 'link-download-href-' + index );
+                                // link.href = window.URL.createObjectURL(blob);
+                                // link.download = attach[index]['name'];
+                            })
+                    });
+                }
             } else {
                 this.viewContent.attachment = {
                     url: '',
@@ -935,40 +1098,41 @@ export default {
                     name: '',
                 }
             }
-
-
-            if (from_mail.search("<") > 0) {
-                var spl = from_mail.split("<")[1]
-                reply_to = spl.slice(0, -1);
-            }
-
-            content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
-
-            this.selectedMessage = false;
-            this.MessageDisplay = true;
-            this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = content;
-            this.viewContent.date = inbox.full_clean_date;
-            this.viewContent.subject = inbox.subject;
-            this.viewContent.index = index;
-            this.viewContent.id = inbox.id;
-            this.viewContent.deleted_at = inbox.deleted_at;
-            this.viewContent.from_mail = reply_to == '' ? inbox.from_mail : reply_to;
-            this.viewContent.is_sent = is_sent;
-            this.viewContent.received = inbox.received;
-
-            if (inbox.is_viewed == 0){
-                axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
-                this.records.data[index].is_viewed = 1
-            }
-
-            this.cardInbox = false;
-            this.cardReadMessage = true;
-
-            this.iFrameLoader(this.viewContent.strippedHtml)
         },
 
-        iFrameLoader(iframeBody){
+        iFrameLoaderThread(thread) {
+            let self = this;
+
+            this.$nextTick(() => {
+                thread.forEach(function (email) {
+
+                    let body = JSON.parse(email.body);
+                    let body_html = JSON.parse(email.body_html);
+                    let stripped_html = JSON.parse(email.stripped_html);
+
+                    let content = body_html
+                        ? body_html['body-html']
+                        : stripped_html
+                            ? stripped_html['stripped-html']
+                            : body['body-plain']
+
+                    content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
+
+                    let iFrameElement = self.$refs['iframe' + email.id][0]
+                    let doc = iFrameElement.contentWindow.document
+                    doc.open()
+                    doc.write(content)
+                    doc.close()
+
+                    iFrameElement.onload = () => {
+                        iFrameElement.style.height = "0"
+                        iFrameElement.style.height = doc.body.scrollHeight + 'px';
+                    }
+                });
+            });
+        },
+
+        iFrameLoader(iframeBody) {
             const iFrameEl = this.$refs.iframe
             const doc = iFrameEl.contentWindow.document
             doc.open()
