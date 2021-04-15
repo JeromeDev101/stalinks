@@ -183,8 +183,7 @@
                                 <iframe
                                     ref="iframe"
                                     width="100%"
-                                    frameborder="0"
-                                    scrolling="no">
+                                    frameborder="0">
 
                                 </iframe>
                             </div>
