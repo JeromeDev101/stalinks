@@ -132,7 +132,7 @@ class MailgunController extends Controller
             $params['bcc'] = $request->cc;
         }
 
-    	$sender = $this->mg->messages()->send('stalinks.com', $params);
+        $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
         $attac_object = '';
         if($request->attachment != "undefined" )
@@ -368,6 +368,8 @@ class MailgunController extends Controller
         $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
         $in_reply_to = null;
         $references = null;
+        $stripped_html = null;
+        $body_html = null;
 
         $aw = $this->mg->events()->get('stalinks.com');
         // $r_attachment = '';
@@ -427,11 +429,20 @@ class MailgunController extends Controller
             $references = preg_replace("/[<>]/", "", $input['References']);
         }
 
+        if( isset($input['stripped-html']) && $input['stripped-html'] ){
+            $stripped_html = json_encode($input['stripped-html']);
+        }
+
+        if( isset($input['body-html']) && $input['body-html'] ){
+            $body_html = json_encode($input['body-html']);
+        }
 
         $data = [
             'sender'            => $request->sender,
             'subject'           => $request->subject,
             'body'              => json_encode($request->only('body-plain')),
+            'stripped_html'     => $stripped_html,
+            'body_html'         => $body_html,
             'attachment'        => json_encode($r_attachment),
             // 'attachment'        => '',
             'from_mail'         => $request->from,
