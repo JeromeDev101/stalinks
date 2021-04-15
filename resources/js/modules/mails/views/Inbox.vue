@@ -177,7 +177,17 @@
                         </div>
 
                         <div class="mailbox-read-message">
-                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>
+<!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
+<!--                            <div id="htmlDiv" v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
+                            <div>
+                                <iframe
+                                    ref="iframe"
+                                    width="100%"
+                                    frameborder="0"
+                                    scrolling="no">
+
+                                </iframe>
+                            </div>
                         </div>
                     </div>
 
@@ -884,7 +894,16 @@ export default {
         },
 
         viewMessage(inbox, index) {
-            let content = JSON.parse(inbox.body);
+
+            let body = JSON.parse(inbox.body);
+            let body_html = JSON.parse(inbox.body_html);
+            let stripped_html = JSON.parse(inbox.stripped_html);
+
+            let content = body_html
+                ? body_html['body-html']
+                : stripped_html
+                    ? stripped_html['stripped-html']
+                    : body['body-plain']
             let from_mail = inbox.from_mail;
             let is_sent = inbox.is_sent;
             let reply_to = '';
@@ -924,10 +943,12 @@ export default {
                 reply_to = spl.slice(0, -1);
             }
 
+            content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
+
             this.selectedMessage = false;
             this.MessageDisplay = true;
             this.viewContent.from = inbox.from_mail;
-            this.viewContent.strippedHtml = content['body-plain'];
+            this.viewContent.strippedHtml = content;
             this.viewContent.date = inbox.full_clean_date;
             this.viewContent.subject = inbox.subject;
             this.viewContent.index = index;
@@ -942,10 +963,24 @@ export default {
                 this.records.data[index].is_viewed = 1
             }
 
-
             this.cardInbox = false;
             this.cardReadMessage = true;
 
+            this.iFrameLoader(this.viewContent.strippedHtml)
+        },
+
+        iFrameLoader(iframeBody){
+            const iFrameEl = this.$refs.iframe
+            const doc = iFrameEl.contentWindow.document
+            doc.open()
+            doc.write(iframeBody)
+            doc.close()
+            iFrameEl.onload = () => {
+                iFrameEl.style.height = "0"
+                this.$nextTick(() => {
+                    iFrameEl.style.height = doc.body.scrollHeight + 'px';
+                });
+            }
         },
 
         async sendEmail(type) {
@@ -1102,5 +1137,4 @@ export default {
 .vue-tag-error {
     border-color: red !important;
 }
-
 </style>

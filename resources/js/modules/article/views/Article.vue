@@ -660,15 +660,16 @@
                 // let article = '';
 
                 // console.log(this.getArticleInfo())
+                if( this.id_article ) {
+                    this.getArticleInfo().then((res) => {
+                        var article = res.data[0];
 
-                this.getArticleInfo().then((res) => {
-                    var article = res.data[0];
-
-                    if( article ){
-                        this.doUpdate(article.backlinks, article);
-                        $("#modal-content-edit").modal('show')
-                    }
-                })
+                        if( article ){
+                            this.doUpdate(article.backlinks, article);
+                            $("#modal-content-edit").modal('show')
+                        }
+                    })
+                }
                 
 
                 // articles.forEach(function(item, index){
