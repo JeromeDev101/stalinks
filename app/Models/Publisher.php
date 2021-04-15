@@ -48,19 +48,19 @@ class Publisher extends Model
     }
 
     public function getCustomUsernameAttribute() {
-        return isset($this->user->username) ? $this->user->username:null;
+        return isset($this->user->username) ? $this->user->username:'N/A';
     }
 
     public function getCustomTopicAttribute() {
-        return isset($this->topic) ? $this->topic:null;
+        return isset($this->topic) && $this->topic != '' ? $this->topic:'N/A';
     }
 
     public function getCustomContinentAttribute() {
-        return isset($this->continent->name) ? $this->continent->name:null;
+        return isset($this->continent->name) ? $this->continent->name:'N/A';
     }
 
     public function getCustomPriceAttribute() {
-        return isset($this->price) ? $this->price:null;
+        return isset($this->price) ? $this->price:0;
     }
 
     public function getCustomCreatedAttribute() {
