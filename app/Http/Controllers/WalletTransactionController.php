@@ -114,12 +114,13 @@ class WalletTransactionController extends Controller
         $fileName = $paymentType != 1 ? $this->moveFileToStorage($image) : '';
 
         // If payment type is paypal dont insert proof_doc field
-        $data = $paymentType != 1 ? [
+        $data = $paymentType == 1 ? [
             'user_id' => $request->user_id_buyer,
             'payment_via_id' => $request->payment_type,
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
-            'admin_confirmation' => 'Not Paid',
+            'proof_doc' => '/',
+            'admin_confirmation' => 'Paid',
         ] : [
             'user_id' => $request->user_id_buyer,
             'payment_via_id' => $request->payment_type,

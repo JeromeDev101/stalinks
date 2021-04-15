@@ -150,7 +150,8 @@
                         </span>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
+                            <div class="row" v-if="step
+                            == 0">
                                 <!--                                    <div class="col-md-12">-->
                                 <!--                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">-->
                                 <!--                                            <label for="">User Buyer</label>-->
@@ -191,10 +192,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" v-else-if="step
+                        == 1">
+                                <div class="col-sm-12">
+                                    <div id="smart-button-container">
+                                        <div style="text-align: center;">
+                                            <div id="paypal-button-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-footer">
+
+                        <div class="modal-footer"
+                             v-if="step == 0">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
+                            <button type="button"
+                                    @click="nextPage"
+                                    class="btn btn-primary">Next</button>
                         </div>
                     </div>
                 </div>
@@ -230,6 +246,7 @@ export default {
                 payment_type: '',
                 amount_usd: '',
             },
+            step: 0
         };
     },
 
@@ -305,19 +322,72 @@ export default {
             seenNotifications: "seenUserNotifications"
         }),
 
+        initPaypalButtons() {
+            let vm = this;
+            paypal.Buttons({
+                style : {
+                    shape : 'rect',
+                    color : 'black',
+                    layout : 'vertical',
+                    label : 'pay',
+
+                },
+
+                createOrder : function (data, actions) {
+                    return axios.post('/api/paypal/order/create', {
+                        amount: vm.updateModel.amount_usd,
+                    })
+                        .then(response => {
+                            return response.data.result;
+                        })
+                        .then(data => {
+                            return data.id;
+                        });
+                },
+
+                onApprove : function (data, actions) {
+                    return axios.post('/api/paypal/order/'+
+                        data.orderID
+                        +'/capture')
+                        .then(response => {
+                            vm.submitPay();
+                        });
+                },
+
+                onError : function (err) {
+                    swal.fire(
+                        'Error',
+                        'There was an error on processing your payment.',
+                        'error'
+                    )
+                }
+            }).render('#paypal-button-container');
+        },
+
+        nextPage() {
+            this.step = 1;
+
+            setTimeout(this.initPaypalButtons, 300);
+        },
+
         async submitPay() {
             this.formData = new FormData();
-            this.formData.append('file', this.$refs.proof.files[0]);
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
             this.formData.append('user_id_buyer',
                 this.user.id);
+
+            if (this.updateModel.payment_type != 1) {
+                this.formData.append('file', this.$refs.proof.files[0]);
+            }
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionAddWallet', this.formData)
             this.isPopupLoading = false;
 
             if( this.messageForms.action == 'success' ){
+
+                this.liveGetWallet();
 
                 $("#modal-add-wallet-header").modal('hide');
                 this.updateModel = {
