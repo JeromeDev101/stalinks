@@ -430,11 +430,11 @@ class MailgunController extends Controller
         }
 
         if( isset($input['stripped-html']) && $input['stripped-html'] ){
-            $stripped_html = json_encode($input['stripped-html']);
+            $stripped_html = json_encode($request->only('stripped-html'));
         }
 
         if( isset($input['body-html']) && $input['body-html'] ){
-            $body_html = json_encode($input['body-html']);
+            $body_html = json_encode($request->only('body-html'));
         }
 
         $data = [
