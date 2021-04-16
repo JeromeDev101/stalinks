@@ -42,16 +42,16 @@ const state = {
     listStatusText : {
         0:  { text: EXT_STATUS_NEW, label: "default" },
         10: { text: EXT_STATUS_CRAWL_FAILED, label: "danger"},
-        20: { text: EXT_STATUS_CONTACTS_NULL, label: "warning" },
-        30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
         // 40: { text: EXT_STATUS_AHREAFED, label: "primary" },
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
+        20: { text: EXT_STATUS_CONTACTS_NULL, label: "warning" },
+        30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
+        110: { text: EXT_STATUS_GOT_EMAIL, label: "success" },
         55: { text: EXT_STATUS_NO_ANSWER, label: "warning" },
         60: { text: EXT_STATUS_REFUSED, label: "warning" },
         70: { text: EXT_STATUS_IN_TOUCHED, label: "success" },
         90: { text: UNQUALIFIED, label: "success" },
         100: { text: EXT_STATUS_QUALIFIED, label: "success" },
-        110: { text: EXT_STATUS_GOT_EMAIL, label: "success" }
     },
     totalTopSites: 0,
     tableExtShowOptions: {
