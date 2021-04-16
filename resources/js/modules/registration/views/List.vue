@@ -248,7 +248,22 @@
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
                                 <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
-                                <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
+                                <td v-show="tblAccountsOpt.in_charge">
+                                    {{
+                                        account.team_in_charge == null
+                                            ? 'N/A'
+                                            : account.is_sub_account == 1
+                                                ? 'Sub'
+                                                :account.team_in_charge.username
+                                    }}
+
+                                    <span
+                                        v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
+                                        class="badge badge-danger">
+
+                                        Inactive
+                                    </span>
+                                </td>
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
@@ -269,7 +284,7 @@
                             </tr>
                         </tbody>
                     </table>
-
+                    <pagination :data="listAccount" @pagination-change-page="getAccountList" :limit="8"></pagination>
                 </div>
 
             </div>
@@ -1361,7 +1376,7 @@
                 await this.$store.dispatch('actionGetListPayentType', params);
             },
 
-            async getAccountList(params) {
+            async getAccountList(page = 1) {
 
                 $("#tbl_account").DataTable().destroy();
                 this.isLoadingTable = true;
@@ -1382,6 +1397,7 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        page: page
                     }
                 });
                 this.isLoadingTable = false;
