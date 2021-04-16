@@ -351,6 +351,12 @@ export default {
                         +'/capture')
                         .then(response => {
                             vm.submitPay();
+
+                            swal.fire(
+                                'Success',
+                                'Successfully Added',
+                                'success'
+                            )
                         });
                 },
 
@@ -396,13 +402,13 @@ export default {
                     amount_usd: '',
                 }
 
-                this.$refs.proof.value = '';
-
                 swal.fire(
                     'Success',
                     'Successfully Added',
                     'success'
                 )
+
+                this.$refs.proof.value = '';
 
             }
 
