@@ -269,7 +269,7 @@
                             </tr>
                         </tbody>
                     </table>
-
+                    <pagination :data="listAccount" @pagination-change-page="getAccountList" :limit="8"></pagination>
                 </div>
 
             </div>
@@ -1361,7 +1361,7 @@
                 await this.$store.dispatch('actionGetListPayentType', params);
             },
 
-            async getAccountList(params) {
+            async getAccountList(page = 1) {
 
                 $("#tbl_account").DataTable().destroy();
                 this.isLoadingTable = true;
@@ -1382,6 +1382,7 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        page: page
                     }
                 });
                 this.isLoadingTable = false;
