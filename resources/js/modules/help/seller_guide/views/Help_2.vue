@@ -6,8 +6,15 @@
           <div class='box-header'>
             <div class='row'>
               <div class='col-md-12'>
-                <h1 class='bg-primary text-white p-2 mt-3'>
+                <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
+                   <img
+                    class=''
+                    src='../../../../../images/writer-guide/back.png'/>
                  HELP 2 : Upload your list of URLs with price and other criteria
+                 <img
+                    class=''
+                    src='../../../../../images/writer-guide/next.png'
+                  />
                 </h1>
                    
                 <p>Now is time to upload your URLs</p>
@@ -19,7 +26,7 @@ At the left corner of the screen, go to the “Seller” menu and “List Publis
 On the menu bar, click on Seller → List Publisher
 
                 </p>
-                  <img src="../../../../../images/seller-guide/url-guide-1.png"/>
+                  <img class="buyer-img "src="../../../../../images/seller-guide/url-guide-1.png"/>
               <p>
                   If you choose to do it manually:
                 On the right side, click on the add URL button
@@ -31,7 +38,7 @@ On the menu bar, click on Seller → List Publisher
 
               </p>
                   <ol type='a'>
-                    <li>Sellcer</li>
+                    <li>Seller</li>
                     <li>
                       Include article: yes / no
                     </li>
@@ -50,7 +57,7 @@ On the menu bar, click on Seller → List Publisher
                      Topic 
                     </li>
                   </ol>
-<img src="../../../../../images/seller-guide/seller-guide-3.png"/>
+<img class="buyer-img"src="../../../../../images/seller-guide/url-guide-3.png"/>
                  <p>Click Add</p>
                     
 
@@ -60,14 +67,14 @@ you must prepare a CSV Excel file first containing the details of the URL’s (U
 We have made a template for you 
 
                   </p>
-                  <!-- <img src="../../../../../images/seller-guide/seller-guide-4.png"/> -->
+                   <img class="buyer-img"src="../../../../../images/seller-guide/url-guide-4.png"/> 
               
 
                 <p>When your CSV is ready 
 Click “Choose File” then click the upload icon.
 </p>
 
- <!-- <img src="../../../../../images/seller-guide/seller-guide-5.png"/> -->
+  <img class="buyer-img"src="../../../../../images/seller-guide/url-guide-5.png"/> 
  <p>
      You always can edit or delete urls info 
 We are the on to generate ahref score for you 
@@ -89,6 +96,33 @@ Thanks for using Stalinks
     </div>
   </div>
 </template>
+
+<style>
+        .buyer-img{
+            width: 100%;
+            padding: 20px;
+        }
+        .content-style li {
+            font-size:17px;
+            line-height:2em;
+            padding:20px;
+            font-weight:600;
+        }
+          p{
+          font-size: 17px;
+    line-height: 2em;
+    padding: 0 20px;
+    font-weight: 600;
+        }
+
+          .with-arrow{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+        }
+        
+    </style>
+
 
 <script>
     import { mapState } from 'vuex';
