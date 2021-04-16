@@ -254,7 +254,7 @@
                     </div>
 
                     <!-- email contents -->
-                    <div v-show="MessageDisplay" v-for="email in viewContentThread.thread" class="box-body no-padding">
+                    <div v-show="MessageDisplay" v-for="email in viewContentThread.threads" class="box-body no-padding">
                         <!-- email recipients/sender and date -->
                         <div class="mailbox-read-info">
                             <h6 class="font-weight-bold mb-0">
@@ -277,6 +277,52 @@
 
                                 </iframe>
                             </div>
+                        </div>
+
+                        <!-- email attachments -->
+                        <div v-show="MessageDisplay && email.attachment.url !== ''" class="box-footer">
+                            <ul class="mailbox-attachments clearfix">
+                                <li
+                                    v-if="email.is_sent === 0 && email.attachment.length !== 0"
+                                    v-for="(attach, index) in email.attachment"
+                                    :key="index">
+
+                                    <div class="mailbox-attachment-info mailbox-attachment-info-custom card">
+                                        <a
+                                            href="#"
+                                            class="mailbox-attachment-name"
+                                            :title="attach.name"
+                                            :id="'link-download-href-' + index + email.id">
+
+                                            <i class="fa fa-paperclip"></i>
+                                            {{ attach.name }}
+                                        </a>
+
+                                        <span class="mailbox-attachment-size">
+                                            {{ bytesToSize(attach.size) }}
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <li v-if="email.is_sent === 1">
+                                    <div class="mailbox-attachment-info mailbox-attachment-info-custom card">
+                                        <a
+                                            target="_blank"
+                                            class="mailbox-attachment-name"
+                                            :download="email.attachment.display_name"
+                                            :href="'/attachment/'+email.attachment.filename">
+
+                                            <i class="fa fa-paperclip"></i>
+                                            {{ email.attachment.display_name }}
+                                        </a>
+
+                                        <span class="mailbox-attachment-size">
+                                            {{ bytesToSize(email.attachment.size) }}
+                                        </span>
+                                    </div>
+
+                                </li>
+                            </ul>
                         </div>
 
                         <hr>
@@ -655,7 +701,7 @@ export default {
             },
             viewContentThread: {
                 inbox: {},
-                thread: [],
+                threads: [],
             },
             records: [],
             loadingMessage: false,
@@ -1017,7 +1063,6 @@ export default {
                     }
                 }
 
-
                 if (from_mail.search("<") > 0) {
                     let spl = from_mail.split("<")[1]
                     reply_to = spl.slice(0, -1);
@@ -1058,41 +1103,43 @@ export default {
             self.cardReadMessageThread = true;
 
             self.viewContentThread.inbox = inbox
-            self.viewContentThread.thread = inbox.thread
+            self.viewContentThread.threads = JSON.parse(JSON.stringify(inbox.thread));
 
             // load email body in iframe
-            self.iFrameLoaderThread(self.viewContentThread.thread)
+            self.iFrameLoaderThread(self.viewContentThread.threads)
 
-            // thread.forEach(function (email, index) {
-            //     self.emailAttachmentSorter(email, email.attachment, index)
-            // });
+            // attachments
+            self.viewContentThread.threads.forEach(function (email, index) {
+                self.emailAttachmentSorter(email, email.attachment, index)
+            });
         },
 
         emailAttachmentSorter(inbox, attachments, index) {
             if(attachments !== '' && attachments !== '[]') {
                 let attach = JSON.parse(attachments);
-                this.viewContentThread[index].attachment  = attach;
+                this.viewContentThread.threads[index].attachment  = attach
 
                 if (inbox.is_sent === 0) {
-                    attach.forEach(function (att, index) {
-                        console.log(att.url)
+                    attach.forEach(function (att, ind) {
                         axios.post('/api/mail/show-attachment', {
                             url: att.url
                         },{ responseType: 'arraybuffer' })
                             .then((res) => {
+
                                 let blob = new Blob([res.data], { type: res.headers['content-type'] })
-                                let cont = res.headers['content-type'].split("/");
+                                let result = res.headers['content-type'].split("/");
 
-                                console.log(blob)
-
-                                // let link = document.getElementById( 'link-download-href-' + index );
-                                // link.href = window.URL.createObjectURL(blob);
-                                // link.download = attach[index]['name'];
+                                let link = document.getElementById( 'link-download-href-' + ind + inbox.id);
+                                link.href = window.URL.createObjectURL(blob);
+                                link.download = att.name;
+                            })
+                            .catch((err) => {
+                                console.log(err)
                             })
                     });
                 }
             } else {
-                this.viewContent.attachment = {
+                this.viewContentThread.threads[index].attachment = {
                     url: '',
                     size: '',
                     name: '',
