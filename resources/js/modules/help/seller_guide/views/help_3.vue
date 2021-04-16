@@ -6,8 +6,20 @@
           <div class='box-header'>
             <div class='row'>
               <div class='col-md-12'>
-                <h1 class='bg-primary text-white p-2 mt-3'>
+                <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
+                   <router-link :to="{ path: '/help/seller-guide-2' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                  HELP 3 : Follow up your orders
+                  <router-link :to="{ path: '/help/seller-guide-4' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  </router-link>
                 </h1>
                    
               
@@ -17,7 +29,7 @@
 Now that you got some order is time to be sure delivery is done on time 
 
                 </p>
-                  <img src="../../../../../images/seller-guide/follow-guide-1.png"/>
+                  <img class="follow-img"src="../../../../../images/seller-guide/follow-guide-1.png"/>
               <p>
                 Use the filter to look for what you need
 please update the status via edit button 
@@ -54,6 +66,12 @@ Thanks for using Stalinks
     </div>
   </div>
 </template>
+<style>
+  .follow-img{
+    width:100%;
+    padding: 20px;
+  }
+</style>
 
 <script>
     import { mapState } from 'vuex';

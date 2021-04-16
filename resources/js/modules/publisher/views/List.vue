@@ -2272,7 +2272,7 @@
                     inc_article: that.inc_article,
                     topic: topic,
                     casino_sites: that.casino_sites.toLowerCase(),
-                    kw_anchor: that.kw_anchor,
+                    kw_anchor: that.kw_anchor.toLowerCase(),
                     // country_id: that.country_id,
                     continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,

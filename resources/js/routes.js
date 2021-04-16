@@ -51,6 +51,11 @@ import SellerGuide2 from '@/modules/help/seller_guide/views/Help_2.vue'
 import SellerGuide3 from '@/modules/help/seller_guide/views/help_3.vue'
 import SellerGuide4 from '@/modules/help/seller_guide/views/help_4.vue'
 
+// writers guide
+import WriterGuide1 from '@/modules/help/writer_guide/views/Help_1.vue'
+import WriterGuide2 from '@/modules/help/writer_guide/views/Help_2.vue'
+import WriterGuide3 from '@/modules/help/writer_guide/views/Help_3.vue'
+
 const routes = [
   {
     path: '/login',
@@ -122,6 +127,21 @@ const routes = [
             path: 'seller-guide-4',
             name: 'seller-guide-4',
             component: SellerGuide4
+          },
+          {
+            path: 'writer-guide-1',
+            name: 'writer-guide-1',
+            component: WriterGuide1
+          },
+          {
+            path: 'writer-guide-2',
+            name: 'writer-guide-2',
+            component: WriterGuide2
+          },
+          {
+            path: 'writer-guide-3',
+            name: 'writer-guide-3',
+            component: WriterGuide3
           }
         ]
       },
