@@ -7,14 +7,19 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                   <img
-                    class=''
-                    src='../../../../../images/writer-guide/back.png'/>
+                   <router-link :to="{ path: '/help/seller-guide-2' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                  HELP 3 : Follow up your orders
-                  <img
-                    class=''
-                    src='../../../../../images/writer-guide/next.png'
-                  />
+                  <router-link :to="{ path: '/help/seller-guide-4' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  </router-link>
                 </h1>
                    
               

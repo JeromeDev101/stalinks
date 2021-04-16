@@ -66,9 +66,9 @@
                                             </router-link>
                                         </li>
                                         <li>
-                                            <router-link :to="{ path: '/help/writer-guide-3' }">
+                                            <!-- <router-link :to="{ path: '/help/writer-guide-3' }"> -->
                                                 STEP 3. Follow up your income
-                                            </router-link>
+                                            <!-- </router-link> -->
                                         </li>
                                         
                                     </ul>
