@@ -7,14 +7,19 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                   <img
-                    class=''
-                    src='../../../../../images/writer-guide/back.png'/>
+                   <router-link :to="{ path: '/help/seller-guide-1' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                  HELP 2 : Upload your list of URLs with price and other criteria
-                 <img
-                    class=''
-                    src='../../../../../images/writer-guide/next.png'
-                  />
+                  <router-link :to="{ path: '/help/seller-guide-3' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  </router-link>
                 </h1>
                    
                 <p>Now is time to upload your URLs</p>

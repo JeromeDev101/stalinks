@@ -7,14 +7,13 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                  <img
-                    class=''
-                    src='../../../../../images/writer-guide/back.png'/>
+                  <router-link :to="{ path: '/help/seller-guide-3' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                  HELP 4 : GET PAY
-                  <img
-                    class=''
-                    src='../../../../../images/writer-guide/next.png'
-                  />
                 </h1>
                    
               

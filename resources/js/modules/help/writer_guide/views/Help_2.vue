@@ -11,9 +11,19 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 text-uppercase with-arrow '>
-                  <img class="" src='../../../../../images/writer-guide/back.png' />
+                  <router-link :to="{ path: '/help/writer-guide-1' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                   STEP 2: Start Writing Content
- <img class="" src='../../../../../images/writer-guide/next.png' />
+                  <!-- <router-link :to="{ path: '/help/writer-guide-3' }"> -->
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  <!-- </router-link> -->
                  
                 </h1>
                

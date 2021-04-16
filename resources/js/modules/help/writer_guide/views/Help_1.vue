@@ -8,9 +8,13 @@
               <div class='col-md-12'>
                
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                   <img class="" src='../../../../../images/writer-guide/back.png' />
                   STEP 1: Register to Stalinks and Setup your Price
-                   <img class="" src='../../../../../images/writer-guide/next.png' />
+                   <router-link :to="{ path: '/help/writer-guide-2' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  </router-link>
                 </h1>
                 <p>
                   After you have validated your account, just logging in to your

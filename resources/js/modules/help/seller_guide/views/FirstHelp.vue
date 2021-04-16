@@ -7,15 +7,19 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                  <img
+                  <!-- <img
                     class=''
                     src='../../../../../images/writer-guide/back.png'
-                  />
+                  /> -->
                   HELP 1 : Learn about the dashboard
-                  <img
-                    class=''
-                    src='../../../../../images/writer-guide/next.png'
-                  />
+
+                  <router-link :to="{ path: '/help/seller-guide-2' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/next.png'
+                    />
+                  </router-link>
+                    
                 </h1>
                 <h2 class='text-center text-uppercase'> How to sell backlinks at STAlinks?</h2>
                 <p>Now that you are login into our desk management</p>
