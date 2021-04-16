@@ -595,6 +595,12 @@ class MailgunController extends Controller
         return response()->json(['success' => true],200);
     }
 
+    public function setViewMessageThread(Request $request) {
+        Reply::whereIn('id', $request->ids)->update(['is_viewed' => 1]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function labeling(Request $request) {
         if (is_array($request->ids)) {
             foreach ($request->ids as $ids) {

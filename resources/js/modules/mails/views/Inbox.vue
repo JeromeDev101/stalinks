@@ -1019,7 +1019,7 @@ export default {
 
         viewMessage(inbox, index, route) {
             if (route === 'Inbox') {
-                this.viewMessageThread(inbox)
+                this.viewMessageThread(inbox, index)
             } else {
                 let body = JSON.parse(inbox.body);
                 let body_html = JSON.parse(inbox.body_html);
@@ -1095,8 +1095,9 @@ export default {
             }
         },
 
-        viewMessageThread(inbox) {
+        viewMessageThread(inbox, inbox_index) {
             let self = this;
+            let viewed_emails = [];
 
             self.cardInbox = false;
             self.MessageDisplay = true;
@@ -1111,7 +1112,16 @@ export default {
             // attachments
             self.viewContentThread.threads.forEach(function (email, index) {
                 self.emailAttachmentSorter(email, email.attachment, index)
+                if (email.is_viewed === 0) {
+                    viewed_emails.push(email.id)
+                    self.records.data[inbox_index].thread[index].is_viewed = 1
+                }
             });
+
+            // is_viewed function
+            if (viewed_emails.length !== 0) {
+                axios.post('/api/mail/is-viewed-thread',{ ids: viewed_emails} )
+            }
         },
 
         emailAttachmentSorter(inbox, attachments, index) {
