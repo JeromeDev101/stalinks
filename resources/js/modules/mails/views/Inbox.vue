@@ -348,7 +348,7 @@
                             type="button"
                             class="btn btn-default"
 
-                            @click="deleteMessageThread(viewContent.id, viewContent.index, false)">
+                            @click="deleteMessageThread(viewContentThread.threads, 'single')">
 
                             <i class="fa fa-trash-o"></i>
                             Delete
@@ -886,70 +886,77 @@ export default {
         },
 
         deleteMessage(id, index, is_all) {
-            swal.fire({
-                title: "Are you sure ?",
-                html: "Delete these message?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, keep it'
-            })
-            .then((result) => {
-                if (result.isConfirmed) {
 
-                    let ids = [];
-                    for (var chk in this.checkIds) {
-                        ids.push(this.checkIds[chk].id);
-                    }
+            if (this.$route.name === 'Inbox') {
+                this.deleteMessageThread(null, 'all')
+            } else {
+                swal.fire({
+                    title: "Are you sure ?",
+                    html: "Delete these message?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
 
-                    axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
-                    .then((res) => {
-                        if (is_all) {
-                            this.getInbox();
-                            this.paginate.total -= ids.length;
-                        }else{
-                            this.records.data.splice(index, 1);
-                            this.paginate.total--;
+                        let ids = [];
+                        for (var chk in this.checkIds) {
+                            ids.push(this.checkIds[chk].id);
                         }
-                    })
 
-                    this.selectedMessage = true;
-                    this.MessageDisplay = false;
-                    this.viewContent = {
-                        received: '',
-                        is_sent: '',
-                        from_mail: '',
-                        index: '',
-                        id: '',
-                        date: '',
-                        from: '',
-                        subject: '',
-                        strippedHtml: '',
-                        deleted_at: '',
-                        attachment: {
-                            url: '',
-                            size: '',
-                            name: '',
-                        },
+                        axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
+                            .then((res) => {
+                                if (is_all) {
+                                    this.getInbox();
+                                    this.paginate.total -= ids.length;
+                                }else{
+                                    this.records.data.splice(index, 1);
+                                    this.paginate.total--;
+                                }
+                            })
+
+                        this.selectedMessage = true;
+                        this.MessageDisplay = false;
+                        this.viewContent = {
+                            received: '',
+                            is_sent: '',
+                            from_mail: '',
+                            index: '',
+                            id: '',
+                            date: '',
+                            from: '',
+                            subject: '',
+                            strippedHtml: '',
+                            deleted_at: '',
+                            attachment: {
+                                url: '',
+                                size: '',
+                                name: '',
+                            },
+                        }
+
+                        this.checkIds = [];
+
+                        this.clearViewing()
+
+                        swal.fire(
+                            'Deleted!',
+                            'Messages is move to Trash.',
+                            'success'
+                        )
                     }
-
-                    this.checkIds = [];
-
-                    this.clearViewing()
-
-                    swal.fire(
-                        'Deleted!',
-                        'Messages is move to Trash.',
-                        'success'
-                    )
-                }
-            });
+                });
+            }
         },
 
         deleteMessageThread(thread, mod) {
+            let self = this
+
             swal.fire({
-                title: "Delete thread",
-                html: "Delete all emails in this thread?",
+                title: mod === 'single' ? "Delete thread" : "Delete selected threads",
+                html: mod === 'single' ? "Delete all emails in this thread?" : "Delete all emails in selected threads?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete them!',
@@ -957,11 +964,38 @@ export default {
             })
             .then((result) => {
                 if (result.isConfirmed) {
-                
-                } else {
-                
-                }  
+
+                    let ids = self.getThreadIds(thread, mod)
+
+                    axios.post('/api/mail/delete-message-thread', { ids: ids})
+                        .then((res) => {
+                            self.clearViewing()
+                            self.getInbox()
+
+                            swal.fire(
+                                'Deleted!',
+                                'Deleted emails moved to trash.',
+                                'success'
+                            )
+                        })
+                }
             })
+        },
+
+        getThreadIds(thread, mod) {
+            let result = [];
+            let self = this
+
+            if (mod === 'single') {
+                result = thread.map(a => a.id);
+            } else {
+                self.checkIds.forEach(function (item) {
+                    let ids = item.thread.map(a => a.id)
+                    result = result.concat(ids);
+                })
+            }
+
+            return result;
         },
 
         selectAll() {
@@ -1056,6 +1090,7 @@ export default {
             if( this.checkIds.length > 0 ){
                 this.btnEnable = false;
             }
+            console.log(this.checkIds)
         },
 
         refeshInbox() {

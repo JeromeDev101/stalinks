@@ -654,6 +654,12 @@ class MailgunController extends Controller
         return response()->json(['success' => true],200);
     }
 
+    public function deleteMessageThread(Request $request) {
+        Reply::whereIn('id', $request->ids)->update(['deleted_at' => date('Y-m-d')]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function get_reply(Request $request)
     {
         $validator = Validator::make($request->all(), [
