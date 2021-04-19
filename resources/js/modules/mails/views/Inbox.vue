@@ -218,7 +218,7 @@
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply" data-target="#modal-email-reply">
+                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
                                 <i class="fa fa-reply"></i>
                                 {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
@@ -337,7 +337,7 @@
                                 data-toggle="modal"
                                 data-target="#modal-email-reply"
 
-                                @click="doReply">
+                                @click="doReply($route.name)">
 
                                 <i class="fa fa-reply"></i>
                                 Reply
@@ -507,11 +507,11 @@
                     <div class="modal-body relative">
                         <form class="row" action="">
 
-                            <div class="col-md-12">
-                                <blockquote class="default">
-                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>
-                                </blockquote>
-                            </div>
+<!--                            <div class="col-md-12">-->
+<!--                                <blockquote class="default">-->
+<!--                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>-->
+<!--                                </blockquote>-->
+<!--                            </div>-->
 
 
                             <div class="col-md-6">
@@ -773,7 +773,20 @@ export default {
         },
 
         displayInboxNameAndThreadCount(thread) {
-            let senders = thread.map(a => a.sender === this.user.work_mail ? 'me' : a.sender);
+            // let senders = thread.map(a => a.from_mail === this.user.work_mail ? 'me' : a.from_mail);
+            let self = this
+
+            let senders = thread.map(function (element) {
+                let from = self.getFromMail(element.from_mail)
+                return from === ''
+                    ? element.from_mail === self.user.work_mail
+                        ? 'me'
+                        : element.from_mail
+                        : from === self.user.work_mail
+                            ? 'me'
+                            : from;
+            })
+
             senders = senders.filter((item, index) => senders.indexOf(item) === index);
             return senders.join(', ');
         },
@@ -808,27 +821,38 @@ export default {
             return result;
         },
 
-        doReply() {
+        doReply(route) {
+
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
             this.replyContent.email = [];
-            this.replyContent.title = this.viewContent.subject;
+            this.replyContent.title = route === 'Inbox'
+                ? this.viewContentThread.inbox.subject
+                : this.viewContent.subject;
 
             // add email
+            if (route === 'Inbox') {
 
-            if (this.viewContent.is_sent === 1) {
-                this.replyContent.email = createTags(this.viewContent.received.replace(/\s/g, '')
-                    .split(/[|,]/g)
-                    .filter(function (email) {
-                        return email !== '';
-                    }))
-            } else {
-                let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
+                let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
                 this.$refs.replyTag.addTag(tag);
+
+            } else {
+
+                if (this.viewContent.is_sent === 1) {
+                    this.replyContent.email = createTags(this.viewContent.received.replace(/\s/g, '')
+                        .split(/[|,]/g)
+                        .filter(function (email) {
+                            return email !== '';
+                        }))
+                } else {
+                    let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
+                    this.$refs.replyTag.addTag(tag);
+                }
+
             }
 
             axios.post('/api/mail/get-reply', {
-                email: this.viewContent.from_mail,
+                email: route === 'Inbox' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
             })
             .then((res) => {
                 // console.log(res.data)
@@ -1063,10 +1087,7 @@ export default {
                     }
                 }
 
-                if (from_mail.search("<") > 0) {
-                    let spl = from_mail.split("<")[1]
-                    reply_to = spl.slice(0, -1);
-                }
+                reply_to = this.getFromMail(from_mail)
 
                 content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
 
@@ -1097,6 +1118,7 @@ export default {
 
         viewMessageThread(inbox, inbox_index) {
             let self = this;
+            let reply_to = ''
             let viewed_emails = [];
 
             self.cardInbox = false;
@@ -1105,6 +1127,13 @@ export default {
 
             self.viewContentThread.inbox = inbox
             self.viewContentThread.threads = JSON.parse(JSON.stringify(inbox.thread));
+
+            let from_mail = self.viewContentThread.inbox.from_mail
+
+            // get from_mail
+            reply_to = this.getFromMail(from_mail)
+
+            self.viewContentThread.inbox.from_mail = reply_to === '' ? inbox.from_mail : reply_to;
 
             // load email body in iframe
             self.iFrameLoaderThread(self.viewContentThread.threads)
@@ -1201,6 +1230,17 @@ export default {
                     iFrameEl.style.height = doc.body.scrollHeight + 'px';
                 });
             }
+        },
+
+        getFromMail(from_mail) {
+            let reply_to = '';
+
+            if (from_mail.search("<") > 0) {
+                let spl = from_mail.split("<")[1]
+                reply_to = spl.slice(0, -1);
+            }
+
+            return reply_to;
         },
 
         async sendEmail(type) {

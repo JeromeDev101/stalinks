@@ -221,6 +221,7 @@ class MailgunController extends Controller
                         MIN(labels.name) as label_name,
                         MIN(labels.color) as label_color,
                         MAX(replies.label_id) as label_id,
+                        MIN(replies.from_mail) as from_mail,
                         MIN(replies.created_at) as created_at,
                         MIN(replies.attachment) as attachment,
                         MAX(replies.is_starred) as is_starred,
