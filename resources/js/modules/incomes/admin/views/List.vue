@@ -11,10 +11,26 @@
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" name="" v-model="filterModel.backlink_id" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Completed</label>
+
+                                <date-range-picker
+                                    v-model="filterModel.date_completed"
+                                    ref="picker"
+                                    opens="right"
+                                    style="width: 100%"
+                                    :linkedCalendars="true"
+                                    :dateRange="filterModel.date_completed"
+                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                />
                             </div>
                         </div>
 
@@ -140,6 +156,10 @@
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
                     backlink_id: this.$route.query.backlink_id || '',
+                    date_completed: {
+                        startDate: '',
+                        endDate: ''
+                    },
                 },
                 isSearchingLoading: false,
             }
@@ -171,7 +191,7 @@
                 if( p1 != 0 ){
                     result = 0;
                 }
-                
+
                 return result;
 
             },
@@ -227,7 +247,7 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageformIncomesAdmin');
             },
-    
+
         },
     }
 </script>
