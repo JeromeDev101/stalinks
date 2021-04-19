@@ -1302,6 +1302,7 @@ import DownloadCsv from '@/components/export-csv/Csv.vue'
 import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
 import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+import _ from 'underscore';
 
 export default {
     components: {
@@ -2594,7 +2595,7 @@ export default {
                 arr.push(ob[key]);
             });
 
-            return arr;
+            return _.sortBy(arr, 'text');
         },
 
         clearSearch() {
