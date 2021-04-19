@@ -343,6 +343,16 @@
                                 Reply
                             </button>
                         </div>
+
+                        <button
+                            type="button"
+                            class="btn btn-default"
+
+                            @click="deleteMessageThread(viewContent.id, viewContent.index, false)">
+
+                            <i class="fa fa-trash-o"></i>
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -934,6 +944,24 @@ export default {
                     )
                 }
             });
+        },
+
+        deleteMessageThread(thread, mod) {
+            swal.fire({
+                title: "Delete thread",
+                html: "Delete all emails in this thread?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete them!',
+                cancelButtonText: 'No, keep them.'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                
+                } else {
+                
+                }  
+            })
         },
 
         selectAll() {

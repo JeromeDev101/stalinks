@@ -287,9 +287,17 @@ class MailgunController extends Controller
                     break;
                 case 'Sent':
                      if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.is_sent', 1);
+                        $inbox = $inbox->where('replies.is_sent', 1)->where(function ($sub) {
+                            $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            });
                      }else{
-                        $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
+                        $inbox = $inbox->where('replies.sender', $request->email)
+                            ->where('replies.is_sent', 1)
+                            ->where(function ($sub) {
+                                $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            });;
                      }
 
                     break;
@@ -297,9 +305,15 @@ class MailgunController extends Controller
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
                     if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.deleted_at','!=',1);
+                        $inbox = $inbox->whereNotNull('replies.deleted_at')->where('replies.deleted_at','!=',1);
                     }else{
-                        $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
+                        $inbox = $inbox
+                            ->whereNotNull('replies.deleted_at')
+                            ->where('replies.deleted_at','!=',1)
+                            ->where(function ($sub) use ($request){
+                                $sub->where('replies.sender', $request->email)
+                                    ->orWhere('replies.received', $request->email);
+                            });
                     }
 
                     break;
