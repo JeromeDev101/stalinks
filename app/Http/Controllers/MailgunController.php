@@ -319,9 +319,22 @@ class MailgunController extends Controller
                     break;
                 case 'Starred':
                      if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.is_starred', 1);
+                        $inbox = $inbox->where('replies.is_starred', 1)
+                            ->where(function ($sub) {
+                            $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            });;
                      }else{
-                        $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
+                        $inbox = $inbox
+                            ->where('replies.is_starred', 1)
+                            ->where(function ($sub) use ($request){
+                                $sub->where('replies.sender', $request->email)
+                                    ->orWhere('replies.received', $request->email);
+                            })
+                            ->where(function ($sub) {
+                                $sub->whereNull('deleted_at')
+                                    ->orWhere('deleted_at', 1);
+                            });;
                      }
 
                     break;
