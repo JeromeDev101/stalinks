@@ -14,7 +14,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                     </router-link>
-                 STEP 1: Navigating with the dashboard 
+                 STEP 1: NAVIGATING WITH THE DASHBOARD
                    <router-link :to="{ path: '/help/buyer-guide-2' }">
                       <img
                       class=''
