@@ -275,7 +275,7 @@ class MailgunController extends Controller
                     }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
-                    ->orderBy('replies.id', 'desc')
+                    ->orderBy('id', 'desc')
                     ->paginate();
 
                     // get emails with "Re: " subjects
@@ -312,7 +312,7 @@ class MailgunController extends Controller
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
                         ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
-                        ->orderBy('replies.id', 'desc')
+                        ->orderBy('id', 'desc')
                         ->paginate();
 
                     // get emails with "Re: " subjects
@@ -370,7 +370,7 @@ class MailgunController extends Controller
                      }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
-                        ->orderBy('replies.id', 'desc')
+                        ->orderBy('id', 'desc')
                         ->paginate();
 
                     // get emails with "Re: " subjects
