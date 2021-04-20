@@ -261,7 +261,29 @@
                         <div class="mailbox-read-info">
                             <h6 class="font-weight-bold mb-0">
                                 {{ email.from_mail }}
-                                <span class="mailbox-read-time pull-right">{{ email.full_clean_date }}</span>
+
+                                <span class="pull-right">
+                                    <span v-if="email.attachment.url !== ''" class="mr-2">
+                                        <i class="fa fa-paperclip"></i>
+                                    </span>
+
+                                    <span class="mailbox-read-time">
+                                        {{ email.full_clean_date }}
+                                    </span>
+
+                                    <span
+                                        v-if="viewContentThread.inbox.is_sent === 1 && email.is_sent === 0"
+                                        class="ml-2"
+                                        title="Reply"
+                                        style="cursor: pointer"
+                                        data-toggle="modal"
+                                        data-target="#modal-email-reply"
+
+                                        @click="doReply($route.name, email)">
+
+                                        <i class="fa fa-reply"></i>
+                                    </span>
+                                </span>
                             </h6>
 
                             <small class="text-muted">
@@ -322,7 +344,6 @@
                                             {{ bytesToSize(email.attachment.size) }}
                                         </span>
                                     </div>
-
                                 </li>
                             </ul>
                         </div>
@@ -834,20 +855,25 @@ export default {
             return result;
         },
 
-        doReply(route) {
+        doReply(route, info = null) {
 
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
             this.replyContent.email = [];
             this.replyContent.title = route !== 'Trash'
-                ? this.viewContentThread.inbox.subject
+                ? info
+                    ? info.subject
+                    : this.viewContentThread.inbox.subject
                 : this.viewContent.subject;
 
             // add email
             if (route !== 'Trash') {
 
                 if (this.viewContentThread.inbox.is_sent === 1) {
-                    this.replyContent.email = createTags(this.viewContentThread.inbox.received.replace(/\s/g, '')
+
+                    let rec = info ? info.sender : this.viewContentThread.inbox.received
+
+                    this.replyContent.email = createTags(rec.replace(/\s/g, '')
                         .split(/[|,]/g)
                         .filter(function (email) {
                             return email !== '';
@@ -1101,7 +1127,6 @@ export default {
             if( this.checkIds.length > 0 ){
                 this.btnEnable = false;
             }
-            console.log(this.checkIds)
         },
 
         refeshInbox() {

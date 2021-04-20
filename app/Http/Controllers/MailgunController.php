@@ -213,23 +213,23 @@ class MailgunController extends Controller
 
         if (isset($request->param) && $request->param != ''){
             if ($request->param != 'Trash') {
-                $inbox = Reply::selectRaw(
-                    'replies.subject,
-                        replies.sender,
-                        replies.received,
-                        MIN(replies.id) as id,
-                        MIN(labels.name) as label_name,
-                        MIN(replies.is_sent) as is_sent,
-                        MIN(labels.color) as label_color,
-                        MAX(replies.label_id) as label_id,
-                        MIN(replies.from_mail) as from_mail,
-                        MIN(replies.created_at) as created_at,
-                        MIN(replies.attachment) as attachment,
-                        MAX(replies.is_starred) as is_starred,
-                        CONCAT("Re: ", replies.subject) AS con_sub,
-                        REPLACE(replies.subject, "Re: ", "") AS re_sub
-                    ')
-                    ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id');
+                $inbox = Reply::selectRaw('
+                    replies.subject,
+                    replies.sender,
+                    replies.received,
+                    MIN(replies.id) as id,
+                    MIN(labels.name) as label_name,
+                    MIN(replies.is_sent) as is_sent,
+                    MIN(labels.color) as label_color,
+                    MAX(replies.label_id) as label_id,
+                    MIN(replies.from_mail) as from_mail,
+                    MIN(replies.created_at) as created_at,
+                    MIN(replies.attachment) as attachment,
+                    MAX(replies.is_starred) as is_starred,
+                    CONCAT("Re: ", replies.subject) AS con_sub,
+                    REPLACE(replies.subject, "Re: ", "") AS re_sub
+                ')
+                ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id');
             } else {
                 $inbox = Reply::select('replies.*', 'labels.name as label_name', 'labels.color as label_color')
                     ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
@@ -311,6 +311,7 @@ class MailgunController extends Controller
                      }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
+                        ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
                         ->orderBy('replies.id', 'desc')
                         ->paginate();
 
@@ -414,7 +415,7 @@ class MailgunController extends Controller
                         || in_array($item->sender, $received_array)
                     );
                 }
-            })->sortBy('created_at')->values();
+            })->sortBy('id')->values();
 
             unset($item['thread']);
             $item['thread'] = $threads;
