@@ -8,6 +8,12 @@
               <div class='col-md-12'>
                
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
+                    <router-link :to="{ path: '/help/seller-guide-4' }">
+                      <img
+                      class=''
+                      src='../../../../../images/writer-guide/back.png'
+                    />
+                  </router-link>
                   STEP 1: Register to Stalinks and Setup your Price
                    <router-link :to="{ path: '/help/writer-guide-2' }">
                       <img
@@ -29,7 +35,7 @@
                 </p>
                 <ol class='content-styles' >
                   <li>Total Backlink (Buyer)</li>
-                  <ul>
+                  <ul class="list-style-none">
                     <li>All the information about to track the orders</li>
 
                     <li>It has 6 columns:</li>
@@ -81,12 +87,7 @@
             font-weight:600;
         }
 
-        p{
-          font-size: 17px;
-    line-height: 2em;
-    padding: 0 20px;
-    font-weight: 600;
-        }
+     
 
         .with-arrow{
           display:flex;
