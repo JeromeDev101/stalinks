@@ -13,7 +13,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                 STEP 4: GET PAY
+                 STEP 4: GET PAID
                    <router-link :to="{ path: '/help/writer-guide-1' }">
                       <img
                       class=''
