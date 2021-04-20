@@ -275,6 +275,7 @@ class MailgunController extends Controller
                     }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
+                    ->havingRaw('subject != CONCAT("Re: ", replies.subject)')
                     ->orderBy('id', 'desc')
                     ->paginate();
 
