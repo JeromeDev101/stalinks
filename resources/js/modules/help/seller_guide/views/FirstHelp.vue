@@ -7,11 +7,13 @@
             <div class='row'>
               <div class='col-md-12'>
                 <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                  <!-- <img
+                   <router-link :to="{ path: '/help/buyer-guide-3' }">
+                   <img
                     class=''
                     src='../../../../../images/writer-guide/back.png'
-                  /> -->
-                  HELP 1 : Learn about the dashboard
+                  /> 
+                  </router-link>
+                STEP 1: Learn about the Dashboard
 
                   <router-link :to="{ path: '/help/seller-guide-2' }">
                       <img
@@ -21,9 +23,9 @@
                   </router-link>
                     
                 </h1>
-                <h2 class='text-center text-uppercase'> How to sell backlinks at STAlinks?</h2>
+                <p class =' text-uppercase'> How to sell backlinks at StaLinks?</h2>
                 <p>Now that you are login into our desk management</p>
-                <h2 class='ml-3'>Navigating the dashboard</h2>
+               
                 <p>
                   Upon logging in, you will automatically send to the Dashboard
                   page. The Dashboard is the tools you can use to track your
@@ -33,7 +35,7 @@
                 </p>
                 <ol class="content-style">
                   <li>Seller List</li>
-                  <ul>
+                  <ul class="list-style-none">
                     <li>
                       Seller List will have all the information about the
                       account you have registered.
@@ -61,7 +63,7 @@
                   <img class="buyer-img" src='../../../../../images/seller-guide/seller-guide-1.png' />
 
                   <li>Total Backlink (Seller)</li>
-                  <ul>
+                  <ul class="list-style-none">
                     <li>All the information about to track the orders</li>
 
                     <li>It has 8 columns:</li>
@@ -119,12 +121,7 @@
             padding:20px;
             font-weight:600;
         }
-          p{
-          font-size: 16px;
-    line-height: 2em;
-    padding: 0 20px;
-    font-weight: 500;
-        }
+      
 
           .with-arrow{
           display:flex;

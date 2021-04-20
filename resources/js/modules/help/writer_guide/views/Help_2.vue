@@ -18,12 +18,12 @@
                     />
                   </router-link>
                   STEP 2: Start Writing Content
-                  <!-- <router-link :to="{ path: '/help/writer-guide-3' }"> -->
+                   <router-link :to="{ path: '/help/writer-guide-3' }"> 
                       <img
                       class=''
                       src='../../../../../images/writer-guide/next.png'
                     />
-                  <!-- </router-link> -->
+                   </router-link> 
                  
                 </h1>
                
