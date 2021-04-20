@@ -13,7 +13,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                 STEP 2: Upload your list of URLs with price and other criteria
+                 STEP 2: UPLOAD YOUR LIST OF URLS WITH PRICE AND OTHER CRITERIA
                   <router-link :to="{ path: '/help/seller-guide-3' }">
                       <img
                       class=''
