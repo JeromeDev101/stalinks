@@ -191,6 +191,21 @@
                                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+                                <div class="col-md-6"
+                                     v-if="updateModel.payment_type == 1">
+                                    Hong Kong Paypal
+                                    Account <br>
+                                    <b>Total Amount: ${{
+                                       domesticTotalPaymentAmount
+                                       }}</b>
+                                </div>
+                                <div class="col-md-6" v-if="updateModel.payment_type == 1">
+                                    International Paypal
+                                    Account <br>
+                                    <b>Total Amount: ${{
+                                       internationalTotalPaymentAmount
+                                       }}</b>
+                                </div>
                             </div>
 
                             <div class="row" v-else-if="step
@@ -312,7 +327,23 @@ export default {
                 state.storeNotification.notifications,
             messageForms: state => state.storeWalletTransaction.messageForms,
             listPayment: state => state.storeWalletTransaction.listPayment,
-        })
+        }),
+
+        domesticTotalPaymentAmount() {
+            var total = (+this.updateModel.amount_usd +
+                3e-1) /
+                (1 - (34e-1 / 100));
+
+            return total.toFixed(2);
+        },
+
+        internationalTotalPaymentAmount() {
+            var total = (+this.updateModel.amount_usd +
+                3e-1) /
+                (1 - (39e-1 / 100));
+
+            return total.toFixed(2);
+        }
     },
 
     methods: {
