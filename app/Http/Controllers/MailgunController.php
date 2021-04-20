@@ -638,7 +638,7 @@ class MailgunController extends Controller
 
 
     	$sender = $this->mg->messages()->send('stalinks.com', [
-		    'from'                  => 'support@stalinks.com',
+		    'from'                  => 'stalinks_validation@stalinks.com',
 		    'to'                    => array($str),
             // 'bcc'                   => 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,
