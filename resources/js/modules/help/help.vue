@@ -226,9 +226,9 @@
     
     font-weight: 600;
     font-size: 16px;
-    position: absolute;
+    position: relative;
     top: 50%;
-    left: 8%;
+    left: 2%;
     transform: translateY( -50%);
    }
  
