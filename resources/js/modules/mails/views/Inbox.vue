@@ -70,12 +70,12 @@
                                     v-for="(inbox, index) in records.data"
                                     :key="index"
                                     :class="{
-                                        'text-muted': $route.name == 'Inbox'
+                                        'text-muted': $route.name != 'Trash'
                                             ? inbox.thread
                                                 ? !checkIsViewedForThreads(inbox.thread)
                                                 : false
                                             : inbox.is_viewed == 1,
-                                        'font-weight-bold': $route.name == 'Inbox'
+                                        'font-weight-bold': $route.name != 'Trash'
                                             ? inbox.thread
                                                 ? checkIsViewedForThreads(inbox.thread)
                                                 : false
@@ -99,17 +99,19 @@
                                             class="fa fa-tag mr-3">
                                         </i>
                                         {{
-                                            $route.name == 'Inbox'
+                                            $route.name != 'Trash'
                                                 ? inbox.thread
-                                                    ? displayInboxNameAndThreadCount(inbox.thread)
-                                                    : inbox.sender
-                                                : inbox.is_sent == 1
-                                                    ? 'To: ' + checkEmail(inbox.received)
-                                                    : inbox.from_mail
+                                                    ? inbox.is_sent == 0
+                                                        ? displayInboxNameAndThreadCount(inbox.thread)
+                                                        : 'To: ' + checkEmail(inbox.received)
+                                                    : inbox.is_sent == 1
+                                                        ? 'To: ' + checkEmail(inbox.received)
+                                                        : inbox.from_mail
+                                                : inbox.from_mail
                                         }}
 
                                         <span
-                                            v-if="inbox.thread && $route.name == 'Inbox'"
+                                            v-if="inbox.thread && inbox.thread.length > 1 && $route.name != 'Trash'"
                                             class="badge badge-pill badge-secondary">
 
                                             {{ inbox.thread.length }}
@@ -118,7 +120,7 @@
 
                                     <td @click="viewMessage(inbox, index, $route.name)">{{inbox.subject}}</td>
 
-                                    <td style="width:30px;" class="text-right">
+                                    <td style="width:30px;" class="text-right" v-if="$route.name !== 'Trash'">
                                         <i
                                             :class="{
                                                 'fa': true,
@@ -340,7 +342,7 @@
                                 @click="doReply($route.name)">
 
                                 <i class="fa fa-reply"></i>
-                                Reply
+                                {{ viewContentThread.inbox.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
                         </div>
 
@@ -798,6 +800,7 @@ export default {
             })
 
             senders = senders.filter((item, index) => senders.indexOf(item) === index);
+
             return senders.join(', ');
         },
 
@@ -836,15 +839,23 @@ export default {
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
             this.replyContent.email = [];
-            this.replyContent.title = route === 'Inbox'
+            this.replyContent.title = route !== 'Trash'
                 ? this.viewContentThread.inbox.subject
                 : this.viewContent.subject;
 
             // add email
-            if (route === 'Inbox') {
+            if (route !== 'Trash') {
 
-                let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
-                this.$refs.replyTag.addTag(tag);
+                if (this.viewContentThread.inbox.is_sent === 1) {
+                    this.replyContent.email = createTags(this.viewContentThread.inbox.received.replace(/\s/g, '')
+                        .split(/[|,]/g)
+                        .filter(function (email) {
+                            return email !== '';
+                        }))
+                } else {
+                    let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
+                    this.$refs.replyTag.addTag(tag);
+                }
 
             } else {
 
@@ -862,7 +873,7 @@ export default {
             }
 
             axios.post('/api/mail/get-reply', {
-                email: route === 'Inbox' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
+                email: route !== 'Trash' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
             })
             .then((res) => {
                 // console.log(res.data)
@@ -887,7 +898,7 @@ export default {
 
         deleteMessage(id, index, is_all) {
 
-            if (this.$route.name === 'Inbox') {
+            if (this.$route.name !== 'Trash') {
                 this.deleteMessageThread(null, 'all')
             } else {
                 swal.fire({
@@ -1105,7 +1116,7 @@ export default {
         },
 
         viewMessage(inbox, index, route) {
-            if (route === 'Inbox') {
+            if (route !== 'Trash') {
                 this.viewMessageThread(inbox, index)
             } else {
                 let body = JSON.parse(inbox.body);
