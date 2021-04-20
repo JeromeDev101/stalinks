@@ -14,7 +14,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                  STEP 1: Register to Stalinks and Setup your Price
+                  STEP 1: REGISTER TO STALINKS AND SETUP YOUR PRICE
                    <router-link :to="{ path: '/help/writer-guide-2' }">
                       <img
                       class=''
