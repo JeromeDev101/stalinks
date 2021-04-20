@@ -34,4 +34,8 @@ class Reply extends Model
 
         return $carbonDate->format('M j Y, g:i A');
     }
+
+    public function thread() {
+        return $this->hasMany(Reply::class, 'subject','subject');
+    }
 }
