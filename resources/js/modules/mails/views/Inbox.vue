@@ -281,7 +281,7 @@
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
+                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'" type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
                                 <i class="fa fa-reply"></i>
                                 {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
@@ -333,7 +333,7 @@
                                     </span>
 
                                     <span
-                                        v-if="viewContentThread.inbox.is_sent === 1 && email.is_sent === 0"
+                                        v-if="$route.name !== 'Inbox' && email.is_sent === 0"
                                         class="ml-2"
                                         title="Reply"
                                         style="cursor: pointer"
@@ -416,6 +416,7 @@
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
                             <button
+                                v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
                                 type="button"
                                 class="btn btn-default"
                                 data-toggle="modal"
@@ -744,7 +745,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitLabel">Save</button>
+                        <button type="button" class="btn btn-primary" @click="submitLabelThread">Save</button>
                     </div>
                 </div>
             </div>
@@ -853,7 +854,9 @@ export default {
     watch:{
         $route (to, from){
             this.getInbox();
+            this.clearCheckIds();
             this.clearViewing();
+            this.allSelected = false
         }
     },
 
@@ -938,20 +941,29 @@ export default {
             // add email
             if (route !== 'Trash') {
 
-                if (this.viewContentThread.inbox.is_sent === 1) {
+                if (route !== 'Starred') {
 
-                    let rec = info ? info.sender : this.viewContentThread.inbox.received
+                    if (this.viewContentThread.inbox.is_sent === 1) {
 
-                    this.replyContent.email = createTags(rec.replace(/\s/g, '')
+                        let rec = info ? info.sender : this.viewContentThread.inbox.received
+
+                        this.replyContent.email = createTags(rec.replace(/\s/g, '')
+                            .split(/[|,]/g)
+                            .filter(function (email) {
+                                return email !== '';
+                            }))
+                    } else {
+                        let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
+                        this.$refs.replyTag.addTag(tag);
+                    }
+
+                } else {
+                    this.replyContent.email = createTags(info.sender.replace(/\s/g, '')
                         .split(/[|,]/g)
                         .filter(function (email) {
                             return email !== '';
                         }))
-                } else {
-                    let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
-                    this.$refs.replyTag.addTag(tag);
                 }
-
             } else {
 
                 if (this.viewContent.is_sent === 1) {
@@ -1134,15 +1146,38 @@ export default {
             })
             .then((res) => {
 
-                for (var rec in this.records.data) {
-                    for (var chk in this.checkIds) {
-                        if (this.checkIds[chk].id == this.records.data[rec].id) {
-                            this.records.data[rec].label_id = this.updateModel.label_id;
-                        }
-                    }
-                }
+                // for (var rec in this.records.data) {
+                //     for (var chk in this.checkIds) {
+                //         if (this.checkIds[chk].id == this.records.data[rec].id) {
+                //             this.records.data[rec].label_id = this.updateModel.label_id;
+                //         }
+                //     }
+                // }
+
+                this.getInbox()
+
+                $("#modal-label-selection").modal('hide')
 
             })
+        },
+
+        submitLabelThread() {
+            let self = this
+
+            if(self.$route.name === 'Trash') {
+                self.submitLabel()
+            } else {
+                let ids = self.getThreadIds(null, 'all')
+
+                axios.post('/api/mail/labeling-thread', {
+                    ids: ids,
+                    label_id: this.updateModel.label_id
+                })
+                .then((res) => {
+                    self.getInbox()
+                    $("#modal-label-selection").modal('hide')
+                })
+            }
         },
 
         async getTemplateList() {
@@ -1239,6 +1274,11 @@ export default {
             if( this.checkIds.length > 0 ){
                 this.btnEnable = false;
             }
+        },
+
+        clearCheckIds() {
+            this.checkIds = []
+            this.btnEnable = true;
         },
 
         refeshInbox() {

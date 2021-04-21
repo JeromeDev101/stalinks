@@ -709,6 +709,13 @@ class MailgunController extends Controller
         return response()->json(['success' => true],200);
     }
 
+    public function labelingThread(Request $request)
+    {
+        Reply::whereIn('id', $request->ids)->update(['label_id' => $request->label_id]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function deleteMessage(Request $request) {
         if (is_array($request->id)) {
             foreach($request->id as $id) {

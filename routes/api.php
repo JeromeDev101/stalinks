@@ -214,6 +214,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
         Route::name('is_viewed_thread')->post('/is-viewed-thread','MailgunController@setViewMessageThread');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
+        Route::name('labeling-thread')->post('/labeling-thread','MailgunController@labelingThread');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
         Route::name('delete-message-thread')->post('/delete-message-thread','MailgunController@deleteMessageThread');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
