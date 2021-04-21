@@ -674,6 +674,12 @@ class MailgunController extends Controller
         return response()->json(['succsss' => true],200);
     }
 
+    public function starredThread(Request $request) {
+        Reply::whereIn('id', $request->id)->update(['is_starred' => $request->is_starred]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function setViewMessage(Request $request) {
         $inbox = Reply::findOrFail($request->id);
         $inbox->update(['is_viewed' => 1]);

@@ -32,16 +32,46 @@
                                 <input type="checkbox" @click="selectAll" v-model="allSelected">
                             </button>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-default" title="Starred" :disabled="btnEnable" @click="submitStarred(0,0,true, '')">
-                                    <i class="fa fa-fw fa-star"></i>
-                                </button>
-                                <button type="button" class="btn btn-default" title="Label" :disabled="btnEnable" data-toggle="modal" data-target="#modal-label-selection">
-                                    <i class="fa fa-fw fa-tag"></i>
-                                </button>
-                                <button type="button" class="btn btn-default" title="Refesh inbox" @click="refeshInbox">
+                                <button
+                                    type="button"
+                                    title="Refresh"
+                                    class="btn btn-default"
+
+                                    @click="refeshInbox">
+
                                     <i class="fa fa-fw fa-refresh"></i>
                                 </button>
-                                <button type="button" class="btn btn-default" title="Trash" @click="deleteMessage(0,0,true)" :disabled="btnEnable">
+
+                                <button
+                                    type="button"
+                                    title="Starred"
+                                    class="btn btn-default"
+                                    :disabled="btnEnable || $route.name === 'Trash'"
+
+                                    @click="submitStarredThread(null, null, 'all')">
+
+                                    <i class="fa fa-fw fa-star"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    title="Label"
+                                    class="btn btn-default"
+                                    data-toggle="modal"
+                                    data-target="#modal-label-selection"
+                                    :disabled="btnEnable">
+
+                                    <i class="fa fa-fw fa-tag"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    title="Trash"
+                                    class="btn btn-default"
+                                    :disabled="btnEnable || $route.name === 'Trash'"
+
+                                    @click="deleteMessage(0,0,true)">
+
                                     <i class="fa fa-fw fa-trash"></i>
                                 </button>
                             </div>
@@ -49,8 +79,25 @@
                             <div class="pull-right">
                                 {{paginate.from + '-' + paginate.to + " / " + paginate.total}}
                                 <div class="btn-group">
-                                    <button type="button" :disabled="records.current_page == 1" class="btn btn-default btn-sm" @click="getInbox(page = paginate.prev)"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" :disabled="records.next_page_url == null" class="btn btn-default btn-sm" @click="getInbox(page = paginate.next)"><i class="fa fa-chevron-right"></i></button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-default btn-sm"
+                                        :disabled="records.current_page == 1"
+
+                                        @click="getInbox(page = paginate.prev)">
+
+                                        <i class="fa fa-chevron-left"></i>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-default btn-sm"
+                                        :disabled="records.next_page_url == null"
+
+                                        @click="getInbox(page = paginate.next)">
+
+                                        <i class="fa fa-chevron-right"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -140,7 +187,7 @@
                                             }"
                                             title="Starred"
 
-                                            @click="submitStarred(inbox.id, inbox.is_starred, false, index)">
+                                            @click="submitStarredThread(inbox, index, 'single')">
                                         </i>
                                     </td>
 
@@ -1030,6 +1077,12 @@ export default {
                         .then((res) => {
                             self.clearViewing()
                             self.getInbox()
+                            self.checkIds = [];
+                            self.checkSelected()
+
+                            if (mod !== 'single') {
+                                self.allSelected = !self.allSelected
+                            }
 
                             swal.fire(
                                 'Deleted!',
@@ -1114,7 +1167,7 @@ export default {
             await this.$store.dispatch('actionGetListCountries', params);
         },
 
-        submitStarred(id, is_starred, is_all, position) {
+        submitStarred(id, is_starred, is_all, position, inbox = null) {
             let id_mail = is_all ? this.checkIds : id;
 
             if (!is_all) {
@@ -1140,7 +1193,44 @@ export default {
                 if (is_all){
                     this.getInbox();
                 }
-                // this.btnEnable = true;
+            })
+        },
+
+        submitStarredThread(inbox, index, mod) {
+            let self = this;
+            let starred = 1;
+            let ids = []
+            let thread = null
+
+            if (mod === 'single') {
+                thread = inbox.thread
+                starred = self.checkIsStarredForThreads(thread) ? 0 : 1;
+
+                self.records.data[index].is_starred = starred
+
+                self.records.data[index].thread.forEach(function (item) {
+                    item.is_starred = starred
+                })
+            }
+
+            ids = self.getThreadIds(thread, mod)
+
+            axios.post('/api/mail/starred-thread', {
+                id: ids,
+                is_starred: starred,
+            })
+            .then((res) => {
+                if (mod !== 'single'){
+                    self.getInbox();
+                }
+
+                self.checkIds = [];
+                self.checkSelected()
+                self.clearViewing()
+
+                if (mod !== 'single') {
+                    self.allSelected = !self.allSelected
+                }
             })
         },
 
