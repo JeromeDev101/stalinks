@@ -74,6 +74,9 @@ class UpdateAccountRequest extends FormRequest
             'id_payment_type' => [
                 'required_if:status,==,active'
             ],
+            'writer_price' => [
+                'required_if:type,==,Writer'
+            ],
             // 'paypal_account' => [
             //     'required_if:id_payment_type,==,1'
             // ],
