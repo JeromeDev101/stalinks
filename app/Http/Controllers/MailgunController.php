@@ -214,11 +214,12 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             if ($request->param != 'Trash') {
                 $inbox = Reply::selectRaw('
-                    sender,
-                    received,
+                    MAX(replies.sender) AS sender,
+                    MIN(replies.received) AS received,
                     MIN(replies.id) AS id,
                     MIN(replies.subject) as subject,
                     CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
+                    CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)) as concat_result,
                     MIN(CONCAT("Re: ", subject)) AS con_sub,
                     MIN(REPLACE(subject, "Re: ", "")) AS re_sub,
                     MIN(labels.name) AS label_name,
@@ -372,7 +373,11 @@ class MailgunController extends Controller
                             }]);
                      }
 
-                    $inbox = $inbox->groupBy('subject', 'sender', 'received')
+                    $inbox = $inbox->groupBy(DB::raw('
+                            CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)),
+                            CONCAT("Re: ", REPLACE(subject, "Re: ", ""))
+                        ')
+                        )
                         ->orderBy('id', 'desc')
                         ->paginate();
 
