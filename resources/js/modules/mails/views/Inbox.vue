@@ -854,7 +854,9 @@ export default {
     watch:{
         $route (to, from){
             this.getInbox();
+            this.clearCheckIds();
             this.clearViewing();
+            this.allSelected = false
         }
     },
 
@@ -1249,6 +1251,10 @@ export default {
             if( this.checkIds.length > 0 ){
                 this.btnEnable = false;
             }
+        },
+
+        clearCheckIds() {
+            this.checkIds = []
         },
 
         refeshInbox() {
