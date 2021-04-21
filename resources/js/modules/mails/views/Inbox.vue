@@ -745,7 +745,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitLabel">Save</button>
+                        <button type="button" class="btn btn-primary" @click="submitLabelThread">Save</button>
                     </div>
                 </div>
             </div>
@@ -1146,15 +1146,38 @@ export default {
             })
             .then((res) => {
 
-                for (var rec in this.records.data) {
-                    for (var chk in this.checkIds) {
-                        if (this.checkIds[chk].id == this.records.data[rec].id) {
-                            this.records.data[rec].label_id = this.updateModel.label_id;
-                        }
-                    }
-                }
+                // for (var rec in this.records.data) {
+                //     for (var chk in this.checkIds) {
+                //         if (this.checkIds[chk].id == this.records.data[rec].id) {
+                //             this.records.data[rec].label_id = this.updateModel.label_id;
+                //         }
+                //     }
+                // }
+
+                this.getInbox()
+
+                $("#modal-label-selection").modal('hide')
 
             })
+        },
+
+        submitLabelThread() {
+            let self = this
+
+            if(self.$route.name === 'Trash') {
+                self.submitLabel()
+            } else {
+                let ids = self.getThreadIds(null, 'all')
+
+                axios.post('/api/mail/labeling-thread', {
+                    ids: ids,
+                    label_id: this.updateModel.label_id
+                })
+                .then((res) => {
+                    self.getInbox()
+                    $("#modal-label-selection").modal('hide')
+                })
+            }
         },
 
         async getTemplateList() {
@@ -1255,6 +1278,7 @@ export default {
 
         clearCheckIds() {
             this.checkIds = []
+            this.btnEnable = true;
         },
 
         refeshInbox() {
