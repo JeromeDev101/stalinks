@@ -13,7 +13,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                 STEP 3: Follow up your orders
+                 STEP 3: FOLLOW UP YOUR ORDERS
                   <router-link :to="{ path: '/help/seller-guide-4' }">
                       <img
                       class=''

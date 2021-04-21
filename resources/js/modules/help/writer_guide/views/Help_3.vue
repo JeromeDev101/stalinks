@@ -17,7 +17,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                Follow up your income
+                FOLLOW UP YOUR INCOME
                    <router-link :to="{ path: '/help' }"> 
                       <img
                       class=''

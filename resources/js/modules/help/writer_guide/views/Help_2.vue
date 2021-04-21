@@ -17,7 +17,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                  STEP 2: Start Writing Content
+                  STEP 2: START WRITING CONTENT
                    <router-link :to="{ path: '/help/writer-guide-3' }"> 
                       <img
                       class=''

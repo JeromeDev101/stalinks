@@ -17,7 +17,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                  STEP 2: Purchase backlink that fits your website
+                  STEP 2: PURHCASE BACKLINK THAT FITS YOUR WEBSITE
                    <router-link :to="{ path: '/help/buyer-guide-3' }"> 
                       <img
                       class=''

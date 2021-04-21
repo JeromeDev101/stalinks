@@ -13,7 +13,7 @@
                     src='../../../../../images/writer-guide/back.png'
                   /> 
                   </router-link>
-                STEP 1: Learn about the Dashboard
+                STEP 1: LEARN ABOUT THE DASHBOARD
 
                   <router-link :to="{ path: '/help/seller-guide-2' }">
                       <img

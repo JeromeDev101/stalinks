@@ -351,6 +351,14 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12" v-show="updateDisplayWriterPrice">
+                                <div class="form-group">
+                                    <label>Writer Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone</label>
@@ -595,6 +603,14 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-12" v-show="addDisplayWriterPrice">
+                                <div class="form-group">
+                                    <label>Writer Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone</label>
@@ -760,6 +776,7 @@
                                     <option value="" disabled>Select Account Validation</option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
@@ -1004,6 +1021,7 @@
                     info: '',
                     country_id: '',
                     company_type: 'Company',
+                    writer_price: '',
                 },
 
                 filterModel: {
@@ -1051,6 +1069,7 @@
                     info: '',
                     country_id: '',
                     company_type: '',
+                    writer_price: '',
                 },
 
                 isPopupLoading: false,
@@ -1086,6 +1105,8 @@
                 email_to: '',
                 registrationEmails: [],
                 separators: [';', ',', '|', ' '],
+                addDisplayWriterPrice: false,
+                updateDisplayWriterPrice: false,
             }
         },
 
@@ -1272,6 +1293,15 @@
 
             checkTeamIncharge(method) {
                 let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
+
+                if(role == 'Writer') {
+                    this.addDisplayWriterPrice = true;
+                    this.updateDisplayWriterPrice = true;
+                } else{
+                    this.addDisplayWriterPrice = false;
+                    this.updateDisplayWriterPrice = false;
+                }
+
                 axios.get('/api/team-in-charge-per-role',{
                     params: {
                         role: role
@@ -1366,6 +1396,7 @@
                 this.accountUpdate.team_in_charge = that.team_in_charge == null ? '':that.team_in_charge.id;
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
+                this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '':that.writer_price;
                 this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
 
                 this.checkTeamIncharge('update');
