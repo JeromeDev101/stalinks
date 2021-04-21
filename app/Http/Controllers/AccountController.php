@@ -198,10 +198,10 @@ class AccountController extends Controller
     }
 
     public function updateRegistrationAccount(Request $request) {
-        // dd($request->all());
         $input = $request->except('company_type');
         $request->validate([
             'country_id' => 'required',
+            'writer_price' => 'required_if:type,==,Writer',
             'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
             'paypal_account' => 'required_if:id_payment_type,==,1',
