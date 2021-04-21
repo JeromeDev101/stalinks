@@ -214,20 +214,21 @@ class MailgunController extends Controller
         if (isset($request->param) && $request->param != ''){
             if ($request->param != 'Trash') {
                 $inbox = Reply::selectRaw('
-                    replies.subject,
-                    replies.sender,
-                    replies.received,
-                    MIN(replies.id) as id,
-                    MIN(labels.name) as label_name,
-                    MIN(replies.is_sent) as is_sent,
-                    MIN(labels.color) as label_color,
-                    MAX(replies.label_id) as label_id,
-                    MIN(replies.from_mail) as from_mail,
-                    MIN(replies.created_at) as created_at,
-                    MIN(replies.attachment) as attachment,
-                    MAX(replies.is_starred) as is_starred,
-                    CONCAT("Re: ", replies.subject) AS con_sub,
-                    REPLACE(replies.subject, "Re: ", "") AS re_sub
+                    sender,
+                    received,
+                    MIN(replies.id) AS id,
+                    MIN(replies.subject) as subject,
+                    CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
+                    MIN(CONCAT("Re: ", subject)) AS con_sub,
+                    MIN(REPLACE(subject, "Re: ", "")) AS re_sub,
+                    MIN(labels.name) AS label_name,
+                    MIN(replies.is_sent) AS is_sent,
+                    MIN(labels.color) AS label_color,
+                    MAX(replies.label_id) AS label_id,
+                    MIN(replies.from_mail) AS from_mail,
+                    MIN(replies.created_at) AS created_at,
+                    MIN(replies.attachment) AS attachment,
+                    MAX(replies.is_starred) AS is_starred
                 ')
                 ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id');
             } else {
@@ -274,8 +275,9 @@ class MailgunController extends Controller
                             }]);
                     }
 
-                    $inbox = $inbox->groupBy('subject', 'sender', 'received')
-                    ->havingRaw('subject != CONCAT("Re: ", replies.subject)')
+                    $inbox = $inbox->groupBy(DB::raw(
+                        'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
+                    )
                     ->orderBy('id', 'desc')
                     ->paginate();
 
