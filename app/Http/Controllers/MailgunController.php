@@ -406,15 +406,15 @@ class MailgunController extends Controller
 
                 if ($item->is_sent === 1) {
                     return (
-                        $value->received === $item->received
-                        || $value->sender === $item->received
-                        || in_array($value->sender, $item_received)
-                        || in_array($value->received, $item_received)
+                        ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->sender === $item->received && $value->received === $item->sender)
+                        || (in_array($value->sender, $item_received) && $value->received === $item->sender)
+                        || (in_array($value->received, $item_received) && $value->sender === $item->sender)
                     );
                 } else {
                     return (
-                        $value->received === $item->sender
-                        || $value->sender === $item->sender
+                        ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->received === $item->sender && $value->sender === $item->received)
                         || in_array($item->sender, $received_array)
                     );
                 }

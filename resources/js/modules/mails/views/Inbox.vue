@@ -127,8 +127,16 @@
                                                 'fa-fw': true,
                                                 'orange': true,
                                                 'pointer': true,
-                                                'fa-star': inbox.is_starred == 1,
-                                                'fa-star-o': inbox.is_starred == 0
+                                                'fa-star': $route.name != 'Trash'
+                                                    ? inbox.thread
+                                                        ? checkIsStarredForThreads(inbox.thread)
+                                                        : false
+                                                    : inbox.is_starred == 1,
+                                                'fa-star-o': $route.name != 'Trash'
+                                                    ? inbox.thread
+                                                        ? !checkIsStarredForThreads(inbox.thread)
+                                                        : false
+                                                    : inbox.is_starred == 0
                                             }"
                                             title="Starred"
 
@@ -138,7 +146,13 @@
 
                                     <td @click="viewMessage(inbox, index, $route.name)">
                                         <i
-                                            v-show="inbox.attachment != '' && inbox.attachment != '[]'"
+                                            v-show="
+                                                $route.name != 'Trash'
+                                                    ? inbox.thread
+                                                        ? checkHaveAttachmentsForThreads(inbox.thread)
+                                                        : false
+                                                    : (inbox.attachment != '' && inbox.attachment != '[]')
+                                            "
                                             class="fa fa-fw fa-paperclip">
                                         </i>
                                     </td>
@@ -803,6 +817,14 @@ export default {
     methods: {
         checkIsViewedForThreads(thread) {
             return thread.some(el => el.is_viewed === 0)
+        },
+
+        checkIsStarredForThreads(thread) {
+            return thread.some(el => el.is_starred === 1)
+        },
+
+        checkHaveAttachmentsForThreads(thread) {
+            return thread.some(el => el.attachment !== '' && el.attachment !== '[]')
         },
 
         displayInboxNameAndThreadCount(thread) {
