@@ -72,17 +72,17 @@ class UpdateAccountRequest extends FormRequest
                 'required'
             ],
             'id_payment_type' => [
-                'required'
+                'required_if:status,==,active'
             ],
-            'paypal_account' => [
-                'required_if:id_payment_type,==,1'
-            ],
-            'btc_account' => [
-                'required_if:id_payment_type,==,3'
-            ],
-            'skrill_account' => [
-                'required_if:id_payment_type,==,2'
-            ],
+            // 'paypal_account' => [
+            //     'required_if:id_payment_type,==,1'
+            // ],
+            // 'btc_account' => [
+            //     'required_if:id_payment_type,==,3'
+            // ],
+            // 'skrill_account' => [
+            //     'required_if:id_payment_type,==,2'
+            // ],
         ];
     }
 }
