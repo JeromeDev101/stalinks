@@ -281,7 +281,7 @@
 
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
+                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'" type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
                                 <i class="fa fa-reply"></i>
                                 {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
@@ -333,7 +333,7 @@
                                     </span>
 
                                     <span
-                                        v-if="viewContentThread.inbox.is_sent === 1 && email.is_sent === 0"
+                                        v-if="$route.name !== 'Inbox' && email.is_sent === 0"
                                         class="ml-2"
                                         title="Reply"
                                         style="cursor: pointer"
@@ -416,6 +416,7 @@
                     <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
                             <button
+                                v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
                                 type="button"
                                 class="btn btn-default"
                                 data-toggle="modal"
@@ -938,20 +939,29 @@ export default {
             // add email
             if (route !== 'Trash') {
 
-                if (this.viewContentThread.inbox.is_sent === 1) {
+                if (route !== 'Starred') {
 
-                    let rec = info ? info.sender : this.viewContentThread.inbox.received
+                    if (this.viewContentThread.inbox.is_sent === 1) {
 
-                    this.replyContent.email = createTags(rec.replace(/\s/g, '')
+                        let rec = info ? info.sender : this.viewContentThread.inbox.received
+
+                        this.replyContent.email = createTags(rec.replace(/\s/g, '')
+                            .split(/[|,]/g)
+                            .filter(function (email) {
+                                return email !== '';
+                            }))
+                    } else {
+                        let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
+                        this.$refs.replyTag.addTag(tag);
+                    }
+
+                } else {
+                    this.replyContent.email = createTags(info.sender.replace(/\s/g, '')
                         .split(/[|,]/g)
                         .filter(function (email) {
                             return email !== '';
                         }))
-                } else {
-                    let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
-                    this.$refs.replyTag.addTag(tag);
                 }
-
             } else {
 
                 if (this.viewContent.is_sent === 1) {
