@@ -1515,6 +1515,7 @@ export default {
 
             if (this.messageForms.action == 'success') {
                 $("#modal-compose-email").modal('hide');
+                $("#modal-email-reply").modal('hide');
 
                 swal.fire(
                     'Send',
