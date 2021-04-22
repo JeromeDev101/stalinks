@@ -576,7 +576,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" class="form-control" id="file_send" ref="file_send">
+                                    <input type="file" multiple class="form-control" id="file_send" ref="file_send">
                                 </div>
                             </div>
 
@@ -1509,7 +1509,20 @@ export default {
             // this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
             this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
             this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
-            this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
+
+            // get attachments
+
+            // this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
+
+            let attachments = type === 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files;
+
+            if (!attachments.length) {
+                this.formData.append('attachment', 'undefined');
+            } else {
+                for (let i = 0; i < attachments.length; i++) {
+                    this.formData.append('attachment[]', attachments[i]);
+                }
+            }
 
             await this.$store.dispatch('actionSendMailgun', this.formData);
 
