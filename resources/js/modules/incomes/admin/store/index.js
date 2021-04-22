@@ -15,6 +15,7 @@ const state = {
         fee_charges: true,
         content_charges: true,
         net_incomes: true,
+        live_date: true,
     },
 }
 

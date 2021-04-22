@@ -74,6 +74,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
+                                <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
                                 <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
                                 <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
                                 <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
@@ -85,6 +86,7 @@
                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                <td>{{ index + 1 }}</td>
                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
+                               <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
                                <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price) }}</td>
                                <td v-show="tblOptIncomesAdmin.price">{{ incomes_admin.prices == '' || incomes_admin.prices == null ? 0:'$ ' + number_format(incomes_admin.prices) }}</td>
                                <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
@@ -132,6 +134,9 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblOptIncomesAdmin.net_incomes ? 'checked':''" v-model="tblOptIncomesAdmin.net_incomes">Net Incomes</label>
                             </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblOptIncomesAdmin.live_date ? 'checked':''" v-model="tblOptIncomesAdmin.live_date">Date Completed</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -157,8 +162,8 @@
                     paginate: this.$route.query.paginate || '50',
                     backlink_id: this.$route.query.backlink_id || '',
                     date_completed: {
-                        startDate: '',
-                        endDate: ''
+                        startDate: null,
+                        endDate: null
                     },
                 },
                 isSearchingLoading: false,
@@ -227,6 +232,7 @@
                     params: {
                         paginate: this.filterModel.paginate,
                         backlink_id: this.filterModel.backlink_id,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
             },
@@ -235,6 +241,10 @@
                 this.filterModel = {
                     paginate: '50',
                     backlink_id: '',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.getListIncomesAdmin({
