@@ -42,6 +42,14 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-12" v-show="regModel.type == 'Writer'">
+                                    <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('writer_price')}">
+                                        <label for="">Writer Price <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" v-model="regModel.writer_price">
+                                        <span v-show="errorMessage.hasOwnProperty('writer_price')" class="text-danger">Please provide Writer Pirce</span>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Phone</label>
@@ -197,6 +205,7 @@
                     btc_account: '',
                     skrill_account: '',
                     id_payment_type: '',
+                    writer_price: '',
                 },
                 countryList: [],
                 errorMessage: [],

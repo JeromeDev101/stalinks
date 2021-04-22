@@ -211,66 +211,184 @@ class MailgunController extends Controller
             return response()->json($validator->messages());
         }
 
-
-        $inbox = Reply::select('replies.*', 'labels.name as label_name', 'labels.color as label_color')
+        if (isset($request->param) && $request->param != ''){
+            if ($request->param != 'Trash') {
+                $inbox = Reply::selectRaw('
+                    MAX(replies.sender) AS sender,
+                    MIN(replies.received) AS received,
+                    MIN(replies.id) AS id,
+                    MIN(replies.subject) as subject,
+                    CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
+                    CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)) as concat_result,
+                    MIN(CONCAT("Re: ", subject)) AS con_sub,
+                    MIN(REPLACE(subject, "Re: ", "")) AS re_sub,
+                    MIN(labels.name) AS label_name,
+                    MIN(replies.is_sent) AS is_sent,
+                    MIN(labels.color) AS label_color,
+                    MAX(replies.label_id) AS label_id,
+                    MIN(replies.from_mail) AS from_mail,
+                    MIN(replies.created_at) AS created_at,
+                    MIN(replies.attachment) AS attachment,
+                    MAX(replies.is_starred) AS is_starred
+                ')
+                ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id');
+            } else {
+                $inbox = Reply::select('replies.*', 'labels.name as label_name', 'labels.color as label_color')
                     ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id')
                     ->orderBy('id', 'desc');
+            }
 
-        if (isset($request->search_mail) && $request->search_mail != ''){
+            if (isset($request->search_mail) && $request->search_mail != ''){
+                $inbox = $inbox->where(function ($query) use ($request) {
+                    $query->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
+                        ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
+                        ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
+                        ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
+                        ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
+                });
+            }
 
-            $inbox = $inbox->where(function ($query) use ($request) {
-                $query->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
-                    ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
-                    ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
-                    ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
-                    ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
-            });
+            if (isset($request->label_id) && $request->label_id != ''){
+                $inbox = $inbox->where('replies.label_id', $request->label_id);
+            }
 
-//            $inbox = $inbox->orWhere('replies.received', 'like','%'.$request->search_mail.'%')
-//                            ->orWhere('replies.subject', 'like','%'.$request->search_mail.'%')
-//                            ->orWhere('replies.body', 'like','%'.$request->search_mail.'%')
-//                            ->orWhere('replies.from_mail', 'like','%'.$request->search_mail.'%')
-//                            ->orWhere('replies.sender', 'like','%'.$request->search_mail.'%');
-        }
-
-        if (isset($request->label_id) && $request->label_id != ''){
-            $inbox = $inbox->orWhere('replies.label_id', $request->label_id);
-        }
-
-        if (isset($request->param) && $request->param != ''){
             switch ($request->param) {
                 case 'Inbox':
+
                     if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+//                        $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+                        $inbox = $inbox->where('replies.is_sent', 0)
+                            ->whereNull('replies.deleted_at')
+                            ->with('thread');
                     }else{
-                        $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
+//                        $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')
+//                            ->where('replies.is_sent', 0)
+//                            ->whereNull('replies.deleted_at');
+
+                        $inbox = $inbox->where('replies.is_sent', 0)
+                            ->whereNull('replies.deleted_at')
+                            ->where('replies.received', 'like', '%'.$request->email.'%')
+                            ->with(['thread' => function ($query) use ($request) {
+                                $query->where(function ($sub) use ($request) {
+                                    $sub->orWhere('sender', 'like', '%'.$request->email.'%')
+                                        ->orWhere('received', 'like', '%'.$request->email.'%');
+                                });
+                            }]);
                     }
+
+                    $inbox = $inbox->groupBy(DB::raw(
+                        'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
+                    )
+                    ->orderBy('id', 'desc')
+                    ->paginate();
+
+                    // get emails with "Re: " subjects
+                    $subjects = $this->getSubjects($inbox);
+
+                    // add emails with and without 'Re: ' to the thread
+                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
+
+                    // sort items for the correct thread and date
+                    $inbox = $this->sortEmailThreads($inbox);
 
                     break;
                 case 'Sent':
                      if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.is_sent', 1);
+                        $inbox = $inbox->where('replies.is_sent', 1)->where(function ($sub) {
+                            $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            })
+                            ->with('thread');
                      }else{
-                        $inbox = $inbox->where('replies.sender', $request->email)->where('replies.is_sent', 1);
+                        $inbox = $inbox->where('replies.sender', $request->email)
+                            ->where('replies.is_sent', 1)
+                            ->where(function ($sub) {
+                                $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            })
+                            ->with(['thread' => function ($query) use ($request) {
+                                $query->where(function ($sub) use ($request) {
+                                    $sub->orWhere('sender', 'like', '%'.$request->email.'%')
+                                        ->orWhere('received', 'like', '%'.$request->email.'%');
+                                });
+                            }]);
                      }
+
+                    $inbox = $inbox->groupBy('subject', 'sender', 'received')
+                        ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
+                        ->orderBy('id', 'desc')
+                        ->paginate();
+
+                    // get emails with "Re: " subjects
+                    $subjects = $this->getSubjects($inbox);
+
+                    // add emails with and without 'Re: ' to the thread
+                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
+
+                    // sort items for the correct thread and date
+                    $inbox = $this->sortEmailThreads($inbox);
 
                     break;
                 case 'Trash':
                     // $inbox = $inbox->withTrashed();
                 // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
                     if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.deleted_at','!=',1);
+                        $inbox = $inbox->whereNotNull('replies.deleted_at')->where('replies.deleted_at','!=',1);
                     }else{
-                        $inbox = $inbox->where('replies.deleted_at','!=',1)->where('replies.sender', $request->email)->orWhere('replies.deleted_at','!=',1)->where('replies.received', $request->email);
+                        $inbox = $inbox
+                            ->whereNotNull('replies.deleted_at')
+                            ->where('replies.deleted_at','!=',1)
+                            ->where(function ($sub) use ($request){
+                                $sub->where('replies.sender', $request->email)
+                                    ->orWhere('replies.received', $request->email);
+                            });
                     }
 
                     break;
                 case 'Starred':
+
                      if($request->email == 'jess@stalinks.com' || $request->email == 'all'){
-                        $inbox = $inbox->where('replies.is_starred', 1);
+                        $inbox = $inbox->where('replies.is_starred', 1)
+                            ->where(function ($sub) {
+                            $sub->whereNull('deleted_at')
+                                ->orWhere('deleted_at', 1);
+                            })
+                            ->with('thread');;
                      }else{
-                        $inbox = $inbox->where('replies.is_starred', 1)->where('replies.sender', $request->email)->orWhere('replies.is_starred', 1)->where('replies.received', $request->email);
+                        $inbox = $inbox
+                            ->where('replies.is_starred', 1)
+                            ->where(function ($sub) use ($request){
+                                $sub->where('replies.sender', $request->email)
+                                    ->orWhere('replies.received', $request->email);
+                            })
+                            ->where(function ($sub) {
+                                $sub->whereNull('deleted_at')
+                                    ->orWhere('deleted_at', 1);
+                            })
+                            ->with(['thread' => function ($query) use ($request) {
+                                $query->where(function ($sub) use ($request) {
+                                    $sub->orWhere('sender', 'like', '%'.$request->email.'%')
+                                        ->orWhere('received', 'like', '%'.$request->email.'%');
+                                });
+                            }]);
                      }
+
+                    $inbox = $inbox->groupBy(DB::raw('
+                            CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)),
+                            CONCAT("Re: ", REPLACE(subject, "Re: ", ""))
+                        ')
+                        )
+                        ->orderBy('id', 'desc')
+                        ->paginate();
+
+                    // get emails with "Re: " subjects
+                    $subjects = $this->getSubjects($inbox);
+
+                    // add emails with and without 'Re: ' to the thread
+                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
+
+                    // sort items for the correct thread and date
+                    $inbox = $this->sortEmailThreads($inbox);
 
                     break;
                 default:
@@ -278,12 +396,85 @@ class MailgunController extends Controller
               }
         }
 
-        $inbox = $inbox->paginate();
+        $inbox = ($request->param != 'Trash') ? $inbox : $inbox->paginate();
 
         $cnt = Reply::where('is_viewed', 0)->where('is_sent', 0)->whereNull('deleted_at')->count();
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
+    }
 
+    private function sortEmailThreads($inbox) {
+	    $inbox->transform(function ($item) {
+            $threads = $item->thread->filter(function ($value) use ($item) {
+                $received_array = $this->removeSpacesAndExplode($value->received);
+                $item_received = $this->removeSpacesAndExplode($item->received);
+
+                if ($item->is_sent === 1) {
+                    return (
+                        ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->sender === $item->received && $value->received === $item->sender)
+                        || (in_array($value->sender, $item_received) && $value->received === $item->sender)
+                        || (in_array($value->received, $item_received) && $value->sender === $item->sender)
+                    );
+                } else {
+                    return (
+                        ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->received === $item->sender && $value->sender === $item->received)
+                        || in_array($item->sender, $received_array)
+                    );
+                }
+            })->sortBy('id')->values();
+
+            unset($item['thread']);
+            $item['thread'] = $threads;
+            return $item;
+        });
+
+	    return $inbox;
+    }
+
+    private function addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox) {
+        $add_inbox = Reply::whereIn('subject', $subjects);
+
+        if($request->email !== 'jess@stalinks.com' && $request->email !== 'all'){
+            $add_inbox = $add_inbox->where(function ($sub) use ($request) {
+                $sub->orWhere('sender', 'like', '%'.$request->email.'%')
+                    ->orWhere('received', 'like', '%'.$request->email.'%');
+            });
+        }
+
+        $add_inbox = $add_inbox->get()->groupBy('subject');
+
+        $add_inbox->each(function ($add, $key) use ($inbox) {
+            $inbox->transform(function ($inb) use ($key, $add) {
+                if($inb->con_sub == $key || $inb->re_sub == $key){
+                    $new_thread = $add->merge($inb->thread);
+                }
+
+                if (isset($new_thread)) {
+                    unset($inb['thread']);
+                    $inb['thread'] = $new_thread;
+                }
+                return $inb;
+            });
+        });
+
+        return $inbox;
+    }
+
+    private function getSubjects($inbox) {
+        $subjects = $inbox->getCollection()->pluck('subject')->unique();
+
+        return $subjects->transform(function ($sub) {
+            return strpos($sub, 'Re:') !== false
+                ? str_replace('Re: ', "", $sub)
+                : 'Re: ' . $sub;
+        });
+    }
+
+    private function removeSpacesAndExplode($str) {
+        $string = preg_replace('/\s+/', '', $str);
+        return explode(',', $string);
     }
 
     public function status_mail()
@@ -488,9 +679,21 @@ class MailgunController extends Controller
         return response()->json(['succsss' => true],200);
     }
 
+    public function starredThread(Request $request) {
+        Reply::whereIn('id', $request->id)->update(['is_starred' => $request->is_starred]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function setViewMessage(Request $request) {
         $inbox = Reply::findOrFail($request->id);
         $inbox->update(['is_viewed' => 1]);
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function setViewMessageThread(Request $request) {
+        Reply::whereIn('id', $request->ids)->update(['is_viewed' => 1]);
 
         return response()->json(['success' => true],200);
     }
@@ -506,6 +709,13 @@ class MailgunController extends Controller
         return response()->json(['success' => true],200);
     }
 
+    public function labelingThread(Request $request)
+    {
+        Reply::whereIn('id', $request->ids)->update(['label_id' => $request->label_id]);
+
+        return response()->json(['success' => true],200);
+    }
+
     public function deleteMessage(Request $request) {
         if (is_array($request->id)) {
             foreach($request->id as $id) {
@@ -516,6 +726,12 @@ class MailgunController extends Controller
             $inbox = Reply::findOrFail($request->id);
             $inbox->update(['deleted_at' => date('Y-m-d')]);
         }
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function deleteMessageThread(Request $request) {
+        Reply::whereIn('id', $request->ids)->update(['deleted_at' => date('Y-m-d')]);
 
         return response()->json(['success' => true],200);
     }
@@ -638,7 +854,7 @@ class MailgunController extends Controller
 
 
     	$sender = $this->mg->messages()->send('stalinks.com', [
-		    'from'                  => 'support@stalinks.com',
+		    'from'                  => 'stalinks_validation@stalinks.com',
 		    'to'                    => array($str),
             // 'bcc'                   => 'lhabzter21@gmail.com',
 		    'subject'               => $request->title,

@@ -13,7 +13,7 @@
                       src='../../../../../images/writer-guide/back.png'
                     />
                   </router-link>
-                 HELP 3 : Follow up your orders
+                 STEP 3: FOLLOW UP YOUR ORDERS
                   <router-link :to="{ path: '/help/seller-guide-4' }">
                       <img
                       class=''
@@ -37,7 +37,7 @@ If you don’t provide the article our writer team will send it to you
 Here the different status 
 
               </p>
-                 <ul>
+                 <ul class="list-style-none">
                     <li>
                     Processing: When you see this status, this means that a buyer is interested in buying links from your website. 
                     </li>

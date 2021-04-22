@@ -184,16 +184,24 @@ class AccountController extends Controller
     public function edit(UpdateAccountRequest $request)
     {
         $inputs = $request->all();
+        if($inputs['status'] == 'inactive') {
+            $inputs['account_validation'] = 'invalid';
+        }
+
+        if($inputs['id_payment_type'] == '1' && $inputs['status'] == 'active') $request->validate(['paypal_account' => 'required']);
+        if($inputs['id_payment_type'] == '2' && $inputs['status'] == 'active') $request->validate(['skrill_account' => 'required']);
+        if($inputs['id_payment_type'] == '3' && $inputs['status'] == 'active') $request->validate(['btc_account' => 'required']);
+
         $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
         return response()->json($response);
     }
 
     public function updateRegistrationAccount(Request $request) {
-        // dd($request->all());
         $input = $request->except('company_type');
         $request->validate([
             'country_id' => 'required',
+            'writer_price' => 'required_if:type,==,Writer',
             'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
             'paypal_account' => 'required_if:id_payment_type,==,1',

@@ -42,6 +42,7 @@ class Registration extends Model
         'btc_account',
         'skrill_account',
         'reminded_at',
+        'writer_price',
         ];
 
     public function team_in_charge() {
