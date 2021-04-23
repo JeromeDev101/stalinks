@@ -414,8 +414,8 @@ class MailgunController extends Controller
             ->groupBy(DB::raw(
                 'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
             )
-            ->distinct('sender')
-            ->count();
+            ->distinct(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'))
+            ->count(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'));
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
     }
