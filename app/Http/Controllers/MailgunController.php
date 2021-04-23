@@ -411,9 +411,6 @@ class MailgunController extends Controller
             ->where('is_viewed', 0)
             ->where('is_sent', 0)
             ->whereNull('deleted_at')
-            ->groupBy(DB::raw(
-                'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
-            )
             ->distinct(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'))
             ->count(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'));
 
