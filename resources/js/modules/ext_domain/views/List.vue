@@ -1168,7 +1168,7 @@
                         </div> -->
 
                       <div class="col-md-12" style="margin-top: 15px;">
-                          <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                          <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
                               <label style="color: #333">Email</label>
 
                               <vue-tags-input
@@ -1176,37 +1176,59 @@
                                   :disabled="true"
                                   :separators="separators"
                                   :tags="urlEmails"
-                                  :class="{'vue-tag-error': messageForms.errors.email}"
+                                  :class="{'vue-tag-error': messageFormsMail.errors.email}"
                                   ref="urlTag"
                                   placeholder=""
 
                                   @tags-changed="newTags => urlEmails = newTags"
                               />
 
-                              <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                              <span v-if="messageFormsMail.errors.email" v-for="err in messageFormsMail.errors.email" class="text-danger">{{ err }}</span>
                           </div>
                       </div>
 
                      <div class="col-md-12" style="margin-top: 15px;">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
                            <label style="color: #333">Title</label>
                            <input type="text" v-model="modelMail.title" class="form-control" value="" required="required" >
-                           <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
+                           <span v-if="messageFormsMail.errors.title" v-for="err in messageFormsMail.errors.title" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
+
                      <div class="col-md-12">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                            <label style="color: #333">Content</label>
                            <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>
-                           <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
+                           <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
+
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label style="color: #333">Attachment</label>
+                              <input
+                                  multiple
+                                  type="file"
+                                  class="form-control"
+                                  id="file_send_url"
+                                  ref="file_send_url">
+                          </div>
+                      </div>
                   </form>
                   <div class="overlay" v-if="isPopupLoading"></div>
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="button" :disabled="!allowSending" @click="submitSendMail" class="btn btn-primary">Send</button>
+
+                  <button
+                      type="button"
+                      class="btn btn-primary"
+                      :disabled="!allowSending"
+
+                      @click="submitSendMail">
+
+                      Send
+                  </button>
                </div>
             </div>
          </div>
@@ -1502,6 +1524,7 @@ export default {
             listStatusText: state => state.storeExtDomain.listStatusText,
             listUser: state => state.storeUser.listUser,
             messageForms: state => state.storeExtDomain.messageForms,
+            messageFormsMail: state => state.storeMailgun.messageForms,
             messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
             listInt: state => state.storeIntDomain.listInt,
             listBackLink: state => state.storeBackLink.listBackLink,
@@ -2406,17 +2429,39 @@ export default {
             this.allowSending = false;
             this.isPopupLoading = true;
 
-            await this.$store.dispatch('sendMailWithMailgun', {
-                cc: '',
-                email: this.urlEmails,
-                title: this.modelMail.title,
-                content: this.modelMail.content,
-                attachment: 'undefined',
-            })
+            // create form data
+
+            let formData = new FormData();
+            formData.append('cc', '');
+            formData.append('email', JSON.stringify(this.urlEmails));
+            formData.append('title',  this.modelMail.title);
+            formData.append('content', this.modelMail.content);
+
+            // get attachments
+
+            let attachments = this.$refs.file_send_url.files;
+
+            if (!attachments.length) {
+                formData.append('attachment', 'undefined');
+            } else {
+                for (let i = 0; i < attachments.length; i++) {
+                    formData.append('attachment[]', attachments[i]);
+                }
+            }
+
+            // await this.$store.dispatch('sendMailWithMailgun', {
+            //     cc: '',
+            //     email: this.urlEmails,
+            //     title: this.modelMail.title,
+            //     content: this.modelMail.content,
+            //     attachment: 'undefined',
+            // })
+
+            await this.$store.dispatch('actionSendMailgun', formData);
 
             this.isPopupLoading = false;
 
-            if (this.messageForms.action == 'send_mail') {
+            if (this.messageFormsMail.action === 'success') {
                 this.modelMail = {
                     title: '',
                     content: '',
@@ -2431,7 +2476,12 @@ export default {
                 }
 
                 this.doUpdateMultipleStatus(result, this.extDomain_id);
+
                 $("#modal-email").modal('hide')
+
+                // clear attachments
+
+                this.$refs.file_send_url.value = "";
             } else {
                 swal.fire(
                     'Error',
