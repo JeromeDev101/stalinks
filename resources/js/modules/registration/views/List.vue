@@ -1152,15 +1152,24 @@
             doSendEmail(data) {
                 let emails = [];
 
-                if (typeof(data.email) === "string") {
-                    emails = data.email.split('|')
+                if (this.user.work_mail) {
+
+                    if (typeof(data.email) === "string") {
+                        emails = data.email.split('|')
+                    } else {
+                        emails = data.email.map(a => a.text);
+                    }
+
+                    this.registrationEmails = emails ? createTags(emails) : [];
+
+                    this.openSendEmailModal();
                 } else {
-                    emails = data.email.map(a => a.text);
+                    swal.fire(
+                        'Error',
+                        'Please setup your work mail first.',
+                        'error'
+                    )
                 }
-
-                this.registrationEmails = emails ? createTags(emails) : [];
-
-                this.openSendEmailModal();
             },
 
             openSendEmailModal() {
