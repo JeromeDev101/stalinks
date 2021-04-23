@@ -919,7 +919,7 @@ export default {
 
     methods: {
         checkIsViewedForThreads(thread) {
-            return thread.some(el => el.is_viewed === 0)
+            return thread.some(el => (el.is_sent === 0 && el.is_viewed === 0));
         },
 
         checkIsStarredForThreads(thread) {
@@ -1454,6 +1454,9 @@ export default {
             // is_viewed function
             if (viewed_emails.length !== 0) {
                 axios.post('/api/mail/is-viewed-thread',{ ids: viewed_emails} )
+
+                // update unread messages in inbox count on parent component
+                this.updateInboxUnreadCountInParent(this.inboxCount - 1);
             }
         },
 
@@ -1638,6 +1641,8 @@ export default {
                     this.records = response.data.inbox;
                     this.inboxCount = response.data.count;
 
+                    this.updateInboxUnreadCountInParent(this.inboxCount);
+
                     this.paginate.to = this.records.to == null ? 0:this.records.to;
                     this.paginate.total = this.records.total == null ? 0:this.records.total;
                     this.paginate.from = this.records.from == null ? 0:this.records.from;
@@ -1667,7 +1672,11 @@ export default {
 
         checkEmailValidationError(error){
             return Object.keys(error).some(function(err){ return ~err.indexOf("email.") })
-        }
+        },
+
+        updateInboxUnreadCountInParent(count) {
+            this.$emit('updateInboxUnreadCount', count)
+        },
     }
 }
 </script>
