@@ -29,32 +29,21 @@ class MailgunController extends Controller
 
     public function send(Request $request)
     {
-        // dd($request->attachment);
-        // if(isset($request->attachment1))
-        // {
-        //     $list = array($request->attachment1, $request->attachment2);
-
-        //     $list_attach = array();
-
-        //     foreach ($list as $key => $value) {
-        //         $list_attach[$key]['filePath'] = $value->getRealPath();
-        //         $list_attach[$key]['filename'] = $value->getClientOriginalName();
-
-        //     }
-
-
-        // }else {
-        //     $list_attach = '';
-        // }
-
         if($request->attachment == "undefined" )
         {
             $atth = null;
         }else{
-            $atth = [
-                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
-            ];
+//            $atth = [
+//                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
+//            ];
 
+            if (is_array($request->attachment)) {
+                foreach ($request->attachment as $att) {
+                    $atth[] = array('filePath'=>$att->getRealPath(),'filename'=>$att->getClientOriginalName());
+                }
+            } else {
+                $atth = null;
+            }
         }
 
         // check if email is a string or json object
@@ -134,19 +123,40 @@ class MailgunController extends Controller
 
         $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
-        $attac_object = '';
+        // saving attachments to database
+
+        $attac_object = null;
+
         if($request->attachment != "undefined" )
         {
-            $attach = time().'.'.$request->attachment->getClientOriginalExtension();
-            $request->attachment->move(public_path('/attachment'), $attach);
+//            $attach = time().'.'.$request->attachment->getClientOriginalExtension();
+//            $request->attachment->move(public_path('/attachment'), $attach);
+//
+//            $attac_object = [
+//                'url'           => url('/attachment/'.$attach),
+//                'size'          => \File::size(public_path('/attachment/'), $attach),
+//                'type'          => $request->attachment->getClientOriginalExtension(),
+//                'filename'      => $attach,
+//                'display_name'  => $request->attachment->getClientOriginalName()
+//            ];
 
-            $attac_object = [
-                'url'           => url('/attachment/'.$attach),
-                'size'          => \File::size(public_path('/attachment/'), $attach),
-                'type'          => $request->attachment->getClientOriginalExtension(),
-                'filename'      => $attach,
-                'display_name'  => $request->attachment->getClientOriginalName()
-            ];
+            if (is_array($request->attachment)) {
+
+                foreach ($request->attachment as $att) {
+
+                    $attach = time().'.'.$att->getClientOriginalExtension();
+                    $att->move(public_path('/attachment'), $attach);
+
+                    $attac_object[] = [
+                        'url'           => url('/attachment/'.$attach),
+                        'size'          => \File::size(public_path('/attachment/'), $attach),
+                        'type'          => $att->getClientOriginalExtension(),
+                        'filename'      => $attach,
+                        'display_name'  => $att->getClientOriginalName()
+                    ];
+                }
+
+            }
         }
 
         $input['body-plain'] = $request->content;
@@ -161,7 +171,7 @@ class MailgunController extends Controller
             'received'          => $str,
             'body'              => json_encode($input),
             'from_mail'         => Auth::user()->work_mail,
-            'attachment'        => $attac_object == '' ? '' : json_encode($attac_object),
+            'attachment'        => $attac_object == null ? '' : json_encode($attac_object),
             'date'              => date('Y-m-d'),
             'message_id'        => $res,
             'references_mail'   => '',
@@ -169,10 +179,7 @@ class MailgunController extends Controller
             'message_status'    => '',
         ]);
 
-
-
 		return response()->json(['success'=> true, 'message'=> $sender], 200);
-
     }
 
     public function retrieve_all()

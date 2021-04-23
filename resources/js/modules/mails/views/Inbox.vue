@@ -257,24 +257,56 @@
 
                     <div v-show="MessageDisplay && viewContent.attachment.url != ''" class="box-footer">
                         <ul class="mailbox-attachments clearfix">
-
-                                <!-- <span class="mailbox-attachment-icon">
-                                    <i class="fa fa-file-pdf-o"></i>
-                                    <img class="img-attachment" id="img-read-mail-attach">
-                                </span> -->
-                            <li v-show="viewContent.is_sent == 0 && viewContent.attachment.length != 0" v-for="(attach, index) in viewContent.attachment" :key="index">
+                            <li
+                                v-if="viewContent.is_sent == 0 && viewContent.attachment.length != 0"
+                                v-for="(attach, index) in viewContent.attachment"
+                                :key="index">
                                 <div class="mailbox-attachment-info mailbox-attachment-info-custom">
-                                    <a href="#" :title="attach.name" :id="'link-download-href-'+index" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ attach.name }}</a>
+                                    <a
+                                        href="#"
+                                        :title="attach.name"
+                                        :id="'link-download-href-'+index"
+                                        class="mailbox-attachment-name">
+
+                                        <i class="fa fa-paperclip"></i>
+                                        {{ attach.name }}
+                                    </a>
+
                                     <span class="mailbox-attachment-size">{{ bytesToSize(attach.size) }}</span>
                                 </div>
                             </li>
 
-                            <li v-show="viewContent.is_sent == 1">
+                            <li v-if="viewContent.is_sent == 1 && !Array.isArray(viewContent.attachment)">
                                 <div class="mailbox-attachment-info mailbox-attachment-info-custom">
-                                    <a :href="'/attachment/'+viewContent.attachment.filename" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{ viewContent.attachment.display_name }}</a>
+                                    <a
+                                        target="_blank"
+                                        class="mailbox-attachment-name"
+                                        :download="viewContent.attachment.display_name"
+                                        :href="'/attachment/'+viewContent.attachment.filename">
+
+                                        <i class="fa fa-paperclip"></i>
+                                        {{ viewContent.attachment.display_name }}
+                                    </a>
+
                                     <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
+                            </li>
 
+                            <li v-if="viewContent.is_sent == 1 && Array.isArray(viewContent.attachment)"
+                                v-for="att in viewContent.attachment">
+                                <div class="mailbox-attachment-info mailbox-attachment-info-custom">
+                                    <a
+                                        target="_blank"
+                                        class="mailbox-attachment-name"
+                                        :download="att.display_name"
+                                        :href="'/attachment/'+att.filename">
+
+                                        <i class="fa fa-paperclip"></i>
+                                        {{ att.display_name }}
+                                    </a>
+
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(att.size) }}</span>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -371,7 +403,6 @@
                                     v-if="email.is_sent === 0 && email.attachment.length !== 0"
                                     v-for="(attach, index) in email.attachment"
                                     :key="index">
-
                                     <div class="mailbox-attachment-info mailbox-attachment-info-custom card">
                                         <a
                                             href="#"
@@ -389,8 +420,10 @@
                                     </div>
                                 </li>
 
-                                <li v-if="email.is_sent === 1">
-                                    <div class="mailbox-attachment-info mailbox-attachment-info-custom card">
+                                <li v-if="email.is_sent === 1 && !Array.isArray(email.attachment)">
+                                    <div
+                                        v-if="!Array.isArray(email.attachment)"
+                                        class="mailbox-attachment-info mailbox-attachment-info-custom card">
                                         <a
                                             target="_blank"
                                             class="mailbox-attachment-name"
@@ -403,6 +436,26 @@
 
                                         <span class="mailbox-attachment-size">
                                             {{ bytesToSize(email.attachment.size) }}
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <li
+                                    v-if="email.is_sent === 1 && Array.isArray(email.attachment)"
+                                    v-for="att in email.attachment">
+                                    <div class="mailbox-attachment-info mailbox-attachment-info-custom card">
+                                        <a
+                                            target="_blank"
+                                            class="mailbox-attachment-name"
+                                            :download="att.display_name"
+                                            :href="'/attachment/'+att.filename">
+
+                                            <i class="fa fa-paperclip"></i>
+                                            {{ att.display_name }}
+                                        </a>
+
+                                        <span class="mailbox-attachment-size">
+                                            {{ bytesToSize(att.size) }}
                                         </span>
                                     </div>
                                 </li>
@@ -576,7 +629,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" class="form-control" id="file_send" ref="file_send">
+                                    <input type="file" multiple class="form-control" id="file_send" ref="file_send">
                                 </div>
                             </div>
 
@@ -704,7 +757,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" id="file_reply" ref="file_reply" class="form-control">
+                                    <input type="file" multiple id="file_reply" ref="file_reply" class="form-control">
                                 </div>
                             </div>
 
@@ -1509,7 +1562,20 @@ export default {
             // this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
             this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
             this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
-            this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
+
+            // get attachments
+
+            // this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
+
+            let attachments = type === 'reply' ? this.$refs.file_reply.files : this.$refs.file_send.files;
+
+            if (!attachments.length) {
+                this.formData.append('attachment', 'undefined');
+            } else {
+                for (let i = 0; i < attachments.length; i++) {
+                    this.formData.append('attachment[]', attachments[i]);
+                }
+            }
 
             await this.$store.dispatch('actionSendMailgun', this.formData);
 
@@ -1536,6 +1602,11 @@ export default {
                     title: '',
                     content: ''
                 }
+
+                // clear attachments
+
+                this.$refs.file_reply.value = ""
+                this.$refs.file_send.value = ""
 
                 //this.getStatus();
                 this.getInbox();
