@@ -1603,6 +1603,11 @@ export default {
                     content: ''
                 }
 
+                // clear attachments
+
+                this.$refs.file_reply.value = ""
+                this.$refs.file_send.value = ""
+
                 //this.getStatus();
                 this.getInbox();
                 // this.sendBtn = false;
