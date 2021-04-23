@@ -757,7 +757,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label style="color: #333">Attachment</label>
-                                    <input type="file" id="file_reply" ref="file_reply" class="form-control">
+                                    <input type="file" multiple id="file_reply" ref="file_reply" class="form-control">
                                 </div>
                             </div>
 
@@ -1567,7 +1567,7 @@ export default {
 
             // this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
 
-            let attachments = type === 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files;
+            let attachments = type === 'reply' ? this.$refs.file_reply.files : this.$refs.file_send.files;
 
             if (!attachments.length) {
                 this.formData.append('attachment', 'undefined');
