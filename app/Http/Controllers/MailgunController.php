@@ -415,7 +415,7 @@ class MailgunController extends Controller
                 'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
             )
             ->distinct('sender')
-            ->count('sender');
+            ->count();
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
     }
