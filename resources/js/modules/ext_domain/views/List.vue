@@ -1116,6 +1116,7 @@
          </div>
       </div>
       <!-- End Modal Add -->
+
       <!-- Modal Send Email -->
       <div id="modal-email" class="modal fade" ref="modalEmail" style="display: none;">
          <div class="modal-dialog modal-lg">
@@ -2321,67 +2322,76 @@ export default {
             this.$store.dispatch('clearMessageForm');
             this.urlEmails = [];
 
-            if (ext == null) {
-                if (this.checkIds.length == 0) {
-                    swal.fire('No Selected', 'Please select first', 'error');
+            if (this.user.work_mail) {
 
-                } else if (this.checkIds.length > 10) {
-                    swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
-                } else {
-                    let err = this.checkIds.some(function(items){
-                        return items.status == 50 | items.email == "" | items.email == null;
-                    });
+                if (ext == null) {
+                    if (this.checkIds.length == 0) {
+                        swal.fire('No Selected', 'Selection is empty.', 'error');
 
-                    if(err) {
-                        swal.fire(
-                            'Invalid Selection',
-                            'Some of the selected items may either be contacted already or have no email address',
-                            'error'
-                        );
+                    } else if (this.checkIds.length > 10) {
+                        swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                     } else {
-                        this.openModalEmailElem();
-                        let emails = [];
-                        for (let index in this.checkIds) {
-                            if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
-                                if (typeof(this.checkIds[index].email) === "string") {
-                                    emails.push(this.checkIds[index].email.split('|'))
-                                } else {
-                                    emails.push(this.checkIds[index].email.map(a => a.text))
+                        let err = this.checkIds.some(function(items){
+                            return items.status == 50 | items.email == "" | items.email == null;
+                        });
+
+                        if(err) {
+                            swal.fire(
+                                'Invalid Selection',
+                                'Some of the selected items may either be contacted already or have no email address',
+                                'error'
+                            );
+                        } else {
+                            this.openModalEmailElem();
+                            let emails = [];
+                            for (let index in this.checkIds) {
+                                if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
+                                    if (typeof(this.checkIds[index].email) === "string") {
+                                        emails.push(this.checkIds[index].email.split('|'))
+                                    } else {
+                                        emails.push(this.checkIds[index].email.map(a => a.text))
+                                    }
                                 }
                             }
+
+                            this.urlEmails = createTags(emails.flat())
+
+                            // this.email_to = emails.join('|')
+                        }
+                    }
+                    // console.log(this.checkIds)
+                    // return false;
+                }
+
+                if (ext != null) {
+                    if (ext.status == 50) {
+                        swal.fire('Invalid', 'Record already contacted.', 'error')
+                    } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
+                        swal.fire('No email', 'Please check if record has email.', 'error')
+                    } else {
+                        this.openModalEmailElem();
+                        // this.email_to = ext.email;
+                        this.extDomain_id = ext.id;
+
+                        let emails = [];
+
+                        if (typeof(ext.email) === "string") {
+                            emails = ext.email.split('|')
+                        } else {
+                            emails = ext.email.map(a => a.text);
                         }
 
-                        this.urlEmails = createTags(emails.flat())
-
-                        // this.email_to = emails.join('|')
+                        this.urlEmails = emails ? createTags(emails) : [];
                     }
                 }
-                // console.log(this.checkIds)
-                // return false;
+
+            } else {
+                swal.fire(
+                    'Error',
+                    'Please setup your work mail first.',
+                    'error'
+                )
             }
-
-            if (ext != null) {
-                if (ext.status == 50) {
-                    swal.fire('Invalid', 'This is Already Contacted', 'error')
-                } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
-                    swal.fire('No email', 'Please check if with email', 'error')
-                } else {
-                    this.openModalEmailElem();
-                    // this.email_to = ext.email;
-                    this.extDomain_id = ext.id;
-
-                    let emails = [];
-
-                    if (typeof(ext.email) === "string") {
-                        emails = ext.email.split('|')
-                    } else {
-                        emails = ext.email.map(a => a.text);
-                    }
-
-                    this.urlEmails = emails ? createTags(emails) : [];
-                }
-            }
-
         },
 
         getStatus() {
