@@ -207,6 +207,8 @@ class MailgunController extends Controller
 
     public function recipient_filter(Request $request)
     {
+        $cnt = 0;
+
         //return response()->json(['inbox'=> Auth::user()->role_id]);
 
     	$validator = Validator::make($request->all(), [
@@ -405,7 +407,15 @@ class MailgunController extends Controller
 
         $inbox = ($request->param != 'Trash') ? $inbox : $inbox->paginate();
 
-        $cnt = Reply::where('is_viewed', 0)->where('is_sent', 0)->whereNull('deleted_at')->count();
+        $cnt = Reply::where('replies.received', 'like', '%'.$request->email.'%')
+            ->where('is_viewed', 0)
+            ->where('is_sent', 0)
+            ->whereNull('deleted_at')
+            ->groupBy(DB::raw(
+                'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
+            )
+            ->distinct('sender')
+            ->count('sender');
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
     }

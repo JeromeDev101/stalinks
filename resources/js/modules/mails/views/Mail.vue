@@ -111,7 +111,7 @@
             </div>
 
             <div class="col-md-10">
-                <router-view></router-view>
+                <router-view @updateInboxUnreadCount="updateUnreadInboxCount"></router-view>
             </div>
 
         </div>
@@ -295,6 +295,10 @@ export default {
 
                 this.listUserEmail = response.data;
             });
+        },
+
+        updateUnreadInboxCount(count) {
+            this.displayInboxCnt = count
         }
     }
 }
