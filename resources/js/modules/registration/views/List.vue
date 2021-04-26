@@ -21,8 +21,7 @@
                 </div>
 
                 <div class="box-body m-3 collapse" id="collapseFilterRegistration">
-                    <div class="row">
-
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Search Name, Email & Username</label>
@@ -64,9 +63,19 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <select class="form-control" name="" v-model="filterModel.language_id">
+                                    <option value="">Select Language</option>
+                                    <option v-for="option in listLanguages.data" :value="option.id" :key="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Commission</label>
@@ -207,6 +216,8 @@
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
+                                <th v-show="tblAccountsOpt.country">Country</th>
+                                <th v-show="tblAccountsOpt.language">Language</th>
                                 <th v-show="tblAccountsOpt.company_type">Company Type</th>
                                 <th v-show="tblAccountsOpt.company_name">Company Name</th>
                                 <th v-show="tblAccountsOpt.company_url">Company URL</th>
@@ -267,6 +278,8 @@
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                <td v-show="tblAccountsOpt.country">{{ account.country === null ? 'N/A' : account.country.name }}</td>
+                                <td v-show="tblAccountsOpt.language">{{ account.language === null ? 'N/A' : account.language.name }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
                                 <td v-show="tblAccountsOpt.company_url">
@@ -422,6 +435,18 @@
                                     <label>Country</label>
                                     <select class="form-control" v-model="accountUpdate.country_id">
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountUpdate.language_id">
+                                        <option value=null>None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -675,6 +700,18 @@
                                     <select class="form-control" v-model="accountModel.country_id">
                                         <option value="">All</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountModel.language_id">
+                                        <option value="">None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1032,6 +1069,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: 'Company',
                     writer_price: '',
                 },
@@ -1043,6 +1081,7 @@
                     paginate: this.$route.query.paginate || '15',
                     team_in_charge: this.$route.query.team_in_charge || '',
                     country: this.$route.query.country || '',
+                    language_id: this.$route.query.language_id || '',
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
                     company_type: this.$route.query.company_type || '',
@@ -1080,6 +1119,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: '',
                     writer_price: '',
                 },
@@ -1466,6 +1506,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
                         company_type: this.filterModel.company_type,
@@ -1516,6 +1557,8 @@
                     company_name: '',
                     company_url: '',
                     account_validation: '',
+                    country: '',
+                    language_id: '',
                     created_at: {
                         startDate: null,
                         endDate: null
@@ -1542,6 +1585,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         company_type: this.filterModel.company_type,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,

@@ -30,6 +30,7 @@ class Registration extends Model
         'info',
         'address',
         'country_id',
+        'language_id',
         'id_payment_type',
         'payment_email',
         'payment_account',
@@ -51,6 +52,14 @@ class Registration extends Model
 
     public function user() {
         return $this->belongsTo('App\Models\User', 'email', 'email');
+    }
+
+    public function country() {
+        return $this->belongsTo('App\Models\Country', 'country_id');
+    }
+
+    public function language() {
+        return $this->belongsTo('App\Models\Language', 'language_id');
     }
 
     public function getCreatedAtAttribute($value)
