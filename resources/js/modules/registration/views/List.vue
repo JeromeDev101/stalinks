@@ -269,8 +269,8 @@
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
-                                <td v-show="tblAccountsOpt.country">{{ 'wew' }}</td>
-                                <td v-show="tblAccountsOpt.language">{{ 'waw' }}</td>
+                                <td v-show="tblAccountsOpt.country">{{ account.country === null ? 'N/A' : account.country.name }}</td>
+                                <td v-show="tblAccountsOpt.language">{{ account.language === null ? 'N/A' : account.language.name }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
                                 <td v-show="tblAccountsOpt.company_url">

@@ -54,6 +54,14 @@ class Registration extends Model
         return $this->belongsTo('App\Models\User', 'email', 'email');
     }
 
+    public function country() {
+        return $this->belongsTo('App\Models\Country', 'country_id');
+    }
+
+    public function language() {
+        return $this->belongsTo('App\Models\Language', 'language_id');
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($this->attributes['created_at'])->format('Y-m-d');

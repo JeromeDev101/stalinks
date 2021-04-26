@@ -163,6 +163,8 @@ class AccountController extends Controller
         })
         ->with('team_in_charge:id,name,username,status')
         ->with('user:id,email')
+        ->with('country:id,name')
+        ->with('language:id,name')
         ->orderBy('id', 'desc');
 
         if($paginate === 'All'){
