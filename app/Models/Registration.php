@@ -30,6 +30,7 @@ class Registration extends Model
         'info',
         'address',
         'country_id',
+        'language_id',
         'id_payment_type',
         'payment_email',
         'payment_account',

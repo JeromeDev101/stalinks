@@ -430,6 +430,18 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountUpdate.language_id">
+                                        <option value=null>None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>Address</label>
                                     <textarea class="form-control" v-model="accountUpdate.address"></textarea>
                                 </div>
@@ -675,6 +687,18 @@
                                     <select class="form-control" v-model="accountModel.country_id">
                                         <option value="">All</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountModel.language_id">
+                                        <option value="">None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1032,6 +1056,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: 'Company',
                     writer_price: '',
                 },
@@ -1080,6 +1105,7 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: '',
                     writer_price: '',
                 },
