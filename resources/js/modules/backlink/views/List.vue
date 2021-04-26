@@ -671,18 +671,20 @@
             },
 
             async clearSearch() {
-                await this.$store.dispatch('actionResetFillterBacklink');
-                this.fillter.status = ''
-                this.fillter.paginate = '50'
-
                 this.fillter.process_date = {
                     startDate: null,
                     endDate: null
-                },
+                }
+
                 this.fillter.date_completed = {
                     startDate: null,
                     endDate: null
                 }
+
+                await this.$store.dispatch('actionResetFillterBacklink');
+                this.fillter.status = ''
+                this.fillter.paginate = '50'
+
                 this.getBackLinkList();
             },
 
