@@ -292,16 +292,6 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
-                                    <div>
-                                        <label>Anchor text</label>
-                                        <input type="text" v-model="modelBaclink.anchor_text" :disabled="user.role_id == 8" class="form-control" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.title}" class="form-group">
                                     <div>
                                         <label>Title</label>
@@ -313,12 +303,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
                                     <div>
-                                        <label>Link To</label>
-
-                                        <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter || user.role_id == 8" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
+                                        <label>Anchor text</label>
+                                        <input type="text" v-model="modelBaclink.anchor_text" :disabled="user.role_id == 8" class="form-control" required="required" >
+                                        <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -329,6 +318,17 @@
                                         <label>Link From</label>
                                         <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
                                         <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
+                                    <div>
+                                        <label>Link To</label>
+
+                                        <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter || user.role_id == 8" required="required" >
+                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
                             </div>
