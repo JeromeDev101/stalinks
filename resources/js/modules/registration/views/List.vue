@@ -21,8 +21,7 @@
                 </div>
 
                 <div class="box-body m-3 collapse" id="collapseFilterRegistration">
-                    <div class="row">
-
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Search Name, Email & Username</label>
@@ -64,9 +63,19 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <select class="form-control" name="" v-model="filterModel.language_id">
+                                    <option value="">Select Language</option>
+                                    <option v-for="option in listLanguages.data" :value="option.id" :key="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Commission</label>
@@ -1072,6 +1081,7 @@
                     paginate: this.$route.query.paginate || '15',
                     team_in_charge: this.$route.query.team_in_charge || '',
                     country: this.$route.query.country || '',
+                    language_id: this.$route.query.language_id || '',
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
                     company_type: this.$route.query.company_type || '',
@@ -1496,6 +1506,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
                         company_type: this.filterModel.company_type,
@@ -1546,6 +1557,8 @@
                     company_name: '',
                     company_url: '',
                     account_validation: '',
+                    country: '',
+                    language_id: '',
                     created_at: {
                         startDate: null,
                         endDate: null
@@ -1572,6 +1585,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         company_type: this.filterModel.company_type,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
