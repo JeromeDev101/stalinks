@@ -494,7 +494,11 @@ class AccountController extends Controller
 
     public function getSubAccount(Request $request) {
         $team_in_charge = $request->team_in_charge == '' ?  Auth::user()->id : $request->team_in_charge;
-        $registration = Registration::where('team_in_charge', $team_in_charge)->where('is_sub_account', 1)->get();
+        $registration = Registration::select('registration.*', 'users.id as user_id')
+            ->where('team_in_charge', $team_in_charge)
+            ->join('users', 'users.email', '=', 'registration.email')
+            ->where('is_sub_account', 1)
+            ->get();
 
         return $registration;
     }

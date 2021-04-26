@@ -108,7 +108,7 @@
                                 <label for="">User Buyer</label>
                                 <select class="form-control" v-model="fillter.sub_buyer_id">
                                     <option value="">All</option>
-                                    <option v-for="buyer in listSubAccounts" v-bind:value="buyer.id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
+                                    <option v-for="buyer in listSubAccounts" v-bind:value="buyer.user_id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
                                 </select>
                             </div>
                         </div>
@@ -678,11 +678,13 @@
                 this.fillter.process_date = {
                     startDate: null,
                     endDate: null
-                },
+                }
+
                 this.fillter.date_completed = {
                     startDate: null,
                     endDate: null
                 }
+
                 this.getBackLinkList();
             },
 
