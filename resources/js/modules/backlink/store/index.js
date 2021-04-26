@@ -152,7 +152,27 @@ const actions = {
         commit(MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
     actionResetFillterBacklink({commit}) {
-        commit(FILLTER, { page: 0, querySearch: '', full_data: false, int_id: 0});
+        commit(FILLTER, {
+            sub_buyer_id: '',
+            url_advertiser: '',
+            page: 0,
+            querySearch: '',
+            full_data: false,
+            int_id: 0,
+            status: '',
+            seller: '',
+            buyer: '',
+            backlink_id: '',
+            paginate: '50',
+            process_date : {
+                startDate: null,
+                endDate: null
+            },
+            date_completed : {
+                startDate: null,
+                endDate: null
+            }
+        });
     }
 
 };
