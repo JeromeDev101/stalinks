@@ -407,11 +407,17 @@ class MailgunController extends Controller
 
         $inbox = ($request->param != 'Trash') ? $inbox : $inbox->paginate();
 
-        $cnt = Reply::where('replies.received', 'like', '%'.$request->email.'%')
-            ->where('is_viewed', 0)
+        // getting count of unread emails in inbox
+
+        $cnt = Reply::where('is_viewed', 0)
             ->where('is_sent', 0)
-            ->whereNull('deleted_at')
-            ->distinct(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'))
+            ->whereNull('deleted_at');
+
+        if($request->email !== 'jess@stalinks.com' && $request->email !== 'all'){
+            $cnt = $cnt->where('replies.received', 'like', '%'.$request->email.'%');
+        }
+
+        $cnt = $cnt->distinct(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'))
             ->count(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))'));
 
         return response()->json(['count'=> $cnt, 'inbox'=> $inbox]);
@@ -434,7 +440,8 @@ class MailgunController extends Controller
                     return (
                         ($value->received === $item->received && $value->sender === $item->sender)
                         || ($value->received === $item->sender && $value->sender === $item->received)
-                        || in_array($item->sender, $received_array)
+                        || (in_array($item->sender, $received_array) && $value->sender === $item->received)
+                        || (in_array($item->received, $received_array) && $value->sender === $item->sender)
                     );
                 }
             })->sortBy('id')->values();
