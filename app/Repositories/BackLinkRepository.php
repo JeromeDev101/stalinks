@@ -120,11 +120,13 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
-        if( (isset($user->registration->type) && $user->registration->type == 'Buyer') || $user->role_id == 5){
-            $query->where('user_id', $user_id)
-                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                    return $query->orWhereIn('user_id', $sub_buyer_ids);
-                });
+        if((isset($user->registration->type) && $user->registration->type == 'Buyer') || $user->role_id == 5){
+            if($filters->sub_buyer_id == '') {
+                $query->where('user_id', $user_id)
+                    ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                        return $query->orWhereIn('user_id', $sub_buyer_ids);
+                    });
+            }
         }
 
         $backlink = $this->filter($query, $filters);
