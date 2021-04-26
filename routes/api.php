@@ -233,6 +233,10 @@ Route::middleware('auth:api')->group(function () {
 
     //Compute for best price
     Route::name('generate-best-price')->post('generate-best-price', 'PublisherController@generateBestPrice');
+
+    //Graphs
+    Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
+    Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
 });
 
 //Mailgun external
