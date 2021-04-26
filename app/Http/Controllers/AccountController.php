@@ -422,7 +422,21 @@ class AccountController extends Controller
 
     public function getTeamInCharge() {
         $team_in_charge = [5,6,7,1];
-        $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
+
+        $team = User::select('id','name', 'username')
+            ->where('isOurs',0)
+            ->whereIn('role_id', $team_in_charge)
+            ->orderBy('username', 'asc');
+
+        if (Auth::user()->role_id === 6) {
+            $team = $team->where(function ($sub) {
+                $sub->where('id', Auth::id())
+                    ->orWhere('status', 'inactive');
+            });
+        }
+
+        $team = $team->get();
+
         return response()->json(['data'=> $team], 200);
     }
 

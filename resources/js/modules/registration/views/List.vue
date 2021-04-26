@@ -89,7 +89,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3" v-if="isTeamSeller" v-show="user.role_id == 8 || user.isAdmin">
+                        <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
                             <div class="form-group">
                                 <label>Team In-charge</label>
                                 <select class="form-control" v-model="filterModel.team_in_charge">
@@ -898,7 +898,7 @@
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
                                     <label style="color: #333">Email</label>
 
                                     <vue-tags-input
@@ -906,7 +906,7 @@
                                         :disabled="true"
                                         :separators="separators"
                                         :tags="registrationEmails"
-                                        :class="{'vue-tag-error': messageForms.errors.email}"
+                                        :class="{'vue-tag-error': messageFormsMail.errors.email}"
                                         ref="registrationTag"
                                         placeholder=""
 
@@ -914,8 +914,8 @@
                                     />
 
                                     <span
-                                        v-if="messageForms.errors.email"
-                                        v-for="err in messageForms.errors.email"
+                                        v-if="messageFormsMail.errors.email"
+                                        v-for="err in messageFormsMail.errors.email"
                                         class="text-danger">
 
                                         {{ err }}
@@ -924,14 +924,14 @@
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
                                     <label style="color: #333">Title</label>
 
                                     <input type="text" v-model="modelMail.title" class="form-control" value="" required="required">
 
                                     <span
-                                        v-if="messageForms.errors.title"
-                                        v-for="err in messageForms.errors.title"
+                                        v-if="messageFormsMail.errors.title"
+                                        v-for="err in messageFormsMail.errors.title"
                                         class="text-danger">
 
                                         {{ err }}
@@ -940,7 +940,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                                     <label style="color: #333">Content</label>
 
                                     <textarea
@@ -954,12 +954,24 @@
                                     </textarea>
 
                                     <span
-                                        v-if="messageForms.errors.content"
-                                        v-for="err in messageForms.errors.content"
+                                        v-if="messageFormsMail.errors.content"
+                                        v-for="err in messageFormsMail.errors.content"
                                         class="text-danger">
 
-                                        { err }}
+                                        {{ err }}
                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Attachment</label>
+                                    <input
+                                        multiple
+                                        type="file"
+                                        class="form-control"
+                                        id="file_send_registration"
+                                        ref="file_send_registration">
                                 </div>
                             </div>
                         </form>
@@ -1125,6 +1137,7 @@
                 tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
                 messageForms: state => state.storeAccount.messageForms,
                 messageFormsExt: state => state.storeExtDomain.messageForms,
+                messageFormsMail: state => state.storeMailgun.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
                 listIncharge: state => state.storeAccount.listIncharge,
@@ -1137,18 +1150,26 @@
 
         methods: {
             doSendEmail(data) {
-                console.log(data)
                 let emails = [];
 
-                if (typeof(data.email) === "string") {
-                    emails = data.email.split('|')
+                if (this.user.work_mail) {
+
+                    if (typeof(data.email) === "string") {
+                        emails = data.email.split('|')
+                    } else {
+                        emails = data.email.map(a => a.text);
+                    }
+
+                    this.registrationEmails = emails ? createTags(emails) : [];
+
+                    this.openSendEmailModal();
                 } else {
-                    emails = data.email.map(a => a.text);
+                    swal.fire(
+                        'Error',
+                        'Please setup your work mail first.',
+                        'error'
+                    )
                 }
-
-                this.registrationEmails = emails ? createTags(emails) : [];
-
-                this.openSendEmailModal();
             },
 
             openSendEmailModal() {
@@ -1186,15 +1207,37 @@
             async submitSendMail() {
                 this.allowSending = false;
 
-                await this.$store.dispatch('sendMailWithMailgun', {
-                    cc: '',
-                    email: this.registrationEmails,
-                    title: this.modelMail.title,
-                    content: this.modelMail.content,
-                    attachment: 'undefined',
-                })
+                // create form data
 
-                if (this.messageFormsExt.action === 'send_mail') {
+                let formData = new FormData();
+                formData.append('cc', '');
+                formData.append('email', JSON.stringify(this.registrationEmails));
+                formData.append('title',  this.modelMail.title);
+                formData.append('content', this.modelMail.content);
+
+                // get attachments
+
+                let attachments = this.$refs.file_send_registration.files;
+
+                if (!attachments.length) {
+                    formData.append('attachment', 'undefined');
+                } else {
+                    for (let i = 0; i < attachments.length; i++) {
+                        formData.append('attachment[]', attachments[i]);
+                    }
+                }
+
+                // await this.$store.dispatch('sendMailWithMailgun', {
+                //     cc: '',
+                //     email: this.registrationEmails,
+                //     title: this.modelMail.title,
+                //     content: this.modelMail.content,
+                //     attachment: 'undefined',
+                // })
+
+                await this.$store.dispatch('actionSendMailgun', formData);
+
+                if (this.messageFormsMail.action === 'success') {
                     this.modelMail = {
                         title: '',
                         content: '',
@@ -1209,6 +1252,8 @@
                         'success'
                     )
                     this.allowSending = true;
+
+                    this.$refs.file_send_registration.value = "";
                 } else {
                     await swal.fire(
                         'Error',

@@ -210,9 +210,13 @@ Route::middleware('auth:api')->group(function () {
         Route::name('filter_recipient')->get('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         Route::name('starred')->get('/starred','MailgunController@starred');
+        Route::name('starred-thread')->post('/starred-thread','MailgunController@starredThread');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
+        Route::name('is_viewed_thread')->post('/is-viewed-thread','MailgunController@setViewMessageThread');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
+        Route::name('labeling-thread')->post('/labeling-thread','MailgunController@labelingThread');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
+        Route::name('delete-message-thread')->post('/delete-message-thread','MailgunController@deleteMessageThread');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');

@@ -11,10 +11,26 @@
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Search ID Backlink</label>
                                 <input type="text" class="form-control" name="" v-model="filterModel.backlink_id" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Completed</label>
+
+                                <date-range-picker
+                                    v-model="filterModel.date_completed"
+                                    ref="picker"
+                                    opens="right"
+                                    style="width: 100%"
+                                    :linkedCalendars="true"
+                                    :dateRange="filterModel.date_completed"
+                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                />
                             </div>
                         </div>
 
@@ -58,6 +74,7 @@
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
+                                <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
                                 <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
                                 <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
                                 <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
@@ -69,6 +86,7 @@
                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                <td>{{ index + 1 }}</td>
                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
+                               <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
                                <td v-show="tblOptIncomesAdmin.selling_price">$ {{ incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price) }}</td>
                                <td v-show="tblOptIncomesAdmin.price">{{ incomes_admin.prices == '' || incomes_admin.prices == null ? 0:'$ ' + number_format(incomes_admin.prices) }}</td>
                                <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
@@ -116,6 +134,9 @@
                             <div class="checkbox col-md-6">
                                 <label><input type="checkbox" :checked="tblOptIncomesAdmin.net_incomes ? 'checked':''" v-model="tblOptIncomesAdmin.net_incomes">Net Incomes</label>
                             </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox" :checked="tblOptIncomesAdmin.live_date ? 'checked':''" v-model="tblOptIncomesAdmin.live_date">Date Completed</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -140,6 +161,10 @@
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
                     backlink_id: this.$route.query.backlink_id || '',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    },
                 },
                 isSearchingLoading: false,
             }
@@ -171,7 +196,7 @@
                 if( p1 != 0 ){
                     result = 0;
                 }
-                
+
                 return result;
 
             },
@@ -207,6 +232,7 @@
                     params: {
                         paginate: this.filterModel.paginate,
                         backlink_id: this.filterModel.backlink_id,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
             },
@@ -215,6 +241,10 @@
                 this.filterModel = {
                     paginate: '50',
                     backlink_id: '',
+                    date_completed: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.getListIncomesAdmin({
@@ -227,7 +257,7 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageformIncomesAdmin');
             },
-    
+
         },
     }
 </script>
