@@ -207,6 +207,8 @@
                                 <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
+                                <th v-show="tblAccountsOpt.country">Country</th>
+                                <th v-show="tblAccountsOpt.language">Language</th>
                                 <th v-show="tblAccountsOpt.company_type">Company Type</th>
                                 <th v-show="tblAccountsOpt.company_name">Company Name</th>
                                 <th v-show="tblAccountsOpt.company_url">Company URL</th>
@@ -267,6 +269,8 @@
                                 <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                <td v-show="tblAccountsOpt.country">{{ 'wew' }}</td>
+                                <td v-show="tblAccountsOpt.language">{{ 'waw' }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
                                 <td v-show="tblAccountsOpt.company_url">
