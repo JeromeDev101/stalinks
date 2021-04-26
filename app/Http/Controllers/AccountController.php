@@ -131,9 +131,17 @@ class AccountController extends Controller
                 });
             }
         })->when( $country, function($query) use ($country){
-            return $query->where( 'country_id', $country );
+            if($country == 'none') {
+                return $query->where('country_id', null);
+            } else {
+                return $query->where( 'country_id', $country );
+            }
         })->when( $language_id, function($query) use ($language_id){
-            return $query->where( 'language_id', $language_id );
+            if($language_id == 'none') {
+                return $query->where('language_id', null);
+            } else {
+                return $query->where( 'language_id', $language_id );
+            }
         })->when( $commission, function($query) use ($commission){
             return $query->where( 'commission', $commission );
         })->when( $credit_auth, function($query) use ($credit_auth){

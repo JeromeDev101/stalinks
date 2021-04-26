@@ -57,6 +57,7 @@
                                 <label>Country</label>
                                 <select class="form-control" name="" v-model="filterModel.country">
                                     <option value="">Select Country</option>
+                                    <option value="none">None</option>
                                     <option v-for="option in listCountryAll.data" :value="option.id" :key="option.id">
                                         {{ option.name }}
                                     </option>
@@ -69,6 +70,7 @@
                                 <label>Language</label>
                                 <select class="form-control" name="" v-model="filterModel.language_id">
                                     <option value="">Select Language</option>
+                                    <option value="none">None</option>
                                     <option v-for="option in listLanguages.data" :value="option.id" :key="option.id">
                                         {{ option.name }}
                                     </option>
