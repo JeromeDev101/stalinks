@@ -204,7 +204,7 @@
                                         class="btn btn-default"
                                         :disabled="isDisabledAction"
 
-                                        @click="doSendEmail(null, $event)">
+                                        @click="doSendEmail(null)">
 
                                         <i class="fa fa-fw fa-envelope-o"></i>
                                     </button>
@@ -1262,19 +1262,46 @@
             },
 
             doSendEmail(data) {
+                this.registrationEmails = [];
                 let emails = [];
 
                 if (this.user.work_mail) {
 
-                    if (typeof(data.email) === "string") {
-                        emails = data.email.split('|')
+                    if (data === null) {
+
+                        if (this.checkIds.length === 0) {
+                            swal.fire('Invalid', 'Selection is empty.', 'error');
+                        } else if (this.checkIds.length > 10) {
+                            swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        } else {
+                            this.checkIds.forEach(function (item) {
+                                if (item.email !== "" || item.email != null) {
+                                    if (typeof(item.email) === "string") {
+                                        emails.push(item.email.split('|'))
+                                    } else {
+                                        emails.push(item.email.map(a => a.text))
+                                    }
+                                }
+                            })
+
+                            this.registrationEmails = createTags(emails.flat())
+
+                            this.openSendEmailModal();
+                        }
+
                     } else {
-                        emails = data.email.map(a => a.text);
+
+                        if (typeof(data.email) === "string") {
+                            emails = data.email.split('|')
+                        } else {
+                            emails = data.email.map(a => a.text);
+                        }
+
+                        this.registrationEmails = emails ? createTags(emails) : [];
+
+                        this.openSendEmailModal();
+
                     }
-
-                    this.registrationEmails = emails ? createTags(emails) : [];
-
-                    this.openSendEmailModal();
                 } else {
                     swal.fire(
                         'Error',
@@ -1364,6 +1391,10 @@
                         'success'
                     )
                     this.allowSending = true;
+
+                    this.checkIds = [];
+                    this.checkSelected();
+
 
                     this.$refs.file_send_registration.value = "";
                 } else {
