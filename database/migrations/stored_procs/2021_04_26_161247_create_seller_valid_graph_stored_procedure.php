@@ -26,11 +26,11 @@ class CreateSellerValidGraphStoredProcedure extends Migration
                     MONTHNAME(MAX(registration.created_at)) AS month,
                     YEAR(MAX(registration.created_at)) AS year";
                     SET @xaxisGroup = "GROUP BY MONTH(registration.created_at), YEAR(registration.created_at)";
-                    SET @xaxisOrder = "ORDER BY MONTH(registration.created_at), YEAR(registration.created_at)";
+                    SET @xaxisOrder = "ORDER BY MONTH(registration.creat1ed_at), YEAR(registration.created_at)";
                 ELSE
                     SET @xaxis = "IF(registration.team_in_charge IS NOT NULL AND users.name IS NOT NULL, users.name, \'Deleted Users\') AS xaxis";
                     SET @xaxisGroup = "GROUP BY xaxis";
-                    SET @xaxisOrder = "ORDER BY xaxis";
+                    SET @xaxisOrder = "";
                 END IF;
                 
                 IF vTeam = 0 OR vScope = \'team\' THEN
@@ -52,8 +52,7 @@ class CreateSellerValidGraphStoredProcedure extends Migration
                     AND registration.created_at <= \'", vEndDate,"\'
                     ", @teamFilter,"
                     AND registration.deleted_at IS NULL
-                ", @xaxisGroup,"
-                ORDER BY MONTH(registration.created_at), YEAR(registration.created_at);");
+                ", @xaxisGroup, @xaxisOrder);
             
             PREPARE stmt FROM @query;
             EXECUTE stmt;
