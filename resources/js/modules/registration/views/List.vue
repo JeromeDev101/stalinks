@@ -1550,8 +1550,6 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
@@ -1563,6 +1561,12 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
