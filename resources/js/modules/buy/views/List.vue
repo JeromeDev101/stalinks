@@ -782,6 +782,8 @@
                 this.getBuyList();
                 this.generatorLoader.hide();
             });
+
+            this.columnShow();
         },
 
         computed: {
@@ -1133,8 +1135,6 @@
                         page: page,
                     }
                 })
-
-                this.columnShow();
 
                 this.isSearching = false;
                 this.toggleSearchLoading();
