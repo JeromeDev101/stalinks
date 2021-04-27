@@ -51,7 +51,7 @@ class CreateSellerValidGraphStoredProcedure extends Migration
                     ", @teamFilter,"
                     AND registration.deleted_at IS NULL
                 ", @xaxisGroup,"
-                ORDER BY registration.created_at;");
+                ORDER BY MONTH(registration.created_at), YEAR(registration.created_at);");
             
             PREPARE stmt FROM @query;
             EXECUTE stmt;
