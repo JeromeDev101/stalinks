@@ -188,21 +188,69 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Accounts</h3>
-
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="getAccountList" v-model="filterModel.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-left">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" id="btnGroupAddon">Select Action</div>
+                                </div>
+                                <div class="btn-group">
+                                    <button
+                                        type="submit"
+                                        title="Send Email"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="doSendEmail(null, $event)">
+
+                                        <i class="fa fa-fw fa-envelope-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-right" style="width: 100px">
+                                <select
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;"
+                                    class="form-control float-right"
+
+                                    @change="getAccountList">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-setting"
+                                class="btn btn-default float-right mr-2">
+
+                                <i class="fa fa-cog"></i>
+                            </button>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-registration"
+                                class="btn btn-success pull-right mr-2"
+
+                                @click="clearMessageform">
+
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="box-body no-padding relative">
 
-                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text">
+                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
                         <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
                     </span>
 
@@ -1178,7 +1226,7 @@
                 updateDisplayWriterPrice: false,
 
                 checkIds: [],
-                isDisabledAction: false
+                isDisabledAction: true
             }
         },
 
