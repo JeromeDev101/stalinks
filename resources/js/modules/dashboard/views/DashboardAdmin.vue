@@ -384,6 +384,10 @@ export default {
                 }
             };
 
+            this.filterModel.sellerValid.scope = 'global';
+            this.filterModel.sellerValid.team_in_charge =
+                '0';
+
             this.getSellerValidData();
         },
 
