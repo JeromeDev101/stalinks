@@ -1433,7 +1433,7 @@
                 });
             });
 
-
+            this.setDefaultSettings()
         },
 
         computed:{
@@ -1875,8 +1875,6 @@
 
                 this.searchLoading = false;
                 this.isSearching = false;
-
-                this.setDefaultSettings()
 
                 loader.hide();
             },
