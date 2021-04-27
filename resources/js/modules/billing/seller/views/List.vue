@@ -58,6 +58,24 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date of Payment
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_of_payment"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_of_payment"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -104,6 +122,7 @@
                                 <th>ID Backlink</th>
                                 <th>Seller</th>
                                 <th>Seller Price</th>
+                                <th>Date of Payment</th>
                                 <th>Date Completed</th>
                                 <th>Status Billing</th>
                                 <th>Status Payment</th>
@@ -123,6 +142,7 @@
                                 <td>{{ seller.id }}</td>
                                 <td>{{ seller.publisher == null ? 'Record Deleted': seller.publisher.user == null ? 'Record Deleted' : seller.publisher.user.username }}</td>
                                 <td>{{ seller.price == null || seller.price == '' ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
+                                <td>{{ seller.date_billing == null || seller.date_billing === '' ? 'Pending' : seller.date_billing}}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
@@ -236,6 +256,10 @@
                     status_billing: this.$route.query.status_billing || '',
                     seller: this.$route.query.seller || '',
                     date_completed : {
+                        startDate: null,
+                        endDate: null
+                    },
+                    date_of_payment : {
                         startDate: null,
                         endDate: null
                     }
@@ -404,7 +428,8 @@
                         search: this.filterModel.search,
                         status_billing: this.filterModel.status_billing,
                         seller: this.filterModel.seller,
-                        date_completed: this.filterModel.date_completed
+                        date_completed: this.filterModel.date_completed,
+                        date_of_payment: this.filterModel.date_of_payment
                     }
                 });
             },
@@ -424,6 +449,10 @@
                     status_billing: '',
                     seller: '',
                     date_completed: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    date_of_payment: {
                         startDate: null,
                         endDate: null
                     }
