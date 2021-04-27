@@ -210,6 +210,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th></th>
                                 <th>Action</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
                                 <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
@@ -233,6 +234,20 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <input
+                                                v-model="checkIds"
+                                                type="checkbox"
+                                                class="custom-checkbox"
+                                                :id="account.id"
+                                                :value="account"
+
+                                                @change="checkSelected">
+                                        </button>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="btn-group">
                                         <button
@@ -1161,6 +1176,9 @@
                 separators: [';', ',', '|', ' '],
                 addDisplayWriterPrice: false,
                 updateDisplayWriterPrice: false,
+
+                checkIds: [],
+                isDisabledAction: false
             }
         },
 
@@ -1191,6 +1209,10 @@
         },
 
         methods: {
+            checkSelected() {
+                this.isDisabledAction = this.checkIds.length <= 0;
+            },
+
             doSendEmail(data) {
                 let emails = [];
 
