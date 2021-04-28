@@ -94,9 +94,12 @@ class PublisherController extends Controller
         $input['valid'] = $valid;
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
 
-
         $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
         $input['url'] = $url;
+
+        if (!isset($input['kw_anchor']) || $input['kw_anchor'] == null) {
+            unset($input['kw_anchor']);
+        }
 
         Publisher::create($input);
         return response()->json(['success' => true], 200);
