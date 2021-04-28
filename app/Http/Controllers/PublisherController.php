@@ -397,14 +397,18 @@ class PublisherController extends Controller
 
     public function getDomainZoneExtensions()
     {
-        return Publisher::selectRaw("
+        $zones = Publisher::selectRaw("
                 trim(trailing ')'
                     from trim( trailing '/'
-                        from REPLACE(SUBSTRING_INDEX(url, '.', -1), ' ', ''))) as domain
+                        from REPLACE(SUBSTRING_INDEX(url, '.', -1), ' ', ''))) as domain2
             ")
             ->whereNull('deleted_at')
-            ->groupBy('domain')
-            ->having('domain', '!=', '')
-            ->get();
+            ->groupBy('domain2')
+            ->having('domain2', '!=', '');
+
+        return response()->json([
+            'data' => $zones->get(),
+            'count' => 0,
+        ],200);
     }
 }

@@ -226,6 +226,20 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Domain Zone</label>
+                                <v-select
+                                    v-model="filterModel.domain_zone"
+                                    multiple
+                                    label="domain2"
+                                    placeholder="All"
+                                    :options="listDomainZones.data"
+                                    :searchable="true"
+                                    :reduce="domain => domain.domain2"/>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -1293,6 +1307,7 @@
                         this.$route.query.show_duplicates
                         || 'no',
                     account_validation: this.$route.query.account_validation || '',
+                    domain_zone: this.$route.query.domain_zone || '',
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1767,7 +1782,8 @@
                             page: page,
                             show_duplicates:
                             this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation
+                            account_validation: this.filterModel.account_validation,
+                            domain_zone: this.filterModel.domain_zone
                         }
                     });
                 }else{
@@ -1794,7 +1810,8 @@
                             page: page,
                             show_duplicates:
                             this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation
+                            account_validation: this.filterModel.account_validation,
+                            domain_zone: this.filterModel.domain_zone
                         }
                     });
                 }
@@ -2180,6 +2197,7 @@
                         startDate: null,
                         endDate: null
                     },
+                    domain_zone: ''
                 }
 
                 this.getPublisherList({
@@ -2335,7 +2353,8 @@
                         qc_validation: this.filterModel.qc_validation,
                         show_duplicates:
                         this.filterModel.show_duplicates,
-                        account_validation: this.filterModel.account_validation
+                        account_validation: this.filterModel.account_validation,
+                        domain_zone: this.filterModel.domain_zone
                     }
                 });
             },
