@@ -404,7 +404,8 @@ class PublisherController extends Controller
             ")
             ->whereNull('deleted_at')
             ->groupBy('domain2')
-            ->having('domain2', '!=', '');
+            ->having('domain2', '!=', '')
+            ->orderBy('domain2', 'ASC');
 
         return response()->json([
             'data' => $zones->get(),
