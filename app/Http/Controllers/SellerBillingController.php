@@ -19,6 +19,7 @@ class SellerBillingController extends Controller
 
         $columns = [
             'backlinks.*',
+            'billing.date_billing',
             'billing.proof_doc_path',
             'billing.admin_confirmation',
         ];
@@ -48,6 +49,17 @@ class SellerBillingController extends Controller
             $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
             $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+                ->format('Y-m-d'));
+        }
+
+        if (isset($filter['date_of_payment'])) {
+            $filter['date_of_payment'] = json_decode($filter['date_of_payment']);
+        }
+
+        if( isset($filter['date_of_payment']) && !empty($filter['date_of_payment']) && $filter['date_of_payment']->startDate != ''){
+            $list->where('billing.date_billing', '>=', Carbon::create($filter['date_of_payment']->startDate)
+                ->format('Y-m-d'));
+            $list->where('billing.date_billing', '<=', Carbon::create($filter['date_of_payment']->endDate)
                 ->format('Y-m-d'));
         }
 

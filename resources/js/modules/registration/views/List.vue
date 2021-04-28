@@ -188,21 +188,69 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Accounts</h3>
-
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="getAccountList" v-model="filterModel.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-left">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" id="btnGroupAddon">Select Action</div>
+                                </div>
+                                <div class="btn-group">
+                                    <button
+                                        type="submit"
+                                        title="Send Email"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="doSendEmail(null)">
+
+                                        <i class="fa fa-fw fa-envelope-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-right" style="width: 100px">
+                                <select
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;"
+                                    class="form-control float-right"
+
+                                    @change="getAccountList">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-setting"
+                                class="btn btn-default float-right mr-2">
+
+                                <i class="fa fa-cog"></i>
+                            </button>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-registration"
+                                class="btn btn-success pull-right mr-2"
+
+                                @click="clearMessageform">
+
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="box-body no-padding relative">
 
-                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text">
+                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
                         <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
                     </span>
 
@@ -210,6 +258,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th></th>
                                 <th>Action</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
                                 <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
@@ -233,6 +282,20 @@
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <input
+                                                v-model="checkIds"
+                                                type="checkbox"
+                                                class="custom-checkbox"
+                                                :id="account.id"
+                                                :value="account"
+
+                                                @change="checkSelected">
+                                        </button>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="btn-group">
                                         <button
@@ -1161,6 +1224,9 @@
                 separators: [';', ',', '|', ' '],
                 addDisplayWriterPrice: false,
                 updateDisplayWriterPrice: false,
+
+                checkIds: [],
+                isDisabledAction: true
             }
         },
 
@@ -1191,20 +1257,51 @@
         },
 
         methods: {
+            checkSelected() {
+                this.isDisabledAction = this.checkIds.length <= 0;
+            },
+
             doSendEmail(data) {
+                this.registrationEmails = [];
                 let emails = [];
 
                 if (this.user.work_mail) {
 
-                    if (typeof(data.email) === "string") {
-                        emails = data.email.split('|')
+                    if (data === null) {
+
+                        if (this.checkIds.length === 0) {
+                            swal.fire('Invalid', 'Selection is empty.', 'error');
+                        } else if (this.checkIds.length > 10) {
+                            swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        } else {
+                            this.checkIds.forEach(function (item) {
+                                if (item.email !== "" || item.email != null) {
+                                    if (typeof(item.email) === "string") {
+                                        emails.push(item.email.split('|'))
+                                    } else {
+                                        emails.push(item.email.map(a => a.text))
+                                    }
+                                }
+                            })
+
+                            this.registrationEmails = createTags(emails.flat())
+
+                            this.openSendEmailModal();
+                        }
+
                     } else {
-                        emails = data.email.map(a => a.text);
+
+                        if (typeof(data.email) === "string") {
+                            emails = data.email.split('|')
+                        } else {
+                            emails = data.email.map(a => a.text);
+                        }
+
+                        this.registrationEmails = emails ? createTags(emails) : [];
+
+                        this.openSendEmailModal();
+
                     }
-
-                    this.registrationEmails = emails ? createTags(emails) : [];
-
-                    this.openSendEmailModal();
                 } else {
                     swal.fire(
                         'Error',
@@ -1294,6 +1391,10 @@
                         'success'
                     )
                     this.allowSending = true;
+
+                    this.checkIds = [];
+                    this.checkSelected();
+
 
                     this.$refs.file_send_registration.value = "";
                 } else {
@@ -1528,8 +1629,6 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
@@ -1541,6 +1640,12 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
