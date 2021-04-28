@@ -1385,6 +1385,7 @@
             this.getListSeller();
             this.getListSellerIncharge();
             this.getListContinents();
+            this.getListDomainZones();
 
             // let countries = this.listCountries.data;
             // if( countries.length === 0 ){
@@ -1444,6 +1445,7 @@
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listContinent: state => state.storePublisher.listContinent,
                 listCountryContinent: state => state.storePublisher.listCountryContinent,
+                listDomainZones: state => state.storePublisher.listDomainZones,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
                 listSellerIncharge: state => state.storePublisher.listSellerIncharge,
@@ -2205,6 +2207,10 @@
 
             async getListContinents(params) {
                 await this.$store.dispatch('actionGetListContinents', params);
+            },
+
+            async getListDomainZones(params) {
+                await this.$store.dispatch('actionGetListDomainZones', params);
             },
 
             async getAhrefs() {
