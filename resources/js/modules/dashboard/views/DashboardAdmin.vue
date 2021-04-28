@@ -27,6 +27,7 @@
                                         v-model="filterModel.orders.dateRange"
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="filterModel.orders.dateRange"
+                                        :ranges="dateRanges"
                                         :linkedCalendars="true"
                                         opens="right"
                                         style="width: 100%"
@@ -141,6 +142,7 @@
                                         v-model="filterModel.sellerValid.dateRange"
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                         :dateRange="filterModel.sellerValid.dateRange"
+                                        :ranges="dateRanges"
                                         :linkedCalendars="true"
                                         opens="right"
                                         style="width: 100%"
@@ -196,6 +198,63 @@
             </div>
         </div>
 <!--        SELLER VALID GRAPH END-->
+
+<!--        URL VALID GRAPH-->
+        <div class="col-lg-12">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+                <div class="box-header">
+                    <h3
+                        class="box-title text-primary">URLs Validation
+                    </h3>
+                </div>
+
+                <div class="box-body">
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Date
+                                                        Range
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.urlValid.dateRange"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.urlValid.dateRange"
+                                        :ranges="dateRanges"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Action</label>
+                                <br>
+                                <button
+                                    class="btn btn-default col-md-6"
+                                    @click="filterUrlValid">
+                                    Filter</button>
+                                <button
+                                    class="btn btn-default" @click="clearUrlValidFilter">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="small">
+                        <apexchart type="bar" height="350"
+                                   :options="urlValidChartOptions"
+                                   :series="urlValidData"></apexchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        URL VALID GRAPH END-->
 
         <div class="col-lg-12" >
             <div class="box box-primary" style="padding-bottom:0.5em;">
@@ -258,6 +317,7 @@ import axios from 'axios';
 import orders from '../../../graph_settings/orders';
 import seller_valid
     from "../../../graph_settings/seller_valid";
+import url_valid from "../../../graph_settings/url_valid";
 import _ from 'underscore';
 
 export default {
@@ -289,6 +349,12 @@ export default {
                         startDate: null,
                         endDate: null
                     },
+                },
+                urlValid : {
+                    dateRange: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
             },
             displayModel: {
@@ -299,6 +365,7 @@ export default {
             datacollection2: {},
             ordersData : [],
             sellerValidData: [],
+            urlValidData : [],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -335,7 +402,6 @@ export default {
             styles: {
                 height: '500px',
             },
-
         };
     },
 
@@ -353,6 +419,10 @@ export default {
             return seller_valid.sellerValidGraphSetting();
         },
 
+        urlValidChartOptions() {
+            return url_valid.urlValidGraphSetting();
+        },
+
         teamInCharge() {
             if (this.displayModel.orderTeam == 0) {
                 return 'All';
@@ -361,6 +431,35 @@ export default {
             return _.where(this.listSellerTeam.data, {
                 id: this.displayModel.orderTeam
             })[0].username;
+        },
+
+        dateRanges() {
+            let today = new Date();
+
+            let yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+            yesterday.setHours(0, 0, 0, 0);
+
+            return {
+                'Today' : [today, today],
+                'Yesterday' : [yesterday, yesterday],
+                'This month' : [
+                    new Date(today.getFullYear(),
+                        today.getMonth(), 1),
+                    new Date(today.getFullYear(),
+                        today.getMonth()+1, 0)
+                ],
+                'Last month' : [
+                    new Date(today.getFullYear(), today.getMonth() - 1, 1),
+                    new Date(today.getFullYear(), today.getMonth(), 0)
+                ],
+                'Last 6 months' : [
+                    new Date(today.getFullYear(),
+                        today.getMonth() - 6, 1),
+                    new Date(today.getFullYear(), today.getMonth(), 0)
+                ],
+                'This year' : [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear(), 11, 31)],
+            }
         }
     },
 
@@ -372,10 +471,48 @@ export default {
         this.fillData('without')
         this.getOrdersData();
         this.getSellerValidData();
+        this.getUrlValidData();
         this.getListSellerTeam();
     },
 
     methods: {
+        clearUrlValidFilter() {
+            this.filterModel.urlValid = {
+                dateRange : {
+                    startDate : null,
+                    endDate : null
+                }
+            };
+
+            this.getUrlValidData();
+        },
+
+        filterUrlValid() {
+            if (this.filterModel.urlValid.dateRange.startDate !=
+                null &&
+                this.filterModel.urlValid.dateRange.endDate != null) {
+                this.filterModel.urlValid.dateRange.startDate =
+                    new
+                    Date(this.filterModel.urlValid.dateRange.startDate).toJSON();
+                this.filterModel.urlValid.dateRange.endDate =
+                    new
+                    Date(this.filterModel.urlValid.dateRange.endDate).toJSON();
+            }
+
+            this.getUrlValidData(this.filterModel.urlValid.dateRange.startDate, this.filterModel.urlValid.dateRange.endDate);
+        },
+
+        getUrlValidData(start = null, end = null) {
+            axios.get('/api/graphs/url-valid?start_date=' +
+                start + '&end_date=' + end)
+                .then(response => {
+                    let data = response.data;
+
+                    this.urlValidData =
+                        url_valid.urlValidGraphData(data);
+                });
+        },
+
         clearSellerValidFilter() {
             this.filterModel.sellerValid = {
                 dateRange : {
