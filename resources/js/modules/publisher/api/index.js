@@ -85,6 +85,11 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getListDomainZones(params) {
+        return axios.get('/api/publisher/domain-zones', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 
     static deletePublisher(params) {
         return axios.delete('/api/publisher', params)

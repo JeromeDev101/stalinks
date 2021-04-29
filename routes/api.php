@@ -115,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('best-price-log')->get('publisher/best-prices/log', 'PublisherController@bestPricesGenerationLog');
     Route::name('seller-incharge')->get('/seller-incharge/{user_id}', 'PublisherController@getListSellerIncharge');
     Route::name('publisher-qc-validation')->post('/publisher/qc-validation', 'PublisherController@qcValidationUpdate');
+    Route::name('publisher-domain-zones')->get('/publisher/domain-zones', 'PublisherController@getDomainZoneExtensions');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
@@ -239,6 +240,7 @@ Route::middleware('auth:api')->group(function () {
     //Graphs
     Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
     Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
+    Route::name('url-valid-graph')->get('/graphs/url-valid', 'GraphsController@getUrlValidGraph');
 });
 
 //Mailgun external

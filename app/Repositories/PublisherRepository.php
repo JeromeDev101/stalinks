@@ -212,6 +212,18 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             }
         }
 
+        if (isset($filter['domain_zone']) && !empty($filter['domain_zone'])) {
+            if (is_array($filter['domain_zone'])) {
+
+                $regs = implode("|", $filter['domain_zone']);
+
+                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+
+            } else {
+                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $filter['domain_zone'] . "%'");
+            }
+        }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 

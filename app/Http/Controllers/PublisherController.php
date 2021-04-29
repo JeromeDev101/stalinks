@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Registration;
 use App\Models\Backlink;
 use App\Models\Formula;
+use Illuminate\Support\Facades\DB;
 
 class PublisherController extends Controller
 {
@@ -392,5 +393,23 @@ class PublisherController extends Controller
         $log = BestPriceGenerator::orderBy('created_at', 'DESC')->get();
 
         return response()->json($log);
+    }
+
+    public function getDomainZoneExtensions()
+    {
+        $zones = Publisher::selectRaw("
+                trim(trailing ')'
+                    from trim( trailing '/'
+                        from REPLACE(SUBSTRING_INDEX(url, '.', -1), ' ', ''))) as domain2
+            ")
+            ->whereNull('deleted_at')
+            ->groupBy('domain2')
+            ->having('domain2', '!=', '')
+            ->orderBy('domain2', 'ASC');
+
+        return response()->json([
+            'data' => $zones->get(),
+            'count' => 0,
+        ],200);
     }
 }
