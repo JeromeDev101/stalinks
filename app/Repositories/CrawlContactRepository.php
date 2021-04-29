@@ -152,7 +152,11 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
                   $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
                   $extDomain->save();
 
-                  yield $guzzleClient->requestAsync('GET', $extDomain->domain)
+                  yield $guzzleClient->requestAsync('GET', $extDomain->domain, [
+                      'headers' => [
+                          'decode_content' => false,
+                          'accept-encoding' => 'gzip, deflate'
+                      ]])
                       ->then(function(ResponseInterface $response) use ($extDomain) {
 
                           $html = $response->getBody()->getContents();
