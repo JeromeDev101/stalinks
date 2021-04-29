@@ -126,93 +126,137 @@
          <div class="box">
             <div class="box-header">
                <h3 class="box-title">URL Prospect List</h3>
-            </div>
-            <div class="container-fluid">
-            <div class="form-row">
-               <div class="col-md-4 col-sm-12 my-3">
-                  <div class="row">
-                     <div class="col-sm-12">
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 my-3">
                         <div class="input-group">
-                           <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
-                           <div class="input-group-btn">
-                              <button
-                                  title="Upload CSV File"
-                                  class="btn btn-primary btn-flat"
-                                  :disabled="isEnableBtn"
+                            <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
+                            <div class="input-group-btn">
+                                <button
+                                    title="Upload CSV File"
+                                    class="btn btn-primary btn-flat"
+                                    :disabled="isEnableBtn"
 
-                                  @click="submitUpload">
-                                  <i class="fa fa-upload"></i>
-                              </button>
+                                    @click="submitUpload">
+                                    <i class="fa fa-upload"></i>
+                                </button>
 
-                               <button
-                                   title="Download CSV Template"
-                                   class="btn btn-primary btn-flat"
+                                <button
+                                    title="Download CSV Template"
+                                    class="btn btn-primary btn-flat"
 
-                                   @click="downloadTemplate">
-                                   <i class="fa fa-download"></i>
-                               </button>
-                           </div>
+                                    @click="downloadTemplate">
+                                    <i class="fa fa-download"></i>
+                                </button>
+                            </div>
                         </div>
                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                         <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
-                     </div>
-                  </div>
-                  <!-- <div class="row my-3" v-show="showLang">
-                     <div class="col-12">
-                         <select class="form-control" name="language" ref="language" v-on:change="checkData">
-                             <option value="">Select language</option>
-                             <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
-                                 {{ option.name }}
-                             </option>
-                         </select>
-                     </div>
-                     </div>
 
-                     <div class="row" v-show="showLang">
-                     <div class="col-sm-12">
-                         <select class="form-control" name="status" ref="status" v-on:change="checkData">
-                             <option value="">Select Status</option>
-                             <option value="50">Contacted</option>
-                             <option value="60">Refused</option>
-                             <option value="70">InTouched</option>
-                             <option value="90">Unqualified</option>
-                             <option value="100">Qualified</option>
-                         </select>
-                     </div>
-                     </div> -->
-               </div>
-               <div class="col-md-6 col-sm-6">
-               <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 400px;">
-                  <label style="color: #333;margin: 3%;">Selected Action</label>
-                  <div class="btn-group">
-                     <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                     <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
-                     <button type="submit" title="Status" @click="doMultipleStatus" class="btn btn-default"><i class="fa fa-fw fa-tag"></i></button>
-                     <button type="submit" title="Delete" @click="deleteAll" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
-                  </div>
-               </div>
-            </div>
-               <div class="col-md-2 col-sm-6 my-3">
-                  <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
-                  <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                  <div class="input-group input-group-sm float-right" style="width: 65px">
-                     <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
-                        <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
-                     </select>
-                  </div>
-               </div>
-               </div>
-               <div class="row">
-                  <div class="col-sm-12">
-                     <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status, Country and Email. The columns should be separated using comma(,).</small>
-                  </div>
-               </div>
+                        <!-- <div class="row my-3" v-show="showLang">
+                           <div class="col-12">
+                               <select class="form-control" name="language" ref="language" v-on:change="checkData">
+                                   <option value="">Select language</option>
+                                   <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
+                                       {{ option.name }}
+                                   </option>
+                               </select>
+                           </div>
+                           </div>
+
+                           <div class="row" v-show="showLang">
+                           <div class="col-sm-12">
+                               <select class="form-control" name="status" ref="status" v-on:change="checkData">
+                                   <option value="">Select Status</option>
+                                   <option value="50">Contacted</option>
+                                   <option value="60">Refused</option>
+                                   <option value="70">InTouched</option>
+                                   <option value="90">Unqualified</option>
+                                   <option value="100">Qualified</option>
+                               </select>
+                           </div>
+                           </div> -->
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 my-3">
+                        <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                        <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
+                        <div class="input-group input-group-sm float-right" style="width: 65px">
+                            <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
+                                <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-sm-12">
+                        <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status, Country and Email. The columns should be separated using comma(,).</small>
+                    </div>
+                </div>
             </div>
             <!-- <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
                <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
-            <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }">
-               <span v-if="listExt.total > 10" class="pagination-custom-footer-text">
-               <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+
+             <div class="row">
+                 <div class="col-md-12 ml-3">
+                     <div class="input-group input-group-sm">
+                         <div class="btn-group">
+                             <button
+                                 class="btn btn-default"
+                                 @click="selectAll">
+
+                                 {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                             </button>
+
+                             <button
+                                 data-toggle="modal"
+                                 type="submit"
+                                 title="Send Email"
+                                 class="btn btn-default"
+
+                                 @click="doSendEmail(null, $event)">
+
+                                 <i class="fa fa-fw fa-envelope-o"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Get Ahrefs"
+                                 class="btn btn-default"
+
+                                 @click="getAhrefs()">
+
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Status"
+                                 class="btn btn-default"
+
+                                 @click="doMultipleStatus">
+
+                                 <i class="fa fa-fw fa-tag"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Delete"
+                                 class="btn btn-default"
+
+                                 @click="deleteAll">
+
+                                 <i class="fa fa-fw fa-trash"></i>
+                             </button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
+               <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
+                   <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
                </span>
 
                 <vue-virtual-table
@@ -1771,10 +1815,11 @@ export default {
         selectAll() {
             this.checkIds = [];
             if (!this.allSelected) {
-                for (var ext in this.listExt.data) {
+                for (let ext in this.listExt.data) {
                     this.checkIds.push(this.listExt.data[ext]);
                 }
             }
+            this.allSelected = !this.allSelected;
         },
 
         async getListLanguages() {
