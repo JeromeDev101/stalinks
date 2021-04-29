@@ -43,4 +43,9 @@ class GraphsController extends Controller
     {
         return response()->json($this->graphService->urlValidationQuery($request->all()));
     }
+
+    public function getUrlValidPriceGraph(Request $request)
+    {
+        return response()->json($this->graphService->urlValidPriceQuery($request->all()));
+    }
 }
