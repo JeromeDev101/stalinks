@@ -248,7 +248,9 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
             $hasContact = true;
             $extDomain->email = join("|", $item['emails']);
             $extDomain->facebook = join("|", $item['facebook']);
-            $extDomain->status = config('constant.EXT_STATUS_GOT_CONTACTS');
+            $extDomain->status = count($item['emails'])
+                ? config('constant.EXT_STATUS_GOT_EMAIL')
+                : config('constant.EXT_STATUS_GOT_CONTACTS');
         } else {
             $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
         }
