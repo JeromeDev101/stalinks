@@ -193,17 +193,27 @@
                                 </div>
                                 <div class="col-md-6"
                                      v-if="updateModel.payment_type == 1">
-                                    Hong Kong Paypal
-                                    Account <br>
-                                    <b>Total Amount: ${{
-                                       domesticTotalPaymentAmount
-                                       }}</b>
+                                    <div class="form-group">
+                                        <label
+                                            for="">Paypal
+                                                   Region
+                                        </label>
+                                        <select name=""
+                                                id=""
+                                                class="form-control"
+                                                v-model="updateModel.payment_region">
+                                            <option
+                                                value="domestic">Hong Kong</option>
+                                            <option
+                                                value="international">Non-Hong Kong
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-6" v-if="updateModel.payment_type == 1">
-                                    International Paypal
-                                    Account <br>
+                                <div class="col-md-12"
+                                     v-if="updateModel.payment_type == 1">
                                     <b>Total Amount: ${{
-                                       internationalTotalPaymentAmount
+                                       updateModel.payment_region == 'international' ? internationalTotalPaymentAmount : domesticTotalPaymentAmount
                                        }}</b>
                                 </div>
                             </div>
@@ -260,6 +270,7 @@ export default {
                 user_id_buyer: '',
                 payment_type: '',
                 amount_usd: '',
+                payment_region: 'domestic'
             },
             step: 0
         };
@@ -366,7 +377,10 @@ export default {
 
                 createOrder : function (data, actions) {
                     return axios.post('/api/paypal/order/create', {
-                        amount: vm.updateModel.amount_usd,
+                        amount:
+                        vm.updateModel.payment_region ===
+                            'international' ?
+                            vm.internationalTotalPaymentAmount : vm.domesticTotalPaymentAmount,
                     })
                         .then(response => {
                             return response.data.result;
@@ -433,6 +447,8 @@ export default {
                     amount_usd: '',
                 }
 
+                this.step = 0;
+
                 swal.fire(
                     'Success',
                     'Successfully Added',
@@ -440,6 +456,7 @@ export default {
                 )
 
                 this.$refs.proof.value = '';
+
 
             }
 
