@@ -66,7 +66,7 @@
                      <div class="form-group">
                         <label style="color: #333">Status</label>
                          <v-select multiple
-                                   v-model="filterModel.status_temp" :options="objectToArray(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
+                                   v-model="filterModel.status_temp" :options="objectToArrayWithCustomSort(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
 <!--                        <select v-model="filterModel.status_temp" class="form-control">-->
 <!--                            <option value="-1" selected>All-->
 <!--                            </option>-->
@@ -2701,6 +2701,22 @@ export default {
             });
 
             return _.sortBy(arr, 'text');
+        },
+
+        objectToArrayWithCustomSort(ob) {
+            let sort_array = ['0', '10', '20', '30', '110', '50', '70', '100', '60', '90', '55'];
+            let arr = [];
+
+            sort_array.forEach((sort) => {
+                Object.keys(ob).forEach((key) => {
+                    if (sort === key) {
+                        ob[key]['id'] = key;
+                        arr.push(ob[key]);
+                    }
+                });
+            })
+
+            return arr;
         },
 
         clearSearch() {
