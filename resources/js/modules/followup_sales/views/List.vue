@@ -308,7 +308,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">Anchor text</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.anchor_text" required="required" >
+                                        <input type="text" class="form-control" :disabled="!user.isAdmin && user.role_id !== 8" v-model="updateModel.anchor_text" required="required" >
                                     </div>
                                 </div>
                             </div>
