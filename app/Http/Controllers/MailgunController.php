@@ -224,20 +224,20 @@ class MailgunController extends Controller
             if ($request->param != 'Trash') {
                 $inbox = Reply::selectRaw('
                     MAX(replies.sender) AS sender,
-                    MIN(replies.received) AS received,
-                    MIN(replies.id) AS id,
+                    MAX(replies.received) AS received,
+                    MAX(replies.id) AS id,
                     MIN(replies.subject) as subject,
                     CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
                     CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)) as concat_result,
                     MIN(CONCAT("Re: ", subject)) AS con_sub,
                     MIN(REPLACE(subject, "Re: ", "")) AS re_sub,
-                    MIN(labels.name) AS label_name,
-                    MIN(replies.is_sent) AS is_sent,
-                    MIN(labels.color) AS label_color,
+                    MAX(labels.name) AS label_name,
+                    MAX(replies.is_sent) AS is_sent,
+                    MAX(labels.color) AS label_color,
                     MAX(replies.label_id) AS label_id,
-                    MIN(replies.from_mail) AS from_mail,
-                    MIN(replies.created_at) AS created_at,
-                    MIN(replies.attachment) AS attachment,
+                    MAX(replies.from_mail) AS from_mail,
+                    MAX(replies.created_at) AS created_at,
+                    MAX(replies.attachment) AS attachment,
                     MAX(replies.is_starred) AS is_starred
                 ')
                 ->leftJoin('labels', 'replies.label_id' ,'=', 'labels.id');
@@ -429,19 +429,32 @@ class MailgunController extends Controller
                 $received_array = $this->removeSpacesAndExplode($value->received);
                 $item_received = $this->removeSpacesAndExplode($item->received);
 
+                // get from_mail
+
+                $item_from_mail = $this->getFromMail($item->from_mail);
+                $received_from_mail = $this->getFromMail($value->from_mail);
+
                 if ($item->is_sent === 1) {
                     return (
                         ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->received === $item->received && $received_from_mail === $item->sender)
                         || ($value->sender === $item->received && $value->received === $item->sender)
+                        || ($received_from_mail === $item->received && $value->received === $item->sender)
                         || (in_array($value->sender, $item_received) && $value->received === $item->sender)
+                        || (in_array($received_from_mail, $item_received) && $value->received === $item->sender)
                         || (in_array($value->received, $item_received) && $value->sender === $item->sender)
+                        || (in_array($value->received, $item_received) && $received_from_mail === $item->sender)
                     );
                 } else {
                     return (
                         ($value->received === $item->received && $value->sender === $item->sender)
+                        || ($value->received === $item->received && $value->sender === $item_from_mail)
                         || ($value->received === $item->sender && $value->sender === $item->received)
+                        || ($value->received === $item_from_mail && $value->sender === $item->received)
                         || (in_array($item->sender, $received_array) && $value->sender === $item->received)
+                        || (in_array($item_from_mail, $received_array) && $value->sender === $item->received)
                         || (in_array($item->received, $received_array) && $value->sender === $item->sender)
+                        || (in_array($item->received, $received_array) && $value->sender === $item_from_mail)
                     );
                 }
             })->sortBy('id')->values();
@@ -496,6 +509,14 @@ class MailgunController extends Controller
     private function removeSpacesAndExplode($str) {
         $string = preg_replace('/\s+/', '', $str);
         return explode(',', $string);
+    }
+
+    private function getFromMail($from_mail) {
+        if (preg_match('/<(.*?)>/', $from_mail, $match) == 1) {
+            return $match[1];
+        } else {
+            return $from_mail;
+        }
     }
 
     public function status_mail()
