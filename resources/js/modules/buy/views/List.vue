@@ -84,7 +84,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5) ">
+                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">
                             <div class="form-group">
                                 <label for="">Code</label>
                                 <select name="" class="form-control" v-model="filterModel.code">
@@ -950,8 +950,7 @@
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,
-                        isHidden: this.user.role_id == 5 &&
-                            this.user.isOurs == 1
+                        isHidden: false
                     },
                     {
                         prop : 'code_price',
