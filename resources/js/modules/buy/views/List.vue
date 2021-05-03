@@ -301,9 +301,13 @@
                         <template
                             slot-scope="scope"
                             slot="continentData">
-                            {{ scope.row.country_continent ?
-                            scope.row.country_continent :
-                            scope.row.publisher_continent }}
+                            {{
+                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                ? 'N/A'
+                                : scope.row.country_continent
+                                    ? scope.row.country_continent
+                                    : scope.row.publisher_continent
+                            }}
                         </template>
 
                         <template
