@@ -449,13 +449,17 @@
                             displayDate(scope.row.updated_at) }}
                         </template> -->
 
-                        <!-- <template
+                        <template
                             slot-scope="scope"
                             slot="continentData">
-                            {{ scope.row.country_continent ?
-                            scope.row.country_continent :
-                            scope.row.publisher_continent }}
-                        </template> -->
+                            {{
+                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                    ? 'N/A'
+                                    : scope.row.country_continent
+                                        ? scope.row.country_continent
+                                        : scope.row.publisher_continent
+                            }}
+                        </template>
 
                         <!-- <template
                             slot-scope="scope"
@@ -1534,10 +1538,10 @@
                         isHidden: !this.tblPublisherOpt.country
                     },
                     {
-                        prop : 'custom_continent',
+                        prop : '_action',
                         name : 'Continent',
-                        sortable: true,
-                        // actionName : 'continentData',
+                        // sortable: true,
+                        actionName : 'continentData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.continent
                     },
