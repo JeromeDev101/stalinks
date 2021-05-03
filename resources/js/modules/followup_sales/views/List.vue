@@ -210,8 +210,17 @@
                                     v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
                                 <td
                                     v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
-                                <td
-                                    v-show="tblOptions.url">{{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}</td>
+                                <td v-show="tblOptions.url">
+<!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
+                                    <span v-if="sales.publisher == null">
+                                        N/A
+                                    </span>
+                                    <span v-else>
+                                        <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
+                                            {{ replaceCharacters(sales.publisher.url) }}
+                                        </a>
+                                    </span>
+                                </td>
                                 <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
                                 <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
