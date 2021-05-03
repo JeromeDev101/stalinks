@@ -190,10 +190,28 @@
                                  user.isAdmin">{{
                                                backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
                                 <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
-                                <td>{{ backLink.publisher
-                                    == null ? 'N/A' : replaceCharacters(backLink.publisher.url)
-                                    }}</td>
-                                <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">{{ backLink.url_advertiser }}</td>
+                                <td>
+<!--                                    {{ backLink.publisher == null ? 'N/A' : replaceCharacters(backLink.publisher.url) }}-->
+                                    <span v-if="backLink.publisher == null">
+                                        N/A
+                                    </span>
+                                    <span v-else>
+                                        <a :href="'//' + replaceCharacters(backLink.publisher.url)" target="_blank">
+                                            {{ replaceCharacters(backLink.publisher.url) }}
+                                        </a>
+                                    </span>
+                                </td>
+                                <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">
+<!--                                    {{ backLink.url_advertiser }}-->
+                                    <span v-if="backLink.url_advertiser == null">
+                                        N/A
+                                    </span>
+                                    <span v-else>
+                                        <a :href="'//' + replaceCharacters(backLink.url_advertiser)" target="_blank">
+                                            {{ backLink.url_advertiser }}
+                                        </a>
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="dont-break-out">
                                         {{ backLink.link_from }}

@@ -89,7 +89,7 @@
                                 </div>
                             </td>
                         </tr>
-                    </table>     
+                    </table>
 
                 </div>
 
@@ -122,7 +122,17 @@
                                 <td>{{ incomes.in_charge == null ? 'N/A':incomes.in_charge }}</td>
                                 <td v-if="isSeller">{{ incomes.publisher == null ? 'Record Deleted':incomes.publisher.user.name }}</td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user == null ? '':incomes.user.name }}</td>
-                                <td>{{ incomes.publisher == null ? 'Record Deleted':replaceCharacters(incomes.publisher.url) }}</td>
+                                <td>
+<!--                                    {{ incomes.publisher == null ? 'Record Deleted':replaceCharacters(incomes.publisher.url) }}-->
+                                    <span v-if="incomes.publisher == null">
+                                        Record Deleted
+                                    </span>
+                                    <span v-else>
+                                        <a :href="'//' + replaceCharacters(incomes.publisher.url)" target="_blank">
+                                            {{ replaceCharacters(incomes.publisher.url) }}
+                                        </a>
+                                    </span>
+                                </td>
                                 <td>{{ incomes.publisher == null ? 'Record Deleted':'$ ' + incomes.publisher.price }}</td>
                                 <td>{{ incomes.live_date }}</td>
                                 <td>{{ incomes.status }}</td>

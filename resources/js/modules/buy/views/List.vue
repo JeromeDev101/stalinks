@@ -309,8 +309,11 @@
                         <template
                             slot-scope="scope"
                             slot="urlData">
-                            {{
-                            replaceCharacters(scope.row.url) }}
+<!--                            {{ replaceCharacters(scope.row.url) }}-->
+
+                            <a :href="'//' + scope.row.url" target="_blank">
+                                {{ scope.row.url }}
+                            </a>
                         </template>
 
                         <template

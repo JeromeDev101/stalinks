@@ -488,12 +488,15 @@
                             </span>
                         </template> -->
 
-                        <!-- <template
+                        <template
                             slot-scope="scope"
                             slot="urlData">
-                            {{
-                            replaceCharacters(scope.row.url) }}
-                        </template> -->
+<!--                            {{ replaceCharacters(scope.row.url) }}-->
+
+                            <a :href="'//' + scope.row.custom_url" target="_blank">
+                                {{ scope.row.custom_url }}
+                            </a>
+                        </template>
 
                         <!-- <template
                             slot-scope="scope"
@@ -1578,11 +1581,11 @@
                         isHidden: !this.tblPublisherOpt.valid
                     },
                     {
-                        prop : 'custom_url',
+                        prop : '_action',
                         name : 'URL',
-                        // actionName : 'urlData',
+                        actionName : 'urlData',
                         width: 150,
-                        sortable: true,
+                        // sortable: true,
                         isHidden: !this.tblPublisherOpt.url
                     },
                     {
