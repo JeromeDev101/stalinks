@@ -28,21 +28,24 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden
+        = [
+            'password',
+            'remember_token',
+        ];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts
+        = [
+            'email_verified_at' => 'datetime',
+        ];
 
-    public function isOurs() {
+    public function isOurs()
+    {
         return $this->where('isOurs', 0);
     }
 
@@ -71,11 +74,13 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\IntDomain', 'user_id');
     }
 
-    public function UserType(){
+    public function UserType()
+    {
         return $this->belongsTo('App\Models\Registration', 'email', 'email');
     }
 
-    public function registration(){
+    public function registration()
+    {
         return $this->belongsTo('App\Models\Registration', 'email', 'email');
     }
 
@@ -94,11 +99,13 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Country', 'user_country_ext');
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->type === config('constant.USER_TYPE_ADMIN');
     }
 
-    public function isSetupWorkMail() {
+    public function isSetupWorkMail()
+    {
         return trim($this->work_mail) != ''
             && trim($this->work_mail_pass) != '';
     }
@@ -117,11 +124,42 @@ class User extends Authenticatable
     //     return $this->hasOne('App\Models\WalletTransaction', 'user_id', 'id');
     // }
 
-    public function buyer_purchased() {
+    public function buyer_purchased()
+    {
         return $this->hasMany('App\Models\BuyerPurchased', 'user_id_buyer', 'id');
     }
 
-    public function total_wallet() {
+    public function total_wallet()
+    {
         return $this->hasOne('App\Models\TotalWallet', 'user_id', 'id');
+    }
+
+    public function wallet_transactions()
+    {
+        return $this->hasMany(WalletTransaction::class, 'user_id', 'id');
+    }
+
+    public function subBuyers()
+    {
+        return Registration::with('user')->where('team_in_charge', $this->id)->get();
+    }
+
+    public function credits()
+    {
+        $subBuyers = $this->subBuyers();
+
+        $wallet = $this->wallet_transactions()
+            ->selectRaw('SUM(amount_usd) as amount_usd')
+            ->where('admin_confirmation', '!=', 'Not Paid')
+            ->first();
+
+        $totalPurchased = $this->backlinks()
+            ->selectRaw('SUM(price) as total_purchased')
+            ->when(count($subBuyers) > 0, function($query) use ($subBuyers){
+                return $query->orWhereIn('user_id', $subBuyers->pluck('users.id'));
+            })
+        ->first();
+
+        return floatval($wallet->amount_usd) - floatval($totalPurchased->total_purchased);
     }
 }
