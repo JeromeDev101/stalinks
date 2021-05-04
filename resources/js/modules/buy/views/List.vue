@@ -84,7 +84,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5) ">
+                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">
                             <div class="form-group">
                                 <label for="">Code</label>
                                 <select name="" class="form-control" v-model="filterModel.code">
@@ -301,16 +301,23 @@
                         <template
                             slot-scope="scope"
                             slot="continentData">
-                            {{ scope.row.country_continent ?
-                            scope.row.country_continent :
-                            scope.row.publisher_continent }}
+                            {{
+                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                ? 'N/A'
+                                : scope.row.country_continent
+                                    ? scope.row.country_continent
+                                    : scope.row.publisher_continent
+                            }}
                         </template>
 
                         <template
                             slot-scope="scope"
                             slot="urlData">
-                            {{
-                            replaceCharacters(scope.row.url) }}
+<!--                            {{ replaceCharacters(scope.row.url) }}-->
+
+                            <a :href="'//' + scope.row.url" target="_blank">
+                                {{ scope.row.url }}
+                            </a>
                         </template>
 
                         <template
@@ -943,8 +950,7 @@
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,
-                        isHidden: this.user.role_id == 5 &&
-                            this.user.isOurs == 1
+                        isHidden: false
                     },
                     {
                         prop : 'code_price',

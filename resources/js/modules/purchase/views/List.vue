@@ -138,7 +138,17 @@
                                 <td>{{ purchase.id }}</td>
                                 <td v-show="user.isAdmin || user.isOurs === 0">{{ purchase.publisher == null ? 'Record Deleted':purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
                                 <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
-                                <td>{{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}</td>
+                                <td>
+<!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
+                                    <span v-if="purchase.publisher == null">
+                                        Record Deleted
+                                    </span>
+                                    <span v-else>
+                                        <a :href="'//' + replaceCharacters(purchase.publisher.url)" target="_blank">
+                                            {{ replaceCharacters(purchase.publisher.url) }}
+                                        </a>
+                                    </span>
+                                </td>
                                 <td>$ {{ formatPrice(purchase.prices) }}</td>
                                 <td>{{ purchase.live_date }}</td>
                                 <td>{{ purchase.status }}</td>
