@@ -112,7 +112,7 @@ class FollowupSalesController extends Controller
         //             ->where('backlinks.id',$request->id)
         //             ->first();
 
-        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed', 'anchor_text');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
@@ -144,7 +144,7 @@ class FollowupSalesController extends Controller
 
             broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
         }
-            
+
         $backlink->update($input);
         return response()->json(['success'=> true], 200);
     }
