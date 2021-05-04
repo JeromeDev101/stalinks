@@ -48,6 +48,7 @@ const state = {
         ref_domain: true,
         org_keywords: true,
         org_traffic: true,
+        qc_validation: true,
     },
     bestPriceGeneratorOn: false,
     bestPriceLogs: {}
