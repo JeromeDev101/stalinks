@@ -2572,6 +2572,10 @@ export default {
                     'success'
                 )
             }
+
+            this.getExtList({
+                params: this.filterModel
+            });
         },
 
 
