@@ -225,7 +225,6 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request, NotificationInterface $notification){
-
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
         $price_id = null;
@@ -278,6 +277,7 @@ class ArticlesController extends Controller
             'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
             'status_writer' => $request->content['status'],
             'id_writer' => $user_id,
+            'meta_description' => $request->content['meta_description'],
         ]);
 
         return response()->json(['success'=>true], 200);
