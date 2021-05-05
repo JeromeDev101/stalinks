@@ -740,4 +740,21 @@ class ExtDomainController extends Controller
         $ext_seller = User::select('id', 'name', 'username')->where('role_id', 6)->where('isOurs', 1)->get();
         return response()->json($ext_seller);
     }
+
+    public function updateMultipleEmployee(Request $request) {
+        $request->validate([
+            'ids' => 'required',
+            'emp_id' => 'required'
+        ]);
+
+        foreach($request->ids as $id) {
+            $ext_domain = ExtDomain::find($id);
+            $ext_domain->update([
+                'user_id' => $request->emp_id
+            ]);
+        }
+
+
+        return response()->json(['success' => true],200);
+    }
 }
