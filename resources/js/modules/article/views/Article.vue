@@ -296,7 +296,7 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
+                            <div class="col-sm-12" v-if="user.isOurs == '0' || user.role_id == 4">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
@@ -305,6 +305,13 @@
                                             {{ option }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Meta Description</label>
+                                    <textarea class="form-control" id="" cols="30" rows="3" v-model="contentModel.meta_description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -453,6 +460,7 @@
                     link: '',
                     seller: '',
                     buyer: '',
+                    meta_description: '',
                 },
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
@@ -704,6 +712,7 @@
                 this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
                 this.contentModel.backlink_status = article.backlink_status;
+                this.contentModel.meta_description = article.meta_description;
 
                 $('#modal-content-edit').modal('show');
             },
