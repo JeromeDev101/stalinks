@@ -242,6 +242,16 @@
 
                              <button
                                  type="submit"
+                                 title="Employee"
+                                 class="btn btn-default"
+
+                                 @click="doMultipleEmployee">
+
+                                 <i class="fa fa-fw fa-user"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
                                  title="Delete"
                                  class="btn btn-default"
 
@@ -1278,6 +1288,43 @@
          </div>
       </div>
       <!-- End Send Email -->
+
+
+        
+        <!-- Modal multiple edit of Employee -->
+        <div class="modal fade" ref="modalMultipleEmployee" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Employee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for=""></label>
+                                    <select type="text" v-model="updateMultiEmployee" class="form-control" value="" required="required">
+                                        <option v-for="(option,key) in listSellerTeam.data"
+                                            v-bind:value="option.id" v-if="option.username != 'N/A' && option.status == 'active'" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                        {{ option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleEmployee()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of multiple edit of Employee -->
+
       <!-- Modal Change multiple Status -->
       <div id="modal-multiple-status" class="modal fade" ref="modalMultipleStatus">
          <div class="modal-dialog modal-md">
@@ -1533,6 +1580,7 @@ export default {
             separators: [';', ',', '|', ' '],
             urlEmails: [],
             tableLoading: false,
+            updateMultiEmployee: '',
         };
     },
     async created() {
@@ -2469,6 +2517,50 @@ export default {
                 })
         },
 
+        doMultipleEmployee() {
+            if (this.checkIds.length > 0) {
+                let element = this.$refs.modalMultipleEmployee
+                $(element).modal('show')
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+        },
+
+        submitUpdateMultipleEmployee() {
+            let ids = [];
+            for(let index in this.checkIds) {
+                ids.push(this.checkIds[index].id)
+            }
+
+            axios.post('/api/update-multiple-employee',{
+                ids: ids,
+                emp_id: this.updateMultiEmployee
+            }).then((res) => {
+                if(res.data.success === true) {
+
+                    let element = this.$refs.modalMultipleEmployee
+                    $(element).modal('hide')
+
+                    swal.fire(
+                        'Success',
+                        'Updated Successfully',
+                        'success'
+                    )
+
+                    this.getExtList({
+                        params: this.filterModel
+                    });
+
+                }
+
+                this.updateMultiEmployee = '';
+                this.checkIds = [];
+            })
+        },
 
         async submitSendMail() {
             this.allowSending = false;
