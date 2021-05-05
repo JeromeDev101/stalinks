@@ -129,6 +129,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-delete')->delete('/ext', 'ExtDomainController@delete');
     Route::name('ext-update-multiple-status')->put('/ext/update-multiple-status', 'ExtDomainController@updateMultipleStatus');
     Route::name('ext-get-ext-seller')->get('ext/ext-seller','ExtDomainController@getListExtSeller');
+    Route::name('ext-update-multiple-employee')->post('/update-multiple-employee','ExtDomainController@updateMultipleEmployee');
 
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');

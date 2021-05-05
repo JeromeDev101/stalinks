@@ -62,6 +62,10 @@ class GenerateBestPrice implements ShouldQueue
 
                 $bestPrice = $publisher->where('price', '!=', null)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('price')->first();
 
+                if (!$bestPrice) {
+                    break 1;
+                }
+
                 //If 2 or more URLs has best price
                 if ($publisher->where('price', $bestPrice->price)->count() > 1) {
                     //If 1 of best price's inc_article is YES, set that as Best Price

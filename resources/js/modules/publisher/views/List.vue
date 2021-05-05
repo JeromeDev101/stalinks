@@ -978,73 +978,79 @@
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(12,
+                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.qc_validation ? 'checked':''" v-model="tblPublisherOpt.qc_validation">QC Validation</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(13,
                                 tblPublisherOpt.url)"
                                     :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(13,
+                                    @click="toggleColumn(14,
                                 tblPublisherOpt.price)"
                                     :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(14,
+                                    @click="toggleColumn(15,
                                 tblPublisherOpt.price_basis)"  :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(15,
+                                    @click="toggleColumn(16,
                                 tblPublisherOpt.inc_article)"  :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(16,
+                                    @click="toggleColumn(17,
                                 tblPublisherOpt.kw_anchor)"
                                     :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(17,
+                                    @click="toggleColumn(18,
                                 tblPublisherOpt.ur)"
                                     :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(18,
+                                    @click="toggleColumn(19,
                                 tblPublisherOpt.dr)"
                                     :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(19,
+                                    @click="toggleColumn(20,
                                 tblPublisherOpt.backlinks)"
                                     :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(20,
+                                    @click="toggleColumn(21,
                                 tblPublisherOpt.ref_domain)"
                                     :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(21,
+                                    @click="toggleColumn(22,
                                 tblPublisherOpt.org_keywords)" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(22,
+                                    @click="toggleColumn(23,
                                 tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
                             </div>
                         </div>
@@ -1520,7 +1526,7 @@
                         width: 100,
                         sortable: true,
                         isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0
+                            this.user.isOurs != 0 || !this.tblPublisherOpt.uploaded
                     },
                     {
                         prop : 'language_name',
@@ -1575,7 +1581,7 @@
                         sortable: true,
                         width: 100,
                         isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0
+                            this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
                         prop : 'valid',
@@ -1583,6 +1589,13 @@
                         sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.valid
+                    },
+                    {
+                        prop : 'qc_validation',
+                        name : 'QC Valid',
+                        sortable: true,
+                        width: 100,
+                        isHidden: !this.tblPublisherOpt.qc_validation
                     },
                     {
                         prop : '_action',
