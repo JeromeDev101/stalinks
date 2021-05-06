@@ -434,7 +434,7 @@
             return {
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Issue', 'Canceled'],
+                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
@@ -723,7 +723,9 @@
                 let total_price = [];
                 let total = 0;
                 incomes.forEach(function(item, index){
-                    total_price.push( parseFloat(item.price))
+                    if(item.price != null && item.price != '') {
+                        total_price.push( parseFloat(item.price))
+                    }
                 })
 
                 if( total_price.length > 0 ){
@@ -754,7 +756,7 @@
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
 
-                console.log(that)
+                // console.log(that)
                 this.withArticle = that.publisher == null ? false : that.publisher.inc_article == "No" ? true : false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher == null ? null : that.publisher.id
