@@ -121,14 +121,19 @@ class PurchaseController extends Controller
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                             ->where('user_id', $user_id)
+                            ->where('admin_confirmation', '!=', 'Not Paid')
                             ->get();
 
         $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
                             ->where('status', 'Live')
                             ->where('payment_status', 'Paid')
-                            ->where('user_id', $user_id)
-                            ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                return $query->orWhereIn('user_id', $sub_buyer_ids);
+                            ->where(function($query) use ($sub_buyer_ids, $user_id){
+                                $UserId[] = $user_id;
+                                if(count($sub_buyer_ids) > 0) {
+                                    return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                                } else{
+                                    return $query->whereIn('user_id', $UserId);
+                                }
                             })
                             ->get();
 
