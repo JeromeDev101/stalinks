@@ -1351,6 +1351,7 @@
                 },
                 topicFilter: [
                     'N/A',
+                    'Art',
                     'Beauty',
                     'Charity',
                     'Cooking',
@@ -1362,6 +1363,7 @@
                     'Health',
                     'History',
                     'Job',
+                    'Marketing',
                     'Movies & Music',
                     'News',
                     'Pet',
@@ -1375,6 +1377,7 @@
                     'Unlisted',
                 ],
                 topic: [
+                    'Art',
                     'Beauty',
                     'Charity',
                     'Cooking',
@@ -1386,6 +1389,7 @@
                     'Health',
                     'History',
                     'Job',
+                    'Marketing',
                     'Movies & Music',
                     'News',
                     'Pet',
