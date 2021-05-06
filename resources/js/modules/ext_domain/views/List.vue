@@ -2670,6 +2670,8 @@ export default {
                 )
             }
 
+            this.checkIds = []
+
             this.getExtList({
                 params: this.filterModel
             });
