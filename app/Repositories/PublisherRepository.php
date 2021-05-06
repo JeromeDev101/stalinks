@@ -216,11 +216,15 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             if (is_array($filter['domain_zone'])) {
 
                 $regs = implode("|", $filter['domain_zone']);
+                $regs = str_replace('.', '', $regs);
 
                 $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
 
             } else {
-                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $filter['domain_zone'] . "%'");
+
+                $regs = str_replace('.', '', $filter['domain_zone']);
+
+                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
             }
         }
 

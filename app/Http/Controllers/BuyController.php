@@ -143,6 +143,22 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['domain_zone']) && !empty($filter['domain_zone'])) {
+            if (is_array($filter['domain_zone'])) {
+
+                $regs = implode("|", $filter['domain_zone']);
+                $regs = str_replace('.', '', $regs);
+
+                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+
+            } else {
+
+                $regs = str_replace('.', '', $filter['domain_zone']);
+
+                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
+            }
+        }
+
         if (isset($filter['ur']) && !empty($filter['ur'])) {
             if ($filter['ur_direction'] === 'Above') {
                 $list->where('publisher.ur' , '>=', intval($filter['ur']));
