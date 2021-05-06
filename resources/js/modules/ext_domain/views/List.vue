@@ -1290,7 +1290,7 @@
       <!-- End Send Email -->
 
 
-        
+
         <!-- Modal multiple edit of Employee -->
         <div class="modal fade" ref="modalMultipleEmployee" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -1719,7 +1719,7 @@ export default {
                     name : 'Email',
                     actionName : 'emailsData',
                     width: 200,
-                    isHidden: true
+                    isHidden: false
                 },
                 {
                     prop : '_action',
@@ -2441,6 +2441,8 @@ export default {
             if (this.user.work_mail) {
 
                 if (ext == null) {
+                    this.extDomain_id = '';
+
                     if (this.checkIds.length == 0) {
                         swal.fire('No Selected', 'Selection is empty.', 'error');
 
@@ -2599,10 +2601,13 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageFormsMail.action === 'success') {
-                this.modelMail = {
-                    title: '',
-                    content: '',
-                    mail_name: '',
+
+                if (this.mailInfo.tpl === 0) {
+                    this.modelMail = {
+                        title: '',
+                        content: '',
+                        mail_name: '',
+                    }
                 }
 
                 // this.getStatus();
@@ -2664,6 +2669,8 @@ export default {
                     'success'
                 )
             }
+
+            this.checkIds = []
 
             this.getExtList({
                 params: this.filterModel

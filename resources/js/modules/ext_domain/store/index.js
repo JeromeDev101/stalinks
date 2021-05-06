@@ -60,7 +60,7 @@ const state = {
         alexa_created_at: true,
         country: true,
         domain: true,
-        email: false,
+        email: true,
         facebook: false,
         phone: false,
         rank: true,
