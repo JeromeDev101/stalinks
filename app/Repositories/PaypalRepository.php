@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Repositories\Contracts\PaypalInterface;
+use App\Services\InvoiceService;
 use App\Services\PayPalClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PaypalPayoutsSDK\Payouts\PayoutsGetRequest;
@@ -14,9 +16,12 @@ class PaypalRepository implements PaypalInterface
 {
     protected $paypal;
 
+    protected $invoiceService;
+
     public function __construct()
     {
         $this->paypal = PayPalClient::client();
+        $this->invoiceService = new InvoiceService();
     }
 
     public function createOrder($request)
@@ -40,7 +45,11 @@ class PaypalRepository implements PaypalInterface
     {
         $payload = new OrdersCaptureRequest($id);
 
-        return $this->paypal->execute($payload);
+        $result = $this->paypal->execute($payload);
+
+        $this->invoiceService->generateCreditInvoice($result->result);
+
+        return $result;
     }
 
     public function fetchPayout($id)
