@@ -2189,13 +2189,17 @@ export default {
             });
             this.isPopupLoading = false;
             if (this.messageForms.action === 'updated_ext') {
-                console.log(this.extUpdate)
-                for (var index in this.listExt.data) {
-                    if (this.listExt.data[index].id === this.extUpdate.id) {
-                        this.listExt.data[index] = this.extUpdate;
-                        break;
-                    }
-                }
+                // console.log(this.extUpdate)
+                // for (var index in this.listExt.data) {
+                //     if (this.listExt.data[index].id === this.extUpdate.id) {
+                //         this.listExt.data[index] = this.extUpdate;
+                //         break;
+                //     }
+                // }
+
+                this.getExtList({
+                    params: this.filterModel
+                });
             }
             this.toggleTableLoading();
             loader.hide();
