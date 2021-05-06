@@ -122,6 +122,20 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label>Domain Zone</label>
+                                <v-select
+                                    v-model="filterModel.domain_zone"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :options="listDomainZones.data"
+                                    :searchable="true"
+                                    :reduce="domain => domain.name"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Price Basis</label>
                                 <v-select multiple
                                           v-model="filterModel.price_basis" :options="['Good', 'Average', 'High']" :searchable="false" placeholder="All"/>
@@ -707,6 +721,7 @@
                     code: this.$route.query.code || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
+                    domain_zone: this.$route.query.domain_zone || '',
                     price_basis: this.$route.query.price_basis || '',
                     paginate: this.$route.query.paginate || 50,
                     ur: this.$route.query.ur || 0,
@@ -799,6 +814,7 @@
                 listBuy: state => state.storeBuy.listBuy,
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listContinent: state => state.storePublisher.listContinent,
+                listDomainZones: state => state.storePublisher.listDomainZones,
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
@@ -986,6 +1002,7 @@
             this.getListContinents();
             this.checkCreditAuth();
             this.getListSeller();
+            this.getListDomainZones();
             // this.columnShow();
             // this.checkBuyerCommission();
 
@@ -1139,6 +1156,7 @@
                         price_direction:
                         this.buttonState.price,
                         page: page,
+                        domain_zone: this.filterModel.domain_zone,
                     }
                 })
 
@@ -1149,6 +1167,10 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            async getListDomainZones(params) {
+                await this.$store.dispatch('actionGetListDomainZones', params);
             },
 
             checkSelected() {
@@ -1189,6 +1211,7 @@
                     code: '',
                     casino_sites: '',
                     topic: '',
+                    domain_zone: '',
                     price_basis: '',
                     paginate: 50,
                 }
@@ -1248,6 +1271,7 @@
                         paginate: this.filterModel.paginate,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        domain_zone: this.filterModel.domain_zone,
                         price_basis: this.filterModel.price_basis,
                         ur: this.filterModel.ur,
                         ur_direction: this.buttonState.ur,
