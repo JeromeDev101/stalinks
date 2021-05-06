@@ -233,11 +233,11 @@
                                 <v-select
                                     v-model="filterModel.domain_zone"
                                     multiple
-                                    label="domain2"
+                                    label="name"
                                     placeholder="All"
                                     :options="listDomainZones.data"
                                     :searchable="true"
-                                    :reduce="domain => domain.domain2"/>
+                                    :reduce="domain => domain.name"/>
                             </div>
                         </div>
                     </div>
