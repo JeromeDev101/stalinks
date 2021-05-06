@@ -734,7 +734,7 @@
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.status}" class="form-group">
                            <label style="color: #333">Status</label>
                            <select type="text" v-model="extUpdate.status" @change="showAddURL()" class="form-control" value="" required="required">
-                              <option v-for="(option, key) in listStatusText" v-bind:value="key" :selected="(key === extUpdate.status ? 'selected' : '')">
+                              <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)" v-bind:value="option.id" :selected="(key === extUpdate.status ? 'selected' : '')">
                                  {{ option.text }}
                               </option>
                            </select>
@@ -1339,7 +1339,7 @@
                            <label style="color: #333">Status</label>
                            <select type="text"  class="form-control" v-on:change="checkQualified" v-model="updateStatus.status" required="required">
                               <option value="">Select Status</option>
-                              <option v-for="(option, key) in listStatusText" v-bind:value="key">
+                              <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)" v-bind:value="option.id">
                                  {{ option.text }}
                               </option>
                            </select>
