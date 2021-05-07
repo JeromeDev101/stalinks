@@ -2455,10 +2455,10 @@
                     ? ['URL', 'Price', 'Inc Article',
                        'Seller ID',
                        'Accept C&B','Language', 'Topic',
-                       'KW Anchor', 'Country']
+                       'KW Anchor']
                     : ['URL', 'Price', 'Inc Article',
                        'Accept C&B', 'KW Anchor',
-                       'Language', 'Topic', 'Country'];
+                       'Language', 'Topic'];
 
                 headers.push(rows);
 
