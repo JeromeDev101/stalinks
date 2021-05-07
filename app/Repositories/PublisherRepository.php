@@ -320,8 +320,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 8 || count($line) < 8){
-                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor, Language, Topic and Country only";
+                if(count($line) > 7 || count($line) < 7){
+                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor, Language and Topic only";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -335,7 +335,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $kw_anchor = trim_special_characters($line[4]);
                     $language_excel = trim_special_characters($line[5]);
                     $topic = trim_special_characters($line[6]);
-                    $country = trim_special_characters($line[7]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
@@ -364,7 +363,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                     'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
                                     'topic' => $topic,
-                                    'country_id' => $country
                                 ]);
                             }
                         } else {
@@ -388,8 +386,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             } else {
 
-                if(count($line) > 9 || count($line) < 9){
-                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept, Language, Topic, Kw Anchor and Country only.";
+                if(count($line) > 8 || count($line) < 8){
+                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept, Language, Topic and Kw Anchor only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -404,7 +402,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $language_excel = trim_special_characters($line[5]);
                     $topic = trim_special_characters($line[6]);
                     $kw_anchor = trim_special_characters($line[7]);
-                    $country = trim_special_characters($line[8]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
@@ -435,7 +432,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                             'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                             'topic' => $topic,
                                             'kw_anchor' => $kw_anchor,
-                                            'country_id' => $country
                                         ]);
                                     }
                                 } else {
