@@ -215,16 +215,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if (isset($filter['domain_zone']) && !empty($filter['domain_zone'])) {
             if (is_array($filter['domain_zone'])) {
 
-                $regs = implode("|", $filter['domain_zone']);
+                $regs = implode(",", $filter['domain_zone']);
                 $regs = str_replace('.', '', $regs);
+                $regs = explode(",", $regs);
 
-                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+
+                $list = $list->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','')"), $regs);
 
             } else {
 
                 $regs = str_replace('.', '', $filter['domain_zone']);
 
-                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
+                $list = $list->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','') = '$regs'");
             }
         }
 
