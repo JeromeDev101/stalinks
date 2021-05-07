@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Models\Formula;
 use App\Models\Language;
-use App\Models\Publisher;
+use App\Models\ExtDomain;
 use App\Models\Country;
 
 class ConfigController extends Controller
@@ -126,83 +126,86 @@ class ConfigController extends Controller
         return response()->json(['success' => true],200);
     }
 
+    public function urlProspectEmailExtraction() {
+        $emails = ExtDomain::select('email', 'id')
+                ->whereNotNull('email')
+                ->where(function($query){
+                    return $query->where('email', 'like', '%.png%')
+                                ->orWhere('email', 'like', '%.jpg%')
+                                ->orWhere('email', 'like', '%.svg%')
+                                ->orWhere('email', 'like', '%.jpeg%')
+                                ->orWhere('email', 'like', '%.webp%')
+                                ->orWhere('email', 'like', '%.jp2%')
+                                ->orWhere('email', 'like', '%.gif%');
+                })
+                ->get();
 
-    // public function getCountryWebsite() {
-    //     $list_sites = Publisher::whereNull('country_id')->pluck('url','id')->take(50);
+        $new_emails = [];
+        foreach( $emails as $email ) {
+            if(strpos($email->email, '|') !== false){
+                $explode_email = explode('|', $email->email);
+                $new = [];
+                foreach($explode_email as $exp_email) {
+                    $lowercase_email = strtolower($exp_email);
+                    if(
+                        strpos($lowercase_email, '.png') !== false || 
+                        strpos($lowercase_email, '.jpg') !== false || 
+                        strpos($lowercase_email, '.jpeg') !== false || 
+                        strpos($lowercase_email, '.svg') !== false || 
+                        strpos($lowercase_email, '.gif') !== false || 
+                        strpos($lowercase_email, '.jp2') !== false || 
+                        strpos($lowercase_email, '.webp')
+                    ) {
+                    } else{
+                        $new[] = $exp_email;
+                    }
+                }
 
-    //     $test = [];
-    //     if( count($list_sites) > 0 ) {
-    //         foreach( $list_sites as $key => $sites) {
+                if(count($new) > 0) {
+                    array_push($new_emails,[
+                        'id' => $email->id,
+                        'email' => implode('|', $new)
+                    ]);
+                } else {
+                    array_push($new_emails,[
+                        'id' => $email->id,
+                        'email' => null
+                    ]);
+                }
+            } else {
+                $lowercase_email = strtolower($email);
+                if(
+                    strpos($lowercase_email, '.png') !== false || 
+                    strpos($lowercase_email, '.jpg') !== false || 
+                    strpos($lowercase_email, '.jpeg') !== false || 
+                    strpos($lowercase_email, '.svg') !== false || 
+                    strpos($lowercase_email, '.gif') !== false || 
+                    strpos($lowercase_email, '.jp2') !== false || 
+                    strpos($lowercase_email, '.webp')
+                ) {
+                    array_push($new_emails,[
+                        'id' => $email->id,
+                        'email' => null
+                    ]);
+                } else{
+                    array_push($new_emails,[
+                        'id' => $email->id,
+                        'email' => $email->email
+                    ]);
+                }
+                
+            }
+        }
 
-    //             $url = "https://check-host.net/ip-info?host=".$sites;
+        // updating of emails
+        foreach($new_emails as $new_email) {
+            $ext_domain = ExtDomain::find($new_email['id']);
+            $ext_domain->update([
+                'email' => $new_email['email']
+            ]);
+        }
 
-    //             $curl = curl_init($url);
-    //             curl_setopt($curl, CURLOPT_URL, $url);
-    //             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    //             $headers = array(
-    //             "Accept: application/json",
-    //             );
-    //             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-    //             $resp = curl_exec($curl);
-    //             curl_close($curl);
-
-    //             $dom = new \DOMDocument();
-    //             @$dom->loadHtml($resp);
-    //             $country_name = isset($dom->getElementsByTagName('strong')->item(2)->nodeValue) ? $dom->getElementsByTagName('strong')->item(2)->nodeValue : '';
-    //             $country_id = $this->getCountryId($country_name);
-
-    //             if (!is_null($country_id) && $country_name != '') {
-    //                 $publisher = Publisher::findOrFail($key);
-    //                 $publisher->update(['country_id' => $country_id]);
-    //             } else {
-    //                 $publisher = Publisher::findOrFail($key);
-    //                 $publisher->update(['country_id' => 0]);
-    //             }
-
-    //             array_push($test,[
-    //                 'sites' => $sites,
-    //                 'country' => $country_name,
-    //                 'id' => $country_id,
-    //             ]);
-
-    //         }
-    //     }
-
-    //     return response()->json(['data' => $test]);
-
-    // }
-
-    // private function getCountryId($country) {
-    //     $result = null;
-    //     $country_list = Country::where('name', 'like', '%'.$country.'%')->first();
-
-    //     if($country_list) {
-    //         $result = $country_list->id;
-    //     } 
-
-    //     if ($country == 'United States of America')  $result = 247;
-    //     if ($country == 'United Kingdom of Great Britain and Northern Ireland')  $result = 246;
-    //     if ($country == 'Czechia')  $result = 72;
-
-    //     return $result;
-    // }
-
-
-    // public function getTopicWebsite() {
-    //     $list_sites = Publisher::whereNull('topic')->pluck('url','id')->take(50);
-    //     $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted', 'Unlisted', 'Unlisted', 'Unlisted'];
-
-
-    //     if( count($list_sites) > 0 ) {
-    //         foreach( $list_sites as $key => $sites) {
-    //             $publisher = Publisher::findOrFail($key);
-    //             $publisher->update(['topic' => $topic_list[rand(0,24)] ]);
-    //         }
-    //     }
-
-    //     return response()->json(['success' => true]);
-    // }
+        return response()->json($emails, 200);
+    }
 
 }
