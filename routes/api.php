@@ -252,9 +252,6 @@ Route::name('domain-status')->get('/mail/status','MailgunController@status_mail'
 Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
 Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
 
-// Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
-// Route::name('get-topic-website')->get('/get-website-topic','ConfigController@getTopicWebsite');
-
 //test pusher
 Route::name('pusher')->get('/test-pusher','PushController@test');
 
@@ -263,10 +260,4 @@ Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
-//removing http,www,https
-Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
-
-
-// updating prices
-// Route::name('updating-price')->get('/update-price', 'PublisherController@updatePrice');
-Route::name('get-price-from-publisher')->get('/get-price-from-publisher', 'PublisherController@getPrice');
+Route::get('url-prospect-email-extraction', 'ConfigController@urlProspectEmailExtraction')->name('url-prospect-email-extraction');

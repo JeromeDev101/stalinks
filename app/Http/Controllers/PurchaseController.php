@@ -176,32 +176,4 @@ class PurchaseController extends Controller
         }
     }
 
-    public function testRemoveHttp() {
-        $publishers = Publisher::where('url', 'like', '%/%')->take(100)->get();
-
-        foreach($publishers as $publisher) {
-            $url_copy = $this->remove_http($publisher->url);
-            $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
-
-            $pub = Publisher::findOrfail($publisher->id);
-            $pub->update(['url' => $url]);
-
-        }
-
-
-        $publishers = Publisher::select('id', 'url')->where('url', 'like', '%/%')->get();
-
-        return $publishers;
-    }
-
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
 }
