@@ -648,8 +648,8 @@
                                     <label for="">Include Article</label>
                                     <select class="form-control" v-model="updateModel.inc_article">
                                         <option value=""></option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -2322,7 +2322,7 @@
                     price: that.price,
                     anchor_text: that.anchor_text,
                     link: that.link,
-                    inc_article: that.inc_article,
+                    inc_article: that.inc_article.toLowerCase(),
                     topic: topic,
                     casino_sites: that.casino_sites.toLowerCase(),
                     kw_anchor: that.kw_anchor.toLowerCase(),
@@ -2455,10 +2455,10 @@
                     ? ['URL', 'Price', 'Inc Article',
                        'Seller ID',
                        'Accept C&B','Language', 'Topic',
-                       'KW Anchor', 'Country']
+                       'KW Anchor']
                     : ['URL', 'Price', 'Inc Article',
                        'Accept C&B', 'KW Anchor',
-                       'Language', 'Topic', 'Country'];
+                       'Language', 'Topic'];
 
                 headers.push(rows);
 
