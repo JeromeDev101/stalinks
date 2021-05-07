@@ -67,12 +67,14 @@
                         <div class="col-md-3" v-if="user.isAdmin || user.isOurs == 0">
                             <div class="form-group">
                                 <label for="">Seller</label>
-                                <select class="form-control" v-model="filterModel.seller">
-                                    <option value="">All</option>
-                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username }}
-                                    </option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.seller" :options="listSeller.data" label="name" :reduce="seller => seller.id" :searchable="true" placeholder="All"/>
+<!--                                <select class="form-control" v-model="filterModel.seller">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+<!--                                        {{ option.username == null ? option.name:option.username }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
