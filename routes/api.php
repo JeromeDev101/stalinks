@@ -124,7 +124,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
     Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
-    Route::name('ext-get-contacts')->get('/ext/get-contacts', 'ExtDomainController@crawlContact');
+    Route::name('ext-get-contacts')->post('/ext/get-contacts', 'ExtDomainController@crawlContact');
     Route::name('ext-upload-csv')->post('/ext/upload-csv', 'ExtDomainController@importExcel');
     Route::name('ext-delete')->delete('/ext', 'ExtDomainController@delete');
     Route::name('ext-update-multiple-status')->put('/ext/update-multiple-status', 'ExtDomainController@updateMultipleStatus');

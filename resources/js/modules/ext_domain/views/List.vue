@@ -114,7 +114,6 @@
                             <div class="btn-group">
                                 <button class="btn btn-default" @click="clearSearch" >Clear</button>
                                 <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                                <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
                             </div>
                         </div>
                     </div>
@@ -259,6 +258,12 @@
 
                                  <i class="fa fa-fw fa-trash"></i>
                              </button>
+
+                             <button
+                                 @click="doCrawlExtList"
+                                 :disabled="isCrawling"
+                                 type="submit"
+                                 title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
                          </div>
                      </div>
                  </div>
@@ -2149,17 +2154,28 @@ export default {
         async doCrawlExtList() {
             this.isCrawling = true;
             var arrayIds = [];
-            if (this.listExt.data) {
-                for (let key in this.listExt.data) {
-                    arrayIds.push(this.listExt.data[key].id);
+            if (this.checkIds) {
+                for (let key in this.checkIds) {
+                    arrayIds.push(this.checkIds[key].id);
                 }
             }
             if (arrayIds.length == 0) return;
+
+            if (arrayIds.length > 50) {
+                swal.fire(
+                    'Error',
+                    'You can only crawl 50 URLs at a time',
+                    'error'
+                );
+
+                this.isCrawling = false;
+
+                return;
+            }
+
             await this.$store.dispatch('crawlExtList', {
-                params: {
-                    domain_ids: arrayIds.join(","),
-                    queue: false
-                }
+                domain_ids: arrayIds.join(","),
+                queue: false
             });
             this.isCrawling = false;
         },
