@@ -284,53 +284,6 @@ class PublisherController extends Controller
         return response()->json(['success'=> true],200);
     }
 
-    public function getPrice(){
-        $backlinks = Backlink::select('publisher_id', 'id')->get();
-
-        $test = [];
-        foreach($backlinks as $back) {
-            $publisher = Publisher::find($back->publisher_id);
-
-            if($publisher) {
-                $backlink = Backlink::find($back->id);
-
-                $test[] = $backlink->update([
-                    'price' => $publisher->price,
-                    'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
-                ]);
-
-                // array_push($test,[
-                //     'backlink_id' => $back->id,
-                //     'publisher_id' => $back->publisher_id,
-                //     'price' => $publisher->price,
-                //     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
-                // ]);
-
-            }
-
-            else {
-
-                $backlink = Backlink::find($back->id);
-
-                $test[] = $backlink->update([
-                    'price' => 0,
-                    'prices' => 0,
-                ]);
-
-                // array_push($test,[
-                //     'backlink_id' => $back->id,
-                //     'publisher_id' => $back->publisher_id,
-                //     'price' => 0,
-                //     'prices' => 0,
-                // ]);
-            }
-        }
-
-
-
-        return response()->json($test);
-    }
-
     private function getStalinksPrices($price, $article) {
 
         $formula = Formula::all();

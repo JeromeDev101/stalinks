@@ -252,7 +252,7 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
                 ? config('constant.EXT_STATUS_GOT_EMAIL')
                 : config('constant.EXT_STATUS_GOT_CONTACTS');
         } else {
-            $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
+            $extDomain->status = config('constant.EXT_STATUS_CONTACTS_NULL');
         }
 
         $extDomain->save();
