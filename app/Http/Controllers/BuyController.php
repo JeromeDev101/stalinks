@@ -213,7 +213,7 @@ class BuyController extends Controller
         }
 
         if (isset($filter['code'])) {
-            if(is_array($filter['topic'])) {
+            if(is_array($filter['code'])) {
                 $list->where(function($q) use ($filter){
                     foreach($filter['code'] as $key => $code) {
                         if($key == 0) {
