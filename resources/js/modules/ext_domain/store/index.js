@@ -20,6 +20,7 @@ const EXT_STATUS_CONTACTS_NULL = "ContactNull";
 const EXT_STATUS_GOT_CONTACTS = "GotContacts";
 // const EXT_STATUS_AHREAFED = "Ahrefed";
 const EXT_STATUS_CONTACTED = "Contacted";
+const EXT_STATUS_CONTACTED_VIA_FORM = "ContactedViaForm";
 const EXT_STATUS_NO_ANSWER = "NoAnswer";
 const EXT_STATUS_REFUSED = "Refused";
 const EXT_STATUS_IN_TOUCHED = "InTouched";
@@ -44,6 +45,7 @@ const state = {
         10: { text: EXT_STATUS_CRAWL_FAILED, label: "danger"},
         // 40: { text: EXT_STATUS_AHREAFED, label: "primary" },
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
+        120: { text: EXT_STATUS_CONTACTED_VIA_FORM, label: "success" },
         20: { text: EXT_STATUS_CONTACTS_NULL, label: "warning" },
         30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
         110: { text: EXT_STATUS_GOT_EMAIL, label: "success" },
