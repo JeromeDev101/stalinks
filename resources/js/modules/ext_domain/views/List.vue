@@ -2159,7 +2159,17 @@ export default {
                     arrayIds.push(this.checkIds[key].id);
                 }
             }
-            if (arrayIds.length == 0) return;
+            if (arrayIds.length == 0) {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+
+                this.isCrawling = false;
+
+                return;
+            }
 
             if (arrayIds.length > 50) {
                 swal.fire(
@@ -2177,7 +2187,10 @@ export default {
                 domain_ids: arrayIds.join(","),
                 queue: false
             });
+
             this.isCrawling = false;
+            this.checkIds = [];
+            this.allSelected = false;
         },
         async submitAdd() {
             let that = this;
