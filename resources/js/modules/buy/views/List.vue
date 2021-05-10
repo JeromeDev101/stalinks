@@ -87,12 +87,20 @@
                         <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">
                             <div class="form-group">
                                 <label for="">Code</label>
-                                <select name="" class="form-control" v-model="filterModel.code">
+                                <!-- <select name="" class="form-control" v-model="filterModel.code">
                                     <option value="">All</option>
                                     <option v-for="option in listCode" v-bind:value="option">
                                         {{ option }}
                                     </option>
-                                </select>
+                                </select> -->
+
+                                <v-select
+                                    v-model="filterModel.code"
+                                    multiple
+                                    placeholder="All"
+                                    :options="listCode"
+                                    :searchable="false"
+                                />
                             </div>
                         </div>
 
