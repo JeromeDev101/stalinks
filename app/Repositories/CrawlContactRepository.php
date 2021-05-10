@@ -125,6 +125,29 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
         $emailArray = array_unique($emailArray);
     }
 
+    public function cleanEmails($emails)
+    {
+        if (count($emails) === 0 || empty($emails)) {
+            return [];
+        } else {
+
+            $remove = ['.png', '.gif', '.jpg', '.jpeg', '.jp2', '.webp'];
+
+            foreach ($emails as $key => $el) {
+                $el = strtolower($el);
+
+                foreach ($remove as $key2 => $rem) {
+                    if (strpos($el,$rem) !== false) {
+                        unset($emails[$key]);
+                    }
+                }
+
+            }
+
+            return $emails;
+        }
+    }
+
     public function getClient() {
         $client = new Client();
         $guzzleClient = new GuzzleClient(array(
@@ -170,6 +193,9 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
                               $crawlerResult['emails'] = $emailArray;
                               $crawlerResult['facebook'] = $facebookArray;
                           }
+
+                          // remove png emails
+                          $crawlerResult['emails'] = $this->cleanEmails($crawlerResult['emails']);
 
                           return $crawlerResult;
                       })->then(function(array $crawlResult) {
