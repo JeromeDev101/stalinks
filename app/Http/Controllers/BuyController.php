@@ -213,10 +213,30 @@ class BuyController extends Controller
         }
 
         if (isset($filter['code'])) {
-            $list->whereRaw('ROUND(
-                           (
-                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
-                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+            if(is_array($filter['topic'])) {
+                $list->where(function($q) use ($filter){
+                    foreach($filter['code'] as $key => $code) {
+                        if($key == 0) {
+                            $q->whereRaw('ROUND(
+                                (
+                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+                        } else {
+                            $q->orWhere(function($query) use ($code){
+                                $query->whereRaw('ROUND(
+                                    (
+                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                    ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                            }) ;
+                        }
+                    }
+                });
+            } else {
+                $list->whereRaw('ROUND(
+                    (
+                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                    ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+            }
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
