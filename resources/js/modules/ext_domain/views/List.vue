@@ -2483,13 +2483,13 @@ export default {
                         swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                     } else {
                         let err = this.checkIds.some(function(items){
-                            return items.status == 50 | items.email == "" | items.email == null;
+                            return items.email == "" | items.email == null;
                         });
 
                         if(err) {
                             swal.fire(
                                 'Invalid Selection',
-                                'Some of the selected items may either be contacted already or have no email address',
+                                'Some of the selected items have no email address',
                                 'error'
                             );
                         } else {
@@ -2515,9 +2515,11 @@ export default {
                 }
 
                 if (ext != null) {
-                    if (ext.status == 50) {
-                        swal.fire('Invalid', 'Record already contacted.', 'error')
-                    } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
+                    // if (ext.status == 50) {
+                    //     swal.fire('Invalid', 'Record already contacted.', 'error')
+                    // } else
+
+                    if (ext.email == "" || ext.email == null || ext.email.length == 0) {
                         swal.fire('No email', 'Please check if record has email.', 'error')
                     } else {
                         this.openModalEmailElem();
