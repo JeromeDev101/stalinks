@@ -2842,7 +2842,7 @@ export default {
         },
 
         objectToArrayWithCustomSort(ob) {
-            let sort_array = ['0', '10', '20', '30', '110', '50', '70', '100', '60', '90', '55'];
+            let sort_array = ['0', '10', '20', '30', '110', '50', '120', '70', '100', '60', '90', '55'];
             let arr = [];
 
             sort_array.forEach((sort) => {
