@@ -220,7 +220,7 @@ class BuyController extends Controller
                             $q->whereRaw('ROUND(
                                 (
                                 LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
-                                ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+                                ) / LENGTH("A")) = ' . rtrim($code, 'A'));
                         } else {
                             $q->orWhere(function($query) use ($code){
                                 $query->whereRaw('ROUND(
