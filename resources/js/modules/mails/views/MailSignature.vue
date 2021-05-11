@@ -17,7 +17,7 @@
 
                     <div class="input-group input-group-sm float-right" style="width: 65px">
                         <select
-                            v-model="filterModel.per_page"
+                            v-model="filterModel.paginate"
                             style="height: 37px;"
                             class="form-control pull-right"
 
@@ -82,6 +82,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <pagination :data="listEmailSignature" @pagination-change-page="getSignatureList" :limit="8"></pagination>
                 </div>
             </div>
         </div>
@@ -102,20 +103,22 @@ export default {
                 name: this.$route.query.title || '',
                 user: this.$route.query.user || '',
                 page: this.$route.query.page || 0,
-                per_page: this.$route.query.per_page || 10,
-                paginate: 1
+                paginate: this.$route.query.paginate || 10,
             },
         }
     },
 
     created() {
         this.getListUsers()
+
+        this.getSignatureList()
     },
 
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
-            messageForms: state => state.emailTemplateSystem.messageForms,
+            listEmailSignature: state => state.storeMailgun.listEmailSignature,
+            messageForms: state => state.storeMailgun.messageForms,
         }),
     },
 
@@ -125,6 +128,15 @@ export default {
             .then(response => {
                 this.listUsers = response.data
             })
+        },
+
+        async getSignatureList(page = 1) {
+            this.isLoadingTable = true;
+            this.filterModel.page = page
+            await this.$store.dispatch('actionGetEmailSignatureList', {
+                params: this.filterModel
+            });
+            this.isLoadingTable = false;
         },
     },
 }
