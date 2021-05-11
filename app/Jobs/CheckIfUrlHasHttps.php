@@ -32,26 +32,27 @@ class CheckIfUrlHasHttps implements ShouldQueue
      */
     public function handle()
     {
-        $guzzle = new Client(['defaults' => [ 'exceptions' => false ]]);
 
-        $publishers = Publisher::whereNull('is_https')->get();
+        Publisher::whereNull('is_https')->chunk(500, function ($publishers) {
+            $guzzle = new Client(['defaults' => [ 'exceptions' => false ]]);
 
-        foreach ($publishers as $publisher) {
-            $url = '';
+            foreach ($publishers as $publisher) {
+                $url = '';
 
-            try {
-                $guzzle->request('GET', trim_special_characters($publisher->url), [
-                    'on_stats' => function (TransferStats $stats) use (&$url) {
-                        $url = $stats->getHandlerStats()['url'];
-                    }
-                ]);
+                try {
+                    $guzzle->request('GET', trim_special_characters($publisher->url), [
+                        'on_stats' => function (TransferStats $stats) use (&$url) {
+                            $url = $stats->getHandlerStats()['url'];
+                        }
+                    ]);
 
-                $publisher->update([
-                    'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
-                ]);
-            } catch (\Exception $exception) {
-                \Log::error($exception);
+                    $publisher->update([
+                        'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
+                    ]);
+                } catch (\Exception $exception) {
+                    \Log::error($exception);
+                }
             }
-        }
+        });
     }
 }
