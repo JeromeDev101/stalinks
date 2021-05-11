@@ -40,7 +40,8 @@ class Publisher extends Model
             'qc_validation',
             'valid',
             'href_fetched_at',
-            'deleted_at'
+            'deleted_at',
+            'is_https'
         ];
 
     public function getCustomUrlAttribute() {
