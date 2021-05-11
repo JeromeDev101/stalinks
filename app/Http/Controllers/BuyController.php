@@ -10,6 +10,7 @@ use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Traits\BuyTrait;
 use App\Repositories\Traits\NotificationTrait;
+use App\Services\HttpClient;
 use Illuminate\Http\Request;
 use App\Models\Publisher;
 use App\Models\Backlink;
@@ -25,12 +26,13 @@ class BuyController extends Controller
 {
     use BuyTrait, NotificationTrait;
 
-    protected $publisherRepository, $backlinkRepository;
+    protected $publisherRepository, $backlinkRepository, $httpClient;
 
-    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository)
+    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository, HttpClient $httpClient)
     {
         $this->publisherRepository = $publisherRepository;
         $this->backlinkRepository = $backLinkRepository;
+        $this->httpClient = $httpClient;
     }
 
     public function getList(Request $request){
@@ -50,7 +52,7 @@ class BuyController extends Controller
             'country_continent.name AS country_continent',
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
-            'buyer_purchased.status as status_purchased'
+            'buyer_purchased.status as status_purchased',
         ];
 
         $list = Publisher::select($columns)
@@ -78,6 +80,10 @@ class BuyController extends Controller
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);
+        }
+
+        if (isset($filter['is_https'])) {
+            $list->where('publisher.is_https', $filter['is_https']);
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
@@ -337,6 +343,7 @@ class BuyController extends Controller
             'date_process' => date('Y-m-d'),
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
+            'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
         ]);
 
         $notification->create([

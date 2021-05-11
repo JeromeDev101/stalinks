@@ -158,6 +158,23 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label>Is Https?</label>
+                                <select
+                                    class="form-control"
+                                    v-model="filterModel.is_https">
+                                    <option value="">All</option>
+                                    <option
+                                        value="yes">Yes
+                                    </option>
+                                    <option
+                                        value="no">
+                                        No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">UR</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -737,7 +754,9 @@
                     org_kw: this.$route.query.org_kw || 0,
                     org_traffic:
                         this.$route.query.org_traffic || 0,
-                    price: this.$route.query.price || 0
+                    price: this.$route.query.price || 0,
+                    is_https : this.$route.query.is_https
+                        || ''
                 },
                 buttonState: {
                     ur : 'Above',
@@ -895,6 +914,13 @@
                         name : 'URL',
                         actionName: 'urlData',
                         width: 175,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'is_https',
+                        name : 'Is Https?',
+                        sortable: true,
+                        width: 200,
                         isHidden: false
                     },
                     {
@@ -1165,6 +1191,7 @@
                         this.buttonState.price,
                         page: page,
                         domain_zone: this.filterModel.domain_zone,
+                        is_https: this.filterModel.is_https
                     }
                 })
 
@@ -1222,6 +1249,7 @@
                     domain_zone: '',
                     price_basis: '',
                     paginate: 50,
+                    is_https : ''
                 }
 
                 this.getBuyList({
@@ -1288,7 +1316,9 @@
                         org_kw: this.filterModel.org_kw,
                         org_kw_direction: this.buttonState.org_kw,
                         org_traffic: this.filterModel.org_traffic,
-                        org_traffic_direction: this.buttonState.org_traffic
+                        org_traffic_direction:
+                        this.buttonState.org_traffic,
+                        is_https: this.filterModel.is_https
                     }
                 });
             },
