@@ -32,6 +32,22 @@ const state = {
             endDate: null
         }
     },
+    tblFollowupBacklinksOpt: {
+        id_backlink: true,
+        seller: true,
+        buyer: true,
+        url_publisher: true,
+        url_advertiser: true,
+        link_from: true,
+        price: true,
+        prices: false,
+        code_comb: true,
+        code_price: true,
+        price_basis: true,
+        date_for_process: true,
+        date_completed: true,
+        status: true,
+    },
     messageBacklinkForms: { obj: {}, action: '', message: '', errors: {} },
 };
 
