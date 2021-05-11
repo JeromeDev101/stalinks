@@ -105,6 +105,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.kw_anchor', $filter['kw_anchor']);
         }
 
+        if (isset($filter['is_https'])) {
+            $list = $list->where('publisher.is_https', $filter['is_https']);
+        }
+
         if( isset($filter['qc_validation']) && !empty($filter['qc_validation']) ){
             if( $filter['qc_validation'] == 'na' ) {
                 $list = $list->whereNull('publisher.qc_validation');
