@@ -6,6 +6,9 @@ use App\BestPriceGenerator;
 use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
 use App\Models\DomainZone;
+use App\Services\HttpClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
@@ -19,6 +22,7 @@ use App\Models\Backlink;
 use App\Models\Formula;
 use Illuminate\Support\Facades\DB;
 use Mailgun\Api\Domain;
+use Psr\Http\Message\ResponseInterface;
 
 class PublisherController extends Controller
 {
@@ -29,11 +33,14 @@ class PublisherController extends Controller
      */
     private $configRepository;
 
+    private $httpClient;
+
     public function __construct(PublisherRepositoryInterface $publisherRepository,
-                                ConfigRepositoryInterface $configRepository)
+                                ConfigRepositoryInterface $configRepository, HttpClient $httpClient)
     {
         $this->publisherRepository = $publisherRepository;
         $this->configRepository = $configRepository;
+        $this->httpClient = $httpClient;
     }
 
     public function getList(Request $request)
@@ -103,6 +110,8 @@ class PublisherController extends Controller
         if (!isset($input['kw_anchor']) || $input['kw_anchor'] == null) {
             unset($input['kw_anchor']);
         }
+
+        $input['is_https'] = $this->httpClient->getProtocol($url_copy) == 'https' ? 'yes' : 'no';
 
         Publisher::create($input);
         return response()->json(['success' => true], 200);

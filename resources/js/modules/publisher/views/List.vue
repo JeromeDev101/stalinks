@@ -1619,6 +1619,13 @@
                         isHidden: !this.tblPublisherOpt.url
                     },
                     {
+                        prop : 'is_https',
+                        name : 'Is Https?',
+                        sortable: true,
+                        width: 100,
+                        isHidden: false
+                    },
+                    {
                         prop : 'custom_price',
                         name : 'Price',
                         // actionName : 'priceData',
