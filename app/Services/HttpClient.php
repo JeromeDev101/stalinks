@@ -18,12 +18,16 @@ class HttpClient
     {
         $url = '';
 
-        $this->guzzle->request('GET', trim_special_characters($uri), [
-            'on_stats' => function (TransferStats $stats) use (&$url) {
-                $url = $stats->getHandlerStats()['url'];
-            }
-        ]);
+        try {
+            $this->guzzle->request('GET', trim_special_characters($uri), [
+                'on_stats' => function (TransferStats $stats) use (&$url) {
+                    $url = $stats->getHandlerStats()['url'];
+                }
+            ]);
 
-        return explode(':', $url)[0];
+            return explode(':', $url)[0];
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 }
