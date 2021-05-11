@@ -37,6 +37,7 @@ import OverAllIncomes from '@/modules/incomes/admin/views/List.vue'
 import ResetPassword from '@/modules/reset_password/views/List.vue'
 // import SentMails from '@/modules/mail_sent/views/Sent.vue';
 import Inbox from '@/modules/mails/views/Inbox.vue'
+import MailSignature from '@/modules/mails/views/MailSignature.vue'
 import Maillog from '@/modules/mails/views/Maillog.vue'
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue'
@@ -209,7 +210,12 @@ const routes = [
             path: 'template',
             name: 'mail-template',
             component: MailTemplate
-          }
+          },
+            {
+                path: 'signature',
+                name: 'mail-signature',
+                component: MailSignature
+            }
         ]
       },
       // {

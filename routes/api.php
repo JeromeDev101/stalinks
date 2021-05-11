@@ -223,6 +223,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
+        Route::name('get-user-list')->get('/get-user-list','MailSignatureController@getUsers');
     });
 
     Route::name('labels')->resource('/label','LabelController');
