@@ -11,7 +11,7 @@ class DispatchJob extends Command
      *
      * @var string
      */
-    protected $signature = 'job:dispatch {job}';
+    protected $signature = 'job:dispatch {job} {worker=default}';
 
     /**
      * The console command description.
@@ -37,7 +37,7 @@ class DispatchJob extends Command
      */
     public function handle()
     {
-        $class = '\\App\\Jobs\\' . $this->argument('job');
-        dispatch(new $class());
+        $class = '\\App\\Jobs\\' . $this->option('job');
+        dispatch(new $class())->onQueue($this->option('worker'));
     }
 }
