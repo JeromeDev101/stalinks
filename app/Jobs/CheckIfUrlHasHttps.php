@@ -32,10 +32,8 @@ class CheckIfUrlHasHttps implements ShouldQueue
      */
     public function handle()
     {
-
-        Publisher::chunk(500, function ($publishers) {
-            $guzzle = new Client(['defaults' => [ 'exceptions' => false ]]);
-
+        $guzzle = new Client(['defaults' => [ 'exceptions' => false ]]);
+        Publisher::whereNull('is_https')->chunk(500, function ($publishers) use ($guzzle) {
             foreach ($publishers as $publisher) {
                 $url = '';
 
