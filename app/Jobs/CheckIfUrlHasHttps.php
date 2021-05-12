@@ -37,20 +37,18 @@ class CheckIfUrlHasHttps implements ShouldQueue
             foreach ($publishers as $publisher) {
                 $url = '';
 
-                if (!$publisher->is_https) {
-                    try {
-                        $guzzle->request('GET', trim_special_characters($publisher->url), [
-                            'on_stats' => function (TransferStats $stats) use (&$url) {
-                                $url = $stats->getHandlerStats()['url'];
-                            }
-                        ]);
+                try {
+                    $guzzle->request('GET', trim_special_characters($publisher->url), [
+                        'on_stats' => function (TransferStats $stats) use (&$url) {
+                            $url = $stats->getHandlerStats()['url'];
+                        }
+                    ]);
 
-                        $publisher->update([
-                            'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
-                        ]);
-                    } catch (\Exception $exception) {
-                        \Log::error($exception);
-                    }
+                    $publisher->update([
+                        'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
+                    ]);
+                } catch (\Exception $exception) {
+                    \Log::error($exception);
                 }
             }
         });
