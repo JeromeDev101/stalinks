@@ -242,6 +242,23 @@
                                     :reduce="domain => domain.name"/>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Is Https?</label>
+                                <select
+                                    class="form-control"
+                                    v-model="filterModel.is_https">
+                                    <option value="">All</option>
+                                    <option
+                                        value="yes">Yes
+                                    </option>
+                                    <option
+                                        value="no">
+                                        No</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -567,7 +584,7 @@
         </div>
 
         <!-- Modal Update Publisher -->
-        <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1330,6 +1347,7 @@
                         || 'no',
                     account_validation: this.$route.query.account_validation || '',
                     domain_zone: this.$route.query.domain_zone || '',
+                    is_https: this.$route.query.is_https || ''
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1823,7 +1841,9 @@
                             show_duplicates:
                             this.filterModel.show_duplicates,
                             account_validation: this.filterModel.account_validation,
-                            domain_zone: this.filterModel.domain_zone
+                            domain_zone:
+                            this.filterModel.domain_zone,
+                            is_https: this.filterModel.is_https
                         }
                     });
                 }else{
@@ -1851,7 +1871,9 @@
                             show_duplicates:
                             this.filterModel.show_duplicates,
                             account_validation: this.filterModel.account_validation,
-                            domain_zone: this.filterModel.domain_zone
+                            domain_zone:
+                            this.filterModel.domain_zone,
+                            is_https: this.filterModel.is_https
                         }
                     });
                 }
@@ -2237,7 +2259,8 @@
                         startDate: null,
                         endDate: null
                     },
-                    domain_zone: ''
+                    domain_zone: '',
+                    is_https : ''
                 }
 
                 this.getPublisherList({
@@ -2366,8 +2389,6 @@
             },
 
             doSearch() {
-                $('#tbl-publisher').DataTable().destroy();
-
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -2394,7 +2415,9 @@
                         show_duplicates:
                         this.filterModel.show_duplicates,
                         account_validation: this.filterModel.account_validation,
-                        domain_zone: this.filterModel.domain_zone
+                        domain_zone:
+                        this.filterModel.domain_zone,
+                        is_https: this.filterModel.is_https
                     }
                 });
             },

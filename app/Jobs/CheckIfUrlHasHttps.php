@@ -32,26 +32,35 @@ class CheckIfUrlHasHttps implements ShouldQueue
      */
     public function handle()
     {
-        $guzzle = new Client(['defaults' => [ 'exceptions' => false ]]);
+        \Log::channel('slack')->info('----------START-----------');
+        $guzzle = new Client(['defaults' => [ 'exceptions' => false, 'timeout' => 10 ]]);
+        Publisher::whereNull('is_https')->chunk(500, function ($publishers) use ($guzzle) {
+            \Log::channel('slack')->info('LOADED 500 DATA');
+            foreach ($publishers as $publisher) {
+                $url = '';
 
-        $publishers = Publisher::whereNull('is_https')->get();
+                try {
+                    \Log::channel('slack')->info('START URL: ' . $publisher->url);
+                    $guzzle->request('GET', trim_special_characters($publisher->url), [
+                        'on_stats' => function (TransferStats $stats) use (&$url) {
+                            $url = $stats->getHandlerStats()['url'];
+                        }
+                    ]);
 
-        foreach ($publishers as $publisher) {
-            $url = '';
+                    \Log::channel('slack')->info('END URL: ' . $url);
 
-            try {
-                $guzzle->request('GET', trim_special_characters($publisher->url), [
-                    'on_stats' => function (TransferStats $stats) use (&$url) {
-                        $url = $stats->getHandlerStats()['url'];
+                    if ($url != '') {
+                        $publisher->update([
+                            'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
+                        ]);
                     }
-                ]);
-
-                $publisher->update([
-                    'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
-                ]);
-            } catch (\Exception $exception) {
-                \Log::error($exception);
+                } catch (\Exception $exception) {
+                    \Log::channel('slack')->info($exception->getMessage());
+                    \Log::error($exception);
+                }
             }
-        }
+        });
+
+        \Log::channel('slack')->info('----------END-----------');
     }
 }
