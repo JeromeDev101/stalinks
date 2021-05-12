@@ -8,7 +8,8 @@
                     <button
                         class="btn btn-success ml-auto"
                         data-toggle="modal"
-                        data-target="#modal-add"
+                        data-backdrop="static"
+                        data-target="#modal-add-signature"
 
                         @click="">
 
@@ -86,11 +87,64 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Add Signature -->
+        <div class="modal fade" id="modal-add-signature" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Email Signature</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                        </div>
+                    </div>
+
+                    <div class="modal-body relative">
+                        <form class="row" action="">
+                            <div class="col-md-12">
+                                <div :class="{'has-error': messageForms.errors.name}" class="form-group">
+                                    <label style="color: #333">Signature Name</label>
+                                    <input
+                                        v-model="signatureModel.name"
+                                        required
+                                        type="text"
+                                        class="form-control">
+
+                                    <span
+                                        v-if="messageForms.errors.name"
+                                        v-for="err in messageForms.errors.name"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label style="color: #333">Signature Content</label>
+                                <tinymce
+                                    v-model="signatureModel.content"
+                                    id="articleContent"
+                                    :other_options="options">
+
+                                </tinymce>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" @click="" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import 'tinymce/skins/lightgray/skin.min.css';
 
 export default {
     data() {
@@ -104,6 +158,19 @@ export default {
                 user: this.$route.query.user || '',
                 page: this.$route.query.page || 0,
                 paginate: this.$route.query.paginate || 10,
+            },
+
+            signatureModel : {
+                name: '',
+                content: ''
+            },
+
+            isPopupLoading: false,
+
+            options: {
+                height: 450,
+                branding: false,
+                allow_script_urls: false,
             },
         }
     },
