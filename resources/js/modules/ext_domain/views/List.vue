@@ -2687,9 +2687,9 @@ export default {
                     let obj = this.listExt.data.findIndex(o => o.id === id);
                     this.listExt.data[obj].status = 50;
                 } else {
-                    for (var index in this.checkIds) {
-                        var id = this.checkIds[index].id
-                        var obj = this.listExt.data.findIndex(o => o.id === id);
+                    for (let index in this.checkIds) {
+                        let id2 = this.checkIds[index].id
+                        let obj = this.listExt.data.findIndex(o => o.id === id2);
                         this.listExt.data[obj].status = this.updateStatus.status;
                     }
                 }
