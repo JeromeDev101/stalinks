@@ -8,6 +8,7 @@ use App\Models\ExtDomain;
 use App\Models\Publisher;
 use App\Models\Registration;
 use App\Libs\Ahref;
+use App\Services\HttpClient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -20,9 +21,13 @@ use App\Models\Language;
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
 
-    public function __construct(Publisher $model)
+    protected $httpClient;
+
+    public function __construct(Publisher $model, HttpClient $httpClient)
     {
         parent::__construct($model);
+
+        $this->httpClient = $httpClient;
     }
 
     public function getList($filter)
@@ -367,6 +372,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                     'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
                                     'topic' => $topic,
+                                    'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
                                 ]);
                             }
                         } else {
@@ -436,6 +442,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                             'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                             'topic' => $topic,
                                             'kw_anchor' => $kw_anchor,
+                                            'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
                                         ]);
                                     }
                                 } else {

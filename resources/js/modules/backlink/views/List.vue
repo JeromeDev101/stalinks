@@ -149,6 +149,9 @@
                                         :nameFile = "file_csv">
                                     </download-csv>
                                 </div>
+
+
+                                <button data-toggle="modal" data-target="#modal-setting-followup-backlinks" class="btn btn-default float-right mr-3"><i class="fa fa-cog"></i></button>
                             </td>
                         </tr>
                     </table>
@@ -165,32 +168,35 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-if="user.isOurs == 0">ID Bck</th>
-                                <th v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
-                                <th>User Buyer</th>
-                                <th>URL Publisher</th>
-                                <th v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
-                                <th>Link From</th>
+                                <th v-show="tblFollowupBacklinksOpt.id_backlink" v-if="user.isOurs == 0">ID Bck</th>
+                                <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
+                                <th v-show="tblFollowupBacklinksOpt.buyer">User Buyer</th>
+                                <th v-show="tblFollowupBacklinksOpt.url_publisher">URL Publisher</th>
+                                <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">URL Advertiser</th>
+                                <th v-show="tblFollowupBacklinksOpt.link_from" >Link From</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
-                                <th v-if="user.isAdmin">Price</th>
-                                <th>Prices</th>
+                                <th v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">Price</th>
+                                <th v-show="tblFollowupBacklinksOpt.prices">Prices</th>
+                                <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin">Code Comb</th>
+                                <th v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">Code Price</th>
+                                <th v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">Price Basis</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
-                                <th>Date for Proccess</th>
-                                <th>Date Completed</th>
-                                <th>Status</th>
+                                <th v-show="tblFollowupBacklinksOpt.date_for_process">Date for Proccess</th>
+                                <th v-show="tblFollowupBacklinksOpt.date_completed">Date Completed</th>
+                                <th v-show="tblFollowupBacklinksOpt.status">Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td v-if="user.isOurs == 0">{{ backLink.id }}</td>
-                                <td v-if="(user.isOurs ==
+                                <td v-show="tblFollowupBacklinksOpt.id_backlink" v-if="user.isOurs == 0">{{ backLink.id }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
                                  0 && !user.isAdmin) ||
                                  user.isAdmin">{{
                                                backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
-                                <td>{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
-                                <td>
+                                <td v-show="tblFollowupBacklinksOpt.buyer">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
+                                <td v-show="tblFollowupBacklinksOpt.url_publisher">
 <!--                                    {{ backLink.publisher == null ? 'N/A' : replaceCharacters(backLink.publisher.url) }}-->
                                     <span v-if="backLink.publisher == null">
                                         N/A
@@ -201,7 +207,7 @@
                                         </a>
                                     </span>
                                 </td>
-                                <td v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">
+                                <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">
 <!--                                    {{ backLink.url_advertiser }}-->
                                     <span v-if="backLink.url_advertiser == null">
                                         N/A
@@ -212,7 +218,7 @@
                                         </a>
                                     </span>
                                 </td>
-                                <td>
+                                <td v-show="tblFollowupBacklinksOpt.link_from">
                                     <div class="dont-break-out">
                                         {{ backLink.link_from }}
                                     </div>
@@ -222,12 +228,15 @@
                                         <a href="backLink.link">{{ backLink.link }}</a>
                                     </div>
                                 </td>
-                                <td v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>
-                                <td>{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + formatPrice(backLink.prices) }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.prices">{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + formatPrice(backLink.prices) }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':backLink.publisher.code_comb }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':'$ '+backLink.publisher.code_price }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':backLink.publisher.price_basis }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
-                                <td>{{ backLink.date_process }}</td>
-                                <td>{{ backLink.live_date }}</td>
-                                <td>{{ backLink.status }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.date_for_process">{{ backLink.date_process }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.date_completed">{{ backLink.live_date }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.status">{{ backLink.status }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
@@ -242,6 +251,70 @@
                 </div>
 
                 <!-- <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination> -->
+            </div>
+        </div>
+
+
+        <!-- Modal settings default Followup Backlink -->
+        <div class="modal fade" id="modal-setting-followup-backlinks" style="display: none;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
+                    </div>
+                    <div class="modal-body relative">
+                        <div class="form-group row">
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.id_backlink ? 'checked':''" v-model="tblFollowupBacklinksOpt.id_backlink">ID backlinks</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.seller ? 'checked':''" v-model="tblFollowupBacklinksOpt.seller">Seller</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.buyer ? 'checked':''" v-model="tblFollowupBacklinksOpt.buyer">Buyer</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_publisher ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_publisher">URL Publisher</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_advertiser ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_advertiser">URL Advertiser</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_from ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_from">Link From</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price ? 'checked':''" v-model="tblFollowupBacklinksOpt.price">Price</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.prices ? 'checked':''" v-model="tblFollowupBacklinksOpt.prices">Prices</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_comb ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_comb">Code combination</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_price ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_price">Code Price</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price_basis ? 'checked':''" v-model="tblFollowupBacklinksOpt.price_basis">Price Basis</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_for_process ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_for_process">Date for Process</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_completed ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_completed">Date Completed</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.status ? 'checked':''" v-model="tblFollowupBacklinksOpt.status">Status</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -490,6 +563,7 @@
 
             ...mapState({
                 listBackLink: state => state.storeBackLink.listBackLink,
+                tblFollowupBacklinksOpt: state => state.storeBackLink.tblFollowupBacklinksOpt,
                 fillter: state => state.storeBackLink.fillter,
                 user: state => state.storeAuth.currentUser,
                 messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
@@ -621,6 +695,9 @@
                     { orderable: true, targets: 9 },
                     { orderable: true, targets: 10 },
                     { orderable: true, targets: 11 },
+                    { orderable: true, targets: 12 },
+                    { orderable: true, targets: 13 },
+                    { orderable: true, targets: 14 },
                     { orderable: false, targets: '_all' }
                 ];
 
