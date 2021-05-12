@@ -23,7 +23,4 @@ jobs:
             cd /var/www/html/stalinks.com
             git pull origin master
             npm run dev
-            chmod -R 775 storage
-            cd storage
-            chmod -R 775 logs
             cd ../
