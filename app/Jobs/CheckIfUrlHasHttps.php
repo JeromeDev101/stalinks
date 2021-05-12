@@ -32,25 +32,35 @@ class CheckIfUrlHasHttps implements ShouldQueue
      */
     public function handle()
     {
+        \Log::channel('slack')->info('----------START-----------');
         $guzzle = new Client(['defaults' => [ 'exceptions' => false, 'timeout' => 10 ]]);
         Publisher::whereNull('is_https')->chunk(500, function ($publishers) use ($guzzle) {
+            \Log::channel('slack')->info('LOADED 500 DATA');
             foreach ($publishers as $publisher) {
                 $url = '';
 
                 try {
+                    \Log::channel('slack')->info('START URL: ' . $publisher->url);
                     $guzzle->request('GET', trim_special_characters($publisher->url), [
                         'on_stats' => function (TransferStats $stats) use (&$url) {
                             $url = $stats->getHandlerStats()['url'];
                         }
                     ]);
 
-                    $publisher->update([
-                        'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
-                    ]);
+                    \Log::channel('slack')->info('END URL: ' . $url);
+
+                    if ($url != '') {
+                        $publisher->update([
+                            'is_https' => explode(':', $url)[0] == 'http' ? 'no' : 'yes',
+                        ]);
+                    }
                 } catch (\Exception $exception) {
+                    \Log::channel('slack')->info($exception->getMessage());
                     \Log::error($exception);
                 }
             }
         });
+
+        \Log::channel('slack')->info('----------END-----------');
     }
 }
