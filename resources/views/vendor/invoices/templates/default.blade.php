@@ -143,13 +143,16 @@
                         <p>
                             Unit 912, 9/F, Two Harbourfront <br>
                             22 Tak Fung Street, Hunghom <br>
-                            Kowloon, Hong Kong
+                            Kowloon, Hong Kongw
                         </p>
                     </td>
                     <td class="border-0 pl-0">
-                        <img src="{{ public_path()  . '/images/stalinks.png'}}" alt="">
-                        <p>{{ __('invoices::invoice.serial') }} <strong>{{ $invoice->getSerialNumber() }}</strong></p>
-                        <p>Date: <strong>{{ $invoice->getDate() }}</strong></p>
+                        <img src="{{ public_path('images\stalinks.png') }}" alt="">
+                        <h4 class="text-uppercase" style="color: #1a8296">
+                            <strong>RECEIPT</strong>
+                        </h4>
+{{--                        <p>{{ __('invoices::invoice.serial') }} <strong>{{ $invoice->getSerialNumber() }}</strong></p>--}}
+{{--                        <p>Date: <strong>{{ $invoice->getDate() }}</strong></p>--}}
                     </td>
                 </tr>
             </tbody>
@@ -159,7 +162,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="border-0 pl-0" width="48.5%">
+                    <th class="border-0 pl-0" width="58.5%">
                         <h2>{{ __('invoices::invoice.seller') }}</h2>
                     </th>
                     <th class="border-0" width="3%"></th>
@@ -171,41 +174,44 @@
             <tbody>
                 <tr>
                     <td class="px-0">
-                        @if($invoice->seller->name)
-                            <p class="seller-name">
-                                <strong>{{ $invoice->seller->name }}</strong>
-                            </p>
+                        @if($invoice->buyer->custom_fields->company)
+                            <h2>Company: </h2>
                         @endif
+{{--                        @if($invoice->seller->name)--}}
+{{--                            <p class="seller-name">--}}
+{{--                                <strong>{{ $invoice->seller->name }}</strong>--}}
+{{--                            </p>--}}
+{{--                        @endif--}}
 
-                        @if($invoice->seller->address)
-                            <p class="seller-address">
-                                {{ __('invoices::invoice.address') }}: {{ $invoice->seller->address }}
-                            </p>
-                        @endif
+{{--                        @if($invoice->seller->address)--}}
+{{--                            <p class="seller-address">--}}
+{{--                                {{ __('invoices::invoice.address') }}: {{ $invoice->seller->address }}--}}
+{{--                            </p>--}}
+{{--                        @endif--}}
 
-                        @if($invoice->seller->code)
-                            <p class="seller-code">
-                                {{ __('invoices::invoice.code') }}: {{ $invoice->seller->code }}
-                            </p>
-                        @endif
+{{--                        @if($invoice->seller->code)--}}
+{{--                            <p class="seller-code">--}}
+{{--                                {{ __('invoices::invoice.code') }}: {{ $invoice->seller->code }}--}}
+{{--                            </p>--}}
+{{--                        @endif--}}
 
-                        @if($invoice->seller->vat)
-                            <p class="seller-vat">
-                                {{ __('invoices::invoice.vat') }}: {{ $invoice->seller->vat }}
-                            </p>
-                        @endif
+{{--                        @if($invoice->seller->vat)--}}
+{{--                            <p class="seller-vat">--}}
+{{--                                {{ __('invoices::invoice.vat') }}: {{ $invoice->seller->vat }}--}}
+{{--                            </p>--}}
+{{--                        @endif--}}
 
-                        @if($invoice->seller->phone)
-                            <p class="seller-phone">
-                                {{ __('invoices::invoice.phone') }}: {{ $invoice->seller->phone }}
-                            </p>
-                        @endif
+{{--                        @if($invoice->seller->phone)--}}
+{{--                            <p class="seller-phone">--}}
+{{--                                {{ __('invoices::invoice.phone') }}: {{ $invoice->seller->phone }}--}}
+{{--                            </p>--}}
+{{--                        @endif--}}
 
-                        @foreach($invoice->seller->custom_fields as $key => $value)
-                            <p class="seller-custom-field">
-                                {{ ucfirst($key) }}: {{ $value }}
-                            </p>
-                        @endforeach
+{{--                        @foreach($invoice->seller->custom_fields as $key => $value)--}}
+{{--                            <p class="seller-custom-field">--}}
+{{--                                {{ ucfirst($key) }}: {{ $value }}--}}
+{{--                            </p>--}}
+{{--                        @endforeach--}}
                     </td>
                     <td class="border-0"></td>
                     <td class="px-0">

@@ -24,7 +24,8 @@ class InvoiceService
             'name'          => $payload->purchase_units[0]->shipping->name->full_name,
             'address'       => $payload->purchase_units[0]->shipping->address->address_line_1,
             'custom_fields' => [
-                'postal code' => $payload->purchase_units[0]->shipping->address->postal_code
+                'postal code' => $payload->purchase_units[0]->shipping->address->postal_code,
+                'company' => auth()->user()->registration->company_name
             ]
         ]);
 
