@@ -1611,8 +1611,7 @@
                         // actionName : 'usernameData',
                         sortable: true,
                         width: 100,
-                        isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0 || !this.tblPublisherOpt.seller
+                        isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
                         prop : 'valid',
