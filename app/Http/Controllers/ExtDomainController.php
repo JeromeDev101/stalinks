@@ -321,11 +321,11 @@ class ExtDomainController extends Controller
 
         Validator::make($input, $validateRule)->validate();
 
-        if ($input['email'] != '' || $input['email'] > 0) {
-            $input['status'] = config('constant.EXT_STATUS_GOT_EMAIL');
-        } else if ($hasContactInfo && empty($request->status)) {
-            $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
-        }
+//        if ($input['email'] != '' || $input['email'] > 0) {
+//            $input['status'] = config('constant.EXT_STATUS_GOT_EMAIL');
+//        } else if ($hasContactInfo && empty($request->status)) {
+//            $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
+//        }
 
         if ($this->isInputAfrefInfo($input)) {
             if ($hasContactInfo) {
