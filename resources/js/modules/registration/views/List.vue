@@ -260,11 +260,11 @@
                                 <th>#</th>
                                 <th></th>
                                 <th>Action</th>
+                                <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
                                 <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
                                 <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
-                                <th v-show="tblAccountsOpt.user_id">User ID</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
                                 <th v-show="tblAccountsOpt.country">Country</th>
@@ -321,6 +321,7 @@
                                         </button>
                                     </div>
                                 </td>
+                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
                                 <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
@@ -340,7 +341,6 @@
                                         Inactive
                                     </span>
                                 </td>
-                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
                                 <td v-show="tblAccountsOpt.country">{{ account.country === null ? 'N/A' : account.country.name }}</td>
