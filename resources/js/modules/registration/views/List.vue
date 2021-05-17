@@ -174,6 +174,20 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Verified</label>
+                                <select class="form-control"
+                                        v-model="filterModel.account_verification">
+                                    <option value="">All</option>
+                                    <option value="Yes">Yes
+                                    </option>
+                                    <option value="No">No
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -1156,7 +1170,9 @@
                     created_at: {
                         startDate: null,
                         endDate: null
-                    }
+                    },
+                    account_verification:
+                    this.$route.query.account_verification || ''
                 },
 
                 accountUpdate: {
@@ -1617,6 +1633,8 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification,
                         page: page
                     }
                 });
@@ -1669,7 +1687,8 @@
                     created_at: {
                         startDate: null,
                         endDate: null
-                    }
+                    },
+                    account_verification: ''
                 }
 
                 this.getAccountList({
@@ -1700,6 +1719,8 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification
                     }
                 });
             },

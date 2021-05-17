@@ -172,6 +172,15 @@ class AccountController extends Controller
                 });
             });
         })
+        ->when($request->account_verification, function ($query) use ($request) {
+            if ($request->account_verification == 'Yes') {
+                $query->whereNull('verification_code');
+            } else {
+                $query->whereNotNull('verification_code');
+            }
+
+            return $query;
+        })
         ->with('team_in_charge:id,name,username,status')
         ->with('user:id,email')
         ->with('country:id,name')
