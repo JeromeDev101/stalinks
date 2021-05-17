@@ -475,7 +475,18 @@ class AccountController extends Controller
             $role_id = 4;
         }
 
-        $team = User::select('id','name', 'username')->where('isOurs',0)->where('role_id', $role_id)->orderBy('username', 'asc')->get();
+        $team = User::select('id','name', 'username')
+                    ->where('isOurs',0)
+                    // ->where('role_id', $role_id)
+                    ->where(function($query) use ($role_id, $request) {
+                        if($request->role == 'Buyer') {
+                            $query->whereIn('role_id', [5, 8]);
+                        } else{
+                            $query->where('role_id', $role_id);
+                        }
+                    })
+                    ->orderBy('username', 'asc')
+                    ->get();
         return response()->json($team, 200);
     }
 
