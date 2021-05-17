@@ -44,7 +44,11 @@
 
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" v-model="filterModel.name"  class="form-control pull-right" placeholder="Search Name">
+                                        <input
+                                            v-model="filterModel.name"
+                                            type="text"
+                                            placeholder="Search Name"
+                                            class="form-control pull-right">
                                     </div>
                                 </td>
 
@@ -83,7 +87,12 @@
                             </tr>
                         </tbody>
                     </table>
-                    <pagination :data="listEmailSignature" @pagination-change-page="getSignatureList" :limit="8"></pagination>
+                    <pagination
+                        :limit="8"
+                        :data="listEmailSignature"
+                        @pagination-change-page="getSignatureList">
+
+                    </pagination>
                 </div>
             </div>
         </div>
@@ -170,7 +179,35 @@ export default {
             options: {
                 height: 450,
                 branding: false,
+                image_title: true,
+                automatic_uploads: true,
                 allow_script_urls: false,
+                file_picker_types: 'image',
+                images_upload_handler: function (blobInfo, success, failure) {
+                    let xhr, formData;
+                    xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', '/api/mail/post-signature-image');
+                    let token = '{{ csrf_token() }}';
+                    xhr.setRequestHeader("X-CSRF-Token", token);
+                    xhr.onload = function() {
+                        let json;
+                        if (xhr.status !== 200) {
+                            failure('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+                        json = JSON.parse(xhr.responseText);
+
+                        if (!json || typeof json.location != 'string') {
+                            failure('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        success(json.location);
+                    };
+                    formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                    xhr.send(formData);
+                }
             },
         }
     },

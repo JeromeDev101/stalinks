@@ -29,4 +29,12 @@ class MailSignatureController extends Controller
 
         return $list->paginate($request->paginate);
     }
+
+    public function storeSignatureImage(Request $request)
+    {
+        dd($request->all());
+
+        $img_path = request()->file('file')->store('uploads', 'public');
+        return response()->json(['location' => "/storage/$img_path"]);
+    }
 }
