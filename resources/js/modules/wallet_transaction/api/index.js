@@ -14,6 +14,12 @@ export default class WalletTransactionService {
             .catch(error => error)
     }
 
+    static listBuyerWithTransactions(params){
+        return axios.get('api/wallet-user-buyer-transactions', params)
+            .then(response => response)
+            .catch(error => error)
+    }
+
     static getPaymentType(params){
         return axios.get('api/payment-list', params)
             .then(response => response)

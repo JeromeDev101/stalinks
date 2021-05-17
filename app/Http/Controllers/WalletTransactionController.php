@@ -80,14 +80,25 @@ class WalletTransactionController extends Controller
                     ->where('role_id', 5)
                     ->orderBy('users.username', 'asc');
 
-
         return [
             'data' => $list->get()
         ];
     }
 
+    public function getListBuyerWithWalletTransaction()
+    {
+        $list = WalletTransaction::select('users.id', 'users.name', 'users.email')
+        ->join('users', 'wallet_transactions.user_id', 'users.id')
+        ->groupBy('wallet_transactions.user_id', 'users.id', 'users.name', 'users.email')
+        ->get();
+
+        return response()->json([
+            'data' => $list
+        ]);
+    }
+
     public function getListSellerTeam() {
-        $list = User::select('id', 'username', 'status')->where('role_id', 6)->where('isOurs', 0)->orderBy('username', 'asc');
+        $list = User::select('id', 'username', 'status')->whereIn('role_id', [6, 1])->where('isOurs', 0)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];
