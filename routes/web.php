@@ -51,6 +51,4 @@ Route::get('/aw', function(){
 
 Route::get('/{any}', 'HomeController@index')->where('any', '.*');
 
-Route::name('post-signature-image')->post('/post-signature-image','MailSignatureController@storeSignatureImage');
-
 
