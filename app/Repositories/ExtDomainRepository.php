@@ -509,14 +509,16 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
     public function crawlContact($listIds, $pushToQueue)
     {
-        $extDomains = $this->model->whereIn('id', $listIds)
-           ->where(function($query) {
-                $query->where('email', '')->orWhereNull('email');
-           })->where(function($query) {
-               $query->where('phone', '')->orWhereNull('phone');
-           })->where(function($query) {
-               $query->where('facebook', '')->orWhereNull('facebook');
-           })->get();
+//        $extDomains = $this->model->whereIn('id', $listIds)
+//           ->where(function($query) {
+//                $query->where('email', '')->orWhereNull('email');
+//           })->where(function($query) {
+//               $query->where('phone', '')->orWhereNull('phone');
+//           })->where(function($query) {
+//               $query->where('facebook', '')->orWhereNull('facebook');
+//           })->get();
+
+        $extDomains = $this->model->whereIn('id', $listIds)->get();
 
         if ($extDomains->count() == 0) {
             if ($pushToQueue  === true) {
