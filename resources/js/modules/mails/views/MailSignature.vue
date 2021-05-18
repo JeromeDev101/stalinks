@@ -183,31 +183,32 @@ export default {
                 automatic_uploads: true,
                 allow_script_urls: false,
                 file_picker_types: 'image',
-                images_upload_handler: function (blobInfo, success, failure) {
-                    let xhr, formData;
-                    xhr = new XMLHttpRequest();
-                    xhr.withCredentials = false;
-                    xhr.open('POST', '/api/mail/post-signature-image');
-                    let token = '{{ csrf_token() }}';
-                    xhr.setRequestHeader("X-CSRF-Token", token);
-                    xhr.onload = function() {
-                        let json;
-                        if (xhr.status !== 200) {
-                            failure('HTTP Error: ' + xhr.status);
-                            return;
-                        }
-                        json = JSON.parse(xhr.responseText);
+                images_upload_url: "/post-signature-image",
+                file_picker_callback: function (cb, value, meta) {
+                    let input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
 
-                        if (!json || typeof json.location != 'string') {
-                            failure('Invalid JSON: ' + xhr.responseText);
-                            return;
-                        }
-                        success(json.location);
+                    input.onchange = function () {
+                        let file = this.files[0];
+
+                        let reader = new FileReader();
+                        reader.onload = function () {
+
+                            let id = 'blobid' + (new Date()).getTime();
+                            let blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+                            let base64 = reader.result.split(',')[1];
+                            let blobInfo = blobCache.create(id, file, base64);
+                            blobCache.add(blobInfo);
+
+                            /* call the callback and populate the Title field with the file name */
+                            cb(blobInfo.blobUri(), { title: file.name });
+                        };
+                        reader.readAsDataURL(file);
                     };
-                    formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
-                    xhr.send(formData);
-                }
+
+                    input.click();
+                },
             },
         }
     },
