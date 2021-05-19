@@ -74,7 +74,7 @@
 
         .table thead th {
             vertical-align: bottom;
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 10px solid #1a8296;
         }
 
         .table tbody + tbody {
@@ -163,25 +163,25 @@
             <thead>
                 <tr>
                     <th class="border-0 pl-0" width="58.5%">
-                        <h2>{{ __('invoices::invoice.seller') }}</h2>
+{{--                        <h2>{{ __('invoices::invoice.seller') }}</h2>--}}
                     </th>
                     <th class="border-0" width="3%"></th>
                     <th class="border-0 pl-0">
-                        <h2>{{ __('invoices::invoice.buyer') }}</h2>
+{{--                        <h2>{{ __('invoices::invoice.buyer') }}</h2>--}}
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="px-0">
-                        @if($invoice->buyer->custom_fields->company)
+                        @if($invoice->buyer->custom_fields['company'])
                             <h2>Company: </h2>
                         @endif
-{{--                        @if($invoice->seller->name)--}}
-{{--                            <p class="seller-name">--}}
-{{--                                <strong>{{ $invoice->seller->name }}</strong>--}}
-{{--                            </p>--}}
-{{--                        @endif--}}
+                        @if($invoice->seller->name)
+                            <p class="seller-name">
+                                <strong>{{ $invoice->seller->name }}</strong>
+                            </p>
+                        @endif
 
 {{--                        @if($invoice->seller->address)--}}
 {{--                            <p class="seller-address">--}}
