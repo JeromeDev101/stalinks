@@ -917,12 +917,20 @@
                      <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}" class="form-group">
                            <label style="color: #333">Seller</label>
-                           <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">
-                              <option value="">Select Seller</option>
-                              <option v-for="option in listSeller.data" v-bind:value="option.id">
-                                 {{ option.username == null ? option.name:option.username }}
-                              </option>
-                           </select>
+<!--                           <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">-->
+<!--                              <option value="">Select Seller</option>-->
+<!--                              <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+<!--                                 {{ option.username == null ? option.name:option.username }}-->
+<!--                              </option>-->
+<!--                           </select>-->
+
+                            <v-select
+                                v-model="publisherAdd.seller"
+                                label="username"
+                                :searchable="true"
+                                :options="getSellerTeamInCharge(listSeller.data)"
+                                :reduce="seller => seller.id"/>
+
                            <span v-if="messageForms.errors['pub.seller']" v-for="err in messageForms.errors['pub.seller']" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
@@ -2895,6 +2903,12 @@ export default {
         //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
         //     this.isPopupLoading = false;
         // }
+
+        getSellerTeamInCharge(list) {
+            return this.extUpdate.user_id === null
+                ? list
+                : list.filter(el => el.team_in_charge === this.extUpdate.user_id);
+        },
 
         checkEmailValidationError(error){
             let obj = error;

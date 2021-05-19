@@ -29,6 +29,7 @@ import ForgotPassword from '@/modules/registration/views/ForgotPassword.vue'
 import RegistrationPage from '@/modules/registration/views/Registration.vue'
 import Verification from '@/modules/registration/views/Verification.vue'
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue'
+import WalletSummary from '@/modules/wallet_transaction/views/wallet_summary.vue'
 import ArticleList from '@/modules/article/views/List.vue'
 import Article from '@/modules/article/views/Article.vue'
 import Mails from '@/modules/mails/views/Mail.vue'
@@ -236,6 +237,11 @@ const routes = [
         path: '/wallet-transaction',
         name: 'wallet-transaction',
         component: WalletTransaction
+      },
+      {
+        path: '/wallet-summary',
+        name: 'wallet-summary',
+        component: WalletSummary
       },
       {
         path: '/buyer-billing',
