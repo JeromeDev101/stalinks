@@ -7,7 +7,6 @@ mix.webpackConfig({
         '@': path.resolve('resources/js'),
         'scss@': path.resolve('resources/sass'),
         'public' : path.resolve('public'),
-        'vue$': mix.inProduction() ? 'vue/dist/vue.min.js' : 'vue/dist/vue.js',
       },
     },
   })
