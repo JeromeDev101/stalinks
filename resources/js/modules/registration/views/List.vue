@@ -208,10 +208,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group input-group-sm float-left">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text" id="btnGroupAddon">Select Action</div>
-                                </div>
                                 <div class="btn-group">
+                                    <button
+                                        class="btn btn-default"
+                                        @click="selectAll">
+
+                                        {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                    </button>
+
                                     <button
                                         type="submit"
                                         title="Send Email"
@@ -1242,7 +1246,8 @@
                 updateDisplayWriterPrice: false,
 
                 checkIds: [],
-                isDisabledAction: true
+                isDisabledAction: true,
+                allSelected: false,
             }
         },
 
@@ -1273,6 +1278,17 @@
         },
 
         methods: {
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (let account in this.listAccount.data) {
+                        this.checkIds.push(this.listAccount.data[account]);
+                    }
+                }
+                this.allSelected = !this.allSelected;
+                this.checkSelected()
+            },
+
             checkSelected() {
                 this.isDisabledAction = this.checkIds.length <= 0;
             },
@@ -1410,7 +1426,7 @@
 
                     this.checkIds = [];
                     this.checkSelected();
-
+                    this.allSelected = false;
 
                     this.$refs.file_send_registration.value = "";
                 } else {
