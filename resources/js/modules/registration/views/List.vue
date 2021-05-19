@@ -1126,6 +1126,57 @@
         </div>
         <!-- End Modal Send Email -->
 
+        <!-- Modal Multiple Update In Charge -->
+        <div
+            role="dialog"
+            tabindex="-1"
+            class="modal fade"
+            ref="modalMultipleUpdateIncharge"
+            aria-hidden="true"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update In Charge</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <select
+                                        v-model="updateMultipleInCharge"
+                                        value=""
+                                        type="text"
+                                        required="required"
+                                        class="form-control">
+
+                                        <option value="">N/A</option>
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{
+                                                option.username == null || option.username === ''
+                                                    ? option.name
+                                                    :option.username
+                                            }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleInCharge()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Multiple Update In Charge -->
+
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
@@ -1259,6 +1310,7 @@
                 checkIds: [],
                 isDisabledAction: true,
                 allSelected: false,
+                updateMultipleInCharge: ''
             }
         },
 
@@ -1543,6 +1595,17 @@
                 })
             },
 
+            checkTeamInchargeMultiple(role) {
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
+                    this.listTeamIncharge = res.data
+                })
+            },
+
             multipleUpdateInCharge() {
 
                 let self = this;
@@ -1553,10 +1616,42 @@
 
                 if (same) {
 
+                    this.checkTeamInchargeMultiple(this.checkIds[0].type)
+
+                    let element = this.$refs.modalMultipleUpdateIncharge
+                    $(element).modal('show')
+
                 } else {
                     swal.fire('Invalid', 'Selected items must have the same account type', 'error');
                 }
 
+            },
+
+            submitUpdateMultipleInCharge() {
+                let ids = [];
+                for(let index in this.checkIds) {
+                    ids.push(this.checkIds[index].id)
+                }
+
+                axios.post('/api/update-multiple-in-charge',{
+                    ids: ids,
+                    emp_id: this.updateMultipleInCharge
+                }).then((res) => {
+                    if(res.data.success === true) {
+
+                        let element = this.$refs.modalMultipleUpdateIncharge
+                        $(element).modal('hide')
+
+                        swal.fire(
+                            'Success',
+                            'Updated Successfully',
+                            'success'
+                        )
+
+                        this.updateMultipleInCharge = '';
+                        this.doSearch()
+                    }
+                })
             },
 
             checkCompanyType() {

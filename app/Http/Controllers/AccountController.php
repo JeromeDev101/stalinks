@@ -681,4 +681,13 @@ class AccountController extends Controller
         return response()->json(['success' => true]);
 
     }
+
+    public function updateMultipleInCharge(Request $request)
+    {
+        Registration::whereIn('id', $request->ids)->update([
+            'team_in_charge' => $request->emp_id,
+        ]);
+
+        return response()->json(['success' => true],200);
+    }
 }
