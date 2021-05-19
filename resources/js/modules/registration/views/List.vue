@@ -1712,6 +1712,8 @@
                 });
 
                 this.$router.replace({'query': null});
+
+                this.resetSelectAll()
             },
 
             async doSearch(){
@@ -1739,6 +1741,8 @@
                         this.filterModel.account_verification
                     }
                 });
+
+                this.resetSelectAll()
             },
 
             clearAccountModel() {
@@ -1761,6 +1765,12 @@
                     address: '',
                     country_id: '',
                 };
+            },
+
+            resetSelectAll(){
+                this.checkIds = [];
+                this.allSelected = true;
+                this.selectAll();
             },
 
             columnAdjust(){
