@@ -170,11 +170,13 @@
                         active:
                             $route.name == 'seller-billing' ||
                             $route.name == 'wallet-transaction' ||
+                            $route.name == 'wallet-summary' ||
                             $route.name == 'writer-billing',
                         treeview: true,
                         'menu-open':
                             $route.name == 'wallet-transaction' ||
                             $route.name == 'seller-billing' ||
+                            $route.name == 'wallet-summary' ||
                             $route.name == 'writer-billing'
                     }"
                 >
@@ -217,6 +219,21 @@
                             <router-link :to="{ path: '/wallet-transaction' }">
                                 <i class="fa fa-money"></i>
                                 <span>Wallet Transaction</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+
+                        <li
+                            v-if="user.isAdmin ||
+                            isManager || isBuyer || isQc || isQcSeller ||
+                                     isQcBilling"
+                            :class="{
+                                active: $route.name == 'wallet-summary'
+                            }"
+                        >
+                            <router-link :to="{ path: '/wallet-summary' }">
+                                <i class="fa fa-reorder"></i>
+                                <span>Wallet Summary</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>

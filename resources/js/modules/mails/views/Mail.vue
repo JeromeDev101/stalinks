@@ -5,7 +5,7 @@
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
-                <div v-if="user.isAdmin">
+                <div v-if="user.isAdmin || user.role_id === 8">
                     <div class="form-group">
                         <label for="">Login As:</label>
                         <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">

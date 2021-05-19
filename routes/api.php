@@ -63,6 +63,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
     Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
 
+    //Wallet Summary
+    Route::name('get-wallet-summary')->get('wallet-summary', 'WalletSummaryController@getList');
+
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');
     Route::name('get-check-credit-auth')->get('check-credit-auth','BuyController@checkCreditAuth');
