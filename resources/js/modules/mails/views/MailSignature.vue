@@ -186,7 +186,9 @@ export default {
                 images_upload_handler: function (blobInfo, success, failure) {
                     let xhr, formData;
                     let token = document.head.querySelector('meta[name="csrf-token"]');
-                    let auth = localStorage.hasOwnProperty('vuex') ? 'Bearer ' + JSON.parse(localStorage.getItem("vuex")).storeAuth.token.access_token : '';
+                    let auth = localStorage.hasOwnProperty('vuex')
+                        ? 'Bearer ' + JSON.parse(localStorage.getItem("vuex")).storeAuth.token.access_token
+                        : '';
 
                     xhr = new XMLHttpRequest();
                     xhr.withCredentials = false;
