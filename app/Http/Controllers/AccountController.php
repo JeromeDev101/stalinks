@@ -485,6 +485,7 @@ class AccountController extends Controller
                             $query->where('role_id', $role_id);
                         }
                     })
+                    ->where('status', '!=', 'inactive')
                     ->orderBy('username', 'asc')
                     ->get();
         return response()->json($team, 200);
