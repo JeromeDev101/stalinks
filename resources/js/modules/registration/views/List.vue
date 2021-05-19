@@ -226,6 +226,17 @@
 
                                         <i class="fa fa-fw fa-envelope-o"></i>
                                     </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Update multiple in charges"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="multipleUpdateInCharge">
+
+                                        <i class="fa fa-fw fa-user"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1530,6 +1541,22 @@
                 .then((res)=> {
                     this.listTeamIncharge = res.data
                 })
+            },
+
+            multipleUpdateInCharge() {
+
+                let self = this;
+
+                // check if account types are all the same
+
+                let same = self.checkIds.every(id => id.type === self.checkIds[0].type)
+
+                if (same) {
+
+                } else {
+                    swal.fire('Invalid', 'Selected items must have the same account type', 'error');
+                }
+
             },
 
             checkCompanyType() {
