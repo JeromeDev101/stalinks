@@ -208,10 +208,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group input-group-sm float-left">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text" id="btnGroupAddon">Select Action</div>
-                                </div>
                                 <div class="btn-group">
+                                    <button
+                                        class="btn btn-default"
+                                        @click="selectAll">
+
+                                        {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                    </button>
+
                                     <button
                                         type="submit"
                                         title="Send Email"
@@ -221,6 +225,17 @@
                                         @click="doSendEmail(null)">
 
                                         <i class="fa fa-fw fa-envelope-o"></i>
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Update multiple in charges"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="multipleUpdateInCharge">
+
+                                        <i class="fa fa-fw fa-user"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1111,6 +1126,57 @@
         </div>
         <!-- End Modal Send Email -->
 
+        <!-- Modal Multiple Update In Charge -->
+        <div
+            role="dialog"
+            tabindex="-1"
+            class="modal fade"
+            ref="modalMultipleUpdateIncharge"
+            aria-hidden="true"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update In Charge</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <select
+                                        v-model="updateMultipleInCharge"
+                                        value=""
+                                        type="text"
+                                        required="required"
+                                        class="form-control">
+
+                                        <option value="">N/A</option>
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{
+                                                option.username == null || option.username === ''
+                                                    ? option.name
+                                                    :option.username
+                                            }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleInCharge()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Multiple Update In Charge -->
+
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
@@ -1242,7 +1308,9 @@
                 updateDisplayWriterPrice: false,
 
                 checkIds: [],
-                isDisabledAction: true
+                isDisabledAction: true,
+                allSelected: false,
+                updateMultipleInCharge: ''
             }
         },
 
@@ -1273,6 +1341,17 @@
         },
 
         methods: {
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (let account in this.listAccount.data) {
+                        this.checkIds.push(this.listAccount.data[account]);
+                    }
+                }
+                this.allSelected = !this.allSelected;
+                this.checkSelected()
+            },
+
             checkSelected() {
                 this.isDisabledAction = this.checkIds.length <= 0;
             },
@@ -1410,7 +1489,7 @@
 
                     this.checkIds = [];
                     this.checkSelected();
-
+                    this.allSelected = false;
 
                     this.$refs.file_send_registration.value = "";
                 } else {
@@ -1513,6 +1592,65 @@
                 })
                 .then((res)=> {
                     this.listTeamIncharge = res.data
+                })
+            },
+
+            checkTeamInchargeMultiple(role) {
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
+                    this.listTeamIncharge = res.data
+                })
+            },
+
+            multipleUpdateInCharge() {
+
+                let self = this;
+
+                // check if account types are all the same
+
+                let same = self.checkIds.every(id => id.type === self.checkIds[0].type)
+
+                if (same) {
+
+                    this.checkTeamInchargeMultiple(this.checkIds[0].type)
+
+                    let element = this.$refs.modalMultipleUpdateIncharge
+                    $(element).modal('show')
+
+                } else {
+                    swal.fire('Invalid', 'Selected items must have the same account type', 'error');
+                }
+
+            },
+
+            submitUpdateMultipleInCharge() {
+                let ids = [];
+                for(let index in this.checkIds) {
+                    ids.push(this.checkIds[index].id)
+                }
+
+                axios.post('/api/update-multiple-in-charge',{
+                    ids: ids,
+                    emp_id: this.updateMultipleInCharge
+                }).then((res) => {
+                    if(res.data.success === true) {
+
+                        let element = this.$refs.modalMultipleUpdateIncharge
+                        $(element).modal('hide')
+
+                        swal.fire(
+                            'Success',
+                            'Updated Successfully',
+                            'success'
+                        )
+
+                        this.updateMultipleInCharge = '';
+                        this.doSearch()
+                    }
                 })
             },
 
@@ -1696,6 +1834,8 @@
                 });
 
                 this.$router.replace({'query': null});
+
+                this.resetSelectAll()
             },
 
             async doSearch(){
@@ -1723,6 +1863,8 @@
                         this.filterModel.account_verification
                     }
                 });
+
+                this.resetSelectAll()
             },
 
             clearAccountModel() {
@@ -1745,6 +1887,12 @@
                     address: '',
                     country_id: '',
                 };
+            },
+
+            resetSelectAll(){
+                this.checkIds = [];
+                this.allSelected = true;
+                this.selectAll();
             },
 
             columnAdjust(){

@@ -485,6 +485,7 @@ class AccountController extends Controller
                             $query->where('role_id', $role_id);
                         }
                     })
+                    ->where('status', '!=', 'inactive')
                     ->orderBy('username', 'asc')
                     ->get();
         return response()->json($team, 200);
@@ -679,5 +680,14 @@ class AccountController extends Controller
 
         return response()->json(['success' => true]);
 
+    }
+
+    public function updateMultipleInCharge(Request $request)
+    {
+        Registration::whereIn('id', $request->ids)->update([
+            'team_in_charge' => $request->emp_id,
+        ]);
+
+        return response()->json(['success' => true],200);
     }
 }
