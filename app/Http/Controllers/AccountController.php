@@ -101,7 +101,7 @@ class AccountController extends Controller
         $language_id = $request->language_id;
         $commission = $request->commission;
         $credit_auth = $request->credit_auth;
-        $company_type = $request->company_type;
+        $company_type = $request->company_type == 1 ? 'Freelance' : 'Company';
         $company_name = $request->company_name;
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
@@ -147,7 +147,8 @@ class AccountController extends Controller
         })->when( $credit_auth, function($query) use ($credit_auth){
             return $query->where( 'credit_auth', $credit_auth );
         })->when( $company_type, function($query) use ($company_type){
-            return $query->where( 'is_freelance', $company_type );
+            $comp_type = $company_type == 'Freelance' ? 1 : 0;
+            return $query->where( 'is_freelance', $comp_type);
         })->when( $company_name, function($query) use ($company_name){
             return $query->where( 'company_name', 'like', '%' . $company_name . '%' );
         })->when( $company_url, function($query) use ($company_url){

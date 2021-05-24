@@ -76,7 +76,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         // $language = $file['language'];
         $csv_file = $file['file'];
         $country_name_list = Country::pluck('name')->toArray();
-        $status_list = ['New', 'CrawlFailed', 'ContactNull', 'GotContacts', 'Ahrefed', 'Contacted', 'NoAnswer', 'Refused', 'InTouched', 'Unqualified', 'Qualified'];
+        $status_list = ['New', 'CrawlFailed', 'ContactNull', 'GotContacts', 'GotEmail', 'Contacted', 'ContactedViaForm', 'NoAnswer', 'Refused', 'InTouched', 'Unqualified', 'Qualified'];
 
         $result = true;
         $message = '';
@@ -103,7 +103,14 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                 $email = trim_special_characters($line[3]);
 
                 $isExistDomain = $this->checkDomain($url);
-                $isExistEmail = $this->checkEmail($email);
+//                $isExistEmail = $this->checkEmail($email);
+
+                if ($email == 'null' || $email == '') {
+                    $email = null;
+                    $isExistEmail = false;
+                } else {
+                    $isExistEmail = $this->checkEmail($email);
+                }
 
                 if( trim($url, " ") != '' ){
 
@@ -194,13 +201,15 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             10 => 'CrawlFailed',
             20 => 'ContactNull',
             30 => 'GotContacts',
-            40 => 'Ahrefed',
+//            40 => 'Ahrefed',
             50 => 'Contacted',
             55 => 'NoAnswer',
             60 => 'Refused',
             70 => 'InTouched',
             90 => 'Unqualified',
-            100 => 'Qualified'
+            100 => 'Qualified',
+            110 => 'GotEmail',
+            120 => 'ContactedViaForm'
         ];
 
         if( array_search(strtolower($status), array_map('strtolower', $status_list)) ){
