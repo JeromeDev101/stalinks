@@ -6,10 +6,10 @@
                     <h3 class="box-title align-self-center">Mail Signature</h3>
 
                     <button
+                        title="Add email signature"
                         class="btn btn-success ml-auto"
-                        data-toggle="modal"
-                        data-backdrop="static"
-                        data-target="#modal-add-signature">
+
+                        @click="modalOpener('Add')">
 
                         <i class="fa fa-plus"></i>
                     </button>
@@ -91,12 +91,10 @@
                                 <td>
                                     <div class="btn-group">
                                         <button
-                                            data-toggle="modal"
-                                            data-target="#modal-update"
-                                            title="Edit"
+                                            title="Edit email signature"
                                             class="btn btn-default mr-2"
 
-                                            @click="">
+                                            @click="updateSignature(item); modalOpener('Update')">
 
                                             <i class="fa fa-fw fa-edit"></i>
                                         </button>
@@ -131,11 +129,11 @@
         </div>
 
         <!-- Modal Add Signature -->
-        <div class="modal fade" id="modal-add-signature" style="display: none;">
+        <div class="modal fade" id="modal-add-signature" ref="modalSignature" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Email Signature</h4>
+                        <h4 class="modal-title">{{ modalMode === 'Add' ? 'Add' : 'Update' }} Email Signature</h4>
 
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
@@ -155,7 +153,7 @@
                                 <div :class="{'has-error': messageForms.errors.name}" class="form-group">
                                     <label style="color: #333">Signature Name</label>
                                     <input
-                                        v-model="signatureModel.name"
+                                        v-model="modelName"
                                         required
                                         type="text"
                                         class="form-control">
@@ -183,7 +181,7 @@
                                 </span>
 
                                 <tinymce
-                                    v-model="signatureModel.content"
+                                    v-model="modelContent"
                                     id="articleContent"
                                     :other_options="options">
 
@@ -227,6 +225,12 @@ export default {
                 content: ''
             },
 
+            updateSignatureModel: {
+                name: '',
+                content: '',
+            },
+
+            modalMode: '',
             isPopupLoading: false,
             isLoadingTable: false,
 
@@ -288,6 +292,32 @@ export default {
             listEmailSignature: state => state.storeMailgun.listEmailSignature,
             messageForms: state => state.storeMailgun.messageForms,
         }),
+
+        modelName: {
+            get () {
+                return this.modalMode === 'Add' ? this.signatureModel.name : this.updateSignatureModel.name
+            },
+            set (val) {
+                if (this.modalMode === 'Add') {
+                    this.signatureModel.name = val
+                } else {
+                    this.updateSignatureModel.name = val
+                }
+            }
+        },
+
+        modelContent: {
+            get () {
+                return this.modalMode === 'Add' ? this.signatureModel.content : this.updateSignatureModel.content
+            },
+            set (val) {
+                if (this.modalMode === 'Add') {
+                    this.signatureModel.content = val
+                } else {
+                    this.updateSignatureModel.content = val
+                }
+            }
+        }
     },
 
     methods: {
@@ -322,6 +352,22 @@ export default {
             }
         },
 
+        updateSignature(data) {
+            this.updateSignatureModel.name = data.name;
+            this.updateSignatureModel.content = data.content;
+        },
+
+        modalOpener(mode){
+            if (this.modalMode !== mode) {
+                this.clearMessageForm()
+            }
+
+            this.modalMode = mode
+
+            let element = this.$refs.modalSignature
+            $(element).modal('show')
+        },
+
         clearFilter() {
             this.filterModel.name = '';
             this.filterModel.user = '';
@@ -336,6 +382,10 @@ export default {
                 name: '',
                 content: ''
             };
+        },
+
+        clearMessageForm() {
+            this.$store.dispatch('clearMessageform');
         },
     },
 }
