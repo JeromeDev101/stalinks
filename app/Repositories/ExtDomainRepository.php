@@ -224,8 +224,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         $domain = $this->remove_http($domain);
 
-        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$domain.'%');
-        $checkPublisher = Publisher::where('url', 'like', '%'.$domain.'%');
+//        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$domain.'%');
+//        $checkPublisher = Publisher::where('url', 'like', '%'.$domain.'%');
+
+        $checkExtDomain = ExtDomain::where('domain', $domain);
+        $checkPublisher = Publisher::where('url', $domain);
 
         if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
             $result = false;
