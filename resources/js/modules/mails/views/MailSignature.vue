@@ -346,9 +346,7 @@ export default {
             if (this.messageForms.action === 'saved_signature') {
                 this.clearModel();
 
-                await this.getSignatureList({
-                    params: this.filterModel
-                });
+                await this.getSignatureList()
             }
         },
 
