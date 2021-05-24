@@ -168,7 +168,8 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
         $before = Carbon::now();
         $successCount = 0;
         $totalCount = 0;
-        $guzzleClient = new GuzzleClient();
+//        $guzzleClient = new GuzzleClient();
+        $guzzleClient = new GuzzleClient(array('timeout' => 10, 'verify' => false));
 
         $promises = (function () use ($extDomains, $guzzleClient) {
             foreach ($extDomains as $extDomain) {

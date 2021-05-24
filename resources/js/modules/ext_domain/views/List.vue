@@ -2403,18 +2403,22 @@ export default {
 
             if (that.listAhrefs.length !== 0) {
 
-                this.checkIds.forEach(item => {
-                    if (that.listAhrefs.hasOwnProperty(item.id)) {
-                        let itemAherf = that.listAhrefs[item.id];
-                        item.ahrefs_rank = itemAherf.ahrefs_rank;
-                        item.no_backlinks = itemAherf.no_backlinks;
-                        item.url_rating = itemAherf.url_rating;
-                        item.domain_rating = itemAherf.domain_rating;
-                        item.organic_keywords = itemAherf.organic_keywords;
-                        item.organic_traffic = itemAherf.organic_traffic;
-                        item.ref_domains = itemAherf.ref_domains;
-                        item.status = itemAherf.status;
-                    }
+                // this.checkIds.forEach(item => {
+                //     if (that.listAhrefs.hasOwnProperty(item.id)) {
+                //         let itemAherf = that.listAhrefs[item.id];
+                //         item.ahrefs_rank = itemAherf.ahrefs_rank;
+                //         item.no_backlinks = itemAherf.no_backlinks;
+                //         item.url_rating = itemAherf.url_rating;
+                //         item.domain_rating = itemAherf.domain_rating;
+                //         item.organic_keywords = itemAherf.organic_keywords;
+                //         item.organic_traffic = itemAherf.organic_traffic;
+                //         item.ref_domains = itemAherf.ref_domains;
+                //         item.status = itemAherf.status;
+                //     }
+                // });
+
+                this.getExtList({
+                    params: this.filterModel
                 });
 
                 swal.fire(
@@ -2442,18 +2446,22 @@ export default {
             var that = this;
 
             if (that.listAhrefs.length !== 0) {
-                this.listExt.data.forEach(item => {
-                    if (that.listAhrefs.hasOwnProperty(item.id)) {
-                        let itemAherf = that.listAhrefs[item.id];
-                        item.ahrefs_rank = itemAherf.ahrefs_rank;
-                        item.no_backlinks = itemAherf.no_backlinks;
-                        item.url_rating = itemAherf.url_rating;
-                        item.domain_rating = itemAherf.domain_rating;
-                        item.organic_keywords = itemAherf.organic_keywords;
-                        item.organic_traffic = itemAherf.organic_traffic;
-                        item.ref_domains = itemAherf.ref_domains;
-                        item.status = itemAherf.status;
-                    }
+                // this.listExt.data.forEach(item => {
+                //     if (that.listAhrefs.hasOwnProperty(item.id)) {
+                //         let itemAherf = that.listAhrefs[item.id];
+                //         item.ahrefs_rank = itemAherf.ahrefs_rank;
+                //         item.no_backlinks = itemAherf.no_backlinks;
+                //         item.url_rating = itemAherf.url_rating;
+                //         item.domain_rating = itemAherf.domain_rating;
+                //         item.organic_keywords = itemAherf.organic_keywords;
+                //         item.organic_traffic = itemAherf.organic_traffic;
+                //         item.ref_domains = itemAherf.ref_domains;
+                //         item.status = itemAherf.status;
+                //     }
+                // });
+
+                this.getExtList({
+                    params: this.filterModel
                 });
 
                 swal.fire(
