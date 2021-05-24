@@ -83,6 +83,36 @@
                                     </div>
                                 </td>
                             </tr>
+
+                            <tr v-for="(item, index) in listEmailSignature.data" :key="index">
+                                <td class="center-content">{{ index + 1 }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.user !== null ? item.user.username : 'N/A' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button
+                                            data-toggle="modal"
+                                            data-target="#modal-update"
+                                            title="Edit"
+                                            class="btn btn-default mr-2"
+
+                                            @click="">
+
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </button>
+
+                                        <button
+                                            data-toggle="modal"
+                                            title="Delete"
+                                            class="btn btn-default"
+
+                                            @click="">
+
+                                            <i class="fa fa-fw fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <pagination
