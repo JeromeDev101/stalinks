@@ -249,8 +249,11 @@ class ExtDomainController extends Controller
 
         $url_remove_http = $this->remove_http($input['domain']);
 
-        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
-        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
+//        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
+//        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
+
+        $checkExtDomain = ExtDomain::where('domain', $url_remove_http);
+        $checkPublisher = Publisher::where('url', $url_remove_http);
 
         if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
             $inputted = '';
