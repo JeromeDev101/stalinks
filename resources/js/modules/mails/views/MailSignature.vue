@@ -115,12 +115,17 @@
                             </tr>
                         </tbody>
                     </table>
+
                     <pagination
                         :limit="8"
                         :data="listEmailSignature"
                         @pagination-change-page="getSignatureList">
 
                     </pagination>
+
+                    <div class="overlay" v-if="isLoadingTable">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,6 +228,7 @@ export default {
             },
 
             isPopupLoading: false,
+            isLoadingTable: false,
 
             options: {
                 height: 450,
