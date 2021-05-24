@@ -131,6 +131,16 @@
 
                             <div class="col-md-12">
                                 <label style="color: #333">Signature Content</label>
+
+                                <br>
+                                <span
+                                    v-if="messageForms.errors.content"
+                                    v-for="err in messageForms.errors.content"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <tinymce
                                     v-model="signatureModel.content"
                                     id="articleContent"
@@ -143,7 +153,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="" class="btn btn-primary">Save</button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -251,6 +261,28 @@ export default {
                 params: this.filterModel
             });
             this.isLoadingTable = false;
+        },
+
+        async submitAdd() {
+            let self = this;
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionAddEmailSignature', self.signatureModel);
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action === 'saved_signature') {
+                this.clearModel();
+
+                await this.getSignatureList({
+                    params: this.filterModel
+                });
+            }
+        },
+
+        clearModel() {
+            this.signatureModel = {
+                name: '',
+                content: ''
+            };
         },
     },
 }

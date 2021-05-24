@@ -230,6 +230,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
         Route::name('get-user-list')->get('/get-user-list','MailSignatureController@getUsers');
         Route::name('get-signature-list')->get('/get-signature-list','MailSignatureController@getSignatures');
+        Route::name('add-signature')->post('/add-signature','MailSignatureController@storeSignature');
         Route::name('post-signature-image')->post('/post-signature-image','MailSignatureController@storeSignatureImage');
     });
 

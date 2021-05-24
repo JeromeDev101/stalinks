@@ -18,4 +18,10 @@ export default class MailServices {
             .catch(error => error);
     }
 
+    static addEmailSignature(params) {
+        return axios.post('/api/mail/add-signature', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\MailSignature;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MailSignatureController extends Controller
 {
@@ -28,6 +30,20 @@ class MailSignatureController extends Controller
             ->orderBy('id', 'desc');
 
         return $list->paginate($request->paginate);
+    }
+
+    public function storeSignature(Request $request)
+    {
+        Validator::make($request->all(), [
+            'name' => 'required|unique:mail_signatures|max:255',
+            'content' => 'required',
+        ])->validate();
+
+        $request['user_id'] = Auth::id();
+
+        $sig = MailSignature::create($request->all());
+
+        return response()->json(['success' => true, 'data' => $sig]);
     }
 
     public function storeSignatureImage(Request $request)
