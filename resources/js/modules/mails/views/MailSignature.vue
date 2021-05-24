@@ -9,9 +9,7 @@
                         class="btn btn-success ml-auto"
                         data-toggle="modal"
                         data-backdrop="static"
-                        data-target="#modal-add-signature"
-
-                        @click="">
+                        data-target="#modal-add-signature">
 
                         <i class="fa fa-plus"></i>
                     </button>
@@ -69,7 +67,7 @@
                                             title="Search"
                                             class="btn btn-default"
 
-                                            @click="">
+                                            @click="getSignatureList">
 
                                             <i class="fa fa-fw fa-search"></i>
                                         </button>
@@ -78,7 +76,7 @@
                                             title="Clear"
                                             class="btn btn-default ml-2"
 
-                                            @click="">
+                                            @click="clearFilter">
 
                                             <i class="fa fa-fw fa-refresh"></i>
                                         </button>
@@ -286,6 +284,15 @@ export default {
                     params: this.filterModel
                 });
             }
+        },
+
+        clearFilter() {
+            this.filterModel.name = '';
+            this.filterModel.user = '';
+            this.filterModel.page = 0;
+            this.filterModel.paginate = 10;
+
+            this.getSignatureList()
         },
 
         clearModel() {
