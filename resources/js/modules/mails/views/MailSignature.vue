@@ -103,8 +103,16 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Email Signature</h4>
+
                         <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span
+                                v-if="messageForms.message !== '' && !isPopupLoading"
+                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+
+                                {{ messageForms.message }}
+                            </span>
                         </div>
                     </div>
 
@@ -149,6 +157,8 @@
                                 </tinymce>
                             </div>
                         </form>
+
+                        <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
 
                     <div class="modal-footer">
