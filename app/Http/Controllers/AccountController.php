@@ -101,7 +101,8 @@ class AccountController extends Controller
         $language_id = $request->language_id;
         $commission = $request->commission;
         $credit_auth = $request->credit_auth;
-        $company_type = $request->company_type == 1 ? 'Freelance' : 'Company';
+        $company_type = ($request->company_type == '' || $request->company_type == null)
+            ? null : ($request->company_type == 1 ? 'Freelance' : 'Company');
         $company_name = $request->company_name;
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
