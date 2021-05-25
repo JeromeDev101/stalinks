@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <label for="">Seller</label>
                                 <v-select multiple
-                                          v-model="filterModel.seller" :options="listSeller.data" label="name" :reduce="seller => seller.id" :searchable="true" placeholder="All"/>
+                                          v-model="filterModel.seller" :options="listSeller.data" label="username" :reduce="seller => seller.id" :searchable="true" placeholder="All"/>
 <!--                                <select class="form-control" v-model="filterModel.seller">-->
 <!--                                    <option value="">All</option>-->
 <!--                                    <option v-for="option in listSeller.data" v-bind:value="option.id">-->
