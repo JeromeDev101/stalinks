@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ExtDomain;
 use App\Models\Publisher;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -71,6 +72,37 @@ class GraphService
                 $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
                 $query->where('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
             }
+        }
+
+        return $query->get();
+    }
+
+    public function urlSellerStatisticsQuery($request)
+    {
+        $query = ExtDomain::select(DB::raw('
+            CONCAT(MONTHNAME(MAX(created_at)), " ", YEAR(MAX(created_at))) AS xaxis,
+            COUNT(IF(status = 0, 1, NULL)) AS new,
+            COUNT(IF(status = 10, 1, NULL)) AS crawl_failed,
+            COUNT(IF(status = 20, 1, NULL)) AS contacts_null,
+            COUNT(IF(status = 30, 1, NULL)) AS got_contacts,
+            COUNT(IF(status = 50, 1, NULL)) AS contacted,
+            COUNT(IF(status = 55, 1, NULL)) AS no_answer,
+            COUNT(IF(status = 60, 1, NULL)) AS refused,
+            COUNT(IF(status = 70, 1, NULL)) AS in_touch,
+            COUNT(IF(status = 80, 1, NULL)) AS undefined,
+            COUNT(IF(status = 90, 1, NULL)) AS unqualified,
+            COUNT(IF(status = 100, 1, NULL)) AS qualified,
+            COUNT(IF(status = 110, 1, NULL)) AS got_email,
+            COUNT(status) AS total
+        '))
+        ->groupBy(DB::raw('MONTHNAME(created_at)'))
+        ->groupBy(DB::raw('YEAR(created_at)'))
+        ->orderBy(DB::raw('YEAR(created_at)'))
+        ->orderBy(DB::raw('MONTH(created_at)'));
+
+        if (isset($request['start_date']) && $request['start_date'] != 'null') {
+            $query->where('created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->where('created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
         return $query->get();
