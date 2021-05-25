@@ -108,29 +108,23 @@ class GenerateBestPrice implements ShouldQueue
                     }
                 }
             } else {
-                if ($publisher) {
-                    //Get best price among URLs
-                    $bestPrice = $publisher->where('price', '!=', null)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('price')->first();
+                //Get best price among URLs
+                $bestPrice = $publisher->where('price', '!=', null)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('price')->first();
 
-                    if ($bestPrice) {
-                        //Filter out best price to other URLs
-                        $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
+                if ($bestPrice) {
+                    //Filter out best price to other URLs
+                    $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
 
-                        if ($url == 'clementcycling.com') {
-                            \Log::debug('HIT: ' . $publisher);
-                        }
+                    //Set non-best price to invalid
+                    Publisher::whereIn('id', $invalidIds)->update([
+                        'valid' => 'invalid'
+                    ]);
 
-                        //Set non-best price to invalid
-                        Publisher::whereIn('id', $invalidIds)->update([
-                            'valid' => 'invalid'
+                    //If best priced URL is not valid, update..
+                    if ($bestPrice->valid != 'valid') {
+                        Publisher::where('id', $bestPrice->id)->update([
+                            'valid' => 'valid'
                         ]);
-
-                        //If best priced URL is not valid, update..
-                        if ($bestPrice->valid != 'valid') {
-                            Publisher::where('id', $bestPrice->id)->update([
-                                'valid' => 'valid'
-                            ]);
-                        }
                     }
                 }
             }
