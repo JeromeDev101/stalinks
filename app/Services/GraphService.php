@@ -95,7 +95,7 @@ class GraphService
             COUNT(IF(status = 110, 1, NULL)) AS got_email,
             COUNT(status) AS total
         '))
-        ->groupBy(DB::raw('MONTHNAME(created_at)'))
+        ->groupBy(DB::raw('MONTH(created_at)'))
         ->groupBy(DB::raw('YEAR(created_at)'))
         ->orderBy(DB::raw('YEAR(created_at)'))
         ->orderBy(DB::raw('MONTH(created_at)'));
