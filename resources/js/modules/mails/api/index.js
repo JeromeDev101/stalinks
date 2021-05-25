@@ -24,4 +24,9 @@ export default class MailServices {
             .catch(error => error);
     }
 
+    static updateEmailSignature(params) {
+        return axios.put('/api/mail/update-signature', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 }

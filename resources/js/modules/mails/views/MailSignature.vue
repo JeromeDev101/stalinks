@@ -194,7 +194,8 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        <button v-else type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
@@ -226,6 +227,7 @@ export default {
             },
 
             updateSignatureModel: {
+                id: '',
                 name: '',
                 content: '',
             },
@@ -351,8 +353,19 @@ export default {
         },
 
         updateSignature(data) {
+            this.updateSignatureModel.id = data.id;
             this.updateSignatureModel.name = data.name;
             this.updateSignatureModel.content = data.content;
+        },
+
+        async submitUpdate() {
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionUpdateEmailSignature', this.updateSignatureModel);
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action === 'updated_signature') {
+                await this.getSignatureList()
+            }
         },
 
         modalOpener(mode){

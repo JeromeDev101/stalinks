@@ -102,6 +102,25 @@ const actions = {
             }
         }
     },
+
+    async actionUpdateEmailSignature({commit}, params) {
+        try {
+            let response = await MailServices.updateEmailSignature(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'updated_signature', message: 'Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
 }
 
 const storeMailgun = {

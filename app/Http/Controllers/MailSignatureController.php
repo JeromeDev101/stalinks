@@ -6,6 +6,7 @@ use App\MailSignature;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class MailSignatureController extends Controller
@@ -52,5 +53,18 @@ class MailSignatureController extends Controller
     {
         $img_path = request()->file('file')->store('uploads', 'public');
         return response()->json(['location' => "/storage/$img_path"]);
+    }
+
+    public function updateSignature(Request $request)
+    {
+        $sig = MailSignature::find($request->id);
+
+        if (!$sig) {
+            return response()->json(['success' => false]);
+        }else{
+            $sig->update($request->all());
+            $response['success'] = true;
+            return response()->json(['success' => true]);
+        }
     }
 }
