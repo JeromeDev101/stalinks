@@ -116,16 +116,28 @@ class GraphService
             $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
             $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
             $query->groupBy(DB::raw('DAY(ext_domains.created_at)'));
+
+            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
+            $query->orderBy(DB::raw('DAY(ext_domains.created_at)'));
         } else if ($request['scope'] == 'weekly') {
             $query->groupBy(DB::raw('WEEK(ext_domains.created_at)'));
             $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+
+            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+            $query->orderBy(DB::raw('WEEK(ext_domains.created_at)'));
         } else if ($request['scope'] == 'monthly') {
             $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
             $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+
+            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
         } else if ($request['scope'] == 'team') {
             $query->join('users', 'users.id', 'ext_domains.user_id');
             $query->groupBy('users.id');
             $query->groupBy('users.name');
+
+            $query->orderBy(DB::raw('users.id'));
         }
 
         if (isset($request['start_date']) && $request['start_date'] != 'null') {
@@ -133,8 +145,6 @@ class GraphService
             $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
-        return $query
-            ->orderBy(DB::raw('YEAR(ext_domains.created_at)'))
-            ->orderBy(DB::raw('MONTH(ext_domains.created_at)'))->get();
+        return $query->get();
     }
 }
