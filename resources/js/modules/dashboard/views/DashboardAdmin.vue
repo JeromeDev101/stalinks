@@ -368,6 +368,32 @@
 
                 <div class="box-body">
                     <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Scope
+                                </label>
+                                <div class="input-group">
+                                    <select name=""
+                                            class="form-control"
+                                            v-model="filterModel.urlSellerStatistics.scope"
+                                    >
+                                        <option
+                                            value="daily">
+                                            Daily</option>
+                                        <option
+                                            value="weekly">
+                                            Weekly</option>
+                                        <option
+                                            value="monthly">
+                                            Monthly</option>
+                                        <option
+                                            value="team">
+                                            Team</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
@@ -531,6 +557,7 @@ export default {
                         startDate: null,
                         endDate: null
                     },
+                    scope : 'monthly'
                 }
             },
             displayModel: {
@@ -672,6 +699,9 @@ export default {
                 }
             };
 
+            this.filterModel.urlSellerStatistics.scope =
+                'monthly';
+
             this.getUrlSellerStatisticsData();
         },
 
@@ -695,7 +725,8 @@ export default {
         getUrlSellerStatisticsData(start = null, end =
             null) {
             axios.get('/api/graphs/url-seller-statistics?start_date=' +
-                start + '&end_date=' + end)
+                start + '&end_date=' + end + '&scope=' +
+                this.filterModel.urlSellerStatistics.scope)
                 .then(response => {
                     let data = response.data;
 
@@ -801,6 +832,7 @@ export default {
 
         clearOrdersFilter() {
             this.filterModel.orders = {
+
                 dateRange : {
                     startDate : null,
                     endDate : null
