@@ -173,35 +173,38 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
 
         $promises = (function () use ($extDomains, $guzzleClient) {
             foreach ($extDomains as $extDomain) {
-                  $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
-                  $extDomain->save();
+                $extDomain->phone = null;
+                $extDomain->email = null;
+                $extDomain->facebook = null;
+                $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
+                $extDomain->save();
 
-                  yield $guzzleClient->requestAsync('GET', $extDomain->domain, [
-                      'headers' => [
-                          'decode_content' => false,
-                          'accept-encoding' => 'gzip, deflate'
-                      ]])
-                      ->then(function(ResponseInterface $response) use ($extDomain) {
+                yield $guzzleClient->requestAsync('GET', $extDomain->domain, [
+                    'headers' => [
+                        'decode_content' => false,
+                        'accept-encoding' => 'gzip, deflate'
+                    ]])
+                    ->then(function(ResponseInterface $response) use ($extDomain) {
 
-                          $html = $response->getBody()->getContents();
-                          $crawler = new Crawler($html);
-                          $crawlerResult = $this->handleCrawler($crawler, ['success' => false], $extDomain);
+                        $html = $response->getBody()->getContents();
+                        $crawler = new Crawler($html);
+                        $crawlerResult = $this->handleCrawler($crawler, ['success' => false], $extDomain);
 
-                          if ($crawler->count() == 0) {
-                              $emailArray = [];
-                              $facebookArray = [];
-                              $this->regexContact($html, $crawler, $emailArray, $facebookArray);
-                              $crawlerResult['emails'] = $emailArray;
-                              $crawlerResult['facebook'] = $facebookArray;
-                          }
+                        if ($crawler->count() == 0) {
+                            $emailArray = [];
+                            $facebookArray = [];
+                            $this->regexContact($html, $crawler, $emailArray, $facebookArray);
+                            $crawlerResult['emails'] = $emailArray;
+                            $crawlerResult['facebook'] = $facebookArray;
+                        }
 
-                          // remove png emails
-                          $crawlerResult['emails'] = $this->cleanEmails($crawlerResult['emails']);
+                        // remove png emails
+                        $crawlerResult['emails'] = $this->cleanEmails($crawlerResult['emails']);
 
-                          return $crawlerResult;
-                      })->then(function(array $crawlResult) {
-                          return $this->saveToDatabaseSingle($crawlResult);
-                      });
+                        return $crawlerResult;
+                    })->then(function(array $crawlResult) {
+                        return $this->saveToDatabaseSingle($crawlResult);
+                    });
 
             }
         })();

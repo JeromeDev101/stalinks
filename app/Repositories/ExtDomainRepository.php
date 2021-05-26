@@ -555,7 +555,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             ->whereIn('id', $listIds)
             ->with('country')
             ->with('users:id,username,status')
-            ->orderBy('id', 'desc')
             ->get();
         return $resultCrawled;
     }
