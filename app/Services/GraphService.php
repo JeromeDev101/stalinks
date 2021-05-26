@@ -79,32 +79,62 @@ class GraphService
 
     public function urlSellerStatisticsQuery($request)
     {
-        $query = ExtDomain::select(DB::raw('
-            CONCAT(MONTHNAME(MAX(created_at)), " ", YEAR(MAX(created_at))) AS xaxis,
-            COUNT(IF(status = 0, 1, NULL)) AS new,
-            COUNT(IF(status = 10, 1, NULL)) AS crawl_failed,
-            COUNT(IF(status = 20, 1, NULL)) AS contacts_null,
-            COUNT(IF(status = 30, 1, NULL)) AS got_contacts,
-            COUNT(IF(status = 50, 1, NULL)) AS contacted,
-            COUNT(IF(status = 55, 1, NULL)) AS no_answer,
-            COUNT(IF(status = 60, 1, NULL)) AS refused,
-            COUNT(IF(status = 70, 1, NULL)) AS in_touch,
-            COUNT(IF(status = 80, 1, NULL)) AS undefined,
-            COUNT(IF(status = 90, 1, NULL)) AS unqualified,
-            COUNT(IF(status = 100, 1, NULL)) AS qualified,
-            COUNT(IF(status = 110, 1, NULL)) AS got_email,
-            COUNT(status) AS total
-        '))
-        ->groupBy(DB::raw('MONTH(created_at)'))
-        ->groupBy(DB::raw('YEAR(created_at)'))
-        ->orderBy(DB::raw('YEAR(created_at)'))
-        ->orderBy(DB::raw('MONTH(created_at)'));
+        switch ($request['scope']) {
+            case 'monthly':
+                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                break;
 
-        if (isset($request['start_date']) && $request['start_date'] != 'null') {
-            $query->where('created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-            $query->where('created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+            case 'daily':
+                $xaxis = 'CONCAT(MONTH(MAX(ext_domains.created_at)), \'-\', DAY(MAX(ext_domains.created_at)), \'-\', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                break;
+
+            case 'weekly':
+                $xaxis = 'CONCAT(\'Week \', WEEK(MAX(ext_domains.created_at)), \', \', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                break;
+
+            case 'team':
+                $xaxis = 'users.name AS xaxis,';
         }
 
-        return $query->get();
+        $query = ExtDomain::select(DB::raw($xaxis . '
+            COUNT(IF(ext_domains.status = 0, 1, NULL)) AS new,
+            COUNT(IF(ext_domains.status = 10, 1, NULL)) AS crawl_failed,
+            COUNT(IF(ext_domains.status = 20, 1, NULL)) AS contacts_null,
+            COUNT(IF(ext_domains.status = 30, 1, NULL)) AS got_contacts,
+            COUNT(IF(ext_domains.status = 50, 1, NULL)) AS contacted,
+            COUNT(IF(ext_domains.status = 55, 1, NULL)) AS no_answer,
+            COUNT(IF(ext_domains.status = 60, 1, NULL)) AS refused,
+            COUNT(IF(ext_domains.status = 70, 1, NULL)) AS in_touch,
+            COUNT(IF(ext_domains.status = 80, 1, NULL)) AS undefined,
+            COUNT(IF(ext_domains.status = 90, 1, NULL)) AS unqualified,
+            COUNT(IF(ext_domains.status = 100, 1, NULL)) AS qualified,
+            COUNT(IF(ext_domains.status = 110, 1, NULL)) AS got_email,
+            COUNT(ext_domains.status) AS total
+        '));
+
+        if ($request['scope'] == 'daily') {
+            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('DAY(ext_domains.created_at)'));
+        } else if ($request['scope'] == 'weekly') {
+            $query->groupBy(DB::raw('WEEK(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+        } else if ($request['scope'] == 'monthly') {
+            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+        } else if ($request['scope'] == 'team') {
+            $query->join('users', 'users.id', 'ext_domains.user_id');
+            $query->groupBy('users.id');
+            $query->groupBy('users.name');
+        }
+
+        if (isset($request['start_date']) && $request['start_date'] != 'null') {
+            $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+        }
+
+        return $query
+            ->orderBy(DB::raw('YEAR(ext_domains.created_at)'))
+            ->orderBy(DB::raw('MONTH(ext_domains.created_at)'))->get();
     }
 }
