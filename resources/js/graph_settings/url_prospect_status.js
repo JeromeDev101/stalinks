@@ -85,6 +85,14 @@ export default {
                 }
             }))
         },{
+            name: 'Got Email',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
+                    y : datum.got_email
+                }
+            }))
+        },{
             name: 'Contacted',
             data : _.toArray(_.map(data, function (datum) {
                 return {
@@ -138,14 +146,6 @@ export default {
                 return {
                     x: datum.xaxis,
                     y : datum.qualified
-                }
-            }))
-        },{
-            name: 'Got Email',
-            data : _.toArray(_.map(data, function (datum) {
-                return {
-                    x: datum.xaxis,
-                    y : datum.got_email
                 }
             }))
         },{
