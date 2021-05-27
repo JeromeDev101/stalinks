@@ -249,6 +249,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('url-valid-graph')->get('/graphs/url-valid', 'GraphsController@getUrlValidGraph');
     Route::name('url-valid-graph')->get('/graphs/url-valid-price', 'GraphsController@getUrlValidPriceGraph');
     Route::name('url-seller-statistics')->get('/graphs/url-seller-statistics', 'GraphsController@getUrlSellerStatisticsGraph');
+    Route::name('prospect-qualified-registered')->get('/graphs/prospect-qualified-registered', 'GraphsController@getProspectQualifiedVsRegisteredGraph');
 });
 
 //Mailgun external
