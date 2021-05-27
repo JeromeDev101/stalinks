@@ -316,7 +316,32 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $user_id_list = User::pluck('id')->toArray();
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
-        $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
+        $topic_list = [
+            'Art',
+            'Beauty',
+            'Charity',
+            'Cooking',
+            'Crypto',
+            'Education',
+            'Fashion',
+            'Finance',
+            'Games',
+            'Health',
+            'History',
+            'Job',
+            'Marketing',
+            'Movies & Music',
+            'News',
+            'Pet',
+            'Photograph',
+            'Real Estate',
+            'Religion',
+            'Shopping',
+            'Sports',
+            'Tech',
+            'Travel',
+            'Unlisted',
+        ];
 //        $language = $file['language'];
         $csv_file = $file['file'];
 

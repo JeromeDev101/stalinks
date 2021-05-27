@@ -551,7 +551,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }
 
         $this->crawler->crawls($extDomains);
-        $resultCrawled = $this->model->whereIn('id', $listIds)->with('country')->orderBy('id', 'desc')->get();
+        $resultCrawled = $this->model
+            ->whereIn('id', $listIds)
+            ->with('country')
+            ->with('users:id,username,status')
+            ->get();
         return $resultCrawled;
     }
 

@@ -357,6 +357,166 @@
         </div>
 <!--        URL VALID PRICE GRAPH END-->
 
+<!--        URL SELLER STATISTICS GRAPH-->
+        <div class="col-lg-12">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+                <div class="box-header">
+                    <h3
+                        class="box-title text-primary">URL Seller Statistics
+                    </h3>
+                </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Scope
+                                </label>
+                                <div class="input-group">
+                                    <select name=""
+                                            class="form-control"
+                                            v-model="filterModel.urlSellerStatistics.scope"
+                                    >
+                                        <option
+                                            value="daily">
+                                            Daily</option>
+                                        <option
+                                            value="weekly">
+                                            Weekly</option>
+                                        <option
+                                            value="monthly">
+                                            Monthly</option>
+                                        <option
+                                            value="team">
+                                            Team</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Date
+                                                        Range
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.urlSellerStatistics.dateRange"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.urlSellerStatistics.dateRange"
+                                        :ranges="dateRanges"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Action</label>
+                                <br>
+                                <button
+                                    class="btn btn-default col-md-6"
+                                    @click="filterUrlSellerStatistics">
+                                    Filter</button>
+                                <button
+                                    class="btn btn-default" @click="clearUrlSellerStatisticsFilter">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="small">
+                        <apexchart type="line" height="350"
+                                   :options="urlSellerStatisticsChartOptions"
+                                   :series="urlSellerStatisticsData"></apexchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        URL SELLER STATISTICS GRAPH END-->
+
+<!--        PROSPECT QUALIFIED VS REGISTERED GRAPH-->
+        <div class="col-lg-12">
+            <div class="box box-primary" style="padding-bottom:0.5em;">
+                <div class="box-header">
+                    <h3
+                        class="box-title text-primary">Url Prospect Qualified Vs Registered
+                    </h3>
+                </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Scope
+                                </label>
+                                <div class="input-group">
+                                    <select name=""
+                                            class="form-control"
+                                            v-model="filterModel.prospectQualifiedRegistered.scope"
+                                    >
+                                        <option
+                                            value="monthly">
+                                            Monthly</option>
+                                        <option
+                                            value="team">
+                                            Team</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Date
+                                                        Range
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.prospectQualifiedRegistered.dateRange"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.prospectQualifiedRegistered.dateRange"
+                                        :ranges="dateRanges"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Action</label>
+                                <br>
+                                <button
+                                    class="btn btn-default col-md-6"
+                                    @click="filterProspectQualifiedRegistered">
+                                    Filter</button>
+                                <button
+                                    class="btn btn-default" @click="clearProspectQualifiedRegistered">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="small">
+                        <apexchart type="bar" height="350"
+                                   :options="prospectQualifiedRegisteredOptions"
+                                   :series="prospectQualifiedRegisteredData"></apexchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        PROSPECT QUALIFIED VS REGISTERED GRAPH END-->
+
         <div class="col-lg-12" >
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
@@ -400,11 +560,11 @@
                         <line-chart :chart-data="datacollection" :options="options" :styles="styles"></line-chart>
                     </div>
                     <hr>
-                    <h3 class="box-title text-primary">Seller Sites Statistics</h3>
+<!--                    <h3 class="box-title text-primary">Seller Sites Statistics</h3>-->
 
-                    <div class="small">
-                        <line-chart :chart-data="datacollection2" :options="options" :styles="styles"></line-chart>
-                    </div>
+<!--                    <div class="small">-->
+<!--                        <line-chart :chart-data="datacollection2" :options="options" :styles="styles"></line-chart>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -421,6 +581,10 @@ import seller_valid
 import url_valid from "../../../graph_settings/url_valid";
 import url_valid_price
     from "../../../graph_settings/url_valid_price";
+import url_seller_statistics from
+        "../../../graph_settings/url_prospect_status";
+import prospect_qualified_register
+    from "../../../graph_settings/prospect_qualified_register";
 import _ from 'underscore';
 
 export default {
@@ -466,6 +630,20 @@ export default {
                         startDate: null,
                         endDate: null
                     },
+                },
+                urlSellerStatistics : {
+                    dateRange: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    scope : 'monthly'
+                },
+                prospectQualifiedRegistered : {
+                    dateRange: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    scope : 'monthly'
                 }
             },
             displayModel: {
@@ -478,6 +656,8 @@ export default {
             sellerValidData: [],
             urlValidData : [],
             urlValidPriceData : [],
+            urlSellerStatisticsData: [],
+            prospectQualifiedRegisteredData : [],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -539,6 +719,14 @@ export default {
             return url_valid_price.urlValidPriceGraphSetting();
         },
 
+        urlSellerStatisticsChartOptions() {
+            return url_seller_statistics.graphSetting();
+        },
+
+        prospectQualifiedRegisteredOptions() {
+            return prospect_qualified_register.graphSetting();
+        },
+
         teamInCharge() {
             if (this.displayModel.orderTeam == 0) {
                 return 'All';
@@ -589,10 +777,100 @@ export default {
         this.getSellerValidData();
         this.getUrlValidData();
         this.getUrlValidPriceData();
+        this.getUrlSellerStatisticsData();
+        this.getProspectQualifiedRegistered();
         this.getListSellerTeam();
     },
 
     methods: {
+        clearProspectQualifiedRegistered() {
+            this.filterModel.prospectQualifiedRegistered = {
+                dateRange : {
+                    startDate : null,
+                    endDate : null
+                }
+            };
+
+            this.filterModel.prospectQualifiedRegistered.scope =
+                'monthly';
+
+            this.getProspectQualifiedRegistered();
+        },
+
+        filterProspectQualifiedRegistered() {
+            if
+            (this.filterModel.prospectQualifiedRegistered.dateRange.startDate !=
+                null &&
+                this.filterModel.prospectQualifiedRegistered.dateRange.endDate !=
+                null) {
+                this.filterModel.prospectQualifiedRegistered.dateRange.startDate =
+                    new
+                    Date(this.filterModel.prospectQualifiedRegistered.dateRange.startDate).toJSON();
+                this.filterModel.prospectQualifiedRegistered.dateRange.endDate =
+                    new
+                    Date(this.filterModel.prospectQualifiedRegistered.dateRange.endDate).toJSON();
+            }
+
+            this.getProspectQualifiedRegistered(this.filterModel.prospectQualifiedRegistered.dateRange.startDate, this.filterModel.prospectQualifiedRegistered.dateRange.endDate);
+        },
+
+        getProspectQualifiedRegistered(start = null, end =
+            null) {
+            axios.get('/api/graphs/prospect-qualified-registered?start_date=' +
+                start + '&end_date=' + end + '&scope=' +
+                this.filterModel.prospectQualifiedRegistered.scope)
+                .then(response => {
+                    let data = response.data;
+
+                    this.prospectQualifiedRegisteredData =
+                        prospect_qualified_register.graphData(data);
+                });
+        },
+
+        clearUrlSellerStatisticsFilter() {
+            this.filterModel.urlSellerStatistics = {
+                dateRange : {
+                    startDate : null,
+                    endDate : null
+                }
+            };
+
+            this.filterModel.urlSellerStatistics.scope =
+                'monthly';
+
+            this.getUrlSellerStatisticsData();
+        },
+
+        filterUrlSellerStatistics() {
+            if
+            (this.filterModel.urlSellerStatistics.dateRange.startDate !=
+                null &&
+                this.filterModel.urlSellerStatistics.dateRange.endDate !=
+                null) {
+                this.filterModel.urlSellerStatistics.dateRange.startDate =
+                    new
+                    Date(this.filterModel.urlSellerStatistics.dateRange.startDate).toJSON();
+                this.filterModel.urlSellerStatistics.dateRange.endDate =
+                    new
+                    Date(this.filterModel.urlSellerStatistics.dateRange.endDate).toJSON();
+            }
+
+            this.getUrlSellerStatisticsData(this.filterModel.urlSellerStatistics.dateRange.startDate, this.filterModel.urlSellerStatistics.dateRange.endDate);
+        },
+
+        getUrlSellerStatisticsData(start = null, end =
+            null) {
+            axios.get('/api/graphs/url-seller-statistics?start_date=' +
+                start + '&end_date=' + end + '&scope=' +
+                this.filterModel.urlSellerStatistics.scope)
+                .then(response => {
+                    let data = response.data;
+
+                    this.urlSellerStatisticsData =
+                        url_seller_statistics.graphData(data);
+                });
+        },
+
         clearUrlValidPriceFilter() {
             this.filterModel.urlValidPrice = {
                 dateRange : {
@@ -690,6 +968,7 @@ export default {
 
         clearOrdersFilter() {
             this.filterModel.orders = {
+
                 dateRange : {
                     startDate : null,
                     endDate : null

@@ -271,7 +271,8 @@
 
              <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
                <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
-                   <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+                   <b v-if="!isResultCrawled">Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+                   <b v-else>Showing {{ listExt.data.length }} crawled items. Click search or clear filter to refresh the list.</b>
                </span>
 
                 <vue-virtual-table
@@ -1594,6 +1595,7 @@ export default {
             urlEmails: [],
             tableLoading: false,
             updateMultiEmployee: '',
+            isResultCrawled: false,
         };
     },
     async created() {
@@ -2108,6 +2110,7 @@ export default {
             await this.$store.dispatch('getListExt', params);
             this.isLoadingTable = false;
             $('.freeze-table').freezeTable({'columnNum': 4, 'shadow': true, 'scrollable': true});
+            this.isResultCrawled = false;
             loader.hide();
         },
         async doSearchList() {
@@ -2160,8 +2163,9 @@ export default {
             });
         },
         async doCrawlExtList() {
+            let loader = this.$loading.show();
             this.isCrawling = true;
-            var arrayIds = [];
+            let arrayIds = [];
             if (this.checkIds) {
                 for (let key in this.checkIds) {
                     arrayIds.push(this.checkIds[key].id);
@@ -2175,7 +2179,7 @@ export default {
                 )
 
                 this.isCrawling = false;
-
+                loader.hide();
                 return;
             }
 
@@ -2187,7 +2191,7 @@ export default {
                 );
 
                 this.isCrawling = false;
-
+                loader.hide();
                 return;
             }
 
@@ -2196,9 +2200,21 @@ export default {
                 queue: false
             });
 
+            if (this.messageForms.action === 'crawled') {
+                swal.fire(
+                    'Success',
+                    'Crawled ' + this.listExt.data.length + ' items successfully!',
+                    'success'
+                )
+
+                this.isResultCrawled = true;
+            }
+
             this.isCrawling = false;
             this.checkIds = [];
             this.allSelected = false;
+            this.$store.dispatch('clearMessageForm');
+            loader.hide();
         },
         async submitAdd() {
             let that = this;

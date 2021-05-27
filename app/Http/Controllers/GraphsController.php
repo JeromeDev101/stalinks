@@ -48,4 +48,14 @@ class GraphsController extends Controller
     {
         return response()->json($this->graphService->urlValidPriceQuery($request->all()));
     }
+
+    public function getUrlSellerStatisticsGraph(Request $request)
+    {
+        return response()->json($this->graphService->urlSellerStatisticsQuery($request->all()));
+    }
+
+    public function getProspectQualifiedVsRegisteredGraph(Request $request)
+    {
+        return response()->json($this->graphService->prospectQualifiedVsRegisteredQuery($request->all()));
+    }
 }
