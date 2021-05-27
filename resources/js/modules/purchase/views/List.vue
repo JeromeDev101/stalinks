@@ -369,8 +369,8 @@
                 let total_price = [];
                 let total = 0;
                 incomes.forEach(function(item, index){
-                    if( item.price != null && item.price != '' ) {
-                        total_price.push( parseFloat(item.price))
+                    if( item.prices != null && item.prices != '' ) {
+                        total_price.push( parseFloat(item.prices))
                     }
                 })
 
