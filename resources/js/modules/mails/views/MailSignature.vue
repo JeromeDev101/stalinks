@@ -20,7 +20,7 @@
                             style="height: 37px;"
                             class="form-control pull-right"
 
-                            @change="">
+                            @change="getSignatureList">
 
                             <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
                         </select>
@@ -28,10 +28,15 @@
                 </div>
 
                 <div class="box-body no-padding relative">
+
+                    <span v-if="listEmailSignature.total > 0" class="pagination-custom-footer-text m-0">
+                        <b>Showing {{ listEmailSignature.from }} to {{ listEmailSignature.to }} of {{ listEmailSignature.total }} entries.</b>
+                    </span>
+
                     <table class="table table-hover table-bordered table-striped">
                         <tbody>
                             <tr class="label-primary">
-                                <th>#</th>
+                                <th>#ID</th>
                                 <th>Name</th>
                                 <th>User</th>
                                 <th>Actions</th>
@@ -85,7 +90,7 @@
                             </tr>
 
                             <tr v-for="(item, index) in listEmailSignature.data" :key="index">
-                                <td class="center-content">{{ index + 1 }}</td>
+                                <td class="center-content">{{ item.id }}</td>
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.user !== null ? item.user.username : 'N/A' }}</td>
                                 <td>
