@@ -94,6 +94,17 @@ class PublisherController extends Controller
 
         $url_copy = $this->remove_http($request->url);
 
+        $isDuplicate = $this->checkDuplicate($url_copy, $request->seller);
+
+        if($isDuplicate) {
+            return response()->json([
+                "message" => 'The given data was invalid.',
+                "errors" => [
+                    "url" => 'Duplicate url and seller.',
+                ],
+            ],422);
+        }
+
         $publisher = Publisher::where('url', 'like', '%'.$url_copy.'%')->where('valid', 'valid')->count();
         if ($publisher > 0) {
             $valid = 'unchecked';
@@ -115,6 +126,16 @@ class PublisherController extends Controller
 
         Publisher::create($input);
         return response()->json(['success' => true], 200);
+    }
+
+    private function checkDuplicate($url, $seller_id) {
+        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id);
+        return $publisher->count() > 0;
+    }
+
+    private function checkDuplicateUpdate($url, $seller_id, $id) {
+        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id)->where('id', '!=', $id);
+        return $publisher->count() > 0;
     }
 
     private function remove_http($url) {
@@ -157,6 +178,19 @@ class PublisherController extends Controller
             'casino_sites' => 'required',
             'kw_anchor' => 'required',
         ]);
+
+        $request['url'] = $this->remove_http($request->url);
+
+        $isDuplicate = $this->checkDuplicateUpdate($request->url, $request->user_id, $request->id);
+
+        if($isDuplicate) {
+            return response()->json([
+                "message" => 'The given data was invalid.',
+                "errors" => [
+                    "url" => 'Duplicate url and seller.',
+                ],
+            ],422);
+        }
 
         $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
 
