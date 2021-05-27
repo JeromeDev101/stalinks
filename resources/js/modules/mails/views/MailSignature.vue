@@ -104,7 +104,7 @@
                                             title="Delete"
                                             class="btn btn-default"
 
-                                            @click="">
+                                            @click="deleteSignature(item.id)">
 
                                             <i class="fa fa-fw fa-trash"></i>
                                         </button>
@@ -356,6 +356,31 @@ export default {
             this.updateSignatureModel.id = data.id;
             this.updateSignatureModel.name = data.name;
             this.updateSignatureModel.content = data.content;
+        },
+
+        async deleteSignature(id) {
+            swal.fire({
+                title: "Delete Email Signature",
+                text: "Do you want to delete this email signature?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete('/api/mail/delete-signature/' + id)
+                    .then(response => {
+                        this.getSignatureList()
+
+                        swal.fire(
+                            'Deleted!',
+                            'Email signature deleted.',
+                            'success'
+                        )
+                    })
+                }
+            });
         },
 
         async submitUpdate() {

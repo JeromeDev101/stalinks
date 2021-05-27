@@ -67,4 +67,11 @@ class MailSignatureController extends Controller
             return response()->json(['success' => true]);
         }
     }
+
+    public function destroy($id)
+    {
+        MailSignature::find($id)->delete();
+
+        return response()->json(['success' => true]);
+    }
 }
