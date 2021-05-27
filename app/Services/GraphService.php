@@ -94,6 +94,7 @@ class GraphService
 
             case 'team':
                 $xaxis = 'users.name AS xaxis,';
+                break;
         }
 
         $query = ExtDomain::select(DB::raw($xaxis . '
@@ -133,6 +134,46 @@ class GraphService
             $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
             $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
         } else if ($request['scope'] == 'team') {
+            $query->join('users', 'users.id', 'ext_domains.user_id');
+            $query->groupBy('users.id');
+            $query->groupBy('users.name');
+
+            $query->orderBy(DB::raw('users.id'));
+        }
+
+        if (isset($request['start_date']) && $request['start_date'] != 'null') {
+            $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+        }
+
+        return $query->get();
+    }
+
+    public function prospectQualifiedVsRegisteredQuery($request)
+    {
+        switch ($request['scope']) {
+            case 'monthly':
+                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                break;
+
+            case 'team':
+                $xaxis = 'users.name AS xaxis,';
+                break;
+        }
+
+        $query = ExtDomain::select(DB::raw(
+            $xaxis .
+            'COUNT(IF(ext_domains.status = 100, 1, NULL)) AS qualified,
+            COUNT(ext_domains.status) AS total'
+        ));
+
+        if ($request['scope'] == 'monthly') {
+            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+
+            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
+        } else {
             $query->join('users', 'users.id', 'ext_domains.user_id');
             $query->groupBy('users.id');
             $query->groupBy('users.name');
