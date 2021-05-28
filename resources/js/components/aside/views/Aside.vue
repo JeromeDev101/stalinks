@@ -104,6 +104,23 @@
                 <li
                     v-if="
                         user.isAdmin ||
+                            (user.isOurs == 0 && (isManager || isSeller))
+                    "
+                    :class="{ active: $route.name == 'generate-list' }"
+                >
+                    <router-link
+                        class="custom-padding"
+                        :to="{ path: '/generate-list' }"
+                    >
+                        <i class="fa fa-reorder"></i>
+                        <span>Generate List</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
+                <li
+                    v-if="
+                        user.isAdmin ||
                             (user.role_id == 3 && user.isOurs == 0) ||
                             (user.role_id == 5 && user.isOurs == 0) ||
                             (user.role_id == 6 && user.isOurs == 0) ||
