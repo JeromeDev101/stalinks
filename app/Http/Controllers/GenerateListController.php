@@ -127,7 +127,13 @@ class GenerateListController extends Controller
                         'ref_domain' => 0,
                         'org_kw' => 0,
                         'org_traffic' => 0,
-                        'price' => 0
+                        'price' => 0,
+                        'code_1' => 'E',
+                        'code_2' => 'E',
+                        'code_3' => 'E',
+                        'code_4' => 'E',
+                        'code_comb' => 'EEEE',
+                        'price' => 0,
                     ]);
                 }
             }
