@@ -20,6 +20,7 @@ import VueTagsInput from '@johmun/vue-tags-input';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueApexCharts from 'vue-apexcharts'
+import excel from 'vue-excel-export'
 
 require('./bootstrap');
 
@@ -29,6 +30,7 @@ Vue.use(Cookies);
 Vue.use(Toast);
 Vue.use(Loading);
 Vue.use(VueApexCharts)
+Vue.use(excel)
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
