@@ -969,6 +969,7 @@ export default {
         clearOrdersFilter() {
             this.filterModel.orders = {
 
+
                 dateRange : {
                     startDate : null,
                     endDate : null
