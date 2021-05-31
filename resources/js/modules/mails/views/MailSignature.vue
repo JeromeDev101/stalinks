@@ -185,12 +185,13 @@
                                     {{ err }}
                                 </span>
 
-                                <tinymce
-                                    v-model="modelContent"
-                                    id="articleContent"
-                                    :other_options="options">
+<!--                                <tinymce-->
+<!--                                    v-model="modelContent"-->
+<!--                                    id="articleContent"-->
+<!--                                    :other_options="options">-->
 
-                                </tinymce>
+<!--                                </tinymce>-->
+                                <ckeditor></ckeditor>
                             </div>
                         </form>
 
@@ -211,8 +212,12 @@
 <script>
 import { mapState } from 'vuex';
 import 'tinymce/skins/lightgray/skin.min.css';
+import Ckeditor from "../../../components/editor/Ckeditor";
 
 export default {
+    components: {
+        Ckeditor
+    },
     data() {
         return {
             listUsers: [],

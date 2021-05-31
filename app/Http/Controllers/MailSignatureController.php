@@ -51,8 +51,11 @@ class MailSignatureController extends Controller
 
     public function storeSignatureImage(Request $request)
     {
-        $img_path = request()->file('file')->store('uploads', 'public');
-        return response()->json(['location' => "/storage/$img_path"]);
+        // $img_path = request()->file('originalName')->store('uploads', 'public');
+        // return response()->json(['url' => "/storage/$img_path"]);
+
+        $img_path = $request->file('upload')->store('uploads', 'public');
+        return response()->json(['url' => "/storage/$img_path"]);
     }
 
     public function updateSignature(Request $request)
