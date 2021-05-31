@@ -39,10 +39,10 @@ class GraphService
                         COUNT(IF(publisher.valid = \'valid\', 1, NULL)) AS valid,
                         COUNT(IF(publisher.price_basis IN (\'good\', \'average\') AND publisher.valid = \'valid\', 1, NULL)) AS quality_price'
             ))
-            ->groupBy(DB::raw('MONTH(publisher.created_at)'))
-            ->groupBy(DB::raw('YEAR(publisher.created_at)'))
-            ->orderBy(DB::raw('YEAR(publisher.created_at)'))
-            ->orderBy(DB::raw('MONTH(publisher.created_at)'));
+                ->groupBy(DB::raw('MONTH(publisher.created_at)'))
+                ->groupBy(DB::raw('YEAR(publisher.created_at)'))
+                ->orderBy(DB::raw('YEAR(publisher.created_at)'))
+                ->orderBy(DB::raw('MONTH(publisher.created_at)'));
 
             if (isset($request['start_date']) && $request['start_date'] != 'null') {
                 $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
@@ -61,12 +61,12 @@ class GraphService
                     COUNT(IF(publisher.valid = \'valid\', 1, NULL)) AS valid,
                     COUNT(IF(publisher.valid = \'valid\' AND publisher.price_basis IN (\'good\', \'average\'), 1, NULL)) AS quality_price'
             ))
-            ->join('users', 'publisher.user_id', 'users.id')
-            ->leftJoin('registration', 'users.email', 'registration.email')
-            ->join(DB::raw('users users2'), 'registration.team_in_charge', 'users2.id')
-            ->groupBy('registration.team_in_charge')
-            ->groupBy('users2.name')
-            ->orderBy(DB::raw('xaxis'));
+                ->join('users', 'publisher.user_id', 'users.id')
+                ->leftJoin('registration', 'users.email', 'registration.email')
+                ->join(DB::raw('users users2'), 'registration.team_in_charge', 'users2.id')
+                ->groupBy('registration.team_in_charge')
+                ->groupBy('users2.name')
+                ->orderBy(DB::raw('xaxis'));
 
             if (isset($request['start_date']) && $request['start_date'] != 'null') {
                 $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
@@ -153,18 +153,30 @@ class GraphService
     {
         switch ($request['scope']) {
             case 'monthly':
-                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,
+                (
+                    SELECT COUNT(registration.id)
+                    FROM registration
+                    WHERE registration.deleted_at IS NULL
+                    AND MONTH(registration.created_at) = MONTH(MAX(ext_domains.created_at))
+                    AND YEAR(registration.created_at) = YEAR(MAX(ext_domains.created_at))
+                ) AS total,';
                 break;
 
             case 'team':
-                $xaxis = 'users.name AS xaxis,';
+                $xaxis = 'users.name AS xaxis,
+                (
+                    SELECT COUNT(registration.created_at)
+                    FROM registration
+                    WHERE registration.deleted_at IS NULL
+                    AND registration.team_in_charge = ext_domains.user_id
+                ) AS total,';
                 break;
         }
 
         $query = ExtDomain::select(DB::raw(
             $xaxis .
-            'COUNT(IF(ext_domains.status = 100, 1, NULL)) AS qualified,
-            COUNT(ext_domains.status) AS total'
+            'COUNT(IF(ext_domains.status = 100, 1, NULL)) AS qualified'
         ));
 
         if ($request['scope'] == 'monthly') {
@@ -175,7 +187,7 @@ class GraphService
             $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
         } else {
             $query->join('users', 'users.id', 'ext_domains.user_id');
-            $query->groupBy('users.id');
+            $query->groupBy('ext_domains.user_id');
             $query->groupBy('users.name');
 
             $query->orderBy(DB::raw('users.id'));
