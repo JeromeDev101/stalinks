@@ -19,7 +19,8 @@ import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import VueTagsInput from '@johmun/vue-tags-input';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
-import VueApexCharts from 'vue-apexcharts'
+import VueApexCharts from 'vue-apexcharts';
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 require('./bootstrap');
 
@@ -28,7 +29,8 @@ Vue.use(Toasted);
 Vue.use(Cookies);
 Vue.use(Toast);
 Vue.use(Loading);
-Vue.use(VueApexCharts)
+Vue.use(VueApexCharts);
+Vue.use(CKEditor);
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
@@ -38,6 +40,7 @@ Vue.component('compact-picker', Compact)
 Vue.component('date-range-picker', DateRangePicker);
 Vue.component('vue-tags-input', VueTagsInput);
 Vue.component('apexchart', VueApexCharts)
+Vue.component('ckeditor', CKEditor)
 
 const router = new VueRouter({
     mode: 'history',
