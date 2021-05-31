@@ -33,6 +33,7 @@ import WalletSummary from '@/modules/wallet_transaction/views/wallet_summary.vue
 import ArticleList from '@/modules/article/views/List.vue'
 import Article from '@/modules/article/views/Article.vue'
 import Mails from '@/modules/mails/views/Mail.vue'
+import GenerateList from '@/modules/generate_list/views/List.vue'
 
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue'
 import ResetPassword from '@/modules/reset_password/views/List.vue'
@@ -347,6 +348,11 @@ const routes = [
         path: 'mail-logs',
         name: 'mail-logs',
         component: Maillog
+      },
+      {
+        path: 'generate-list',
+        name: 'generate-list',
+        component: GenerateList
       },
       {
         path: '*',
