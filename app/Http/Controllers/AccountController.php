@@ -226,6 +226,7 @@ class AccountController extends Controller
         $request->validate([
             'country_id' => 'required',
             'writer_price' => 'required_if:type,==,Writer',
+            'rate_type' => 'required_if:type,==,Writer',
             'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
             'paypal_account' => 'required_if:id_payment_type,==,1',
