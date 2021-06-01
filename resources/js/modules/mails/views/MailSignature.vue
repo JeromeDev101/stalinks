@@ -163,6 +163,7 @@
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.name}" class="form-group">
                                     <label style="color: #333">Signature Name</label>
+
                                     <input
                                         v-model="modelName"
                                         required
@@ -172,6 +173,26 @@
                                     <span
                                         v-if="messageForms.errors.name"
                                         v-for="err in messageForms.errors.name"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'has-error': messageForms.errors.work_mail}" class="form-group">
+                                    <label style="color: #333">Login Mail</label>
+
+                                    <select class="form-control" v-model="modelWorkMail">
+                                        <option v-for="option in listUsers" v-bind:value="option.work_mail">
+                                            {{ option.work_mail }}
+                                        </option>
+                                    </select>
+
+                                    <span
+                                        v-if="messageForms.errors.work_mail"
+                                        v-for="err in messageForms.errors.work_mail"
                                         class="text-danger">
 
                                         {{ err }}
@@ -240,13 +261,15 @@ export default {
 
             signatureModel : {
                 name: '',
-                content: ''
+                content: '',
+                work_mail: ''
             },
 
             updateSignatureModel: {
                 id: '',
                 name: '',
                 content: '',
+                work_mail: ''
             },
 
             modalMode: '',
@@ -301,7 +324,6 @@ export default {
 
     created() {
         this.getListUsers()
-
         this.getSignatureList()
     },
 
@@ -321,6 +343,19 @@ export default {
                     this.signatureModel.name = val
                 } else {
                     this.updateSignatureModel.name = val
+                }
+            }
+        },
+
+        modelWorkMail: {
+            get () {
+                return this.modalMode === 'Add' ? this.signatureModel.work_mail : this.updateSignatureModel.work_mail
+            },
+            set (val) {
+                if (this.modalMode === 'Add') {
+                    this.signatureModel.work_mail = val
+                } else {
+                    this.updateSignatureModel.work_mail = val
                 }
             }
         },
@@ -373,6 +408,7 @@ export default {
             this.updateSignatureModel.id = data.id;
             this.updateSignatureModel.name = data.name;
             this.updateSignatureModel.content = data.content;
+            this.updateSignatureModel.work_mail = data.work_mail;
         },
 
         async deleteSignature(id) {
@@ -437,7 +473,8 @@ export default {
         clearModel() {
             this.signatureModel = {
                 name: '',
-                content: ''
+                content: '',
+                work_mail: ''
             };
         },
 

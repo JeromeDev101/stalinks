@@ -13,6 +13,7 @@ class MailSignature extends Model
         'name',
         'content',
         'user_id',
+        'work_mail'
     ];
 
     public function user()
