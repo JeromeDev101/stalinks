@@ -40,8 +40,11 @@ class MailSignatureController extends Controller
     {
         Validator::make($request->all(), [
             'content' => 'required',
-            'work_mail' => 'required',
+            'work_mail' => 'required|unique:mail_signatures',
             'name' => 'required|unique:mail_signatures|max:255',
+        ],
+        [
+            'work_mail.unique' => 'Only one email signature is allowed per work mail/login mail.'
         ])->validate();
 
         $request['user_id'] = Auth::id();
@@ -64,12 +67,18 @@ class MailSignatureController extends Controller
     {
         Validator::make($request->all(), [
             'content' => 'required',
-            'work_mail' => 'required',
+            'work_mail' => [
+                'required',
+                Rule::unique('mail_signatures')->ignore($request->id)
+            ],
             'name' => [
                 'max:225',
                 'required',
                 Rule::unique('mail_signatures')->ignore($request->id)
             ]
+        ],
+        [
+            'work_mail.unique' => 'Only one email signature is allowed per work mail/login mail.'
         ])->validate();
 
         $sig = MailSignature::find($request->id);
