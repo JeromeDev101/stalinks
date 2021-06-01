@@ -44,6 +44,7 @@ class Registration extends Model
         'skrill_account',
         'reminded_at',
         'writer_price',
+        'rate_type',
         ];
 
     public function team_in_charge() {
