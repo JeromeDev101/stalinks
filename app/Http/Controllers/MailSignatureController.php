@@ -15,12 +15,15 @@ class MailSignatureController extends Controller
     public function getUsers()
     {
         return User::select('id', 'username', 'work_mail')
-            ->distinct('username')
+            ->distinct('work_mail')
             ->where('isOurs', 0)
             ->where('status', 'active')
             ->where('work_mail', '!=', '')
             ->orderBy('username', 'asc')
-            ->get();
+            ->get()
+            ->unique('work_mail')
+            ->values()
+            ->all();
     }
 
     public function getSignatures(Request $request)
