@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class MailSignatureController extends Controller
 {
@@ -38,8 +39,9 @@ class MailSignatureController extends Controller
     public function storeSignature(Request $request)
     {
         Validator::make($request->all(), [
-            'name' => 'required|unique:mail_signatures|max:255',
             'content' => 'required',
+            'work_mail' => 'required',
+            'name' => 'required|unique:mail_signatures|max:255',
         ])->validate();
 
         $request['user_id'] = Auth::id();
@@ -60,6 +62,16 @@ class MailSignatureController extends Controller
 
     public function updateSignature(Request $request)
     {
+        Validator::make($request->all(), [
+            'content' => 'required',
+            'work_mail' => 'required',
+            'name' => [
+                'max:225',
+                'required',
+                Rule::unique('mail_signatures')->ignore($request->id)
+            ]
+        ])->validate();
+
         $sig = MailSignature::find($request->id);
 
         if (!$sig) {

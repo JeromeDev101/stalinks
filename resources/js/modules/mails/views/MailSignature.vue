@@ -451,9 +451,13 @@ export default {
         },
 
         modalOpener(mode){
-            if (this.modalMode !== mode) {
-                this.clearMessageForm()
-            }
+            // if (this.modalMode !== mode) {
+            //     this.clearMessageForm()
+            // } else {
+            //     this.messageForms.message = ""
+            // }
+
+            this.clearMessageForm()
 
             this.modalMode = mode
 
