@@ -278,6 +278,8 @@ class ArticlesController extends Controller
             'status_writer' => $request->content['status'],
             'id_writer' => $user_id,
             'meta_description' => $request->content['meta_description'],
+            'meta_keyword' => $request->content['meta_keyword'],
+            'note' => $request->content['note'],
         ]);
 
         return response()->json(['success'=>true], 200);

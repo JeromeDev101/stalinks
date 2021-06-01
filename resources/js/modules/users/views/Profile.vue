@@ -80,6 +80,20 @@
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
+                                    <td><b>Pricing Type</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
+                                            <select class="form-control" v-model="user.user_type.rate_type">
+                                                <option value="ppw">Pay Per Words (PPW)</option>
+                                                <option value="ppa">Pay Per Article (PPA)</option>
+                                            </select>
+                                            <span v-if="messageForms.errors.rate_type" class="text-danger">
+                                                The Pricing Type field is required.
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
                                     <td><b>Writer Price</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">

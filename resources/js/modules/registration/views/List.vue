@@ -458,14 +458,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-12" v-show="updateDisplayWriterPrice">
-                                <div class="form-group">
-                                    <label>Writer Price <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone</label>
@@ -562,6 +554,33 @@
                             </div>
 
                         </div>
+
+                        <hr/>
+                        <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                        <hr/>
+
+                        <div class="row" v-show="updateDisplayWriterPrice">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pricing type</label>
+                                    <select class="form-control" v-model="accountUpdate.rate_type">
+                                        <option value="ppw">Pay Per Words (PPW)</option>
+                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" >
+                                <div class="form-group">
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
@@ -722,14 +741,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-12" v-show="addDisplayWriterPrice">
-                                <div class="form-group">
-                                    <label>Writer Price <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone</label>
@@ -823,6 +834,32 @@
                                 <div class="form-group">
                                     <label>Info</label>
                                     <textarea class="form-control" v-model="accountModel.info"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr/>
+                        <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
+                        <hr/>
+
+                        <div class="row" v-show="addDisplayWriterPrice">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pricing type</label>
+                                    <select class="form-control" v-model="accountModel.rate_type">
+                                        <option value="ppw">Pay Per Words (PPW)</option>
+                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -1217,6 +1254,7 @@
                     language_id: '',
                     company_type: 'Company',
                     writer_price: '',
+                    rate_type: '',
                 },
 
                 filterModel: {
@@ -1269,6 +1307,7 @@
                     language_id: '',
                     company_type: '',
                     writer_price: '',
+                    rate_type: '',
                 },
 
                 isPopupLoading: false,
