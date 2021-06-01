@@ -451,18 +451,24 @@ export default {
         },
 
         modalOpener(mode){
-            // if (this.modalMode !== mode) {
-            //     this.clearMessageForm()
-            // } else {
-            //     this.messageForms.message = ""
-            // }
-
             this.clearMessageForm()
 
             this.modalMode = mode
 
+            if (this.modalMode === 'Add') {
+                this.checkWorkMail()
+            }
+
             let element = this.$refs.modalSignature
             $(element).modal('show')
+        },
+
+        checkWorkMail() {
+            this.signatureModel.work_mail = this.user.work_mail
+                ? (this.listUsers.some(el => el.work_mail === this.user.work_mail))
+                    ? this.user.work_mail
+                    : ''
+                : '';
         },
 
         clearFilter() {
