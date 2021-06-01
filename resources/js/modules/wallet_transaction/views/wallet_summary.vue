@@ -13,8 +13,11 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Buyer</label>
-                                <select name="" class="form-control" >
+                                <select name="" class="form-control" v-model="filterModel.buyer">
                                     <option value="">All</option>
+                                    <option v-for="option in summaryData" v-bind:value="option.id">
+                                        {{ option.username }}
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -23,8 +26,8 @@
 
                     <div class="row mb-3">
                         <div class="col-md-2">
-                            <button class="btn btn-default"  >Clear</button>
-                            <button class="btn btn-default">Search </button>
+                            <button class="btn btn-default" @click="clearSearch()">Clear</button>
+                            <button class="btn btn-default" @click="getWalletSummary()">Search </button>
                         </div>
                     </div>
 
@@ -56,11 +59,11 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ summary.username == null ? summary.name : summary.username }}</td>
                                 <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
-                                <td>{{ '$ ' + summary.orders }}</td>
-                                <td>{{ '$ ' + summary.order_cancel }}</td>
-                                <td>{{ '$ ' + summary.order_live }}</td>
-                                <td>{{ '$ ' + summary.credit_left }}</td>
-                                <td>{{ '$ ' + summary.wallet }}</td>
+                                <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.order_cancel).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -81,6 +84,9 @@
         data() {
             return {
                 summaryData: [],
+                filterModel: {
+                    buyer: this.$route.query.buyer || '',
+                },
             }
         },
 
@@ -96,10 +102,22 @@
 
         methods: {
             getWalletSummary() {
-                axios.get('/api/wallet-summary')
-                    .then((res) => {
-                        this.summaryData = res.data
-                    })
+                axios.get('/api/wallet-summary',{
+                    params: {
+                        buyer: this.filterModel.buyer
+                    }
+                }).then((res) => {
+                    this.summaryData = res.data
+                })
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    buyer: '',
+                }
+
+                this.$router.replace({'query': null});
+                this.getWalletSummary();
             }
         },
 
