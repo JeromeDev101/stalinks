@@ -1,6 +1,14 @@
 <template>
     <div>
-        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <ckeditor
+            v-model="editorData"
+            :editor="editor"
+            :value="value"
+            :config="editorConfig"
+
+            @input="onInput">
+
+        </ckeditor>
     </div>
 </template>
 
@@ -43,6 +51,7 @@ export default {
         // Use the <ckeditor> component in this view.
         ckeditor: CKEditor.component
     },
+    props: ['value'],
     data() {
         return {
             editor: ClassicEditor,
@@ -184,7 +193,16 @@ export default {
         this.editorConfig.simpleUpload.headers['X-CSRF-TOKEN'] = token.content;
     },
 
+    watch: {
+        value: function(newVal) {
+            this.editorData = newVal;
+        }
+    },
+
     methods: {
+        onInput() {
+            this.$emit('input', this.editorData)
+        },
     },
 }
 </script>

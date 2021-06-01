@@ -191,7 +191,8 @@
 <!--                                    :other_options="options">-->
 
 <!--                                </tinymce>-->
-                                <ckeditor></ckeditor>
+
+                                <ckeditor v-model="modelContent"></ckeditor>
                             </div>
                         </form>
 
