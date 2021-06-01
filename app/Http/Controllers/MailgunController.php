@@ -105,7 +105,7 @@ class MailgunController extends Controller
         $str = implode (", ", $list_emails);
 
         $params = [
-		    'from'                  => Auth::user()->work_mail,
+		    'from'                  => $request->has('work_mail') ? $request->work_mail : Auth::user()->work_mail,
 		    'to'                    => array($str),
 		    'subject'               => $request->title,
             'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
@@ -163,7 +163,7 @@ class MailgunController extends Controller
         $res = preg_replace("/[<->]/", "", $sender->getId());
 
         $sendEmail = Reply::create([
-            'sender'            => Auth::user()->work_mail,
+            'sender'            => $request->has('work_mail') ? $request->work_mail : Auth::user()->work_mail,
             'subject'           => $request->title,
             'is_sent'           => 1,
             'is_viewed'         => 1,
