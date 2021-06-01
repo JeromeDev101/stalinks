@@ -217,7 +217,7 @@ export default {
     methods: {
         selectWorkMail() {
             this.setQueryLabel(null)
-            this.$children[5].getInbox()
+            this.$children[6].getInbox()
             this.getListLabels()
         },
 
