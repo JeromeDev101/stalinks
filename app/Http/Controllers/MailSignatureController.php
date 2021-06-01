@@ -27,8 +27,8 @@ class MailSignatureController extends Controller
     {
         $list = MailSignature::when($request->name, function($query) use ($request){
                 return $query->where( 'name', 'like', "%".$request->name."%");
-            })->when($request->user, function($query) use ($request){
-                return $query->where( 'user_id', $request->user);
+            })->when($request->work_mail, function($query) use ($request){
+                return $query->where( 'work_mail', $request->work_mail);
             })
             ->with('user')
             ->orderBy('id', 'desc');

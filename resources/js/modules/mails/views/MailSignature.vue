@@ -38,7 +38,7 @@
                             <tr class="label-primary">
                                 <th>#ID</th>
                                 <th>Name</th>
-                                <th>User</th>
+                                <th>Login Mail</th>
                                 <th>Actions</th>
                             </tr>
 
@@ -57,10 +57,10 @@
 
                                 <td>
                                     <div class="form-group">
-                                        <select v-model="filterModel.user" class="form-control pull-right">
-                                            <option value="">Search User</option>
-                                            <option v-for="option in listUsers" :value="option.id">
-                                                {{ option.username }}
+                                        <select v-model="filterModel.work_mail" class="form-control pull-right">
+                                            <option value="">Search Login Mail</option>
+                                            <option v-for="option in listUsers" :value="option.work_mail">
+                                                {{ option.work_mail }}
                                             </option>
                                         </select>
                                     </div>
@@ -92,7 +92,7 @@
                             <tr v-for="(item, index) in listEmailSignature.data" :key="index">
                                 <td class="center-content">{{ item.id }}</td>
                                 <td>{{ item.name }}</td>
-                                <td>{{ item.user !== null ? item.user.username : 'N/A' }}</td>
+                                <td>{{ item.work_mail !== null ? item.work_mail : 'N/A' }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button
@@ -253,10 +253,10 @@ export default {
             listPageOptions: [5, 10, 25, 50, 100],
 
             filterModel: {
-                name: this.$route.query.title || '',
-                user: this.$route.query.user || '',
                 page: this.$route.query.page || 0,
+                name: this.$route.query.title || '',
                 paginate: this.$route.query.paginate || 10,
+                work_mail: this.$route.query.work_mail || '',
             },
 
             signatureModel : {
@@ -466,10 +466,10 @@ export default {
         },
 
         clearFilter() {
-            this.filterModel.name = '';
-            this.filterModel.user = '';
             this.filterModel.page = 0;
+            this.filterModel.name = '';
             this.filterModel.paginate = 10;
+            this.filterModel.work_mail = '';
 
             this.getSignatureList()
         },
