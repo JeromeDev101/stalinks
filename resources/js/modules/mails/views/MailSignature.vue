@@ -153,6 +153,12 @@
                     </div>
 
                     <div class="modal-body relative">
+
+                        <div class="alert alert-info">
+                            <i class="fa fa-exclamation-circle"></i>
+                            Setting table border to <strong>none</strong> will still show grey borders for guidelines.
+                        </div>
+
                         <form class="row" action="">
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.name}" class="form-group">

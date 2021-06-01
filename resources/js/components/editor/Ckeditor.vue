@@ -2,8 +2,8 @@
     <div>
         <ckeditor
             v-model="editorData"
-            :editor="editor"
             :value="value"
+            :editor="editor"
             :config="editorConfig"
 
             @input="onInput">
