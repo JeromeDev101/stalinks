@@ -42,14 +42,6 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12" v-show="regModel.type == 'Writer'">
-                                    <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('writer_price')}">
-                                        <label for="">Writer Price <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" v-model="regModel.writer_price">
-                                        <span v-show="errorMessage.hasOwnProperty('writer_price')" class="text-danger">Please provide Writer Pirce</span>
-                                    </div>
-                                </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Phone</label>
@@ -95,6 +87,32 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <h4 class="text-primary my-3"  v-show="regModel.type == 'Writer'">Writer pricing</h4> 
+                            <hr/>
+
+                            <div class="row"  v-show="regModel.type == 'Writer'">
+
+                                <div class="col-sm-6">
+                                    <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('rate_type')}">
+                                        <label>Pricing type <span class="text-danger">*</span></label>
+                                        <select class="form-control" v-model="regModel.rate_type">
+                                            <option value="ppw">Pay Per Words (PPW)</option>
+                                            <option value="ppa">Pay Per Article (PPA)</option>
+                                        </select>
+                                        <span v-show="errorMessage.hasOwnProperty('rate_type')" class="text-danger">Please provide Writer Pirce</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('writer_price')}">
+                                        <label for="">Writer Price <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" v-model="regModel.writer_price">
+                                        <span v-show="errorMessage.hasOwnProperty('writer_price')" class="text-danger">Please provide Writer Pirce</span>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4> 
                             <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
@@ -206,6 +224,7 @@
                     skrill_account: '',
                     id_payment_type: '',
                     writer_price: '',
+                    rate_type: '',
                 },
                 countryList: [],
                 errorMessage: [],

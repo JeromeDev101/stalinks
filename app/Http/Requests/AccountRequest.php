@@ -85,6 +85,9 @@ class AccountRequest extends FormRequest
             'writer_price' => [
                 'required_if:type,==,Writer'
             ],
+            'rate_type' => [
+                'required_if:type,==,Writer'
+            ],
         ];
 
         if(Auth::user()->isAdmin() || auth()->user()->role_id === 8){
