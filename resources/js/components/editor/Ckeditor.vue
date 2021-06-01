@@ -46,6 +46,8 @@ import ImageUpload from "@ckeditor/ckeditor5-image/src/imageupload";
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
 
+import ImageRemoveEventCallbackPlugin from "ckeditor5-image-remove-event-callback-plugin";
+
 export default {
     components: {
         // Use the <ckeditor> component in this view.
@@ -85,7 +87,9 @@ export default {
                     ImageUpload,
                     ImageResize,
                     ImageToolbar,
-                    SimpleUploadAdapter
+                    SimpleUploadAdapter,
+
+                    ImageRemoveEventCallbackPlugin
                 ],
                 toolbar: {
                     items: [
@@ -191,6 +195,9 @@ export default {
             ? 'Bearer ' + JSON.parse(localStorage.getItem("vuex")).storeAuth.token.access_token
             : '';
         this.editorConfig.simpleUpload.headers['X-CSRF-TOKEN'] = token.content;
+
+        // for image removal
+        this.editorConfig.imageRemoveEvent = { callback: this.imageRemove };
     },
 
     watch: {
@@ -202,6 +209,10 @@ export default {
     methods: {
         onInput() {
             this.$emit('input', this.editorData)
+        },
+
+        imageRemove(images) {
+            this.$emit("imageRemove", images);
         },
     },
 }

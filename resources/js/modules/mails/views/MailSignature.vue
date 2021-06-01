@@ -198,7 +198,7 @@
 
 <!--                                </tinymce>-->
 
-                                <ckeditor v-model="modelContent"></ckeditor>
+                                <ckeditor v-model="modelContent" @imageRemove="handleImageRemove"></ckeditor>
                             </div>
                         </form>
 
@@ -408,6 +408,10 @@ export default {
             if (this.messageForms.action === 'updated_signature') {
                 await this.getSignatureList()
             }
+        },
+
+        handleImageRemove(images) {
+            console.log(images)
         },
 
         modalOpener(mode){
