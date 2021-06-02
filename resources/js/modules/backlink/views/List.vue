@@ -168,7 +168,7 @@
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-show="tblFollowupBacklinksOpt.id_backlink" v-if="user.isOurs == 0">ID Bck</th>
+                                <th v-show="tblFollowupBacklinksOpt.id_backlink">ID Bck</th>
                                 <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
                                 <th v-show="tblFollowupBacklinksOpt.buyer">User Buyer</th>
                                 <th v-show="tblFollowupBacklinksOpt.url_publisher">URL Publisher</th>
@@ -190,7 +190,7 @@
                         <tbody>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
-                                <td v-show="tblFollowupBacklinksOpt.id_backlink" v-if="user.isOurs == 0">{{ backLink.id }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
                                  0 && !user.isAdmin) ||
                                  user.isAdmin">{{
@@ -706,13 +706,14 @@
                         { orderable: true, targets: 0 },
                         { orderable: true, targets: 1 },
                         { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3, width: "200px" },
+                        { orderable: true, targets: 3 },
                         { orderable: true, targets: 4, width: "200px" },
-                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 5, width: "200px" },
                         { orderable: true, targets: 6 },
                         { orderable: true, targets: 7 },
                         { orderable: true, targets: 8 },
                         { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
                         { orderable: false, targets: '_all' }
                     ];
                 }
