@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\InboxResource;
-use App\MailSignature;
 use Illuminate\Http\Request;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
@@ -105,35 +104,17 @@ class MailgunController extends Controller
 
         $str = implode (", ", $list_emails);
 
-        // work mail and email signature
-
-        $work_mail = $request->has('work_mail') ? $request->work_mail : Auth::user()->work_mail;
-
-        $signature = MailSignature::select('content')->where('work_mail', $work_mail)->first();
-
-        $signature = $signature ? "<div style='width:100%'>" . $signature->content . "</div>" : '';
-
-        // get inline images source
-
-        $inlineImagesSrc = $this->imageSrcExtractor($signature);
-
-        // replace html string images source for mailgun
-
-        $send_signature = str_replace("/storage/uploads/","cid:", $signature);
-
         $params = [
-		    'from'                  => $work_mail,
+		    'from'                  => Auth::user()->work_mail,
 		    'to'                    => array($str),
 		    'subject'               => $request->title,
-//            'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
-            'html'                  => "<div style='white-space: pre'>" . $request->content . $send_signature . "</div>",
+            'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
             'recipient-variables'   => json_encode($object),
             'attachment'            => $atth,
             'o:tag'                 => array('test1'),
             'o:tracking'            => 'yes',
             'o:tracking-opens'      => 'yes',
             'o:tracking-clicks'     => 'yes',
-            'inline'                => $inlineImagesSrc
         ];
 
         if(isset($request->cc) && $request->cc != ""){
@@ -178,13 +159,11 @@ class MailgunController extends Controller
             }
         }
 
-//        $input['body-plain'] = $request->content;
-        $input['body-plain'] = "<div style='white-space: pre'>" . $request->content . $signature . "</div>";
-
+        $input['body-plain'] = $request->content;
         $res = preg_replace("/[<->]/", "", $sender->getId());
 
         $sendEmail = Reply::create([
-            'sender'            => $work_mail,
+            'sender'            => Auth::user()->work_mail,
             'subject'           => $request->title,
             'is_sent'           => 1,
             'is_viewed'         => 1,
@@ -201,42 +180,6 @@ class MailgunController extends Controller
         ]);
 
 		return response()->json(['success'=> true, 'message'=> $sender], 200);
-    }
-
-    public function imageSrcExtractor($str)
-    {
-        //Create a new DOMDocument object.
-        $htmlDom = new \DOMDocument();
-
-        //Load the HTML string into our DOMDocument object.
-        @$htmlDom->loadHTML($str);
-
-        //Extract all img elements / tags from the HTML.
-        $imageTags = $htmlDom->getElementsByTagName('img');
-
-        //Create an array to add extracted images to.
-        $extractedImages = array();
-
-        //Loop through the image tags that DOMDocument found.
-        foreach($imageTags as $imageTag){
-
-            //Get the src attribute of the image.
-            $imgSrc = $imageTag->getAttribute('src');
-
-            //Get the alt text of the image.
-            $altText = $imageTag->getAttribute('alt');
-
-            //Get the title text of the image, if it exists.
-            $titleText = $imageTag->getAttribute('title');
-
-            //Add the image details to our $extractedImages array.
-            $extractedImages[] = array(
-//                'filePath' => $imgSrc,
-                'filePath' => str_replace("/storage","../storage/app/public/", $imgSrc),
-            );
-        }
-
-        return $extractedImages;
     }
 
     public function retrieve_all()
