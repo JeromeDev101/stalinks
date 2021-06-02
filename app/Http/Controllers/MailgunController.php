@@ -111,7 +111,7 @@ class MailgunController extends Controller
 
         $signature = MailSignature::select('content')->where('work_mail', $work_mail)->first();
 
-        $signature = $signature ? "<div>" . $signature->content . "</div>" : '';
+        $signature = $signature ? "<div style='width:100%'>" . $signature->content . "</div>" : '';
 
         // get inline images source
 
@@ -120,8 +120,6 @@ class MailgunController extends Controller
         // replace html string images source for mailgun
 
         $send_signature = str_replace("/storage/uploads/","cid:", $signature);
-
-        dd
 
         $params = [
 		    'from'                  => $work_mail,

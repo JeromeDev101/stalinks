@@ -234,6 +234,8 @@
                 </div>
             </div>
         </div>
+
+        <div style="display: none" ref="editorPreview" v-html="htmlContent"></div>
     </div>
 </template>
 
@@ -262,19 +264,23 @@ export default {
             signatureModel : {
                 name: '',
                 content: '',
-                work_mail: ''
+                work_mail: '',
+                html_content : ''
             },
 
             updateSignatureModel: {
                 id: '',
                 name: '',
                 content: '',
-                work_mail: ''
+                work_mail: '',
+                html_content : ''
             },
 
             modalMode: '',
             isPopupLoading: false,
             isLoadingTable: false,
+
+            htmlContent: '',
 
             options: {
                 height: 450,
@@ -370,7 +376,15 @@ export default {
                 } else {
                     this.updateSignatureModel.content = val
                 }
+
+                this.htmlContent = val
             }
+        }
+    },
+
+    watch: {
+        htmlContent: function () {
+            this.finalizeHtml()
         }
     },
 
@@ -394,6 +408,9 @@ export default {
         async submitAdd() {
             let self = this;
             this.isPopupLoading = true;
+
+            this.signatureModel.html_content = this.$refs.editorPreview.innerHTML
+
             await this.$store.dispatch('actionAddEmailSignature', self.signatureModel);
             this.isPopupLoading = false;
 
@@ -438,6 +455,9 @@ export default {
 
         async submitUpdate() {
             this.isPopupLoading = true;
+
+            this.updateSignatureModel.html_content = this.$refs.editorPreview.innerHTML
+
             await this.$store.dispatch('actionUpdateEmailSignature', this.updateSignatureModel);
             this.isPopupLoading = false;
 
@@ -450,6 +470,42 @@ export default {
             console.log(images)
         },
 
+        finalizeHtml() {
+            this.$nextTick(() => {
+                let tables = this.$refs.editorPreview.getElementsByClassName('table')
+
+                let tableElements = this.$refs.editorPreview.getElementsByTagName('table')
+
+                for(let i=0; i < tableElements.length; i++)
+                {
+                    if (tables[i].style['width'] != null && tables[i].style['width'] !== '') {
+                        tableElements[i].style['width'] = tables[i].style['width'];
+                    }
+
+                    if(tableElements[i].style['width'] !== '' && tableElements[i].style['width'] != null) {
+                        tables[i].style['width'] = ''
+                    }
+                }
+
+                let images = this.$refs.editorPreview.getElementsByClassName('image')
+
+                let imageElements = this.$refs.editorPreview.getElementsByTagName('img')
+
+                for(let i=0; i < imageElements.length; i++)
+                {
+                    if (images[i].style['width'] != null && images[i].style['width'] !== '') {
+                        imageElements[i].style['width'] = images[i].style['width'];
+                    }
+
+                    if (imageElements[i].style['width'] !== '' && imageElements[i].style['width'] != null) {
+                        images[i].style['width'] = ''
+                    }
+                }
+
+                console.log(this.$refs.editorPreview.innerHTML)
+            });
+        },
+
         modalOpener(mode){
             this.clearMessageForm()
 
@@ -458,6 +514,8 @@ export default {
             if (this.modalMode === 'Add') {
                 this.checkWorkMail()
             }
+
+            this.finalizeHtml()
 
             let element = this.$refs.modalSignature
             $(element).modal('show')
@@ -484,7 +542,8 @@ export default {
             this.signatureModel = {
                 name: '',
                 content: '',
-                work_mail: ''
+                work_mail: '',
+                html_content: ''
             };
         },
 

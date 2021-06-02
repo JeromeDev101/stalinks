@@ -153,12 +153,12 @@ export default {
                         },
                         {
                             name: 'resizeImage:50',
-                            value: '50',
+                            value: '250',
                             icon: 'medium'
                         },
                         {
                             name: 'resizeImage:75',
-                            value: '75',
+                            value: '400',
                             icon: 'large'
                         }
                     ],
@@ -167,7 +167,9 @@ export default {
                         'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
                         '|',
                         'resizeImage:50', 'resizeImage:75', 'resizeImage:original',
-                    ]
+                    ],
+
+                    resizeUnit: 'px'
                 },
 
                 simpleUpload: {
@@ -183,7 +185,7 @@ export default {
                         Authorization: '',
                         Accept: 'application/json'
                     }
-                }
+                },
             }
         }
     },

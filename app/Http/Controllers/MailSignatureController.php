@@ -52,7 +52,9 @@ class MailSignatureController extends Controller
 
         $request['user_id'] = Auth::id();
 
-        $sig = MailSignature::create($request->all());
+        $request['content'] = $request->html_content;
+
+        $sig = MailSignature::create($request->except('html_content'));
 
         return response()->json(['success' => true, 'data' => $sig]);
     }
@@ -84,12 +86,14 @@ class MailSignatureController extends Controller
             'work_mail.unique' => 'Only one email signature is allowed per work mail/login mail.'
         ])->validate();
 
+        $request['content'] = $request->html_content;
+
         $sig = MailSignature::find($request->id);
 
         if (!$sig) {
             return response()->json(['success' => false]);
         }else{
-            $sig->update($request->all());
+            $sig->update($request->except('html_content'));
             $response['success'] = true;
             return response()->json(['success' => true]);
         }
