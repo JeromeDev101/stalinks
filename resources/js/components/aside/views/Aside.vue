@@ -104,7 +104,7 @@
                 <li
                     v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller))
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))
                     "
                     :class="{ active: $route.name == 'generate-list' }"
                 >
