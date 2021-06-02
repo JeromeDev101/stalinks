@@ -26,6 +26,10 @@ class WalletSummaryController extends Controller
                     ->where('users.isOurs', 1)
                     ->where('users.status', 'active')
                     ->where('registration.is_sub_account', 0)
+                    ->when(isset($request->buyer), function($query) use ($request) {
+                        return $query->where('users.id', $request->buyer);
+                    })
+                    ->having('deposit', '>', 0)
                     ->groupBy('users.id', 'users.name', 'users.username')
                     ->get();
 

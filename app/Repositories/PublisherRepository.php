@@ -274,12 +274,109 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         switch ( $type ) {
             case "value1":
                 $score = $b - $a;
+                
+                // ur = $a
+                // dr = $b
+
                 $val = '';
-                if( $score < 5 && $score >= -3){  $val = 'A'; }
-                else if( $score <= 8 && $score >= 5){ $val = 'C'; }
-                else if( $score <= -4 && $score >= -8){ $val = 'D'; }
-                else if( $score >= 8 || $score <= -8){ $val = 'E'; }
+                           
+                if( ($a >= 0 && $a <= 9) || ($b >= 0 && $b <= 9) ){
+                    $val = 'E';
+                    return $val;
+                }
+                
+                
+                if( ($a >= 10 && $a <= 100) && ($b >= 10 && $b <= 19) ) {
+                    
+                    if( $score >= -9 && $score <= 9 ) {
+                        $val = 'D';
+                    } else {
+                        $val = 'E';
+                    }
+                    return $val;
+                }
+                
+                if( ($a >= 10 && $a <= 19) && ($b >= 20 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 15 ) {
+                        $val = 'D';
+                    } else {
+                        $val = 'E';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 20 && $a <= 100) && ($b >= 20 && $b <= 34) ) {
+                    
+                    if( $score >= -15 && $score <= -1 ) {
+                        $val = 'D';
+                    } else if( $score <= -16 ) {
+                        $val = 'E';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 20 && $a <= 34) && ($b >= 35 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 16 ) {
+                        $val = 'B';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 35 && $a <= 49) && ($b >= 35 && $b <= 49) ) {
+                    
+                    if( $score >= -9 && $score <= 9 ) {
+                        $val = 'B';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 50 && $a <= 100) && ($b >= 35 && $b <= 49) ) {
+                    
+                    if( $score >= -15 && $score <= -5 ) {
+                        $val = 'D';
+                    } else if( $score <= -16 ) {
+                        $val = 'E';
+                    } else {
+                        $val = 'A';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 35 && $a <= 49) && ($b >= 50 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 5 ) {
+                        $val = 'A';
+                    } else {
+                        $val = 'B';
+                    }
+                    return $val;
+                }
+                
+                if( ($a >= 50 && $a <= 100) && ($b >= 50 && $b <= 100) ) {
+                    
+                    if( $score >= -5 && $score <= 15 ) {
+                        $val = 'A';
+                    } else {
+                        $val = 'B';
+                    }
+                    return $val;
+                }
+
                 return $val;
+                
             case "value2":
                 if($a == 0){
                     return '';

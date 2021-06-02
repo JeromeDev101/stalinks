@@ -73,6 +73,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');
 
+    //Generate List
+    Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
+    Route::name('generate-list')->get('generate-list','GenerateListController@getList');
+    Route::name('generate-list-delete')->post('generate-list-delete','GenerateListController@deleteGenerateList');
+    Route::name('generate-list-ahref')->post('generate-list-ahref','GenerateListController@getAhrefs');
+    Route::name('generate-list-compute-price')->post('generate-list-compute-price','GenerateListController@computePrice');
+
     //Accounts
     Route::name('add-accounts')->post('accounts', 'AccountController@store');
     Route::name('get-accounts')->get('accounts', 'AccountController@getList');

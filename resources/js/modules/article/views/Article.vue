@@ -310,8 +310,22 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label for="">Note</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.note"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Meta Keywords</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_keyword"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label for="">Meta Description</label>
-                                    <textarea class="form-control" id="" cols="30" rows="3" v-model="contentModel.meta_description"></textarea>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -461,6 +475,8 @@
                     seller: '',
                     buyer: '',
                     meta_description: '',
+                    note: '',
+                    meta_keyword: '',
                 },
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
@@ -713,6 +729,8 @@
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
                 this.contentModel.backlink_status = article.backlink_status;
                 this.contentModel.meta_description = article.meta_description;
+                this.contentModel.meta_keyword = article.meta_keyword;
+                this.contentModel.note = article.note;
 
                 $('#modal-content-edit').modal('show');
             },
