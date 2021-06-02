@@ -39,8 +39,14 @@ class ArticlesController extends Controller
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:15;
         $user = Auth::user();
         $registration = Registration::where('email', $user->email)->first();
+        $columns = [
+            'article.*',
+            'users.isOurs',
+        ];
 
-        $list = Article::with('country:id,name')
+        $list = Article::select($columns)
+                        ->leftjoin('users', 'article.id_writer', '=', 'users.id')
+                        ->with('country:id,name')
                         ->with('price')
                         ->with(['backlinks' => function($q){
                             $q->with(['publisher' => function($sub){
