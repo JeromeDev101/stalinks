@@ -51,12 +51,6 @@
                                     Mail Template
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-signature'}">
-                                <router-link :to="{path:'/mails/signature', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
-                                    <i class="fa fa-fw fa-id-card-o"></i>
-                                    Signatures
-                                </router-link>
-                            </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
                                 <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-trash"></i>
@@ -217,7 +211,7 @@ export default {
     methods: {
         selectWorkMail() {
             this.setQueryLabel(null)
-            this.$children[6].getInbox()
+            this.$children[5].getInbox()
             this.getListLabels()
         },
 
