@@ -27,7 +27,8 @@ const state = {
         under_of_main_buyer: true,
         account_validation: true,
         status: true,
-        email: true,
+        country: false,
+        language: false,
     },
 }
 

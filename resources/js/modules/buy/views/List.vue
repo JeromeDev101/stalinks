@@ -84,15 +84,23 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5) ">
+                        <div class="col-md-2" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">
                             <div class="form-group">
                                 <label for="">Code</label>
-                                <select name="" class="form-control" v-model="filterModel.code">
+                                <!-- <select name="" class="form-control" v-model="filterModel.code">
                                     <option value="">All</option>
                                     <option v-for="option in listCode" v-bind:value="option">
                                         {{ option }}
                                     </option>
-                                </select>
+                                </select> -->
+
+                                <v-select
+                                    v-model="filterModel.code"
+                                    multiple
+                                    placeholder="All"
+                                    :options="listCode"
+                                    :searchable="false"
+                                />
                             </div>
                         </div>
 
@@ -122,6 +130,20 @@
 
                         <div class="col-md-2">
                             <div class="form-group">
+                                <label>Domain Zone</label>
+                                <v-select
+                                    v-model="filterModel.domain_zone"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :options="listDomainZones.data"
+                                    :searchable="true"
+                                    :reduce="domain => domain.name"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
                                 <label for="">Price Basis</label>
                                 <v-select multiple
                                           v-model="filterModel.price_basis" :options="['Good', 'Average', 'High']" :searchable="false" placeholder="All"/>
@@ -131,6 +153,23 @@
 <!--                                    <option value="Average">Average</option>-->
 <!--                                    <option value="High">High</option>-->
 <!--                                </select>-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Is Https?</label>
+                                <select
+                                    class="form-control"
+                                    v-model="filterModel.is_https">
+                                    <option value="">All</option>
+                                    <option
+                                        value="yes">Yes
+                                    </option>
+                                    <option
+                                        value="no">
+                                        No</option>
+                                </select>
                             </div>
                         </div>
 
@@ -301,16 +340,23 @@
                         <template
                             slot-scope="scope"
                             slot="continentData">
-                            {{ scope.row.country_continent ?
-                            scope.row.country_continent :
-                            scope.row.publisher_continent }}
+                            {{
+                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                ? 'N/A'
+                                : scope.row.country_continent
+                                    ? scope.row.country_continent
+                                    : scope.row.publisher_continent
+                            }}
                         </template>
 
                         <template
                             slot-scope="scope"
                             slot="urlData">
-                            {{
-                            replaceCharacters(scope.row.url) }}
+<!--                            {{ replaceCharacters(scope.row.url) }}-->
+
+                            <a :href="'//' + scope.row.url" target="_blank">
+                                {{ scope.row.url }}
+                            </a>
                         </template>
 
                         <template
@@ -700,6 +746,7 @@
                     code: this.$route.query.code || '',
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
+                    domain_zone: this.$route.query.domain_zone || '',
                     price_basis: this.$route.query.price_basis || '',
                     paginate: this.$route.query.paginate || 50,
                     ur: this.$route.query.ur || 0,
@@ -707,7 +754,9 @@
                     org_kw: this.$route.query.org_kw || 0,
                     org_traffic:
                         this.$route.query.org_traffic || 0,
-                    price: this.$route.query.price || 0
+                    price: this.$route.query.price || 0,
+                    is_https : this.$route.query.is_https
+                        || ''
                 },
                 buttonState: {
                     ur : 'Above',
@@ -782,6 +831,8 @@
                 this.getBuyList();
                 this.generatorLoader.hide();
             });
+
+            this.columnShow();
         },
 
         computed: {
@@ -790,6 +841,7 @@
                 listBuy: state => state.storeBuy.listBuy,
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listContinent: state => state.storePublisher.listContinent,
+                listDomainZones: state => state.storePublisher.listDomainZones,
                 messageForms: state => state.storeBuy.messageForms,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storeBuy.listSeller,
@@ -862,6 +914,13 @@
                         name : 'URL',
                         actionName: 'urlData',
                         width: 175,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'is_https',
+                        name : 'Is Https?',
+                        sortable: true,
+                        width: 200,
                         isHidden: false
                     },
                     {
@@ -941,8 +1000,7 @@
                         name : 'Code Comb',
                         sortable: true,
                         width: 125,
-                        isHidden: this.user.role_id == 5 &&
-                            this.user.isOurs == 1
+                        isHidden: false
                     },
                     {
                         prop : 'code_price',
@@ -978,6 +1036,7 @@
             this.getListContinents();
             this.checkCreditAuth();
             this.getListSeller();
+            this.getListDomainZones();
             // this.columnShow();
             // this.checkBuyerCommission();
 
@@ -1131,10 +1190,10 @@
                         price_direction:
                         this.buttonState.price,
                         page: page,
+                        domain_zone: this.filterModel.domain_zone,
+                        is_https: this.filterModel.is_https
                     }
                 })
-
-                this.columnShow();
 
                 this.isSearching = false;
                 this.toggleSearchLoading();
@@ -1143,6 +1202,10 @@
 
             async getListSeller(params) {
                 await this.$store.dispatch('actionGetListSeller', params);
+            },
+
+            async getListDomainZones(params) {
+                await this.$store.dispatch('actionGetListDomainZones', params);
             },
 
             checkSelected() {
@@ -1183,8 +1246,10 @@
                     code: '',
                     casino_sites: '',
                     topic: '',
+                    domain_zone: '',
                     price_basis: '',
                     paginate: 50,
+                    is_https : ''
                 }
 
                 this.getBuyList({
@@ -1242,6 +1307,7 @@
                         paginate: this.filterModel.paginate,
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
+                        domain_zone: this.filterModel.domain_zone,
                         price_basis: this.filterModel.price_basis,
                         ur: this.filterModel.ur,
                         ur_direction: this.buttonState.ur,
@@ -1250,7 +1316,9 @@
                         org_kw: this.filterModel.org_kw,
                         org_kw_direction: this.buttonState.org_kw,
                         org_traffic: this.filterModel.org_traffic,
-                        org_traffic_direction: this.buttonState.org_traffic
+                        org_traffic_direction:
+                        this.buttonState.org_traffic,
+                        is_https: this.filterModel.is_https
                     }
                 });
             },

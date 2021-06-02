@@ -60,6 +60,8 @@
                                     <option value="Queue">Queue</option>
                                     <option value="In Writing">In Writing</option>
                                     <option value="Done">Done</option>
+                                    <option value="Canceled">Canceled</option>
+                                    <option value="Issue">Issue</option>
                                 </select>
                             </div>
                         </div>
@@ -220,7 +222,7 @@
                             slot="statusData">
                             {{ scope.row.status_writer ==
                             null ?
-                            'Queue':scope.row.status_writer
+                            scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue' :scope.row.status_writer
                             }}
                         </template>
 
@@ -294,7 +296,7 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
+                            <div class="col-sm-12" v-if="user.isOurs == '0' || user.role_id == 4">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
@@ -303,6 +305,27 @@
                                             {{ option }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Note</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.note"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Meta Keywords</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_keyword"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Meta Description</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -316,7 +339,7 @@
                     <div class="modal-footer">
                         <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
                         <button @click="clearQuery" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button @click="submitSave"  type="button" class="btn btn-primary">Save</button>
+                        <button @click="submitSave" v-show="contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue'" type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -408,6 +431,7 @@
     import { mapState } from 'vuex';
     import 'tinymce/skins/lightgray/skin.min.css';
     import VueVirtualTable from 'vue-virtual-table';
+    import axios from 'axios';
 
     export default {
         components: {
@@ -450,6 +474,9 @@
                     link: '',
                     seller: '',
                     buyer: '',
+                    meta_description: '',
+                    note: '',
+                    meta_keyword: '',
                 },
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
@@ -641,21 +668,44 @@
                 }
             },
 
-            viewArticle() {
-                let id = this.id_article;
-                let articles = this.listArticles.data;
-                let article = '';
-
-                articles.forEach(function(item, index){
-                    if( item.id == id){
-                        article = item;
+            async getArticleInfo() {
+                const res = await axios.get('/api/article-list', {
+                    params: {
+                        search_article: this.id_article
                     }
-                })
+                }).then(response => response.data);
 
-                if( id ){
-                    this.doUpdate(article.backlinks, article);
-                    $("#modal-content-edit").modal('show')
+                return res;
+            },
+
+            viewArticle() {
+                // let id = this.id_article;
+                // let articles = this.listArticles.data;
+                // let article = '';
+
+                // console.log(this.getArticleInfo())
+                if( this.id_article ) {
+                    this.getArticleInfo().then((res) => {
+                        var article = res.data[0];
+
+                        if( article ){
+                            this.doUpdate(article.backlinks, article);
+                            $("#modal-content-edit").modal('show')
+                        }
+                    })
                 }
+                
+
+                // articles.forEach(function(item, index){
+                //     if( item.id == id){
+                //         article = item;
+                //     }
+                // })
+
+                // if( article ){
+                //     this.doUpdate(article.backlinks, article);
+                //     $("#modal-content-edit").modal('show')
+                // }
             },
 
             clearQuery() {
@@ -677,6 +727,10 @@
                 this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
                 this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
+                this.contentModel.backlink_status = article.backlink_status;
+                this.contentModel.meta_description = article.meta_description;
+                this.contentModel.meta_keyword = article.meta_keyword;
+                this.contentModel.note = article.note;
 
                 $('#modal-content-edit').modal('show');
             },

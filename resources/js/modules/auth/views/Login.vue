@@ -2,7 +2,7 @@
     <div class="homepage-login">
         <div class="col-md-4 col-md-offset-4 homepage-login__login custom-card">
             <h2 class="homepage-login__title">
-                <img src="images/banner.png" alt="User Image">
+                <img style="height: auto; width: 385px;" src="../../../../images/stalinks2.png" alt="User Image">
             </h2>
             <form class="homepage-login__login-form" @submit.prevent="submitLogin(credentials)">
                 <div class="form-group">

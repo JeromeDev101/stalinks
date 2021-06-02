@@ -61,6 +61,10 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-user-seller-team')->get('wallet-user-seller-team', 'WalletTransactionController@getListSellerTeam');
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
+    Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
+
+    //Wallet Summary
+    Route::name('get-wallet-summary')->get('wallet-summary', 'WalletSummaryController@getList');
 
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');
@@ -68,6 +72,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-buy')->put('buy','BuyController@update');
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');
+
+    //Generate List
+    Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
+    Route::name('generate-list')->get('generate-list','GenerateListController@getList');
+    Route::name('generate-list-delete')->post('generate-list-delete','GenerateListController@deleteGenerateList');
+    Route::name('generate-list-ahref')->post('generate-list-ahref','GenerateListController@getAhrefs');
+    Route::name('generate-list-compute-price')->post('generate-list-compute-price','GenerateListController@computePrice');
 
     //Accounts
     Route::name('add-accounts')->post('accounts', 'AccountController@store');
@@ -84,6 +95,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-sub-account')->get('/update-sub-account', 'AccountController@updateSubAccount');
     Route::name('get-verified-account')->get('/get-verified-account', 'AccountController@checkVerifiedAccount');
     Route::name('verify-account')->post('/verify-account', 'AccountController@verifyAccount');
+    Route::name('update-multiple-in-charge')->post('/update-multiple-in-charge', 'AccountController@updateMultipleInCharge');
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');
@@ -114,6 +126,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
     Route::name('best-price-log')->get('publisher/best-prices/log', 'PublisherController@bestPricesGenerationLog');
     Route::name('seller-incharge')->get('/seller-incharge/{user_id}', 'PublisherController@getListSellerIncharge');
+    Route::name('publisher-qc-validation')->post('/publisher/qc-validation', 'PublisherController@qcValidationUpdate');
+    Route::name('publisher-domain-zones')->get('/publisher/domain-zones', 'PublisherController@getDomainZoneExtensions');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
@@ -122,11 +136,12 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
     Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
-    Route::name('ext-get-contacts')->get('/ext/get-contacts', 'ExtDomainController@crawlContact');
+    Route::name('ext-get-contacts')->post('/ext/get-contacts', 'ExtDomainController@crawlContact');
     Route::name('ext-upload-csv')->post('/ext/upload-csv', 'ExtDomainController@importExcel');
     Route::name('ext-delete')->delete('/ext', 'ExtDomainController@delete');
     Route::name('ext-update-multiple-status')->put('/ext/update-multiple-status', 'ExtDomainController@updateMultipleStatus');
     Route::name('ext-get-ext-seller')->get('ext/ext-seller','ExtDomainController@getListExtSeller');
+    Route::name('ext-update-multiple-employee')->post('/update-multiple-employee','ExtDomainController@updateMultipleEmployee');
 
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');
@@ -209,9 +224,13 @@ Route::middleware('auth:api')->group(function () {
         Route::name('filter_recipient')->get('/filter-recipient','MailgunController@recipient_filter');
         Route::name('get_sent')->post('/sent','MailgunController@sent');
         Route::name('starred')->get('/starred','MailgunController@starred');
+        Route::name('starred-thread')->post('/starred-thread','MailgunController@starredThread');
         Route::name('is_viewed')->get('/is-viewed','MailgunController@setViewMessage');
+        Route::name('is_viewed_thread')->post('/is-viewed-thread','MailgunController@setViewMessageThread');
         Route::name('labeling')->post('/labeling','MailgunController@labeling');
+        Route::name('labeling-thread')->post('/labeling-thread','MailgunController@labelingThread');
         Route::name('delete-message')->get('/delete-message','MailgunController@deleteMessage');
+        Route::name('delete-message-thread')->post('/delete-message-thread','MailgunController@deleteMessageThread');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
@@ -234,6 +253,14 @@ Route::middleware('auth:api')->group(function () {
     //Paypal Integration
     Route::name('create-order')->post('/paypal/order/create', 'PayPalController@createOrder');
     Route::name('capture-order')->post('/paypal/order/{id}/capture', 'PayPalController@captureOrder');
+
+    //Graphs
+    Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
+    Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
+    Route::name('url-valid-graph')->get('/graphs/url-valid', 'GraphsController@getUrlValidGraph');
+    Route::name('url-valid-graph')->get('/graphs/url-valid-price', 'GraphsController@getUrlValidPriceGraph');
+    Route::name('url-seller-statistics')->get('/graphs/url-seller-statistics', 'GraphsController@getUrlSellerStatisticsGraph');
+    Route::name('prospect-qualified-registered')->get('/graphs/prospect-qualified-registered', 'GraphsController@getProspectQualifiedVsRegisteredGraph');
 });
 
 //Mailgun external
@@ -243,12 +270,15 @@ Route::name('domain-status')->get('/mail/status','MailgunController@status_mail'
 Route::name('message_view')->post('/mail/view-message','MailgunController@view_message');
 Route::name('show_attach')->post('/mail/show-attachment','MailgunController@show_attachment');
 
-// Route::name('get-country-website')->get('/get-website-country','ConfigController@getCountryWebsite');
-// Route::name('get-topic-website')->get('/get-website-topic','ConfigController@getTopicWebsite');
-
 //test pusher
 Route::name('pusher')->get('/test-pusher','PushController@test');
 
+//test paypal payment
+Route::get('payment', 'PayPalController@payment')->name('payment');
+Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
+Route::get('payment/success', 'PayPalController@success')->name('payment.success');
+
+Route::get('url-prospect-email-extraction', 'ConfigController@urlProspectEmailExtraction')->name('url-prospect-email-extraction');
 //removing http,www,https
 Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
 

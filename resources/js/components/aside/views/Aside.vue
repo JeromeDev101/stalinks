@@ -104,6 +104,23 @@
                 <li
                     v-if="
                         user.isAdmin ||
+                            (user.isOurs == 0 && (isManager || isSeller))
+                    "
+                    :class="{ active: $route.name == 'generate-list' }"
+                >
+                    <router-link
+                        class="custom-padding"
+                        :to="{ path: '/generate-list' }"
+                    >
+                        <i class="fa fa-reorder"></i>
+                        <span>Generate List</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
+                <li
+                    v-if="
+                        user.isAdmin ||
                             (user.role_id == 3 && user.isOurs == 0) ||
                             (user.role_id == 5 && user.isOurs == 0) ||
                             (user.role_id == 6 && user.isOurs == 0) ||
@@ -170,11 +187,13 @@
                         active:
                             $route.name == 'seller-billing' ||
                             $route.name == 'wallet-transaction' ||
+                            $route.name == 'wallet-summary' ||
                             $route.name == 'writer-billing',
                         treeview: true,
                         'menu-open':
                             $route.name == 'wallet-transaction' ||
                             $route.name == 'seller-billing' ||
+                            $route.name == 'wallet-summary' ||
                             $route.name == 'writer-billing'
                     }"
                 >
@@ -217,6 +236,21 @@
                             <router-link :to="{ path: '/wallet-transaction' }">
                                 <i class="fa fa-money"></i>
                                 <span>Wallet Transaction</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+
+                        <li
+                            v-if="user.isAdmin ||
+                            isManager || isBuyer || isQc || isQcSeller ||
+                                     isQcBilling"
+                            :class="{
+                                active: $route.name == 'wallet-summary'
+                            }"
+                        >
+                            <router-link :to="{ path: '/wallet-summary' }">
+                                <i class="fa fa-reorder"></i>
+                                <span>Wallet Summary</span>
                                 <span class="pull-right-container"></span>
                             </router-link>
                         </li>
@@ -449,6 +483,23 @@
                             </router-link>
                         </li>
                     </ul>
+                </li>
+
+                <li :class="{ 
+                    active: 
+                        $route.name == 'help' || 
+                        $route.name == 'seller-guide-1' ||
+                        $route.name == 'seller-guide-2' ||
+                        $route.name == 'seller-guide-3' ||
+                        $route.name == 'seller-guide-4'
+                }">
+                    <router-link
+                        class="page-sidebar__item"
+                        :to="{ path: '/help' }"
+                    >
+                        <i class="fa fa-question-circle"></i>
+                        <span>Help</span>
+                    </router-link>
                 </li>
             </ul>
         </section>

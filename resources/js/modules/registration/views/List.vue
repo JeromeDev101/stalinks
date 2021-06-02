@@ -21,8 +21,7 @@
                 </div>
 
                 <div class="box-body m-3 collapse" id="collapseFilterRegistration">
-                    <div class="row">
-
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Search Name, Email & Username</label>
@@ -58,15 +57,27 @@
                                 <label>Country</label>
                                 <select class="form-control" name="" v-model="filterModel.country">
                                     <option value="">Select Country</option>
+                                    <option value="none">None</option>
                                     <option v-for="option in listCountryAll.data" :value="option.id" :key="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <select class="form-control" name="" v-model="filterModel.language_id">
+                                    <option value="">Select Language</option>
+                                    <option value="none">None</option>
+                                    <option v-for="option in listLanguages.data" :value="option.id" :key="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Commission</label>
@@ -89,7 +100,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3" v-if="isTeamSeller" v-show="user.role_id == 8 || user.isAdmin">
+                        <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
                             <div class="form-group">
                                 <label>Team In-charge</label>
                                 <select class="form-control" v-model="filterModel.team_in_charge">
@@ -142,6 +153,7 @@
                                     <option value="">All</option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                             </div>
                         </div>
@@ -162,6 +174,20 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Verified</label>
+                                <select class="form-control"
+                                        v-model="filterModel.account_verification">
+                                    <option value="">All</option>
+                                    <option value="Yes">Yes
+                                    </option>
+                                    <option value="No">No
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -176,36 +202,102 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Accounts</h3>
-
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="getAccountList" v-model="filterModel.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button class="btn btn-success pull-right" @click="clearMessageform" data-toggle="modal" data-target="#modal-registration">Register</button>
                 </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-left">
+                                <div class="btn-group">
+                                    <button
+                                        class="btn btn-default"
+                                        @click="selectAll">
+
+                                        {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Send Email"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="doSendEmail(null)">
+
+                                        <i class="fa fa-fw fa-envelope-o"></i>
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Update multiple in charges"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="multipleUpdateInCharge">
+
+                                        <i class="fa fa-fw fa-user"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-right" style="width: 100px">
+                                <select
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;"
+                                    class="form-control float-right"
+
+                                    @change="getAccountList">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-setting"
+                                class="btn btn-default float-right mr-2">
+
+                                <i class="fa fa-cog"></i>
+                            </button>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-registration"
+                                class="btn btn-success pull-right mr-2"
+
+                                @click="clearMessageform">
+
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="box-body no-padding relative">
 
-                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text">
+                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
                         <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
                     </span>
 
-                    <table id="tbl_account" class="table table-striped table-bordered">
+                    <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
                         <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-show="tblAccountsOpt.date_registered">Date Registered</th>
-                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Account Email</th>
+                                <th></th>
+                                <th>Action</th>
+                                <th v-show="tblAccountsOpt.user_id">User ID</th>
+                                <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
+                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
                                 <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
                                 <th v-show="tblAccountsOpt.in_charge">In-charge</th>
-                                <th v-show="tblAccountsOpt.user_id">User ID</th>
-                                <th v-show="tblAccountsOpt.email">Email</th>
                                 <th v-show="tblAccountsOpt.username">Username</th>
                                 <th v-show="tblAccountsOpt.name">Name</th>
+                                <th v-show="tblAccountsOpt.country">Country</th>
+                                <th v-show="tblAccountsOpt.language">Language</th>
                                 <th v-show="tblAccountsOpt.company_type">Company Type</th>
                                 <th v-show="tblAccountsOpt.company_name">Company Name</th>
                                 <th v-show="tblAccountsOpt.company_url">Company URL</th>
@@ -214,20 +306,74 @@
                                 <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
                                 <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
                                 <th>Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <input
+                                                v-model="checkIds"
+                                                type="checkbox"
+                                                class="custom-checkbox"
+                                                :id="account.id"
+                                                :value="account"
+
+                                                @change="checkSelected">
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button
+                                            title="Edit"
+                                            data-toggle="modal"
+                                            class="btn btn-default"
+                                            data-target="#modal-update-registration"
+
+                                            @click="doUpdateAccount(account)">
+
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            title="Send Email"
+                                            data-toggle="modal"
+                                            class="btn btn-default"
+
+                                            @click="doSendEmail(account)">
+
+                                            <i class="fa fa-fw fa-envelope-o"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
                                 <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
-                                <td v-show="tblAccountsOpt.in_charge">{{ account.team_in_charge == null ?  '': account.is_sub_account == 1 ?  '':account.team_in_charge.username }}</td>
-                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
-                                <td v-show="tblAccountsOpt.email">{{ account.email }}</td>
+                                <td v-show="tblAccountsOpt.in_charge">
+                                    {{
+                                        account.team_in_charge == null
+                                            ? 'N/A'
+                                            : account.is_sub_account == 1
+                                                ? 'Sub'
+                                                :account.team_in_charge.username
+                                    }}
+
+                                    <span
+                                        v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
+                                        class="badge badge-danger">
+
+                                        Inactive
+                                    </span>
+                                </td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                <td v-show="tblAccountsOpt.country">{{ account.country === null ? 'N/A' : account.country.name }}</td>
+                                <td v-show="tblAccountsOpt.language">{{ account.language === null ? 'N/A' : account.language.name }}</td>
                                 <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
                                 <td v-show="tblAccountsOpt.company_url">
@@ -242,17 +388,10 @@
                                 <td v-show="tblAccountsOpt.under_of_main_buyer">{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdateAccount(account)" data-target="#modal-update-registration" title="Edit" class="btn btn-default">
-                                            <i class="fa fa-fw fa-edit"></i>
-                                        </button>
-                                    </div>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
-
+                    <pagination :data="listAccount" @pagination-change-page="getAccountList" :limit="8"></pagination>
                 </div>
 
             </div>
@@ -390,6 +529,18 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountUpdate.language_id">
+                                        <option value=null>None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>Address</label>
                                     <textarea class="form-control" v-model="accountUpdate.address"></textarea>
                                 </div>
@@ -403,6 +554,33 @@
                             </div>
 
                         </div>
+
+                        <hr/>
+                        <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                        <hr/>
+
+                        <div class="row" v-show="updateDisplayWriterPrice">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pricing type</label>
+                                    <select class="form-control" v-model="accountUpdate.rate_type">
+                                        <option value="ppw">Pay Per Words (PPW)</option>
+                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" >
+                                <div class="form-group">
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
@@ -495,6 +673,7 @@
                                 <select class="form-control" name="" v-model="accountUpdate.account_validation">
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                             </div>
 
@@ -634,6 +813,18 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountModel.language_id">
+                                        <option value="">None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label>Address</label>
                                     <textarea class="form-control" v-model="accountModel.address"></textarea>
                                 </div>
@@ -643,6 +834,32 @@
                                 <div class="form-group">
                                     <label>Info</label>
                                     <textarea class="form-control" v-model="accountModel.info"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr/>
+                        <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
+                        <hr/>
+
+                        <div class="row" v-show="addDisplayWriterPrice">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pricing type</label>
+                                    <select class="form-control" v-model="accountModel.rate_type">
+                                        <option value="ppw">Pay Per Words (PPW)</option>
+                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -727,6 +944,7 @@
                                     <option value="" disabled>Select Account Validation</option>
                                     <option value="valid">Valid</option>
                                     <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
@@ -791,6 +1009,211 @@
         </div>
         <!-- End of Modal Settings -->
 
+        <!-- Modal Send Email -->
+        <div id="modal-email-registration" class="modal fade" ref="modalEmailRegistration" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Send email</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                            <span
+                                v-if="messageForms.message != ''"
+                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="modal-body relative">
+                        <form class="row" action="">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="color: #333">Language</label>
+                                        <div>
+                                            <select
+                                                v-model="mailInfo.country.id"
+                                                class="form-control pull-right"
+
+                                                @change="doChangeEmailCountry">
+
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div  class="form-group">
+                                            <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
+                                            <div>
+                                                <select
+                                                    v-model="mailInfo.tpl"
+                                                    class="form-control pull-right"
+
+                                                    @change="doChangeEmailTemplate">
+
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
+                                                        {{ option.mail_name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
+                                    <label style="color: #333">Email</label>
+
+                                    <vue-tags-input
+                                        v-model="email_to"
+                                        :disabled="true"
+                                        :separators="separators"
+                                        :tags="registrationEmails"
+                                        :class="{'vue-tag-error': messageFormsMail.errors.email}"
+                                        ref="registrationTag"
+                                        placeholder=""
+
+                                        @tags-changed="newTags => registrationEmails = newTags"
+                                    />
+
+                                    <span
+                                        v-if="messageFormsMail.errors.email"
+                                        v-for="err in messageFormsMail.errors.email"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-top: 15px;">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
+                                    <label style="color: #333">Title</label>
+
+                                    <input type="text" v-model="modelMail.title" class="form-control" value="" required="required">
+
+                                    <span
+                                        v-if="messageFormsMail.errors.title"
+                                        v-for="err in messageFormsMail.errors.title"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
+                                    <label style="color: #333">Content</label>
+
+                                    <textarea
+                                        v-model="modelMail.content"
+                                        value=""
+                                        rows="10"
+                                        type="text"
+                                        required="required"
+                                        class="form-control">
+
+                                    </textarea>
+
+                                    <span
+                                        v-if="messageFormsMail.errors.content"
+                                        v-for="err in messageFormsMail.errors.content"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Attachment</label>
+                                    <input
+                                        multiple
+                                        type="file"
+                                        class="form-control"
+                                        id="file_send_registration"
+                                        ref="file_send_registration">
+                                </div>
+                            </div>
+                        </form>
+                        <div class="overlay" v-if="isPopupLoading"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="!allowSending"
+
+                            @click="submitSendMail">
+
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Send Email -->
+
+        <!-- Modal Multiple Update In Charge -->
+        <div
+            role="dialog"
+            tabindex="-1"
+            class="modal fade"
+            ref="modalMultipleUpdateIncharge"
+            aria-hidden="true"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update In Charge</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <select
+                                        v-model="updateMultipleInCharge"
+                                        value=""
+                                        type="text"
+                                        required="required"
+                                        class="form-control">
+
+                                        <option value="">N/A</option>
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{
+                                                option.username == null || option.username === ''
+                                                    ? option.name
+                                                    :option.username
+                                            }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleInCharge()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Multiple Update In Charge -->
+
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
@@ -799,6 +1222,7 @@
     import { mapState } from 'vuex';
     import axios from 'axios';
     import TermsAndConditions from "../../../components/terms/TermsAndConditions";
+    import {createTags} from "@johmun/vue-tags-input";
 
     export default {
         components: {TermsAndConditions},
@@ -827,7 +1251,10 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: 'Company',
+                    writer_price: '',
+                    rate_type: '',
                 },
 
                 filterModel: {
@@ -837,6 +1264,7 @@
                     paginate: this.$route.query.paginate || '15',
                     team_in_charge: this.$route.query.team_in_charge || '',
                     country: this.$route.query.country || '',
+                    language_id: this.$route.query.language_id || '',
                     commission: this.$route.query.commission || '',
                     credit_auth: this.$route.query.credit_auth || '',
                     company_type: this.$route.query.company_type || '',
@@ -846,7 +1274,9 @@
                     created_at: {
                         startDate: null,
                         endDate: null
-                    }
+                    },
+                    account_verification:
+                    this.$route.query.account_verification || ''
                 },
 
                 accountUpdate: {
@@ -874,7 +1304,10 @@
                     address: '',
                     info: '',
                     country_id: '',
+                    language_id: '',
                     company_type: '',
+                    writer_price: '',
+                    rate_type: '',
                 },
 
                 isPopupLoading: false,
@@ -888,6 +1321,35 @@
                 isVerified: true,
                 btnTermsAndConditions: false,
                 isDisableSubmit: true,
+                allowSending: false,
+
+                // for email sending
+                mailInfo: {
+                    tpl: 0,
+                    ids: '',
+                    receiver_text: '',
+                    country: {
+                        id: 0,
+                        name: '',
+                        code: ''
+                    }
+                },
+
+                modelMail: {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                },
+                email_to: '',
+                registrationEmails: [],
+                separators: [';', ',', '|', ' '],
+                addDisplayWriterPrice: false,
+                updateDisplayWriterPrice: false,
+
+                checkIds: [],
+                isDisabledAction: true,
+                allSelected: false,
+                updateMultipleInCharge: ''
             }
         },
 
@@ -898,21 +1360,190 @@
             this.getTeamInCharge();
             this.checkTeamSeller();
             this.getListCountries();
+            this.getListLanguages();
         },
 
         computed: {
             ...mapState({
                 tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
                 messageForms: state => state.storeAccount.messageForms,
+                messageFormsExt: state => state.storeExtDomain.messageForms,
+                messageFormsMail: state => state.storeMailgun.messageForms,
                 listAccount: state => state.storeAccount.listAccount,
                 listPayment: state => state.storeAccount.listPayment,
                 listIncharge: state => state.storeAccount.listIncharge,
                 user: state => state.storeAuth.currentUser,
                 listCountryAll: state => state.storePublisher.listCountryAll,
+                listLanguages: state => state.storePublisher.listLanguages,
+                listMailTemplate: state => state.storeExtDomain.listMailTemplate,
             }),
         },
 
         methods: {
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (let account in this.listAccount.data) {
+                        this.checkIds.push(this.listAccount.data[account]);
+                    }
+                }
+                this.allSelected = !this.allSelected;
+                this.checkSelected()
+            },
+
+            checkSelected() {
+                this.isDisabledAction = this.checkIds.length <= 0;
+            },
+
+            doSendEmail(data) {
+                this.registrationEmails = [];
+                let emails = [];
+
+                if (this.user.work_mail) {
+
+                    if (data === null) {
+
+                        if (this.checkIds.length === 0) {
+                            swal.fire('Invalid', 'Selection is empty.', 'error');
+                        } else if (this.checkIds.length > 10) {
+                            swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        } else {
+                            this.checkIds.forEach(function (item) {
+                                if (item.email !== "" || item.email != null) {
+                                    if (typeof(item.email) === "string") {
+                                        emails.push(item.email.split('|'))
+                                    } else {
+                                        emails.push(item.email.map(a => a.text))
+                                    }
+                                }
+                            })
+
+                            this.registrationEmails = createTags(emails.flat())
+
+                            this.openSendEmailModal();
+                        }
+
+                    } else {
+
+                        if (typeof(data.email) === "string") {
+                            emails = data.email.split('|')
+                        } else {
+                            emails = data.email.map(a => a.text);
+                        }
+
+                        this.registrationEmails = emails ? createTags(emails) : [];
+
+                        this.openSendEmailModal();
+
+                    }
+                } else {
+                    swal.fire(
+                        'Error',
+                        'Please setup your work mail first.',
+                        'error'
+                    )
+                }
+            },
+
+            openSendEmailModal() {
+                let element = this.$refs.modalEmailRegistration;
+                $(element).modal('show');
+                this.allowSending = true;
+            },
+
+            doChangeEmailCountry() {
+                let that = this, data = {};
+                let list = this.listLanguages.data
+
+                list.forEach(function (item) {
+                    if (item.id === that.mailInfo.country.id) {
+                        data = item;
+                    }
+                });
+
+                this.mailInfo.country.id = data.id;
+                this.mailInfo.country.name = data.name;
+                this.mailInfo.country.code = data.code;
+
+                this.fetchTemplateMail(this.mailInfo.country.id);
+            },
+
+            async fetchTemplateMail(countryId) {
+                await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
+            },
+
+            async doChangeEmailTemplate() {
+                let that = this;
+                this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+            },
+
+            async submitSendMail() {
+                this.allowSending = false;
+
+                // create form data
+
+                let formData = new FormData();
+                formData.append('cc', '');
+                formData.append('email', JSON.stringify(this.registrationEmails));
+                formData.append('title',  this.modelMail.title);
+                formData.append('content', this.modelMail.content);
+
+                // get attachments
+
+                let attachments = this.$refs.file_send_registration.files;
+
+                if (!attachments.length) {
+                    formData.append('attachment', 'undefined');
+                } else {
+                    for (let i = 0; i < attachments.length; i++) {
+                        formData.append('attachment[]', attachments[i]);
+                    }
+                }
+
+                // await this.$store.dispatch('sendMailWithMailgun', {
+                //     cc: '',
+                //     email: this.registrationEmails,
+                //     title: this.modelMail.title,
+                //     content: this.modelMail.content,
+                //     attachment: 'undefined',
+                // })
+
+                await this.$store.dispatch('actionSendMailgun', formData);
+
+                if (this.messageFormsMail.action === 'success') {
+                    this.modelMail = {
+                        title: '',
+                        content: '',
+                        mail_name: '',
+                    }
+
+                    $("#modal-email-registration").modal('hide')
+
+                    await swal.fire(
+                        'Success',
+                        'Email successfully sent',
+                        'success'
+                    )
+                    this.allowSending = true;
+
+                    this.checkIds = [];
+                    this.checkSelected();
+                    this.allSelected = false;
+
+                    this.$refs.file_send_registration.value = "";
+                } else {
+                    await swal.fire(
+                        'Error',
+                        'There are some errors while sending the email',
+                        'error'
+                    )
+                    this.allowSending = true;
+                }
+            },
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
             displayEmailPayment(account) {
                 let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '':account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
@@ -984,6 +1615,15 @@
 
             checkTeamIncharge(method) {
                 let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
+
+                if(role == 'Writer') {
+                    this.addDisplayWriterPrice = true;
+                    this.updateDisplayWriterPrice = true;
+                } else{
+                    this.addDisplayWriterPrice = false;
+                    this.updateDisplayWriterPrice = false;
+                }
+
                 axios.get('/api/team-in-charge-per-role',{
                     params: {
                         role: role
@@ -991,6 +1631,65 @@
                 })
                 .then((res)=> {
                     this.listTeamIncharge = res.data
+                })
+            },
+
+            checkTeamInchargeMultiple(role) {
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
+                    this.listTeamIncharge = res.data
+                })
+            },
+
+            multipleUpdateInCharge() {
+
+                let self = this;
+
+                // check if account types are all the same
+
+                let same = self.checkIds.every(id => id.type === self.checkIds[0].type)
+
+                if (same) {
+
+                    this.checkTeamInchargeMultiple(this.checkIds[0].type)
+
+                    let element = this.$refs.modalMultipleUpdateIncharge
+                    $(element).modal('show')
+
+                } else {
+                    swal.fire('Invalid', 'Selected items must have the same account type', 'error');
+                }
+
+            },
+
+            submitUpdateMultipleInCharge() {
+                let ids = [];
+                for(let index in this.checkIds) {
+                    ids.push(this.checkIds[index].id)
+                }
+
+                axios.post('/api/update-multiple-in-charge',{
+                    ids: ids,
+                    emp_id: this.updateMultipleInCharge
+                }).then((res) => {
+                    if(res.data.success === true) {
+
+                        let element = this.$refs.modalMultipleUpdateIncharge
+                        $(element).modal('hide')
+
+                        swal.fire(
+                            'Success',
+                            'Updated Successfully',
+                            'success'
+                        )
+
+                        this.updateMultipleInCharge = '';
+                        this.doSearch()
+                    }
                 })
             },
 
@@ -1078,6 +1777,7 @@
                 this.accountUpdate.team_in_charge = that.team_in_charge == null ? '':that.team_in_charge.id;
                 this.accountUpdate.password = '';
                 this.accountUpdate.c_password = '';
+                this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '':that.writer_price;
                 this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
 
                 this.checkTeamIncharge('update');
@@ -1088,7 +1788,7 @@
                 await this.$store.dispatch('actionGetListPayentType', params);
             },
 
-            async getAccountList(params) {
+            async getAccountList(page = 1) {
 
                 $("#tbl_account").DataTable().destroy();
                 this.isLoadingTable = true;
@@ -1102,6 +1802,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
                         company_type: this.filterModel.company_type,
@@ -1109,6 +1810,9 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification,
+                        page: page
                     }
                 });
                 this.isLoadingTable = false;
@@ -1120,8 +1824,6 @@
                     searching: false,
                     columnDefs: [
                         { orderable: true, targets: 0 },
-                        { orderable: true, targets: 1 },
-                        { orderable: true, targets: 2 },
                         { orderable: true, targets: 3 },
                         { orderable: true, targets: 4 },
                         { orderable: true, targets: 5 },
@@ -1133,6 +1835,12 @@
                         { orderable: true, targets: 11 },
                         { orderable: true, targets: 12 },
                         { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
                         { orderable: false, targets: '_all' }
                     ],
                 });
@@ -1151,10 +1859,13 @@
                     company_name: '',
                     company_url: '',
                     account_validation: '',
+                    country: '',
+                    language_id: '',
                     created_at: {
                         startDate: null,
                         endDate: null
-                    }
+                    },
+                    account_verification: ''
                 }
 
                 this.getAccountList({
@@ -1162,6 +1873,8 @@
                 });
 
                 this.$router.replace({'query': null});
+
+                this.resetSelectAll()
             },
 
             async doSearch(){
@@ -1177,6 +1890,7 @@
                         paginate: this.filterModel.paginate,
                         team_in_charge: this.filterModel.team_in_charge,
                         country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
                         company_type: this.filterModel.company_type,
                         commission: this.filterModel.commission,
                         credit_auth: this.filterModel.credit_auth,
@@ -1184,8 +1898,12 @@
                         company_url: this.filterModel.company_url,
                         account_validation: this.filterModel.account_validation,
                         created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification
                     }
                 });
+
+                this.resetSelectAll()
             },
 
             clearAccountModel() {
@@ -1208,6 +1926,12 @@
                     address: '',
                     country_id: '',
                 };
+            },
+
+            resetSelectAll(){
+                this.checkIds = [];
+                this.allSelected = true;
+                this.selectAll();
             },
 
             columnAdjust(){

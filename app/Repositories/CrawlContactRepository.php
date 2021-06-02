@@ -125,6 +125,29 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
         $emailArray = array_unique($emailArray);
     }
 
+    public function cleanEmails($emails)
+    {
+        if (count($emails) === 0 || empty($emails)) {
+            return [];
+        } else {
+
+            $remove = ['.png', '.gif', '.jpg', '.jpeg', '.jp2', '.webp'];
+
+            foreach ($emails as $key => $el) {
+                $el = strtolower($el);
+
+                foreach ($remove as $key2 => $rem) {
+                    if (strpos($el,$rem) !== false) {
+                        unset($emails[$key]);
+                    }
+                }
+
+            }
+
+            return $emails;
+        }
+    }
+
     public function getClient() {
         $client = new Client();
         $guzzleClient = new GuzzleClient(array(
@@ -145,32 +168,43 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
         $before = Carbon::now();
         $successCount = 0;
         $totalCount = 0;
-        $guzzleClient = new GuzzleClient();
+//        $guzzleClient = new GuzzleClient();
+        $guzzleClient = new GuzzleClient(array('timeout' => 10, 'verify' => false));
 
         $promises = (function () use ($extDomains, $guzzleClient) {
             foreach ($extDomains as $extDomain) {
-                  $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
-                  $extDomain->save();
+                $extDomain->phone = null;
+                $extDomain->email = null;
+                $extDomain->facebook = null;
+                $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
+                $extDomain->save();
 
-                  yield $guzzleClient->requestAsync('GET', $extDomain->domain)
-                      ->then(function(ResponseInterface $response) use ($extDomain) {
+                yield $guzzleClient->requestAsync('GET', $extDomain->domain, [
+                    'headers' => [
+                        'decode_content' => false,
+                        'accept-encoding' => 'gzip, deflate'
+                    ]])
+                    ->then(function(ResponseInterface $response) use ($extDomain) {
 
-                          $html = $response->getBody()->getContents();
-                          $crawler = new Crawler($html);
-                          $crawlerResult = $this->handleCrawler($crawler, ['success' => false], $extDomain);
+                        $html = $response->getBody()->getContents();
+                        $crawler = new Crawler($html);
+                        $crawlerResult = $this->handleCrawler($crawler, ['success' => false], $extDomain);
 
-                          if ($crawler->count() == 0) {
-                              $emailArray = [];
-                              $facebookArray = [];
-                              $this->regexContact($html, $crawler, $emailArray, $facebookArray);
-                              $crawlerResult['emails'] = $emailArray;
-                              $crawlerResult['facebook'] = $facebookArray;
-                          }
+                        if ($crawler->count() == 0) {
+                            $emailArray = [];
+                            $facebookArray = [];
+                            $this->regexContact($html, $crawler, $emailArray, $facebookArray);
+                            $crawlerResult['emails'] = $emailArray;
+                            $crawlerResult['facebook'] = $facebookArray;
+                        }
 
-                          return $crawlerResult;
-                      })->then(function(array $crawlResult) {
-                          return $this->saveToDatabaseSingle($crawlResult);
-                      });
+                        // remove png emails
+                        $crawlerResult['emails'] = $this->cleanEmails($crawlerResult['emails']);
+
+                        return $crawlerResult;
+                    })->then(function(array $crawlResult) {
+                        return $this->saveToDatabaseSingle($crawlResult);
+                    });
 
             }
         })();
@@ -244,9 +278,11 @@ class CrawlContactRepository implements CrawlContactRepositoryInterface {
             $hasContact = true;
             $extDomain->email = join("|", $item['emails']);
             $extDomain->facebook = join("|", $item['facebook']);
-            $extDomain->status = config('constant.EXT_STATUS_GOT_CONTACTS');
+            $extDomain->status = (count($item['emails']) > 0 && !empty($item['emails']))
+                ? config('constant.EXT_STATUS_GOT_EMAIL')
+                : config('constant.EXT_STATUS_GOT_CONTACTS');
         } else {
-            $extDomain->status = config('constant.EXT_STATUS_CRAWL_FAILED');
+            $extDomain->status = config('constant.EXT_STATUS_CONTACTS_NULL');
         }
 
         $extDomain->save();

@@ -44,6 +44,7 @@
                                 <label for="">Language</label>
                                 <select class="form-control" v-model="filterModel.language_id">
                                     <option value="">All</option>
+                                    <option value="na">N/A</option>
                                     <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
@@ -66,12 +67,14 @@
                         <div class="col-md-3" v-if="user.isAdmin || user.isOurs == 0">
                             <div class="form-group">
                                 <label for="">Seller</label>
-                                <select class="form-control" v-model="filterModel.seller">
-                                    <option value="">All</option>
-                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username }}
-                                    </option>
-                                </select>
+                                <v-select multiple
+                                          v-model="filterModel.seller" :options="listSeller.data" label="username" :reduce="seller => seller.id" :searchable="true" placeholder="All"/>
+<!--                                <select class="form-control" v-model="filterModel.seller">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+<!--                                        {{ option.username == null ? option.name:option.username }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
@@ -165,7 +168,7 @@
                                         {{ option }}
                                     </option>
                                 </select> -->
-                                <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                <v-select multiple v-model="filterModel.topic" :options="topicFilter" :searchable="false" placeholder="All"/>
                             </div>
                         </div>
 
@@ -225,6 +228,37 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Domain Zone</label>
+                                <v-select
+                                    v-model="filterModel.domain_zone"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :options="listDomainZones.data"
+                                    :searchable="true"
+                                    :reduce="domain => domain.name"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Is Https?</label>
+                                <select
+                                    class="form-control"
+                                    v-model="filterModel.is_https">
+                                    <option value="">All</option>
+                                    <option
+                                        value="yes">Yes
+                                    </option>
+                                    <option
+                                        value="no">
+                                        No</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -254,7 +288,15 @@
                     <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
                     <button v-if="user.isAdmin ||
                     user.role_id == 8"
-                        class="btn btn-primary float-right" @click="generateBestPrices">Generate Best Prices</button>
+                        class="btn btn-primary float-right" :disabled="isGenerating" @click="generateBestPrices">
+                        <span v-if="isGenerating">
+                            <i
+                                class="fa fa-spin fa-cog"></i> Generating...
+                        </span>
+                        <span v-else>
+                            Generate Best Price
+                        </span>
+                    </button>
 
                     <div class="form-row">
                         <div class="col-md-8 col-lg-6 my-3">
@@ -339,7 +381,10 @@
                             <small v-show="user.isOurs == 0" class="text-secondary">
                                 Reminder: The uploaded data is for Seller -List Publisher.
                                 The columns for the CSV file are URL, Price, Inc Article, Seller ID,
-                                Accept C&B, Language and Topic. The columns should be separated using comma (,).
+                                Accept C&B, KW Anchor,
+                                Language, Topic and
+                                Country. The
+                                columns should be separated using comma (,).
                                 Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
                                 Keyword Anchor yes if accept KW no if only |URL|.
                                 Select the main language of the site for the language.
@@ -347,8 +392,12 @@
 
                             <small v-show="user.isOurs == 1" class="text-secondary">
                                 Reminder: The uploaded data is for Seller -List Publisher.
-                                The columns for the CSV file are URL, Price, Inc Article, Accept C&B, KW Anchor
-                                and Language. The columns should be separated using comma (,).
+                                The columns for the CSV
+                                file are URL, Price, Inc
+                                Article, Accept C&B, KW
+                                Anchor, Language, Topic
+                                and Country. The columns
+                                should be separated using comma (,).
                                 If you only have URL and Price is fine too. Price are in USD.
                                 Inc Article value is Yes/No. Keyword Anchor yes if accept KW no if only |URL|.
                                 Select the main language of the site for the language.
@@ -379,9 +428,11 @@
                                     <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
                                     <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
                                     <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>
-                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>
-                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>
+<!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
+<!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
+<!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
+                                    <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
+                                    <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
                                 </div>
                             </div>
                         </div>
@@ -410,7 +461,7 @@
                                    v-model="checkIds">
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="createdData">
                             {{
@@ -422,22 +473,26 @@
                             slot="updatedData">
                             {{
                             displayDate(scope.row.updated_at) }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
                             slot="continentData">
-                            {{ scope.row.country_continent ?
-                            scope.row.country_continent :
-                            scope.row.publisher_continent }}
+                            {{
+                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                    ? 'N/A'
+                                    : scope.row.country_continent
+                                        ? scope.row.country_continent
+                                        : scope.row.publisher_continent
+                            }}
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="topicData">
                             {{ scope.row.topic == null ?
                             'N/A':scope.row.topic }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
@@ -446,7 +501,7 @@
                             'N/A':scope.row.in_charge }}
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="usernameData">
                             {{ scope.row.username ?
@@ -461,23 +516,26 @@
                                 class="badge badge-danger">
                                 Invalid
                             </span>
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
                             slot="urlData">
-                            {{
-                            replaceCharacters(scope.row.url) }}
+<!--                            {{ replaceCharacters(scope.row.url) }}-->
+
+                            <a :href="'//' + scope.row.custom_url" target="_blank">
+                                {{ scope.row.custom_url }}
+                            </a>
                         </template>
 
-                        <template
+                        <!-- <template
                             slot-scope="scope"
                             slot="priceData">
                             {{ scope.row.price == '' ||
                             scope.row.price == null ?
                             '':'$'}} {{
                             scope.row.price }}
-                        </template>
+                        </template> -->
 
                         <template
                             slot-scope="scope"
@@ -526,7 +584,7 @@
         </div>
 
         <!-- Modal Update Publisher -->
-        <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal fade" id="modal-update-publisher" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -609,8 +667,8 @@
                                     <label for="">Include Article</label>
                                     <select class="form-control" v-model="updateModel.inc_article">
                                         <option value=""></option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -946,73 +1004,79 @@
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(12,
+                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.qc_validation ? 'checked':''" v-model="tblPublisherOpt.qc_validation">QC Validation</label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(13,
                                 tblPublisherOpt.url)"
                                     :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(13,
+                                    @click="toggleColumn(14,
                                 tblPublisherOpt.price)"
                                     :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(14,
+                                    @click="toggleColumn(15,
                                 tblPublisherOpt.price_basis)"  :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(15,
+                                    @click="toggleColumn(16,
                                 tblPublisherOpt.inc_article)"  :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(16,
+                                    @click="toggleColumn(17,
                                 tblPublisherOpt.kw_anchor)"
                                     :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(17,
+                                    @click="toggleColumn(18,
                                 tblPublisherOpt.ur)"
                                     :checked="tblPublisherOpt.ur ? 'checked':''" v-model="tblPublisherOpt.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(18,
+                                    @click="toggleColumn(19,
                                 tblPublisherOpt.dr)"
                                     :checked="tblPublisherOpt.dr ? 'checked':''" v-model="tblPublisherOpt.dr">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(19,
+                                    @click="toggleColumn(20,
                                 tblPublisherOpt.backlinks)"
                                     :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(20,
+                                    @click="toggleColumn(21,
                                 tblPublisherOpt.ref_domain)"
                                     :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(21,
+                                    @click="toggleColumn(22,
                                 tblPublisherOpt.org_keywords)" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(22,
+                                    @click="toggleColumn(23,
                                 tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
                             </div>
                         </div>
@@ -1282,6 +1346,8 @@
                         this.$route.query.show_duplicates
                         || 'no',
                     account_validation: this.$route.query.account_validation || '',
+                    domain_zone: this.$route.query.domain_zone || '',
+                    is_https: this.$route.query.is_https || ''
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1303,7 +1369,9 @@
                     continent_id: '',
                     kw_anchor: '',
                 },
-                topic: [
+                topicFilter: [
+                    'N/A',
+                    'Art',
                     'Beauty',
                     'Charity',
                     'Cooking',
@@ -1315,11 +1383,38 @@
                     'Health',
                     'History',
                     'Job',
+                    'Marketing',
                     'Movies & Music',
                     'News',
                     'Pet',
                     'Photograph',
-                    'Real State',
+                    'Real Estate',
+                    'Religion',
+                    'Shopping',
+                    'Sports',
+                    'Tech',
+                    'Travel',
+                    'Unlisted',
+                ],
+                topic: [
+                    'Art',
+                    'Beauty',
+                    'Charity',
+                    'Cooking',
+                    'Crypto',
+                    'Education',
+                    'Fashion',
+                    'Finance',
+                    'Games',
+                    'Health',
+                    'History',
+                    'Job',
+                    'Marketing',
+                    'Movies & Music',
+                    'News',
+                    'Pet',
+                    'Photograph',
+                    'Real Estate',
                     'Religion',
                     'Shopping',
                     'Sports',
@@ -1333,15 +1428,23 @@
                 },
                 isAccountInvalid: false,
                 isAccountPaymentNotComplete: false,
+                isGenerating: false
             }
         },
 
         async created() {
+            await
+                this.$store.dispatch('getGeneratorLogs');
+            if (this.isGeneratorOn) {
+                this.isGenerating = true;
+            }
+
             this.getPublisherList();
             this.checkAccountType();
             this.getListSeller();
             this.getListSellerIncharge();
             this.getListContinents();
+            this.getListDomainZones();
 
             // let countries = this.listCountries.data;
             // if( countries.length === 0 ){
@@ -1365,6 +1468,19 @@
             const channel = pusher.subscribe('private-user.' +
                 this.user.id);
 
+            if (this.user.isAdmin || this.user.role_id == 8) {
+                const channel2 =
+                    pusher.subscribe('BestPriceChannel');
+
+                channel2.bind('bestprices.start', (e) => {
+                    this.isGenerating = true;
+                });
+
+                channel2.bind('bestprices.end', (e) => {
+                    this.isGenerating = false;
+                });
+            }
+
             channel.bind('prices.generate', (e) => {
                 this.getPublisherList();
 
@@ -1376,6 +1492,8 @@
                     confirmButtonText: "Ok",
                 });
             });
+
+            this.setDefaultSettings()
         },
 
         computed:{
@@ -1386,12 +1504,15 @@
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listContinent: state => state.storePublisher.listContinent,
                 listCountryContinent: state => state.storePublisher.listCountryContinent,
+                listDomainZones: state => state.storePublisher.listDomainZones,
                 user: state => state.storeAuth.currentUser,
                 listSeller: state => state.storePublisher.listSeller,
                 listSellerIncharge: state => state.storePublisher.listSellerIncharge,
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
+                isGeneratorOn: state =>
+                    state.storePublisher.bestPriceGeneratorOn
             }),
 
             isQc() {
@@ -1421,20 +1542,22 @@
                         isHidden: false
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_created',
                         name : 'Uploaded',
-                        actionName : 'createdData',
+                        // actionName : 'createdData',
                         width: 100,
+                        sortable: true,
                         isHidden:
                             !this.tblPublisherOpt.created
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_updated',
                         name : 'Updated',
-                        actionName : 'updatedData',
+                        // actionName : 'updatedData',
                         width: 100,
+                        sortable: true,
                         isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0
+                            this.user.isOurs != 0 || !this.tblPublisherOpt.uploaded
                     },
                     {
                         prop : 'language_name',
@@ -1454,14 +1577,16 @@
                     {
                         prop : '_action',
                         name : 'Continent',
+                        // sortable: true,
                         actionName : 'continentData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.continent
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_topic',
                         name : 'Topic',
-                        actionName : 'topicData',
+                        // actionName : 'topicData',
+                        sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.topic
                     },
@@ -1481,12 +1606,12 @@
                         isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_username',
                         name : 'Seller',
-                        actionName : 'usernameData',
+                        // actionName : 'usernameData',
+                        sortable: true,
                         width: 100,
-                        isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0
+                        isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
                         prop : 'valid',
@@ -1496,17 +1621,34 @@
                         isHidden: !this.tblPublisherOpt.valid
                     },
                     {
+                        prop : 'qc_validation',
+                        name : 'QC Valid',
+                        sortable: true,
+                        width: 100,
+                        isHidden: !this.tblPublisherOpt.qc_validation
+                    },
+                    {
                         prop : '_action',
                         name : 'URL',
                         actionName : 'urlData',
                         width: 150,
+                        // sortable: true,
                         isHidden: !this.tblPublisherOpt.url
                     },
                     {
-                        prop : '_action',
-                        name : 'Price',
-                        actionName : 'priceData',
+                        prop : 'is_https',
+                        name : 'Is Https?',
+                        sortable: true,
                         width: 100,
+                        isHidden: false
+                    },
+                    {
+                        prop : 'custom_price',
+                        name : 'Price',
+                        // actionName : 'priceData',
+                        width: 100,
+                        sortable: true,
+                        prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
                     },
                     {
@@ -1697,7 +1839,10 @@
                             page: page,
                             show_duplicates:
                             this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation
+                            account_validation: this.filterModel.account_validation,
+                            domain_zone:
+                            this.filterModel.domain_zone,
+                            is_https: this.filterModel.is_https
                         }
                     });
                 }else{
@@ -1724,7 +1869,10 @@
                             page: page,
                             show_duplicates:
                             this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation
+                            account_validation: this.filterModel.account_validation,
+                            domain_zone:
+                            this.filterModel.domain_zone,
+                            is_https: this.filterModel.is_https
                         }
                     });
                 }
@@ -1808,8 +1956,6 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                this.setDefaultSettings()
-
                 loader.hide();
             },
 
@@ -1875,6 +2021,33 @@
                         this.getPublisherList();
 
                     }
+                }
+
+                this.checkIds = [];
+            },
+
+            async qcValidationUpdate(value){
+                await this.$store.dispatch('actionQcValidationUpdate', {
+                    qc_validation: value,
+                    ids: this.checkIds,
+                });
+
+                if( this.messageForms.action === 'saved' ){
+                    await swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'QC Validation successfully updated',
+                        confirmButtonText: "Ok",
+                    });
+
+                    await this.getPublisherList();
+                } else {
+                    await swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'There was an error upon updating the QC Validation',
+                        confirmButtonText: "Ok",
+                    });
                 }
 
                 this.checkIds = [];
@@ -2085,6 +2258,8 @@
                         startDate: null,
                         endDate: null
                     },
+                    domain_zone: '',
+                    is_https : ''
                 }
 
                 this.getPublisherList({
@@ -2112,6 +2287,10 @@
 
             async getListContinents(params) {
                 await this.$store.dispatch('actionGetListContinents', params);
+            },
+
+            async getListDomainZones(params) {
+                await this.$store.dispatch('actionGetListDomainZones', params);
             },
 
             async getAhrefs() {
@@ -2174,10 +2353,10 @@
                     price: that.price,
                     anchor_text: that.anchor_text,
                     link: that.link,
-                    inc_article: that.inc_article,
+                    inc_article: that.inc_article.toLowerCase(),
                     topic: topic,
                     casino_sites: that.casino_sites.toLowerCase(),
-                    kw_anchor: that.kw_anchor,
+                    kw_anchor: that.kw_anchor.toLowerCase(),
                     // country_id: that.country_id,
                     continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,
@@ -2209,8 +2388,6 @@
             },
 
             doSearch() {
-                $('#tbl-publisher').DataTable().destroy();
-
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -2236,7 +2413,10 @@
                         qc_validation: this.filterModel.qc_validation,
                         show_duplicates:
                         this.filterModel.show_duplicates,
-                        account_validation: this.filterModel.account_validation
+                        account_validation: this.filterModel.account_validation,
+                        domain_zone:
+                        this.filterModel.domain_zone,
+                        is_https: this.filterModel.is_https
                     }
                 });
             },
@@ -2303,8 +2483,13 @@
                 let headers = [];
 
                 let rows = this.user.isOurs === 0
-                    ? ['URL', 'Price', 'Inc Article', 'Seller ID', 'Accept C&B','Language', 'Topic']
-                    : ['URL', 'Price', 'Inc Article', 'Accept C&B', 'KW Anchor', 'Language'];
+                    ? ['URL', 'Price', 'Inc Article',
+                       'Seller ID',
+                       'Accept C&B','Language', 'Topic',
+                       'KW Anchor']
+                    : ['URL', 'Price', 'Inc Article',
+                       'Accept C&B', 'KW Anchor',
+                       'Language', 'Topic'];
 
                 headers.push(rows);
 

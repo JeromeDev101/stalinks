@@ -79,6 +79,33 @@
                                     <td><b>Type</b></td>
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
+                                <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
+                                    <td><b>Pricing Type</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
+                                            <select class="form-control" v-model="user.user_type.rate_type">
+                                                <option value="ppw">Pay Per Words (PPW)</option>
+                                                <option value="ppa">Pay Per Article (PPA)</option>
+                                            </select>
+                                            <span v-if="messageForms.errors.rate_type" class="text-danger">
+                                                The Pricing Type field is required.
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
+                                    <td><b>Writer Price</b></td>
+                                    <td>
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
+                                            <input type="number" v-model="user.user_type.writer_price" class="form-control" value="" required="required" placeholder="Enter Price">
+                                            <span
+                                                v-if="messageForms.errors.writer_price"
+                                                class="text-danger">
+                                                The Writer Price field is required.
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr v-if="currentUser.isOurs == 1">
                                     <td><b>Company Type</b></td>
                                     <td v-if="user.user_type">

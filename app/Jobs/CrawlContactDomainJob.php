@@ -54,4 +54,9 @@ class CrawlContactDomainJob implements ShouldQueue
         $data = $crawler->crawls($this->extDomains);
         Log::info('CrawlContactDomainJob done', ['count' => $sizeData, 'job_id' => $jobId, 'status' => $data]);
     }
+
+    public function fail($exception = null)
+    {
+        \Log::error($exception);
+    }
 }

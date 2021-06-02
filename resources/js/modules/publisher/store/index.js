@@ -8,6 +8,7 @@ const LIST_COUNTRY_ALL = 'LIST_COUNTRY_ALL';
 const LIST_COUNTRY_CONTINENT = 'LIST_COUNTRY_CONTINENT';
 const LIST_CONTINENT = 'LIST_CONTINENT';
 const LIST_LANGUAGES = 'LIST_LANGUAGES';
+const LIST_DOMAIN_ZONES = 'LIST_DOMAIN_ZONES';
 const LIST_SELLER = 'LIST_SELLER';
 const LIST_SELLER_INCHARGE = 'LIST_SELLER_INCHARGE';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
@@ -22,6 +23,7 @@ const state = {
     listCountryContinent: { data: [], total: 0 },
     listContinent: { data: [], total: 0 },
     listLanguages: { data: [], total: 0 },
+    listDomainZones: { data: [], total: 0 },
     listSeller: { data:[] },
     listSellerIncharge: { data:[] },
     tblPublisherOpt: {
@@ -46,6 +48,7 @@ const state = {
         ref_domain: true,
         org_keywords: true,
         org_traffic: true,
+        qc_validation: true,
     },
     bestPriceGeneratorOn: false,
     bestPriceLogs: {}
@@ -134,7 +137,11 @@ const mutations = {
     [LIST_BEST_PRICE_LOG](state, listLog) {
         state.bestPriceLogs = listLog;
         state.bestPriceGeneratorOn = listLog[0].status === 'start';
-    }
+    },
+
+    [LIST_DOMAIN_ZONES](state, listDomainZones) {
+        state.listDomainZones = listDomainZones;
+    },
 }
 
 const actions = {
@@ -246,6 +253,26 @@ const actions = {
         }
     },
 
+    async actionQcValidationUpdate({ commit }, params) {
+        try {
+            let response = await PublisherService.qcValidationUpdate(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'saved', message: 'Sucessfully Saved', errors: response.data.data });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetListSeller({ commit }, params) {
         try {
             let response = await PublisherService.getListSeller(params);
@@ -307,6 +334,20 @@ const actions = {
         try {
             let response = await PublisherService.getListLanguages(params);
             commit(LIST_LANGUAGES, response.data );
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(PUBLISHER_ERROR, errors);
+            } else {
+                commit(PUBLISHER_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListDomainZones({ commit }, params) {
+        try {
+            let response = await PublisherService.getListDomainZones(params);
+            commit(LIST_DOMAIN_ZONES, response.data );
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

@@ -29,7 +29,6 @@ class DashboardAdminController extends Controller
         ];
     }
 
-
     private function sellerStatistics() {
         $request = $this->filter;
         $range_date = $this->rangeDate();

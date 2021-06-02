@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\BestPriceGenerator;
 use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
+use App\Models\DomainZone;
+use App\Services\HttpClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
@@ -16,6 +20,9 @@ use App\Models\User;
 use App\Models\Registration;
 use App\Models\Backlink;
 use App\Models\Formula;
+use Illuminate\Support\Facades\DB;
+use Mailgun\Api\Domain;
+use Psr\Http\Message\ResponseInterface;
 
 class PublisherController extends Controller
 {
@@ -26,11 +33,14 @@ class PublisherController extends Controller
      */
     private $configRepository;
 
+    private $httpClient;
+
     public function __construct(PublisherRepositoryInterface $publisherRepository,
-                                ConfigRepositoryInterface $configRepository)
+                                ConfigRepositoryInterface $configRepository, HttpClient $httpClient)
     {
         $this->publisherRepository = $publisherRepository;
         $this->configRepository = $configRepository;
+        $this->httpClient = $httpClient;
     }
 
     public function getList(Request $request)
@@ -84,6 +94,17 @@ class PublisherController extends Controller
 
         $url_copy = $this->remove_http($request->url);
 
+        $isDuplicate = $this->checkDuplicate($url_copy, $request->seller);
+
+        if($isDuplicate) {
+            return response()->json([
+                "message" => 'The given data was invalid.',
+                "errors" => [
+                    "url" => 'Duplicate url and seller.',
+                ],
+            ],422);
+        }
+
         $publisher = Publisher::where('url', 'like', '%'.$url_copy.'%')->where('valid', 'valid')->count();
         if ($publisher > 0) {
             $valid = 'unchecked';
@@ -94,12 +115,27 @@ class PublisherController extends Controller
         $input['valid'] = $valid;
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
 
-
         $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
         $input['url'] = $url;
 
+        if (!isset($input['kw_anchor']) || $input['kw_anchor'] == null) {
+            unset($input['kw_anchor']);
+        }
+
+        $input['is_https'] = $this->httpClient->getProtocol($url_copy) == 'https' ? 'yes' : 'no';
+
         Publisher::create($input);
         return response()->json(['success' => true], 200);
+    }
+
+    private function checkDuplicate($url, $seller_id) {
+        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id);
+        return $publisher->count() > 0;
+    }
+
+    private function checkDuplicateUpdate($url, $seller_id, $id) {
+        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id)->where('id', '!=', $id);
+        return $publisher->count() > 0;
     }
 
     private function remove_http($url) {
@@ -142,6 +178,19 @@ class PublisherController extends Controller
             'casino_sites' => 'required',
             'kw_anchor' => 'required',
         ]);
+
+        $request['url'] = $this->remove_http($request->url);
+
+        $isDuplicate = $this->checkDuplicateUpdate($request->url, $request->user_id, $request->id);
+
+        if($isDuplicate) {
+            return response()->json([
+                "message" => 'The given data was invalid.',
+                "errors" => [
+                    "url" => 'Duplicate url and seller.',
+                ],
+            ],422);
+        }
 
         $input = $request->except('name', 'company_name', 'username', 'topic', 'user_id', 'team_in_charge', 'team_in_charge_old');
 
@@ -246,6 +295,13 @@ class PublisherController extends Controller
         return response()->json(['success'=> true, 'data' => $result],200);
     }
 
+    public function qcValidationUpdate(Request $request) {
+        $result = Publisher::whereIn('id', $request->ids)
+            ->update(['qc_validation' => $request->qc_validation]);
+
+        return response()->json(['success'=> true, 'data' => $result],200);
+    }
+
     public function getInfo(Request $request) {
         $publisher = Publisher::where('url', $request->url)->first();
         if( !$publisher ){
@@ -269,53 +325,6 @@ class PublisherController extends Controller
         }
 
         return response()->json(['success'=> true],200);
-    }
-
-    public function getPrice(){
-        $backlinks = Backlink::select('publisher_id', 'id')->get();
-
-        $test = [];
-        foreach($backlinks as $back) {
-            $publisher = Publisher::find($back->publisher_id);
-
-            if($publisher) {
-                $backlink = Backlink::find($back->id);
-
-                $test[] = $backlink->update([
-                    'price' => $publisher->price,
-                    'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
-                ]);
-
-                // array_push($test,[
-                //     'backlink_id' => $back->id,
-                //     'publisher_id' => $back->publisher_id,
-                //     'price' => $publisher->price,
-                //     'prices' => $this->getStalinksPrices($publisher->price, $publisher->inc_article),
-                // ]);
-
-            }
-
-            else {
-
-                $backlink = Backlink::find($back->id);
-
-                $test[] = $backlink->update([
-                    'price' => 0,
-                    'prices' => 0,
-                ]);
-
-                // array_push($test,[
-                //     'backlink_id' => $back->id,
-                //     'publisher_id' => $back->publisher_id,
-                //     'price' => 0,
-                //     'prices' => 0,
-                // ]);
-            }
-        }
-
-
-
-        return response()->json($test);
     }
 
     private function getStalinksPrices($price, $article) {
@@ -364,7 +373,15 @@ class PublisherController extends Controller
 
     public function generateBestPrice()
     {
-        GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+        $log = BestPriceGenerator::orderBy('created_at', 'DESC')->first();
+
+        if ($log->status == 'end') {
+            GenerateBestPrice::dispatch(auth()->user()->id)->onQueue('high');
+        } else {
+            return response()->json([
+                'error' => 'Someone is already generating, please try again later..'
+            ], 500);
+        }
 
         return response()->json('success');
     }
@@ -374,5 +391,25 @@ class PublisherController extends Controller
         $log = BestPriceGenerator::orderBy('created_at', 'DESC')->get();
 
         return response()->json($log);
+    }
+
+    public function getDomainZoneExtensions()
+    {
+//        $zones = Publisher::selectRaw("
+//                trim(trailing ')'
+//                    from trim( trailing '/'
+//                        from REPLACE(SUBSTRING_INDEX(url, '.', -1), ' ', ''))) as domain2
+//            ")
+//            ->whereNull('deleted_at')
+//            ->groupBy('domain2')
+//            ->having('domain2', '!=', '')
+//            ->orderBy('domain2', 'ASC');
+
+        $zones = DomainZone::orderBy('name', 'ASC');
+
+        return response()->json([
+            'data' => $zones->get(),
+            'count' => 0,
+        ],200);
     }
 }

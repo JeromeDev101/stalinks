@@ -75,6 +75,7 @@ class AuthController extends Controller
     }
 
     public function edit(UpdateUserRequest $request) {
+        // dd($request->all());
         $response = ['success' => false];
         $input = $request->except(
             'avatar',
@@ -138,6 +139,7 @@ class AuthController extends Controller
                 'is_freelance' => $request->user_type['company_type'] == 'Company' ? 0:1,
                 'country_id' => $request->user_type['country_id'],
                 'id_payment_type' => $request->id_payment_type,
+                'writer_price' => $request->user_type['writer_price'],
             ];
 
             if( isset($input['password']) ){

@@ -46,7 +46,14 @@
                                {{ option.name }}
                            </option>
                            </select> -->
-                        <v-select multiple v-model="filterModel.country_id_temp" :options="listCountryAll.data" :reduce="name => name.name" label="name" :searchable="false" placeholder="All"/>
+                        <v-select
+                            v-model="filterModel.country_id_temp"
+                            multiple
+                            label="name"
+                            placeholder="All"
+                            :options="listCountryAll.data"
+                            :reduce="name => name.name"
+                            :searchable="true"/>
                      </div>
                   </div>
                   <div v-if="tableShow.domain" class="col-md-2">
@@ -59,7 +66,7 @@
                      <div class="form-group">
                         <label style="color: #333">Status</label>
                          <v-select multiple
-                                   v-model="filterModel.status_temp" :options="objectToArray(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
+                                   v-model="filterModel.status_temp" :options="objectToArrayWithCustomSort(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
 <!--                        <select v-model="filterModel.status_temp" class="form-control">-->
 <!--                            <option value="-1" selected>All-->
 <!--                            </option>-->
@@ -107,7 +114,6 @@
                             <div class="btn-group">
                                 <button class="btn btn-default" @click="clearSearch" >Clear</button>
                                 <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                                <button @click="doCrawlExtList" type="submit" title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
                             </div>
                         </div>
                     </div>
@@ -119,93 +125,154 @@
          <div class="box">
             <div class="box-header">
                <h3 class="box-title">URL Prospect List</h3>
-            </div>
-            <div class="container-fluid">
-            <div class="form-row">
-               <div class="col-md-4 col-sm-12 my-3">
-                  <div class="row">
-                     <div class="col-sm-12">
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 my-3">
                         <div class="input-group">
-                           <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
-                           <div class="input-group-btn">
-                              <button
-                                  title="Upload CSV File"
-                                  class="btn btn-primary btn-flat"
-                                  :disabled="isEnableBtn"
+                            <input type="file" class="form-control" v-on:change="checkDataExcel" enctype="multipart/form-data" ref="excel" name="file">
+                            <div class="input-group-btn">
+                                <button
+                                    title="Upload CSV File"
+                                    class="btn btn-primary btn-flat"
+                                    :disabled="isEnableBtn"
 
-                                  @click="submitUpload">
-                                  <i class="fa fa-upload"></i>
-                              </button>
+                                    @click="submitUpload">
+                                    <i class="fa fa-upload"></i>
+                                </button>
 
-                               <button
-                                   title="Download CSV Template"
-                                   class="btn btn-primary btn-flat"
+                                <button
+                                    title="Download CSV Template"
+                                    class="btn btn-primary btn-flat"
 
-                                   @click="downloadTemplate">
-                                   <i class="fa fa-download"></i>
-                               </button>
-                           </div>
+                                    @click="downloadTemplate">
+                                    <i class="fa fa-download"></i>
+                                </button>
+                            </div>
                         </div>
                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                         <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
-                     </div>
-                  </div>
-                  <!-- <div class="row my-3" v-show="showLang">
-                     <div class="col-12">
-                         <select class="form-control" name="language" ref="language" v-on:change="checkData">
-                             <option value="">Select language</option>
-                             <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
-                                 {{ option.name }}
-                             </option>
-                         </select>
-                     </div>
-                     </div>
 
-                     <div class="row" v-show="showLang">
-                     <div class="col-sm-12">
-                         <select class="form-control" name="status" ref="status" v-on:change="checkData">
-                             <option value="">Select Status</option>
-                             <option value="50">Contacted</option>
-                             <option value="60">Refused</option>
-                             <option value="70">InTouched</option>
-                             <option value="90">Unqualified</option>
-                             <option value="100">Qualified</option>
-                         </select>
-                     </div>
-                     </div> -->
-               </div>
-               <div class="col-md-6 col-sm-6">
-               <div class="input-group input-group-sm float-right" style="min-width: 200px; max-width: 400px;">
-                  <label style="color: #333;margin: 3%;">Selected Action</label>
-                  <div class="btn-group">
-                     <button @click="doSendEmail(null, $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></button>
-                     <button type="submit" title="Get Ahrefs" @click="getAhrefs()" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button>
-                     <button type="submit" title="Status" @click="doMultipleStatus" class="btn btn-default"><i class="fa fa-fw fa-tag"></i></button>
-                     <button type="submit" title="Delete" @click="deleteAll" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
-                  </div>
-               </div>
-            </div>
-               <div class="col-md-2 col-sm-6 my-3">
-                  <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
-                  <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                  <div class="input-group input-group-sm float-right" style="width: 65px">
-                     <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
-                        <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
-                     </select>
-                  </div>
-               </div>
-               </div>
-               <div class="row">
-                  <div class="col-sm-12">
-                     <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status, Country and Email. The columns should be separated using comma(,).</small>
-                  </div>
-               </div>
+                        <!-- <div class="row my-3" v-show="showLang">
+                           <div class="col-12">
+                               <select class="form-control" name="language" ref="language" v-on:change="checkData">
+                                   <option value="">Select language</option>
+                                   <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
+                                       {{ option.name }}
+                                   </option>
+                               </select>
+                           </div>
+                           </div>
+
+                           <div class="row" v-show="showLang">
+                           <div class="col-sm-12">
+                               <select class="form-control" name="status" ref="status" v-on:change="checkData">
+                                   <option value="">Select Status</option>
+                                   <option value="50">Contacted</option>
+                                   <option value="60">Refused</option>
+                                   <option value="70">InTouched</option>
+                                   <option value="90">Unqualified</option>
+                                   <option value="100">Qualified</option>
+                               </select>
+                           </div>
+                           </div> -->
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 my-3">
+                        <button @click="doAddExt" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                        <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
+                        <div class="input-group input-group-sm float-right" style="width: 65px">
+                            <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
+                                <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row my-0">
+                    <div class="col-sm-12">
+                        <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status, Country and Email. The columns should be separated using comma(,).</small>
+                    </div>
+                </div>
             </div>
             <!-- <div class="box-body no-padding table-wrapper table-scrollable freeze-table" style="height: 600px; overflow-x: scroll;">
                <table id="data-table" class="dataTable table table-hover table-bordered table-striped rlink-table" style="min-width: 1070px; max-width: 1626px;"> -->
-            <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }">
-               <span v-if="listExt.total > 10" class="pagination-custom-footer-text">
-               <b>Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+
+             <div class="row">
+                 <div class="col-md-12 ml-3">
+                     <div class="input-group input-group-sm">
+                         <div class="btn-group">
+                             <button
+                                 class="btn btn-default"
+                                 @click="selectAll">
+
+                                 {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                             </button>
+
+                             <button
+                                 data-toggle="modal"
+                                 type="submit"
+                                 title="Send Email"
+                                 class="btn btn-default"
+
+                                 @click="doSendEmail(null, $event)">
+
+                                 <i class="fa fa-fw fa-envelope-o"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Get Ahrefs"
+                                 class="btn btn-default"
+
+                                 @click="getAhrefs()">
+
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Status"
+                                 class="btn btn-default"
+
+                                 @click="doMultipleStatus">
+
+                                 <i class="fa fa-fw fa-tag"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Employee"
+                                 class="btn btn-default"
+
+                                 @click="doMultipleEmployee">
+
+                                 <i class="fa fa-fw fa-user"></i>
+                             </button>
+
+                             <button
+                                 type="submit"
+                                 title="Delete"
+                                 class="btn btn-default"
+
+                                 @click="deleteAll">
+
+                                 <i class="fa fa-fw fa-trash"></i>
+                             </button>
+
+                             <button
+                                 @click="doCrawlExtList"
+                                 :disabled="isCrawling"
+                                 type="submit"
+                                 title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i></button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
+               <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
+                   <b v-if="!isResultCrawled">Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
+                   <b v-else>Showing {{ listExt.data.length }} crawled items. Click search or clear filter to refresh the list.</b>
                </span>
 
                 <vue-virtual-table
@@ -220,7 +287,7 @@
                         slot-scope="scope"
                         slot="actionButtons">
                        <div class="btn-group"
-                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null)">
+                            v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null) || (scope.row.users == null ? false:scope.row.users.status == 'inactive' ? true:false)">
                           <button data-action="a1"
                                   :data-index="scope.index"
                                   @click="doEditExt(scope.row)"
@@ -673,7 +740,7 @@
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.status}" class="form-group">
                            <label style="color: #333">Status</label>
                            <select type="text" v-model="extUpdate.status" @change="showAddURL()" class="form-control" value="" required="required">
-                              <option v-for="(option, key) in listStatusText" v-bind:value="key" :selected="(key === extUpdate.status ? 'selected' : '')">
+                              <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)" v-bind:value="option.id" :selected="(key === extUpdate.status ? 'selected' : '')">
                                  {{ option.text }}
                               </option>
                            </select>
@@ -851,12 +918,20 @@
                      <div class="col-md-6">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}" class="form-group">
                            <label style="color: #333">Seller</label>
-                           <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">
-                              <option value="">Select Seller</option>
-                              <option v-for="option in listSeller.data" v-bind:value="option.id">
-                                 {{ option.username == null ? option.name:option.username }}
-                              </option>
-                           </select>
+<!--                           <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">-->
+<!--                              <option value="">Select Seller</option>-->
+<!--                              <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+<!--                                 {{ option.username == null ? option.name:option.username }}-->
+<!--                              </option>-->
+<!--                           </select>-->
+
+                            <v-select
+                                v-model="publisherAdd.seller"
+                                label="username"
+                                :searchable="true"
+                                :options="getSellerTeamInCharge(listSeller.data)"
+                                :reduce="seller => seller.id"/>
+
                            <span v-if="messageForms.errors['pub.seller']" v-for="err in messageForms.errors['pub.seller']" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
@@ -1109,6 +1184,7 @@
          </div>
       </div>
       <!-- End Modal Add -->
+
       <!-- Modal Send Email -->
       <div id="modal-email" class="modal fade" ref="modalEmail" style="display: none;">
          <div class="modal-dialog modal-lg">
@@ -1160,7 +1236,7 @@
                         </div> -->
 
                       <div class="col-md-12" style="margin-top: 15px;">
-                          <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                          <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
                               <label style="color: #333">Email</label>
 
                               <vue-tags-input
@@ -1168,42 +1244,101 @@
                                   :disabled="true"
                                   :separators="separators"
                                   :tags="urlEmails"
-                                  :class="{'vue-tag-error': messageForms.errors.email}"
+                                  :class="{'vue-tag-error': messageFormsMail.errors.email}"
                                   ref="urlTag"
                                   placeholder=""
 
                                   @tags-changed="newTags => urlEmails = newTags"
                               />
 
-                              <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                              <span v-if="messageFormsMail.errors.email" v-for="err in messageFormsMail.errors.email" class="text-danger">{{ err }}</span>
                           </div>
                       </div>
 
                      <div class="col-md-12" style="margin-top: 15px;">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
                            <label style="color: #333">Title</label>
                            <input type="text" v-model="modelMail.title" class="form-control" value="" required="required" >
-                           <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
+                           <span v-if="messageFormsMail.errors.title" v-for="err in messageFormsMail.errors.title" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
+
                      <div class="col-md-12">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
+                        <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                            <label style="color: #333">Content</label>
                            <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>
-                           <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
+                           <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
+
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label style="color: #333">Attachment</label>
+                              <input
+                                  multiple
+                                  type="file"
+                                  class="form-control"
+                                  id="file_send_url"
+                                  ref="file_send_url">
+                          </div>
+                      </div>
                   </form>
                   <div class="overlay" v-if="isPopupLoading"></div>
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="button" :disabled="!allowSending" @click="submitSendMail" class="btn btn-primary">Send</button>
+
+                  <button
+                      type="button"
+                      class="btn btn-primary"
+                      :disabled="!allowSending"
+
+                      @click="submitSendMail">
+
+                      Send
+                  </button>
                </div>
             </div>
          </div>
       </div>
       <!-- End Send Email -->
+
+
+
+        <!-- Modal multiple edit of Employee -->
+        <div class="modal fade" ref="modalMultipleEmployee" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Employee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for=""></label>
+                                    <select type="text" v-model="updateMultiEmployee" class="form-control" value="" required="required">
+                                        <option v-for="(option,key) in listSellerTeam.data"
+                                            v-bind:value="option.id" v-if="option.username != 'N/A' && option.status == 'active'" :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                        {{ option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleEmployee()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of multiple edit of Employee -->
+
       <!-- Modal Change multiple Status -->
       <div id="modal-multiple-status" class="modal fade" ref="modalMultipleStatus">
          <div class="modal-dialog modal-md">
@@ -1218,7 +1353,7 @@
                            <label style="color: #333">Status</label>
                            <select type="text"  class="form-control" v-on:change="checkQualified" v-model="updateStatus.status" required="required">
                               <option value="">Select Status</option>
-                              <option v-for="(option, key) in listStatusText" v-bind:value="key">
+                              <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)" v-bind:value="option.id">
                                  {{ option.text }}
                               </option>
                            </select>
@@ -1295,6 +1430,7 @@ import DownloadCsv from '@/components/export-csv/Csv.vue'
 import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
 import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+import _ from 'underscore';
 
 export default {
     components: {
@@ -1458,6 +1594,8 @@ export default {
             separators: [';', ',', '|', ' '],
             urlEmails: [],
             tableLoading: false,
+            updateMultiEmployee: '',
+            isResultCrawled: false,
         };
     },
     async created() {
@@ -1493,6 +1631,7 @@ export default {
             listStatusText: state => state.storeExtDomain.listStatusText,
             listUser: state => state.storeUser.listUser,
             messageForms: state => state.storeExtDomain.messageForms,
+            messageFormsMail: state => state.storeMailgun.messageForms,
             messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
             listInt: state => state.storeIntDomain.listInt,
             listBackLink: state => state.storeBackLink.listBackLink,
@@ -1595,7 +1734,7 @@ export default {
                     name : 'Email',
                     actionName : 'emailsData',
                     width: 200,
-                    isHidden: true
+                    isHidden: false
                 },
                 {
                     prop : '_action',
@@ -1739,10 +1878,11 @@ export default {
         selectAll() {
             this.checkIds = [];
             if (!this.allSelected) {
-                for (var ext in this.listExt.data) {
+                for (let ext in this.listExt.data) {
                     this.checkIds.push(this.listExt.data[ext]);
                 }
             }
+            this.allSelected = !this.allSelected;
         },
 
         async getListLanguages() {
@@ -1970,6 +2110,7 @@ export default {
             await this.$store.dispatch('getListExt', params);
             this.isLoadingTable = false;
             $('.freeze-table').freezeTable({'columnNum': 4, 'shadow': true, 'scrollable': true});
+            this.isResultCrawled = false;
             loader.hide();
         },
         async doSearchList() {
@@ -2022,21 +2163,58 @@ export default {
             });
         },
         async doCrawlExtList() {
+            let loader = this.$loading.show();
             this.isCrawling = true;
-            var arrayIds = [];
-            if (this.listExt.data) {
-                for (let key in this.listExt.data) {
-                    arrayIds.push(this.listExt.data[key].id);
+            let arrayIds = [];
+            if (this.checkIds) {
+                for (let key in this.checkIds) {
+                    arrayIds.push(this.checkIds[key].id);
                 }
             }
-            if (arrayIds.length == 0) return;
+            if (arrayIds.length == 0) {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+
+                this.isCrawling = false;
+                loader.hide();
+                return;
+            }
+
+            if (arrayIds.length > 50) {
+                swal.fire(
+                    'Error',
+                    'You can only crawl 50 URLs at a time',
+                    'error'
+                );
+
+                this.isCrawling = false;
+                loader.hide();
+                return;
+            }
+
             await this.$store.dispatch('crawlExtList', {
-                params: {
-                    domain_ids: arrayIds.join(","),
-                    queue: false
-                }
+                domain_ids: arrayIds.join(","),
+                queue: false
             });
+
+            if (this.messageForms.action === 'crawled') {
+                swal.fire(
+                    'Success',
+                    'Crawled ' + this.listExt.data.length + ' items successfully!',
+                    'success'
+                )
+
+                this.isResultCrawled = true;
+            }
+
             this.isCrawling = false;
+            this.checkIds = [];
+            this.allSelected = false;
+            this.$store.dispatch('clearMessageForm');
+            loader.hide();
         },
         async submitAdd() {
             let that = this;
@@ -2064,13 +2242,17 @@ export default {
             });
             this.isPopupLoading = false;
             if (this.messageForms.action === 'updated_ext') {
-                console.log(this.extUpdate)
-                for (var index in this.listExt.data) {
-                    if (this.listExt.data[index].id === this.extUpdate.id) {
-                        this.listExt.data[index] = this.extUpdate;
-                        break;
-                    }
-                }
+                // console.log(this.extUpdate)
+                // for (var index in this.listExt.data) {
+                //     if (this.listExt.data[index].id === this.extUpdate.id) {
+                //         this.listExt.data[index] = this.extUpdate;
+                //         break;
+                //     }
+                // }
+
+                this.getExtList({
+                    params: this.filterModel
+                });
             }
             this.toggleTableLoading();
             loader.hide();
@@ -2237,18 +2419,22 @@ export default {
 
             if (that.listAhrefs.length !== 0) {
 
-                this.checkIds.forEach(item => {
-                    if (that.listAhrefs.hasOwnProperty(item.id)) {
-                        let itemAherf = that.listAhrefs[item.id];
-                        item.ahrefs_rank = itemAherf.ahrefs_rank;
-                        item.no_backlinks = itemAherf.no_backlinks;
-                        item.url_rating = itemAherf.url_rating;
-                        item.domain_rating = itemAherf.domain_rating;
-                        item.organic_keywords = itemAherf.organic_keywords;
-                        item.organic_traffic = itemAherf.organic_traffic;
-                        item.ref_domains = itemAherf.ref_domains;
-                        item.status = itemAherf.status;
-                    }
+                // this.checkIds.forEach(item => {
+                //     if (that.listAhrefs.hasOwnProperty(item.id)) {
+                //         let itemAherf = that.listAhrefs[item.id];
+                //         item.ahrefs_rank = itemAherf.ahrefs_rank;
+                //         item.no_backlinks = itemAherf.no_backlinks;
+                //         item.url_rating = itemAherf.url_rating;
+                //         item.domain_rating = itemAherf.domain_rating;
+                //         item.organic_keywords = itemAherf.organic_keywords;
+                //         item.organic_traffic = itemAherf.organic_traffic;
+                //         item.ref_domains = itemAherf.ref_domains;
+                //         item.status = itemAherf.status;
+                //     }
+                // });
+
+                this.getExtList({
+                    params: this.filterModel
                 });
 
                 swal.fire(
@@ -2276,18 +2462,22 @@ export default {
             var that = this;
 
             if (that.listAhrefs.length !== 0) {
-                this.listExt.data.forEach(item => {
-                    if (that.listAhrefs.hasOwnProperty(item.id)) {
-                        let itemAherf = that.listAhrefs[item.id];
-                        item.ahrefs_rank = itemAherf.ahrefs_rank;
-                        item.no_backlinks = itemAherf.no_backlinks;
-                        item.url_rating = itemAherf.url_rating;
-                        item.domain_rating = itemAherf.domain_rating;
-                        item.organic_keywords = itemAherf.organic_keywords;
-                        item.organic_traffic = itemAherf.organic_traffic;
-                        item.ref_domains = itemAherf.ref_domains;
-                        item.status = itemAherf.status;
-                    }
+                // this.listExt.data.forEach(item => {
+                //     if (that.listAhrefs.hasOwnProperty(item.id)) {
+                //         let itemAherf = that.listAhrefs[item.id];
+                //         item.ahrefs_rank = itemAherf.ahrefs_rank;
+                //         item.no_backlinks = itemAherf.no_backlinks;
+                //         item.url_rating = itemAherf.url_rating;
+                //         item.domain_rating = itemAherf.domain_rating;
+                //         item.organic_keywords = itemAherf.organic_keywords;
+                //         item.organic_traffic = itemAherf.organic_traffic;
+                //         item.ref_domains = itemAherf.ref_domains;
+                //         item.status = itemAherf.status;
+                //     }
+                // });
+
+                this.getExtList({
+                    params: this.filterModel
                 });
 
                 swal.fire(
@@ -2313,67 +2503,80 @@ export default {
             this.$store.dispatch('clearMessageForm');
             this.urlEmails = [];
 
-            if (ext == null) {
-                if (this.checkIds.length == 0) {
-                    swal.fire('No Selected', 'Please select first', 'error');
+            if (this.user.work_mail) {
 
-                } else if (this.checkIds.length > 10) {
-                    swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
-                } else {
-                    let err = this.checkIds.some(function(items){
-                        return items.status == 50 | items.email == "" | items.email == null;
-                    });
+                if (ext == null) {
+                    this.extDomain_id = '';
 
-                    if(err) {
-                        swal.fire(
-                            'Invalid Selection',
-                            'Some of the selected items may either be contacted already or have no email address',
-                            'error'
-                        );
+                    if (this.checkIds.length == 0) {
+                        swal.fire('No Selected', 'Selection is empty.', 'error');
+
+                    } else if (this.checkIds.length > 10) {
+                        swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                     } else {
-                        this.openModalEmailElem();
-                        let emails = [];
-                        for (let index in this.checkIds) {
-                            if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
-                                if (typeof(this.checkIds[index].email) === "string") {
-                                    emails.push(this.checkIds[index].email.split('|'))
-                                } else {
-                                    emails.push(this.checkIds[index].email.map(a => a.text))
+                        let err = this.checkIds.some(function(items){
+                            return items.email == "" | items.email == null;
+                        });
+
+                        if(err) {
+                            swal.fire(
+                                'Invalid Selection',
+                                'Some of the selected items have no email address',
+                                'error'
+                            );
+                        } else {
+                            this.openModalEmailElem();
+                            let emails = [];
+                            for (let index in this.checkIds) {
+                                if (this.checkIds[index].email != "" || this.checkIds[index].email != null) {
+                                    if (typeof(this.checkIds[index].email) === "string") {
+                                        emails.push(this.checkIds[index].email.split('|'))
+                                    } else {
+                                        emails.push(this.checkIds[index].email.map(a => a.text))
+                                    }
                                 }
                             }
+
+                            this.urlEmails = createTags(emails.flat())
+
+                            // this.email_to = emails.join('|')
+                        }
+                    }
+                    // console.log(this.checkIds)
+                    // return false;
+                }
+
+                if (ext != null) {
+                    // if (ext.status == 50) {
+                    //     swal.fire('Invalid', 'Record already contacted.', 'error')
+                    // } else
+
+                    if (ext.email == "" || ext.email == null || ext.email.length == 0) {
+                        swal.fire('No email', 'Please check if record has email.', 'error')
+                    } else {
+                        this.openModalEmailElem();
+                        // this.email_to = ext.email;
+                        this.extDomain_id = ext.id;
+
+                        let emails = [];
+
+                        if (typeof(ext.email) === "string") {
+                            emails = ext.email.split('|')
+                        } else {
+                            emails = ext.email.map(a => a.text);
                         }
 
-                        this.urlEmails = createTags(emails.flat())
-
-                        // this.email_to = emails.join('|')
+                        this.urlEmails = emails ? createTags(emails) : [];
                     }
                 }
-                // console.log(this.checkIds)
-                // return false;
+
+            } else {
+                swal.fire(
+                    'Error',
+                    'Please setup your work mail first.',
+                    'error'
+                )
             }
-
-            if (ext != null) {
-                if (ext.status == 50) {
-                    swal.fire('Invalid', 'This is Already Contacted', 'error')
-                } else if (ext.email == "" || ext.email == null || ext.email.length == 0) {
-                    swal.fire('No email', 'Please check if with email', 'error')
-                } else {
-                    this.openModalEmailElem();
-                    // this.email_to = ext.email;
-                    this.extDomain_id = ext.id;
-
-                    let emails = [];
-
-                    if (typeof(ext.email) === "string") {
-                        emails = ext.email.split('|')
-                    } else {
-                        emails = ext.email.map(a => a.text);
-                    }
-
-                    this.urlEmails = emails ? createTags(emails) : [];
-                }
-            }
-
         },
 
         getStatus() {
@@ -2383,26 +2586,95 @@ export default {
                 })
         },
 
+        doMultipleEmployee() {
+            if (this.checkIds.length > 0) {
+                let element = this.$refs.modalMultipleEmployee
+                $(element).modal('show')
+            } else {
+                swal.fire(
+                    'No item',
+                    'No selected item',
+                    'error'
+                )
+            }
+        },
+
+        submitUpdateMultipleEmployee() {
+            let ids = [];
+            for(let index in this.checkIds) {
+                ids.push(this.checkIds[index].id)
+            }
+
+            axios.post('/api/update-multiple-employee',{
+                ids: ids,
+                emp_id: this.updateMultiEmployee
+            }).then((res) => {
+                if(res.data.success === true) {
+
+                    let element = this.$refs.modalMultipleEmployee
+                    $(element).modal('hide')
+
+                    swal.fire(
+                        'Success',
+                        'Updated Successfully',
+                        'success'
+                    )
+
+                    this.getExtList({
+                        params: this.filterModel
+                    });
+
+                }
+
+                this.updateMultiEmployee = '';
+                this.checkIds = [];
+            })
+        },
 
         async submitSendMail() {
             this.allowSending = false;
             this.isPopupLoading = true;
 
-            await this.$store.dispatch('sendMailWithMailgun', {
-                cc: '',
-                email: this.urlEmails,
-                title: this.modelMail.title,
-                content: this.modelMail.content,
-                attachment: 'undefined',
-            })
+            // create form data
+
+            let formData = new FormData();
+            formData.append('cc', '');
+            formData.append('email', JSON.stringify(this.urlEmails));
+            formData.append('title',  this.modelMail.title);
+            formData.append('content', this.modelMail.content);
+
+            // get attachments
+
+            let attachments = this.$refs.file_send_url.files;
+
+            if (!attachments.length) {
+                formData.append('attachment', 'undefined');
+            } else {
+                for (let i = 0; i < attachments.length; i++) {
+                    formData.append('attachment[]', attachments[i]);
+                }
+            }
+
+            // await this.$store.dispatch('sendMailWithMailgun', {
+            //     cc: '',
+            //     email: this.urlEmails,
+            //     title: this.modelMail.title,
+            //     content: this.modelMail.content,
+            //     attachment: 'undefined',
+            // })
+
+            await this.$store.dispatch('actionSendMailgun', formData);
 
             this.isPopupLoading = false;
 
-            if (this.messageForms.action == 'send_mail') {
-                this.modelMail = {
-                    title: '',
-                    content: '',
-                    mail_name: '',
+            if (this.messageFormsMail.action === 'success') {
+
+                if (this.mailInfo.tpl === 0) {
+                    this.modelMail = {
+                        title: '',
+                        content: '',
+                        mail_name: '',
+                    }
                 }
 
                 // this.getStatus();
@@ -2413,7 +2685,12 @@ export default {
                 }
 
                 this.doUpdateMultipleStatus(result, this.extDomain_id);
+
                 $("#modal-email").modal('hide')
+
+                // clear attachments
+
+                this.$refs.file_send_url.value = "";
             } else {
                 swal.fire(
                     'Error',
@@ -2442,9 +2719,9 @@ export default {
                     let obj = this.listExt.data.findIndex(o => o.id === id);
                     this.listExt.data[obj].status = 50;
                 } else {
-                    for (var index in this.checkIds) {
-                        var id = this.checkIds[index].id
-                        var obj = this.listExt.data.findIndex(o => o.id === id);
+                    for (let index in this.checkIds) {
+                        let id2 = this.checkIds[index].id
+                        let obj = this.listExt.data.findIndex(o => o.id === id2);
                         this.listExt.data[obj].status = this.updateStatus.status;
                     }
                 }
@@ -2459,6 +2736,12 @@ export default {
                     'success'
                 )
             }
+
+            this.checkIds = []
+
+            this.getExtList({
+                params: this.filterModel
+            });
         },
 
 
@@ -2562,9 +2845,21 @@ export default {
             let that = this;
             this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
         },
-        async doChangeEmailCountry() {
-            let that = this;
-            this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+        doChangeEmailCountry() {
+            let that = this, data = {};
+            let list = this.listLanguages.data
+            // this.mailInfo.country = this.listLanguages.data.filter(item => item.id === that.mailInfo.country.id)[0];
+
+             list.forEach(function (item) {
+                 if (item.id === that.mailInfo.country.id) {
+                     data = item;
+                 }
+            });
+
+            this.mailInfo.country.id = data.id;
+            this.mailInfo.country.name = data.name;
+            this.mailInfo.country.code = data.code;
+
             this.fetchTemplateMail(this.mailInfo.country.id);
         },
 
@@ -2574,6 +2869,22 @@ export default {
                 ob[key]['id'] = key;
                 arr.push(ob[key]);
             });
+
+            return _.sortBy(arr, 'text');
+        },
+
+        objectToArrayWithCustomSort(ob) {
+            let sort_array = ['0', '10', '20', '30', '110', '50', '120', '70', '100', '60', '90', '55'];
+            let arr = [];
+
+            sort_array.forEach((sort) => {
+                Object.keys(ob).forEach((key) => {
+                    if (sort === key) {
+                        ob[key]['id'] = key;
+                        arr.push(ob[key]);
+                    }
+                });
+            })
 
             return arr;
         },
@@ -2616,6 +2927,12 @@ export default {
         //     await this.$store.dispatch('sendMail', { ids: this.mailInfo.ids, mail_name: this.modelMail.mail_name, title: this.modelMail.title, content: this.modelMail.content });
         //     this.isPopupLoading = false;
         // }
+
+        getSellerTeamInCharge(list) {
+            return this.extUpdate.user_id === null
+                ? list
+                : list.filter(el => el.team_in_charge === this.extUpdate.user_id);
+        },
 
         checkEmailValidationError(error){
             let obj = error;

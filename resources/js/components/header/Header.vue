@@ -1,7 +1,7 @@
 <template>
     <header class="main-header main-header-custom">
         <a href="#" class="logo logo-custom" style="position:fixed;">
-            <img class="" src="../../../images/stalinks.png" alt="User Image" />
+            <img class="" style="height: auto; width: 205px;" src="../../../images/stalinks2.png" alt="User Image" />
         </a>
         <nav class="navbar navbar-static-top">
             <a

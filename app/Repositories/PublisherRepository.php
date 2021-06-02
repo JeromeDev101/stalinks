@@ -8,6 +8,7 @@ use App\Models\ExtDomain;
 use App\Models\Publisher;
 use App\Models\Registration;
 use App\Libs\Ahref;
+use App\Services\HttpClient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -20,9 +21,13 @@ use App\Models\Language;
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface {
     protected $extDomain;
 
-    public function __construct(Publisher $model)
+    protected $httpClient;
+
+    public function __construct(Publisher $model, HttpClient $httpClient)
     {
         parent::__construct($model);
+
+        $this->httpClient = $httpClient;
     }
 
     public function getList($filter)
@@ -100,6 +105,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $list = $list->where('publisher.kw_anchor', $filter['kw_anchor']);
         }
 
+        if (isset($filter['is_https'])) {
+            $list = $list->where('publisher.is_https', $filter['is_https']);
+        }
+
         if( isset($filter['qc_validation']) && !empty($filter['qc_validation']) ){
             if( $filter['qc_validation'] == 'na' ) {
                 $list = $list->whereNull('publisher.qc_validation');
@@ -135,7 +144,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
 
         if( isset($filter['language_id']) && !empty($filter['language_id']) ){
-            $list = $list->where('publisher.language_id', $filter['language_id']);
+            if( $filter['language_id'] === 'na' ) {
+                $list = $list->whereNull('publisher.language_id');
+            } else {
+                $list = $list->where('publisher.language_id', $filter['language_id']);
+            }
         }
 
         if( isset($filter['casino_sites']) && !empty($filter['casino_sites']) ){
@@ -144,9 +157,24 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
             if(is_array($filter['topic'])) {
-                foreach($filter['topic'] as $topic) {
-                    $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
-                }
+                // foreach($filter['topic'] as $topic) {
+
+                    // $list = $list->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+
+                    $list = $list->where(function($query) use ($filter) {
+                        if( in_array('N/A', $filter['topic']) ) {
+                            foreach($filter['topic'] as $topic) {
+                                $query->orWhere('publisher.topic', 'like', '%'.$topic.'%')
+                                    ->orWhereNull('publisher.topic');
+                            }
+                        } else {
+                            foreach($filter['topic'] as $topic) {
+                                $query->orWhere('publisher.topic', 'like', '%'.$topic.'%');
+                            }
+                        }
+                    });
+
+                // }
             } else {
                 $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
             }
@@ -193,6 +221,26 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             }
         }
 
+        if (isset($filter['domain_zone']) && !empty($filter['domain_zone'])) {
+            if (is_array($filter['domain_zone'])) {
+
+                $regs = implode(",", $filter['domain_zone']);
+                $regs = str_replace('.', '', $regs);
+                $regs = explode(",", $regs);
+
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+
+                $list = $list->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','')"), $regs);
+
+            } else {
+
+                $regs = str_replace('.', '', $filter['domain_zone']);
+
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
+                $list = $list->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','') = '$regs'");
+            }
+        }
+
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 
@@ -226,12 +274,109 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         switch ( $type ) {
             case "value1":
                 $score = $b - $a;
+                
+                // ur = $a
+                // dr = $b
+
                 $val = '';
-                if( $score < 5 && $score >= -3){  $val = 'A'; }
-                else if( $score <= 8 && $score >= 5){ $val = 'C'; }
-                else if( $score <= -4 && $score >= -8){ $val = 'D'; }
-                else if( $score >= 8 || $score <= -8){ $val = 'E'; }
+                           
+                if( ($a >= 0 && $a <= 9) || ($b >= 0 && $b <= 9) ){
+                    $val = 'E';
+                    return $val;
+                }
+                
+                
+                if( ($a >= 10 && $a <= 100) && ($b >= 10 && $b <= 19) ) {
+                    
+                    if( $score >= -9 && $score <= 9 ) {
+                        $val = 'D';
+                    } else {
+                        $val = 'E';
+                    }
+                    return $val;
+                }
+                
+                if( ($a >= 10 && $a <= 19) && ($b >= 20 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 15 ) {
+                        $val = 'D';
+                    } else {
+                        $val = 'E';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 20 && $a <= 100) && ($b >= 20 && $b <= 34) ) {
+                    
+                    if( $score >= -15 && $score <= -1 ) {
+                        $val = 'D';
+                    } else if( $score <= -16 ) {
+                        $val = 'E';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 20 && $a <= 34) && ($b >= 35 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 16 ) {
+                        $val = 'B';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 35 && $a <= 49) && ($b >= 35 && $b <= 49) ) {
+                    
+                    if( $score >= -9 && $score <= 9 ) {
+                        $val = 'B';
+                    } else {
+                        $val = 'C';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 50 && $a <= 100) && ($b >= 35 && $b <= 49) ) {
+                    
+                    if( $score >= -15 && $score <= -5 ) {
+                        $val = 'D';
+                    } else if( $score <= -16 ) {
+                        $val = 'E';
+                    } else {
+                        $val = 'A';
+                    }
+                    return $val;
+                }
+                
+                
+                if( ($a >= 35 && $a <= 49) && ($b >= 50 && $b <= 100) ) {
+                    
+                    if( $score >= 1 && $score <= 5 ) {
+                        $val = 'A';
+                    } else {
+                        $val = 'B';
+                    }
+                    return $val;
+                }
+                
+                if( ($a >= 50 && $a <= 100) && ($b >= 50 && $b <= 100) ) {
+                    
+                    if( $score >= -5 && $score <= 15 ) {
+                        $val = 'A';
+                    } else {
+                        $val = 'B';
+                    }
+                    return $val;
+                }
+
                 return $val;
+                
             case "value2":
                 if($a == 0){
                     return '';
@@ -268,7 +413,32 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $user_id_list = User::pluck('id')->toArray();
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
-        $topic_list = ['Movies & Music','Beauty','Crypto','Travel','Charity','Cooking','Education','Fashion','Finance','Games','Health','History','Job','News','Pet','Photograph','Real State','Religion','Shopping','Sports','Tech','Unlisted'];
+        $topic_list = [
+            'Art',
+            'Beauty',
+            'Charity',
+            'Cooking',
+            'Crypto',
+            'Education',
+            'Fashion',
+            'Finance',
+            'Games',
+            'Health',
+            'History',
+            'Job',
+            'Marketing',
+            'Movies & Music',
+            'News',
+            'Pet',
+            'Photograph',
+            'Real Estate',
+            'Religion',
+            'Shopping',
+            'Sports',
+            'Tech',
+            'Travel',
+            'Unlisted',
+        ];
 //        $language = $file['language'];
         $csv_file = $file['file'];
 
@@ -283,12 +453,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $datas = [];
         $existing_datas = [];
         while ( ($line = fgetcsv($csv) ) !== FALSE) {
-            \Log::debug($line);
-
             if (Auth::user()->isOurs == 1){
 
-                if(count($line) > 6 || count($line) < 6){
-                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor and Language only.";
+                if(count($line) > 7 || count($line) < 7){
+                    $message = "Please check the header: Url, Price, Inc Article, Accept, KW Anchor, Language and Topic only";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -301,6 +469,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $accept = trim_special_characters($line[3]);
                     $kw_anchor = trim_special_characters($line[4]);
                     $language_excel = trim_special_characters($line[5]);
+                    $topic = trim_special_characters($line[6]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
@@ -328,7 +497,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     'valid' => $valid,
                                     'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                     'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
-                                    'topic' => null
+                                    'topic' => $topic,
+                                    'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
                                 ]);
                             }
                         } else {
@@ -352,8 +522,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             } else {
 
-                if(count($line) > 7 || count($line) < 7){
-                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept, Language and Topic only.";
+                if(count($line) > 8 || count($line) < 8){
+                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept, Language, Topic and Kw Anchor only.";
                     $file_message = "Invalid Header format. ".$message;
                     $result = false;
                     break;
@@ -367,6 +537,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $accept = trim_special_characters($line[4]);
                     $language_excel = trim_special_characters($line[5]);
                     $topic = trim_special_characters($line[6]);
+                    $kw_anchor = trim_special_characters($line[7]);
 
                     $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
@@ -396,6 +567,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                             'valid' => $valid,
                                             'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                             'topic' => $topic,
+                                            'kw_anchor' => $kw_anchor,
+                                            'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
                                         ]);
                                     }
                                 } else {

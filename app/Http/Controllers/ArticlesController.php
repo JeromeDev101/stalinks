@@ -94,8 +94,15 @@ class ArticlesController extends Controller
         $user = Auth::user();
         $registration = Registration::where('email', $user->email)->first();
 
+        $columns = [
+            'article.*',
+            'publisher.topic',
+            'publisher.casino_sites',
+            'users.username as writer',
+            'backlinks.status as backlink_status'
+        ];
 
-        $list = Article::select('article.*', 'publisher.topic', 'publisher.casino_sites', 'users.username as writer')
+        $list = Article::select($columns)
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
                         ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
@@ -107,8 +114,8 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
-                        ->where('backlinks.status' ,'!=', 'Canceled')
-                        ->where('backlinks.status' ,'!=', 'Issue')
+                        // ->where('backlinks.status' ,'!=', 'Canceled')
+                        // ->where('backlinks.status' ,'!=', 'Issue')
                         ->orderBy('id', 'desc');
 
         if( isset($filter['search_backlink']) && $filter['search_backlink'] ){
@@ -138,6 +145,10 @@ class ArticlesController extends Controller
         if( isset($filter['status']) && $filter['status'] != ""){
             if( $filter['status'] == 'Queue' ){
                 $list->whereNull('article.status_writer');
+            }else if( $filter['status'] == 'Canceled' || $filter['status'] == 'Issue' ){
+                $list->whereHas('backlinks', function($query) use ($filter) {
+                    return $query->where('status', $filter['status']);
+                })->whereNull('article.status_writer');
             }else{
                 $list->where('article.status_writer', $filter['status']);
             }
@@ -214,7 +225,6 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request, NotificationInterface $notification){
-
         $user_id = Auth::user()->id;
         $article = Article::find($request->content['id']);
         $price_id = null;
@@ -267,6 +277,9 @@ class ArticlesController extends Controller
             'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
             'status_writer' => $request->content['status'],
             'id_writer' => $user_id,
+            'meta_description' => $request->content['meta_description'],
+            'meta_keyword' => $request->content['meta_keyword'],
+            'note' => $request->content['note'],
         ]);
 
         return response()->json(['success'=>true], 200);

@@ -20,11 +20,13 @@ const EXT_STATUS_CONTACTS_NULL = "ContactNull";
 const EXT_STATUS_GOT_CONTACTS = "GotContacts";
 // const EXT_STATUS_AHREAFED = "Ahrefed";
 const EXT_STATUS_CONTACTED = "Contacted";
+const EXT_STATUS_CONTACTED_VIA_FORM = "ContactedViaForm";
 const EXT_STATUS_NO_ANSWER = "NoAnswer";
 const EXT_STATUS_REFUSED = "Refused";
 const EXT_STATUS_IN_TOUCHED = "InTouched";
 const UNQUALIFIED = "Unqualified";
 const EXT_STATUS_QUALIFIED = "Qualified";
+const EXT_STATUS_GOT_EMAIL = "GotEmail";
 
 const state = {
     totalExtDomain: 0,
@@ -41,15 +43,17 @@ const state = {
     listStatusText : {
         0:  { text: EXT_STATUS_NEW, label: "default" },
         10: { text: EXT_STATUS_CRAWL_FAILED, label: "danger"},
-        20: { text: EXT_STATUS_CONTACTS_NULL, label: "warning" },
-        30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
         // 40: { text: EXT_STATUS_AHREAFED, label: "primary" },
         50: { text: EXT_STATUS_CONTACTED, label: "success" },
+        120: { text: EXT_STATUS_CONTACTED_VIA_FORM, label: "success" },
+        20: { text: EXT_STATUS_CONTACTS_NULL, label: "warning" },
+        30: { text: EXT_STATUS_GOT_CONTACTS, label: "success" },
+        110: { text: EXT_STATUS_GOT_EMAIL, label: "success" },
         55: { text: EXT_STATUS_NO_ANSWER, label: "warning" },
         60: { text: EXT_STATUS_REFUSED, label: "warning" },
         70: { text: EXT_STATUS_IN_TOUCHED, label: "success" },
         90: { text: UNQUALIFIED, label: "success" },
-        100: { text: EXT_STATUS_QUALIFIED, label: "success" }
+        100: { text: EXT_STATUS_QUALIFIED, label: "success" },
     },
     totalTopSites: 0,
     tableExtShowOptions: {
@@ -58,7 +62,7 @@ const state = {
         alexa_created_at: true,
         country: true,
         domain: true,
-        email: false,
+        email: true,
         facebook: false,
         phone: false,
         rank: true,
@@ -336,6 +340,7 @@ const actions = {
             let response = await ExtDomainService.crawlExtList(params);
             if (response.status === 200) {
                 commit(EXT_DOMAIN_SET_LIST_EXT, { listExt: response.data, isOnlyData: true });
+                commit(MESSAGE_FORMS, { action: 'crawled', message: 'Crawled !', errors: {} });
             }
         } catch (e) {
             let errors = e.response.data.errors;

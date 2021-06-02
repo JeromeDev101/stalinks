@@ -55,6 +55,12 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static qcValidationUpdate(params) {
+        return axios.post('/api/publisher/qc-validation', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static updatePublisher(params) {
         return axios.put('/api/publisher', params)
             .then(response => response)
@@ -79,6 +85,11 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getListDomainZones(params) {
+        return axios.get('/api/publisher/domain-zones', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 
     static deletePublisher(params) {
         return axios.delete('/api/publisher', params)

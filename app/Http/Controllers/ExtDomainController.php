@@ -249,8 +249,11 @@ class ExtDomainController extends Controller
 
         $url_remove_http = $this->remove_http($input['domain']);
 
-        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
-        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
+//        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
+//        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
+
+        $checkExtDomain = ExtDomain::where('domain', $url_remove_http);
+        $checkPublisher = Publisher::where('url', $url_remove_http);
 
         if( $checkExtDomain->count() > 0 || $checkPublisher->count() > 0 ){
             $inputted = '';
@@ -320,9 +323,12 @@ class ExtDomainController extends Controller
         }
 
         Validator::make($input, $validateRule)->validate();
-        if ($hasContactInfo && empty($request->status)) {
-            $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
-        }
+
+//        if ($input['email'] != '' || $input['email'] > 0) {
+//            $input['status'] = config('constant.EXT_STATUS_GOT_EMAIL');
+//        } else if ($hasContactInfo && empty($request->status)) {
+//            $input['status'] = config('constant.EXT_STATUS_GOT_CONTACTS');
+//        }
 
         if ($this->isInputAfrefInfo($input)) {
             if ($hasContactInfo) {
@@ -736,5 +742,22 @@ class ExtDomainController extends Controller
     public function getListExtSeller() {
         $ext_seller = User::select('id', 'name', 'username')->where('role_id', 6)->where('isOurs', 1)->get();
         return response()->json($ext_seller);
+    }
+
+    public function updateMultipleEmployee(Request $request) {
+        $request->validate([
+            'ids' => 'required',
+            'emp_id' => 'required'
+        ]);
+
+        foreach($request->ids as $id) {
+            $ext_domain = ExtDomain::find($id);
+            $ext_domain->update([
+                'user_id' => $request->emp_id
+            ]);
+        }
+
+
+        return response()->json(['success' => true],200);
     }
 }

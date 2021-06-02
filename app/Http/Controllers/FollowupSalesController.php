@@ -13,6 +13,7 @@ use App\Models\Publisher;
 use App\Events\BacklinkLiveEvent;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class FollowupSalesController extends Controller
 {
@@ -104,14 +105,14 @@ class FollowupSalesController extends Controller
     }
 
     public function update( Request $request, NotificationInterface $notification){
-        $seller = DB::table('backlinks')
-                    ->join('publisher','backlinks.publisher_id','=','publisher.id')
-                    ->join('users','publisher.user_id','=','users.id')
-                    ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
-                    ->where('backlinks.id',$request->id)
-                    ->first();
+        // $seller = DB::table('backlinks')
+        //             ->join('publisher','backlinks.publisher_id','=','publisher.id')
+        //             ->join('users','publisher.user_id','=','users.id')
+        //             ->select('users.id as user_id','users.email as user_primary_email','users.work_mail as user_work_mail')
+        //             ->where('backlinks.id',$request->id)
+        //             ->first();
 
-        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed', 'anchor_text');
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
@@ -134,14 +135,26 @@ class FollowupSalesController extends Controller
             $input['live_date'] = date('Y-m-d');
         }
 
-        $notification->create([
-            'user_id' => $backlink->publisher->user_id,
-            'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
-        ]);
+        $isExistUserId = $this->checkUser($backlink->publisher->user_id);
+        if( $isExistUserId ) {
+            $notification->create([
+                'user_id' => $backlink->publisher->user_id,
+                'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
+            ]);
 
-        broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
+            broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
+        }
 
         $backlink->update($input);
         return response()->json(['success'=> true], 200);
+    }
+
+    private function checkUser($user_id) {
+        $user = User::find($user_id);
+
+        if(!$user) {
+            return false;
+        }
+        return true;
     }
 }

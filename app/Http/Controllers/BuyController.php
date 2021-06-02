@@ -10,6 +10,7 @@ use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Traits\BuyTrait;
 use App\Repositories\Traits\NotificationTrait;
+use App\Services\HttpClient;
 use Illuminate\Http\Request;
 use App\Models\Publisher;
 use App\Models\Backlink;
@@ -19,17 +20,19 @@ use App\Models\Registration;
 use App\Models\WalletTransaction;
 use App\Models\User;
 use App\Events\NotificationEvent;
+use Illuminate\Support\Facades\DB;
 
 class BuyController extends Controller
 {
     use BuyTrait, NotificationTrait;
 
-    protected $publisherRepository, $backlinkRepository;
+    protected $publisherRepository, $backlinkRepository, $httpClient;
 
-    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository)
+    public function __construct(PublisherRepositoryInterface $publisherRepository, BackLinkRepositoryInterface $backLinkRepository, HttpClient $httpClient)
     {
         $this->publisherRepository = $publisherRepository;
         $this->backlinkRepository = $backLinkRepository;
+        $this->httpClient = $httpClient;
     }
 
     public function getList(Request $request){
@@ -49,7 +52,7 @@ class BuyController extends Controller
             'country_continent.name AS country_continent',
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
-            'buyer_purchased.status as status_purchased'
+            'buyer_purchased.status as status_purchased',
         ];
 
         $list = Publisher::select($columns)
@@ -77,6 +80,10 @@ class BuyController extends Controller
 
         if( isset($filter['seller']) && !empty($filter['seller']) ){
             $list->where('publisher.user_id', $filter['seller']);
+        }
+
+        if (isset($filter['is_https'])) {
+            $list->where('publisher.is_https', $filter['is_https']);
         }
 
         if( isset($filter['search']) && !empty($filter['search']) ){
@@ -143,6 +150,26 @@ class BuyController extends Controller
             }
         }
 
+        if (isset($filter['domain_zone']) && !empty($filter['domain_zone'])) {
+            if (is_array($filter['domain_zone'])) {
+
+//                $regs = implode("|", $filter['domain_zone']);
+                $regs = implode(",", $filter['domain_zone']);
+                $regs = str_replace('.', '', $regs);
+                $regs = explode(",", $regs);
+
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') REGEXP '" . $regs . "'");
+
+                $list = $list->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','')"), $regs);
+            } else {
+
+                $regs = str_replace('.', '', $filter['domain_zone']);
+
+//                $list = $list->whereRaw("REPLACE(SUBSTRING_INDEX(url, '.', -1),' ','') like '%" . $regs . "%'");
+                $list = $list->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(url, '.', -1),' ',''),'/','') = '$regs'");
+            }
+        }
+
         if (isset($filter['ur']) && !empty($filter['ur'])) {
             if ($filter['ur_direction'] === 'Above') {
                 $list->where('publisher.ur' , '>=', intval($filter['ur']));
@@ -192,10 +219,30 @@ class BuyController extends Controller
         }
 
         if (isset($filter['code'])) {
-            $list->whereRaw('ROUND(
-                           (
-                           LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
-                           ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+            if(is_array($filter['code'])) {
+                $list->where(function($q) use ($filter){
+                    foreach($filter['code'] as $key => $code) {
+                        if($key == 0) {
+                            $q->whereRaw('ROUND(
+                                (
+                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                        } else {
+                            $q->orWhere(function($query) use ($code){
+                                $query->whereRaw('ROUND(
+                                    (
+                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                    ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                            }) ;
+                        }
+                    }
+                });
+            } else {
+                $list->whereRaw('ROUND(
+                    (
+                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                    ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+            }
         }
 
         if( isset($filter['topic']) && !empty($filter['topic']) ){
@@ -305,6 +352,7 @@ class BuyController extends Controller
             'date_process' => date('Y-m-d'),
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
+            'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
         ]);
 
         $notification->create([

@@ -27,7 +27,7 @@ export default class ExtDomainService {
     }
 
     static crawlExtList(params) {
-        return axios.get('/api/ext/get-contacts', params)
+        return axios.post('/api/ext/get-contacts', params)
             .then(response => response)
             .catch(error => error);
     }

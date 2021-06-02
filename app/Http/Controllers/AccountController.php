@@ -42,7 +42,7 @@ class AccountController extends Controller
         if( Auth::user()->role_id == 8 || Auth::user()->role_id == 1 || Auth::user()->role_id == 3 ) {
             $request->validate(['account_validation' => 'required']);
         } else {
-            $input['account_validation'] = 'invalid';
+            $input['account_validation'] = 'processing';
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {
@@ -98,9 +98,11 @@ class AccountController extends Controller
         $paginate = $request->paginate;
         $team_in_charge = $request->team_in_charge;
         $country = $request->country;
+        $language_id = $request->language_id;
         $commission = $request->commission;
         $credit_auth = $request->credit_auth;
-        $company_type = $request->company_type;
+        $company_type = ($request->company_type == '' || $request->company_type == null)
+            ? null : ($request->company_type == 1 ? 'Freelance' : 'Company');
         $company_name = $request->company_name;
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
@@ -130,13 +132,24 @@ class AccountController extends Controller
                 });
             }
         })->when( $country, function($query) use ($country){
-            return $query->where( 'country_id', $country );
+            if($country == 'none') {
+                return $query->where('country_id', null);
+            } else {
+                return $query->where( 'country_id', $country );
+            }
+        })->when( $language_id, function($query) use ($language_id){
+            if($language_id == 'none') {
+                return $query->where('language_id', null);
+            } else {
+                return $query->where( 'language_id', $language_id );
+            }
         })->when( $commission, function($query) use ($commission){
             return $query->where( 'commission', $commission );
         })->when( $credit_auth, function($query) use ($credit_auth){
             return $query->where( 'credit_auth', $credit_auth );
         })->when( $company_type, function($query) use ($company_type){
-            return $query->where( 'is_freelance', $company_type );
+            $comp_type = $company_type == 'Freelance' ? 1 : 0;
+            return $query->where( 'is_freelance', $comp_type);
         })->when( $company_name, function($query) use ($company_name){
             return $query->where( 'company_name', 'like', '%' . $company_name . '%' );
         })->when( $company_url, function($query) use ($company_url){
@@ -153,15 +166,27 @@ class AccountController extends Controller
 
             return $query->where(function ($query2) use ($user_id) {
                 $query2->whereHas('team_in_charge', function ($sub) use( $user_id ) {
-                    $sub->where('team_in_charge', $user_id);
+                    $sub->where('registration.team_in_charge', $user_id)
+                    ->orWhere('users.status', 'inactive');
                 })->orWhere(function($query) {
                     $query->whereNull('team_in_charge')
                         ->where('type', 'Seller');
                 });
             });
         })
-        ->with('team_in_charge:id,name,username')
+        ->when($request->account_verification, function ($query) use ($request) {
+            if ($request->account_verification == 'Yes') {
+                $query->whereNull('verification_code');
+            } else {
+                $query->whereNotNull('verification_code');
+            }
+
+            return $query;
+        })
+        ->with('team_in_charge:id,name,username,status')
         ->with('user:id,email')
+        ->with('country:id,name')
+        ->with('language:id,name')
         ->orderBy('id', 'desc');
 
         if($paginate === 'All'){
@@ -183,16 +208,25 @@ class AccountController extends Controller
     public function edit(UpdateAccountRequest $request)
     {
         $inputs = $request->all();
+        if($inputs['status'] == 'inactive') {
+            $inputs['account_validation'] = 'invalid';
+        }
+
+        if($inputs['id_payment_type'] == '1' && $inputs['status'] == 'active') $request->validate(['paypal_account' => 'required']);
+        if($inputs['id_payment_type'] == '2' && $inputs['status'] == 'active') $request->validate(['skrill_account' => 'required']);
+        if($inputs['id_payment_type'] == '3' && $inputs['status'] == 'active') $request->validate(['btc_account' => 'required']);
+
         $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
         return response()->json($response);
     }
 
     public function updateRegistrationAccount(Request $request) {
-        // dd($request->all());
         $input = $request->except('company_type');
         $request->validate([
             'country_id' => 'required',
+            'writer_price' => 'required_if:type,==,Writer',
+            'rate_type' => 'required_if:type,==,Writer',
             'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
             'paypal_account' => 'required_if:id_payment_type,==,1',
@@ -242,7 +276,7 @@ class AccountController extends Controller
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'no';
         $input['credit_auth'] = 'No';
-        $input['account_validation'] = 'invalid';
+        $input['account_validation'] = 'processing';
         $input['password'] = Hash::make($input['password']);
 
         // OLD SENDING OF EMAIL
@@ -331,12 +365,6 @@ class AccountController extends Controller
         $wallet = 0;
         $deposit = 0;
 
-        // $publisher_ids = BuyerPurchased::select('publisher_id')
-        //                                 ->where('user_id_buyer', $user_id)
-        //                                 ->where('status', 'Purchased')
-        //                                 ->get()
-        //                                 ->toArray();
-
         $registered = Registration::where('email', Auth::user()->email)->first();
         if ( isset($registered->is_sub_account) && $registered->is_sub_account == 1 ) {
             if ( isset($registered->team_in_charge) ) {
@@ -347,38 +375,43 @@ class AccountController extends Controller
 
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+        $UserId[] = $user_id;
 
-        // dd($sub_buyer_ids);
 
-
-        $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
-                                ->where('status', 'Live')
-                                ->where('payment_status', 'Paid')
-                                ->where('user_id', $user_id)
-                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
-                                })
-                                ->get();
+        // $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
+        //                         ->where('status', 'Live')
+        //                         ->where('payment_status', 'Paid')
+        //                         ->where(function($query) use ($sub_buyer_ids, $UserId){
+        //                             if(count($sub_buyer_ids) > 0) {
+        //                                 return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+        //                             } else{
+        //                                 return $query->whereIn('user_id', $UserId);
+        //                             }
+        //                         })
+        //                         ->get();
 
         $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
-                                ->where('user_id', $user_id)
-                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                ->where('status', '!=', 'Canceled')
+                                ->where(function($query) use ($sub_buyer_ids, $UserId){
+                                    if(count($sub_buyer_ids) > 0) {
+                                        return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                                    } else{
+                                        return $query->whereIn('user_id', $UserId);
+                                    }
                                 })
                                 ->get();
 
         $total_purchased_paid = Backlink::selectRaw('SUM(price) as total_purchased_paid')
                                 ->where('status', 'Live')
-                                ->where('user_id', $user_id)
-                                ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                                    return $query->orWhereIn('user_id', $sub_buyer_ids);
+                                ->where('payment_status', 'Paid')
+                                ->where(function($query) use ($sub_buyer_ids, $UserId){
+                                    if(count($sub_buyer_ids) > 0) {
+                                        return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                                    } else{
+                                        return $query->whereIn('user_id', $UserId);
+                                    }
                                 })
                                 ->get();
-
-        // $user = User::select('id','name')
-        //             ->with('total_wallet')
-        //             ->where('id', $user_id)
-        //             ->get();
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
@@ -397,15 +430,15 @@ class AccountController extends Controller
             }
         }
 
-        if( isset($total_paid[0]['total_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
-            $wallet = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_paid[0]['total_paid']);
+        if( isset($total_purchased_paid[0]['total_purchased_paid']) && isset($wallet_transaction[0]['amount_usd']) ){
+            $wallet = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased_paid[0]['total_purchased_paid']);
         }
 
         return [
             'wallet' => $wallet,
             'total_purchased' => floatVal($total_purchased[0]['total_purchased']),
             'total_purchased_paid' => floatVal($total_purchased_paid[0]['total_purchased_paid']),
-            'total_paid' => floatVal($total_paid[0]['total_paid']),
+            // 'total_paid' => floatVal($total_paid[0]['total_paid']),
             'credit' => round($credit),
             'deposit' => $deposit,
         ];
@@ -413,7 +446,21 @@ class AccountController extends Controller
 
     public function getTeamInCharge() {
         $team_in_charge = [5,6,7,1];
-        $team = User::select('id','name', 'username')->where('isOurs',0)->whereIn('role_id', $team_in_charge)->orderBy('username', 'asc')->get();
+
+        $team = User::select('id','name', 'username')
+            ->where('isOurs',0)
+            ->whereIn('role_id', $team_in_charge)
+            ->orderBy('username', 'asc');
+
+        if (Auth::user()->role_id === 6) {
+            $team = $team->where(function ($sub) {
+                $sub->where('id', Auth::id())
+                    ->orWhere('status', 'inactive');
+            });
+        }
+
+        $team = $team->get();
+
         return response()->json(['data'=> $team], 200);
     }
 
@@ -431,7 +478,19 @@ class AccountController extends Controller
             $role_id = 4;
         }
 
-        $team = User::select('id','name', 'username')->where('isOurs',0)->where('role_id', $role_id)->orderBy('username', 'asc')->get();
+        $team = User::select('id','name', 'username')
+                    ->where('isOurs',0)
+                    // ->where('role_id', $role_id)
+                    ->where(function($query) use ($role_id, $request) {
+                        if($request->role == 'Buyer') {
+                            $query->whereIn('role_id', [5, 8]);
+                        } else{
+                            $query->where('role_id', $role_id);
+                        }
+                    })
+                    ->where('status', '!=', 'inactive')
+                    ->orderBy('username', 'asc')
+                    ->get();
         return response()->json($team, 200);
     }
 
@@ -471,7 +530,11 @@ class AccountController extends Controller
 
     public function getSubAccount(Request $request) {
         $team_in_charge = $request->team_in_charge == '' ?  Auth::user()->id : $request->team_in_charge;
-        $registration = Registration::where('team_in_charge', $team_in_charge)->where('is_sub_account', 1)->get();
+        $registration = Registration::select('registration.*', 'users.id as user_id')
+            ->where('team_in_charge', $team_in_charge)
+            ->join('users', 'users.email', '=', 'registration.email')
+            ->where('is_sub_account', 1)
+            ->get();
 
         return $registration;
     }
@@ -620,5 +683,14 @@ class AccountController extends Controller
 
         return response()->json(['success' => true]);
 
+    }
+
+    public function updateMultipleInCharge(Request $request)
+    {
+        Registration::whereIn('id', $request->ids)->update([
+            'team_in_charge' => $request->emp_id,
+        ]);
+
+        return response()->json(['success' => true],200);
     }
 }

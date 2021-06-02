@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from 'vue/dist/vue.common';
 import VueRouter from 'vue-router';
 import App from './App.vue';
 import routes from './routes';
@@ -19,6 +19,8 @@ import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 import VueTagsInput from '@johmun/vue-tags-input';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import VueApexCharts from 'vue-apexcharts'
+import excel from 'vue-excel-export'
 
 require('./bootstrap');
 
@@ -27,6 +29,8 @@ Vue.use(Toasted);
 Vue.use(Cookies);
 Vue.use(Toast);
 Vue.use(Loading);
+Vue.use(VueApexCharts)
+Vue.use(excel)
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
@@ -35,6 +39,7 @@ Vue.component('tinymce', tinymce)
 Vue.component('compact-picker', Compact)
 Vue.component('date-range-picker', DateRangePicker);
 Vue.component('vue-tags-input', VueTagsInput);
+Vue.component('apexchart', VueApexCharts)
 
 const router = new VueRouter({
     mode: 'history',

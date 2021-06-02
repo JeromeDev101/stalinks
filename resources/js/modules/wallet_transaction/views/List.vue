@@ -15,7 +15,9 @@
                                 <label for="">Buyer</label>
                                 <select name="" class="form-control" v-model="filterModel.buyer">
                                     <option value="">All</option>
-                                    <option v-for="option in listBuyer.data" v-bind:value="option.id">
+                                    <option v-for="option
+                                     in
+                                     listBuyerTransactions.data" v-bind:value="option.id">
                                         {{ option.name }}
                                     </option>
                                 </select>
@@ -349,6 +351,7 @@
             ...mapState({
                 listWallet: state => state.storeWalletTransaction.listWallet,
                 listBuyer: state => state.storeWalletTransaction.listBuyer,
+                listBuyerTransactions: state => state.storeWalletTransaction.listBuyerTransactions,
                 messageForms: state => state.storeWalletTransaction.messageForms,
                 listPayment: state => state.storeWalletTransaction.listPayment,
                 user: state => state.storeAuth.currentUser,
@@ -432,6 +435,7 @@
 
             async getListBuyer(params) {
                 await this.$store.dispatch('actionGetListBuyer', params);
+                await this.$store.dispatch('actionGetListBuyerWithTransaction', params);
             },
 
             async getListPaymentType(params) {

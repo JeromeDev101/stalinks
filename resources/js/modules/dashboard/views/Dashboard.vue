@@ -586,7 +586,7 @@ export default {
         padding: 0.8rem;
     }
     .tbl-custom thead tr th {
-        background: white;
+        /* background: white; */
         position: sticky;
         top: 0;
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
