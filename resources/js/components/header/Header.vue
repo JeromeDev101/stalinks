@@ -395,13 +395,7 @@ export default {
                         data.orderID
                         +'/capture')
                         .then(response => {
-                            vm.submitPay();
-
-                            swal.fire(
-                                'Success',
-                                'Successfully Added',
-                                'success'
-                            )
+                            vm.submitPay(response);
                         });
                 },
 
@@ -421,7 +415,7 @@ export default {
             setTimeout(this.initPaypalButtons, 300);
         },
 
-        async submitPay() {
+        async submitPay(paypalPayload) {
             this.formData = new FormData();
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
@@ -430,6 +424,9 @@ export default {
 
             if (this.updateModel.payment_type != 1) {
                 this.formData.append('file', this.$refs.proof.files[0]);
+            } else {
+                this.formData.append('payload',
+                    JSON.stringify(paypalPayload));
             }
 
             this.isPopupLoading = true;

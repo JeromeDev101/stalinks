@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use App\Http\Requests\WalletTransaction\AddWalletRequest;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Models\TotalWallet;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\Storage;
 
 class WalletTransactionController extends Controller
 {
@@ -121,7 +123,7 @@ class WalletTransactionController extends Controller
         ];
     }
 
-    public function addWallet(AddWalletRequest $request) {
+    public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
         $image = $request->file;
         $paymentType = $request->get('payment_type');
 
@@ -144,7 +146,17 @@ class WalletTransactionController extends Controller
             'admin_confirmation' => 'Not Paid',
         ];
 
-        WalletTransaction::create($data);
+        $result = WalletTransaction::create($data);
+
+        if ($paymentType == 1) {
+            $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
+            $payload->invoice_id = $result->id;
+            $result->update([
+                'invoice' => '/storage/app/STAL-' . $result->id . '.pdf'
+            ]);
+
+            $invoice->generateCreditInvoice($payload);
+        }
 
         return response()->json(['success' => true], 200);
     }
@@ -203,5 +215,12 @@ class WalletTransactionController extends Controller
         $file->move(public_path('images/wallet_transaction'), $new_name);
 
         return $new_name;
+    }
+
+    public function downloadPaypalInvoice($id)
+    {
+        $file = Storage::get('STAL-' . $id . '.pdf');
+
+        return $file;
     }
 }

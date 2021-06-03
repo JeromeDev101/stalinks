@@ -147,7 +147,7 @@
                         </p>
                     </td>
                     <td class="border-0 pl-0">
-                        <img src="{{ public_path('images\stalinks.png') }}" alt="">
+{{--                        <img src="{{ $invoice->buyer->custom_fields['logo'] }}" alt="">--}}
                         <h4 class="text-uppercase" style="color: #1a8296">
                             <strong>RECEIPT</strong>
                         </h4>
@@ -175,81 +175,26 @@
                 <tr>
                     <td class="px-0">
                         @if($invoice->buyer->custom_fields['company'])
-                            <h2>Company: </h2>
-                        @endif
-                        @if($invoice->seller->name)
-                            <p class="seller-name">
-                                <strong>{{ $invoice->seller->name }}</strong>
-                            </p>
+                            <p><strong>Company: </strong> {{ $invoice->buyer->custom_fields['company'] }}</p>
                         @endif
 
-{{--                        @if($invoice->seller->address)--}}
-{{--                            <p class="seller-address">--}}
-{{--                                {{ __('invoices::invoice.address') }}: {{ $invoice->seller->address }}--}}
-{{--                            </p>--}}
-{{--                        @endif--}}
+                        @if($invoice->buyer->custom_fields['full_name'])
+                            <p><strong>Name: </strong> {{ $invoice->buyer->custom_fields['full_name'] }}</p>
+                        @endif
 
-{{--                        @if($invoice->seller->code)--}}
-{{--                            <p class="seller-code">--}}
-{{--                                {{ __('invoices::invoice.code') }}: {{ $invoice->seller->code }}--}}
-{{--                            </p>--}}
-{{--                        @endif--}}
+                        @if($invoice->buyer->custom_fields['email'])
+                            <p><strong>Email: </strong> {{ $invoice->buyer->custom_fields['email'] }}</p>
+                        @endif
 
-{{--                        @if($invoice->seller->vat)--}}
-{{--                            <p class="seller-vat">--}}
-{{--                                {{ __('invoices::invoice.vat') }}: {{ $invoice->seller->vat }}--}}
-{{--                            </p>--}}
-{{--                        @endif--}}
-
-{{--                        @if($invoice->seller->phone)--}}
-{{--                            <p class="seller-phone">--}}
-{{--                                {{ __('invoices::invoice.phone') }}: {{ $invoice->seller->phone }}--}}
-{{--                            </p>--}}
-{{--                        @endif--}}
-
-{{--                        @foreach($invoice->seller->custom_fields as $key => $value)--}}
-{{--                            <p class="seller-custom-field">--}}
-{{--                                {{ ucfirst($key) }}: {{ $value }}--}}
-{{--                            </p>--}}
-{{--                        @endforeach--}}
+                        @if($invoice->buyer->custom_fields['country'])
+                            <p><strong>Country: </strong> {{ $invoice->buyer->custom_fields['country'] }}</p>
+                        @endif
                     </td>
                     <td class="border-0"></td>
                     <td class="px-0">
-                        @if($invoice->buyer->name)
-                            <p class="buyer-name">
-                                <strong>{{ $invoice->buyer->name }}</strong>
-                            </p>
-                        @endif
+                        <p><strong>Serial: </strong> {{ $invoice->getSerialNumber() }}</p>
 
-                        @if($invoice->buyer->address)
-                            <p class="buyer-address">
-                                {{ __('invoices::invoice.address') }}: {{ $invoice->buyer->address }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->code)
-                            <p class="buyer-code">
-                                {{ __('invoices::invoice.code') }}: {{ $invoice->buyer->code }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->vat)
-                            <p class="buyer-vat">
-                                {{ __('invoices::invoice.vat') }}: {{ $invoice->buyer->vat }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->phone)
-                            <p class="buyer-phone">
-                                {{ __('invoices::invoice.phone') }}: {{ $invoice->buyer->phone }}
-                            </p>
-                        @endif
-
-                        @foreach($invoice->buyer->custom_fields as $key => $value)
-                            <p class="buyer-custom-field">
-                                {{ ucfirst($key) }}: {{ $value }}
-                            </p>
-                        @endforeach
+                        <p><strong>Date: </strong> {{ $invoice->getDate() }}</p>
                     </td>
                 </tr>
             </tbody>
@@ -258,43 +203,21 @@
         {{-- Table --}}
         <table class="table">
             <thead>
-                <tr>
-                    <th scope="col" class="border-0 pl-0">{{ __('invoices::invoice.service') }}</th>
-                    @if($invoice->hasItemUnits)
-                        <th scope="col" class="text-center border-0">{{ __('invoices::invoice.units') }}</th>
-                    @endif
-                    <th scope="col" class="text-center border-0">{{ __('invoices::invoice.quantity') }}</th>
-                    <th scope="col" class="text-right border-0">{{ __('invoices::invoice.price') }}</th>
-                    @if($invoice->hasItemDiscount)
-                        <th scope="col" class="text-right border-0">{{ __('invoices::invoice.discount') }}</th>
-                    @endif
-                    @if($invoice->hasItemTax)
-                        <th scope="col" class="text-right border-0">{{ __('invoices::invoice.tax') }}</th>
-                    @endif
-                    <th scope="col" class="text-right border-0 pr-0">{{ __('invoices::invoice.sub_total') }}</th>
+                <tr style="height: 200px; background-color: #1a8296; color: #ffffff">
+                    <th scope="col" class="border-0 pl-0">Backlinks Services</th>
+                    <th scope="col" class="text-center border-0">Qty</th>
+                    <th scope="col" class="text-right border-0">Price</th>
+                    <th scope="col" class="text-right border-0">Total in USD</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($invoice->items as $item)
                 <tr>
                     <td class="pl-0">{{ $item->title }}</td>
-                    @if($invoice->hasItemUnits)
-                        <td class="text-center">{{ $item->units }}</td>
-                    @endif
                     <td class="text-center">{{ $item->quantity }}</td>
                     <td class="text-right">
                         {{ $invoice->formatCurrency($item->price_per_unit) }}
                     </td>
-                    @if($invoice->hasItemDiscount)
-                        <td class="text-right">
-                            {{ $invoice->formatCurrency($item->discount) }}
-                        </td>
-                    @endif
-                    @if($invoice->hasItemTax)
-                        <td class="text-right">
-                            {{ $invoice->formatCurrency($item->tax) }}
-                        </td>
-                    @endif
                     <td class="text-right pr-0">
                         {{ $invoice->formatCurrency($item->sub_total_price) }}
                     </td>
@@ -347,9 +270,8 @@
             </tbody>
         </table>
 
-        <p>
-            {{ trans('invoices::invoice.amount_in_words') }}: {{ $invoice->getTotalAmountInWords() }}
-        </p>
+        <p><strong>Payment Received via</strong></p>
+        <p>PAYPAL</p>
 
         <script type="text/php">
             if (isset($pdf) && $PAGE_COUNT > 1) {

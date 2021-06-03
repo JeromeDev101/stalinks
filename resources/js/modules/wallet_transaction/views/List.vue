@@ -91,7 +91,8 @@
                                 <th>Payment Via</th>
                                 <th>Amount USD</th>
                                 <th>Date</th>
-                                <th>Proof of Doc</th>
+                                <th>Proof of Doc
+                                <th>Invoice</th>
                                 <th>Confirmation</th>
                                 <th>Action</th>
                             </tr>
@@ -107,6 +108,14 @@
                                 <td>
                                     <div class="btn-group">
                                         <button title="Proof of Documents" @click="doShow(wallet.proof_doc)" data-target="#modal-wallet-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="btn-group"
+                                        v-if="wallet.invoice">
+                                        <button
+                                            title="Download Invoice" @click="downloadInvoice(wallet.id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
                                     </div>
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
@@ -309,6 +318,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         data() {
@@ -485,6 +495,24 @@
 
             doShow(doc) {
                 this.proof_doc = doc;
+            },
+
+            downloadInvoice(id) {
+                axios({
+                    url: '/api/files/invoice/paypal/' + id,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download',
+                        'STAL-' + id + '.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
             },
 
             async submitUpdatePay() {

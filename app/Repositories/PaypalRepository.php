@@ -47,8 +47,6 @@ class PaypalRepository implements PaypalInterface
 
         $result = $this->paypal->execute($payload);
 
-        $this->invoiceService->generateCreditInvoice($result->result);
-
         return $result;
     }
 

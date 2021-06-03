@@ -13,7 +13,7 @@ return [
     ],
 
     'serial_number' => [
-        'series'           => 'AA',
+        'series'           => 'STAL',
         'sequence'         => 1,
         /**
          * Sequence will be padded accordingly, for ex. 00001

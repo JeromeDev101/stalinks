@@ -20,18 +20,26 @@ class InvoiceService
 
     public function generateCreditInvoice($payload)
     {
+        $user = auth()->user();
         $customer = new Party([
-            'name'          => $payload->purchase_units[0]->shipping->name->full_name,
-            'address'       => $payload->purchase_units[0]->shipping->address->address_line_1,
             'custom_fields' => [
-                'postal code' => $payload->purchase_units[0]->shipping->address->postal_code,
-                'company' => auth()->user()->registration->company_name
+                'company' => optional($user->registration)->company_name,
+                'full_name' => $user->name,
+                'email' => $user->email,
+                'country' => optional($user->registration->country)->name,
+                'logo' => public_path('images/stalinks.png')
             ]
         ]);
 
         $item = (new InvoiceItem())->title('Wallet Credit')->pricePerUnit($payload->purchase_units[0]->payments->captures[0]->amount->value);
 
         $invoice = Invoice::make()
+            ->series('STAL')
+            ->sequence($payload->invoice_id)
+            ->serialNumberFormat('{SERIES}-{SEQUENCE}')
+            ->filename('STAL-' . $payload->invoice_id)
+            ->date(now())
+            ->dateFormat('m-d-Y')
             ->seller($this->client)
             ->buyer($customer)
             ->addItem($item)
