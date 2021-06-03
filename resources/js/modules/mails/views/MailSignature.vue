@@ -212,7 +212,14 @@
                                     {{ err }}
                                 </span>
 
-                                <ckeditor v-model="modelContent" @imageRemove="handleImageRemove"></ckeditor>
+                                <tinymce
+                                    v-model="modelContent"
+                                    id="articleContent"
+                                    :other_options="options"
+
+                                    @editorChange="testEvent">
+
+                                </tinymce>
                             </div>
                         </form>
 
@@ -227,19 +234,14 @@
                 </div>
             </div>
         </div>
-
-        <div style="display: none" ref="editorPreview" v-html="htmlContent"></div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import Ckeditor from "../../../components/editor/Ckeditor";
+import 'tinymce/skins/lightgray/skin.min.css';
 
 export default {
-    components: {
-        Ckeditor
-    },
     data() {
         return {
             listUsers: [],
@@ -257,7 +259,6 @@ export default {
                 name: '',
                 content: '',
                 work_mail: '',
-                html_content : ''
             },
 
             updateSignatureModel: {
@@ -265,14 +266,50 @@ export default {
                 name: '',
                 content: '',
                 work_mail: '',
-                html_content : ''
             },
 
             modalMode: '',
             isPopupLoading: false,
             isLoadingTable: false,
 
-            htmlContent: '',
+            options: {
+                height: 450,
+                branding: false,
+                image_title: true,
+                automatic_uploads: true,
+                allow_script_urls: false,
+                file_picker_types: 'image',
+                images_upload_handler: function (blobInfo, success, failure) {
+                    let xhr, formData;
+                    let token = document.head.querySelector('meta[name="csrf-token"]');
+                    let auth = localStorage.hasOwnProperty('vuex')
+                        ? 'Bearer ' + JSON.parse(localStorage.getItem("vuex")).storeAuth.token.access_token
+                        : '';
+                    xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', '/api/mail/post-signature-image');
+                    // manually set header
+                    xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.setRequestHeader('Authorization', auth);
+                    xhr.onload = function() {
+                        let json;
+                        if (xhr.status !== 200) {
+                            failure('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+                        json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location != 'string') {
+                            failure('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        success(json.location);
+                    };
+                    formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                    xhr.send(formData);
+                }
+            },
         }
     },
 
@@ -324,19 +361,15 @@ export default {
                 } else {
                     this.updateSignatureModel.content = val
                 }
-
-                this.htmlContent = val
             }
         }
     },
 
-    watch: {
-        htmlContent: function () {
-            this.finalizeHtml()
-        }
-    },
-
     methods: {
+        testEvent() {
+            console.log('test');
+        },
+
         getListUsers(){
             axios.get('/api/mail/get-user-list')
             .then(response => {
@@ -356,9 +389,6 @@ export default {
         async submitAdd() {
             let self = this;
             this.isPopupLoading = true;
-
-            this.signatureModel.html_content = this.$refs.editorPreview.innerHTML
-
             await this.$store.dispatch('actionAddEmailSignature', self.signatureModel);
             this.isPopupLoading = false;
 
@@ -403,9 +433,6 @@ export default {
 
         async submitUpdate() {
             this.isPopupLoading = true;
-
-            this.updateSignatureModel.html_content = this.$refs.editorPreview.innerHTML
-
             await this.$store.dispatch('actionUpdateEmailSignature', this.updateSignatureModel);
             this.isPopupLoading = false;
 
@@ -418,42 +445,6 @@ export default {
             console.log(images)
         },
 
-        finalizeHtml() {
-            this.$nextTick(() => {
-                let tables = this.$refs.editorPreview.getElementsByClassName('table')
-
-                let tableElements = this.$refs.editorPreview.getElementsByTagName('table')
-
-                for(let i=0; i < tableElements.length; i++)
-                {
-                    if (tables[i].style['width'] != null && tables[i].style['width'] !== '') {
-                        tableElements[i].style['width'] = tables[i].style['width'];
-                    }
-
-                    if(tableElements[i].style['width'] !== '' && tableElements[i].style['width'] != null) {
-                        tables[i].style['width'] = ''
-                    }
-                }
-
-                let images = this.$refs.editorPreview.getElementsByClassName('image')
-
-                let imageElements = this.$refs.editorPreview.getElementsByTagName('img')
-
-                for(let i=0; i < imageElements.length; i++)
-                {
-                    if (images[i].style['width'] != null && images[i].style['width'] !== '') {
-                        imageElements[i].style['width'] = images[i].style['width'];
-                    }
-
-                    if (imageElements[i].style['width'] !== '' && imageElements[i].style['width'] != null) {
-                        images[i].style['width'] = ''
-                    }
-                }
-
-                console.log(this.$refs.editorPreview.innerHTML)
-            });
-        },
-
         modalOpener(mode){
             this.clearMessageForm()
 
@@ -462,8 +453,6 @@ export default {
             if (this.modalMode === 'Add') {
                 this.checkWorkMail()
             }
-
-            this.finalizeHtml()
 
             let element = this.$refs.modalSignature
             $(element).modal('show')
@@ -491,7 +480,6 @@ export default {
                 name: '',
                 content: '',
                 work_mail: '',
-                html_content: ''
             };
         },
 

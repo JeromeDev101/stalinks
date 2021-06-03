@@ -52,20 +52,15 @@ class MailSignatureController extends Controller
 
         $request['user_id'] = Auth::id();
 
-        $request['content'] = $request->html_content;
-
-        $sig = MailSignature::create($request->except('html_content'));
+        $sig = MailSignature::create($request->all());
 
         return response()->json(['success' => true, 'data' => $sig]);
     }
 
     public function storeSignatureImage(Request $request)
     {
-        // $img_path = request()->file('originalName')->store('uploads', 'public');
-        // return response()->json(['url' => "/storage/$img_path"]);
-
-        $img_path = $request->file('upload')->store('uploads', 'public');
-        return response()->json(['url' => "/storage/$img_path"]);
+        $img_path = request()->file('file')->store('uploads', 'public');
+        return response()->json(['location' => "/storage/$img_path"]);
     }
 
     public function updateSignature(Request $request)
@@ -86,14 +81,12 @@ class MailSignatureController extends Controller
             'work_mail.unique' => 'Only one email signature is allowed per work mail/login mail.'
         ])->validate();
 
-        $request['content'] = $request->html_content;
-
         $sig = MailSignature::find($request->id);
 
         if (!$sig) {
             return response()->json(['success' => false]);
         }else{
-            $sig->update($request->except('html_content'));
+            $sig->update($request->all());
             $response['success'] = true;
             return response()->json(['success' => true]);
         }
