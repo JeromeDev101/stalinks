@@ -1006,6 +1006,7 @@
                         prop : 'code_price',
                         name : 'Code Price',
                         sortable: true,
+                        prefix: '$ ',
                         width: 120,
                         isHidden: this.user.role_id == 5 &&
                             this.user.isOurs == 1
@@ -1361,7 +1362,6 @@
 
             computePriceStalinks(price, article) {
 
-                let activeUser = this.user
                 let selling_price = price
                 let percent = parseFloat(this.formula.data[0].percentage);
                 let additional = parseFloat(this.formula.data[0].additional);
@@ -1370,11 +1370,7 @@
 
                 if( price != '' && price != null ){ // check if price has a value
 
-                        if( article == 'Yes' ){ //check if with article
-
-                            // if( commission == 'no' ){
-                            //     selling_price = price
-                            // }
+                        if( article.toLowerCase() == 'yes' ){ //check if with article
 
                             if( commission == 'yes' ){
                                 let percentage = this.percentage(percent, price)
@@ -1382,11 +1378,7 @@
                             }
                         }
 
-                        if( article == 'No' ){ //check if without article
-
-                            // if( commission == 'no' ){
-                            //     selling_price = parseFloat(price) + additional
-                            // }
+                        if( article.toLowerCase() == 'no' ){ //check if without article
 
                             if( commission == 'yes' ){
                                 let percentage = this.percentage(percent, price)
@@ -1414,13 +1406,13 @@
                 if( activeUser.user_type ){ //check if has user_type value
 
                     let type = activeUser.user_type.type
-                    let commission = activeUser.user_type.commission
+                    let commission = (activeUser.user_type.commission).toLowerCase()
 
                     if( price != '' && price != null ){ // check if price has a value
 
                         if( type == 'Buyer' ){ // check if the user_type is a 'Buyer'
 
-                            if( article == 'Yes' ){ //check if with article
+                            if( article.toLowerCase() == 'yes' ){ //check if with article
 
                                 if( commission == 'no' ){
                                     selling_price = price
@@ -1432,7 +1424,7 @@
                                 }
                             }
 
-                            if( article == 'No' ){ //check if without article
+                            if( article.toLowerCase() == 'no' ){ //check if without article
 
                                 if( commission == 'no' ){
                                     selling_price = parseFloat(price) + additional
@@ -1458,8 +1450,9 @@
                 let char1 = str.replace("http://", "");
                 let char2 = char1.replace("https://", "");
                 let char3 = char2.replace("www.", "");
+                let char4 = char3.replace("/", "");
 
-                return char3;
+                return char4;
             },
 
             percentage(percent, total) {
