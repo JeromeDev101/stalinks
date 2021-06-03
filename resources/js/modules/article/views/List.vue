@@ -119,7 +119,7 @@
                                 <td>{{ article.price == null  ? '':article.price.price == null ? '':'$ ' + article.price.price}}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
-                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content, article)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                     <div class="btn-group" v-if="user.isAdmin">
                                         <button title="Delete" @click="deleteArticle(article.id)" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
@@ -184,7 +184,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="showWriterPrice">
                                 <div class="form-group">
                                     <label for="">Writer Price</label>
                                     <input type="text" class="form-control" v-model="editModel.price" placeholder="0.00">
@@ -239,6 +239,7 @@
                     price: '',
                 },
                 isSearching: false,
+                showWriterPrice: false,
             }
         },
 
@@ -355,12 +356,18 @@
                 this.$router.replace({'query': null});
             },
 
-            viewContent(backlinks, content) {
+            viewContent(backlinks, content, article) {
                 this.data = content == null ? '':content;
                 this.viewModel = backlinks
                 this.viewModel.url_publisher = backlinks == null ? '':backlinks.publisher.url;
                 this.viewModel.seller = backlinks == null ? '':backlinks.publisher.user.name;
                 this.viewModel.buyer = backlinks == null ? '':backlinks.user.name;
+
+                if( article.isOurs === 1 ) {
+                    this.showWriterPrice = true;
+                } else {
+                    this.showWriterPrice = false;
+                }
             },
 
             async getListCountries(params) {
