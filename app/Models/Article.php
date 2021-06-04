@@ -12,6 +12,12 @@ class Article extends Model
     protected $table = 'article';
     protected $guarded = [];
 
+    protected $appends = ['contentnohtml'];
+
+    public function getContentNoHtmlAttribute() {
+        return strip_tags($this->content);
+    }
+
     public function user() {
         return $this->belongsTo('App\Models\User', 'id_writer');
     }
