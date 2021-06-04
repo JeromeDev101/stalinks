@@ -381,6 +381,8 @@
                             formatPrice(scope.row.org_traffic) }}
                         </template>
 
+
+                        <!--
                         <template
                             slot-scope="scope"
                             slot="priceData">
@@ -400,6 +402,8 @@
                             computePriceStalinks(scope.row.price,
                             scope.row.inc_article) }}
                         </template>
+
+                        -->
 
                         <template
                             slot-scope="scope"
@@ -973,18 +977,20 @@
                         isHidden: false
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_new_price',
                         name : 'Price',
-                        actionName : 'priceData',
+                        // actionName : 'priceData',
                         sortable: true,
+                        prefix: '$',
                         width: 100,
                         isHidden: false
                     },
                     {
-                        prop : '_action',
+                        prop : 'custom_new_prices',
                         name : 'Prices',
-                        actionName : 'pricesData',
+                        // actionName : 'pricesData',
                         sortable: true,
+                        prefix: '$',
                         width: 100,
                         isHidden: !this.user.isAdmin
                     },

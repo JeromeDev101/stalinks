@@ -6,6 +6,9 @@ use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Formula;
+use App\Models\Registration;
 
 class Publisher extends Model
 {
@@ -20,7 +23,9 @@ class Publisher extends Model
         'custom_continent',
         'custom_price',
         'custom_username',
-        'custom_topic'
+        'custom_topic',
+        'custom_new_price',
+        'custom_new_prices'
     ];
 
     protected $fillable
@@ -72,6 +77,14 @@ class Publisher extends Model
         return Carbon::parse($this->updated_at)->format('Y-m-d');
     }
 
+    public function getCustomNewPricesAttribute() {
+        return $this->computePriceStalinks($this->price, $this->inc_article);
+    } 
+
+    public function getCustomNewPriceAttribute() {
+        return $this->computePrice($this->price, $this->inc_article);
+    } 
+
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
@@ -100,5 +113,106 @@ class Publisher extends Model
            }
         }
         return $url;
+    }
+
+    private function percentage($percent, $total) {
+        return number_format(($percent/ 100) * $total, 2, '.', '');
+    }
+
+    private function computePrice($price, $article) {
+
+        $formula = Formula::first();
+
+        $activeUser = Auth::user();
+        $registration = Registration::where('email', $activeUser->email)->first();
+        $selling_price = $price;
+
+        $percent = floatval($formula->percentage);
+        $additional = floatval($formula->additional);
+
+        if( isset($registration) ){
+
+            $type = $registration->type;
+            $commission = strtolower($registration->commission);
+
+            if( $price != '' && $price != null ){ 
+
+                if( $type == 'Buyer' ){ 
+
+                    if( strtolower($article) == 'yes' ){ 
+
+                        if( $commission == 'no' ){
+                            $selling_price = $price;
+                        }
+
+                        if( $commission == 'yes' ){
+                            $percentage = $this->percentage($percent, $price);
+                            $selling_price = floatval($percentage) + floatval($price);
+                        }
+                    }
+
+                    if( strtolower($article) == 'no' ){ 
+
+                        if( $commission == 'no' ){
+                            $selling_price = floatval($price) + $additional;
+                        }
+
+                        if( $commission == 'yes' ){
+                            $percentage = $this->percentage($percent, $price);
+                            $selling_price = floatval($percentage) + floatval($price) + $additional;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        $selling_price = floatval($selling_price);
+
+        return $selling_price;
+    }
+
+
+    private function computePriceStalinks($price, $article) {
+
+        $formula = Formula::first();
+        $selling_price = $price;
+        $percent = floatval($formula->percentage);
+        $additional = floatval($formula->additional);
+        $commission = 'yes';
+
+        if( $price != '' && $price != null ){ 
+
+            if( strtolower($article) == 'yes' ){ 
+
+                if( $commission == 'no' ){
+                    $selling_price = $price;
+                }
+
+                if( $commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatval($percentage) + floatval($price);
+                }
+            }
+
+            if( strtolower($article) == 'no' ){ 
+
+                if( $commission == 'no' ){
+                    $selling_price = floatval($price) + $additional;
+                }
+
+                if( $commission == 'yes' ){
+                    $percentage = $this->percentage($percent, $price);
+                    $selling_price = floatval($percentage) + floatval($price) + $additional;
+                }
+
+            }
+            
+        }
+
+        $selling_price = ceil(floatval($selling_price));
+
+        return $selling_price;
     }
 }
