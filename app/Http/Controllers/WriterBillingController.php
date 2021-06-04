@@ -28,6 +28,10 @@ class WriterBillingController extends Controller
                         ->with('user:id,name,username')
                         ->orderBy('id', 'desc');
 
+        if (!auth()->user()->isAdmin()) {
+            $list->where('article.id_writer', auth()->user()->id);
+        }
+
         if( isset($filter['search_backlink'] ) && $filter['search_backlink'] ){
             $list->where('article.id_backlink', $filter['search_backlink']);
         }
