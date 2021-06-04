@@ -71,9 +71,9 @@ class UpdateAccountRequest extends FormRequest
             'account_validation' => [
                 'required'
             ],
-            'id_payment_type' => [
-                'required_if:status,==,active'
-            ],
+            // 'id_payment_type' => [
+            //     'required_if:status,==,active'
+            // ],
             // 'writer_price' => [
             //     'required_if:type,==,Writer',
             //     'required_if:account_validation,==,valid'
