@@ -216,6 +216,13 @@ class AccountController extends Controller
         if($inputs['id_payment_type'] == '2' && $inputs['status'] == 'active') $request->validate(['skrill_account' => 'required']);
         if($inputs['id_payment_type'] == '3' && $inputs['status'] == 'active') $request->validate(['btc_account' => 'required']);
 
+        if( $request->account_validation != 'invalid' ) {
+            $request->validate([
+                'writer_price' => 'required_if:type,==,Writer',
+                'rate_type' => 'required_if:type,==,Writer'
+            ]);
+        }
+
         $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
         return response()->json($response);
@@ -642,6 +649,14 @@ class AccountController extends Controller
 
     public function verifyAccount(UpdateAccountRequest $request) {
         $registered = Registration::find($request->id);
+
+        if( $request->account_validation != 'invalid' ) {
+            $request->validate([
+                'writer_price' => 'required_if:type,==,Writer',
+                'rate_type' => 'required_if:type,==,Writer'
+            ]);
+        }
+        
 
         if (!$registered) {
             return response()->json(['success' => false], 422);
