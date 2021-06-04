@@ -148,7 +148,11 @@
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button
+                                            v-if="seller.proof_doc_path == null || !isFilePdf(seller.proof_doc_path)"
+                                            @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button v-else
+                                            title="Download Proof" @click="downloadProof(wallet.id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -170,7 +174,9 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <img class="img-fluid" :src="proof_doc" atl="Proof of Billing" >
+                                <img class="img-fluid"
+                                     :src="proof_doc"
+                                     alt="Proof of Billing" >
                             </div>
                         </div>
                     </div>
@@ -599,6 +605,30 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            isFilePdf(path) {
+                var arr = path.split('.');
+
+                return arr[1] === 'pdf';
+            },
+
+            downloadProof(id) {
+                axios({
+                    url: '/api/files/proof/paypal/' + id,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download',
+                        'STAL-SELLER-' + id + '.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
+            }
         },
     }
 </script>

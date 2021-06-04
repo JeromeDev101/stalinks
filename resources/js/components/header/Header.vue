@@ -195,7 +195,8 @@
                                      v-if="updateModel.payment_type == 1">
                                     <div class="form-group">
                                         <label
-                                            for="">Paypal
+                                            for="">Your
+                                                   Paypal
                                                    Region
                                         </label>
                                         <select name=""

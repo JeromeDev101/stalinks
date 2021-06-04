@@ -47,4 +47,38 @@ class InvoiceService
 
         return $invoice->url();
     }
+
+    public function generateSellerProof($seller, $backlink_ids, $totalBacklinkAmount, $id, $fee)
+    {
+        $user = auth()->user();
+
+        $customer = new Party([
+            'custom_fields' => [
+                'full_name' => $seller->name,
+                'email' => $seller->email,
+                'backlinks' => $backlink_ids,
+                'total' => $totalBacklinkAmount
+            ]
+        ]);
+
+        $items = [
+            (new InvoiceItem())->title('Gross Amount')->pricePerUnit($totalBacklinkAmount),
+            (new InvoiceItem())->title('Paypal Fee')->pricePerUnit($fee)
+        ];
+
+        $invoice = Invoice::make()
+            ->series('STAL-SELLER-')
+            ->sequence($id)
+            ->serialNumberFormat('{SERIES}-{SEQUENCE}')
+            ->filename('STAL-SELLER-' . $id)
+            ->date(now())
+            ->dateFormat('m-d-Y')
+            ->seller($this->client)
+            ->buyer($customer)
+            ->template('seller')
+            ->addItems($items)
+            ->save('local');
+
+        return $invoice->url();
+    }
 }
