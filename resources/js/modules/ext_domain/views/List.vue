@@ -336,53 +336,64 @@
                         'N/A':scope.row.users.username }}
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="emailsData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.email"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.email"
-                            class="pl-15">
-                          <li v-for="item in
-                          scope.row.email.split('|')">{{
-                                                     item
-                                               }}</li>
-                        </ol>
+                    <template slot-scope="scope" slot="emailsData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.email">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.email.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="facebookData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.facebook"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.facebook"
-                            class="pl-15">
-                          <li v-for="item in
-                          scope.row.facebook.split('|')"><a
-                              target="_blank" :href="item">{{ item }}<br/></a></li>
-                        </ol>
+                    <template slot-scope="scope" slot="facebookData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.facebook">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.facebook.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="phoneData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.phone"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.phone"
-                            class="pl-15">
-                           <li v-for="item in
-                           scope.row.phone.split('|')"><a
-                               target="_blank" :href="item">{{ item }}<br/></a></li>
-                        </ol>
+                    <template slot-scope="scope" slot="phoneData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.phone">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.phone.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
                     <template
