@@ -2181,6 +2181,17 @@
             async submitUpload() {
                 $('#tbl-publisher').DataTable().destroy();
 
+                swal.fire({
+                    title: "Uploading CSV...",
+                    text: "Please wait",
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        swal.showLoading()
+                    },
+                });
+
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);
                 // this.formData.append('language', this.$refs.language.value);
