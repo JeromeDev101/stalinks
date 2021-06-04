@@ -438,6 +438,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             }
         }
 
+        // Alexa Rank Filter
+        if (isset($input['alexa_rank_from']) && !empty($input['alexa_rank_from']) && isset($input['alexa_rank_to']) && !empty($input['alexa_rank_to']) ) {
+            $query->whereBetween('alexa_rank',[$input['alexa_rank_from'], $input['alexa_rank_to']]);
+        }
+
         // Date upload filter
         $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
 

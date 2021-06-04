@@ -107,6 +107,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label style="color: #333">Alexa Rank</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="From" v-model="filterModel.alexa_rank_from">
+                                <input type="text" class="form-control" placeholder="To" v-model="filterModel.alexa_rank_to">
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-if="tableShow.status" class="col-md-2">
                         <div class="form-group pull-right">
                             <label style="color: #333">Action</label>
@@ -1479,6 +1490,8 @@ export default {
                 employee_id: this.$route.query.employee_id || '',
                 required_email_temp: this.$route.query.required_email_temp || 0,
                 required_email: this.$route.query.required_email || 0,
+                alexa_rank_from: this.$route.query.alexa_rank_from || '',
+                alexa_rank_to: this.$route.query.alexa_rank_to || '',
                 sort_key: this.$route.query.sort_key || 'id',
                 sort_value:
                     this.$route.query.sort_value || 'desc',
@@ -2135,6 +2148,8 @@ export default {
                     id: that.filterModel.id,
                     sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
                     per_page: that.filterModel.per_page,
+                    alexa_rank_from: that.filterModel.alexa_rank_from,
+                    alexa_rank_to: that.filterModel.alexa_rank_to,
                     alexa_date_upload:
                     that.filterModel.alexa_date_upload
                 }
@@ -2899,6 +2914,8 @@ export default {
                 domain: '',
                 domain_temp: '',
                 email: '',
+                alexa_rank_from: '',
+                alexa_rank_to: '',
                 status: -1,
                 status_temp: null,
                 page: 0,
