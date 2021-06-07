@@ -104,7 +104,7 @@
                 <li
                     v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller))
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))
                     "
                     :class="{ active: $route.name == 'generate-list' }"
                 >
@@ -174,8 +174,7 @@
                 <li
                     v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 &&
-                                (isManager ||
+                            ((isManager ||
                                     isSeller ||
                                     isBuyer ||
                                     isPostingWriter ||
@@ -206,6 +205,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li
+                            v-if="isSeller"
                             :class="{ active: $route.name == 'seller-billing' }"
                         >
                             <router-link :to="{ path: '/seller-billing' }">
@@ -216,6 +216,7 @@
                         </li>
 
                         <li
+                            v-if="isPostingWriter"
                             :class="{ active: $route.name == 'writer-billing' }"
                         >
                             <router-link :to="{ path: '/writer-billing' }">
@@ -485,9 +486,9 @@
                     </ul>
                 </li>
 
-                <li :class="{ 
-                    active: 
-                        $route.name == 'help' || 
+                <li :class="{
+                    active:
+                        $route.name == 'help' ||
                         $route.name == 'seller-guide-1' ||
                         $route.name == 'seller-guide-2' ||
                         $route.name == 'seller-guide-3' ||

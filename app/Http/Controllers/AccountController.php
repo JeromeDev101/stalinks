@@ -212,9 +212,18 @@ class AccountController extends Controller
             $inputs['account_validation'] = 'invalid';
         }
 
-        if($inputs['id_payment_type'] == '1' && $inputs['status'] == 'active') $request->validate(['paypal_account' => 'required']);
-        if($inputs['id_payment_type'] == '2' && $inputs['status'] == 'active') $request->validate(['skrill_account' => 'required']);
-        if($inputs['id_payment_type'] == '3' && $inputs['status'] == 'active') $request->validate(['btc_account' => 'required']);
+        if( $request->account_validation != 'invalid' ) {
+            $request->validate([
+                'writer_price' => 'required_if:type,==,Writer',
+                'rate_type' => 'required_if:type,==,Writer',
+                'id_payment_type' => 'required'
+            ]);
+
+            if($inputs['id_payment_type'] == '1' && $inputs['status'] == 'active') $request->validate(['paypal_account' => 'required']);
+            if($inputs['id_payment_type'] == '2' && $inputs['status'] == 'active') $request->validate(['skrill_account' => 'required']);
+            if($inputs['id_payment_type'] == '3' && $inputs['status'] == 'active') $request->validate(['btc_account' => 'required']);
+
+        }
 
         $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
@@ -642,6 +651,15 @@ class AccountController extends Controller
 
     public function verifyAccount(UpdateAccountRequest $request) {
         $registered = Registration::find($request->id);
+
+        if( $request->account_validation != 'invalid' ) {
+            $request->validate([
+                'writer_price' => 'required_if:type,==,Writer',
+                'rate_type' => 'required_if:type,==,Writer',
+                'id_payment_type' => 'required'
+            ]);
+        }
+        
 
         if (!$registered) {
             return response()->json(['success' => false], 422);

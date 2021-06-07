@@ -107,6 +107,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label style="color: #333">Alexa Rank</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="From" v-model="filterModel.alexa_rank_from">
+                                <input type="text" class="form-control" placeholder="To" v-model="filterModel.alexa_rank_to">
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-if="tableShow.status" class="col-md-2">
                         <div class="form-group pull-right">
                             <label style="color: #333">Action</label>
@@ -325,53 +336,64 @@
                         'N/A':scope.row.users.username }}
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="emailsData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.email"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.email"
-                            class="pl-15">
-                          <li v-for="item in
-                          scope.row.email.split('|')">{{
-                                                     item
-                                               }}</li>
-                        </ol>
+                    <template slot-scope="scope" slot="emailsData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.email">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.email.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="facebookData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.facebook"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.facebook"
-                            class="pl-15">
-                          <li v-for="item in
-                          scope.row.facebook.split('|')"><a
-                              target="_blank" :href="item">{{ item }}<br/></a></li>
-                        </ol>
+                    <template slot-scope="scope" slot="facebookData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.facebook">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.facebook.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
-                    <template
-                        slot-scope="scope"
-                        slot="phoneData">
-                        <div style="width: 100%;
-                        text-align: center;"
-                             v-if="isCrawling &&
-                             !scope.row.phone"><img
-                            src="/images/row-loading.gif" alt="crawling"></div>
-                        <ol v-if="scope.row.phone"
-                            class="pl-15">
-                           <li v-for="item in
-                           scope.row.phone.split('|')"><a
-                               target="_blank" :href="item">{{ item }}<br/></a></li>
-                        </ol>
+                    <template slot-scope="scope" slot="phoneData">
+                        <div v-if="isCrawling" style="width: 100%; text-align: center;">
+                            <img src="/images/row-loading.gif" alt="crawling">
+                        </div>
+
+                        <div v-else>
+                            <div v-if="scope.row.phone">
+                                <ol class="pl-15">
+                                    <li v-for="item in scope.row.phone.split('|')">
+                                        {{ item }}
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div v-else>
+                                <span>N/A</span>
+                            </div>
+                        </div>
                     </template>
 
                     <template
@@ -1479,6 +1501,8 @@ export default {
                 employee_id: this.$route.query.employee_id || '',
                 required_email_temp: this.$route.query.required_email_temp || 0,
                 required_email: this.$route.query.required_email || 0,
+                alexa_rank_from: this.$route.query.alexa_rank_from || '',
+                alexa_rank_to: this.$route.query.alexa_rank_to || '',
                 sort_key: this.$route.query.sort_key || 'id',
                 sort_value:
                     this.$route.query.sort_value || 'desc',
@@ -2135,6 +2159,8 @@ export default {
                     id: that.filterModel.id,
                     sort: that.filterModel.sort_key + ',' + that.filterModel.sort_value,
                     per_page: that.filterModel.per_page,
+                    alexa_rank_from: that.filterModel.alexa_rank_from,
+                    alexa_rank_to: that.filterModel.alexa_rank_to,
                     alexa_date_upload:
                     that.filterModel.alexa_date_upload
                 }
@@ -2899,6 +2925,8 @@ export default {
                 domain: '',
                 domain_temp: '',
                 email: '',
+                alexa_rank_from: '',
+                alexa_rank_to: '',
                 status: -1,
                 status_temp: null,
                 page: 0,

@@ -116,10 +116,10 @@
                                 <td>{{ article.country.name }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>
-                                <td>{{ article.price == null  ? '':article.price.price == null ? '':'$ ' + article.price.price}}</td>
+                                <td>{{ article.isOurs == 1 ? computeWriterPrice(article):'----'}}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
-                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content, article)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                     <div class="btn-group" v-if="user.isAdmin">
                                         <button title="Delete" @click="deleteArticle(article.id)" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
@@ -184,10 +184,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="showWriterPrice">
                                 <div class="form-group">
                                     <label for="">Writer Price</label>
-                                    <input type="text" class="form-control" v-model="editModel.price" placeholder="0.00">
+                                    <input type="text" class="form-control" v-model="editModel.price" placeholder="0.00" :disabled="true">
                                 </div>
                             </div>
 
@@ -239,6 +239,7 @@
                     price: '',
                 },
                 isSearching: false,
+                showWriterPrice: false,
             }
         },
 
@@ -258,6 +259,28 @@
         },
 
         methods: {
+            computeWriterPrice(article) {
+                var rate_type = (article.rate_type == null || article.rate_type == '') ? 'ppw' : (article.rate_type).toLowerCase();
+                var content = article.contentnohtml
+                var writer_price = parseFloat(article.writer_price);
+                var price = 0;
+
+                if (rate_type == 'ppw') {
+                    price = writer_price * this.countWords(content)
+                } else {
+                    price = writer_price
+                }
+
+                return '$ '+ price;
+            },
+
+            countWords(str) {
+                str = str.replace(/(^\s*)|(\s*$)/gi,"");
+                str = str.replace(/[ ]{2,}/gi," ");
+                str = str.replace(/\n /,"\n");
+                return str.split(' ').length;
+            },
+
             async getListArticles(params){
                 $('#tbl_article_admin').DataTable().destroy();
 
@@ -355,12 +378,20 @@
                 this.$router.replace({'query': null});
             },
 
-            viewContent(backlinks, content) {
+            viewContent(backlinks, content, article) {
                 this.data = content == null ? '':content;
                 this.viewModel = backlinks
                 this.viewModel.url_publisher = backlinks == null ? '':backlinks.publisher.url;
                 this.viewModel.seller = backlinks == null ? '':backlinks.publisher.user.name;
                 this.viewModel.buyer = backlinks == null ? '':backlinks.user.name;
+
+                this.editModel.price = this.computeWriterPrice(article)
+
+                if( article.isOurs === 1 ) {
+                    this.showWriterPrice = true;
+                } else {
+                    this.showWriterPrice = false;
+                }
             },
 
             async getListCountries(params) {

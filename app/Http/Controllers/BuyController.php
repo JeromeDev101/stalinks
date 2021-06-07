@@ -39,6 +39,7 @@ class BuyController extends Controller
         $filter = $request->all();
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
         $user = Auth::user();
+
         $credit = 0;
 
         $columns = [
@@ -66,9 +67,11 @@ class BuyController extends Controller
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                         ->where('buyer_purchased.user_id_buyer', $user->id);
                 })
+                ->whereNotNull('users.id') // to remove all seller's URL that deleted
                 ->where('publisher.valid', 'valid')
                 ->where('publisher.qc_validation', 'yes')
                 ->whereNotNull('publisher.href_fetched_at');
+
 
         // if( Auth::user()->role_id == 5 || (isset($registered->type) && $registered->type == 'Buyer') ){
         //     $list->where('publisher.valid', 'valid');
