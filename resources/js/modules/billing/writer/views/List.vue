@@ -108,6 +108,7 @@
                                 <th>Date Completed</th>
                                 <th>Date Created</th>
                                 <th>ID Backlink</th>
+                                <th>ID Article</th>
                                 <th>Writer</th>
                                 <th>Price for writer</th>
                                 <th>Payment Status</th>
@@ -127,8 +128,9 @@
                                 <td>{{ article.date_complete }}</td>
                                 <td>{{ article.created_at }}</td>
                                 <td>{{ article.id_backlink }}</td>
+                                <td>{{ article.id }}</td>
                                 <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
-                                <td>$ 15</td>
+                                <td>{{ '$ ' + computeWriterPrice(article) }}</td>
                                 <td>{{ article.payment_status == null ? 'Not Paid':article.payment_status }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -291,6 +293,28 @@
 
         methods: {
 
+            computeWriterPrice(article) {
+                var rate_type = (article.rate_type == null || article.rate_type == '') ? 'ppw' : (article.rate_type).toLowerCase();
+                var content = article.contentnohtml
+                var writer_price = parseFloat(article.writer_price);
+                var price = 0;
+
+                if (rate_type == 'ppw') {
+                    price = writer_price * this.countWords(content)
+                } else {
+                    price = writer_price
+                }
+
+                return price;
+            },
+
+            countWords(str) {
+                str = str.replace(/(^\s*)|(\s*$)/gi,"");
+                str = str.replace(/[ ]{2,}/gi," ");
+                str = str.replace(/\n /,"\n");
+                return str.split(' ').length;
+            },
+
             async doUpdatePay() {
                 await this.$store.dispatch('actionGetWriterInfo', { ids: this.checkIds });
 
@@ -298,6 +322,7 @@
                     let data = this.writerInfo.data[0]
                     let modal = this.$refs.modal_payment;
                     let account = 'Not yet setup';
+                    let total_amount = [];
 
                     this.info.writer = data.username;
                     this.info.payment_type = data.payment_type == null ? 'Not yet setup':data.payment_type.type;
@@ -326,7 +351,13 @@
                     }
 
                     this.info.account = account;
-                    this.info.amount = 15;
+
+                    for( var index in this.checkIds ) {
+                        var price = this.computeWriterPrice(this.checkIds[index])
+                        total_amount.push(price)
+                    }
+
+                    this.info.amount = total_amount.reduce((a, b) => a + b, 0);
 
                     $(modal).modal('show')
                 }else{

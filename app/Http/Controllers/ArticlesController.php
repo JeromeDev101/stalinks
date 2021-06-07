@@ -42,10 +42,13 @@ class ArticlesController extends Controller
         $columns = [
             'article.*',
             'users.isOurs',
+            'registration.rate_type',
+            'registration.writer_price',
         ];
 
         $list = Article::select($columns)
                         ->leftjoin('users', 'article.id_writer', '=', 'users.id')
+                        ->leftjoin('registration', 'users.email', '=' , 'registration.email')
                         ->with('country:id,name')
                         ->with('price')
                         ->with(['backlinks' => function($q){
