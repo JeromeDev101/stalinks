@@ -270,7 +270,8 @@ Route::middleware('auth:api')->group(function () {
 
     //Download files
     Route::name('download-paypal-invoice')->get('/files/invoice/paypal/{id}', 'WalletTransactionController@downloadPaypalInvoice');
-    Route::name('download-paypal-proof')->get('/files/proof/paypal/{id}', 'SellerBillingController@downloadPaypalProof');
+    Route::name('download-paypal-proof-seller')->get('/files/proof/paypal/seller/{id}', 'SellerBillingController@downloadPaypalProof');
+    Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
 });
 
 //Mailgun external

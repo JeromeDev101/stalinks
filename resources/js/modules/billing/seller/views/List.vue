@@ -614,7 +614,8 @@
 
             downloadProof(id) {
                 axios({
-                    url: '/api/files/proof/paypal/' + id,
+                    url: '/api/files/proof/paypal/seller/' +
+                        id,
                     method: 'GET',
                     responseType: 'blob',
                 }).then((response) => {

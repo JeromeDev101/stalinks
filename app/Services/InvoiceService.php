@@ -81,4 +81,36 @@ class InvoiceService
 
         return $invoice->url();
     }
+
+    public function generateWriterProof($writer, $articleIds, $totalArticleAmount, $id, $fee)
+    {
+        $customer = new Party([
+            'custom_fields' => [
+                'full_name' => $writer->name,
+                'email' => $writer->email,
+                'articles' => $articleIds,
+                'total' => $totalArticleAmount
+            ]
+        ]);
+
+        $items = [
+            (new InvoiceItem())->title('Gross Amount')->pricePerUnit($totalArticleAmount),
+            (new InvoiceItem())->title('Paypal Fee')->pricePerUnit($fee)
+        ];
+
+        $invoice = Invoice::make()
+            ->series('STAL-WRITER-')
+            ->sequence($id)
+            ->serialNumberFormat('{SERIES}-{SEQUENCE}')
+            ->filename('STAL-WRITER-' . $id)
+            ->date(now())
+            ->dateFormat('m-d-Y')
+            ->seller($this->client)
+            ->buyer($customer)
+            ->template('writer')
+            ->addItems($items)
+            ->save('local');
+
+        return $invoice->url();
+    }
 }
