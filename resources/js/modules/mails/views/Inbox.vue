@@ -621,7 +621,8 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
-                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>
+<!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>-->
+                                    <tiny-editor editor-id="composeEditor" v-model="emailContent.content"></tiny-editor>
                                     <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -749,7 +750,8 @@
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
-                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>
+<!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>-->
+                                    <tiny-editor editor-id="replyEditor" v-model="replyContent.content"></tiny-editor>
                                     <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -812,9 +814,11 @@
 import axios from 'axios';
 import { mapState } from 'vuex';
 import { createTag, createTags } from '@johmun/vue-tags-input';
+import TinyEditor from "../../../components/editor/TinyEditor";
 
 export default {
     name: 'AppInbox',
+    components: {TinyEditor},
     data() {
         return {
             search_mail: '',
@@ -1244,11 +1248,17 @@ export default {
 
             let template = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0]
 
+            template['content'] = this.convertLineBreaks(template['content'])
+
             for (let key in template) {
                 if(template.hasOwnProperty(key)){
                     content[key] = template[key]
                 }
             }
+        },
+
+        convertLineBreaks(str) {
+            return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
         },
 
         async getListCountries(params) {
