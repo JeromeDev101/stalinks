@@ -1288,8 +1288,9 @@
                      <div class="col-md-12">
                         <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                            <label style="color: #333">Content</label>
-                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>
-                           <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
+<!--                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>-->
+                            <tiny-editor editor-id="urlEmailEditor" v-model="modelMail.content"></tiny-editor>
+                            <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
 
@@ -1453,11 +1454,13 @@ import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
 import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 import _ from 'underscore';
+import TinyEditor from "../../../components/editor/TinyEditor";
 
 export default {
     components: {
         DownloadCsv,
-        VueVirtualTable
+        VueVirtualTable,
+        TinyEditor
     },
     name: 'ExtList',
     mixins: [csvTemplateMixin],
@@ -2862,15 +2865,23 @@ export default {
             let extDomain = this.listExt.data[index];
             this.doSendEmail(extDomain);
         },
+
         async fetchTemplateMail(countryId) {
             this.isPopupLoading = true;
             await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
             this.isPopupLoading = false;
         },
+
         async doChangeEmailTemplate() {
             let that = this;
             this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+            this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
         },
+
+        convertLineBreaks(str) {
+            return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        },
+
         doChangeEmailCountry() {
             let that = this, data = {};
             let list = this.listLanguages.data
