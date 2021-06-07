@@ -481,9 +481,9 @@
                             {{
                                 (scope.row.country_continent == null && scope.row.publisher_continent == null)
                                     ? 'N/A'
-                                    : scope.row.country_continent
-                                        ? scope.row.country_continent
-                                        : scope.row.publisher_continent
+                                    : scope.row.publisher_continent
+                                        ? scope.row.publisher_continent
+                                        : scope.row.country_continent
                             }}
                         </template>
 
@@ -2180,6 +2180,17 @@
 
             async submitUpload() {
                 $('#tbl-publisher').DataTable().destroy();
+
+                swal.fire({
+                    title: "Uploading CSV...",
+                    text: "Please wait",
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        swal.showLoading()
+                    },
+                });
 
                 this.formData = new FormData();
                 this.formData.append('file', this.$refs.excel.files[0]);

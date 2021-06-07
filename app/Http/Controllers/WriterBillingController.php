@@ -14,10 +14,11 @@ class WriterBillingController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $list = Article::select('article.*', 'billing_writer.proof_doc_path')
+        $list = Article::select('article.*', 'billing_writer.proof_doc_path', 'registration.rate_type', 'registration.writer_price')
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
                         ->leftJoin('price', 'article.id_writer_price', '=', 'price.id')
                         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
+                        ->leftjoin('registration', 'users.email', '=' , 'registration.email')
                         ->leftJoin('billing_writer', 'article.id', '=', 'billing_writer.id_article')
                         ->with('backlinks:id,title,status')
                         ->with('country:id,name')
@@ -26,6 +27,10 @@ class WriterBillingController extends Controller
                         ->where('users.isOurs', 1)
                         ->with('user:id,name,username')
                         ->orderBy('id', 'desc');
+
+        if (!auth()->user()->isAdmin()) {
+            $list->where('article.id_writer', auth()->user()->id);
+        }
 
         if( isset($filter['search_backlink'] ) && $filter['search_backlink'] ){
             $list->where('article.id_backlink', $filter['search_backlink']);
