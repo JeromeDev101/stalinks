@@ -1565,6 +1565,7 @@ export default {
             // this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
             this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
             this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
+            this.formData.append('work_mail', this.user.work_mail);
 
             // get attachments
 
