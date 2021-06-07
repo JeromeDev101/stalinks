@@ -119,13 +119,13 @@ class MailgunController extends Controller
 
         // replace html string images source for mailgun
 
-        $send_signature = str_replace("../storage/uploads/","cid:", $signature);
+        $send_signature = str_replace("/storage/uploads/","cid:", $signature);
 
         // for html content
 
         $inlineImagesContentSrc = $this->imageSrcExtractor($request->content);
 
-        $send_content = str_replace("../storage/uploads/","cid:", $request->content);
+        $send_content = str_replace("/storage/uploads/","cid:", $request->content);
 
         // merge all inline images src
 
@@ -242,7 +242,7 @@ class MailgunController extends Controller
             //Add the image details to our $extractedImages array.
             $extractedImages[] = array(
 //                'filePath' => $imgSrc,
-                'filePath' => str_replace("../storage/","../storage/app/public/", $imgSrc),
+                'filePath' => str_replace("/storage/","../storage/app/public/", $imgSrc),
             );
         }
 

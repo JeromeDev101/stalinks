@@ -22,6 +22,7 @@ export default {
                 height: 300,
                 branding: false,
                 image_title: true,
+                convert_urls: false,
                 automatic_uploads: true,
                 allow_script_urls: false,
                 forced_root_block : false,
