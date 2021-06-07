@@ -201,7 +201,7 @@ class MailgunController extends Controller
             'label_id'          => 0,
             'received'          => $str,
             'body'              => json_encode($input),
-            'from_mail'         => Auth::user()->work_mail,
+            'from_mail'         => $work_mail,
             'attachment'        => $attac_object == null ? '' : json_encode($attac_object),
             'date'              => date('Y-m-d'),
             'message_id'        => $res,
