@@ -16,32 +16,32 @@
             background: $black-lighter;
             text-decoration: none;
         }
-       
+
     }
 }
 .skin-blue {
 .sidebar-menu{
-  
+
     li.active{
                a{
                 color:#59c1e0!important;
                }
-              
-                
+
+
             }
-   
+
             img{
                 height: 25px;
                }
-        
+
     }
-    
+
    .header-custom{
        color:$white!important;
        font-size:20px;
        letter-spacing: 1px;
        font-weight:600;
-    
+
    }
 }
 
@@ -55,6 +55,7 @@
 
 .main-sidebar-custom{
     background-color: #1f292d!important;
+    min-width: 68px !important;
     top:23px;
 }
 
