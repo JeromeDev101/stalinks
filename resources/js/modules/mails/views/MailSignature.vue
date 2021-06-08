@@ -159,7 +159,7 @@
                             Setting table border to <strong>none</strong> will still show grey borders for guidelines.
                         </div>
 
-                        <form class="row" action="">
+                        <form class="row" action="" @submit.prevent="">
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.name}" class="form-group">
                                     <label style="color: #333">Signature Name</label>
@@ -276,6 +276,7 @@ export default {
                 height: 450,
                 branding: false,
                 image_title: true,
+                convert_urls: false,
                 automatic_uploads: true,
                 allow_script_urls: false,
                 file_picker_types: 'image',

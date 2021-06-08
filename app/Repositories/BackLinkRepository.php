@@ -122,9 +122,18 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
         if((isset($user->registration->type) && $user->registration->type == 'Buyer') || $user->role_id == 5){
             if($filters->sub_buyer_id == '') {
-                $query->where('user_id', $user_id)
-                    ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                        return $query->orWhereIn('user_id', $sub_buyer_ids);
+                // $query->where('user_id', $user_id)
+                //     ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+                //         return $query->orWhereIn('user_id', $sub_buyer_ids);
+                //     });
+
+                $query->where(function($query) use ($sub_buyer_ids, $user_id){
+                        $UserId[] = $user_id;
+                        if(count($sub_buyer_ids) > 0) {
+                            return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                        } else{
+                            return $query->whereIn('user_id', $UserId);
+                        }
                     });
             }
         }

@@ -21,7 +21,7 @@
             </div>
             <div class="container-fluid m-3 collapse" id="collapseExample">
                <div class="row">
-                   <div v-if="tableShow.domain" class="col-md-2">
+                   <div v-if="tableShow.domain" class="col-md-3">
                        <div class="from-group">
                            <label style="color: #333">Email
                            </label>
@@ -29,44 +29,68 @@
                                   v-model="filterModel.email" class="form-control pull-right" placeholder="Search Email">
                        </div>
                    </div>
-                  <div v-if="tableShow.country" class="col-md-2">
-                     <div class="form-group">
-                        <label style="color: #333">Email Required</label>
-                        <select v-model="filterModel.required_email_temp" class="form-control pull-right">
-                           <option value="0">No</option>
-                           <option value="1">Yes</option>
-                        </select>
-                     </div>
-                  </div>
-                  <div v-if="tableShow.country" class="col-md-2">
-                     <div class="form-group">
-                        <label style="color: #333">Country</label>
+
+                   <div v-if="tableShow.country" class="col-md-3">
+                       <div class="form-group">
+                           <label style="color: #333">Email Required</label>
+                            <select v-model="filterModel.required_email_temp" class="form-control pull-right">
+                               <option value="0">No</option>
+                               <option value="1">Yes</option>
+                            </select>
+                        </div>
+                   </div>
+
+                   <div v-if="tableShow.country" class="col-md-3">
+                       <div class="form-group">
+                           <label style="color: #333">Country</label>
                         <!-- <select v-model="filterModel.country_id_temp" class="form-control pull-right">
                            <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
                                {{ option.name }}
                            </option>
                            </select> -->
-                        <v-select
-                            v-model="filterModel.country_id_temp"
-                            multiple
-                            label="name"
-                            placeholder="All"
-                            :options="listCountryAll.data"
-                            :reduce="name => name.name"
-                            :searchable="true"/>
-                     </div>
-                  </div>
-                  <div v-if="tableShow.domain" class="col-md-2">
-                     <div class="from-group">
-                        <label style="color: #333">Domains</label>
-                        <input type="text" v-model="filterModel.domain_temp" class="form-control pull-right" placeholder="Search Domain">
-                     </div>
-                  </div>
-                  <div v-if="tableShow.status" class="col-md-2">
-                     <div class="form-group">
-                        <label style="color: #333">Status</label>
-                         <v-select multiple
-                                   v-model="filterModel.status_temp" :options="objectToArrayWithCustomSort(listStatusText)" :reduce="status => status.id" label="text" :searchable="false" placeholder="All"/>
+                           <v-select
+                               v-model="filterModel.country_id_temp"
+                               multiple
+                               label="name"
+                               placeholder="All"
+                               :options="listCountryAll.data"
+                               :reduce="name => name.name"
+                               :searchable="true"/>
+                       </div>
+                   </div>
+
+                   <div v-if="tableShow.domain" class="col-md-3">
+                       <div class="from-group">
+                           <label style="color: #333">Search URL</label>
+                           <input type="text" v-model="filterModel.domain_temp" class="form-control pull-right" placeholder="Search URL">
+                       </div>
+                   </div>
+
+                   <div class="col-md-3">
+                       <div class="form-group">
+                           <label>Domain Zone</label>
+                           <v-select
+                               v-model="filterModel.domain_zone"
+                               multiple
+                               label="name"
+                               placeholder="All"
+                               :options="listDomainZones.data"
+                               :searchable="true"
+                               :reduce="domain => domain.name"/>
+                       </div>
+                   </div>
+
+                   <div v-if="tableShow.status" class="col-md-3">
+                      <div class="form-group">
+                          <label style="color: #333">Status</label>
+                          <v-select
+                              multiple
+                              v-model="filterModel.status_temp"
+                              :options="objectToArrayWithCustomSort(listStatusText)"
+                              :reduce="status => status.id"
+                              label="text"
+                              :searchable="false"
+                              placeholder="All"/>
 <!--                        <select v-model="filterModel.status_temp" class="form-control">-->
 <!--                            <option value="-1" selected>All-->
 <!--                            </option>-->
@@ -74,23 +98,28 @@
 <!--                              {{ option.text }}-->
 <!--                           </option>-->
 <!--                        </select>-->
-                     </div>
-                  </div>
-               </div>
-                <div class="row">
-                    <div class="col-md-2" v-if="user.isAdmin || tableShow.employee">
+                      </div>
+                   </div>
+
+                   <div class="col-md-3" v-if="user.isAdmin || tableShow.employee">
                         <div class="form-group">
                             <label style="color: #333">Employee</label>
                             <!-- <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
                                <option value="0">Select Employee</option>
                                <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
                                </select> -->
-                            <v-select multiple
-                                      v-model="filterModel.employee_id" :options="listSellerTeam.data" :reduce="username => username.username" label="username" :searchable="false" placeholder="All"/>
+                            <v-select
+                                multiple
+                                v-model="filterModel.employee_id"
+                                :options="listSellerTeam.data"
+                                :reduce="username => username.username"
+                                label="username"
+                                :searchable="false"
+                                placeholder="All"/>
                         </div>
-                    </div>
+                   </div>
 
-                    <div class="col-md-2">
+                   <div class="col-md-3">
                         <div class="form-group">
                             <label
                                 style="color: #333">Date Upload
@@ -106,11 +135,14 @@
                                 />
                             </div>
                         </div>
-                    </div>
+                   </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label style="color: #333">Alexa Rank</label>
+                            <label
+                                style="color: #333"
+                            >Alexa Rank <i
+                                class="fa fa-question-circle" title="From and To must not be empty"></i></label>
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="From" v-model="filterModel.alexa_rank_from">
                                 <input type="text" class="form-control" placeholder="To" v-model="filterModel.alexa_rank_to">
@@ -118,8 +150,8 @@
                         </div>
                     </div>
 
-                    <div v-if="tableShow.status" class="col-md-2">
-                        <div class="form-group pull-right">
+                    <div v-if="tableShow.status" class="col-md-3">
+                        <div class="form-group">
                             <label style="color: #333">Action</label>
                             <br>
                             <div class="btn-group">
@@ -128,7 +160,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+               </div>
             </div>
          </div>
       </div>
@@ -1288,8 +1320,9 @@
                      <div class="col-md-12">
                         <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                            <label style="color: #333">Content</label>
-                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>
-                           <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
+<!--                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>-->
+                            <tiny-editor editor-id="urlEmailEditor" v-model="modelMail.content"></tiny-editor>
+                            <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
 
@@ -1453,11 +1486,13 @@ import {createTags} from '@johmun/vue-tags-input';
 import VueVirtualTable from 'vue-virtual-table';
 import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 import _ from 'underscore';
+import TinyEditor from "../../../components/editor/TinyEditor";
 
 export default {
     components: {
         DownloadCsv,
-        VueVirtualTable
+        VueVirtualTable,
+        TinyEditor
     },
     name: 'ExtList',
     mixins: [csvTemplateMixin],
@@ -1509,7 +1544,8 @@ export default {
                 alexa_date_upload: {
                     startDate: null,
                     endDate: null
-                }
+                },
+                domain_zone: this.$route.query.domain_zone || '',
             },
             listPageOptions: [50, 150, 250, 350, 500, 1000, 2000],
             extModel: {
@@ -1646,6 +1682,7 @@ export default {
 
         this.getListSellerTeam();
         this.getListLanguages();
+        this.getListDomainZones();
     },
     computed: {
         ...mapState({
@@ -1668,6 +1705,7 @@ export default {
             listCountryAll: state => state.storePublisher.listCountryAll,
             listSellerTeam: state => state.storeExtDomain.listSellerTeam,
             listLanguages: state => state.storePublisher.listLanguages,
+            listDomainZones: state => state.storePublisher.listDomainZones,
         }),
 
         pagination() {
@@ -1748,7 +1786,7 @@ export default {
                 },
                 {
                     prop : 'domain',
-                    name : 'Domain',
+                    name : 'URL',
                     sortable: true,
                     width: 150,
                     isHidden: false
@@ -1912,6 +1950,11 @@ export default {
         async getListLanguages() {
             await this.$store.dispatch('actionGetListLanguages');
         },
+
+        async getListDomainZones(params) {
+            await this.$store.dispatch('actionGetListDomainZones', params);
+        },
+
 
         async getListCountries(params) {
             await this.$store.dispatch('actionGetListCountries', params);
@@ -2162,7 +2205,8 @@ export default {
                     alexa_rank_from: that.filterModel.alexa_rank_from,
                     alexa_rank_to: that.filterModel.alexa_rank_to,
                     alexa_date_upload:
-                    that.filterModel.alexa_date_upload
+                    that.filterModel.alexa_date_upload,
+                    domain_zone: that.filterModel.domain_zone
                 }
             });
         },
@@ -2184,7 +2228,8 @@ export default {
                     required_email:
                     that.filterModel.required_email,
                     alexa_date_upload:
-                    that.filterModel.alexa_date_upload
+                    that.filterModel.alexa_date_upload,
+                    domain_zone: that.filterModel.domain_zone
                 }
             });
         },
@@ -2862,15 +2907,23 @@ export default {
             let extDomain = this.listExt.data[index];
             this.doSendEmail(extDomain);
         },
+
         async fetchTemplateMail(countryId) {
             this.isPopupLoading = true;
             await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
             this.isPopupLoading = false;
         },
+
         async doChangeEmailTemplate() {
             let that = this;
             this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+            this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
         },
+
+        convertLineBreaks(str) {
+            return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        },
+
         doChangeEmailCountry() {
             let that = this, data = {};
             let list = this.listLanguages.data
@@ -2939,7 +2992,8 @@ export default {
                 alexa_date_upload: {
                     startDate: null,
                     endDate: null
-                }
+                },
+                domain_zone: '',
             };
 
             this.getExtList({

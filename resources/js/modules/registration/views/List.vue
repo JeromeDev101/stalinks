@@ -1029,7 +1029,26 @@
                         <form class="row" action="">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
+                                        <div v-if="user.isAdmin">
+                                            <div class="form-group">
+                                                <label>Login As:</label>
+
+                                                <select class="form-control" v-model="user.work_mail">
+                                                    <option value="all">All</option>
+                                                    <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
+                                                        {{ option.work_mail }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <label style="color: #333">Language</label>
                                         <div>
                                             <select
@@ -1045,7 +1064,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-9">
+                                    <div class="col-md-6">
                                         <div  class="form-group">
                                             <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
                                             <div>
@@ -1111,15 +1130,17 @@
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                                     <label style="color: #333">Content</label>
 
-                                    <textarea
-                                        v-model="modelMail.content"
-                                        value=""
-                                        rows="10"
-                                        type="text"
-                                        required="required"
-                                        class="form-control">
+<!--                                    <textarea-->
+<!--                                        v-model="modelMail.content"-->
+<!--                                        value=""-->
+<!--                                        rows="10"-->
+<!--                                        type="text"-->
+<!--                                        required="required"-->
+<!--                                        class="form-control">-->
 
-                                    </textarea>
+<!--                                    </textarea>-->
+
+                                    <tiny-editor editor-id="registrationEmailEditor" v-model="modelMail.content"></tiny-editor>
 
                                     <span
                                         v-if="messageFormsMail.errors.content"
@@ -1223,9 +1244,10 @@
     import axios from 'axios';
     import TermsAndConditions from "../../../components/terms/TermsAndConditions";
     import {createTags} from "@johmun/vue-tags-input";
+    import TinyEditor from "../../../components/editor/TinyEditor";
 
     export default {
-        components: {TermsAndConditions},
+        components: {TermsAndConditions, TinyEditor},
         data() {
             return {
                 paginate: [15,25,50,100,200,250,'All'],
@@ -1349,7 +1371,9 @@
                 checkIds: [],
                 isDisabledAction: true,
                 allSelected: false,
-                updateMultipleInCharge: ''
+                updateMultipleInCharge: '',
+
+                listUserEmail: [],
             }
         },
 
@@ -1361,6 +1385,7 @@
             this.checkTeamSeller();
             this.getListCountries();
             this.getListLanguages();
+            this.getListEmails();
         },
 
         computed: {
@@ -1380,6 +1405,12 @@
         },
 
         methods: {
+            getListEmails() {
+                axios.get('/api/mail/get-mail-list').then((response) => {
+                    this.listUserEmail = response.data;
+                });
+            },
+
             selectAll() {
                 this.checkIds = [];
                 if (!this.allSelected) {
@@ -1475,6 +1506,11 @@
             async doChangeEmailTemplate() {
                 let that = this;
                 this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+                this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
+            },
+
+            convertLineBreaks(str) {
+                return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
             },
 
             async submitSendMail() {
@@ -1487,6 +1523,7 @@
                 formData.append('email', JSON.stringify(this.registrationEmails));
                 formData.append('title',  this.modelMail.title);
                 formData.append('content', this.modelMail.content);
+                formData.append('work_mail', this.user.work_mail);
 
                 // get attachments
 
