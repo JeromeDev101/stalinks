@@ -33,7 +33,7 @@ class CheckIfUrlHasHttps implements ShouldQueue
     public function handle()
     {
         \Log::channel('slack')->info('----------START-----------');
-        $guzzle = new Client(['defaults' => [ 'exceptions' => false, 'timeout' => 10 ]]);
+        $guzzle = new Client(['defaults' => [ 'exceptions' => false]]);
         Publisher::whereNull('is_https')->chunk(500, function ($publishers) use ($guzzle) {
             \Log::channel('slack')->info('LOADED 500 DATA');
             foreach ($publishers as $publisher) {
@@ -44,7 +44,8 @@ class CheckIfUrlHasHttps implements ShouldQueue
                     $guzzle->request('GET', trim_special_characters($publisher->url), [
                         'on_stats' => function (TransferStats $stats) use (&$url) {
                             $url = $stats->getHandlerStats()['url'];
-                        }
+                        },
+                        'timeout' => 10
                     ]);
 
                     \Log::channel('slack')->info('END URL: ' . $url);
