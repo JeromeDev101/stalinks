@@ -134,7 +134,7 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
                         } else{
                             return $query->whereIn('user_id', $UserId);
                         }
-                    })
+                    });
             }
         }
 
