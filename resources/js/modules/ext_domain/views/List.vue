@@ -139,7 +139,10 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label style="color: #333">Alexa Rank</label>
+                            <label
+                                style="color: #333"
+                            >Alexa Rank <i
+                                class="fa fa-question-circle" title="From and To must not be empty"></i></label>
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="From" v-model="filterModel.alexa_rank_from">
                                 <input type="text" class="form-control" placeholder="To" v-model="filterModel.alexa_rank_to">
