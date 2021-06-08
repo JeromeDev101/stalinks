@@ -49,8 +49,9 @@
                                 <th>Deposit</th>
                                 <th>Orders</th>
                                 <th>Orders Cancelled</th>
-                                <th>Orders Live</th>
+                                <th>Valid Orders</th>
                                 <th>Credit Left</th>
+                                <th>Purchase</th>
                                 <th>Wallet</th>
                             </tr>
                         </thead>
@@ -61,8 +62,9 @@
                                 <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
                                 <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
                                 <td>{{ '$ ' + (summary.order_cancel).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.valid_orders).toFixed(0) }}</td>
                                 <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
+                                <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
                                 <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
                             </tr>
                         </tbody>
