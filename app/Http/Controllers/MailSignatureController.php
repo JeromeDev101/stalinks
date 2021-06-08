@@ -43,8 +43,19 @@ class MailSignatureController extends Controller
     {
         Validator::make($request->all(), [
             'content' => 'required',
-            'work_mail' => 'required|unique:mail_signatures',
-            'name' => 'required|unique:mail_signatures|max:255',
+            'work_mail' => [
+                'required',
+                Rule::unique('mail_signatures')->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                })
+            ],
+            'name' => [
+                'max:225',
+                'required',
+                Rule::unique('mail_signatures')->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                })
+            ]
         ],
         [
             'work_mail.unique' => 'Only one email signature is allowed per work mail/login mail.'
@@ -69,12 +80,16 @@ class MailSignatureController extends Controller
             'content' => 'required',
             'work_mail' => [
                 'required',
-                Rule::unique('mail_signatures')->ignore($request->id)
+                Rule::unique('mail_signatures')->ignore($request->id)->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                })
             ],
             'name' => [
                 'max:225',
                 'required',
-                Rule::unique('mail_signatures')->ignore($request->id)
+                Rule::unique('mail_signatures')->ignore($request->id)->where(function ($query) {
+                    return $query->where('deleted_at', null);
+                })
             ]
         ],
         [
