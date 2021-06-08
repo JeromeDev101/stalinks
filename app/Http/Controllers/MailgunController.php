@@ -119,21 +119,31 @@ class MailgunController extends Controller
 
         // replace html string images source for mailgun
 
-        $send_signature = str_replace("../storage/uploads/","cid:", $signature);
+        $send_signature = str_replace("/storage/uploads/","cid:", $signature);
+
+        // for html content
+
+        $inlineImagesContentSrc = $this->imageSrcExtractor($request->content);
+
+        $send_content = str_replace("/storage/uploads/","cid:", $request->content);
+
+        // merge all inline images src
+
+        $inlineImagesAllSrc = array_merge($inlineImagesSrc, $inlineImagesContentSrc);
 
         $params = [
 		    'from'                  => $work_mail,
 		    'to'                    => array($str),
 		    'subject'               => $request->title,
 //            'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
-            'html'                  => "<div style='white-space: pre'>" . $request->content . $send_signature . "</div>",
+            'html'                  => "<div style='white-space: pre'>" . $send_content . $send_signature . "</div>",
             'recipient-variables'   => json_encode($object),
             'attachment'            => $atth,
             'o:tag'                 => array('test1'),
             'o:tracking'            => 'yes',
             'o:tracking-opens'      => 'yes',
             'o:tracking-clicks'     => 'yes',
-            'inline'                => $inlineImagesSrc
+            'inline'                => $inlineImagesAllSrc
         ];
 
         if(isset($request->cc) && $request->cc != ""){
@@ -191,7 +201,7 @@ class MailgunController extends Controller
             'label_id'          => 0,
             'received'          => $str,
             'body'              => json_encode($input),
-            'from_mail'         => Auth::user()->work_mail,
+            'from_mail'         => $work_mail,
             'attachment'        => $attac_object == null ? '' : json_encode($attac_object),
             'date'              => date('Y-m-d'),
             'message_id'        => $res,
@@ -232,7 +242,7 @@ class MailgunController extends Controller
             //Add the image details to our $extractedImages array.
             $extractedImages[] = array(
 //                'filePath' => $imgSrc,
-                'filePath' => str_replace("../storage/","../storage/app/public/", $imgSrc),
+                'filePath' => str_replace("/storage/","../storage/app/public/", $imgSrc),
             );
         }
 
