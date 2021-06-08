@@ -205,7 +205,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li
-                            v-if="isSeller"
+                            v-if="isSeller || user.isAdmin"
                             :class="{ active: $route.name == 'seller-billing' }"
                         >
                             <router-link :to="{ path: '/seller-billing' }">
@@ -216,7 +216,7 @@
                         </li>
 
                         <li
-                            v-if="isPostingWriter"
+                            v-if="isPostingWriter || user.isAdmin"
                             :class="{ active: $route.name == 'writer-billing' }"
                         >
                             <router-link :to="{ path: '/writer-billing' }">
