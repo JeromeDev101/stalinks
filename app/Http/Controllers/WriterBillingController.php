@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Events\WriterPaid;
+use App\Http\Requests\WriterPayRequest;
 use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\PaypalInterface;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\BillingWriter;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class WriterBillingController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
-        $list = Article::select('article.*', 'billing_writer.proof_doc_path', 'registration.rate_type', 'registration.writer_price')
+        $list = Article::select('article.*', 'billing_writer.proof_doc_path', 'registration.rate_type', 'registration.writer_price', 'billing_writer.id AS billing_writer_id')
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
                         ->leftJoin('price', 'article.id_writer_price', '=', 'price.id')
                         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
@@ -67,16 +72,18 @@ class WriterBillingController extends Controller
         ];
     }
 
-    public function payBilling(Request $request, NotificationInterface $notification) {
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
+    public function payBilling(WriterPayRequest $request, NotificationInterface $notification, InvoiceService $invoice, PaypalInterface $paypal) {
         $ids = json_decode($request->ids);
 
-        $image = $request->file;
-        $new_name = time() . '-billing-writer.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images/billing'), $new_name);
+        $new_name = null;
+
+        if ($request->get('id_payment_type') != 1) {
+            $image = $request->file;
+            $new_name = time() . '-billing-writer.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/billing'), $new_name);
+        }
+
+        DB::beginTransaction();
         $article_ids = [];
         foreach( $ids as $data ){
             $article_id = $data->id;
@@ -86,7 +93,7 @@ class WriterBillingController extends Controller
             $article = Article::FindOrFail($article_id);
             $article->update(['payment_status' => 'Paid']);
 
-            BillingWriter::create([
+            $billing = BillingWriter::create([
                 'id_article' => $article_id,
                 'id_user' => $user_id_writer,
                 'price' => $request->price,
@@ -96,10 +103,32 @@ class WriterBillingController extends Controller
             ]);
         }
 
+        if ($request->get('id_payment_type') == 1) {
+            $writer = User::find($user_id_writer);
+            $paypalResult = $paypal->createPayout([
+                'email' => $writer->email,
+                'amount' => $request->price
+            ]);
+
+            $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
+
+            BillingWriter::where('id_article', $article_id)->update([
+                'fee' => $payoutResult->result->items[0]->payout_item_fee->value
+            ]);
+
+            $invoicePdf = $invoice->generateWriterProof($writer, $article_ids, $request->price, $billing->id, $payoutResult->result->items[0]->payout_item_fee->value);
+
+            $billing->update([
+                'proof_doc_path' =>  $invoicePdf
+            ]);
+        }
+
         $notification->create([
             'user_id' => $ids[0]->id_writer,
             'notification' => 'Your account has been credited of '. $request->price .' for the different order '. implode(', ', $article_ids) .' thanks'
         ]);
+
+        DB::commit();
 
         broadcast(new WriterPaid($ids[0]->id_writer));
 
@@ -134,5 +163,12 @@ class WriterBillingController extends Controller
         }
 
         return $result;
+    }
+
+    public function downloadPaypalProof($id)
+    {
+        $file = Storage::get('STAL-WRITER-' . $id . '.pdf');
+
+        return $file;
     }
 }
