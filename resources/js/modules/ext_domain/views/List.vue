@@ -58,8 +58,8 @@
                   </div>
                   <div v-if="tableShow.domain" class="col-md-2">
                      <div class="from-group">
-                        <label style="color: #333">Domains</label>
-                        <input type="text" v-model="filterModel.domain_temp" class="form-control pull-right" placeholder="Search Domain">
+                        <label style="color: #333">Search URL</label>
+                        <input type="text" v-model="filterModel.domain_temp" class="form-control pull-right" placeholder="Search URL">
                      </div>
                   </div>
                   <div v-if="tableShow.status" class="col-md-2">
@@ -1751,7 +1751,7 @@ export default {
                 },
                 {
                     prop : 'domain',
-                    name : 'Domain',
+                    name : 'URL',
                     sortable: true,
                     width: 150,
                     isHidden: false
