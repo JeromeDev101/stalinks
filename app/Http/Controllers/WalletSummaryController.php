@@ -38,7 +38,7 @@ class WalletSummaryController extends Controller
             $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live');
             $user_buyers[$key]['order_cancel'] = $this->getTotal($user_buyer->id, 'order_cancel');
             $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live');
-            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotal($user_buyer->id, 'orders');
+            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotal($user_buyer->id, 'valid_orders');
             $user_buyers[$key]['valid_orders'] = $this->getTotal($user_buyer->id, 'valid_orders');
 
         }
