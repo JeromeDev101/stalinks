@@ -443,6 +443,24 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             $query->whereBetween('alexa_rank',[$input['alexa_rank_from'], $input['alexa_rank_to']]);
         }
 
+        // Domain Zone
+        if (isset($input['domain_zone']) && !empty($input['domain_zone'])) {
+            if (is_array($input['domain_zone'])) {
+
+                $regs = implode(",", $input['domain_zone']);
+                $regs = str_replace('.', '', $regs);
+                $regs = explode(",", $regs);
+
+                $query->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','')"), $regs);
+
+            } else {
+
+                $regs = str_replace('.', '', $input['domain_zone']);
+
+                $query->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','') = '$regs'");
+            }
+        }
+
         // Date upload filter
         $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
 
