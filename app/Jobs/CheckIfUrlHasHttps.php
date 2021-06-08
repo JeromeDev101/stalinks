@@ -55,6 +55,9 @@ class CheckIfUrlHasHttps implements ShouldQueue
                         ]);
                     }
                 } catch (\Exception $exception) {
+                    $publisher->update([
+                        'is_https' => 'N/A'
+                    ]);
                     \Log::channel('slack')->info($exception->getMessage());
                     \Log::error($exception);
                 }
