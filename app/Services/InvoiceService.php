@@ -31,7 +31,10 @@ class InvoiceService
             ]
         ]);
 
-        $item = (new InvoiceItem())->title('Wallet Credit')->pricePerUnit($payload->purchase_units[0]->payments->captures[0]->amount->value);
+        $items = [
+            (new InvoiceItem())->title('Wallet Credit')->pricePerUnit($payload->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->net_amount->value),
+            (new InvoiceItem())->title('Paypal Fee')->pricePerUnit($payload->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value)
+        ];
 
         $invoice = Invoice::make()
             ->series('STAL')
@@ -42,7 +45,7 @@ class InvoiceService
             ->dateFormat('m-d-Y')
             ->seller($this->client)
             ->buyer($customer)
-            ->addItem($item)
+            ->addItems($items)
             ->save('local');
 
         return $invoice->url();
