@@ -78,7 +78,9 @@
                     <h3 class="box-title">Wallet Transaction</h3>
                     <span class="ml-5 text-primary" v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
                     <span class="ml-5 text-primary">Total amount: <b>${{ totalAmount }}</b></span>
-                    <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
+                    <button v-if="user.isAdmin"
+                            data-toggle="modal"
+                             @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
                 <div class="box-body no-padding relative">
