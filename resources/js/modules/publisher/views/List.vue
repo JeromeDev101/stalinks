@@ -382,8 +382,8 @@
                                 Reminder: The uploaded data is for Seller -List Publisher.
                                 The columns for the CSV file are URL, Price, Inc Article, Seller ID,
                                 Accept C&B, KW Anchor,
-                                Language, Topic and
-                                Country. The
+                                Language, Topic,
+                                Country and KW Anchor. The
                                 columns should be separated using comma (,).
                                 Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
                                 Keyword Anchor yes if accept KW no if only |URL|.
@@ -2496,11 +2496,11 @@
                 let rows = this.user.isOurs === 0
                     ? ['URL', 'Price', 'Inc Article',
                        'Seller ID',
-                       'Accept C&B','Language', 'Topic',
+                       'Accept C&B','Language', 'Topic', 'Country',
                        'KW Anchor']
                     : ['URL', 'Price', 'Inc Article',
                        'Accept C&B', 'KW Anchor',
-                       'Language', 'Topic'];
+                       'Language', 'Topic', 'Country'];
 
                 headers.push(rows);
 
