@@ -27,17 +27,17 @@
                             </div>
                         </div>
 
-<!--                        <div class="col-md-3">-->
-<!--                            <div class="form-group">-->
-<!--                                <label for="">Country</label>-->
-<!--                                <select class="form-control" v-model="filterModel.country_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <select class="form-control" v-model="filterModel.country_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -1313,7 +1313,7 @@
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
-                    // country_id: this.$route.query.country_id || '',
+                    country_id: this.$route.query.country_id || '',
                     continent_id: this.$route.query.continent_id
                         ? Array.isArray(this.$route.query.continent_id)
                             ? this.$route.query.continent_id.map(function (val) {
@@ -1818,7 +1818,7 @@
 
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            // country_id: this.filterModel.country_id,
+                            country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -1848,7 +1848,7 @@
                 }else{
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            // country_id: this.filterModel.country_id,
+                            country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -2246,7 +2246,7 @@
             clearSearch() {
                 this.filterModel = {
                     continent_id: '',
-                    // country_id: '',
+                    country_id: '',
                     search: '',
                     language_id: '',
                     inc_article: '',
@@ -2405,7 +2405,7 @@
 
                 this.getPublisherList({
                     params: {
-                        // country_id: this.filterModel.country_id,
+                        country_id: this.filterModel.country_id,
                         continent_id: this.filterModel.continent_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
