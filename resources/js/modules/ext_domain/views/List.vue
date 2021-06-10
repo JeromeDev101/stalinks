@@ -2762,6 +2762,10 @@ export default {
                 // clear attachments
 
                 this.$refs.file_send_url.value = "";
+
+                // clear message form
+
+                await this.$store.dispatch('clearMessageForm');
             } else {
                 swal.fire(
                     'Error',

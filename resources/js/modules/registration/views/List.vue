@@ -1568,6 +1568,10 @@ export default {
                     this.allSelected = false;
 
                     this.$refs.file_send_registration.value = "";
+
+                    // clear message forms
+
+                    this.clearMessageFormMail()
                 } else {
                     await swal.fire(
                         'Error',
@@ -1826,6 +1830,10 @@ export default {
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageFormAccount');
+            },
+
+            clearMessageFormMail(){
+                this.$store.dispatch('clearMessageForm');
             },
 
             doUpdateAccount(account){

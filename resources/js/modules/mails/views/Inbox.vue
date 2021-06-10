@@ -1627,6 +1627,16 @@ export default {
                 // this.sendBtn = false;
                 this.countryMailId = '';
                 this.mailInfo = {};
+
+                // clear mesesage forms
+
+                this.clearMessageform()
+            } else {
+                await swal.fire(
+                    'Error',
+                    'There are some errors while sending the email',
+                    'error'
+                )
             }
         },
 
