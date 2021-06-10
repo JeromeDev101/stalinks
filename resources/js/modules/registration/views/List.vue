@@ -1240,7 +1240,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import axios from 'axios';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 import {createTags} from "@johmun/vue-tags-input";
@@ -1405,6 +1405,10 @@ export default {
         },
 
         methods: {
+            ...mapActions({
+                clearMessageFormEmail: "clearMessageform",
+            }),
+
             getListEmails() {
                 axios.get('/api/mail/get-mail-list').then((response) => {
                     this.listUserEmail = response.data;
@@ -1833,7 +1837,7 @@ export default {
             },
 
             clearMessageFormMail(){
-                this.$store.dispatch('clearMessageForm');
+                this.clearMessageFormEmail()
             },
 
             doUpdateAccount(account){
