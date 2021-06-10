@@ -134,7 +134,11 @@
                                 <td>{{ article.payment_status == null ? 'Not Paid':article.payment_status }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="View Proof of Billing" :disabled="article.proof_doc_path == null" @click="doShow(article.proof_doc_path)" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button
+                                            v-if="article.proof_doc_path == null || !isFilePdf(article.proof_doc_path)"
+                                            title="View Proof of Billing" :disabled="article.proof_doc_path == null" @click="doShow(article.proof_doc_path)" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button v-else
+                                                title="Download Proof" @click="downloadProof(article.billing_writer_id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -180,7 +184,9 @@
                                 </table>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12"
+                                 v-if="info.payment_type_id
+                                 != 1">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
@@ -404,10 +410,13 @@
             async doPay() {
                 let ids = this.checkIds
                 this.formData = new FormData();
-                this.formData.append('file', this.$refs.proof.files[0]);
                 this.formData.append('id_payment_type', this.info.payment_type_id);
                 this.formData.append('price', this.info.amount);
                 this.formData.append('ids', JSON.stringify(ids) );
+
+                if (this.info.payment_type_id != 1) {
+                    this.formData.append('file', this.$refs.proof.files[0]);
+                }
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionPayWriter', this.formData)
@@ -467,6 +476,31 @@
                     this.isDisabled = false;
                 }
             },
+
+            isFilePdf(path) {
+                var arr = path.split('.');
+
+                return arr[1] === 'pdf';
+            },
+
+            downloadProof(id) {
+                axios({
+                    url: '/api/files/proof/paypal/writer/' +
+                        id,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download',
+                        'STAL-WRITER-' + id + '.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
+            }
         },
     }
 </script>

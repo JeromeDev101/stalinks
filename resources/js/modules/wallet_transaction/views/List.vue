@@ -78,7 +78,9 @@
                     <h3 class="box-title">Wallet Transaction</h3>
                     <span class="ml-5 text-primary" v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
                     <span class="ml-5 text-primary">Total amount: <b>${{ totalAmount }}</b></span>
-                    <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
+                    <button v-if="user.isAdmin"
+                            data-toggle="modal"
+                             @click="clearMessageform" data-target="#modal-add-wallet" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet</button>
                 </div>
 
                 <div class="box-body no-padding relative">
@@ -91,7 +93,8 @@
                                 <th>Payment Via</th>
                                 <th>Amount USD</th>
                                 <th>Date</th>
-                                <th>Proof of Doc</th>
+                                <th>Proof of Doc
+                                <th>Invoice</th>
                                 <th>Confirmation</th>
                                 <th>Action</th>
                             </tr>
@@ -107,6 +110,14 @@
                                 <td>
                                     <div class="btn-group">
                                         <button title="Proof of Documents" @click="doShow(wallet.proof_doc)" data-target="#modal-wallet-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div
+                                        class="btn-group"
+                                        v-if="wallet.invoice">
+                                        <button
+                                            title="Download Invoice" @click="downloadInvoice(wallet.id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
                                     </div>
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
@@ -150,19 +161,18 @@
         <!-- End of Modal Show proof -->
 
         <!-- Modal Add Wallet -->
-        <div class="modal fade" id="modal-add-wallet" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal fade" id="modal-add-wallet"
+             tabindex="-1" role="dialog"
+             aria-labelledby="modelTitleId" aria-hidden="true" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add Wallet Transaction</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
-
-                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
-                            {{ messageForms.message }}
-                        </span>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row" v-if="walletStep
+                         === 0">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">
                                     <label for="">User Buyer</label>
@@ -193,7 +203,8 @@
                                     <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12"
+                                 v-if="updateModel.payment_type != 1">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
@@ -202,8 +213,20 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row"
+                            v-show="walletStep === 1">
+                            <div class="col-sm-12">
+                                <div id="smart-button-container">
+                                    <div style="text-align: center;">
+                                        <div id="paypal-button-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer"
+                         v-if="walletStep === 0">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
                     </div>
@@ -297,6 +320,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         data() {
@@ -325,6 +349,7 @@
                 },
                 searchLoading: false,
                 totalAmount: 0,
+                walletStep: 0
             }
         },
 
@@ -346,6 +371,56 @@
         },
 
         methods: {
+            initPaypalButtons() {
+                paypal.Buttons({
+                    style: {
+                        shape: 'rect',
+                        color: 'black',
+                        layout: 'vertical',
+                        label: 'pay',
+
+                    },
+
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{"amount":{"currency_code":"USD","value":1}}]
+                        });
+                    },
+
+                    onApprove: function(data, actions) {
+                        let vm = this;
+                        return actions.order.capture().then(function(details) {
+                            try {
+                                $("#modal-add-wallet").modal('hide');
+                                vm.updateModel = {
+                                    user_id_buyer : '',
+                                    payment_type : '',
+                                    amount_usd : '',
+                                };
+
+                                swal.fire(
+                                    'Success',
+                                    'Successfully Added',
+                                    'success'
+                                );
+
+                                vm.getWalletTransactionList();
+                            } catch (err) {
+                                console.log(err);
+                            }
+                        });
+                    },
+
+                    onError: function(err) {
+                        swal.fire(
+                            'Error',
+                            'There was an error on processing your payment.',
+                            'error'
+                        )
+                    }
+                }).render('#paypal-button-container');
+            },
+
             async getWalletTransactionList(params) {
 
                 $('#tbl_wallet_transaction').DataTable().destroy();
@@ -424,6 +499,24 @@
                 this.proof_doc = doc;
             },
 
+            downloadInvoice(id) {
+                axios({
+                    url: '/api/files/invoice/paypal/' + id,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download',
+                        'STAL-' + id + '.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
+            },
+
             async submitUpdatePay() {
                 this.formDataEdit = new FormData();
                 this.formDataEdit.append('file', this.$refs.proof_edit.files[0]);
@@ -446,33 +539,40 @@
 
             async submitPay() {
                 this.formData = new FormData();
-                this.formData.append('file', this.$refs.proof.files[0]);
                 this.formData.append('payment_type', this.updateModel.payment_type);
                 this.formData.append('amount_usd', this.updateModel.amount_usd);
                 this.formData.append('user_id_buyer', this.updateModel.user_id_buyer);
+
+                if (this.updateModel.payment_type !== 1) {
+                    this.formData.append('file', this.$refs.proof.files[0]);
+                }
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionAddWallet', this.formData)
                 this.isPopupLoading = false;
 
                 if( this.messageForms.action == 'success' ){
+                    if (this.updateModel.payment_type === 1) {
+                        this.walletStep = 1;
+                        this.initPaypalButtons();
+                    } else {
+                        $("#modal-add-wallet").modal('hide');
+                        this.updateModel = {
+                            user_id_buyer: '',
+                            payment_type: '',
+                            amount_usd: '',
+                        }
 
-                    $("#modal-add-wallet").modal('hide');
-                    this.updateModel = {
-                        user_id_buyer: '',
-                        payment_type: '',
-                        amount_usd: '',
+                        this.$refs.proof.value = '';
+
+                        swal.fire(
+                            'Success',
+                            'Successfully Added',
+                            'success'
+                        )
+
+                        this.getWalletTransactionList();
                     }
-
-                    this.$refs.proof.value = '';
-
-                    swal.fire(
-                        'Success',
-                        'Successfully Added',
-                        'success'
-                    )
-
-                    this.getWalletTransactionList();
                 }
 
                 this.$root.$refs.AppHeader.liveGetWallet()

@@ -6,7 +6,9 @@ use App\Repositories\AccountRepository;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use App\Repositories\Contracts\CrawlContactRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\PaypalInterface;
 use App\Repositories\NotificationRepository;
+use App\Repositories\PaypalRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\UserRepository;
 use App\Repositories\Contracts\UserRepositoryInterface;
@@ -60,6 +62,7 @@ class RepositoryProvider extends ServiceProvider
         PublisherRepositoryInterface::class => PublisherRepository::class,
         NotificationInterface::class => NotificationRepository::class,
         AccountRepositoryInterface::class => AccountRepository::class,
+        PaypalInterface::class => PaypalRepository::class
     ];
     /**
      * Register services.

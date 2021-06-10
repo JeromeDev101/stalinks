@@ -256,6 +256,10 @@ Route::middleware('auth:api')->group(function () {
     //Compute for best price
     Route::name('generate-best-price')->post('generate-best-price', 'PublisherController@generateBestPrice');
 
+    //Paypal Integration
+    Route::name('create-order')->post('/paypal/order/create', 'PayPalController@createOrder');
+    Route::name('capture-order')->post('/paypal/order/{id}/capture', 'PayPalController@captureOrder');
+
     //Graphs
     Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
     Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
@@ -263,6 +267,11 @@ Route::middleware('auth:api')->group(function () {
     Route::name('url-valid-graph')->get('/graphs/url-valid-price', 'GraphsController@getUrlValidPriceGraph');
     Route::name('url-seller-statistics')->get('/graphs/url-seller-statistics', 'GraphsController@getUrlSellerStatisticsGraph');
     Route::name('prospect-qualified-registered')->get('/graphs/prospect-qualified-registered', 'GraphsController@getProspectQualifiedVsRegisteredGraph');
+
+    //Download files
+    Route::name('download-paypal-invoice')->get('/files/invoice/paypal/{id}', 'WalletTransactionController@downloadPaypalInvoice');
+    Route::name('download-paypal-proof-seller')->get('/files/proof/paypal/seller/{id}', 'SellerBillingController@downloadPaypalProof');
+    Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
 });
 
 //Mailgun external
@@ -281,3 +290,10 @@ Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
 Route::get('url-prospect-email-extraction', 'ConfigController@urlProspectEmailExtraction')->name('url-prospect-email-extraction');
+//removing http,www,https
+Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
+
+
+// updating prices
+// Route::name('updating-price')->get('/update-price', 'PublisherController@updatePrice');
+Route::name('get-price-from-publisher')->get('/get-price-from-publisher', 'PublisherController@getPrice');

@@ -26,7 +26,7 @@
                             Credit: <strong>$ {{ money.credit }}</strong>
                         </a>
                         <button
-                            v-if="user.registration.is_sub_account == 0"
+                            v-if="user.registration.is_sub_account == 0 && user.registration.account_validation == 'valid'"
                             class="btn btn-round btn-success"
                             data-toggle="modal" data-target="#modal-add-wallet-header"><i
                             class="fa fa-plus"></i>
@@ -150,7 +150,8 @@
                         </span>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
+                            <div class="row" v-if="step
+                            == 0">
                                 <!--                                    <div class="col-md-12">-->
                                 <!--                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">-->
                                 <!--                                            <label for="">User Buyer</label>-->
@@ -181,7 +182,8 @@
                                         <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12"
+                                     v-if="updateModel.payment_type != 1">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                         <label for="">Proof of Documents</label>
                                         <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
@@ -189,11 +191,52 @@
                                         <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+                                <div class="col-md-6"
+                                     v-if="updateModel.payment_type == 1">
+                                    <div class="form-group">
+                                        <label
+                                            for="">Your
+                                                   Paypal
+                                                   Region
+                                        </label>
+                                        <select name=""
+                                                id=""
+                                                class="form-control"
+                                                v-model="updateModel.payment_region">
+                                            <option
+                                                value="domestic">Hong Kong</option>
+                                            <option
+                                                value="international">Non-Hong Kong
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"
+                                     v-if="updateModel.payment_type == 1">
+                                    <b>Total Amount: ${{
+                                       updateModel.payment_region == 'international' ? internationalTotalPaymentAmount : domesticTotalPaymentAmount
+                                       }}</b>
+                                </div>
+                            </div>
+
+                            <div class="row" v-else-if="step
+                        == 1">
+                                <div class="col-sm-12">
+                                    <div id="smart-button-container">
+                                        <div style="text-align: center;">
+                                            <div id="paypal-button-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+
+                        <div class="modal-footer"
+                             v-if="step == 0">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
+                            <button type="button"
+                                    @click="nextPage"
+                                    class="btn btn-primary">Next</button>
                         </div>
                     </div>
                 </div>
@@ -228,7 +271,9 @@ export default {
                 user_id_buyer: '',
                 payment_type: '',
                 amount_usd: '',
+                payment_region: 'domestic'
             },
+            step: 0
         };
     },
 
@@ -294,7 +339,23 @@ export default {
                 state.storeNotification.notifications,
             messageForms: state => state.storeWalletTransaction.messageForms,
             listPayment: state => state.storeWalletTransaction.listPayment,
-        })
+        }),
+
+        domesticTotalPaymentAmount() {
+            var total = (+this.updateModel.amount_usd +
+                3e-1) /
+                (1 - (34e-1 / 100));
+
+            return total.toFixed(2);
+        },
+
+        internationalTotalPaymentAmount() {
+            var total = (+this.updateModel.amount_usd +
+                3e-1) /
+                (1 - (39e-1 / 100));
+
+            return total.toFixed(2);
+        }
     },
 
     methods: {
@@ -304,19 +365,78 @@ export default {
             seenNotifications: "seenUserNotifications"
         }),
 
-        async submitPay() {
+        initPaypalButtons() {
+            let vm = this;
+            paypal.Buttons({
+                style : {
+                    shape : 'rect',
+                    color : 'black',
+                    layout : 'vertical',
+                    label : 'pay',
+
+                },
+
+                createOrder : function (data, actions) {
+                    return axios.post('/api/paypal/order/create', {
+                        amount:
+                        vm.updateModel.payment_region ===
+                            'international' ?
+                            vm.internationalTotalPaymentAmount : vm.domesticTotalPaymentAmount,
+                    })
+                        .then(response => {
+                            return response.data.result;
+                        })
+                        .then(data => {
+                            return data.id;
+                        });
+                },
+
+                onApprove : function (data, actions) {
+                    return axios.post('/api/paypal/order/'+
+                        data.orderID
+                        +'/capture')
+                        .then(response => {
+                            vm.submitPay(response);
+                        });
+                },
+
+                onError : function (err) {
+                    swal.fire(
+                        'Error',
+                        'There was an error on processing your payment.',
+                        'error'
+                    )
+                }
+            }).render('#paypal-button-container');
+        },
+
+        nextPage() {
+            this.step = 1;
+
+            setTimeout(this.initPaypalButtons, 300);
+        },
+
+        async submitPay(paypalPayload) {
             this.formData = new FormData();
-            this.formData.append('file', this.$refs.proof.files[0]);
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
             this.formData.append('user_id_buyer',
                 this.user.id);
+
+            if (this.updateModel.payment_type != 1) {
+                this.formData.append('file', this.$refs.proof.files[0]);
+            } else {
+                this.formData.append('payload',
+                    JSON.stringify(paypalPayload));
+            }
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionAddWallet', this.formData)
             this.isPopupLoading = false;
 
             if( this.messageForms.action == 'success' ){
+
+                this.liveGetWallet();
 
                 $("#modal-add-wallet-header").modal('hide');
                 this.updateModel = {
@@ -325,13 +445,16 @@ export default {
                     amount_usd: '',
                 }
 
-                this.$refs.proof.value = '';
+                this.step = 0;
 
                 swal.fire(
                     'Success',
                     'Successfully Added',
                     'success'
                 )
+
+                this.$refs.proof.value = '';
+
 
             }
 
