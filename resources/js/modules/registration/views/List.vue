@@ -1240,7 +1240,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import axios from 'axios';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 import {createTags} from "@johmun/vue-tags-input";
@@ -1405,6 +1405,10 @@ export default {
         },
 
         methods: {
+            ...mapActions({
+                clearMessageFormEmail: "clearMessageform",
+            }),
+
             getListEmails() {
                 axios.get('/api/mail/get-mail-list').then((response) => {
                     this.listUserEmail = response.data;
@@ -1568,6 +1572,10 @@ export default {
                     this.allSelected = false;
 
                     this.$refs.file_send_registration.value = "";
+
+                    // clear message forms
+
+                    this.clearMessageFormMail()
                 } else {
                     await swal.fire(
                         'Error',
@@ -1826,6 +1834,10 @@ export default {
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageFormAccount');
+            },
+
+            clearMessageFormMail(){
+                this.clearMessageFormEmail()
             },
 
             doUpdateAccount(account){
