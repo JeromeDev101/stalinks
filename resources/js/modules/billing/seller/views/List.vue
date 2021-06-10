@@ -148,7 +148,11 @@
                                 <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button
+                                            v-if="seller.proof_doc_path == null || !isFilePdf(seller.proof_doc_path)"
+                                            @click="doShow(seller.proof_doc_path)" :disabled="seller.proof_doc_path == null" title="View Proof of Billing" data-target="#modal-view-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button v-else
+                                            title="Download Proof" @click="downloadProof(wallet.id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -170,7 +174,9 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <img class="img-fluid" :src="proof_doc" atl="Proof of Billing" >
+                                <img class="img-fluid"
+                                     :src="proof_doc"
+                                     alt="Proof of Billing" >
                             </div>
                         </div>
                     </div>
@@ -195,7 +201,7 @@
                         </span>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row" v-if="step == 0">
                             <div class="col-md-12 mb-4">
                                 <table class="table">
                                     <tr>
@@ -215,7 +221,9 @@
                                 </table>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12"
+                                 v-if="info.payment_type_id
+                                 != 1">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
@@ -225,10 +233,24 @@
                             </div>
 
                         </div>
+
+                        <div class="row"v-else-if="step
+                        == 1">
+                            <div class="col-sm-12">
+                                <div id="smart-button-container">
+                                    <div style="text-align: center;">
+                                        <div id="paypal-button-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="step
+                    == 0">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="doPay" class="btn btn-primary" :disabled="isDisabledPay">Pay</button>
+                        <button type="button"
+                                @click="doPay"
+                                class="btn btn-primary" :disabled="isDisabledPay">Pay</button>
                     </div>
                 </div>
             </div>
@@ -239,7 +261,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapActions } from 'vuex';
 
     export default {
         data() {
@@ -275,6 +297,7 @@
                 },
                 isDisabledPay: true,
                 isSearching: false,
+                step: 0
             }
         },
 
@@ -294,8 +317,71 @@
             }),
         },
 
-        methods: {
-            async getSellerBilling(params){
+        methods : {
+            initPaypalButtons() {
+                let vm = this;
+                paypal.Buttons({
+                    style : {
+                        shape : 'rect',
+                        color : 'black',
+                        layout : 'vertical',
+                        label : 'pay',
+
+                    },
+
+                    createOrder : function (data, actions) {
+                        return axios.post('/api/paypal/order/create', {
+                            email: vm.info.account,
+                            amount: vm.info.amount,
+                            entity: 'seller'
+                        })
+                            .then(response => {
+                                return response.data.result;
+                            })
+                            .then(data => {
+                                return data.id;
+                            });
+                    },
+
+                    onApprove : function (data, actions) {
+                        return axios.post('/api/paypal/order/'+
+                            data.orderID
+                            +'/capture')
+                            .then(response => {
+                                this.doPay();
+                            });
+
+
+                        // return vm.$store.dispatch('captureOrder')
+                        //     .then(response => {
+                        //         $("#modal-add-wallet").modal('hide');
+                        //         vm.updateModel = {
+                        //             user_id_buyer : '',
+                        //             payment_type : '',
+                        //             amount_usd : '',
+                        //         };
+                        //
+                        //         swal.fire(
+                        //             'Success',
+                        //             'Successfully Added',
+                        //             'success'
+                        //         );
+                        //
+                        //         vm.getWalletTransactionList();
+                        //     });
+                    },
+
+                    onError : function (err) {
+                        swal.fire(
+                            'Error',
+                            'There was an error on processing your payment.',
+                            'error'
+                        )
+                    }
+                }).render('#paypal-button-container');
+            },
+
+            async getSellerBilling(params) {
                 this.searchLoading = true;
                 this.isSearching = true;
                 await this.$store.dispatch('actionGetSellerBilling', params);
@@ -303,17 +389,20 @@
                 this.isSearching = false;
 
                 $('#tbl_seller_billing').DataTable({
-                    paging: false,
-                    searching: false,
-                    columnDefs: [
-                        { orderable: true, targets: 0 },
-                        { orderable: true, targets: 2 },
-                        { orderable: true, targets: 3 },
-                        { orderable: true, targets: 4 },
-                        { orderable: true, targets: 5 },
-                        { orderable: true, targets: 6 },
-                        { orderable: true, targets: 7 },
-                        { orderable: false, targets: '_all' }
+                    paging : false,
+                    searching : false,
+                    columnDefs : [
+                        {orderable : true, targets : 0},
+                        {orderable : true, targets : 2},
+                        {orderable : true, targets : 3},
+                        {orderable : true, targets : 4},
+                        {orderable : true, targets : 5},
+                        {orderable : true, targets : 6},
+                        {orderable : true, targets : 7},
+                        {
+                            orderable : false,
+                            targets : '_all'
+                        }
                     ],
                 });
 
@@ -321,56 +410,56 @@
             },
 
             async doUpdatePayment() {
-                await this.$store.dispatch('actionGetSellerInfo', { ids: this.checkIds });
+                await this.$store.dispatch('actionGetSellerInfo', {ids : this.checkIds});
 
-                if(this.sellerInfo.success){
+                if (this.sellerInfo.success) {
                     let data = this.sellerInfo.data[0]
                     let account = 'Not yet setup';
                     let total = 0;
                     $("#modal-payment").modal('show');
 
                     this.info.seller = data.username;
-                    this.info.payment_type = data.payment_type == null ? 'Not yet setup':data.payment_type.type;
-                    this.info.payment_type_id = data.payment_type == null ? null:data.payment_type.id;
+                    this.info.payment_type = data.payment_type == null ? 'Not yet setup' : data.payment_type.type;
+                    this.info.payment_type_id = data.payment_type == null ? null : data.payment_type.id;
 
-                    if( data.payment_type != null && data.registration != null ){
+                    if (data.payment_type != null && data.registration != null) {
                         this.isDisabledPay = false;
 
-                        switch ( data.payment_type.id ) {
-                        case 1:
-                            account = data.registration.paypal_account == null ? 'Not yet setup':data.registration.paypal_account;
-                            break;
-                        case 2:
-                            account = data.registration.skrill_account == null ? 'Not yet setup':data.registration.skrill_account;
-                            break;
-                        case 3:
-                            account = data.registration.btc_account  == null ? 'Not yet setup':data.registration.btc_account;
-                            break;
-                        default:
-                            account = "Not yet setup";
+                        switch (data.payment_type.id) {
+                            case 1:
+                                account = data.registration.paypal_account == null ? 'Not yet setup' : data.registration.paypal_account;
+                                break;
+                            case 2:
+                                account = data.registration.skrill_account == null ? 'Not yet setup' : data.registration.skrill_account;
+                                break;
+                            case 3:
+                                account = data.registration.btc_account == null ? 'Not yet setup' : data.registration.btc_account;
+                                break;
+                            default:
+                                account = "Not yet setup";
                         }
                     }
 
-                    for( var index in this.checkIds ){
+                    for (var index in this.checkIds) {
                         // if( this.checkIds[index].publisher != null ){
                         //     if( this.checkIds[index].publisher.price != null ){
                         //         total += parseInt(this.checkIds[index].publisher.price);
                         //     }
                         // }
 
-                        if( this.checkIds[index].price != null ){
+                        if (this.checkIds[index].price != null) {
                             total += parseInt(this.checkIds[index].price);
                         }
                     }
 
-                    if( account == 'Not yet setup' ){
+                    if (account == 'Not yet setup') {
                         this.isDisabledPay = true;
                     }
 
                     this.info.account = account;
                     this.info.amount = total
 
-                }else{
+                } else {
                     swal.fire(
                         'Invalid',
                         'Multiple Payment in different seller is invalid.',
@@ -394,13 +483,13 @@
                 let total_price = [];
                 let total = 0;
 
-                seller_billing.forEach(function(item, index){
+                seller_billing.forEach(function (item, index) {
                     if (typeof item.price !== 'undefined') {
-                        total_price.push( parseFloat(item.price))
+                        total_price.push(parseFloat(item.price))
                     }
                 })
 
-                if( total_price.length > 0 ){
+                if (total_price.length > 0) {
                     total = total_price.reduce(this.calcSum)
                 }
                 this.totalAmount = total.toFixed(2);
@@ -420,7 +509,7 @@
                 $('#tbl_seller_billing').DataTable().destroy();
 
                 this.$router.push({
-                    query: this.filterModel,
+                    query : this.filterModel,
                 });
 
                 this.getSellerBilling({
@@ -436,7 +525,7 @@
 
             checkSelected() {
                 this.isDisabled = true;
-                if( this.checkIds.length > 0 ){
+                if (this.checkIds.length > 0) {
                     this.isDisabled = false;
                 }
             },
@@ -459,29 +548,38 @@
                 }
 
                 this.getSellerBilling({
-                    params: this.filterModel
+                    params : this.filterModel
                 });
 
-                this.$router.replace({'query': null});
+                this.$router.replace({'query' : null});
 
             },
 
-            async doPay() {
+            nextPage() {
+                this.step = 1;
 
+                setTimeout(this.initPaypalButtons, 300);
+            },
+
+            async doPay() {
                 $('#tbl_seller_billing').DataTable().destroy();
 
                 let ids = this.checkIds
                 this.formData = new FormData();
-                this.formData.append('file', this.$refs.proof.files[0]);
                 this.formData.append('payment_type', this.updateModel.payment_type);
-                this.formData.append('ids', JSON.stringify(ids) );
-                this.formData.append('payment_id', this.info.payment_type_id );
+                this.formData.append('ids', JSON.stringify(ids));
+                this.formData.append('payment_id', this.info.payment_type_id);
+
+                // Append file parameter if payment type is not paypal
+                if (this.info.payment_type_id != 1) {
+                    this.formData.append('file', this.$refs.proof.files[0]);
+                }
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionPay', this.formData)
                 this.isPopupLoading = false;
 
-                if( this.messageForms.action == 'success' ){
+                if (this.messageForms.action == 'success') {
                     $("#modal-payment").modal('hide')
                     this.getSellerBilling();
                     this.$refs.proof.value = '';
@@ -507,6 +605,31 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            isFilePdf(path) {
+                var arr = path.split('.');
+
+                return arr[1] === 'pdf';
+            },
+
+            downloadProof(id) {
+                axios({
+                    url: '/api/files/proof/paypal/seller/' +
+                        id,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download',
+                        'STAL-SELLER-' + id + '.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
+            }
         },
     }
 </script>

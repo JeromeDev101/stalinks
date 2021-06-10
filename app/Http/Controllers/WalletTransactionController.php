@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\InvoiceService;
 use Carbon\Carbon;
+use App\Http\Requests\WalletTransaction\AddWalletRequest;
 use Illuminate\Http\Request;
 use App\Models\WalletTransaction;
 use App\Models\User;
 use App\Models\TotalWallet;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\Storage;
 
 class WalletTransactionController extends Controller
 {
@@ -120,38 +123,40 @@ class WalletTransactionController extends Controller
         ];
     }
 
-    public function addWallet(Request $request) {
-        $request->validate([
-            'payment_type' => 'required',
-            'amount_usd' => 'required',
-            'user_id_buyer' => 'required',
-            'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
+    public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
         $image = $request->file;
-        $new_name = date('Ymd').time() . '-transaction.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images/wallet_transaction'), $new_name);
+        $paymentType = $request->get('payment_type');
 
-        WalletTransaction::create([
+        $fileName = $paymentType != 1 ? $this->moveFileToStorage($image) : '';
+
+        // If payment type is paypal dont insert proof_doc field
+        $data = $paymentType == 1 ? [
             'user_id' => $request->user_id_buyer,
             'payment_via_id' => $request->payment_type,
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
-            'proof_doc' => '/images/wallet_transaction/'.$new_name,
+            'proof_doc' => '/',
+            'admin_confirmation' => 'Paid',
+        ] : [
+            'user_id' => $request->user_id_buyer,
+            'payment_via_id' => $request->payment_type,
+            'amount_usd' => $request->amount_usd,
+            'date' => date('Y-m-d'),
+            'proof_doc' => '/images/wallet_transaction/'.$fileName,
             'admin_confirmation' => 'Not Paid',
-        ]);
+        ];
 
-        // $total_wallet = TotalWallet::where('user_id', $request->user_id_buyer)->first();
+        $result = WalletTransaction::create($data);
 
-        // if( isset($total_wallet['user_id']) && $total_wallet['user_id'] == ""){
-        //     TotalWallet::create([
-        //         'user_id' => $request->user_id_buyer,
-        //         'total_wallet' => $request->amount_usd,
-        //     ]);
-        // }else{
-        //     $amount = floatVal($total_wallet['total_wallet']) + floatVal($request->amount_usd);
-        //     $total_wallet->update(['total_wallet' => $amount]);
-        // }
+        if ($paymentType == 1) {
+            $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
+            $payload->invoice_id = $result->id;
+            $result->update([
+                'invoice' => '/storage/app/STAL-' . $result->id . '.pdf'
+            ]);
+
+            $invoice->generateCreditInvoice($payload);
+        }
 
         return response()->json(['success' => true], 200);
     }
@@ -197,5 +202,25 @@ class WalletTransactionController extends Controller
 
         return response()->json(['success'=>true],200);
 
+    }
+
+    /**
+     * Move file to wallet transaction folder and return file name
+     * @param $file
+     * @return string
+     */
+    private function moveFileToStorage($file)
+    {
+        $new_name = date('Ymd').time() . '-transaction.' . $file->getClientOriginalExtension();
+        $file->move(public_path('images/wallet_transaction'), $new_name);
+
+        return $new_name;
+    }
+
+    public function downloadPaypalInvoice($id)
+    {
+        $file = Storage::get('STAL-' . $id . '.pdf');
+
+        return $file;
     }
 }

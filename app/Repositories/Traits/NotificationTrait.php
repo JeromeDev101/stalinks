@@ -5,7 +5,9 @@ namespace App\Repositories\Traits;
 use App\Events\BestPriceGenerationEnd;
 use App\Events\BestPriceGenerationStart;
 use App\Events\Buyer\BuyEvent;
+use App\Events\BuyerDebited;
 use App\Events\GenerateBestPricesDone;
+use App\Events\SellerPaid;
 use App\Events\SellerReceivesOrderEvent;
 use App\Models\Notif;
 
@@ -29,6 +31,26 @@ trait NotificationTrait
         ]);
 
         broadcast(new SellerReceivesOrderEvent($userId));
+    }
+
+    public function buyerDebittedNotification($backlink, $totalAmount, $backlinkIds)
+    {
+        Notif::create([
+            'user_id' => $backlink->user_id,
+            'notification' => 'Your account has been debited of '. $totalAmount .' for the different order '. implode(', ', $backlinkIds) .' thanks'
+        ]);
+
+        broadcast(new BuyerDebited($backlink->user_id));
+    }
+
+    public function sellerPaidNotification($seller, $totalAmount, $backlinkIds)
+    {
+        Notif::create([
+            'user_id' => $seller,
+            'notification' => 'Your account has been credited of '. $totalAmount .' for the different order '. implode(', ', $backlinkIds) .' thanks'
+        ]);
+
+        broadcast(new SellerPaid($seller));
     }
 
     public function generateBestPricesDoneNotification($userId)
