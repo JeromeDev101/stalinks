@@ -285,7 +285,7 @@
                     </div>
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
                     <button v-if="user.isAdmin ||
                     user.role_id == 8"
                         class="btn btn-primary float-right" :disabled="isGenerating" @click="generateBestPrices">
@@ -1749,6 +1749,10 @@
         },
 
         methods: {
+            clearCountryContinentInfo() {
+                this.country_continent_info = '';
+            },
+
             selectCountry(mod) {
                 let model_id = mod === 'add'
                     ? this.addModel.country_id
@@ -2127,6 +2131,7 @@
             },
 
             doMultipleEdit() {
+                this.clearCountryContinentInfo();
                 this.updateMultiple = {
                     language: '',
                     country: '',
@@ -2379,6 +2384,7 @@
 
             doUpdate(publish) {
                 this.clearMessageform()
+                this.clearCountryContinentInfo()
                 let that = JSON.parse(JSON.stringify(publish))
 
                 let topic = '';
