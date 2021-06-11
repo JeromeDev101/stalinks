@@ -630,17 +630,23 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label for="">Country</label>-->
-<!--                                    <select class="form-control" v-model="updateModel.country_id">-->
-<!--                                        <option value="">Select Country</option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+
+                                    <select class="form-control" v-model="updateModel.country_id"  @change="selectCountry('update')">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -838,18 +844,24 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">-->
-<!--                                    <label for="">Country</label>-->
-<!--                                    <select class="form-control" v-model="addModel.country_id">-->
-<!--                                        <option value="">Select Country</option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
+                                    <label for="">Country</label>
+
+                                    <select class="form-control" v-model="addModel.country_id" @change="selectCountry('add')">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.continent_id}" class="form-group">
@@ -1143,17 +1155,23 @@
                                     </select>
                                 </div>
                             </div>
-<!--                            <div class="col-md-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label>Country</label>-->
-<!--                                    <select class="form-control" v-model="updateMultiple.country">-->
-<!--                                        <option value=""></option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Country</label>
+
+                                    <select class="form-control" v-model="updateMultiple.country" @change="selectCountry('multi')">
+                                        <option value=""></option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Continent</label>
@@ -1279,7 +1297,7 @@
                     kw_anchor: '',
                     casino_sites: '',
                     price: '',
-                    // country: '',
+                    country: '',
                     continent: '',
                     language: '',
                     qc_validation: '',
@@ -1303,7 +1321,7 @@
                     casino_sites: '',
                     topic: '',
                     kw_anchor: '',
-                    // country_id: '',
+                    country_id: '',
                     continent_id: '',
                     // team_in_charge: '',
                     // team_in_charge_old: '',
@@ -1365,7 +1383,7 @@
                     inc_article: '',
                     casino_sites: '',
                     topic: '',
-                    // country_id: '',
+                    country_id: '',
                     continent_id: '',
                     kw_anchor: '',
                 },
@@ -1428,7 +1446,9 @@
                 },
                 isAccountInvalid: false,
                 isAccountPaymentNotComplete: false,
-                isGenerating: false
+                isGenerating: false,
+
+                country_continent_info: '',
             }
         },
 
@@ -1729,6 +1749,29 @@
         },
 
         methods: {
+            selectCountry(mod) {
+                let model_id = mod === 'add'
+                    ? this.addModel.country_id
+                    : mod === 'update'
+                        ? this.updateModel.country_id
+                        : this.updateMultiple.country
+
+                let index = this.listCountryAll.data.map(e => e.id).indexOf(model_id);
+                let continent_id = this.listCountryAll.data[index].continent_id ?? '';
+
+                if (mod === 'add') {
+                    this.addModel.continent_id = continent_id;
+                } else if(mod === 'update') {
+                    this.updateModel.continent_id = continent_id;
+                } else {
+                    this.updateMultiple.continent = continent_id
+                }
+
+                this.country_continent_info = continent_id === ''
+                    ? 'Country continent is not set. Continent input will not be filled automatically'
+                    : '';
+            },
+
             async generateBestPrices() {
                 await
                     this.$store.dispatch('generateBestPrices');
@@ -2100,7 +2143,7 @@
                 axios.post('/api/update-multiple-publisher',{
                     ids: this.checkIds,
                     language: this.updateMultiple.language,
-                    // country: this.updateMultiple.country,
+                    country: this.updateMultiple.country,
                     continent_id: this.updateMultiple.continent,
                     price: this.updateMultiple.price,
                     casino_sites: this.updateMultiple.casino_sites,
@@ -2165,7 +2208,7 @@
                         price: '',
                         casino_sites: '',
                         topic: '',
-                        // country_id: '',
+                        country_id: '',
                         continent_id: '',
                         kw_anchor: '',
                     }
@@ -2368,7 +2411,7 @@
                     topic: topic,
                     casino_sites: that.casino_sites.toLowerCase(),
                     kw_anchor: that.kw_anchor.toLowerCase(),
-                    // country_id: that.country_id,
+                    country_id: that.country_id,
                     continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
