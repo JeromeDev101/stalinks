@@ -43,19 +43,25 @@
                             </div>
                         </div>
 
-<!--                        <div class="col-md-2">-->
-<!--                            <div class="form-group">-->
-<!--                                <label for="">Country</label>-->
-<!--                                <v-select multiple-->
-<!--                                          v-model="filterModel.country_id" label="name" :options="listCountryAll.data" :reduce="country => country.id" :searchable="false" placeholder="All"/>-->
-<!--&lt;!&ndash;                                <select class="form-control" v-model="filterModel.country_id">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <option value="">All</option>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        {{ option.name }}&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </option>&ndash;&gt;-->
-<!--&lt;!&ndash;                                </select>&ndash;&gt;-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <v-select
+                                    v-model="filterModel.country_id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :searchable="true"
+                                    :options="listCountryAll.data"
+                                    :reduce="country => country.id"/>
+<!--                                <select class="form-control" v-model="filterModel.country_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+                            </div>
+                        </div>
 
                         <div class="col-md-2">
                             <div class="form-group">
@@ -65,10 +71,9 @@
                                     multiple
                                     label="name"
                                     placeholder="All"
+                                    :searchable="true"
                                     :options="listContinent.data"
-                                    :reduce="continent => continent.id"
-                                    :searchable="false"
-                                />
+                                    :reduce="continent => continent.id"/>
                             </div>
                         </div>
 
@@ -343,9 +348,9 @@
                             {{
                                 (scope.row.country_continent == null && scope.row.publisher_continent == null)
                                 ? 'N/A'
-                                : scope.row.country_continent
-                                    ? scope.row.country_continent
-                                    : scope.row.publisher_continent
+                                : scope.row.publisher_continent
+                                    ? scope.row.publisher_continent
+                                    : scope.row.country_continent
                             }}
                         </template>
 
@@ -742,7 +747,13 @@
                             })
                             : [parseInt(this.$route.query.continent_id)]
                         : '',
-                    country_id: '',
+                    country_id: this.$route.query.country_id
+                        ? Array.isArray(this.$route.query.country_id)
+                            ? this.$route.query.country_id.map(function (val) {
+                                return parseInt(val, 10);
+                            })
+                            : [parseInt(this.$route.query.country_id)]
+                        : '',
                     search: this.$route.query.search || '',
                     language_id: '',
                     status_purchase: this.$route.query.status_purchase || '',
