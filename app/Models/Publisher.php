@@ -33,6 +33,7 @@ class Publisher extends Model
             'user_id',
             'url',
             'language_id',
+            'country_id',
             'code_comb',
             'price_basis',
             'code_price',
@@ -79,11 +80,11 @@ class Publisher extends Model
 
     public function getCustomNewPricesAttribute() {
         return $this->computePriceStalinks($this->price, $this->inc_article);
-    } 
+    }
 
     public function getCustomNewPriceAttribute() {
         return $this->computePrice($this->price, $this->inc_article);
-    } 
+    }
 
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id');
@@ -135,11 +136,11 @@ class Publisher extends Model
             $type = $registration->type;
             $commission = strtolower($registration->commission);
 
-            if( $price != '' && $price != null ){ 
+            if( $price != '' && $price != null ){
 
-                if( $type == 'Buyer' ){ 
+                if( $type == 'Buyer' ){
 
-                    if( strtolower($article) == 'yes' ){ 
+                    if( strtolower($article) == 'yes' ){
 
                         if( $commission == 'no' ){
                             $selling_price = $price;
@@ -151,7 +152,7 @@ class Publisher extends Model
                         }
                     }
 
-                    if( strtolower($article) == 'no' ){ 
+                    if( strtolower($article) == 'no' ){
 
                         if( $commission == 'no' ){
                             $selling_price = floatval($price) + $additional;
@@ -182,9 +183,9 @@ class Publisher extends Model
         $additional = floatval($formula->additional);
         $commission = 'yes';
 
-        if( $price != '' && $price != null ){ 
+        if( $price != '' && $price != null ){
 
-            if( strtolower($article) == 'yes' ){ 
+            if( strtolower($article) == 'yes' ){
 
                 if( $commission == 'no' ){
                     $selling_price = $price;
@@ -196,7 +197,7 @@ class Publisher extends Model
                 }
             }
 
-            if( strtolower($article) == 'no' ){ 
+            if( strtolower($article) == 'no' ){
 
                 if( $commission == 'no' ){
                     $selling_price = floatval($price) + $additional;
@@ -208,7 +209,7 @@ class Publisher extends Model
                 }
 
             }
-            
+
         }
 
         $selling_price = ceil(floatval($selling_price));

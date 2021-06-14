@@ -1621,9 +1621,11 @@ export default {
             isQualified: false,
             formAddUrl: false,
             topic: [
+                'Art',
                 'Beauty',
                 'Charity',
                 'Cooking',
+                'Crypto',
                 'Education',
                 'Fashion',
                 'Finance',
@@ -1631,15 +1633,17 @@ export default {
                 'Health',
                 'History',
                 'Job',
+                'Marketing',
                 'Movies & Music',
                 'News',
                 'Pet',
                 'Photograph',
-                'Real State',
+                'Real Estate',
                 'Religion',
                 'Shopping',
                 'Sports',
                 'Tech',
+                'Travel',
                 'Unlisted',
             ],
             isEditable: false,
@@ -2762,6 +2766,10 @@ export default {
                 // clear attachments
 
                 this.$refs.file_send_url.value = "";
+
+                // clear message form
+
+                await this.$store.dispatch('clearMessageForm');
             } else {
                 swal.fire(
                     'Error',

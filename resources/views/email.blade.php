@@ -52,7 +52,7 @@
             mso-table-rspace: 0pt;
         }
         td{
-            
+
         }
 
         img {
@@ -105,7 +105,7 @@
     </style>
 </head>
 
-<body style="background-image: url('{{ asset('/images/background-login.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
+<body style="background-image: url('{{ asset('/images/background-login2.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
     <!-- HIDDEN PREHEADER TEXT -->
     <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -127,7 +127,7 @@
                            <img src="{{ asset('/images/banner.png') }}" style="background-repeat: no-repeat;background-attachment: fixed;background-size: cover;" >
                         </td>
                     </tr>
-                
+
                     <tr>
                         <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Email Verification</h1>

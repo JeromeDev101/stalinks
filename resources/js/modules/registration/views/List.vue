@@ -399,7 +399,7 @@
         </div>
 
         <!-- Modal Update Registration -->
-        <div class="modal fade" id="modal-update-registration" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal fade" id="modal-update-registration" ref="modalUpdateAccount" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1240,13 +1240,13 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
-    import axios from 'axios';
-    import TermsAndConditions from "../../../components/terms/TermsAndConditions";
-    import {createTags} from "@johmun/vue-tags-input";
-    import TinyEditor from "../../../components/editor/TinyEditor";
+import {mapActions, mapState} from 'vuex';
+import axios from 'axios';
+import TermsAndConditions from "../../../components/terms/TermsAndConditions";
+import {createTags} from "@johmun/vue-tags-input";
+import TinyEditor from "../../../components/editor/TinyEditor";
 
-    export default {
+export default {
         components: {TermsAndConditions, TinyEditor},
         data() {
             return {
@@ -1405,6 +1405,10 @@
         },
 
         methods: {
+            ...mapActions({
+                clearMessageFormEmail: "clearMessageform",
+            }),
+
             getListEmails() {
                 axios.get('/api/mail/get-mail-list').then((response) => {
                     this.listUserEmail = response.data;
@@ -1568,6 +1572,10 @@
                     this.allSelected = false;
 
                     this.$refs.file_send_registration.value = "";
+
+                    // clear message forms
+
+                    this.clearMessageFormMail()
                 } else {
                     await swal.fire(
                         'Error',
@@ -1771,18 +1779,39 @@
             },
 
             async submitUpdate(){
+                let self = this
+
+                swal.fire({
+                    title: "Update Account",
+                    html: "Are you sure that you want to update the information?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        self.saveUpdate()
+                    }
+                });
+            },
+
+            async saveUpdate() {
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateAccount', this.accountUpdate);
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_account') {
-                    this.getAccountList();
-
                     swal.fire(
                         'Updated',
                         'Successfully Updated!',
                         'success'
                     );
+
+                    let element = this.$refs.modalUpdateAccount;
+                    $(element).modal('hide');
+
+                    this.getAccountList();
                 }
             },
 
@@ -1805,6 +1834,10 @@
 
             clearMessageform() {
                 this.$store.dispatch('clearMessageFormAccount');
+            },
+
+            clearMessageFormMail(){
+                this.clearMessageFormEmail()
             },
 
             doUpdateAccount(account){

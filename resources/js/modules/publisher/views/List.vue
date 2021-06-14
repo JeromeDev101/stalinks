@@ -27,17 +27,17 @@
                             </div>
                         </div>
 
-<!--                        <div class="col-md-3">-->
-<!--                            <div class="form-group">-->
-<!--                                <label for="">Country</label>-->
-<!--                                <select class="form-control" v-model="filterModel.country_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <select class="form-control" v-model="filterModel.country_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
@@ -285,7 +285,7 @@
                     </div>
 
                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
+                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
                     <button v-if="user.isAdmin ||
                     user.role_id == 8"
                         class="btn btn-primary float-right" :disabled="isGenerating" @click="generateBestPrices">
@@ -382,8 +382,8 @@
                                 Reminder: The uploaded data is for Seller -List Publisher.
                                 The columns for the CSV file are URL, Price, Inc Article, Seller ID,
                                 Accept C&B, KW Anchor,
-                                Language, Topic and
-                                Country. The
+                                Language, Topic,
+                                Country and KW Anchor. The
                                 columns should be separated using comma (,).
                                 Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
                                 Keyword Anchor yes if accept KW no if only |URL|.
@@ -630,17 +630,23 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label for="">Country</label>-->
-<!--                                    <select class="form-control" v-model="updateModel.country_id">-->
-<!--                                        <option value="">Select Country</option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+
+                                    <select class="form-control" v-model="updateModel.country_id"  @change="selectCountry('update')">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -838,18 +844,24 @@
                                 </div>
                             </div>
 
-<!--                            <div class="col-md-6">-->
-<!--                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">-->
-<!--                                    <label for="">Country</label>-->
-<!--                                    <select class="form-control" v-model="addModel.country_id">-->
-<!--                                        <option value="">Select Country</option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
+                                    <label for="">Country</label>
+
+                                    <select class="form-control" v-model="addModel.country_id" @change="selectCountry('add')">
+                                        <option value="">Select Country</option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.continent_id}" class="form-group">
@@ -1143,17 +1155,23 @@
                                     </select>
                                 </div>
                             </div>
-<!--                            <div class="col-md-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label>Country</label>-->
-<!--                                    <select class="form-control" v-model="updateMultiple.country">-->
-<!--                                        <option value=""></option>-->
-<!--                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Country</label>
+
+                                    <select class="form-control" v-model="updateMultiple.country" @change="selectCountry('multi')">
+                                        <option value=""></option>
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_info }}
+                                    </small>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Continent</label>
@@ -1279,7 +1297,7 @@
                     kw_anchor: '',
                     casino_sites: '',
                     price: '',
-                    // country: '',
+                    country: '',
                     continent: '',
                     language: '',
                     qc_validation: '',
@@ -1303,7 +1321,7 @@
                     casino_sites: '',
                     topic: '',
                     kw_anchor: '',
-                    // country_id: '',
+                    country_id: '',
                     continent_id: '',
                     // team_in_charge: '',
                     // team_in_charge_old: '',
@@ -1313,7 +1331,7 @@
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
-                    // country_id: this.$route.query.country_id || '',
+                    country_id: this.$route.query.country_id || '',
                     continent_id: this.$route.query.continent_id
                         ? Array.isArray(this.$route.query.continent_id)
                             ? this.$route.query.continent_id.map(function (val) {
@@ -1365,7 +1383,7 @@
                     inc_article: '',
                     casino_sites: '',
                     topic: '',
-                    // country_id: '',
+                    country_id: '',
                     continent_id: '',
                     kw_anchor: '',
                 },
@@ -1428,7 +1446,9 @@
                 },
                 isAccountInvalid: false,
                 isAccountPaymentNotComplete: false,
-                isGenerating: false
+                isGenerating: false,
+
+                country_continent_info: '',
             }
         },
 
@@ -1729,6 +1749,33 @@
         },
 
         methods: {
+            clearCountryContinentInfo() {
+                this.country_continent_info = '';
+            },
+
+            selectCountry(mod) {
+                let model_id = mod === 'add'
+                    ? this.addModel.country_id
+                    : mod === 'update'
+                        ? this.updateModel.country_id
+                        : this.updateMultiple.country
+
+                let index = this.listCountryAll.data.map(e => e.id).indexOf(model_id);
+                let continent_id = this.listCountryAll.data[index].continent_id ?? '';
+
+                if (mod === 'add') {
+                    this.addModel.continent_id = continent_id;
+                } else if(mod === 'update') {
+                    this.updateModel.continent_id = continent_id;
+                } else {
+                    this.updateMultiple.continent = continent_id
+                }
+
+                this.country_continent_info = continent_id === ''
+                    ? 'Country continent is not set. Continent input will not be filled automatically'
+                    : '';
+            },
+
             async generateBestPrices() {
                 await
                     this.$store.dispatch('generateBestPrices');
@@ -1818,7 +1865,7 @@
 
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            // country_id: this.filterModel.country_id,
+                            country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -1848,7 +1895,7 @@
                 }else{
                     await this.$store.dispatch('getListPublisher', {
                         params: {
-                            // country_id: this.filterModel.country_id,
+                            country_id: this.filterModel.country_id,
                             continent_id: this.filterModel.continent_id,
                             search: this.filterModel.search,
                             language_id: this.filterModel.language_id,
@@ -2084,6 +2131,7 @@
             },
 
             doMultipleEdit() {
+                this.clearCountryContinentInfo();
                 this.updateMultiple = {
                     language: '',
                     country: '',
@@ -2100,7 +2148,7 @@
                 axios.post('/api/update-multiple-publisher',{
                     ids: this.checkIds,
                     language: this.updateMultiple.language,
-                    // country: this.updateMultiple.country,
+                    country: this.updateMultiple.country,
                     continent_id: this.updateMultiple.continent,
                     price: this.updateMultiple.price,
                     casino_sites: this.updateMultiple.casino_sites,
@@ -2165,7 +2213,7 @@
                         price: '',
                         casino_sites: '',
                         topic: '',
-                        // country_id: '',
+                        country_id: '',
                         continent_id: '',
                         kw_anchor: '',
                     }
@@ -2246,7 +2294,7 @@
             clearSearch() {
                 this.filterModel = {
                     continent_id: '',
-                    // country_id: '',
+                    country_id: '',
                     search: '',
                     language_id: '',
                     inc_article: '',
@@ -2336,6 +2384,7 @@
 
             doUpdate(publish) {
                 this.clearMessageform()
+                this.clearCountryContinentInfo()
                 let that = JSON.parse(JSON.stringify(publish))
 
                 let topic = '';
@@ -2368,7 +2417,7 @@
                     topic: topic,
                     casino_sites: that.casino_sites.toLowerCase(),
                     kw_anchor: that.kw_anchor.toLowerCase(),
-                    // country_id: that.country_id,
+                    country_id: that.country_id,
                     continent_id: that.continent_id,
                     // team_in_charge: that.team_in_charge,
                     user_id: that.user_id,
@@ -2405,7 +2454,7 @@
 
                 this.getPublisherList({
                     params: {
-                        // country_id: this.filterModel.country_id,
+                        country_id: this.filterModel.country_id,
                         continent_id: this.filterModel.continent_id,
                         search: this.filterModel.search,
                         language_id: this.filterModel.language_id,
@@ -2496,11 +2545,11 @@
                 let rows = this.user.isOurs === 0
                     ? ['URL', 'Price', 'Inc Article',
                        'Seller ID',
-                       'Accept C&B','Language', 'Topic',
+                       'Accept C&B','Language', 'Topic', 'Country',
                        'KW Anchor']
                     : ['URL', 'Price', 'Inc Article',
                        'Accept C&B', 'KW Anchor',
-                       'Language', 'Topic'];
+                       'Language', 'Topic', 'Country'];
 
                 headers.push(rows);
 
