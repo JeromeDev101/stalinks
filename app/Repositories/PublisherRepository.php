@@ -209,8 +209,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             });
         }
 
+//        if (isset($filter['country_id']) && !empty($filter['country_id'])) {
+//            $list = $list->where('publisher.country_id', $filter['country_id']);
+//        }
+
         if (isset($filter['country_id']) && !empty($filter['country_id'])) {
-            $list = $list->where('publisher.country_id', $filter['country_id']);
+            if (is_array($filter['country_id'])) {
+                $list->whereIn('publisher.country_id', $filter['country_id']);
+            } else {
+                $list->where('publisher.country_id', $filter['country_id']);
+            }
         }
 
         if (isset($filter['price_basis']) && !empty($filter['price_basis'])) {
