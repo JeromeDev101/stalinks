@@ -87,7 +87,7 @@ class ArticlesController extends Controller
         }
 
         if( isset($filter['search_article']) && $filter['search_article'] != ""){
-            $list->where('id', $filter['search_article']);
+            $list->where('article.id', $filter['search_article']);
         }
 
         if( isset($filter['language_id']) && $filter['language_id'] != ""){
