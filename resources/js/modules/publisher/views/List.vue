@@ -22,7 +22,7 @@
                                     label="name"
                                     placeholder="All"
                                     :options="listContinent.data"
-                                    :searchable="false"
+                                    :searchable="true"
                                     :reduce="continent => continent.id"/>
                             </div>
                         </div>
@@ -30,12 +30,20 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Country</label>
-                                <select class="form-control" v-model="filterModel.country_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                                <v-select
+                                    v-model="filterModel.country_id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :searchable="true"
+                                    :options="listCountryContinent.data"
+                                    :reduce="country => country.id"/>
+<!--                                <select class="form-control" v-model="filterModel.country_id">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
+<!--                                        {{ option.name }}-->
+<!--                                    </option>-->
+<!--                                </select>-->
                             </div>
                         </div>
 
@@ -1331,13 +1339,19 @@
                 isEnableBtn: true,
                 isPopupLoading: false,
                 filterModel: {
-                    country_id: this.$route.query.country_id || '',
                     continent_id: this.$route.query.continent_id
                         ? Array.isArray(this.$route.query.continent_id)
                             ? this.$route.query.continent_id.map(function (val) {
                                 return parseInt(val, 10);
                             })
                             : [parseInt(this.$route.query.continent_id)]
+                        : '',
+                    country_id: this.$route.query.country_id
+                        ? Array.isArray(this.$route.query.country_id)
+                            ? this.$route.query.country_id.map(function (val) {
+                                return parseInt(val, 10);
+                            })
+                            : [parseInt(this.$route.query.country_id)]
                         : '',
                     search: this.$route.query.search || '',
                     language_id: this.$route.query.language_id || '',
