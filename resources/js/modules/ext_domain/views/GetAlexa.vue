@@ -56,8 +56,18 @@
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td>{{ ext.country.name }}</td>
                                 <td><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
-                                <td style="max-width: 200px"><ol v-if="ext.email != '' && ext.email != null" class="pl-15"><li v-for="item in ext.email.split('|')" key="item">{{ item }}</li></ol></td>
-                                <td style="max-width: 200px" ><ol v-if="ext.email != '' && ext.facebook != null" class="pl-15"><li v-for="item in ext.facebook.split('|')" key="item"><a target="_blank" :href="item">{{ item }}<br/></a></li></ol></td>
+                                <td style="max-width: 200px">
+                                    <ol v-if="ext.email != '' && ext.email != null" class="pl-15">
+                                        <li v-for="item in ext.email.split('|')" key="item">{{ item }}</li>
+                                    </ol>
+                                </td>
+                                <td style="max-width: 200px" >
+                                    <ol v-if="ext.facebook != '' && ext.facebook != null" class="pl-15">
+                                        <li v-for="item in ext.facebook.split('|')" key="item">
+                                            <a target="_blank" :href="item">{{ item }}<br/></a>
+                                        </li>
+                                    </ol>
+                                </td>
                                 <td>{{ ext.alexa_rank }}</td>
                                 <td><span :class="['label', 'label-' + listStatusText[ext.status].label]">{{ listStatusText[ext.status].text }}</span></td>
                             </tr>
