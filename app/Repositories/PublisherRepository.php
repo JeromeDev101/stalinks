@@ -499,7 +499,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         Publisher::create([
                                             'user_id' => $id,
                                             'language_id' => $lang,
-                                            'country_id' => $count,
+                                            'continent_id' => $count->continent_id,
+                                            'country_id' => $count->id,
                                             'url' => $url_remove_http,
                                             'ur' => 0,
                                             'dr' => 0,
@@ -595,7 +596,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                             Publisher::create([
                                                 'user_id' => $seller_id ,
                                                 'language_id' => $lang,
-                                                'country_id' => $count,
+                                                'continent_id' => $count->continent_id,
+                                                'country_id' => $count->id,
                                                 'url' => $url_remove_http,
                                                 'ur' => 0,
                                                 'dr' => 0,
@@ -724,12 +726,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     }
 
     private function getCountry($country){
-        $id = 5;
-        $country = Country::where('name', 'like', '%'.$country.'%')->first();
-        if( $country ){
-            $id = $country->id;
-        }
-        return $id;
+        return Country::where('name', 'like', '%'.$country.'%')->first();
     }
 
     /**
