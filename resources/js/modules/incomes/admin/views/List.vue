@@ -50,7 +50,6 @@
                 <div class="box-header">
                     <h3 class="box-title">Incomes</h3>
 
-
                     <div class="input-group input-group-sm float-right" style="width: 100px">
                         <select name="" class="form-control float-right" @change="getListIncomesAdmin" v-model="filterModel.paginate" style="height: 37px;">
                             <option v-for="option in paginate" v-bind:value="option">
@@ -61,6 +60,34 @@
 
                     <button data-toggle="modal" data-target="#modal-setting-incomes" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
 
+
+                    <div class="d-flex justify-content-center">
+                        <div class="col">
+                            <h6>Seller Price:
+                                ${{listIncomesAdmin.seller_price_sum}}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Buyer Price:
+                                ${{listIncomesAdmin.buyer_price_sum}}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Fee Charges:
+                                $0.00</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Content Charges:
+                                $0.00</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Net Incomes:
+                                $0.00</h6>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="box-body no-padding">

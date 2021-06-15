@@ -27,9 +27,17 @@ class IncomesAdminController extends Controller
                 $list = $list->where('backlinks.live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
             }
         }
+        $sellerPrice = $list->sum('prices');
+        $buyerPrice = $list->sum('price');
+
 
         $list = $list->orderBy('id', 'desc')->paginate($paginate);
 
-        return response()->json($list);
+        $totals = collect([
+            'seller_price_sum' => number_format($sellerPrice, 2),
+            'buyer_price_sum' => number_format($buyerPrice, 2)
+        ]);
+
+        return response()->json($totals->merge($list));
     }
 }
