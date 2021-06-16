@@ -28,8 +28,9 @@
                         <button
                             v-if="user.registration.is_sub_account == 0 && user.registration.account_validation == 'valid'"
                             class="btn btn-round btn-success"
-                            data-toggle="modal" data-target="#modal-add-wallet-header"><i
-                            class="fa fa-plus"></i>
+                            data-toggle="modal"
+                            data-target="#modal-add-wallet-header"><i
+                            class="fa fa-plus"></i> Add Credit
                         </button>
                     </li>
 
