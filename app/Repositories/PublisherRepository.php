@@ -73,6 +73,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     HAVING COUNT(*) > 1
                     )temp'), 'publisher.url', 'temp.url')
                 ->orderBy('url', 'asc');
+        } else if(isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'no') {
+            $list->groupBy('url');
+            $list->havingRaw('COUNT(url) < 2');
+            $list->orderBy('url', 'asc');
         } else {
             $list->orderBy('created_at', 'desc');
         }
