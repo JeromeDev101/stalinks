@@ -1347,7 +1347,7 @@
 
                 this.updateModel = that
                 this.updateModel.seller_price = that.price;
-                this.updateModel.price = this.computePriceStalinks(that.price, that.inc_article);
+                this.updateModel.price = this.computePrice(that.price, that.inc_article);
                 this.updateModel.prices = this.updateModel.price
 
                 $('#modal-buy-update').modal({
