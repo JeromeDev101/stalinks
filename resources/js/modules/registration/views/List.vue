@@ -1812,6 +1812,12 @@ export default {
                     $(element).modal('hide');
 
                     this.getAccountList();
+                } else {
+                    swal.fire(
+                        'Error',
+                        'There are some errors while updating the account!',
+                        'error'
+                    );
                 }
             },
 
