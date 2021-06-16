@@ -50,9 +50,9 @@ class UpdateAccountRequest extends FormRequest
             'type' => [
                 'required'
             ],
-            'company_name' => [
-                'required_if:company_type,==,Company'
-            ],
+            // 'company_name' => [
+            //     'required_if:company_type,==,Company'
+            // ],
             'skype' => [
                 'nullable'
             ],

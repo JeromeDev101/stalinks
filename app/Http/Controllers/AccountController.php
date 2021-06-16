@@ -214,6 +214,10 @@ class AccountController extends Controller
         $inputs = $request->all();
         if($inputs['status'] == 'inactive') {
             $inputs['account_validation'] = 'invalid';
+        } else {
+            $request->validate([
+                'company_name' => ['required_if:company_type,==,Company']
+            ]);
         }
 
         if( $request->account_validation != 'invalid' ) {
@@ -660,7 +664,8 @@ class AccountController extends Controller
             $request->validate([
                 'writer_price' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
-                'id_payment_type' => 'required'
+                'id_payment_type' => 'required',
+                'company_name' => 'required_if:company_type,==,Company'
             ]);
         }
 
