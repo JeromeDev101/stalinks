@@ -368,6 +368,14 @@
                         'N/A':scope.row.users.username }}
                     </template>
 
+                    <template
+                        slot-scope="scope"
+                        slot="domainData">
+                        <a :href="'//' + scope.row.domain" target="_blank">
+                            {{ scope.row.domain }}
+                        </a>
+                    </template>
+
                     <template slot-scope="scope" slot="emailsData">
                         <div v-if="isCrawling" style="width: 100%; text-align: center;">
                             <img src="/images/row-loading.gif" alt="crawling">
@@ -1789,9 +1797,9 @@ export default {
                     isHidden: false
                 },
                 {
-                    prop : 'domain',
+                    prop : '_action',
                     name : 'URL',
-                    sortable: true,
+                    actionName : 'domainData',
                     width: 150,
                     isHidden: false
                 },
