@@ -644,7 +644,7 @@
 
                                     <select class="form-control" v-model="updateModel.country_id"  @change="selectCountry('update')">
                                         <option value="">Select Country</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in updateCountrySelect" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -858,7 +858,7 @@
 
                                     <select class="form-control" v-model="addModel.country_id" @change="selectCountry('add')">
                                         <option value="">Select Country</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in addCountrySelect" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1169,7 +1169,7 @@
 
                                     <select class="form-control" v-model="updateMultiple.country" @change="selectCountry('multi')">
                                         <option value=""></option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        <option v-for="option in multipleCountrySelect" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -1183,7 +1183,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Continent</label>
-                                    <select class="form-control" v-model="updateMultiple.continent">
+                                    <select class="form-control" v-model="updateMultiple.continent_id">
                                         <option value=""></option>
                                         <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
@@ -1306,7 +1306,7 @@
                     casino_sites: '',
                     price: '',
                     country: '',
-                    continent: '',
+                    continent_id: '',
                     language: '',
                     qc_validation: '',
                 },
@@ -1530,6 +1530,68 @@
             this.setDefaultSettings()
         },
 
+        watch: {
+            'addModel.continent_id': function() {
+                if (this.addModel.country_id != null
+                    && this.addModel.country_id !== ''
+                    && this.addModel.continent_id !== 0
+                    && this.addModel.continent_id !== '') {
+
+                    let filtered = this.listCountryAll.data.filter(item => item.continent_id === this.addModel.continent_id)
+                    let is_gone = filtered.some(el => el.id === this.addModel.country_id);
+                    let index = this.listCountryAll.data.map(e => e.id).indexOf(this.addModel.country_id);
+
+                    this.country_continent_info = is_gone
+                        ? ''
+                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+
+                    this.addModel.country_id = is_gone
+                        ? this.addModel.country_id
+                        : '';
+                }
+            },
+
+            'updateModel.continent_id': function() {
+                if (this.updateModel.country_id != null
+                    && this.updateModel.country_id !== ''
+                    && this.updateModel.continent_id !== 0
+                    && this.updateModel.continent_id !== '') {
+
+                    let filtered = this.listCountryAll.data.filter(item => item.continent_id === this.updateModel.continent_id)
+                    let is_gone = filtered.some(el => el.id === this.updateModel.country_id);
+                    let index = this.listCountryAll.data.map(e => e.id).indexOf(this.updateModel.country_id);
+
+                    this.country_continent_info = is_gone
+                        ? ''
+                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+
+                    this.updateModel.country_id = is_gone
+                        ? this.updateModel.country_id
+                        : '';
+                }
+            },
+
+            'updateMultiple.continent_id': function() {
+                if (this.updateMultiple.country != null
+                    && this.updateMultiple.country !== ''
+                    && this.updateMultiple.continent_id !== 0
+                    && this.updateMultiple.continent_id !== '') {
+
+                    let filtered = this.listCountryAll.data.filter(item => item.continent_id === this.updateMultiple.continent_id)
+                    let is_gone = filtered.some(el => el.id === this.updateMultiple.country);
+                    let index = this.listCountryAll.data.map(e => e.id).indexOf(this.updateMultiple.country);
+
+                    this.country_continent_info = is_gone
+                        ? ''
+                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+
+                    this.updateMultiple.country = is_gone
+                        ? this.updateMultiple.country
+                        : '';
+                }
+            }
+        },
+
         computed:{
             ...mapState({
                 tblPublisherOpt: state => state.storePublisher.tblPublisherOpt,
@@ -1559,6 +1621,26 @@
                     ? this.listSellerIncharge.data
                     : this.listSeller.data;
             },
+
+            addCountrySelect() {
+                return (this.addModel.continent_id == null || this.addModel.continent_id === '' || this.addModel.continent_id === 0)
+                    ? this.listCountryAll.data
+                    : this.listCountryAll.data.filter(item => item.continent_id === this.addModel.continent_id)
+            },
+
+            updateCountrySelect() {
+                return (this.updateModel.continent_id == null || this.updateModel.continent_id === '' || this.updateModel.continent_id === 0)
+                    ? this.listCountryAll.data
+                    : this.listCountryAll.data.filter(item => item.continent_id === this.updateModel.continent_id)
+            },
+
+
+            multipleCountrySelect() {
+                return (this.updateMultiple.continent_id == null || this.updateMultiple.continent_id === '' || this.updateMultiple.continent_id === 0)
+                    ? this.listCountryAll.data
+                    : this.listCountryAll.data.filter(item => item.continent_id === this.updateMultiple.continent_id)
+            },
+
 
             tableConfig() {
                 return [
@@ -1774,20 +1856,22 @@
                         ? this.updateModel.country_id
                         : this.updateMultiple.country
 
-                let index = this.listCountryAll.data.map(e => e.id).indexOf(model_id);
-                let continent_id = this.listCountryAll.data[index].continent_id ?? '';
+                if (model_id) {
+                    let index = this.listCountryAll.data.map(e => e.id).indexOf(model_id);
+                    let continent_id = this.listCountryAll.data[index].continent_id ?? '';
 
-                if (mod === 'add') {
-                    this.addModel.continent_id = continent_id;
-                } else if(mod === 'update') {
-                    this.updateModel.continent_id = continent_id;
-                } else {
-                    this.updateMultiple.continent = continent_id
+                    if (mod === 'add') {
+                        this.addModel.continent_id = continent_id;
+                    } else if(mod === 'update') {
+                        this.updateModel.continent_id = continent_id;
+                    } else {
+                        this.updateMultiple.continent_id = continent_id;
+                    }
+
+                    this.country_continent_info = continent_id === ''
+                        ? 'Country continent is not set. Continent input will not be filled automatically'
+                        : '';
                 }
-
-                this.country_continent_info = continent_id === ''
-                    ? 'Country continent is not set. Continent input will not be filled automatically'
-                    : '';
             },
 
             async generateBestPrices() {
@@ -2149,6 +2233,7 @@
                 this.updateMultiple = {
                     language: '',
                     country: '',
+                    continent_id: '',
                     price: '',
                     casino_sites: '',
                     kw_anchor: '',
@@ -2163,7 +2248,7 @@
                     ids: this.checkIds,
                     language: this.updateMultiple.language,
                     country: this.updateMultiple.country,
-                    continent_id: this.updateMultiple.continent,
+                    continent_id: this.updateMultiple.continent_id,
                     price: this.updateMultiple.price,
                     casino_sites: this.updateMultiple.casino_sites,
                     kw_anchor: this.updateMultiple.kw_anchor,
