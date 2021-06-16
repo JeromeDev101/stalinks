@@ -901,7 +901,7 @@
                         name : 'Casino & Betting sites',
                         actionName: 'casinoSiteData',
                         width: 175,
-                        isHidden: true
+                        isHidden: !this.tblBuyOptions.casino_sites
                     },
                     {
                         prop : 'language_name',
@@ -915,7 +915,7 @@
                         name : 'Country',
                         sortable: true,
                         width: 120,
-                        isHidden: true
+                        isHidden: false
                     },
                     {
                         prop : '_action',
@@ -933,7 +933,7 @@
                     },
                     {
                         prop : 'is_https',
-                        name : 'Is Https?',
+                        name : 'Https',
                         sortable: true,
                         width: 200,
                         isHidden: false
@@ -978,7 +978,7 @@
                         name : 'Ratio',
                         actionName : 'ratioData',
                         width: 100,
-                        isHidden: false
+                        isHidden: !this.tblBuyOptions.ratio
                     },
                     {
                         prop : '_action',
@@ -1148,7 +1148,7 @@
                     this.tblBuyOptions.code_price = false;
                 }
 
-                this.tblBuyOptions.country = false;
+                // this.tblBuyOptions.country = false;
             },
 
             formatPrice(value) {

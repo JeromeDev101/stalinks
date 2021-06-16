@@ -32,7 +32,7 @@ const state = {
         code_comb: true,
         code_price: true,
         price_basis: true,
-        ratio: true,
+        ratio: false,
     },
 }
 
