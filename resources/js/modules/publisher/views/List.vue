@@ -219,6 +219,9 @@
                                               Duplicates</label>
                                 <select name=""
                                         class="form-control" v-model="filterModel.show_duplicates">
+                                    <option
+                                        value="">All
+                                    </option>
                                     <option value="no">
                                         No</option>
                                     <option value="yes">Yes</option>
@@ -1376,7 +1379,7 @@
                     qc_validation: this.$route.query.qc_validation || '',
                     show_duplicates:
                         this.$route.query.show_duplicates
-                        || 'no',
+                        || '',
                     account_validation: this.$route.query.account_validation || '',
                     domain_zone: this.$route.query.domain_zone || '',
                     is_https: this.$route.query.is_https || ''
