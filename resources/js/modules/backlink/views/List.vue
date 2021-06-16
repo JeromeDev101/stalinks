@@ -334,7 +334,7 @@
                     <div class="modal-body relative">
                         <form class="row" action="">
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-show="user.role_id != 5">
                                 <div class="form-group">
                                     <label>Seller name</label>
                                     <input type="text" v-model="modelBaclink.username" :disabled="true" class="form-control" required="required" >
