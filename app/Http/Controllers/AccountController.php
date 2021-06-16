@@ -167,10 +167,14 @@ class AccountController extends Controller
             return $query->where(function ($query2) use ($user_id) {
                 $query2->whereHas('team_in_charge', function ($sub) use( $user_id ) {
                     $sub->where('registration.team_in_charge', $user_id)
-                    ->orWhere('users.status', 'inactive');
+                    ->orWhere(function($query) use ($user_id) {
+                        $query->whereIn('type', ['Seller', 'Writer'])
+                            ->where('users.status', 'inactive');
+                    });
                 })->orWhere(function($query) {
                     $query->whereNull('team_in_charge')
-                        ->where('type', 'Seller');
+                        ->where('type', 'Seller')
+                        ->orWhere('type', 'Writer');
                 });
             });
         })
@@ -659,7 +663,7 @@ class AccountController extends Controller
                 'id_payment_type' => 'required'
             ]);
         }
-        
+
 
         if (!$registered) {
             return response()->json(['success' => false], 422);
