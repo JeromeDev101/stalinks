@@ -19,6 +19,9 @@ class WalletSummaryController extends Controller
             DB::raw('SUM(CASE WHEN wallet_transactions.admin_confirmation = "Paid" THEN wallet_transactions.amount_usd ELSE NULL END) as deposit'),
         ];
 
+        $checkAdmin = Auth::user()->type != 10 ? true: false;
+        $user_id = Auth::user()->id;
+
         $user_buyers = User::select($columns)
                     ->where('role_id', 5)
                     ->leftjoin('registration', 'users.email', '=', 'registration.email')
@@ -28,6 +31,9 @@ class WalletSummaryController extends Controller
                     ->where('registration.is_sub_account', 0)
                     ->when(isset($request->buyer), function($query) use ($request) {
                         return $query->where('users.id', $request->buyer);
+                    })
+                    ->when($checkAdmin, function($query) use ($user_id) {
+                        return $query->where('users.id', $user_id);
                     })
                     ->having('deposit', '>', 0)
                     ->groupBy('users.id', 'users.name', 'users.username')
