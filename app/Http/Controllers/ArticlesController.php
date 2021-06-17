@@ -46,6 +46,8 @@ class ArticlesController extends Controller
             'registration.writer_price',
         ];
 
+        $isExtWriter = (Auth::user()->role_id == 4 && Auth::user()->isOurs == 1) ? true:false;
+
         $list = Article::select($columns)
                         ->leftjoin('users', 'article.id_writer', '=', 'users.id')
                         ->leftjoin('registration', 'users.email', '=' , 'registration.email')
@@ -111,6 +113,8 @@ class ArticlesController extends Controller
             'backlinks.status as backlink_status'
         ];
 
+        $isExtWriter = (Auth::user()->role_id == 4 && Auth::user()->isOurs == 1) ? true:false;
+
         $list = Article::select($columns)
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
                         ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
@@ -123,6 +127,11 @@ class ArticlesController extends Controller
                             }])
                             ->with('user:id,name');
                         }])
+                        ->when($isExtWriter, function($query) use ($user) {
+                            return $query->where(function($sub) use ($user) {
+                                $sub->whereNull('id_writer')->orWhere('id_writer', $user->id);
+                            });
+                        })
                         // ->where('backlinks.status' ,'!=', 'Canceled')
                         // ->where('backlinks.status' ,'!=', 'Issue')
                         ->orderBy('id', 'desc');
