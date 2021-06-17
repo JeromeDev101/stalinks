@@ -79,13 +79,13 @@ class Publisher extends Model
     }
 
     public function getCustomNewPricesAttribute() {
-        return $this->price;
-        // return $this->computePriceStalinks($this->price, $this->inc_article);
+        // return $this->price;
+        return $this->computePriceStalinks($this->price, $this->inc_article);
     }
 
     public function getCustomNewPriceAttribute() {
-        return $this->price;
-        // return $this->computePrice($this->price, $this->inc_article);
+        // return $this->price;
+        return $this->computePrice($this->price, $this->inc_article);
     }
 
     public function user() {
