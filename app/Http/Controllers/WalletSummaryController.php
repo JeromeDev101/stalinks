@@ -42,48 +42,48 @@ class WalletSummaryController extends Controller
         foreach($user_buyers as $key => $user_buyer) {
             $user_buyers[$key]['orders'] = $this->getTotalPurchase($user_buyer->id, 'orders');
             $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live');
-            $user_buyers[$key]['order_cancel'] = $this->getTotal($user_buyer->id, 'order_cancel');
+            $user_buyers[$key]['order_cancel'] = $this->getTotalPurchase($user_buyer->id, 'order_cancel');
             $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live');
-            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotal($user_buyer->id, 'valid_orders');
-            $user_buyers[$key]['valid_orders'] = $this->getTotal($user_buyer->id, 'valid_orders');
+            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders');
+            $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders');
 
         }
 
         return $user_buyers;
     }
 
-    private function getTotal($user_id, $type) {
+    // private function getTotal($user_id, $type) {
 
-        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
-        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+    //     $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+    //     $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
-        $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
-                            ->where(function($query) use ($type) {
-                                if( $type == 'order_live' ) {
-                                    return $query->where('status', 'Live')
-                                                ->where('payment_status', 'Paid');
-                                }
+    //     $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
+    //                         ->where(function($query) use ($type) {
+    //                             if( $type == 'order_live' ) {
+    //                                 return $query->where('status', 'Live')
+    //                                             ->where('payment_status', 'Paid');
+    //                             }
                                 
-                                if( $type == 'order_cancel' ) {
-                                    return $query->where('status', 'Canceled');
-                                }
+    //                             if( $type == 'order_cancel' ) {
+    //                                 return $query->where('status', 'Canceled');
+    //                             }
 
-                                if( $type == 'valid_orders' ) {
-                                    return $query->whereIn('status', ['Live', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue']);
-                                }
-                            })
-                            ->where(function($query) use ($sub_buyer_ids, $user_id){
-                                $UserId[] = $user_id;
-                                if(count($sub_buyer_ids) > 0) {
-                                    return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
-                                } else{
-                                    return $query->whereIn('user_id', $UserId);
-                                }
-                            })
-                            ->get();
+    //                             if( $type == 'valid_orders' ) {
+    //                                 return $query->whereIn('status', ['Live', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue']);
+    //                             }
+    //                         })
+    //                         ->where(function($query) use ($sub_buyer_ids, $user_id){
+    //                             $UserId[] = $user_id;
+    //                             if(count($sub_buyer_ids) > 0) {
+    //                                 return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+    //                             } else{
+    //                                 return $query->whereIn('user_id', $UserId);
+    //                             }
+    //                         })
+    //                         ->get();
 
-        return isset($total_paid[0]['total_paid']) ? floatval($total_paid[0]['total_paid']) : 0;
-    }
+    //     return isset($total_paid[0]['total_paid']) ? floatval($total_paid[0]['total_paid']) : 0;
+    // }
 
     private function getTotalPurchase($user_id, $type) {
 
