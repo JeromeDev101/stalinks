@@ -94,7 +94,7 @@
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
-                                    <td><b>Writer Price</b></td>
+                                    <td><b>Writer Price (USD)</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
                                             <input type="number" v-model="user.user_type.writer_price" class="form-control" value="" required="required" placeholder="Enter Price">
