@@ -169,7 +169,8 @@ class Publisher extends Model
             }
         }
 
-        $selling_price = floatval($selling_price);
+        $selling_price = round(floatval($selling_price));
+//        $selling_price = floatval($selling_price);
 
         return $selling_price;
     }
@@ -212,7 +213,7 @@ class Publisher extends Model
 
         }
 
-        $selling_price = ceil(floatval($selling_price));
+        $selling_price = round(floatval($selling_price));
 
         return $selling_price;
     }

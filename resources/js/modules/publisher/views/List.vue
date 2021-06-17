@@ -1753,7 +1753,7 @@
                     },
                     {
                         prop : 'is_https',
-                        name : 'Is Https?',
+                        name : 'Https',
                         sortable: true,
                         width: 100,
                         isHidden: false
@@ -1947,7 +1947,7 @@
                     this.tblPublisherOpt.in_charge = true;
                 }
 
-                this.tblPublisherOpt.country = false;
+                // this.tblPublisherOpt.country = false;
             },
 
             async getTeamInCharge(){

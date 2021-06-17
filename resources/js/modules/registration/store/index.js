@@ -138,6 +138,7 @@ const actions= {
                 commit(MESSAGE_FORMS, { action: 'updated_account', message: 'Saved !', errors: {} });
             }
             else if (response.response.status === 422) {
+                response.response.data.action = 'update_failed';
                 commit(MESSAGE_FORMS, response.response.data);
             }
         } catch (e) {
