@@ -573,7 +573,7 @@
 
                             <div class="col-sm-6" >
                                 <div class="form-group">
-                                    <label>Price <span class="text-danger">*</span></label>
+                                    <label>Price (USD)<span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
@@ -857,7 +857,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Price <span class="text-danger">*</span></label>
+                                    <label>Price (USD)<span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
