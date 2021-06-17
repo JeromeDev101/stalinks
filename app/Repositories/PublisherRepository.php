@@ -50,7 +50,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'B.username AS in_charge',
-            'B.id AS team_in_charge',
+            'B.id AS team_in_charge'
         ];
         $list = Publisher::select($columns)
                 ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
@@ -74,9 +74,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     )temp'), 'publisher.url', 'temp.url')
                 ->orderBy('url', 'asc');
         } else if(isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'no') {
-            $list->groupBy('url');
-            $list->havingRaw('COUNT(url) < 2');
-            $list->orderBy('url', 'asc');
+            $validFilter = isset($filter['valid']) ? 'AND valid IN ('. implode(',', implode_array_to_strings($filter['valid'])) .')' : '';
+
+            $list = $list->join(DB::raw('(
+                    SELECT url, valid
+                    FROM publisher
+                    WHERE deleted_at IS NULL
+                    GROUP BY url
+                    HAVING COUNT(*) < 2 '. $validFilter .'
+                    )temp'), 'publisher.url', 'temp.url')
+                ->orderBy('url', 'asc');
         } else {
             $list->orderBy('created_at', 'desc');
         }
