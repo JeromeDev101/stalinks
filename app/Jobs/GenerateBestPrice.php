@@ -114,10 +114,6 @@ class GenerateBestPrice implements ShouldQueue
                         //Filter out best price to other URLs
                         $invalidIds = $publisher->whereNotIn('id', [$bestPrice->id])->pluck('id');
 
-                        if ($url == 'clementcycling.com') {
-                            \Log::debug('HIT: ' . $publisher);
-                        }
-
                         //Set non-best price to invalid
                         Publisher::whereIn('id', $invalidIds)->update([
                             'valid' => 'invalid'
@@ -131,6 +127,18 @@ class GenerateBestPrice implements ShouldQueue
                         }
                     }
                 }
+            }
+        }
+
+        $nonDuplicates = Publisher::select('url')->groupBy('url')->havingRaw('count(*) < 2')->get()->pluck('url');
+
+        foreach ($nonDuplicates as $url) {
+            $publisher = Publisher::where('url', $url)->first();
+
+            if ($publisher && $publisher->valid == 'invalid' && $publisher->user && $publisher->user->registration && $publisher->user->registration->account_validation == 'valid') {
+                $publisher->update([
+                    'valid' => 'valid'
+                ]);
             }
         }
 
