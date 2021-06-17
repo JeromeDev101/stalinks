@@ -30,22 +30,6 @@ class MailgunController extends Controller
 
     public function send(Request $request)
     {
-        if($request->attachment == "undefined" )
-        {
-            $atth = null;
-        }else{
-//            $atth = [
-//                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
-//            ];
-
-            if (is_array($request->attachment)) {
-                foreach ($request->attachment as $att) {
-                    $atth[] = array('filePath'=>$att->getRealPath(),'filename'=>$att->getClientOriginalName());
-                }
-            } else {
-                $atth = null;
-            }
-        }
 
         // check if email is a string or json object
 
@@ -72,6 +56,23 @@ class MailgunController extends Controller
         // if ($validator->fails()) {
         //     return response()->json($validator->messages(),422);
         // }
+
+        if($request->attachment == "undefined")
+        {
+            $atth = null;
+        }else{
+//            $atth = [
+//                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
+//            ];
+
+            if (is_array($request->attachment)) {
+                foreach ($request->attachment as $att) {
+                    $atth[] = array('filePath'=>$att->getRealPath(),'filename'=>$att->getClientOriginalName());
+                }
+            } else {
+                $atth = null;
+            }
+        }
 
         $email_to = $request->email;
 
