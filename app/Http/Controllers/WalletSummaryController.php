@@ -40,7 +40,7 @@ class WalletSummaryController extends Controller
                     ->get();
 
         foreach($user_buyers as $key => $user_buyer) {
-            $user_buyers[$key]['orders'] = $this->getTotal($user_buyer->id, 'orders');
+            $user_buyers[$key]['orders'] = $this->getTotalPurchase($user_buyer->id, 'orders');
             $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live');
             $user_buyers[$key]['order_cancel'] = $this->getTotal($user_buyer->id, 'order_cancel');
             $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live');
