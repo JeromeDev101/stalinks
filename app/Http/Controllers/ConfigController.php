@@ -10,6 +10,8 @@ use App\Models\Formula;
 use App\Models\Language;
 use App\Models\ExtDomain;
 use App\Models\Country;
+use App\Models\Publisher;
+use App\Jobs\PriceBasisJob;
 
 class ConfigController extends Controller
 {
@@ -206,6 +208,11 @@ class ConfigController extends Controller
         }
 
         return response()->json($emails, 200);
+    }
+
+    public function updatePriceBasis()
+    {
+        PriceBasisJob::dispatch();
     }
 
 }
