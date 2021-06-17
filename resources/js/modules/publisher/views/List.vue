@@ -219,6 +219,9 @@
                                               Duplicates</label>
                                 <select name=""
                                         class="form-control" v-model="filterModel.show_duplicates">
+                                    <option
+                                        value="">All
+                                    </option>
                                     <option value="no">
                                         No</option>
                                     <option value="yes">Yes</option>
@@ -329,6 +332,17 @@
                                                 @click="downloadTemplate">
                                                 <i class="fa fa-download"></i>
                                             </button>
+
+                                            <export-excel
+                                                name="master_list.xls"
+                                                worksheet="My Worksheet"
+                                                class="btn btn-primary btn-flat"
+                                                :data=masterListDataMethod()>
+
+                                                <i class="fa fa-list"></i>
+                                                Download List
+
+                                            </export-excel>
                                         </div>
                                     </div>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
@@ -1376,7 +1390,7 @@
                     qc_validation: this.$route.query.qc_validation || '',
                     show_duplicates:
                         this.$route.query.show_duplicates
-                        || 'no',
+                        || '',
                     account_validation: this.$route.query.account_validation || '',
                     domain_zone: this.$route.query.domain_zone || '',
                     is_https: this.$route.query.is_https || ''
@@ -1634,13 +1648,11 @@
                     : this.listCountryAll.data.filter(item => item.continent_id === this.updateModel.continent_id)
             },
 
-
             multipleCountrySelect() {
                 return (this.updateMultiple.continent_id == null || this.updateMultiple.continent_id === '' || this.updateMultiple.continent_id === 0)
                     ? this.listCountryAll.data
                     : this.listCountryAll.data.filter(item => item.continent_id === this.updateMultiple.continent_id)
             },
-
 
             tableConfig() {
                 return [
@@ -1845,6 +1857,34 @@
         },
 
         methods: {
+            masterListDataMethod() {
+                let obj = [];
+                let countries = this.listCountryAll.data.map(country => country.name);
+                let languages = this.listLanguages.data.map(language => language.name);
+                let listTopics = this.topic;
+
+                // get all country name
+                for (let i = 0; i < countries.length; i++) {
+                    obj[i] = {
+                        country: countries[i]
+                    }
+                }
+
+                // add language
+                for (let i = 0; i < languages.length; i++) {
+                    obj[i].language = languages[i]
+                }
+
+                // add topics
+                if (obj.length) {
+                    for (let i = 0; i < listTopics.length; i++) {
+                        obj[i].topic = listTopics[i]
+                    }
+                }
+
+                return obj;
+            },
+
             clearCountryContinentInfo() {
                 this.country_continent_info = '';
             },
