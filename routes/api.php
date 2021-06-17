@@ -294,6 +294,5 @@ Route::get('url-prospect-email-extraction', 'ConfigController@urlProspectEmailEx
 Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp');
 
 
-// updating prices
-// Route::name('updating-price')->get('/update-price', 'PublisherController@updatePrice');
-Route::name('get-price-from-publisher')->get('/get-price-from-publisher', 'PublisherController@getPrice');
+// updating price basis
+Route::name('update-price-basis-publisher')->get('/update-price-basis-publisher', 'ConfigController@updatePriceBasis');
