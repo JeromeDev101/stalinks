@@ -36,7 +36,7 @@
                                     label="name"
                                     placeholder="All"
                                     :searchable="true"
-                                    :options="listCountryContinent.data"
+                                    :options="filterCountrySelect"
                                     :reduce="country => country.id"/>
 <!--                                <select class="form-control" v-model="filterModel.country_id">-->
 <!--                                    <option value="">All</option>-->
@@ -44,6 +44,11 @@
 <!--                                        {{ option.name }}-->
 <!--                                    </option>-->
 <!--                                </select>-->
+
+                                <small class="font-italic text-primary" v-if="country_continent_filter_info">
+                                    <i class="fa fa-exclamation-circle"></i>
+                                    {{ country_continent_filter_info }}
+                                </small>
                             </div>
                         </div>
 
@@ -1477,6 +1482,7 @@
                 isGenerating: false,
 
                 country_continent_info: '',
+                country_continent_filter_info: '',
             }
         },
 
@@ -1545,6 +1551,43 @@
         },
 
         watch: {
+            'filterModel.continent_id': function() {
+                if (this.filterModel.country_id != null
+                    && this.filterModel.country_id !== ''
+                    && this.filterModel.continent_id !== 0
+                    && this.filterModel.continent_id !== ''
+                    && this.filterModel.country_id.length !== 0
+                    && this.filterModel.continent_id.length !== 0
+                    && this.filterModel.continent_id.includes(0) === false) {
+
+                    // get all the countries within the selected continent
+                    let filtered = this.listCountryContinent.data
+                        .filter(item => this.filterModel.continent_id
+                            .includes(item.continent_id))
+
+                    // extract id to array
+                    let continentCountries = filtered.map(e => e.id);
+
+                    // check if every id of country is included on the filtered countries according to continent
+                    let is_gone = this.filterModel.country_id.every( country => continentCountries.includes(country) );
+
+                    // extract id of removed countries
+                    let removedCountries = this.filterModel.country_id.filter(e => !continentCountries.includes(e))
+
+                    // remove id of country filter value that is removed from filtered countries via continent
+                    let filteredCountryIds = this.filterModel.country_id.filter(e => !removedCountries.includes(e))
+
+                    // display message
+                    this.country_continent_filter_info = is_gone
+                        ? ''
+                        : 'Some selected countries that were not within the selected continent(s) are removed.';
+
+                    this.filterModel.country_id = is_gone
+                        ? this.filterModel.country_id
+                        : filteredCountryIds.length !== 0 ? filteredCountryIds : '';
+                }
+            },
+
             'addModel.continent_id': function() {
                 if (this.addModel.country_id != null
                     && this.addModel.country_id !== ''
@@ -1634,6 +1677,17 @@
                 return this.user.role_id == 6 && this.user.isOurs == 0
                     ? this.listSellerIncharge.data
                     : this.listSeller.data;
+            },
+
+            filterCountrySelect() {
+                return (this.filterModel.continent_id == null
+                    || this.filterModel.continent_id === ''
+                    || this.filterModel.continent_id === 0
+                    || this.filterModel.continent_id.length === 0
+                    || this.filterModel.continent_id.includes(0))
+
+                    ? this.listCountryContinent.data
+                    : this.listCountryContinent.data.filter(item => this.filterModel.continent_id.includes(item.continent_id))
             },
 
             addCountrySelect() {
@@ -2460,6 +2514,8 @@
                     is_https : ''
                 }
 
+                this.country_continent_filter_info = '';
+                
                 this.getPublisherList({
                     params: this.filterModel
                 });
