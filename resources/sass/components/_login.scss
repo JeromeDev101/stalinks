@@ -3,6 +3,8 @@
     background-size: cover;
     height: 100vh;
     position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     &__login {
         padding: 20px 10px 10px 10px;
