@@ -37,7 +37,7 @@ class GenerateBestPrice implements ShouldQueue
     {
         BestPriceGenerator::create([
             'user_id' => $this->userId,
-            'status' => 'start'
+            'status'  => 'start'
         ]);
 
         $this->generateBestPriceStart();
@@ -46,7 +46,7 @@ class GenerateBestPrice implements ShouldQueue
 
         //Loop through each duplicate url
         foreach ($duplicates as $url) {
-            $url = preg_replace('/\s+/', '', $url);
+            $url       = preg_replace('/\s+/', '', $url);
             $publisher = Publisher::with('user.registration')->where('url', 'like', '%' . $url . '%')->get();
 
             //If duplicates has both Yes and No in inc_article field
@@ -140,13 +140,29 @@ class GenerateBestPrice implements ShouldQueue
                     'valid' => 'valid'
                 ]);
             }
+
+            if (!$publisher || !$publisher->user || !$publisher->user->registration) {
+                continue;
+            }
+
+            if (in_array($publisher->user->registration->account_validation, [
+                'valid',
+                'processing'
+            ])) {
+                $publisher->update([
+                    'valid' => 'valid'
+                ]);
+            } else {
+                $publisher->update([
+                    'valid' => 'invalid'
+                ]);
+            }
         }
 
         BestPriceGenerator::create([
             'user_id' => $this->userId,
-            'status' => 'end'
+            'status'  => 'end'
         ]);
-
 
         //Notify buyers
         $this->generateBestPriceEnd();
