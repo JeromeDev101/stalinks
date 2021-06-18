@@ -1,6 +1,7 @@
 .homepage-login {
     background: url($image-path + 'background-login2.jpg');
-    background-size: cover;
+    background-size: contain;
+    background-position: center;
     height: 100vh;
     position: relative;
     overflow-y: auto;
