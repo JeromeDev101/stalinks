@@ -68,6 +68,7 @@ class BuyController extends Controller
                         ->where('buyer_purchased.user_id_buyer', $user->id);
                 })
                 ->whereNotNull('users.id') // to remove all seller's URL that deleted
+                ->where('registration.account_validation', 'valid')
                 ->where('publisher.valid', 'valid')
                 ->where('publisher.qc_validation', 'yes')
                 ->whereNotNull('publisher.href_fetched_at');
