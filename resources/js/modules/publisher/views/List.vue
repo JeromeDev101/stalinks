@@ -436,6 +436,7 @@
                 </div>
 
                 <div class="box-body no-padding" style="overflow:auto!important;">
+                
                     <div class="col-md-2 my-3">
 
                         <div class="input-group">
@@ -463,7 +464,12 @@
                                     <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
                                 </div>
                             </div>
+
                         </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <Sort :data="['URL', 'Seller']"></Sort>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1309,10 +1315,12 @@
     import axios from 'axios';
     import VueVirtualTable from 'vue-virtual-table';
     import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+    import Sort from '@/components/sort/Sort';
 
     export default {
         components: {
             VueVirtualTable,
+            Sort,
         },
         name: '',
         mixins: [csvTemplateMixin],
