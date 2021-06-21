@@ -1433,7 +1433,8 @@
                         || '',
                     account_validation: this.$route.query.account_validation || '',
                     domain_zone: this.$route.query.domain_zone || '',
-                    is_https: this.$route.query.is_https || ''
+                    is_https: this.$route.query.is_https || '',
+                    sort: ''
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1521,29 +1522,119 @@
 
                 sort_options: [
                     {
+                        name: 'Uploaded',
+                        sort: '',
+                        column: 'created_at'
+                    },
+                    {
+                        name: 'Updated',
+                        sort: '',
+                        column: 'updated_at'
+                    },
+                    {
+                        name: 'Language',
+                        sort: '',
+                        column: 'languages.name'
+                    },
+                    {
+                        name: 'Country',
+                        sort: '',
+                        column: 'countries.name'
+                    },
+                    {
+                        name: 'Continent',
+                        sort: '',
+                        column: 'publisher_continent.name'
+                    },
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'A.username'
+                    },
+                    {
+                        name: 'Valid',
+                        sort: '',
+                        column: 'valid'
+                    },
+                    {
+                        name: 'QC Valid',
+                        sort: '',
+                        column: 'qc_validation'
+                    },
+                    {
                         name: 'URL',
                         sort: '',
-                        column: 'domain'
+                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')'
                     },
                     {
-                        name: 'Seller',
+                        name: 'HTTPS',
                         sort: '',
-                        column: 'seller'
-                    },
-                    {
-                        name: 'Price',
-                        sort: '',
-                        column: 'price'
+                        column: 'is_https'
                     },
                     {
                         name: 'Price',
                         sort: '',
-                        column: 'price'
+                        column: 'cast(price as unsigned)'
                     },
                     {
-                        name: 'Seller',
+                        name: 'Price Basis',
                         sort: '',
-                        column: 'seller'
+                        column: 'price_basis'
+                    },
+                    {
+                        name: 'Include Article',
+                        sort: '',
+                        column: 'inc_article'
+                    },
+                    {
+                        name: 'KW Anchor',
+                        sort: '',
+                        column: 'kw_anchor'
+                    },
+                    {
+                        name: 'UR',
+                        sort: '',
+                        column: 'cast(ur as unsigned)'
+                    },
+                    {
+                        name: 'DR',
+                        sort: '',
+                        column: 'cast(dr as unsigned)'
+                    },
+                    {
+                        name: 'Backlinks',
+                        sort: '',
+                        column: 'cast(backlinks as unsigned)'
+                    },
+                    {
+                        name: 'Ref Domain',
+                        sort: '',
+                        column: 'cast(ref_domain as unsigned)'
+                    },
+                    {
+                        name: 'Org Keywords',
+                        sort: '',
+                        column: 'cast(org_keywords as unsigned)'
+                    },
+                    {
+                        name: 'Org Traffic',
+                        sort: '',
+                        column: 'cast(org_traffic as unsigned)'
+                    },
+                    {
+                        name: 'Topic',
+                        sort: '',
+                        column: 'topic'
+                    },
+                    {
+                        name: 'In-charge',
+                        sort: '',
+                        column: 'B.username'
+                    },
+                    {
+                        name: 'C&B Sites',
+                        sort: '',
+                        column: 'casino_sites'
                     },
                 ]
             }
@@ -1975,7 +2066,8 @@
 
         methods: {
             sortPublisher(data) {
-                console.log(data)
+                this.filterModel.sort = data.filter(item => item.sort !== '')
+                this.getPublisherList();
             },
 
             masterListDataMethod() {
@@ -2148,7 +2240,8 @@
                             account_validation: this.filterModel.account_validation,
                             domain_zone:
                             this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https
+                            is_https: this.filterModel.is_https,
+                            sort: this.filterModel.sort
                         }
                     });
                 }else{
@@ -2178,7 +2271,8 @@
                             account_validation: this.filterModel.account_validation,
                             domain_zone:
                             this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https
+                            is_https: this.filterModel.is_https,
+                            sort: this.filterModel.sort
                         }
                     });
                 }
@@ -2578,7 +2672,8 @@
                         endDate: null
                     },
                     domain_zone: '',
-                    is_https : ''
+                    is_https : '',
+                    sort: ''
                 }
 
                 this.country_continent_filter_info = '';
@@ -2738,7 +2833,8 @@
                         account_validation: this.filterModel.account_validation,
                         domain_zone:
                         this.filterModel.domain_zone,
-                        is_https: this.filterModel.is_https
+                        is_https: this.filterModel.is_https,
+                        sort: this.filterModel.sort
                     }
                 });
             },

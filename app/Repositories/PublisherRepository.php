@@ -85,7 +85,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     )temp'), 'publisher.url', 'temp.url')
                 ->orderBy('url', 'asc');
         } else {
-            $list->orderBy('created_at', 'desc');
+//            $list->orderBy('created_at', 'desc');
         }
 
         if( isset($filter['account_validation']) && !empty($filter['account_validation']) ){
@@ -260,6 +260,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             }
         }
 
+        if (isset($filter['sort']) && !empty($filter['sort'])) {
+            foreach ($filter['sort'] as &$sort) {
+                $sort = \GuzzleHttp\json_decode($sort);
+                $list = $list->orderByRaw("$sort->column $sort->sort");
+            }
+        } else {
+            $list->orderBy('created_at', 'desc');
+        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 
