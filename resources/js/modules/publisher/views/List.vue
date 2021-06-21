@@ -462,7 +462,7 @@
                 </div>
 
                 <div class="box-body no-padding" style="overflow:auto!important;">
-                
+
                     <div class="col-md-2 my-3">
 
                         <div class="input-group">
@@ -495,7 +495,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <Sort :data="['URL', 'Seller']"></Sort>
+                        <Sort :items="sort_options" @submitSort="sortPublisher"></Sort>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1518,6 +1518,34 @@
 
                 country_continent_info: '',
                 country_continent_filter_info: '',
+
+                sort_options: [
+                    {
+                        name: 'URL',
+                        sort: '',
+                        column: 'domain'
+                    },
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'seller'
+                    },
+                    {
+                        name: 'Price',
+                        sort: '',
+                        column: 'price'
+                    },
+                    {
+                        name: 'Price',
+                        sort: '',
+                        column: 'price'
+                    },
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'seller'
+                    },
+                ]
             }
         },
 
@@ -1946,6 +1974,10 @@
         },
 
         methods: {
+            sortPublisher(data) {
+                console.log(data)
+            },
+
             masterListDataMethod() {
                 let obj = [];
                 let countries = this.listCountryAll.data.map(country => country.name);
