@@ -797,24 +797,17 @@
             },
 
             getTotalAmount() {
-                let incomes = this.listBackLink.data
-                let total_price = [];
-                let total = 0;
-                incomes.forEach(function(item, index){
-                    if(item.price != null && item.price != '') {
-                        total_price.push( parseFloat(item.price))
-                    }
-                })
+                let incomes = this.listBackLink.data;
 
-                if( total_price.length > 0 ){
-                    total = total_price.reduce(this.calcSum)
-                }
-                this.totalAmount = total.toFixed(2);
+                this.totalAmount = _.sumBy(incomes, function
+                    (o) {
+                    return parseFloat(o.prices);
+                }).toFixed(0);
             },
-
-            calcSum(total, num) {
-                return total + num
-            },
+            //
+            // calcSum(total, num) {
+            //     return total + num
+            // },
 
             checkAccountType() {
                 let that = this.user

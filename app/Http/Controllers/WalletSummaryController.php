@@ -63,7 +63,7 @@ class WalletSummaryController extends Controller
     //                                 return $query->where('status', 'Live')
     //                                             ->where('payment_status', 'Paid');
     //                             }
-                                
+
     //                             if( $type == 'order_cancel' ) {
     //                                 return $query->where('status', 'Canceled');
     //                             }
@@ -91,29 +91,37 @@ class WalletSummaryController extends Controller
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
         $total_paid = Backlink::selectRaw('SUM(prices) as total_paid')
-                            ->where(function($query) use ($type) {
-                                if( $type == 'order_live' ) {
-                                    return $query->where('status', 'Live')
-                                                ->where('payment_status', 'Paid');
-                                }
-                                
-                                if( $type == 'order_cancel' ) {
-                                    return $query->where('status', 'Canceled');
-                                }
+            ->where(function ($query) use ($type) {
+                if ($type == 'order_live') {
+                    return $query->where('status', 'Live');
+//                        ->where('payment_status', 'Paid');
+                }
 
-                                if( $type == 'valid_orders' ) {
-                                    return $query->whereIn('status', ['Live', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live in Process', 'Issue']);
-                                }
-                            })
-                            ->where(function($query) use ($sub_buyer_ids, $user_id){
-                                $UserId[] = $user_id;
-                                if(count($sub_buyer_ids) > 0) {
-                                    return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
-                                } else{
-                                    return $query->whereIn('user_id', $UserId);
-                                }
-                            })
-                            ->get();
+                if ($type == 'order_cancel') {
+                    return $query->where('status', 'Canceled');
+                }
+
+                if ($type == 'valid_orders') {
+                    return $query->whereIn('status', [
+                        'Live',
+                        'Processing',
+                        'Content In Writing',
+                        'Content Done',
+                        'Content sent',
+                        'Live in Process',
+                        'Issue'
+                    ]);
+                }
+            })
+            ->where(function ($query) use ($sub_buyer_ids, $user_id) {
+                $UserId[] = $user_id;
+                if (count($sub_buyer_ids) > 0) {
+                    return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(), $UserId));
+                } else {
+                    return $query->whereIn('user_id', $UserId);
+                }
+            })
+            ->get();
 
         return isset($total_paid[0]['total_paid']) ? floatval($total_paid[0]['total_paid']) : 0;
     }
