@@ -407,7 +407,7 @@ class AccountController extends Controller
         //                         })
         //                         ->get();
 
-        $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
+        $total_purchased = Backlink::selectRaw('SUM(prices) as total_purchased')
                                 ->where('status', '!=', 'Canceled')
                                 ->where(function($query) use ($sub_buyer_ids, $UserId){
                                     if(count($sub_buyer_ids) > 0) {
@@ -418,7 +418,7 @@ class AccountController extends Controller
                                 })
                                 ->get();
 
-        $total_purchased_paid = Backlink::selectRaw('SUM(price) as total_purchased_paid')
+        $total_purchased_paid = Backlink::selectRaw('SUM(prices) as total_purchased_paid')
                                 ->where('status', 'Live')
                                 ->where('payment_status', 'Paid')
                                 ->where(function($query) use ($sub_buyer_ids, $UserId){
