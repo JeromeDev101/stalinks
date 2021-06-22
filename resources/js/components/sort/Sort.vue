@@ -1,6 +1,12 @@
 <template>
     <div class="custom-dropdown dropdown">
-        <button @click="myFunction()" class="btn btn-default">Sort</button>
+        <button
+            class="btn"
+            :class="{'btn-default': checkSortItems, 'btn-primary': !checkSortItems}"
+
+            @click="myFunction()">
+            Sort
+        </button>
 
         <div id="myDropdown" class="dropdown-content container card p-1">
             <div class="row no-gutters">
@@ -39,27 +45,9 @@
 
             <div class="px-2 pb-2 w-100 text-right">
                 <button class="btn btn-primary" @click="submitSort()" :disabled="checkSortItems">Sort</button>
-                <button class="btn btn-success" @click="resetSort()">Clear</button>
+                <button class="btn btn-success" @click="resetSort()" :disabled="checkSortItems">Clear</button>
                 <button class="btn btn-default" @click="myFunction()">Close</button>
             </div>
-
-<!--            <ul class="list-group">-->
-<!--                <li v-for="(option, index) in data" class="list-group-item" :value="option" :key="index">-->
-<!--                    <table border="0" width="100%">-->
-<!--                        <tr>-->
-<!--                            <td>-->
-<!--                                {{ option }}-->
-<!--                            </td>-->
-<!--                            <td class="text-right">-->
-<!--                                <select style="width:80px;">-->
-<!--                                    <option value="ASC">ASC</option>-->
-<!--                                    <option value="DESC">DESC</option>-->
-<!--                                </select>-->
-<!--                            </td>-->
-<!--                        </tr>-->
-<!--                    </table>-->
-<!--                </li>-->
-<!--            </ul>-->
         </div>
     </div>
 </template>
@@ -95,9 +83,15 @@
         methods: {
             resetSort() {
                 this.sortItems.forEach(e => e.sort = '');
+
+                if (this.$parent.filterModel.sort !== '' || this.$parent.filterModel.sort.length !== 0) {
+                    this.myFunction();
+                    this.$emit('submitSort', this.sortItems)
+                }
             },
 
             submitSort() {
+                this.myFunction();
                 this.$emit('submitSort', this.sortItems)
             },
 
@@ -126,6 +120,7 @@
         z-index: 1;
         display: none;
         min-width: 500px;
+        right: 0;
         position: absolute;
         list-style-type: none;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);

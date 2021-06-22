@@ -463,39 +463,43 @@
 
                 <div class="box-body no-padding" style="overflow:auto!important;">
 
-                    <div class="col-md-2 my-3">
+                    <div class="row mx-2">
+                        <div class="col-md-6 my-3">
 
-                        <div class="input-group">
-                            <button class="btn btn-default mr-2"
-                                @click="selectAll">{{
-                                                   allSelected
-                                                   ?
-                                                   "Deselect"
-                                                   : "Select"
-                                                   }} All
-                            </button>
-
-                            <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Selected Action
+                            <div class="input-group">
+                                <button class="btn btn-default mr-2"
+                                        @click="selectAll">{{
+                                        allSelected
+                                            ?
+                                            "Deselect"
+                                            : "Select"
+                                    }} All
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
-                                    <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                    <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-<!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
-<!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
-<!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
-                                    <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
-                                    <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Selected Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
+                                        <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
+                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                        <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
+                                        <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
+                                        <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
+                                        <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
+                                        <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+                                    </div>
                                 </div>
+
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="col-md-2">
-                        <Sort :items="sort_options" @submitSort="sortPublisher"></Sort>
+                        <div class="col-md-6 my-3">
+                            <div class="d-flex flex-column align-items-end">
+                                <Sort :items="sort_options" @submitSort="sortPublisher" ref="sortComponent"></Sort>
+                            </div>
+                        </div>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1954,7 +1958,7 @@
                         name : 'Valid',
                         sortable: true,
                         width: 100,
-                        isHidden: !this.tblPublisherOpt.valid
+                        isHidden: !this.tblPublisherOpt.valid,
                     },
                     {
                         prop : 'qc_validation',
@@ -2681,6 +2685,8 @@
                 this.getPublisherList({
                     params: this.filterModel
                 });
+
+                this.$refs.sortComponent.resetSort();
 
                 this.$router.replace({'query': null});
             },
