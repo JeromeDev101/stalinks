@@ -1923,7 +1923,7 @@
                         name : 'Uploaded',
                         // actionName : 'createdData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         isHidden:
                             !this.tblPublisherOpt.created
                     },
@@ -1932,14 +1932,14 @@
                         name : 'Updated',
                         // actionName : 'updatedData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         isHidden: !this.user.isAdmin ||
                             this.user.isOurs != 0 || !this.tblPublisherOpt.uploaded
                     },
                     {
                         prop : 'language_name',
                         name : 'Language',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.language
@@ -1947,7 +1947,7 @@
                     {
                         prop : 'country_name',
                         name : 'Country',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.country
                     },
@@ -1963,14 +1963,14 @@
                         prop : 'custom_topic',
                         name : 'Topic',
                         // actionName : 'topicData',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.topic
                     },
                     {
                         prop : 'casino_sites',
                         name : 'Casino & Betting Sites',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.casino_sites
@@ -1986,21 +1986,21 @@
                         prop : 'custom_username',
                         name : 'Seller',
                         // actionName : 'usernameData',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
                         prop : 'valid',
                         name : 'Valid',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.valid,
                     },
                     {
                         prop : 'qc_validation',
                         name : 'QC Valid',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.qc_validation
                     },
@@ -2015,7 +2015,7 @@
                     {
                         prop : 'is_https',
                         name : 'Https',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: false
                     },
@@ -2024,7 +2024,7 @@
                         name : 'Price',
                         // actionName : 'priceData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
                     },
@@ -2039,7 +2039,7 @@
                     {
                         prop : 'inc_article',
                         name : 'Inc Article',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.inc_article
@@ -2047,35 +2047,35 @@
                     {
                         prop : 'kw_anchor',
                         name : 'KW Anchor',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.kw_anchor
                     },
                     {
                         prop : 'ur',
                         name : 'UR',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.ur
                     },
                     {
                         prop : 'dr',
                         name : 'DR',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.dr
                     },
                     {
                         prop : 'backlinks',
                         name : 'Backlinks',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.backlinks
                     },
                     {
                         prop : 'ref_domain',
                         name : 'Ref Domain',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.ref_domain
