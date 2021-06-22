@@ -11,269 +11,296 @@
                 </div>
 
                 <div class="box-body m-3 collapse" id="collapseExample">
+                    <!-- external users filters -->
+                    <div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Search URL</label>
+                                    <input
+                                        v-model="filterModel.search"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Type here"
+                                        aria-describedby="helpId">
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Continent</label>
-                                <v-select
-                                    v-model="filterModel.continent_id"
-                                    multiple
-                                    label="name"
-                                    placeholder="All"
-                                    :options="listContinent.data"
-                                    :searchable="true"
-                                    :reduce="continent => continent.id"/>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="filterModel.language_id">
+                                        <option value="">All</option>
+                                        <option value="na">N/A</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Continent</label>
+                                    <v-select
+                                        v-model="filterModel.continent_id"
+                                        multiple
+                                        label="name"
+                                        placeholder="All"
+                                        :options="listContinent.data"
+                                        :searchable="true"
+                                        :reduce="continent => continent.id"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <v-select
+                                        v-model="filterModel.country_id"
+                                        multiple
+                                        label="name"
+                                        placeholder="All"
+                                        :searchable="true"
+                                        :options="filterCountrySelect"
+                                        :reduce="country => country.id"/>
+<!--                                        <select class="form-control" v-model="filterModel.country_id">-->
+<!--                                            <option value="">All</option>-->
+<!--                                            <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
+<!--                                                {{ option.name }}-->
+<!--                                            </option>-->
+<!--                                        </select>-->
+
+                                    <small class="font-italic text-primary" v-if="country_continent_filter_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_filter_info }}
+                                    </small>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Country</label>
-                                <v-select
-                                    v-model="filterModel.country_id"
-                                    multiple
-                                    label="name"
-                                    placeholder="All"
-                                    :searchable="true"
-                                    :options="filterCountrySelect"
-                                    :reduce="country => country.id"/>
-<!--                                <select class="form-control" v-model="filterModel.country_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Domain Zone</label>
+                                    <v-select
+                                        v-model="filterModel.domain_zone"
+                                        multiple
+                                        label="name"
+                                        placeholder="All"
+                                        :options="listDomainZones.data"
+                                        :searchable="true"
+                                        :reduce="domain => domain.name"/>
+                                </div>
+                            </div>
 
-                                <small class="font-italic text-primary" v-if="country_continent_filter_info">
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    {{ country_continent_filter_info }}
-                                </small>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Is Https?</label>
+                                    <select class="form-control" v-model="filterModel.is_https">
+                                        <option value="">All</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Topic</label>
+                                    <!-- <select class="form-control" v-model="filterModel.topic">
+                                        <option value="">All</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select> -->
+                                    <v-select
+                                        v-model="filterModel.topic"
+                                        multiple
+                                        placeholder="All"
+                                        :options="topicFilter"
+                                        :searchable="false"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" v-if="!isQc">
+                                <div class="form-group">
+                                    <label for="">Keyword Anchor</label>
+                                    <select class="form-control" v-model="filterModel.kw_anchor">
+                                        <option value="">All</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Language</label>
-                                <select class="form-control" v-model="filterModel.language_id">
-                                    <option value="">All</option>
-                                    <option value="na">N/A</option>
-                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
+                        <div class="row">
+                            <div class="col-md-3" v-if="!isQc">
+                                <div class="form-group">
+                                    <label>Include Article</label>
+                                    <select class="form-control" v-model="filterModel.inc_article">
+                                        <option value="">All</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" v-if="!isQc">
+                                <div class="form-group">
+                                    <label>Accept Casino & Betting Sites</label>
+                                    <select class="form-control" v-model="filterModel.casino_sites">
+                                        <option value="">All</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Price Basis</label>
+                                    <v-select
+                                        v-model="filterModel.price_basis"
+                                        multiple
+                                        placeholder="All"
+                                        :searchable="false"
+                                        :options="['Good', 'Average', 'High']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- internal team filters -->
+                    <div v-if="user.isAdmin || user.isOurs === 0">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>In charge</label>
+                                    <select class="form-control" v-model="filterModel.in_charge">
+                                        <option value="">All</option>
+                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name:option.username}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Seller</label>
+                                    <v-select
+                                        v-model="filterModel.seller"
+                                        multiple
+                                        label="username"
+                                        placeholder="All"
+                                        :searchable="true"
+                                        :options="listSeller.data"
+                                        :reduce="seller => seller.id"/>
+
+<!--                                        <select class="form-control" v-model="filterModel.seller">-->
+<!--                                            <option value="">All</option>-->
+<!--                                            <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+<!--                                                {{ option.username == null ? option.name:option.username }}-->
+<!--                                            </option>-->
+<!--                                        </select>-->
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
+                                <div class="form-group">
+                                    <label>Account Validation</label>
+                                    <select class="form-control" v-model="filterModel.account_validation">
+                                        <option value="">All</option>
+                                        <option value="valid">Valid</option>
+                                        <option value="invalid">Invalid</option>
+                                        <option value="processing">Processing</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">In charge</label>
-                                <select class="form-control" v-model="filterModel.in_charge">
-                                    <option value="">All</option>
-                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username}}
-                                    </option>
-                                </select>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Uploaded</label>
+<!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+
+                                    <date-range-picker
+                                        v-model="filterModel.uploaded"
+                                        ref="picker"
+                                        opens="right"
+                                        style="width: 100%"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.uploaded"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" v-if="!isQc">
+                                <div class="form-group">
+                                    <label>Updated</label>
+<!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+
+                                    <date-range-picker
+                                        v-model="filterModel.date"
+                                        opens="left"
+                                        ref="picker"
+                                        style="width: 100%"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Got Ahref</label>
+                                    <select class="form-control" v-model="filterModel.got_ahref">
+                                        <option value="">All</option>
+                                        <option value="With">With</option>
+                                        <option value="Without">Without</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3" v-if="user.isAdmin || user.isOurs == 0">
-                            <div class="form-group">
-                                <label for="">Seller</label>
-                                <v-select multiple
-                                          v-model="filterModel.seller" :options="listSeller.data" label="username" :reduce="seller => seller.id" :searchable="true" placeholder="All"/>
-<!--                                <select class="form-control" v-model="filterModel.seller">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listSeller.data" v-bind:value="option.id">-->
-<!--                                        {{ option.username == null ? option.name:option.username }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
+                        <div class="row">
+                            <div class="col-md-3"
+                                 v-show="user.isAdmin || user.role_id === 8">
+                                <div class="form-group">
+                                    <label>QC Validation</label>
+                                    <select name="" class="form-control" v-model="filterModel.qc_validation">
+                                        <option value="">All</option>
+                                        <option value="na">N/A</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Valid</label>
-                                <v-select multiple v-model="filterModel.valid" :options="['valid','invalid','unchecked']" :searchable="false" placeholder="All"/>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Valid</label>
+                                    <v-select
+                                        v-model="filterModel.valid"
+                                        multiple
+                                        placeholder="All"
+                                        :searchable="false"
+                                        :options="['valid','invalid','unchecked']"/>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-3" v-if="!isQc">
-                            <div class="form-group">
-                                <label for="">Include Article</label>
-                                <select class="form-control" v-model="filterModel.inc_article">
-                                    <option value="">All</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Got Ahref</label>
-                                <select class="form-control" v-model="filterModel.got_ahref">
-                                    <option value="">All</option>
-                                    <option value="With">With</option>
-                                    <option value="Without">Without</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3" v-if="!isQc">
-                            <div class="form-group">
-                                <label for="">Updated
-                                </label>
-<!--                                <input type="date" class="form-control" v-model="filterModel.date">-->
-                                <date-range-picker
-                                    ref="picker"
-                                    v-model="filterModel.date"
-                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                    :dateRange="filterModel.date"
-                                    :linkedCalendars="true"
-                                    opens="left"
-                                    style="width: 100%"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Uploaded
-                                </label>
-                                <!--                                <input type="date" class="form-control" v-model="filterModel.date">-->
-                                <date-range-picker
-                                    ref="picker"
-                                    v-model="filterModel.uploaded"
-                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                    :dateRange="filterModel.uploaded"
-                                    :linkedCalendars="true"
-                                    opens="right"
-                                    style="width: 100%"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Search URL</label>
-                                <input type="text" class="form-control" v-model="filterModel.search" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3" v-if="!isQc">
-                            <div class="form-group">
-                                <label for="">Accept Casino & Betting Sites</label>
-                                <select class="form-control" v-model="filterModel.casino_sites">
-                                    <option value="">All</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Topic</label>
-                                <!-- <select class="form-control" v-model="filterModel.topic">
-                                    <option value="">All</option>
-                                    <option v-for="option in topic" v-bind:value="option">
-                                        {{ option }}
-                                    </option>
-                                </select> -->
-                                <v-select multiple v-model="filterModel.topic" :options="topicFilter" :searchable="false" placeholder="All"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3" v-if="!isQc">
-                            <div class="form-group">
-                                <label for="">Keyword Anchor</label>
-                                <select class="form-control" v-model="filterModel.kw_anchor">
-                                    <option value="">All</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Price Basis</label>
-                                <v-select multiple
-                                          v-model="filterModel.price_basis" :options="['Good', 'Average', 'High']" :searchable="false" placeholder="All"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3"
-                             v-show="user.isAdmin || user.role_id == 8">
-                            <div class="form-group">
-                                <label for="">QC Validation</label>
-                                <select name="" class="form-control" v-model="filterModel.qc_validation">
-                                    <option value="">All</option>
-                                    <option value="na">N/A</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3"
-                             v-show="user.isAdmin || user.role_id == 8">
-                            <div class="form-group">
-                                <label for="">Show
-                                              Duplicates</label>
-                                <select name=""
-                                        class="form-control" v-model="filterModel.show_duplicates">
-                                    <option
-                                        value="">All
-                                    </option>
-                                    <option value="no">
-                                        No</option>
-                                    <option value="yes">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
-                            <div class="form-group">
-                                <label>Account Validation</label>
-                                <select class="form-control" v-model="filterModel.account_validation">
-                                    <option value="">All</option>
-                                    <option value="valid">Valid</option>
-                                    <option value="invalid">Invalid</option>
-                                    <option value="processing">Processing</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Domain Zone</label>
-                                <v-select
-                                    v-model="filterModel.domain_zone"
-                                    multiple
-                                    label="name"
-                                    placeholder="All"
-                                    :options="listDomainZones.data"
-                                    :searchable="true"
-                                    :reduce="domain => domain.name"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Is Https?</label>
-                                <select
-                                    class="form-control"
-                                    v-model="filterModel.is_https">
-                                    <option value="">All</option>
-                                    <option
-                                        value="yes">Yes
-                                    </option>
-                                    <option
-                                        value="no">
-                                        No</option>
-                                </select>
+                            <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8">
+                                <div class="form-group">
+                                    <label>Show Duplicates</label>
+                                    <select class="form-control" v-model="filterModel.show_duplicates">
+                                        <option value="">All</option>
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -284,7 +311,6 @@
                             <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -436,6 +462,7 @@
                 </div>
 
                 <div class="box-body no-padding" style="overflow:auto!important;">
+                
                     <div class="col-md-2 my-3">
 
                         <div class="input-group">
@@ -463,7 +490,12 @@
                                     <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
                                 </div>
                             </div>
+
                         </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <Sort :data="['URL', 'Seller']"></Sort>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1309,10 +1341,12 @@
     import axios from 'axios';
     import VueVirtualTable from 'vue-virtual-table';
     import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+    import Sort from '@/components/sort/Sort';
 
     export default {
         components: {
             VueVirtualTable,
+            Sort,
         },
         name: '',
         mixins: [csvTemplateMixin],
@@ -2516,7 +2550,7 @@
                 }
 
                 this.country_continent_filter_info = '';
-                
+
                 this.getPublisherList({
                     params: this.filterModel
                 });

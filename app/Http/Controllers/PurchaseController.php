@@ -124,9 +124,9 @@ class PurchaseController extends Controller
                             ->where('admin_confirmation', '!=', 'Not Paid')
                             ->get();
 
-        $total_paid = Backlink::selectRaw('SUM(price) as total_paid')
+        $total_paid = Backlink::selectRaw('SUM(prices) as total_paid')
                             ->where('status', 'Live')
-                            ->where('payment_status', 'Paid')
+//                            ->where('payment_status', 'Paid')
                             ->where(function($query) use ($sub_buyer_ids, $user_id){
                                 $UserId[] = $user_id;
                                 if(count($sub_buyer_ids) > 0) {
