@@ -497,7 +497,14 @@
 
                         <div class="col-md-6 my-3">
                             <div class="d-flex flex-column align-items-end">
-                                <Sort :items="sort_options" @submitSort="sortPublisher" ref="sortComponent"></Sort>
+                                <Sort
+                                    ref="sortComponent"
+                                    :sorted="isSorted"
+                                    :items="sortOptions"
+
+                                    @submitSort="sortPublisher"
+                                    @updateOptions="updateSortOptions">
+                                </Sort>
                             </div>
                         </div>
                     </div>
@@ -1524,123 +1531,7 @@
                 country_continent_info: '',
                 country_continent_filter_info: '',
 
-                sort_options: [
-                    {
-                        name: 'Uploaded',
-                        sort: '',
-                        column: 'created_at'
-                    },
-                    {
-                        name: 'Updated',
-                        sort: '',
-                        column: 'updated_at'
-                    },
-                    {
-                        name: 'Language',
-                        sort: '',
-                        column: 'languages.name'
-                    },
-                    {
-                        name: 'Country',
-                        sort: '',
-                        column: 'countries.name'
-                    },
-                    {
-                        name: 'Continent',
-                        sort: '',
-                        column: 'continent_name'
-                    },
-                    {
-                        name: 'Seller',
-                        sort: '',
-                        column: 'A.username'
-                    },
-                    {
-                        name: 'Valid',
-                        sort: '',
-                        column: 'valid'
-                    },
-                    {
-                        name: 'QC Valid',
-                        sort: '',
-                        column: 'qc_validation'
-                    },
-                    {
-                        name: 'URL',
-                        sort: '',
-                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')'
-                    },
-                    {
-                        name: 'HTTPS',
-                        sort: '',
-                        column: 'is_https'
-                    },
-                    {
-                        name: 'Price',
-                        sort: '',
-                        column: 'cast(price as unsigned)'
-                    },
-                    {
-                        name: 'Price Basis',
-                        sort: '',
-                        column: 'price_basis'
-                    },
-                    {
-                        name: 'Include Article',
-                        sort: '',
-                        column: 'inc_article'
-                    },
-                    {
-                        name: 'KW Anchor',
-                        sort: '',
-                        column: 'kw_anchor'
-                    },
-                    {
-                        name: 'UR',
-                        sort: '',
-                        column: 'cast(ur as unsigned)'
-                    },
-                    {
-                        name: 'DR',
-                        sort: '',
-                        column: 'cast(dr as unsigned)'
-                    },
-                    {
-                        name: 'Backlinks',
-                        sort: '',
-                        column: 'cast(backlinks as unsigned)'
-                    },
-                    {
-                        name: 'Ref Domain',
-                        sort: '',
-                        column: 'cast(ref_domain as unsigned)'
-                    },
-                    {
-                        name: 'Org Keywords',
-                        sort: '',
-                        column: 'cast(org_keywords as unsigned)'
-                    },
-                    {
-                        name: 'Org Traffic',
-                        sort: '',
-                        column: 'cast(org_traffic as unsigned)'
-                    },
-                    {
-                        name: 'Topic',
-                        sort: '',
-                        column: 'topic'
-                    },
-                    {
-                        name: 'In-charge',
-                        sort: '',
-                        column: 'B.username'
-                    },
-                    {
-                        name: 'C&B Sites',
-                        sort: '',
-                        column: 'casino_sites'
-                    },
-                ]
+                sort_options: [],
             }
         },
 
@@ -1866,6 +1757,152 @@
                     : this.listCountryAll.data.filter(item => item.continent_id === this.updateMultiple.continent_id)
             },
 
+            isSorted() {
+                return this.filterModel.sort !== '' && this.filterModel.sort.length !== 0;
+            },
+
+            sortOptions() {
+                return [
+                    {
+                        name: 'Uploaded',
+                        sort: '',
+                        column: 'created_at',
+                        hidden: !this.tblPublisherOpt.created
+                    },
+                    {
+                        name: 'Updated',
+                        sort: '',
+                        column: 'updated_at',
+                        hidden: !this.user.isAdmin || this.user.isOurs !== 0 || !this.tblPublisherOpt.uploaded
+                    },
+                    {
+                        name: 'Language',
+                        sort: '',
+                        column: 'languages.name',
+                        hidden: !this.tblPublisherOpt.language
+                    },
+                    {
+                        name: 'Country',
+                        sort: '',
+                        column: 'countries.name',
+                        hidden: !this.tblPublisherOpt.country
+                    },
+                    {
+                        name: 'Continent',
+                        sort: '',
+                        column: 'continent_name',
+                        hidden: !this.tblPublisherOpt.continent
+                    },
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'A.username',
+                        hidden: this.user.isOurs !== 0 || !this.tblPublisherOpt.seller
+                    },
+                    {
+                        name: 'Valid',
+                        sort: '',
+                        column: 'valid',
+                        hidden: !this.tblPublisherOpt.valid,
+                    },
+                    {
+                        name: 'QC Valid',
+                        sort: '',
+                        column: 'qc_validation',
+                        hidden: !this.tblPublisherOpt.qc_validation
+                    },
+                    {
+                        name: 'URL',
+                        sort: '',
+                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
+                        hidden: !this.tblPublisherOpt.url
+                    },
+                    {
+                        name: 'HTTPS',
+                        sort: '',
+                        column: 'is_https'
+                    },
+                    {
+                        name: 'Price',
+                        sort: '',
+                        column: 'cast(price as unsigned)',
+                        hidden: !this.tblPublisherOpt.price
+                    },
+                    {
+                        name: 'Price Basis',
+                        sort: '',
+                        column: 'price_basis',
+                        hidden: !this.tblPublisherOpt.price_basis
+                    },
+                    {
+                        name: 'Include Article',
+                        sort: '',
+                        column: 'inc_article',
+                        hidden: !this.tblPublisherOpt.inc_article
+                    },
+                    {
+                        name: 'KW Anchor',
+                        sort: '',
+                        column: 'kw_anchor',
+                        hidden: !this.tblPublisherOpt.kw_anchor
+                    },
+                    {
+                        name: 'UR',
+                        sort: '',
+                        column: 'cast(ur as unsigned)',
+                        hidden: !this.tblPublisherOpt.ur
+                    },
+                    {
+                        name: 'DR',
+                        sort: '',
+                        column: 'cast(dr as unsigned)',
+                        hidden: !this.tblPublisherOpt.dr
+                    },
+                    {
+                        name: 'Backlinks',
+                        sort: '',
+                        column: 'cast(backlinks as unsigned)',
+                        hidden: !this.tblPublisherOpt.backlinks
+                    },
+                    {
+                        name: 'Ref Domain',
+                        sort: '',
+                        column: 'cast(ref_domain as unsigned)',
+                        hidden: !this.tblPublisherOpt.ref_domain
+                    },
+                    {
+                        name: 'Org Keywords',
+                        sort: '',
+                        column: 'cast(org_keywords as unsigned)',
+                        hidden: !this.tblPublisherOpt.org_keywords
+                    },
+                    {
+                        name: 'Org Traffic',
+                        sort: '',
+                        column: 'cast(org_traffic as unsigned)',
+                        hidden: !this.tblPublisherOpt.org_traffic
+                    },
+                    {
+                        name: 'Topic',
+                        sort: '',
+                        column: 'topic',
+                        hidden: !this.tblPublisherOpt.topic
+                    },
+                    {
+                        name: 'In-charge',
+                        sort: '',
+                        column: 'B.username',
+                        hidden: !this.tblPublisherOpt.in_charge
+                    },
+                    {
+                        name: 'C&B Sites',
+                        sort: '',
+                        column: 'casino_sites',
+                        hidden: !this.tblPublisherOpt.casino_sites
+                    },
+                ]
+            },
+
             tableConfig() {
                 return [
                     {
@@ -2070,8 +2107,12 @@
 
         methods: {
             sortPublisher(data) {
-                this.filterModel.sort = data.filter(item => item.sort !== '')
+                this.filterModel.sort = data.filter(item => item.sort !== '' && item.hidden !== true)
                 this.getPublisherList();
+            },
+
+            updateSortOptions(data) {
+                this.sort_options = data;
             },
 
             masterListDataMethod() {
@@ -2215,6 +2256,11 @@
                 let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
+
+                if (this.isSorted) {
+                    this.filterModel.sort = this.getSortData()
+                }
+
                 if(this.filterModel.paginate == 'All')
                 {
 
@@ -2815,6 +2861,10 @@
                     query: this.filterModel,
                 });
 
+                if (this.isSorted) {
+                    this.filterModel.sort = this.getSortData()
+                }
+
                 this.getPublisherList({
                     params: {
                         country_id: this.filterModel.country_id,
@@ -2843,6 +2893,10 @@
                         sort: this.filterModel.sort
                     }
                 });
+            },
+
+            getSortData() {
+                return this.sort_options.filter(item => item.sort !== '' && item.hidden !== true)
             },
 
             checkData() {

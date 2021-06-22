@@ -10,7 +10,7 @@
 
         <div id="myDropdown" class="dropdown-content container card p-1">
             <div class="row no-gutters">
-                <div class="col-6 col-md-4 p-1" v-for="(option, index) in sortItems" :key="index">
+                <div class="col-6 col-md-4 p-1" v-for="(option, index) in sortItems" v-if="!option.hidden" :key="index">
                     <div class="card">
                         <div class="card-body p-1">
                             <div class="row">
@@ -66,11 +66,35 @@
                         hidden: false
                     }
                 ]
+            },
+
+            sorted: {
+                type: Boolean,
+                default: false
             }
         },
+
         data() {
             return {
-                sortItems: this.items
+                sortItems: this.items,
+                isSorted: this.sorted
+            }
+        },
+
+        watch: {
+            items: function (newVal) {
+                this.updateHidden(newVal);
+            },
+
+            sorted: function (newVal) {
+                this.isSorted = newVal;
+            },
+
+            sortItems: {
+                deep: true,
+                handler() {
+                    this.updateParent();
+                }
             }
         },
 
@@ -84,8 +108,7 @@
             resetSort() {
                 this.sortItems.forEach(e => e.sort = '');
 
-                if (this.$parent.filterModel.sort !== '' || this.$parent.filterModel.sort.length !== 0) {
-                    this.myFunction();
+                if (this.isSorted) {
                     this.$emit('submitSort', this.sortItems)
                 }
             },
@@ -99,6 +122,19 @@
                 this.sortItems[index].sort = this.sortItems[index].sort === sort
                     ? ''
                     : sort
+            },
+
+            updateHidden(data) {
+                data.forEach((value, index) => {
+                    this.sortItems[index].hidden = value.hidden;
+                    if (value.hidden) {
+                        this.sortItems[index].sort = '';
+                    }
+                })
+            },
+
+            updateParent() {
+                this.$emit('updateOptions', this.sortItems)
             },
 
             myFunction() {
