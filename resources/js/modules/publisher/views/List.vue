@@ -1544,7 +1544,7 @@
                     {
                         name: 'Continent',
                         sort: '',
-                        column: 'publisher_continent.name'
+                        column: 'continent_name'
                     },
                     {
                         name: 'Seller',
