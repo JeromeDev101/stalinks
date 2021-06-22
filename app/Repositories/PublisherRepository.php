@@ -37,7 +37,23 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $paginate = $filter['price_basis'] == '' ? $paginate:Publisher::count();
 
-        $columns = [
+//        $columns = [
+//            'publisher.*',
+//            'registration.username',
+//            'registration.account_validation as user_account_validation',
+//            'A.name',
+//            'A.username as user_name',
+//            'A.isOurs',
+//            'registration.company_name',
+//            'countries.name AS country_name',
+//            'country_continent.name AS country_continent',
+//            'publisher_continent.name AS publisher_continent',
+//            'languages.name AS language_name',
+//            'B.username AS in_charge',
+//            'B.id AS team_in_charge'
+//        ];
+
+        $list = Publisher::select(
             'publisher.*',
             'registration.username',
             'registration.account_validation as user_account_validation',
@@ -50,16 +66,22 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'B.username AS in_charge',
-            'B.id AS team_in_charge'
-        ];
-        $list = Publisher::select($columns)
-                ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
-                ->leftJoin('registration', 'A.email', '=', 'registration.email')
-                ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
-                ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
-                ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
-                ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
-                ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
+            'B.id AS team_in_charge',
+            DB::raw('(
+                        CASE
+                            WHEN publisher_continent.name IS NULL and country_continent.name is NULL THEN null
+                            WHEN publisher_continent.name IS NULL THEN country_continent.name
+                            WHEN country_continent.name IS NULL THEN publisher_continent.name
+                            ELSE publisher_continent.name
+                        END
+                    ) AS continent_name'))
+            ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+            ->leftJoin('registration', 'A.email', '=', 'registration.email')
+            ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+            ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+            ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
+            ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
+            ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
             $validFilter = isset($filter['valid']) ? 'AND valid IN ('. implode(',', implode_array_to_strings($filter['valid'])) .')' : '';
@@ -85,7 +107,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     )temp'), 'publisher.url', 'temp.url')
                 ->orderBy('url', 'asc');
         } else {
-            $list->orderBy('created_at', 'desc');
+//            $list->orderBy('created_at', 'desc');
         }
 
         if( isset($filter['account_validation']) && !empty($filter['account_validation']) ){
@@ -260,6 +282,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             }
         }
 
+        if (isset($filter['sort']) && !empty($filter['sort'])) {
+            foreach ($filter['sort'] as &$sort) {
+                $sort = \GuzzleHttp\json_decode($sort);
+                $list = $list->orderByRaw("$sort->column $sort->sort");
+            }
+        } else {
+            $list->orderBy('created_at', 'desc');
+        }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
 

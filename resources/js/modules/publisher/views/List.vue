@@ -462,40 +462,51 @@
                 </div>
 
                 <div class="box-body no-padding" style="overflow:auto!important;">
-                
-                    <div class="col-md-2 my-3">
 
-                        <div class="input-group">
-                            <button class="btn btn-default mr-2"
-                                @click="selectAll">{{
-                                                   allSelected
-                                                   ?
-                                                   "Deselect"
-                                                   : "Select"
-                                                   }} All
-                            </button>
+                    <div class="row mx-2">
+                        <div class="col-md-6 my-3">
 
-                            <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Selected Action
+                            <div class="input-group">
+                                <button class="btn btn-default mr-2"
+                                        @click="selectAll">{{
+                                        allSelected
+                                            ?
+                                            "Deselect"
+                                            : "Select"
+                                    }} All
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
-                                    <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                    <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-<!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
-<!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
-<!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
-                                    <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
-                                    <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Selected Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
+                                        <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
+                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                        <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
+                                        <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
+                                        <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
+                                        <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
+                                        <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+                                    </div>
                                 </div>
+
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="col-md-2">
-                        <Sort :data="['URL', 'Seller']"></Sort>
+                        <div class="col-md-6 my-3">
+                            <div class="d-flex flex-column align-items-end">
+                                <Sort
+                                    ref="sortComponent"
+                                    :sorted="isSorted"
+                                    :items="sortOptions"
+
+                                    @submitSort="sortPublisher"
+                                    @updateOptions="updateSortOptions">
+                                </Sort>
+                            </div>
+                        </div>
                     </div>
 
                     <span class="pagination-custom-footer-text">
@@ -1433,7 +1444,8 @@
                         || '',
                     account_validation: this.$route.query.account_validation || '',
                     domain_zone: this.$route.query.domain_zone || '',
-                    is_https: this.$route.query.is_https || ''
+                    is_https: this.$route.query.is_https || '',
+                    sort: ''
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1518,6 +1530,8 @@
 
                 country_continent_info: '',
                 country_continent_filter_info: '',
+
+                sort_options: [],
             }
         },
 
@@ -1743,6 +1757,152 @@
                     : this.listCountryAll.data.filter(item => item.continent_id === this.updateMultiple.continent_id)
             },
 
+            isSorted() {
+                return this.filterModel.sort !== '' && this.filterModel.sort.length !== 0;
+            },
+
+            sortOptions() {
+                return [
+                    {
+                        name: 'Uploaded',
+                        sort: '',
+                        column: 'created_at',
+                        hidden: !this.tblPublisherOpt.created
+                    },
+                    {
+                        name: 'Updated',
+                        sort: '',
+                        column: 'updated_at',
+                        hidden: !this.user.isAdmin || this.user.isOurs !== 0 || !this.tblPublisherOpt.uploaded
+                    },
+                    {
+                        name: 'Language',
+                        sort: '',
+                        column: 'languages.name',
+                        hidden: !this.tblPublisherOpt.language
+                    },
+                    {
+                        name: 'Country',
+                        sort: '',
+                        column: 'countries.name',
+                        hidden: !this.tblPublisherOpt.country
+                    },
+                    {
+                        name: 'Continent',
+                        sort: '',
+                        column: 'continent_name',
+                        hidden: !this.tblPublisherOpt.continent
+                    },
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'A.username',
+                        hidden: this.user.isOurs !== 0 || !this.tblPublisherOpt.seller
+                    },
+                    {
+                        name: 'Valid',
+                        sort: '',
+                        column: 'valid',
+                        hidden: !this.tblPublisherOpt.valid,
+                    },
+                    {
+                        name: 'QC Valid',
+                        sort: '',
+                        column: 'qc_validation',
+                        hidden: !this.tblPublisherOpt.qc_validation
+                    },
+                    {
+                        name: 'URL',
+                        sort: '',
+                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
+                        hidden: !this.tblPublisherOpt.url
+                    },
+                    {
+                        name: 'HTTPS',
+                        sort: '',
+                        column: 'is_https'
+                    },
+                    {
+                        name: 'Price',
+                        sort: '',
+                        column: 'cast(price as unsigned)',
+                        hidden: !this.tblPublisherOpt.price
+                    },
+                    {
+                        name: 'Price Basis',
+                        sort: '',
+                        column: 'price_basis',
+                        hidden: !this.tblPublisherOpt.price_basis
+                    },
+                    {
+                        name: 'Include Article',
+                        sort: '',
+                        column: 'inc_article',
+                        hidden: !this.tblPublisherOpt.inc_article
+                    },
+                    {
+                        name: 'KW Anchor',
+                        sort: '',
+                        column: 'kw_anchor',
+                        hidden: !this.tblPublisherOpt.kw_anchor
+                    },
+                    {
+                        name: 'UR',
+                        sort: '',
+                        column: 'cast(ur as unsigned)',
+                        hidden: !this.tblPublisherOpt.ur
+                    },
+                    {
+                        name: 'DR',
+                        sort: '',
+                        column: 'cast(dr as unsigned)',
+                        hidden: !this.tblPublisherOpt.dr
+                    },
+                    {
+                        name: 'Backlinks',
+                        sort: '',
+                        column: 'cast(backlinks as unsigned)',
+                        hidden: !this.tblPublisherOpt.backlinks
+                    },
+                    {
+                        name: 'Ref Domain',
+                        sort: '',
+                        column: 'cast(ref_domain as unsigned)',
+                        hidden: !this.tblPublisherOpt.ref_domain
+                    },
+                    {
+                        name: 'Org Keywords',
+                        sort: '',
+                        column: 'cast(org_keywords as unsigned)',
+                        hidden: !this.tblPublisherOpt.org_keywords
+                    },
+                    {
+                        name: 'Org Traffic',
+                        sort: '',
+                        column: 'cast(org_traffic as unsigned)',
+                        hidden: !this.tblPublisherOpt.org_traffic
+                    },
+                    {
+                        name: 'Topic',
+                        sort: '',
+                        column: 'topic',
+                        hidden: !this.tblPublisherOpt.topic
+                    },
+                    {
+                        name: 'In-charge',
+                        sort: '',
+                        column: 'B.username',
+                        hidden: !this.tblPublisherOpt.in_charge
+                    },
+                    {
+                        name: 'C&B Sites',
+                        sort: '',
+                        column: 'casino_sites',
+                        hidden: !this.tblPublisherOpt.casino_sites
+                    },
+                ]
+            },
+
             tableConfig() {
                 return [
                     {
@@ -1763,7 +1923,7 @@
                         name : 'Uploaded',
                         // actionName : 'createdData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         isHidden:
                             !this.tblPublisherOpt.created
                     },
@@ -1772,14 +1932,14 @@
                         name : 'Updated',
                         // actionName : 'updatedData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         isHidden: !this.user.isAdmin ||
                             this.user.isOurs != 0 || !this.tblPublisherOpt.uploaded
                     },
                     {
                         prop : 'language_name',
                         name : 'Language',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.language
@@ -1787,7 +1947,7 @@
                     {
                         prop : 'country_name',
                         name : 'Country',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.country
                     },
@@ -1803,14 +1963,14 @@
                         prop : 'custom_topic',
                         name : 'Topic',
                         // actionName : 'topicData',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.topic
                     },
                     {
                         prop : 'casino_sites',
                         name : 'Casino & Betting Sites',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.casino_sites
@@ -1826,21 +1986,21 @@
                         prop : 'custom_username',
                         name : 'Seller',
                         // actionName : 'usernameData',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
                         prop : 'valid',
                         name : 'Valid',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
-                        isHidden: !this.tblPublisherOpt.valid
+                        isHidden: !this.tblPublisherOpt.valid,
                     },
                     {
                         prop : 'qc_validation',
                         name : 'QC Valid',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.qc_validation
                     },
@@ -1855,7 +2015,7 @@
                     {
                         prop : 'is_https',
                         name : 'Https',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: false
                     },
@@ -1864,7 +2024,7 @@
                         name : 'Price',
                         // actionName : 'priceData',
                         width: 100,
-                        sortable: true,
+                        // sortable: true,
                         prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
                     },
@@ -1879,7 +2039,7 @@
                     {
                         prop : 'inc_article',
                         name : 'Inc Article',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.inc_article
@@ -1887,35 +2047,35 @@
                     {
                         prop : 'kw_anchor',
                         name : 'KW Anchor',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.kw_anchor
                     },
                     {
                         prop : 'ur',
                         name : 'UR',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.ur
                     },
                     {
                         prop : 'dr',
                         name : 'DR',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.dr
                     },
                     {
                         prop : 'backlinks',
                         name : 'Backlinks',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.backlinks
                     },
                     {
                         prop : 'ref_domain',
                         name : 'Ref Domain',
-                        sortable: true,
+                        // sortable: true,
                         width: 100,
                         isHidden:
                             !this.tblPublisherOpt.ref_domain
@@ -1946,6 +2106,15 @@
         },
 
         methods: {
+            sortPublisher(data) {
+                this.filterModel.sort = data.filter(item => item.sort !== '' && item.hidden !== true)
+                this.getPublisherList();
+            },
+
+            updateSortOptions(data) {
+                this.sort_options = data;
+            },
+
             masterListDataMethod() {
                 let obj = [];
                 let countries = this.listCountryAll.data.map(country => country.name);
@@ -2087,6 +2256,11 @@
                 let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
+
+                if (this.isSorted) {
+                    this.filterModel.sort = this.getSortData()
+                }
+
                 if(this.filterModel.paginate == 'All')
                 {
 
@@ -2116,7 +2290,8 @@
                             account_validation: this.filterModel.account_validation,
                             domain_zone:
                             this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https
+                            is_https: this.filterModel.is_https,
+                            sort: this.filterModel.sort
                         }
                     });
                 }else{
@@ -2146,7 +2321,8 @@
                             account_validation: this.filterModel.account_validation,
                             domain_zone:
                             this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https
+                            is_https: this.filterModel.is_https,
+                            sort: this.filterModel.sort
                         }
                     });
                 }
@@ -2546,7 +2722,8 @@
                         endDate: null
                     },
                     domain_zone: '',
-                    is_https : ''
+                    is_https : '',
+                    sort: ''
                 }
 
                 this.country_continent_filter_info = '';
@@ -2554,6 +2731,8 @@
                 this.getPublisherList({
                     params: this.filterModel
                 });
+
+                this.$refs.sortComponent.resetSort();
 
                 this.$router.replace({'query': null});
             },
@@ -2682,6 +2861,10 @@
                     query: this.filterModel,
                 });
 
+                if (this.isSorted) {
+                    this.filterModel.sort = this.getSortData()
+                }
+
                 this.getPublisherList({
                     params: {
                         country_id: this.filterModel.country_id,
@@ -2706,9 +2889,14 @@
                         account_validation: this.filterModel.account_validation,
                         domain_zone:
                         this.filterModel.domain_zone,
-                        is_https: this.filterModel.is_https
+                        is_https: this.filterModel.is_https,
+                        sort: this.filterModel.sort
                     }
                 });
+            },
+
+            getSortData() {
+                return this.sort_options.filter(item => item.sort !== '' && item.hidden !== true)
             },
 
             checkData() {

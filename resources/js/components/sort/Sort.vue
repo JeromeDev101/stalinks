@@ -1,27 +1,148 @@
 <template>
-    <div class="custom-dropdown">
-        <button @click="myFunction()" class="btn btn-default">Sort</button>
-        <ul id="myDropdown" class="dropdown-content">
-        
-            <li v-for="(option, index) in data" v-bind:value="option">
-                <table border="0" width="100%">
-                    <tr>
-                        <td>
-                            {{ option }}
-                        </td>
-                        <td class="text-right">
-                            <select style="width:80px;">
-                                <option value="ASC">ASC</option>
-                                <option value="DESC">DESC</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </li>
-        </ul>
+    <div class="custom-dropdown dropdown">
+        <button
+            class="btn"
+            :class="{'btn-default': checkSortItems, 'btn-primary': !checkSortItems}"
+
+            @click="myFunction()">
+            Sort
+        </button>
+
+        <div id="myDropdown" class="dropdown-content container card p-1">
+            <div class="row no-gutters">
+                <div class="col-6 col-md-4 p-1" v-for="(option, index) in sortItems" v-if="!option.hidden" :key="index">
+                    <div class="card">
+                        <div class="card-body p-1">
+                            <div class="row">
+                                <div class="col-8 col-md-9 d-flex">
+                                    <span class="align-self-center">{{ option.name }}</span>
+                                </div>
+
+                                <div class="col-4 col-md-3 flex-column">
+                                    <div class="d-flex flex-column align-items-end">
+                                        <i
+                                            class="fa fa-caret-up fa-lg"
+                                            :style="[option.sort === 'asc' ? {'color': '#3caed2'} : {'color': 'grey'}]"
+
+                                            @click="clickSort(index, 'asc')">
+                                        </i>
+
+                                        <i
+                                            class="fa fa-caret-down fa-lg"
+                                            :style="[option.sort === 'desc' ? {'color': '#3caed2'} : {'color': 'grey'}]"
+
+                                            @click="clickSort(index, 'desc')">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+
+            <div class="px-2 pb-2 w-100 text-right">
+                <button class="btn btn-primary" @click="submitSort()" :disabled="checkSortItems">Sort</button>
+                <button class="btn btn-success" @click="resetSort()" :disabled="checkSortItems">Clear</button>
+                <button class="btn btn-default" @click="myFunction()">Close</button>
+            </div>
+        </div>
     </div>
 </template>
 
+<script>
+    export default {
+        name: 'Sort',
+        props: {
+            items: {
+                type: Array,
+                default:[
+                    {
+                        name: '',
+                        sort: '',
+                        column: '',
+                        hidden: false
+                    }
+                ]
+            },
+
+            sorted: {
+                type: Boolean,
+                default: false
+            }
+        },
+
+        data() {
+            return {
+                sortItems: this.items,
+                isSorted: this.sorted
+            }
+        },
+
+        watch: {
+            items: function (newVal) {
+                this.updateHidden(newVal);
+            },
+
+            sorted: function (newVal) {
+                this.isSorted = newVal;
+            },
+
+            sortItems: {
+                deep: true,
+                handler() {
+                    this.updateParent();
+                }
+            }
+        },
+
+        computed: {
+            checkSortItems() {
+                return this.sortItems.every(e => e.sort === '')
+            }
+        },
+
+        methods: {
+            resetSort() {
+                this.sortItems.forEach(e => e.sort = '');
+
+                if (this.isSorted) {
+                    this.$emit('submitSort', this.sortItems)
+                }
+            },
+
+            submitSort() {
+                this.myFunction();
+                this.$emit('submitSort', this.sortItems)
+            },
+
+            clickSort(index, sort) {
+                this.sortItems[index].sort = this.sortItems[index].sort === sort
+                    ? ''
+                    : sort
+            },
+
+            updateHidden(data) {
+                data.forEach((value, index) => {
+                    this.sortItems[index].hidden = value.hidden;
+                    if (value.hidden) {
+                        this.sortItems[index].sort = '';
+                    }
+                })
+            },
+
+            updateParent() {
+                this.$emit('updateOptions', this.sortItems)
+            },
+
+            myFunction() {
+                document.getElementById("myDropdown").classList.toggle("show");
+            },
+        }
+    };
+</script>
 
 <style scoped>
     .custom-dropdown {
@@ -30,40 +151,36 @@
     }
 
     .dropdown-content {
-        list-style-type: none;
         margin: 0;
-        padding: 0;
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 200px;
-        overflow: auto;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        width:100%;
         z-index: 1;
+        display: none;
+        min-width: 500px;
+        right: 0;
+        position: absolute;
+        list-style-type: none;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    @media only screen and (max-width: 600px) {
+        .dropdown-content {
+            min-width: 350px;
+        }
     }
 
     .dropdown-content li {
         color: black;
-        padding: 6px 8px;
         display: block;
+        padding: 6px 8px;
     }
 
     .show {display: block;}
-</style>
-    
-<script>
-    export default {
-        name: 'Sort',
-        props: ['data'],
-        data() {
-            return {
 
-            }
-        },
-        methods: {
-            myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
-            },
-        }
-    };
-</script>
+    i {
+        cursor: pointer;
+    }
+
+    .list-group-item {
+        cursor: default !important;
+    }
+</style>
