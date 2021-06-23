@@ -7,7 +7,7 @@
         </section>
 
 <!--        ORDERS DATA GRAPH-->
-        <div class="col-lg-12" >
+        <div class="col-lg-12" v-if="user.isAdmin || isQc">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -95,7 +95,7 @@
 <!--        ORDERS DATA GRAPH END-->
 
 <!--        SELLER VALID GRAPH-->
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="user.isAdmin || isQcManager">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -200,7 +200,7 @@
 <!--        SELLER VALID GRAPH END-->
 
 <!--        URL VALID GRAPH-->
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="user.isAdmin || isQc">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -257,7 +257,7 @@
 <!--        URL VALID GRAPH END-->
 
 <!--        URL VALID PRICE GRAPH-->
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="user.isAdmin || isCs">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -358,7 +358,7 @@
 <!--        URL VALID PRICE GRAPH END-->
 
 <!--        URL SELLER STATISTICS GRAPH-->
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="user.isAdmin || isCs">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -441,7 +441,7 @@
 <!--        URL SELLER STATISTICS GRAPH END-->
 
 <!--        PROSPECT QUALIFIED VS REGISTERED GRAPH-->
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-if="user.isAdmin || isCs">
             <div class="box box-primary" style="padding-bottom:0.5em;">
                 <div class="box-header">
                     <h3
@@ -702,6 +702,19 @@ export default {
             user: state => state.storeAuth.currentUser,
             listSellerTeam: state => state.storeExtDomain.listSellerTeam,
         }),
+
+        isQc() {
+            let qcRoleIds = [5, 8, 9, 10];
+            return qcRoleIds.includes(this.user.role_id);
+        },
+
+        isQcManager() {
+            return this.user.role_id === 8
+        },
+
+        isCs() {
+            return this.user.role_id === 6
+        },
 
         orderChartOptions() {
             return orders.ordersGraphSetting();
