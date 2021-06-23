@@ -275,6 +275,7 @@ export default {
             },
 
             addImages: [],
+            updateImages: [],
 
             modalMode: '',
             isPopupLoading: false,
@@ -330,6 +331,10 @@ export default {
     watch: {
         'signatureModel.content': function(value) {
             this.getAddSignatureImages(value)
+        },
+
+        'updateSignatureModel.content': function(value) {
+            this.getUpdateSignatureImages(value)
         }
     },
 
@@ -403,9 +408,22 @@ export default {
             })
         },
 
+        getUpdateSignatureImages(string) {
+            let self = this
+            let images = self.getImages(string)
+
+            images.forEach(function (img) {
+                if (!self.updateImages.includes(img)) {
+                    self.updateImages.push(img)
+                }
+            })
+        },
+
         getRemovedImages(mode, images) {
             if (mode === 'Add') {
                 return this.addImages.filter(img => !images.includes(img))
+            } else {
+                return this.updateImages.filter(img => !images.includes(img))
             }
         },
 
@@ -465,6 +483,8 @@ export default {
             this.updateSignatureTemp.name = data.name
             this.updateSignatureTemp.content = data.content
             this.updateSignatureTemp.work_mail = data.work_mail
+
+            this.getUpdateSignatureImages(data.content)
         },
 
         compareUpdateData() {
@@ -506,7 +526,16 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated_signature') {
+                let removedImages = this.getRemovedImages('Update', this.getImages(this.updateSignatureModel.content))
+
+                await this.deleteRemovedImages(removedImages);
+
+                this.updateImages = [];
+
                 await this.getSignatureList()
+                this.updateSignatureTemp.name = this.updateSignatureModel.name
+                this.updateSignatureTemp.content = this.updateSignatureModel.content
+                this.updateSignatureTemp.work_mail = this.updateSignatureModel.work_mail
             }
         },
 
@@ -553,6 +582,14 @@ export default {
                     .then((result) => {
                         if (result.isConfirmed) {
                             this.closeModal()
+
+                            // get added images
+                            let removedImages = this.getRemovedImages('Update', this.getImages(this.updateSignatureTemp.content))
+
+                            // remove images
+                            this.deleteRemovedImages(removedImages)
+
+                            this.updateImages = [];
                         }
                     });
                 } else {
