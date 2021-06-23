@@ -134,7 +134,7 @@
         </div>
 
         <!-- Modal Add Signature -->
-        <div class="modal fade" id="modal-add-signature" ref="modalSignature" style="display: none;">
+        <div class="modal fade" id="modal-add-signature" ref="modalSignature" style="display: none;" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -268,6 +268,8 @@ export default {
                 work_mail: '',
             },
 
+            addImages: [],
+
             modalMode: '',
             isPopupLoading: false,
             isLoadingTable: false,
@@ -319,6 +321,12 @@ export default {
         this.getSignatureList()
     },
 
+    watch: {
+        'signatureModel.content': function(value) {
+            this.getAddSignatureImages(value)
+        }
+    },
+
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
@@ -367,8 +375,30 @@ export default {
     },
 
     methods: {
-        testEvent() {
-            console.log('test');
+        getImages(string) {
+            const imgRex = /<img.*?src="(.*?)"[^>]+>/g;
+            const images = [];
+            let img;
+            while ((img = imgRex.exec(string))) {
+                images.push(img[1]);
+            }
+
+            return images;
+        },
+
+        getAddSignatureImages(string) {
+            let self = this
+            let images = self.getImages(string)
+
+            images.forEach(function (img) {
+                if (!self.addImages.includes(img)) {
+                    self.addImages.push(img)
+                }
+            })
+        },
+
+        testEvent(event) {
+            // console.log(event);
         },
 
         getListUsers(){
