@@ -572,7 +572,7 @@
                             'N/A':scope.row.in_charge }}
                         </template>
 
-                        <!-- <template
+                        <template
                             slot-scope="scope"
                             slot="usernameData">
                             {{ scope.row.username ?
@@ -587,7 +587,7 @@
                                 class="badge badge-danger">
                                 Invalid
                             </span>
-                        </template> -->
+                        </template>
 
                         <template
                             slot-scope="scope"
@@ -599,14 +599,14 @@
                             </a>
                         </template>
 
-                        <!-- <template
+                        <template
                             slot-scope="scope"
                             slot="priceData">
                             {{ scope.row.price == '' ||
                             scope.row.price == null ?
                             '':'$'}} {{
                             scope.row.price }}
-                        </template> -->
+                        </template>
 
                         <template
                             slot-scope="scope"
@@ -1983,9 +1983,9 @@
                         isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
-                        prop : 'custom_username',
+                        prop : '_action',
                         name : 'Seller',
-                        // actionName : 'usernameData',
+                        actionName : 'usernameData',
                         // sortable: true,
                         width: 100,
                         isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
@@ -2020,12 +2020,12 @@
                         isHidden: false
                     },
                     {
-                        prop : 'custom_price',
+                        prop : '_action',
                         name : 'Price',
-                        // actionName : 'priceData',
+                        actionName : 'priceData',
                         width: 100,
                         // sortable: true,
-                        prefix: '$ ',
+                        // prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
                     },
                     {

@@ -392,7 +392,7 @@
                         </template>
 
 
-                        <!--
+                        
                         <template
                             slot-scope="scope"
                             slot="priceData">
@@ -413,7 +413,7 @@
                             scope.row.inc_article) }}
                         </template>
 
-                        -->
+                       
 
                         <template
                             slot-scope="scope"
@@ -1045,20 +1045,20 @@
                         isHidden: false
                     },
                     {
-                        prop : 'custom_new_price',
+                        prop : '_action',
                         name : 'Price',
-                        // actionName : 'priceData',
-                        sortable: true,
-                        prefix: '$',
+                        actionName : 'priceData',
+                        // sortable: true,
+                        // prefix: '$',
                         width: 100,
                         isHidden: false
                     },
                     {
-                        prop : 'custom_new_prices',
+                        prop : '_action',
                         name : 'Prices',
-                        // actionName : 'pricesData',
-                        sortable: true,
-                        prefix: '$',
+                        actionName : 'pricesData',
+                        // sortable: true,
+                        // prefix: '$',
                         width: 100,
                         isHidden: !this.user.isAdmin
                     },
