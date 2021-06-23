@@ -285,13 +285,25 @@ class BuyController extends Controller
 
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+        $UserId[] = $user->id;
 
-        $total_purchased = Backlink::selectRaw('SUM(price) as total_purchased')
-            ->where('user_id', $user->id)
-            ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
-                return $query->orWhereIn('user_id', $sub_buyer_ids);
+        $total_purchased = Backlink::selectRaw('SUM(prices) as total_purchased')
+            ->where('status', '!=', 'Canceled')
+            ->where(function($query) use ($sub_buyer_ids, $UserId){
+                if(count($sub_buyer_ids) > 0) {
+                    return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                } else{
+                    return $query->whereIn('user_id', $UserId);
+                }
             })
             ->get();
+
+        // $total_purchased = Backlink::selectRaw('SUM(prices) as total_purchased')
+        //     ->where('user_id', $user->id)
+        //     ->when(count($sub_buyer_ids) > 0, function($query) use ($sub_buyer_ids){
+        //         return $query->orWhereIn('user_id', $sub_buyer_ids);
+        //     })
+        //     ->get();
 
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
