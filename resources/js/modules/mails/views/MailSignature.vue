@@ -227,7 +227,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">Close</button>
                         <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
                         <button v-else type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
                     </div>
@@ -263,6 +263,12 @@ export default {
 
             updateSignatureModel: {
                 id: '',
+                name: '',
+                content: '',
+                work_mail: '',
+            },
+
+            updateSignatureTemp: {
                 name: '',
                 content: '',
                 work_mail: '',
@@ -435,6 +441,19 @@ export default {
             this.updateSignatureModel.name = data.name;
             this.updateSignatureModel.content = data.content;
             this.updateSignatureModel.work_mail = data.work_mail;
+
+            // add data to temp
+            this.updateSignatureTemp.name = data.name
+            this.updateSignatureTemp.content = data.content
+            this.updateSignatureTemp.work_mail = data.work_mail
+        },
+
+        compareUpdateData() {
+            return (
+                (this.updateSignatureModel.name !== this.updateSignatureTemp.name)
+                || (this.updateSignatureModel.content !== this.updateSignatureTemp.content)
+                || (this.updateSignatureModel.work_mail !== this.updateSignatureTemp.work_mail)
+            )
         },
 
         async deleteSignature(id) {
@@ -476,7 +495,56 @@ export default {
             console.log(images)
         },
 
-        modalOpener(mode){
+        modalCloser(mode) {
+            if (mode === 'Add') {
+
+                if (this.signatureModel.content || this.signatureModel.name) {
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Changes will not be saved",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.closeModal()
+                        }
+                    });
+                } else {
+                    this.closeModal()
+                }
+
+            } else {
+
+                if (this.compareUpdateData()) {
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Changes will not be saved",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.closeModal()
+                        }
+                    });
+                } else {
+                    this.closeModal()
+                }
+
+            }
+        },
+
+        closeModal() {
+            let element = this.$refs.modalSignature
+            $(element).modal('hide')
+        },
+
+        modalOpener(mode) {
             this.clearMessageForm()
 
             this.modalMode = mode
