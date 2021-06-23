@@ -21,11 +21,11 @@ class Publisher extends Model
         'custom_updated',
         'custom_url',
         'custom_continent',
-        'custom_price',
+        // 'custom_price',
         'custom_username',
-        'custom_topic',
-        'custom_new_price',
-        'custom_new_prices'
+        'custom_topic'
+        // 'custom_new_price',
+        // 'custom_new_prices'
     ];
 
     protected $fillable
@@ -66,9 +66,9 @@ class Publisher extends Model
         return isset($this->continent->name) ? $this->continent->name:'N/A';
     }
 
-    public function getCustomPriceAttribute() {
-        return isset($this->price) ? $this->price:0;
-    }
+    // public function getCustomPriceAttribute() {
+    //     return isset($this->price) ? $this->price:0;
+    // }
 
     public function getCustomCreatedAttribute() {
         return Carbon::parse($this->created_at)->format('Y-m-d');
@@ -78,15 +78,13 @@ class Publisher extends Model
         return Carbon::parse($this->updated_at)->format('Y-m-d');
     }
 
-    public function getCustomNewPricesAttribute() {
-        // return $this->price;
-        return $this->computePriceStalinks($this->price, $this->inc_article);
-    }
+    // public function getCustomNewPricesAttribute() {
+    //     return $this->computePriceStalinks($this->price, $this->inc_article);
+    // }
 
-    public function getCustomNewPriceAttribute() {
-        // return $this->price;
-        return $this->computePrice($this->price, $this->inc_article);
-    }
+    // public function getCustomNewPriceAttribute() {
+    //     return $this->computePrice($this->price, $this->inc_article);
+    // }
 
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id');
@@ -118,105 +116,104 @@ class Publisher extends Model
         return $url;
     }
 
-    private function percentage($percent, $total) {
-        return number_format(($percent/ 100) * $total, 2, '.', '');
-    }
+    // private function percentage($percent, $total) {
+    //     return number_format(($percent/ 100) * $total, 2, '.', '');
+    // }
 
-    private function computePrice($price, $article) {
+    // private function computePrice($price, $article) {
 
-        $formula = Formula::first();
+    //     $formula = Formula::first();
 
-        $activeUser = Auth::user();
-        $registration = Registration::where('email', $activeUser->email)->first();
-        $selling_price = $price;
+    //     $activeUser = Auth::user();
+    //     $registration = Registration::where('email', $activeUser->email)->first();
+    //     $selling_price = $price;
 
-        $percent = floatval($formula->percentage);
-        $additional = floatval($formula->additional);
+    //     $percent = floatval($formula->percentage);
+    //     $additional = floatval($formula->additional);
 
-        if( isset($registration) ){
+    //     if( isset($registration) ){
 
-            $type = $registration->type;
-            $commission = strtolower($registration->commission);
+    //         $type = $registration->type;
+    //         $commission = strtolower($registration->commission);
 
-            if( $price != '' && $price != null ){
+    //         if( $price != '' && $price != null ){
 
-                if( $type == 'Buyer' ){
+    //             if( $type == 'Buyer' ){
 
-                    if( strtolower($article) == 'yes' ){
+    //                 if( strtolower($article) == 'yes' ){
 
-                        if( $commission == 'no' ){
-                            $selling_price = $price;
-                        }
+    //                     if( $commission == 'no' ){
+    //                         $selling_price = $price;
+    //                     }
 
-                        if( $commission == 'yes' ){
-                            $percentage = $this->percentage($percent, $price);
-                            $selling_price = floatval($percentage) + floatval($price);
-                        }
-                    }
+    //                     if( $commission == 'yes' ){
+    //                         $percentage = $this->percentage($percent, $price);
+    //                         $selling_price = floatval($percentage) + floatval($price);
+    //                     }
+    //                 }
 
-                    if( strtolower($article) == 'no' ){
+    //                 if( strtolower($article) == 'no' ){
 
-                        if( $commission == 'no' ){
-                            $selling_price = floatval($price) + $additional;
-                        }
+    //                     if( $commission == 'no' ){
+    //                         $selling_price = floatval($price) + $additional;
+    //                     }
 
-                        if( $commission == 'yes' ){
-                            $percentage = $this->percentage($percent, $price);
-                            $selling_price = floatval($percentage) + floatval($price) + $additional;
-                        }
+    //                     if( $commission == 'yes' ){
+    //                         $percentage = $this->percentage($percent, $price);
+    //                         $selling_price = floatval($percentage) + floatval($price) + $additional;
+    //                     }
 
-                    }
-                }
+    //                 }
+    //             }
 
-            }
-        }
+    //         }
+    //     }
 
-        $selling_price = round(floatval($selling_price));
-//        $selling_price = floatval($selling_price);
+    //     $selling_price = round(floatval($selling_price));
 
-        return $selling_price;
-    }
+    //     return $selling_price;
+    // }
 
 
-    private function computePriceStalinks($price, $article) {
+    // private function computePriceStalinks($price, $article) {
 
-        $formula = Formula::first();
-        $selling_price = $price;
-        $percent = floatval($formula->percentage);
-        $additional = floatval($formula->additional);
-        $commission = 'yes';
+    //     $formula = Formula::first();
+    //     $selling_price = $price;
+    //     $percent = floatval($formula->percentage);
+    //     $additional = floatval($formula->additional);
+    //     $commission = 'yes';
 
-        if( $price != '' && $price != null ){
+    //     if( $price != '' && $price != null ){
 
-            if( strtolower($article) == 'yes' ){
+    //         if( strtolower($article) == 'yes' ){
 
-                if( $commission == 'no' ){
-                    $selling_price = $price;
-                }
+    //             if( $commission == 'no' ){
+    //                 $selling_price = $price;
+    //             }
 
-                if( $commission == 'yes' ){
-                    $percentage = $this->percentage($percent, $price);
-                    $selling_price = floatval($percentage) + floatval($price);
-                }
-            }
+    //             if( $commission == 'yes' ){
+    //                 $percentage = $this->percentage($percent, $price);
+    //                 $selling_price = floatval($percentage) + floatval($price);
+    //             }
+    //         }
 
-            if( strtolower($article) == 'no' ){
+    //         if( strtolower($article) == 'no' ){
 
-                if( $commission == 'no' ){
-                    $selling_price = floatval($price) + $additional;
-                }
+    //             if( $commission == 'no' ){
+    //                 $selling_price = floatval($price) + $additional;
+    //             }
 
-                if( $commission == 'yes' ){
-                    $percentage = $this->percentage($percent, $price);
-                    $selling_price = floatval($percentage) + floatval($price) + $additional;
-                }
+    //             if( $commission == 'yes' ){
+    //                 $percentage = $this->percentage($percent, $price);
+    //                 $selling_price = floatval($percentage) + floatval($price) + $additional;
+    //             }
 
-            }
+    //         }
 
-        }
+    //     }
 
-        $selling_price = round(floatval($selling_price));
+    //     $selling_price = round(floatval($selling_price));
 
-        return $selling_price;
-    }
+    //     return $selling_price;
+    // }
 }
