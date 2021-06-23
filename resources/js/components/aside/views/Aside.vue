@@ -30,7 +30,7 @@
                 </li>
 
                 <li
-                    v-if="user.isAdmin || isQc"
+                    v-if="user.isAdmin || isQc || isBuyer || isQcBilling || isQcSeller || isSeller"
                     :class="{ active: $route.name == 'dashboard' }"
                 >
                     <router-link
