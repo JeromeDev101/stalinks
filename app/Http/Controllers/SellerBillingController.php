@@ -91,13 +91,8 @@ class SellerBillingController extends Controller
     }
 
     public function payBilling(SellerPayRequest $request, NotificationInterface $notification, PaypalInterface $paypal, InvoiceService $invoice) {
-        // Disregard file upload if payment type is paypal
-        if ($request->get('payment_id') != 1) {
-            $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
-            move_file_to_storage($request->file, 'images/billing', $filename);
-        } else {
-            $filename = null;
-        }
+        $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
+        move_file_to_storage($request->file, 'images/billing', $filename);
 
         $paypalResult = null;
         $payoutResult = null;
@@ -141,24 +136,24 @@ class SellerBillingController extends Controller
                 }
             }
 
-            if ($request->get('payment_id') == 1) {
-                $paypalResult = $paypal->createPayout([
-                    'email' => $seller->email,
-                    'amount' => $totalBacklinkAmount
-                ]);
-
-                $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
-
-                Billing::where('id_backlink', $ids[0]->id)->update([
-                    'fee' => $payoutResult->result->items[0]->payout_item_fee->value
-                ]);
-
-                $invoicePdf = $invoice->generateSellerProof($seller, $backlink_ids, $totalBacklinkAmount, $billing->id, $payoutResult->result->items[0]->payout_item_fee->value);
-
-                $billing->update([
-                    'proof_doc_path' =>  $invoicePdf
-                ]);
-            }
+//            if ($request->get('payment_id') == 1) {
+//                $paypalResult = $paypal->createPayout([
+//                    'email' => $seller->email,
+//                    'amount' => $totalBacklinkAmount
+//                ]);
+//
+//                $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
+//
+//                Billing::where('id_backlink', $ids[0]->id)->update([
+//                    'fee' => $payoutResult->result->items[0]->payout_item_fee->value
+//                ]);
+//
+//                $invoicePdf = $invoice->generateSellerProof($seller, $backlink_ids, $totalBacklinkAmount, $billing->id, $payoutResult->result->items[0]->payout_item_fee->value);
+//
+//                $billing->update([
+//                    'proof_doc_path' =>  $invoicePdf
+//                ]);
+//            }
 
             $this->buyerDebittedNotification($backlink, $totalBacklinkAmount, $backlink_ids);
             $this->sellerPaidNotification($seller->id, $totalBacklinkAmount, $backlink_ids);

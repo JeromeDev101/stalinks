@@ -23,11 +23,6 @@ class SellerPayRequest extends FormRequest
      */
     public function rules()
     {
-        // Disregard validation if payment type is paypal
-        if ($this->request->get('payment_id') == 1) {
-            return [];
-        }
-
         return [
             'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
