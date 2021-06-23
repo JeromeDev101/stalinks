@@ -403,6 +403,20 @@ export default {
             })
         },
 
+        getRemovedImages(mode, images) {
+            if (mode === 'Add') {
+                return this.addImages.filter(img => !images.includes(img))
+            }
+        },
+
+        async deleteRemovedImages(images) {
+            if (images.length !== 0) {
+                await axios.post('/api/mail/delete-signature-image', {
+                    images: images
+                })
+            }
+        },
+
         testEvent(event) {
             // console.log(event);
         },
@@ -425,14 +439,19 @@ export default {
 
         async submitAdd() {
             let self = this;
-            this.isPopupLoading = true;
+            self.isPopupLoading = true;
             await this.$store.dispatch('actionAddEmailSignature', self.signatureModel);
-            this.isPopupLoading = false;
+            self.isPopupLoading = false;
 
-            if (this.messageForms.action === 'saved_signature') {
-                this.clearModel();
+            if (self.messageForms.action === 'saved_signature') {
 
-                await this.getSignatureList()
+                // remove deleted images on editor
+                let removedImages = self.getRemovedImages('Add', self.getImages(self.signatureModel.content))
+                await self.deleteRemovedImages(removedImages);
+
+                await self.clearModel();
+                await self.getSignatureList()
+                this.addImages = [];
             }
         },
 
@@ -509,7 +528,11 @@ export default {
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
+                            // remove all images inserted in editor
+                            this.deleteRemovedImages(this.addImages)
                             this.closeModal()
+                            this.clearModel()
+                            this.addImages = [];
                         }
                     });
                 } else {
