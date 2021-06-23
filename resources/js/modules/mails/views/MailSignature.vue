@@ -109,7 +109,7 @@
                                             title="Delete"
                                             class="btn btn-default"
 
-                                            @click="deleteSignature(item.id)">
+                                            @click="deleteSignature(item.id, item.content)">
 
                                             <i class="fa fa-fw fa-trash"></i>
                                         </button>
@@ -495,7 +495,7 @@ export default {
             )
         },
 
-        async deleteSignature(id) {
+        async deleteSignature(id, content) {
             swal.fire({
                 title: "Delete Email Signature",
                 text: "Do you want to delete this email signature?",
@@ -508,6 +508,9 @@ export default {
                 if (result.isConfirmed) {
                     axios.delete('/api/mail/delete-signature/' + id)
                     .then(response => {
+
+                        this.deleteRemovedImages(this.getImages(content))
+
                         this.getSignatureList()
 
                         swal.fire(
