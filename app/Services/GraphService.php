@@ -146,6 +146,10 @@ class GraphService
             $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
+        if (isset($request['team_in_charge']) && $request['team_in_charge'] > 0 && $request['scope'] !== 'team') {
+            $query->where('ext_domains.user_id', $request['team_in_charge']);
+        }
+
         return $query->get();
     }
 
