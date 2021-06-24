@@ -416,6 +416,30 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2"
+                             v-if="this.filterModel.urlSellerStatistics.scope !== 'team'">
+                            <div class="form-group">
+                                <label
+                                    style="color: #333">Team In-Charge
+                                </label>
+                                <div class="input-group">
+                                    <select name=""
+                                            class="form-control"
+                                            id=""
+                                            v-model="filterModel.urlSellerStatistics.team_in_charge">
+                                        <option
+                                            value="0">All
+                                        </option>
+                                        <option
+                                            :value="user.id"
+                                            v-for="user
+                                            in
+                                            listSellerTeam.data" v-if="user.id !== 0">{{ user.username }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Action</label>
@@ -636,7 +660,8 @@ export default {
                         startDate: null,
                         endDate: null
                     },
-                    scope : 'monthly'
+                    scope : 'monthly',
+                    team_in_charge: 0
                 },
                 prospectQualifiedRegistered : {
                     dateRange: {
@@ -845,11 +870,13 @@ export default {
                 dateRange : {
                     startDate : null,
                     endDate : null
-                }
+                },
+                team_in_charge: 0,
+                scope: 'monthly'
             };
 
-            this.filterModel.urlSellerStatistics.scope =
-                'monthly';
+            // this.filterModel.urlSellerStatistics.scope =
+            //     'monthly';
 
             this.getUrlSellerStatisticsData();
         },
@@ -875,7 +902,9 @@ export default {
             null) {
             axios.get('/api/graphs/url-seller-statistics?start_date=' +
                 start + '&end_date=' + end + '&scope=' +
-                this.filterModel.urlSellerStatistics.scope)
+                this.filterModel.urlSellerStatistics.scope +
+                '&team_in_charge=' +
+                this.filterModel.urlSellerStatistics.team_in_charge)
                 .then(response => {
                     let data = response.data;
 
