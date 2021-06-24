@@ -18,6 +18,7 @@ export default {
     data() {
         return {
             editorData: '',
+            addImages: [],
             options: {
                 height: 300,
                 branding: false,
@@ -64,6 +65,7 @@ export default {
     watch: {
         editorData: function(newVal) {
             this.handleInput()
+            this.getAddedImages(newVal)
         },
         value: function(newVal) {
             // this.editorData = this.convertLineBreaks(newVal);
@@ -73,12 +75,38 @@ export default {
     methods: {
         changeData() {
         },
+
         handleInput (e) {
             this.$emit('input', this.editorData)
         },
+
         convertLineBreaks(str) {
             return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
         },
+
+        // get images on current content
+        getImages(string) {
+            const imgRex = /<img.*?src="(.*?)"[^>]+>/g;
+            const images = [];
+            let img;
+            while ((img = imgRex.exec(string))) {
+                images.push(img[1]);
+            }
+
+            return images;
+        },
+
+        // array of all added images
+        getAddedImages(string) {
+            let self = this
+            let images = self.getImages(string)
+
+            images.forEach(function (img) {
+                if (!self.addImages.includes(img)) {
+                    self.addImages.push(img)
+                }
+            })
+        }
     },
 }
 </script>
