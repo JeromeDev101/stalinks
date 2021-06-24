@@ -221,9 +221,7 @@
                                 </table>
                             </div>
 
-                            <div class="col-md-12"
-                                 v-if="info.payment_type_id
-                                 != 1">
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label for="">Proof of Documents</label>
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="proof" name="file">
@@ -569,11 +567,7 @@
                 this.formData.append('payment_type', this.updateModel.payment_type);
                 this.formData.append('ids', JSON.stringify(ids));
                 this.formData.append('payment_id', this.info.payment_type_id);
-
-                // Append file parameter if payment type is not paypal
-                if (this.info.payment_type_id != 1) {
-                    this.formData.append('file', this.$refs.proof.files[0]);
-                }
+                this.formData.append('file', this.$refs.proof.files[0]);
 
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionPay', this.formData)
