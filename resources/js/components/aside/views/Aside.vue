@@ -5,11 +5,7 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu tree" data-widget="tree">
                 <li
-                    v-if="
-                        user.isAdmin ||
-                            (user.isOurs == 0 &&
-                                (isManager || isSeller || isBuyer || isQc))
-                    "
+                    v-if="user.isAdmin || (user.isOurs === 0 && (isManager || isSeller || isBuyer || isQc))"
                     class="header header-custom"
                 >
                     ADMIN
@@ -30,7 +26,7 @@
                 </li>
 
                 <li
-                    v-if="user.isAdmin || isQc || isBuyer || isQcBilling || isQcSeller || isSeller"
+                    v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller))"
                     :class="{ active: $route.name == 'dashboard' }"
                 >
                     <router-link
