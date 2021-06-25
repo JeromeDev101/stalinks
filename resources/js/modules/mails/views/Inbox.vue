@@ -498,7 +498,7 @@
         </div>
 
         <!-- Modal Send Email -->
-        <div id="modal-compose-email" class="modal fade">
+        <div id="modal-compose-email" class="modal fade" ref="modalCompose" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -622,7 +622,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
 <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>-->
-                                    <tiny-editor editor-id="composeEditor" v-model="emailContent.content"></tiny-editor>
+                                    <tiny-editor editor-id="composeEditor" v-model="emailContent.content" ref="composeEditor"></tiny-editor>
                                     <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -637,7 +637,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Send')">Close</button>
                         <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('compose')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
@@ -647,7 +647,7 @@
 
 
         <!-- Modal Send Reply Email -->
-        <div id="modal-email-reply" class="modal fade">
+        <div id="modal-email-reply" class="modal fade" ref="modalReply" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -751,7 +751,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
 <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>-->
-                                    <tiny-editor editor-id="replyEditor" v-model="replyContent.content"></tiny-editor>
+                                    <tiny-editor editor-id="replyEditor" v-model="replyContent.content" ref="replyEditor"></tiny-editor>
                                     <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -766,14 +766,13 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Reply')">Close</button>
                         <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('reply')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- End Send Reply Email -->
-
 
         <!-- Modal Label -->
         <div id="modal-label-selection" class="modal fade">
@@ -922,6 +921,92 @@ export default {
     },
 
     methods: {
+        modalCloser(mode) {
+            if (mode === 'Send') {
+
+                if (this.emailContent.content
+                    || this.emailContent.email.length !== 0
+                    || this.emailContent.title
+                    || this.emailContent.cc) {
+
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted on editor
+                            this.$refs.composeEditor.deleteImages('All');
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
+
+                } else {
+                    this.closeModal(mode)
+                }
+
+            } else {
+                if (this.replyContent.content
+                    || this.replyContent.cc) {
+
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted on editor
+                            this.$refs.replyEditor.deleteImages('All');
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
+
+                } else {
+                    this.closeModal(mode)
+                }
+            }
+        },
+
+        closeModal(mode) {
+            if (mode === 'Send') {
+                let element = this.$refs.modalCompose
+                $(element).modal('hide')
+            } else {
+                let element = this.$refs.modalReply
+                $(element).modal('hide')
+            }
+        },
+
+        clearModel(mode) {
+            if (mode === 'Send') {
+                this.emailContent = {
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
+                }
+            } else {
+                this.replyContent = {
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
+                }
+            }
+        },
+
         checkIsViewedForThreads(thread) {
             return thread.some(el => (el.is_sent === 0 && el.is_viewed === 0));
         },
@@ -1603,6 +1688,13 @@ export default {
                     'success'
                 )
 
+                // delete removed images on editor
+                if (type === 'compose') {
+                    this.$refs.composeEditor.deleteImages('Removed');
+                } else {
+                    this.$refs.replyEditor.deleteImages('Removed');
+                }
+
                 this.emailContent = {
                     cc: '',
                     email: [],
@@ -1628,7 +1720,7 @@ export default {
                 this.countryMailId = '';
                 this.mailInfo = {};
 
-                // clear mesesage forms
+                // clear message forms
 
                 this.clearMessageform()
             } else {

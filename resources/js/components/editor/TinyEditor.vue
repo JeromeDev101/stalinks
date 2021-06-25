@@ -106,6 +106,33 @@ export default {
                     self.addImages.push(img)
                 }
             })
+        },
+
+        // get removed images from current content
+        getRemovedImages() {
+            let images = this.getImages(this.editorData)
+
+            return this.addImages.filter(img => !images.includes(img))
+        },
+
+        // delete images
+        async deleteRemovedImages(images) {
+            if (images.length !== 0) {
+                await axios.post('/api/mail/delete-signature-image', {
+                    images: images
+                })
+
+                this.addImages = [];
+            }
+        },
+
+        // delete images function
+        deleteImages(mode) {
+            if (mode === 'All') {
+                this.deleteRemovedImages(this.addImages)
+            } else {
+                this.deleteRemovedImages(this.getRemovedImages())
+            }
         }
     },
 }
