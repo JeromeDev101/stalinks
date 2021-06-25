@@ -1554,6 +1554,8 @@
                     }
                 }
 
+                this.updateModel.credit_left = credit_left;
+
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateBuy', this.updateModel);
                 this.isPopupLoading = false;
