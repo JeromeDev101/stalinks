@@ -1248,7 +1248,7 @@
       <!-- End Modal Add -->
 
       <!-- Modal Send Email -->
-      <div id="modal-email" class="modal fade" ref="modalEmail" style="display: none;">
+      <div id="modal-email" class="modal fade" ref="modalEmail" style="display: none;" data-backdrop="static">
          <div class="modal-dialog modal-lg">
             <div class="modal-content">
                <div class="modal-header">
@@ -1329,7 +1329,7 @@
                         <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                            <label style="color: #333">Content</label>
 <!--                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>-->
-                            <tiny-editor editor-id="urlEmailEditor" v-model="modelMail.content"></tiny-editor>
+                            <tiny-editor editor-id="urlEmailEditor" v-model="modelMail.content" ref="urlEmailEditor"></tiny-editor>
                             <span v-if="messageFormsMail.errors.content" v-for="err in messageFormsMail.errors.content" class="text-danger">{{ err }}</span>
                         </div>
                      </div>
@@ -1349,7 +1349,7 @@
                   <div class="overlay" v-if="isPopupLoading"></div>
                </div>
                <div class="modal-footer">
-                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-default pull-left" @click="modalCloser()">Close</button>
 
                   <button
                       type="button"
@@ -1924,6 +1924,47 @@ export default {
         });
     },
     methods: {
+        modalCloser() {
+            if (this.modelMail.title || this.modelMail.content) {
+
+                swal.fire({
+                    title: "Are you sure?",
+                    text: "Email contents will be removed",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted on editor
+                            this.$refs.urlEmailEditor.deleteImages('All');
+
+                            this.closeModal()
+                            this.clearMailModel()
+                        }
+                    });
+
+            } else {
+                this.$refs.urlEmailEditor.deleteImages('All');
+                this.clearMailModel()
+                this.closeModal()
+            }
+        },
+
+        closeModal() {
+            let element = this.$refs.modalEmail
+            $(element).modal('hide')
+        },
+
+        clearMailModel() {
+            this.modelMail = {
+                title: '',
+                content: '',
+                mail_name: '',
+            }
+        },
+
         async saveColumnSetting() {
             let loader = this.$loading.show();
             this.toggleTableLoading();
@@ -2591,10 +2632,22 @@ export default {
                 if (ext == null) {
                     this.extDomain_id = '';
 
+                    let selectedEmails = [];
+
+                    for (let index in this.checkIds) {
+                        if (this.checkIds[index].email !== "" || this.checkIds[index].email != null) {
+                            if (typeof(this.checkIds[index].email) === "string") {
+                                selectedEmails.push(this.checkIds[index].email.split('|'))
+                            } else {
+                                selectedEmails.push(this.checkIds[index].email.map(a => a.text))
+                            }
+                        }
+                    }
+
                     if (this.checkIds.length == 0) {
                         swal.fire('No Selected', 'Selection is empty.', 'error');
 
-                    } else if (this.checkIds.length > 10) {
+                    } else if (selectedEmails.flat().length > 10) {
                         swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                     } else {
                         let err = this.checkIds.some(function(items){
@@ -2751,6 +2804,8 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageFormsMail.action === 'success') {
+
+                this.$refs.urlEmailEditor.deleteImages('Removed');
 
                 if (this.mailInfo.tpl === 0) {
                     this.modelMail = {
