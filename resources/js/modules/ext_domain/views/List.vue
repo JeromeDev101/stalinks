@@ -2632,10 +2632,22 @@ export default {
                 if (ext == null) {
                     this.extDomain_id = '';
 
+                    let selectedEmails = [];
+
+                    for (let index in this.checkIds) {
+                        if (this.checkIds[index].email !== "" || this.checkIds[index].email != null) {
+                            if (typeof(this.checkIds[index].email) === "string") {
+                                selectedEmails.push(this.checkIds[index].email.split('|'))
+                            } else {
+                                selectedEmails.push(this.checkIds[index].email.map(a => a.text))
+                            }
+                        }
+                    }
+
                     if (this.checkIds.length == 0) {
                         swal.fire('No Selected', 'Selection is empty.', 'error');
 
-                    } else if (this.checkIds.length > 10) {
+                    } else if (selectedEmails.flat().length > 10) {
                         swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
                     } else {
                         let err = this.checkIds.some(function(items){

@@ -568,7 +568,10 @@ export default {
                         }
                     });
                 } else {
+                    this.deleteRemovedImages(this.addImages)
                     this.closeModal()
+                    this.clearModel()
+                    this.addImages = [];
                 }
 
             } else {
