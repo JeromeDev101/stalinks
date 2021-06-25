@@ -948,6 +948,8 @@ export default {
                     });
 
                 } else {
+                    this.$refs.composeEditor.deleteImages('All');
+                    this.clearModel(mode)
                     this.closeModal(mode)
                 }
 
@@ -974,6 +976,8 @@ export default {
                     });
 
                 } else {
+                    this.$refs.replyEditor.deleteImages('All');
+                    this.clearModel(mode)
                     this.closeModal(mode)
                 }
             }

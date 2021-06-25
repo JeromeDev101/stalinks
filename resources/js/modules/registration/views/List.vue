@@ -1431,6 +1431,8 @@ export default {
                         });
 
                 } else {
+                    this.$refs.registrationEmailEditor.deleteImages('All');
+                    this.clearMailModel()
                     this.closeModal()
                 }
             },
