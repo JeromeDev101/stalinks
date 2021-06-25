@@ -1010,7 +1010,7 @@
         <!-- End of Modal Settings -->
 
         <!-- Modal Send Email -->
-        <div id="modal-email-registration" class="modal fade" ref="modalEmailRegistration" style="display: none;">
+        <div id="modal-email-registration" class="modal fade" ref="modalEmailRegistration" style="display: none;" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1140,7 +1140,7 @@
 
 <!--                                    </textarea>-->
 
-                                    <tiny-editor editor-id="registrationEmailEditor" v-model="modelMail.content"></tiny-editor>
+                                    <tiny-editor editor-id="registrationEmailEditor" v-model="modelMail.content" ref="registrationEmailEditor"></tiny-editor>
 
                                     <span
                                         v-if="messageFormsMail.errors.content"
@@ -1167,7 +1167,7 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser()">Close</button>
 
                         <button
                             type="button"
@@ -1409,6 +1409,45 @@ export default {
                 clearMessageFormEmail: "clearMessageform",
             }),
 
+            modalCloser() {
+                if (this.modelMail.title || this.modelMail.content) {
+
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                // remove all images inserted on editor
+                                this.$refs.registrationEmailEditor.deleteImages('All');
+
+                                this.closeModal()
+                                this.clearMailModel()
+                            }
+                        });
+
+                } else {
+                    this.closeModal()
+                }
+            },
+
+            closeModal() {
+                let element = this.$refs.modalEmailRegistration
+                $(element).modal('hide')
+            },
+
+            clearMailModel() {
+                this.modelMail = {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                }
+            },
+
             getListEmails() {
                 axios.get('/api/mail/get-mail-list').then((response) => {
                     this.listUserEmail = response.data;
@@ -1552,6 +1591,9 @@ export default {
                 await this.$store.dispatch('actionSendMailgun', formData);
 
                 if (this.messageFormsMail.action === 'success') {
+                    // remove all images inserted on editor
+                    this.$refs.registrationEmailEditor.deleteImages('Removed');
+
                     this.modelMail = {
                         title: '',
                         content: '',
