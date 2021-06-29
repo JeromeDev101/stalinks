@@ -20,3 +20,4 @@ yarn-error.log
 /storage/debugbar
 /public/attachment
 .idea
+public/.alexa_credentials

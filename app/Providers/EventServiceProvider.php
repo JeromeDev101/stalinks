@@ -28,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\BacklinkLiveEvent' => [
           'App\Listerners\BacklinkLiveEventListener',
         ],
+        'App\Events\ExtDomainStatusUpdateEvent' => [
+            'App\Listerners\ExtDomainStatusUpdateEventListener'
+        ],
     ];
 
     /**
