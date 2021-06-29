@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Models;
+use App\Events\ExtDomainStatusUpdateEvent;
 use App\Repositories\Traits\Loggable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Database\Eloquent\Model;
+use Kleemans\AttributeEvents;
 
 class ExtDomain extends Model
 {
-    use SoftDeletes, Loggable;
+    use SoftDeletes, Loggable, AttributeEvents;
 
     protected $table = 'ext_domains';
     protected $guarded = [];
@@ -18,9 +20,19 @@ class ExtDomain extends Model
         'alexa_created_at'
     ];
 
+    protected $dispatchesEvents = [
+        'created' => ExtDomainStatusUpdateEvent::class,
+        'status:*' => ExtDomainStatusUpdateEvent::class,
+    ];
+
     public function users() {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
+
+//    public function status()
+//    {
+//        return $this->hasMany('App\ExtDomainStatus', 'ext_domain_id');
+//    }
 
     public function country()
     {

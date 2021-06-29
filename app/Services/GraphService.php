@@ -79,17 +79,22 @@ class GraphService
 
     public function urlSellerStatisticsQuery($request)
     {
+        $date = $request['mode'] === 'Created' ? 'ext_domains.created_at' : 'ext_domains.status_updated_at';
+
         switch ($request['scope']) {
             case 'monthly':
-                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+//                $xaxis = 'CONCAT(MONTHNAME(MAX(ext_domains.created_at)), " ", YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                $xaxis = 'CONCAT(MONTHNAME(MAX(' . $date . ')), " ", YEAR(MAX(' . $date . '))) AS xaxis,';
                 break;
 
             case 'daily':
-                $xaxis = 'CONCAT(MONTH(MAX(ext_domains.created_at)), \'-\', DAY(MAX(ext_domains.created_at)), \'-\', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+//                $xaxis = 'CONCAT(MONTH(MAX(ext_domains.created_at)), \'-\', DAY(MAX(ext_domains.created_at)), \'-\', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                $xaxis = 'CONCAT(MONTH(MAX(' . $date . ')), \'-\', DAY(MAX(' . $date . ')), \'-\', YEAR(MAX(' . $date . '))) AS xaxis,';
                 break;
 
             case 'weekly':
-                $xaxis = 'CONCAT(\'Week \', WEEK(MAX(ext_domains.created_at)), \', \', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+//                $xaxis = 'CONCAT(\'Week \', WEEK(MAX(ext_domains.created_at)), \', \', YEAR(MAX(ext_domains.created_at))) AS xaxis,';
+                $xaxis = 'CONCAT(\'Week \', WEEK(MAX(' . $date . ')), \', \', YEAR(MAX(' . $date . '))) AS xaxis,';
                 break;
 
             case 'team':
@@ -114,25 +119,45 @@ class GraphService
         '));
 
         if ($request['scope'] == 'daily') {
-            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
-            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
-            $query->groupBy(DB::raw('DAY(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('DAY(ext_domains.created_at)'));
 
-            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
-            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
-            $query->orderBy(DB::raw('DAY(ext_domains.created_at)'));
+//            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
+//            $query->orderBy(DB::raw('DAY(ext_domains.created_at)'));
+
+            $query->groupBy(DB::raw('YEAR(' . $date . ')'));
+            $query->groupBy(DB::raw('MONTH(' . $date . ')'));
+            $query->groupBy(DB::raw('DAY(' . $date . ')'));
+
+            $query->orderBy(DB::raw('YEAR(' . $date . ')'));
+            $query->orderBy(DB::raw('MONTH(' . $date . ')'));
+            $query->orderBy(DB::raw('DAY(' . $date . ')'));
         } else if ($request['scope'] == 'weekly') {
-            $query->groupBy(DB::raw('WEEK(ext_domains.created_at)'));
-            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('WEEK(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+//
+//            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->orderBy(DB::raw('WEEK(ext_domains.created_at)'));
 
-            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
-            $query->orderBy(DB::raw('WEEK(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('WEEK(' . $date . ')'));
+            $query->groupBy(DB::raw('YEAR(' . $date . ')'));
+
+            $query->orderBy(DB::raw('YEAR(' . $date . ')'));
+            $query->orderBy(DB::raw('WEEK(' . $date . ')'));
         } else if ($request['scope'] == 'monthly') {
-            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
-            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('MONTH(ext_domains.created_at)'));
+//            $query->groupBy(DB::raw('YEAR(ext_domains.created_at)'));
+//
+//            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
+//            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
 
-            $query->orderBy(DB::raw('YEAR(ext_domains.created_at)'));
-            $query->orderBy(DB::raw('MONTH(ext_domains.created_at)'));
+            $query->groupBy(DB::raw('MONTH(' . $date . ')'));
+            $query->groupBy(DB::raw('YEAR(' . $date . ')'));
+
+            $query->orderBy(DB::raw('YEAR(' . $date . ')'));
+            $query->orderBy(DB::raw('MONTH(' . $date . ')'));
         } else if ($request['scope'] == 'team') {
             $query->join('users', 'users.id', 'ext_domains.user_id');
             $query->groupBy('users.id');
@@ -142,12 +167,22 @@ class GraphService
         }
 
         if (isset($request['start_date']) && $request['start_date'] != 'null') {
-            $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+//            $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+//            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+
+            $start_date = Carbon::create($request['start_date'])->format('Y-m-d');
+            $end_date = Carbon::create($request['end_date'])->format('Y-m-d');
+
+            $query->whereRaw("$date >= '$start_date'");
+            $query->whereRaw("$date <= '$end_date'");
         }
 
         if (isset($request['team_in_charge']) && $request['team_in_charge'] > 0 && $request['scope'] !== 'team') {
             $query->where('ext_domains.user_id', $request['team_in_charge']);
+        }
+
+        if ($request['mode'] === 'Status') {
+            $query->whereNotNull('ext_domains.status_updated_at');
         }
 
         return $query->get();
