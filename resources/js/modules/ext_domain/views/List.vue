@@ -2116,7 +2116,7 @@ export default {
         },
 
         async submitUpload() {
-
+            let loader = this.$loading.show();
             this.isEnableBtn = true;
             this.formData = new FormData();
             this.formData.append('file', this.$refs.excel.files[0]);
@@ -2148,8 +2148,16 @@ export default {
                     $("#modal-existing-domain").modal('show')
                 }
 
+                swal.fire(
+                    'Uploaded!',
+                    'Successfully Uploaded.',
+                    'success'
+                )
+
                 console.log(this.existingDomain);
             }
+
+            loader.hide();
         },
 
         formatPrice(value) {
