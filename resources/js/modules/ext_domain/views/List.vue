@@ -2643,7 +2643,7 @@ export default {
                     let selectedEmails = [];
 
                     for (let index in this.checkIds) {
-                        if (this.checkIds[index].email !== "" || this.checkIds[index].email != null) {
+                        if (this.checkIds[index].email !== "" && this.checkIds[index].email != null) {
                             if (typeof(this.checkIds[index].email) === "string") {
                                 selectedEmails.push(this.checkIds[index].email.split('|'))
                             } else {

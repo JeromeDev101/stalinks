@@ -79,6 +79,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('generate-list-delete')->post('generate-list-delete','GenerateListController@deleteGenerateList');
     Route::name('generate-list-ahref')->post('generate-list-ahref','GenerateListController@getAhrefs');
     Route::name('generate-list-compute-price')->post('generate-list-compute-price','GenerateListController@computePrice');
+    Route::name('generate-list-add-url')->post('generate-list-add-url','GenerateListController@store');
 
     //Accounts
     Route::name('add-accounts')->post('accounts', 'AccountController@store');
@@ -205,6 +206,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-payment')->get('/payments', 'PaymentController@getList');
         Route::name('add-payment')->post('/payments', 'PaymentController@store');
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
+        Route::name('get-email-access')->get('/email-access', 'ConfigController@getEmailAccessList');
+        Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
     });
 
     //Formula
