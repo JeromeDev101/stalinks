@@ -113,19 +113,21 @@
                                         </button>
 
                                         <export-excel
-                                            class   = "btn btn-primary btn-flat"
-                                            :data   = generateList.data
-                                            :fields = "json_fields"
-                                            worksheet = "My Worksheet"
-                                            name    = "generate_list.xls">
-                                        
-                                            <i class="fa fa-download"></i>
+                                            class="btn btn-primary btn-flat"
+                                            :data=generateList.data
+                                            worksheet="My Worksheet"
+                                            name="generate_list.xls">
+                                            <i class="fa fa-download"></i> 
                                         
                                         </export-excel>
+
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="text-right">
+                                <button class="btn btn-success" data-toggle="modal" data-target="#modalAddUrlGenerateList">Add URL</button>
+                            </td>
+                            <td width="100px">
                                 <div class="input-group input-group-sm float-right" style="width: 100px">
                                     <select name="" class="form-control float-right" @change="getGenerateList" v-model="filterModel.paginate" style="height: 37px;">
                                         <option v-for="option in paginate" v-bind:value="option">
@@ -222,7 +224,34 @@
             </div>
 
         </div>
-
+        
+        <!-- Modal Add URL -->
+        <div class="modal fade" id="modalAddUrlGenerateList" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add URL</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">URL</label>
+                                    <input type="text" class="form-control" v-model="addModel.url" placeholder="" required>
+                                    <small class="form-text text-danger" v-show="errorMessage.url">Please Fill up first the URL</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" @click="errorMessage.url = false">Close</button>
+                        <button type="button" class="btn btn-primary" @click="submitAdd">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Add URL -->
+        
     </div>
 </template>
 
@@ -263,6 +292,12 @@
                 btnUpload: true,
                 listCode: ['4A', '3A', '2A', '1A', '0A'],
                 allSelected: false,
+                addModel: {
+                    url: '',
+                },
+                errorMessage: {
+                    url: false
+                },
             }
         },
 
@@ -278,6 +313,35 @@
         },
 
         methods: {
+
+            submitAdd() {
+                if( this.addModel.url == '' ) {
+                    this.errorMessage.url = true
+                    return false;
+                }
+-
+                axios.post('/api/generate-list-add-url', this.addModel)
+                    .then((res) => {
+                        if(res.data.success === true) {
+                            swal.fire(
+                                'Saved!',
+                                'Successfully Updated.',
+                                'success'
+                            )
+                        } else {
+                            swal.fire(
+                                'Error',
+                                'URL is already exist',
+                                'error'
+                            )
+                        }
+
+                        this.errorMessage.url = false
+                        this.addModel.url = ''
+                        this.getGenerateList()
+                    })
+            },
+
             getGenerateList() {
                 axios.get('/api/generate-list',{
                     params: {
