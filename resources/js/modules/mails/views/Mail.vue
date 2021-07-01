@@ -5,17 +5,29 @@
             <!-- Side menu section -->
             <div class="col-md-2">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
-                <div v-if="user.isAdmin || user.role_id === 8">
+                <div v-if="user.isAdmin">
                     <div class="form-group">
-                        <label for="">Login As:</label>
+                        <label>Login As:</label>
                         <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
                             <option value="all">All</option>
-                            <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
-                                {{ option.work_mail }}
+                            <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">
+                                [{{ option.role.name }}] {{ option.work_mail }}
                             </option>
                         </select>
                     </div>
                 </div>
+
+                <div v-if="!user.isAdmin && user.access.length !== 0">
+                    <div class="form-group">
+                        <label>Login As:</label>
+                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
+                            <option v-for="option in emailAccessOptions" v-bind:value="option.work_mail">
+                                [{{ option.user.role.name }}] {{ option.work_mail }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Folders</h3>
@@ -196,6 +208,39 @@ export default {
             user: state => state.storeAuth.currentUser,
             messageForms: state => state.storeMailgun.messageForms,
         }),
+
+        adminAccessOptions() {
+            let self = this;
+            const emails = self.listUserEmail;
+
+            emails.forEach(item => {
+                if (item.work_mail === self.user.work_mail_orig) {
+                    item.role.name = 'Me';
+                }
+            });
+
+            return emails;
+        },
+
+        emailAccessOptions() {
+            let obj = {
+                user_id: this.user.id,
+                work_mail: this.user.work_mail_orig,
+                user: {
+                    role: {
+                        name: 'Me'
+                    }
+                }
+            };
+
+            const emails = this.user.access;
+
+            if (!emails.some(obj => obj.work_mail === this.user.work_mail_orig)) {
+                emails.push(obj)
+            }
+
+            return emails;
+        },
 
         generalLabels() {
             return this.listLabel.filter(label => label.user_id === null)

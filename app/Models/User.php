@@ -44,6 +44,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
         ];
 
+    protected $appends = [
+        'work_mail_orig'
+    ];
+
+    public function getWorkMailOrigAttribute() {
+        return $this->work_mail;
+    }
+
     public function isOurs()
     {
         return $this->where('isOurs', 0);
@@ -161,5 +169,10 @@ class User extends Authenticatable
         ->first();
 
         return floatval($wallet->amount_usd) - floatval($totalPurchased->total_purchased);
+    }
+
+    public function access()
+    {
+        return $this->hasMany('App\UserWorkMails', 'user_id');
     }
 }

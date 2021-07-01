@@ -205,6 +205,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-payment')->get('/payments', 'PaymentController@getList');
         Route::name('add-payment')->post('/payments', 'PaymentController@store');
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
+        Route::name('get-email-access')->get('/email-access', 'ConfigController@getEmailAccessList');
+        Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
     });
 
     //Formula

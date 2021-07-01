@@ -22,7 +22,7 @@
                             <button @click="clearMessageform" data-toggle="modal" data-target="#modal-add-language" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                         </div>
 
-                        <div class="box-body no-padding relative">
+                        <div class="box-body no-padding relative" style="height: 650px">
                             <table class="table table-hover table-bordered table-striped rlink-table">
                                 <thead>
                                     <tr class="label-primary">
@@ -114,6 +114,48 @@
 
                     <div class="box">
                         <div class="box-header">
+                            <h3 class="box-title">Mail Access</h3>
+                        </div>
+
+                        <div class="box-body no-padding relative" style="height: 650px">
+                            <table class="table table-condensed table-hover table-striped table-bordered">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Username</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in emailAccessList.data" :key="index">
+                                    <td>{{ index + 1}}</td>
+                                    <td>{{ item.username }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button
+                                                title="Edit"
+                                                type="submit"
+                                                class="btn btn-default"
+                                                data-toggle="modal"
+                                                data-target="#modal-email-access"
+
+                                                @click="doEditEmailAccess(item)">
+
+                                                <i class="fa fa-fw fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="overlay" v-if="isLoadingTable">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-header">
                             <h3 class="box-title">Payment Method</h3>
                             <button data-toggle="modal" @click="clearMessageform" data-target="#modal-add-payment" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                         </div>
@@ -148,7 +190,7 @@
 
                 <div class="col-sm-6">
                     <div class="row">
-                        
+
                         <div class="col-sm-12">
                             <div class="box p-4">
                                 <div class="box-body">
@@ -214,7 +256,7 @@
                                             </div>
                                             <div class="col-sm-12 p-3 text-primary">Commission = No <hr/></div>
                                             <div class="col-sm-12 text-danger">Formula: selling price + Additional</div>
-                                            
+
                                             <div class="col-sm-12 p-3 text-primary">Commission = Yes <hr/></div>
                                             <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price + Additional</div>
                                         </div>
@@ -257,7 +299,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal Update Payment Type -->
         <div class="modal fade" id="modal-update-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -357,7 +399,7 @@
             </div>
         </div>
         <!-- End Add Update Language -->
-        
+
         <!-- Modal Add Payment-->
         <div class="modal fade" id="modal-add-payment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -387,6 +429,55 @@
             </div>
         </div>
         <!-- End of Modal Add Payment-->
+
+        <!-- Modal Email Access -->
+        <div class="modal fade" id="modal-email-access" tabindex="-1" role="dialog" aria-labelledby="modal-email-access" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Email Access</h5>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                            <span v-if="messageForms.message !== '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="border p-2 mb-3">
+                            <h5 class="text-primary">{{ emailAccessModel.username }}</h5>
+                            <span>{{ emailAccessModel.work_mail }}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Emails</label>
+
+                            <span
+                                class="text-danger pull-right"
+                                style="cursor: pointer;"
+
+                                @click="emailAccessModel.emails = []">
+                                Remove all
+                            </span>
+
+                            <v-select
+                                v-model="emailAccessModel.emails"
+                                multiple
+                                label="role_name"
+                                placeholder="Select emails"
+                                :options="emailAccessOptions"
+                                :searchable="true"
+                                :reduce="email => email.work_mail"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitEmailAccess()" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal Add Country -->
         <!-- <div class="modal fade" id="modal-add" style="display: none;">
@@ -520,6 +611,13 @@
                     code: '',
                 },
 
+                emailAccessModel: {
+                    user_id: 0,
+                    username: '',
+                    work_mail: '',
+                    emails: []
+                },
+
                 filterModel: {
                     name: this.$route.query.name || '',
                     code: this.$route.query.name || '',
@@ -566,6 +664,7 @@
             this.getSubscriptionInfo();
             this.getFormula();
             this.getLanguageList();
+            this.getEmailAccessList();
         },
 
         computed: {
@@ -578,12 +677,35 @@
                 Info: state => state.storeSystem.Info,
                 formula: state => state.storeSystem.formula,
                 langaugeList: state => state.storeSystem.langaugeList,
+                emailAccessList: state => state.storeSystem.emailAccessList,
             }),
+
+            emailAccessOptions() {
+                let self = this;
+                const seen = [];
+                const emails = self.emailAccessList.data;
+
+                emails.forEach(item => {
+                    item.role_name = '[' + item.role.name + '] ' + item.work_mail
+                });
+
+                return emails.filter(item => {
+                    const duplicate = seen.includes(item.work_mail) || item.work_mail === self.emailAccessModel.work_mail
+                    seen.push(item.work_mail)
+                    return !duplicate;
+                })
+            }
         },
 
         methods: {
             async getLanguageList() {
                 await this.$store.dispatch('actionGetLanguageList');
+            },
+
+            async getEmailAccessList() {
+                this.isLoadingTable = true;
+                await this.$store.dispatch('actionGetEmailAccessList');
+                this.isLoadingTable = false;
             },
 
             async submitAddLanguage() {
@@ -715,6 +837,35 @@
                 this.clearMessageform();
                 this.$store.dispatch('clearMessageFormSystem');
                 this.paymentUpdate = JSON.parse(JSON.stringify(item))
+            },
+
+            doEditEmailAccess(item) {
+                this.emailAccessModel.user_id = item.id;
+                this.emailAccessModel.username = item.username;
+                this.emailAccessModel.work_mail = item.work_mail;
+                this.emailAccessModel.emails = this.flattenEmailAccess(item.access)
+            },
+
+            flattenEmailAccess(emails) {
+                return emails.map(a => a.work_mail);
+            },
+
+            async submitEmailAccess() {
+                let self = this
+                self.isPopupLoading = true;
+                await self.$store.dispatch('actionAddEmailAccess', self.emailAccessModel);
+                self.isPopupLoading = false;
+
+                if (self.messageForms.action === 'add_email_access') {
+
+                    await swal.fire(
+                        'Saved!',
+                        'Successfully saved.',
+                        'success'
+                    )
+
+                    await this.getEmailAccessList();
+                }
             },
 
             async submitAdd() {
