@@ -803,10 +803,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
             $combineALl = $codeCombiURDR. $codeCombiBlRD .$codeCombiOrgKW. $codeCombiOrgT;
 
-            $price_list = $priceCollection->where('code', strtoupper($combineALl));
+            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
 
             $value['code_combination'] = $combineALl;
-            $value['code_price'] = ( isset($price_list['price']) && !empty($price_list['price']) ) ? $price_list['price']:0;
+            $value['code_price'] = ( isset($price_list->price) && !empty($price_list->price) ) ? $price_list->price:0;
 
 
             // Price Basis
