@@ -558,7 +558,7 @@
                     },
                     {
                         prop : 'id_backlink',
-                        name : 'Language',
+                        name : 'ID Backlinks',
                         sortable: true,
                         width: 100,
                         isHidden: false
@@ -694,7 +694,7 @@
                         }
                     })
                 }
-                
+
 
                 // articles.forEach(function(item, index){
                 //     if( item.id == id){

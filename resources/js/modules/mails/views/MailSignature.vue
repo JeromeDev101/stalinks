@@ -109,7 +109,7 @@
                                             title="Delete"
                                             class="btn btn-default"
 
-                                            @click="deleteSignature(item.id)">
+                                            @click="deleteSignature(item.id, item.content)">
 
                                             <i class="fa fa-fw fa-trash"></i>
                                         </button>
@@ -134,7 +134,7 @@
         </div>
 
         <!-- Modal Add Signature -->
-        <div class="modal fade" id="modal-add-signature" ref="modalSignature" style="display: none;">
+        <div class="modal fade" id="modal-add-signature" ref="modalSignature" style="display: none;" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -227,7 +227,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">Close</button>
                         <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
                         <button v-else type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
                     </div>
@@ -267,6 +267,15 @@ export default {
                 content: '',
                 work_mail: '',
             },
+
+            updateSignatureTemp: {
+                name: '',
+                content: '',
+                work_mail: '',
+            },
+
+            addImages: [],
+            updateImages: [],
 
             modalMode: '',
             isPopupLoading: false,
@@ -319,6 +328,16 @@ export default {
         this.getSignatureList()
     },
 
+    watch: {
+        'signatureModel.content': function(value) {
+            this.getAddSignatureImages(value)
+        },
+
+        'updateSignatureModel.content': function(value) {
+            this.getUpdateSignatureImages(value)
+        }
+    },
+
     computed: {
         ...mapState({
             user: state => state.storeAuth.currentUser,
@@ -367,8 +386,57 @@ export default {
     },
 
     methods: {
-        testEvent() {
-            console.log('test');
+        getImages(string) {
+            const imgRex = /<img.*?src="(.*?)"[^>]+>/g;
+            const images = [];
+            let img;
+            while ((img = imgRex.exec(string))) {
+                images.push(img[1]);
+            }
+
+            return images;
+        },
+
+        getAddSignatureImages(string) {
+            let self = this
+            let images = self.getImages(string)
+
+            images.forEach(function (img) {
+                if (!self.addImages.includes(img)) {
+                    self.addImages.push(img)
+                }
+            })
+        },
+
+        getUpdateSignatureImages(string) {
+            let self = this
+            let images = self.getImages(string)
+
+            images.forEach(function (img) {
+                if (!self.updateImages.includes(img)) {
+                    self.updateImages.push(img)
+                }
+            })
+        },
+
+        getRemovedImages(mode, images) {
+            if (mode === 'Add') {
+                return this.addImages.filter(img => !images.includes(img))
+            } else {
+                return this.updateImages.filter(img => !images.includes(img))
+            }
+        },
+
+        async deleteRemovedImages(images) {
+            if (images.length !== 0) {
+                await axios.post('/api/mail/delete-signature-image', {
+                    images: images
+                })
+            }
+        },
+
+        testEvent(event) {
+            // console.log(event);
         },
 
         getListUsers(){
@@ -389,14 +457,19 @@ export default {
 
         async submitAdd() {
             let self = this;
-            this.isPopupLoading = true;
+            self.isPopupLoading = true;
             await this.$store.dispatch('actionAddEmailSignature', self.signatureModel);
-            this.isPopupLoading = false;
+            self.isPopupLoading = false;
 
-            if (this.messageForms.action === 'saved_signature') {
-                this.clearModel();
+            if (self.messageForms.action === 'saved_signature') {
 
-                await this.getSignatureList()
+                // remove deleted images on editor
+                let removedImages = self.getRemovedImages('Add', self.getImages(self.signatureModel.content))
+                await self.deleteRemovedImages(removedImages);
+
+                await self.clearModel();
+                await self.getSignatureList()
+                this.addImages = [];
             }
         },
 
@@ -405,9 +478,24 @@ export default {
             this.updateSignatureModel.name = data.name;
             this.updateSignatureModel.content = data.content;
             this.updateSignatureModel.work_mail = data.work_mail;
+
+            // add data to temp
+            this.updateSignatureTemp.name = data.name
+            this.updateSignatureTemp.content = data.content
+            this.updateSignatureTemp.work_mail = data.work_mail
+
+            this.getUpdateSignatureImages(data.content)
         },
 
-        async deleteSignature(id) {
+        compareUpdateData() {
+            return (
+                (this.updateSignatureModel.name !== this.updateSignatureTemp.name)
+                || (this.updateSignatureModel.content !== this.updateSignatureTemp.content)
+                || (this.updateSignatureModel.work_mail !== this.updateSignatureTemp.work_mail)
+            )
+        },
+
+        async deleteSignature(id, content) {
             swal.fire({
                 title: "Delete Email Signature",
                 text: "Do you want to delete this email signature?",
@@ -420,6 +508,9 @@ export default {
                 if (result.isConfirmed) {
                     axios.delete('/api/mail/delete-signature/' + id)
                     .then(response => {
+
+                        this.deleteRemovedImages(this.getImages(content))
+
                         this.getSignatureList()
 
                         swal.fire(
@@ -438,7 +529,16 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated_signature') {
+                let removedImages = this.getRemovedImages('Update', this.getImages(this.updateSignatureModel.content))
+
+                await this.deleteRemovedImages(removedImages);
+
+                this.updateImages = [];
+
                 await this.getSignatureList()
+                this.updateSignatureTemp.name = this.updateSignatureModel.name
+                this.updateSignatureTemp.content = this.updateSignatureModel.content
+                this.updateSignatureTemp.work_mail = this.updateSignatureModel.work_mail
             }
         },
 
@@ -446,7 +546,71 @@ export default {
             console.log(images)
         },
 
-        modalOpener(mode){
+        modalCloser(mode) {
+            if (mode === 'Add') {
+
+                if (this.signatureModel.content || this.signatureModel.name) {
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Changes will not be saved",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted in editor
+                            this.deleteRemovedImages(this.addImages)
+                            this.closeModal()
+                            this.clearModel()
+                            this.addImages = [];
+                        }
+                    });
+                } else {
+                    this.deleteRemovedImages(this.addImages)
+                    this.closeModal()
+                    this.clearModel()
+                    this.addImages = [];
+                }
+
+            } else {
+
+                if (this.compareUpdateData()) {
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Changes will not be saved",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.closeModal()
+
+                            // get added images
+                            let removedImages = this.getRemovedImages('Update', this.getImages(this.updateSignatureTemp.content))
+
+                            // remove images
+                            this.deleteRemovedImages(removedImages)
+
+                            this.updateImages = [];
+                        }
+                    });
+                } else {
+                    this.closeModal()
+                }
+
+            }
+        },
+
+        closeModal() {
+            let element = this.$refs.modalSignature
+            $(element).modal('hide')
+        },
+
+        modalOpener(mode) {
             this.clearMessageForm()
 
             this.modalMode = mode

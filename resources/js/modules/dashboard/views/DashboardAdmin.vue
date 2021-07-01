@@ -395,13 +395,41 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+<!--                        <div class="col-md-2">-->
+<!--                            <div class="form-group">-->
+<!--                                <label-->
+<!--                                    style="color: #333">Date-->
+<!--                                                        Range-->
+<!--                                </label>-->
+<!--                                <div class="input-group">-->
+<!--                                    <date-range-picker-->
+<!--                                        ref="picker"-->
+<!--                                        v-model="filterModel.urlSellerStatistics.dateRange"-->
+<!--                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"-->
+<!--                                        :dateRange="filterModel.urlSellerStatistics.dateRange"-->
+<!--                                        :ranges="dateRanges"-->
+<!--                                        :linkedCalendars="true"-->
+<!--                                        opens="right"-->
+<!--                                        style="width: 100%"-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label
-                                    style="color: #333">Date
-                                                        Range
-                                </label>
-                                <div class="input-group">
+                                <label for="">Date Range</label>
+                                <div class="input-group mb-3" style="flex-wrap: unset !important;">
+                                    <div class="input-group-prepend">
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+
+                                            @click="filterModel.urlSellerStatistics.dateMode = filterModel.urlSellerStatistics.dateMode === 'Created' ? 'Status' : 'Created'">
+                                            {{ filterModel.urlSellerStatistics.dateMode }}
+                                        </button>
+                                    </div>
+
                                     <date-range-picker
                                         ref="picker"
                                         v-model="filterModel.urlSellerStatistics.dateRange"
@@ -661,7 +689,8 @@ export default {
                         endDate: null
                     },
                     scope : 'monthly',
-                    team_in_charge: 0
+                    team_in_charge: 0,
+                    dateMode: 'Created'
                 },
                 prospectQualifiedRegistered : {
                     dateRange: {
@@ -872,7 +901,8 @@ export default {
                     endDate : null
                 },
                 team_in_charge: 0,
-                scope: 'monthly'
+                scope: 'monthly',
+                dateMode: 'Created'
             };
 
             // this.filterModel.urlSellerStatistics.scope =
@@ -904,7 +934,8 @@ export default {
                 start + '&end_date=' + end + '&scope=' +
                 this.filterModel.urlSellerStatistics.scope +
                 '&team_in_charge=' +
-                this.filterModel.urlSellerStatistics.team_in_charge)
+                this.filterModel.urlSellerStatistics.team_in_charge +
+                '&mode=' + this.filterModel.urlSellerStatistics.dateMode)
                 .then(response => {
                     let data = response.data;
 

@@ -6,7 +6,9 @@ use App\MailSignature;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -72,6 +74,18 @@ class MailSignatureController extends Controller
     {
         $img_path = request()->file('file')->store('uploads', 'public');
         return response()->json(['location' => "/storage/$img_path"]);
+    }
+
+    public function deleteSignatureImage(Request $request)
+    {
+//        dd($request->all());
+        foreach ($request->images as $image) {
+            $image_path = str_replace("/storage/","../storage/app/public/", $image);
+
+            if (File::exists($image_path)) {
+                File::delete($image_path);
+            }
+        }
     }
 
     public function updateSignature(Request $request)
