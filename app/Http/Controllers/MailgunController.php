@@ -915,7 +915,13 @@ class MailgunController extends Controller
 
     public function get_mail_list()
     {
-        $user_email = User::select('work_mail')->distinct('work_mail')->where('work_mail', '!=', '')->orderBy('work_mail', 'asc')->get();
+        $user_email = User::select('id', 'role_id', 'work_mail')
+            ->where('work_mail', '!=', '')
+            ->with('role')
+            ->orderBy('work_mail', 'asc')
+            ->groupBy('work_mail')
+            ->get();
+
         return response()->json($user_email);
     }
 

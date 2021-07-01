@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
+use App\UserWorkMails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
@@ -114,6 +116,58 @@ class ConfigController extends Controller
         ];
     }
 
+    public function getEmailAccessList() {
+        $email_access = User::distinct('work_mail')
+            ->where('isOurs', 0)
+            ->where('type', '!=', 10)
+            ->whereNotNull('work_mail')
+            ->where('work_mail', '!=', '')
+            ->where('status', '!=', 'inactive')
+            ->with('access:user_id,work_mail')
+            ->with('role')
+            ->orderBy('work_mail', 'asc');
+
+        return [
+            'data' => $email_access->get(),
+            'total' => $email_access->count(),
+        ];
+    }
+
+    public function addEmailAccess(Request $request)
+    {
+        $req_emails = $request->emails;
+        $emails = [];
+        $restore = [];
+
+        $user = User::find($request->user_id);
+
+        // get trashed items from database
+        $trashed = $user->access()->onlyTrashed()->pluck('work_mail')->toArray();
+
+        // filter items on email array, get restored items and remove in request array
+        foreach ($trashed as $key=>$trash) {
+            if (in_array($trash, $req_emails)) {
+                $restore[] = $trash;
+            }
+        }
+
+        // restore the trashed items that are in the email array
+        $user->access()->onlyTrashed()->whereIn('work_mail', $restore)->restore();
+
+        // create array of model instance
+        foreach ($req_emails as $email) {
+            $emails[] = $user->access()->firstOrNew(['work_mail' => $email]);
+        }
+
+        // save many through relationship
+        $user->access()->saveMany($emails);
+
+        // delete items that are not on the email array
+        $user->access()->whereNotIn('work_mail', $request->emails)->delete();
+
+        return response()->json(['success' => true],200);
+    }
+
     public function updateLanguage(Request $request){
         $request->validate([
             'name' => 'required',
@@ -150,12 +204,12 @@ class ConfigController extends Controller
                 foreach($explode_email as $exp_email) {
                     $lowercase_email = strtolower($exp_email);
                     if(
-                        strpos($lowercase_email, '.png') !== false || 
-                        strpos($lowercase_email, '.jpg') !== false || 
-                        strpos($lowercase_email, '.jpeg') !== false || 
-                        strpos($lowercase_email, '.svg') !== false || 
-                        strpos($lowercase_email, '.gif') !== false || 
-                        strpos($lowercase_email, '.jp2') !== false || 
+                        strpos($lowercase_email, '.png') !== false ||
+                        strpos($lowercase_email, '.jpg') !== false ||
+                        strpos($lowercase_email, '.jpeg') !== false ||
+                        strpos($lowercase_email, '.svg') !== false ||
+                        strpos($lowercase_email, '.gif') !== false ||
+                        strpos($lowercase_email, '.jp2') !== false ||
                         strpos($lowercase_email, '.webp')
                     ) {
                     } else{
@@ -177,12 +231,12 @@ class ConfigController extends Controller
             } else {
                 $lowercase_email = strtolower($email);
                 if(
-                    strpos($lowercase_email, '.png') !== false || 
-                    strpos($lowercase_email, '.jpg') !== false || 
-                    strpos($lowercase_email, '.jpeg') !== false || 
-                    strpos($lowercase_email, '.svg') !== false || 
-                    strpos($lowercase_email, '.gif') !== false || 
-                    strpos($lowercase_email, '.jp2') !== false || 
+                    strpos($lowercase_email, '.png') !== false ||
+                    strpos($lowercase_email, '.jpg') !== false ||
+                    strpos($lowercase_email, '.jpeg') !== false ||
+                    strpos($lowercase_email, '.svg') !== false ||
+                    strpos($lowercase_email, '.gif') !== false ||
+                    strpos($lowercase_email, '.jp2') !== false ||
                     strpos($lowercase_email, '.webp')
                 ) {
                     array_push($new_emails,[
@@ -195,7 +249,7 @@ class ConfigController extends Controller
                         'email' => $email->email
                     ]);
                 }
-                
+
             }
         }
 

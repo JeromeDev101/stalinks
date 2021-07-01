@@ -52,8 +52,8 @@ export default class SystemService {
 
     /**
      * Return list of payment types
-     * 
-     * @param {AxiosPromise} params 
+     *
+     * @param {AxiosPromise} params
      */
     static getPaymentList(params) {
         return axios.get('api/admin/payments', params)
@@ -63,6 +63,12 @@ export default class SystemService {
 
     static getLanguageList(params) {
         return axios.get('api/admin/language', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static getEmailAccessList(params) {
+        return axios.get('api/admin/email-access', params)
             .then(response => response)
             .catch(error => error);
     }
@@ -105,6 +111,12 @@ export default class SystemService {
      */
     static addPaymentType(params) {
         return axios.post('/api/admin/payments', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static addEmailAccess(params) {
+        return axios.post('/api/admin/email-access', params)
             .then(response => response)
             .catch(error => error);
     }

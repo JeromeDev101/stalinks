@@ -8,6 +8,7 @@ const MESSAGE_FORMS = 'MESSAGE_FORMS';
 const PAYMENT_LIST = 'PAYMENT_LIST';
 const SUBSCRIPTION_LIST = 'SUBSCRIPTION_LIST';
 const FORMULA = 'FORMULA';
+const EMAIL_ACCESS_LIST = 'EMAIL_ACCESS_LIST';
 
 const state = {
     totalCountry: 0,
@@ -15,6 +16,7 @@ const state = {
     paymentList: { data:[] },
     countryList: { data: [], total: 0 },
     langaugeList: { data: [], total: 0 },
+    emailAccessList: { data: [], total: 0 },
     configList: { data: [], total: 0 },
     messageForms: { action: '', message: '', errors: {} },
     Info: {},
@@ -52,6 +54,10 @@ const mutations = {
 
     [MESSAGE_FORMS] (state, payload) {
         state.messageForms = payload;
+    },
+
+    [EMAIL_ACCESS_LIST](state, emailAccessList) {
+        state.emailAccessList = emailAccessList;
     },
 };
 
@@ -112,6 +118,20 @@ const actions = {
         }
     },
 
+    async actionGetEmailAccessList({ commit }, params) {
+        try {
+            let response = await SystemService.getEmailAccessList(params);
+            commit(EMAIL_ACCESS_LIST, response.data);
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
     async actionGetPaymentList({ commit }, params) {
         try {
             let response = await SystemService.getPaymentList(params);
@@ -131,6 +151,25 @@ const actions = {
             let response = await SystemService.addPaymentType(params);
             if (response.status === 200 && response.data.success === true) {
                 commit(MESSAGE_FORMS, { action: 'saved_payment', message: '#' + response.data.data.id + ' Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SYSTEM_SET_ERROR, errors);
+            } else {
+                commit(SYSTEM_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionAddEmailAccess({commit}, params) {
+        try {
+            let response = await SystemService.addEmailAccess(params);
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'add_email_access', message: 'Saved!', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

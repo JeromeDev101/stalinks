@@ -1036,8 +1036,8 @@
 
                                                 <select class="form-control" v-model="user.work_mail">
                                                     <option value="all">All</option>
-                                                    <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
-                                                        {{ option.work_mail }}
+                                                    <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">
+                                                        [{{ option.role.name }}] {{ option.work_mail }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -1402,6 +1402,19 @@ export default {
                 listLanguages: state => state.storePublisher.listLanguages,
                 listMailTemplate: state => state.storeExtDomain.listMailTemplate,
             }),
+
+            adminAccessOptions() {
+                let self = this;
+                const emails = self.listUserEmail;
+
+                emails.forEach(item => {
+                    if (item.work_mail === self.user.work_mail_orig) {
+                        item.role.name = 'Me';
+                    }
+                });
+
+                return emails;
+            },
         },
 
         methods: {
