@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Listerners;
+namespace App\Listeners;
 
-use App\Events\BacklinkLiveEvent;
+use App\Events\SellerPaidEvent;
+use App\Notifications\SellerPaid;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class BacklinkLiveEventListener
+class SellerPaidListener
 {
     /**
      * Create the event listener.
@@ -21,11 +22,11 @@ class BacklinkLiveEventListener
     /**
      * Handle the event.
      *
-     * @param  BacklinkLiveEvent  $event
+     * @param  object  $event
      * @return void
      */
-    public function handle(BacklinkLiveEvent $event)
+    public function handle(SellerPaidEvent $event)
     {
-        //
+        $event->user->notify(new SellerPaid($event));
     }
 }

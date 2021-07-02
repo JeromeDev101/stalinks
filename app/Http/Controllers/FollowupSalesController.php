@@ -126,35 +126,16 @@ class FollowupSalesController extends Controller
                 ],422);
             }
 
-            $notification->create([
-                'user_id' => $backlink->user_id,
-                'notification' => 'Your purchased Backlink ID ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' is Live.',
-            ]);
+            event(new BacklinkLiveEvent($backlink, $backlink->user));
 
-            broadcast(new BacklinkLiveEvent($backlink->user_id));
             $input['live_date'] = date('Y-m-d');
         }
 
-        $isExistUserId = $this->checkUser($backlink->publisher->user_id);
-        if( $isExistUserId ) {
-            $notification->create([
-                'user_id' => $backlink->publisher->user_id,
-                'notification' => 'Your order number ' . $backlink->id . ' from ' . $backlink->url_advertiser . ' has now the status ' . $input['status'],
-            ]);
-
-            broadcast(new BacklinkStatusChangedEvent($backlink->publisher->user_id));
+        if ($backlink->publisher->user_id) {
+            event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
         }
 
         $backlink->update($input);
         return response()->json(['success'=> true], 200);
-    }
-
-    private function checkUser($user_id) {
-        $user = User::find($user_id);
-
-        if(!$user) {
-            return false;
-        }
-        return true;
     }
 }

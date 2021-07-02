@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddWalletEvent;
 use App\Services\InvoiceService;
 use Carbon\Carbon;
 use App\Http\Requests\WalletTransaction\AddWalletRequest;
@@ -146,17 +147,19 @@ class WalletTransactionController extends Controller
             'admin_confirmation' => 'Not Paid',
         ];
 
-        $result = WalletTransaction::create($data);
+        $wallet = WalletTransaction::create($data);
 
         if ($paymentType == 1) {
             $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
-            $payload->invoice_id = $result->id;
-            $result->update([
-                'invoice' => '/storage/app/STAL-' . $result->id . '.pdf'
+            $payload->invoice_id = $wallet->id;
+            $wallet->update([
+                'invoice' => '/storage/app/STAL-' . $wallet->id . '.pdf'
             ]);
 
             $invoice->generateCreditInvoice($payload);
         }
+
+        event(new AddWalletEvent($wallet->user, $wallet->amount_usd));
 
         return response()->json(['success' => true], 200);
     }

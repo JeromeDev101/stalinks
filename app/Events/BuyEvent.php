@@ -2,6 +2,10 @@
 
 namespace App\Events;
 
+use App\Models\Backlink;
+use App\Models\Notif;
+use App\Models\User;
+use App\Repositories\NotificationRepository;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,20 +14,24 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ArticleDone implements ShouldBroadcast
+class BuyEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $userId;
+    public $backlink;
+
+    public $user;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Backlink $backlink
+     * @param User     $user
      */
-    public function __construct($userId)
+    public function __construct(Backlink $backlink, User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
+        $this->backlink = $backlink;
     }
 
     /**
@@ -33,11 +41,11 @@ class ArticleDone implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'writer.article.done';
+        return 'user.notify';
     }
 }

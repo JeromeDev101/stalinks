@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\WriterPaid;
+use App\Events\WriterPaidEvent;
 use App\Http\Requests\WriterPayRequest;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PaypalInterface;
@@ -123,14 +123,16 @@ class WriterBillingController extends Controller
             ]);
         }
 
-        $notification->create([
-            'user_id' => $ids[0]->id_writer,
-            'notification' => 'Your account has been credited of '. $request->price .' for the different order '. implode(', ', $article_ids) .' thanks'
-        ]);
+        event(new WriterPaidEvent($billing->user, $request->price, $article_ids));
+
+//        $notification->create([
+//            'user_id' => $ids[0]->id_writer,
+//            'notification' => 'Your account has been credited of '. $request->price .' for the different order '. implode(', ', $article_ids) .' thanks'
+//        ]);
 
         DB::commit();
 
-        broadcast(new WriterPaid($ids[0]->id_writer));
+//        broadcast(new WriterPaidEvent($ids[0]->id_writer));
 
         return response()->json(['success' => true], 200);
     }

@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Backlink;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -12,23 +11,24 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SellerReceivesOrderEvent implements ShouldBroadcast
+class WriterPaidEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $backlink;
     public $user;
+    public $price;
+    public $articleIds;
 
     /**
      * Create a new event instance.
      *
-     * @param Backlink $backlink
-     * @param User     $user
+     * @return void
      */
-    public function __construct(Backlink $backlink, User $user)
+    public function __construct(User $user, $price, $articleIds)
     {
-        $this->backlink = $backlink;
         $this->user = $user;
+        $this->price = $price;
+        $this->articleIds = $articleIds;
     }
 
     /**

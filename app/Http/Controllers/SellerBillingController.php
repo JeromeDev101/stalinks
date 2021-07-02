@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BuyerDebited;
-use App\Events\SellerPaid;
+use App\Events\BuyerDebitedEvent;
+use App\Events\SellerPaidEvent;
 use App\Http\Requests\SellerPayRequest;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PaypalInterface;
@@ -90,7 +90,7 @@ class SellerBillingController extends Controller
         ];
     }
 
-    public function payBilling(SellerPayRequest $request, NotificationInterface $notification, PaypalInterface $paypal, InvoiceService $invoice) {
+    public function payBilling(SellerPayRequest $request, PaypalInterface $paypal, InvoiceService $invoice) {
         $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
         move_file_to_storage($request->file, 'images/billing', $filename);
 
@@ -100,7 +100,6 @@ class SellerBillingController extends Controller
         DB::transaction(function () use ($request, $paypal, &$paypalResult, &$payoutResult, $invoice, $filename) {
             $ids = json_decode($request->ids);
 
-            $seller = '';
             $backlink_ids = [];
             $totalBacklinkAmount = 0;
             foreach( $ids as $data ){
@@ -155,8 +154,14 @@ class SellerBillingController extends Controller
 //                ]);
 //            }
 
-            $this->buyerDebittedNotification($backlink, $totalBacklinkAmount, $backlink_ids);
-            $this->sellerPaidNotification($seller->id, $totalBacklinkAmount, $backlink_ids);
+            event(new BuyerDebitedEvent($backlink, $totalBacklinkAmount, $backlink_ids));
+
+            if ($seller) {
+                event(new SellerPaidEvent($seller, $totalBacklinkAmount, $backlink_ids));
+
+            }
+
+//            $this->sellerPaidNotification($seller->id, $totalBacklinkAmount, $backlink_ids);
         });
 
         return response()->json(['success' => true, 'data' => $payoutResult], 200);
