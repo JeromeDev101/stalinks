@@ -23,7 +23,7 @@ trait Loggable
                     Log::create([
                         'table' => 'App\\Models\\' . class_basename($model),
                         'action' => static::getActionName($eventName),
-                        'user_id' => Auth::id(),
+                        'user_id' => auth()->check() ? auth()->user()->id : 49,
                         'payload' => json_encode($model->getDirty())
                     ]);
                 } catch (\Exception $e) {
