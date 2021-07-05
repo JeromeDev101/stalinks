@@ -172,6 +172,43 @@ class GenerateListController extends Controller
         return $url;
     }
 
+    public function store(Request $request) {
+        $request->validate(['url' => 'required']);
+        $url = $this->remove_http($request->url);
+
+        $generate_list = GenerateList::where('url', 'like', '%'.$url.'%')->count();
+
+        if($generate_list > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Existing record'
+            ],200);
+        } 
+
+        GenerateList::create([
+            'url' => $url,
+            'ur' => 0,
+            'dr' => 0,
+            'backlinks' => 0,
+            'ref_domain' => 0,
+            'org_kw' => 0,
+            'org_traffic' => 0,
+            'price' => 0,
+            'code_1' => 'E',
+            'code_2' => 'E',
+            'code_3' => 'E',
+            'code_4' => 'E',
+            'code_comb' => 'EEEE',
+            'price' => 0,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success'
+        ],200);
+
+    }
+
     public function getAhrefs(Request $request) {
         $generate_list = GenerateList::whereIn('id', $request->ids)->get();
 

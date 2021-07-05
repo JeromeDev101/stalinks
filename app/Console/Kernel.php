@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('registration:remind')->everyMinute();
+        $schedule->command('backup:run')->daily();
+        $schedule->command('backup:clean')->daily();
     }
 
     /**
