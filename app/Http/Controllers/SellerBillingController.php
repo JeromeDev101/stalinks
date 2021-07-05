@@ -113,7 +113,7 @@ class SellerBillingController extends Controller
                 $backlink = Backlink::find($backlink_id);
                 $backlink->update(['payment_status' => 'Paid']);
 
-                $billing = Billing::create([
+                $billing = Billing::create([back
                     'id_backlink' => $backlink_id,
                     'id_user' => $seller->id,
                     'seller_price' => $seller_price,
