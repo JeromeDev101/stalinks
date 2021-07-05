@@ -11,4 +11,9 @@ class BillingWriter extends Model
 
     protected $table = 'billing_writer';
     protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'id_user');
+    }
 }

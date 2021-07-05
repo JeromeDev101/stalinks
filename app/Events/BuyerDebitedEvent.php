@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Backlink;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,20 +11,26 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SellerPaid implements ShouldBroadcast
+class BuyerDebitedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $userId;
+    public $backlink;
+    public $totalAmount;
+    public $backlinkIds;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Backlink $backlink
+     * @param          $totalAmount
+     * @param          $backlinkIds
      */
-    public function __construct($userId)
+    public function __construct(Backlink $backlink, $totalAmount, $backlinkIds)
     {
-        $this->userId = $userId;
+        $this->backlink = $backlink;
+        $this->totalAmount = $totalAmount;
+        $this->backlinkIds = $backlinkIds;
     }
 
     /**
@@ -33,11 +40,11 @@ class SellerPaid implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->backlink->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'seller.paid';
+        return 'user.notify';
     }
 }

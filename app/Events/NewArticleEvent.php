@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Article;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,20 +12,24 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class WriterPaid implements ShouldBroadcast
+class NewArticleEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $userId;
+    public $article;
+
+    public $user;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Article $article
+     * @param User    $user
      */
-    public function __construct($userId)
+    public function __construct(Article $article, User $user)
     {
-        $this->userId = $userId;
+        $this->article = $article;
+        $this->user = $user;
     }
 
     /**
@@ -33,11 +39,11 @@ class WriterPaid implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'writer.paid';
+        return 'user.notify';
     }
 }

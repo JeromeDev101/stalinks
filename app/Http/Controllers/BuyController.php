@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Buyer\BuyEvent;
+use App\Events\BuyEvent;
 use App\Events\SellerReceivesOrderEvent;
-use App\Jobs\BuyLink;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
@@ -382,18 +381,8 @@ class BuyController extends Controller
             'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
         ]);
 
-        $notification->create([
-            'user_id' => $user->id,
-            'notification' => 'You have purchased from '. $request->url_advertiser .' on '. date('Y-m-d') . ' at $'. $request->price . ' follow up with Backlink ID '. $backlink->id,
-        ]);
-
-        $notification->create([
-            'user_id' => $publisher->user_id,
-            'notification' => 'You have received an order for ' . $request->url_advertise . ' on ' . date('Y-m-d') . ' follow up with Backlink ID ' . $backlink->id,
-        ]);
-
-        broadcast(new BuyEvent($user->id));
-        broadcast(new SellerReceivesOrderEvent($publisher->user_id));
+        event(new BuyEvent($backlink, $user));
+        event(new SellerReceivesOrderEvent($backlink, $publisher->user));
 
         if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
             Article::create([
@@ -403,7 +392,7 @@ class BuyController extends Controller
             $users = User::where('status','active')->where('role_id',4)->get();
             foreach($users as $user)
             {
-                event(new NotificationEvent("New Article to be write today!", $user->id));
+//                event(new NotificationEvent("New Article to be write today!", $user->id));
             }
 
         }

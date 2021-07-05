@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Backlink;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,16 +16,20 @@ class BacklinkStatusChangedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $userId;
+    public $backlink;
+
+    public $user;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Backlink $backlink
+     * @param User     $user
      */
-    public function __construct($userId)
+    public function __construct(Backlink $backlink, User $user)
     {
-        $this->userId = $userId;
+        $this->backlink = $backlink;
+        $this->user = $user;
     }
 
     /**
@@ -33,11 +39,11 @@ class BacklinkStatusChangedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'backlink.status.changed';
+        return 'user.notify';
     }
 }

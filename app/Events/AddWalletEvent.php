@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Events\Buyer;
+namespace App\Events;
 
-use App\Models\Notif;
-use App\Repositories\NotificationRepository;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,20 +11,24 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BuyEvent implements ShouldBroadcast
+class AddWalletEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $userId;
+    public $amount;
+
+    public $user;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param User $user
+     * @param      $amount
      */
-    public function __construct($userId)
+    public function __construct(User $user, $amount)
     {
-        $this->userId = $userId;
+        $this->amount = $amount;
+        $this->user = $user;
     }
 
     /**
@@ -35,11 +38,11 @@ class BuyEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->userId);
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'buyer.bought';
+        return 'user.notify';
     }
 }

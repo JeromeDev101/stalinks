@@ -14,7 +14,7 @@ use App\Models\Publisher;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes, Loggable;
+    use HasApiTokens, Notifiable, SoftDeletes, Loggable, Notifiable;
 
     /**
      * The attributes that are mass assignable.

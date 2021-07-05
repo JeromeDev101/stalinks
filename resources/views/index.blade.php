@@ -14,7 +14,7 @@
     <div class="wrapper">
         <div id="app"></div>
     </div>
-    <script src="https://www.paypal.com/sdk/js?client-id=AYIjhJCHgv4aAB9tqWRPw9Zkfme1VkJxrtDQnmzwHAhqaBmrVvO1EqgeowZ5OPCcUiLJO63lC99i58x8&currency=USD" data-sdk-integration-source="button-factory"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=ARm2XkwqD_qSHokQswqh_kWaooXHJ96Zxiu192SrLbhuxXsnAyZJ8Juq9rvkxEDSoP_AtzQoEZ0YcZIR&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
