@@ -235,6 +235,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('delete-message-thread')->post('/delete-message-thread','MailgunController@deleteMessageThread');
         Route::name('get_replies')->post('/get-reply','MailgunController@get_reply');
         Route::name('mail-logs')->get('/mail-logs','MailgunController@mail_logs');
+        Route::name('mail-logs-totals')->get('/mail-logs-totals','MailgunController@mail_logs_totals');
         Route::name('get-user-email-list')->get('/user-email-list','AccountController@userEmailFilter');
         Route::name('get-mail-list')->get('/get-mail-list','MailgunController@get_mail_list');
         Route::name('get-user-list')->get('/get-user-list','MailSignatureController@getUsers');
