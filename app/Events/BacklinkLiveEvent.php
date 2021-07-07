@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Backlink;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -19,11 +21,14 @@ class BacklinkLiveEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public $user_id;
+    public $user;
 
-    public function __construct($userId)
+    public $backlink;
+
+    public function __construct(Backlink $backlink, User $user)
     {
-        $this->user_id = $userId;
+        $this->backlink = $backlink;
+        $this->user = $user;
     }
 
     /**
@@ -33,11 +38,11 @@ class BacklinkLiveEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->user_id);
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'backlink.live';
+        return 'user.notify';
     }
 }

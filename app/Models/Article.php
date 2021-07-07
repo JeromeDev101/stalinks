@@ -26,7 +26,7 @@ class Article extends Model
         return $this->belongsTo('App\Models\Country', 'id_language', 'id');
     }
 
-    public function backlinks() {
+    public function backlink() {
         return $this->belongsTo('App\Models\Backlink', 'id_backlink', 'id');
     }
 

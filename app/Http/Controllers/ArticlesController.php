@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ArticleDone;
-use App\Events\NewWriterArticle;
+use App\Events\ArticleDoneEvent;
+use App\Events\NewArticleEvent;
 use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
@@ -53,7 +53,7 @@ class ArticlesController extends Controller
                         ->leftjoin('registration', 'users.email', '=' , 'registration.email')
                         ->with('country:id,name')
                         ->with('price')
-                        ->with(['backlinks' => function($q){
+                        ->with(['backlink' => function($q){
                             $q->with(['publisher' => function($sub){
                                 $sub->with('user:id,name')->with('country:id,name');
                             }])
@@ -121,7 +121,7 @@ class ArticlesController extends Controller
                         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
                         ->with('price')
                         ->with('country:id,name')
-                        ->with(['backlinks' => function($q){
+                        ->with(['backlink' => function($q){
                             $q->with(['publisher' => function($sub){
                                 $sub->with('user:id,name')->with('country:id,name');
                             }])
@@ -164,7 +164,7 @@ class ArticlesController extends Controller
             if( $filter['status'] == 'Queue' ){
                 $list->whereNull('article.status_writer');
             }else if( $filter['status'] == 'Canceled' || $filter['status'] == 'Issue' ){
-                $list->whereHas('backlinks', function($query) use ($filter) {
+                $list->whereHas('backlink', function($query) use ($filter) {
                     return $query->where('status', $filter['status']);
                 })->whereNull('article.status_writer');
             }else{
@@ -232,35 +232,36 @@ class ArticlesController extends Controller
             'date_start' => date('Y-m-d'),
         ]);
 
-        $notification->create([
-            'user_id' => $request->writer,
-            'notification' => 'Hello writers there is a new articles to write for ' . $article->language->name . '  for '. $article->backlinks->url_advertiser .' on '. date('Y-m-d') .' follow up with backlink ID ' . $request->backlink
-        ]);
+        event(new NewArticleEvent($article, $article->user));
 
-        broadcast(New NewWriterArticle($request->writer));
+//        $notification->create([
+//            'user_id' => $request->writer,
+//            'notification' => 'Hello writers there is a new articles to write for ' . $article->language->name . '  for '. $article->backlinks->url_advertiser .' on '. date('Y-m-d') .' follow up with backlink ID ' . $request->backlink
+//        ]);
+//
+//        broadcast(New NewArticleEvent($request->writer));
 
         return response()->json(['success' => true], 200);
     }
 
     public function updateContent(Request $request, NotificationInterface $notification){
         $user_id = Auth::user()->id;
-        $article = Article::find($request->content['id']);
+        $article = Article::find($request->get('content')['id']);
         $price_id = null;
 
-        $price_list = Price::where('id_article', $article->id)->first();
-        if( isset($price_list->id) ){
-            $price_list->update([
-                'price' => $request->content['price']
+        if($article->price){
+            $article->price->update([
+                'price' => $request->get('content')['price']
             ]);
 
-            $price_id = $price_list->id;
+            $price_id = $article->price->id;
         }else{
             $price = Price::create([
-                'price' => $request->content['price'],
+                'price' => $request->get('content')['price'],
                 'id_user' => $user_id,
                 'id_language' => $article->id_language,
                 'id_article' => $article->id,
-                'type' => 'writer',
+                'type' => 'writer'
             ]);
 
             $price_id = $price->id;
@@ -272,12 +273,8 @@ class ArticlesController extends Controller
                 $backlink->update(['status' => 'Content Done']);
             }
 
-            $notification->create([
-                'user_id' => $user_id,
-                'notification' => 'Thanks for finishing the articles on '. date('Y-m-d') .' for the article '. $article->id .' we will credit your account soon thanks'
-            ]);
+            event(new ArticleDoneEvent($article, auth()->user()));
 
-            broadcast(new ArticleDone($user_id));
         }
 
         if( $request->content['status'] == 'In Writing' ){

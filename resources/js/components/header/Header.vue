@@ -53,7 +53,7 @@
                             <li>
                                 <div class="vertical-menu">
                                     <a href="#"
-                                       v-for="notification in notifications.data">{{ notification.notification }}</a>
+                                       v-for="notification in notifications.data">{{ notification.data.message }}</a>
                                 </div>
 
                             </li>
@@ -296,39 +296,7 @@ export default {
         const channel = pusher.subscribe('private-user.' +
             this.user.id);
 
-        channel.bind('buyer.bought', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('backlink.live', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('seller.receives.order', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('backlink.status.changed', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('buyer.debited', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('seller.paid', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('writer.new.article', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('writer.article.done', (e) => {
-            this.getNotifications(this.user.id);
-        });
-
-        channel.bind('writer.paid', (e) => {
+        channel.bind('user.notify', (e) => {
             this.getNotifications(this.user.id);
         });
     },

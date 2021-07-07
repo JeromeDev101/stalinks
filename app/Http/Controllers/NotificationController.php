@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notif;
+use App\Models\User;
 use App\Repositories\Contracts\NotificationInterface;
 use Illuminate\Http\Request;
 
@@ -22,22 +23,18 @@ class NotificationController extends Controller
      */
     public function getUserNotifications($userId)
     {
+        $user = User::find($userId);
+
         return response()->json([
-            'data' => $this->notification->find([
-                'user_id' => $userId
-            ])->take(5),
-            'new_notifications' => $this->notification->newNotificationsCount($userId),
+            'data' => $user->notifications,
+            'new_notifications' => $user->unreadNotifications->count()
         ]);
     }
 
     public function setUserNotificationsSeen($userId)
     {
-        $updateRes = $this->notification->updateUsersNotifications([
-            'is_read' => 1
-        ], [
-            'user_id' => $userId
-        ]);
+        User::find($userId)->notifications->markAsRead();
 
-        return response()->json($updateRes);
+        return 'OK';
     }
 }

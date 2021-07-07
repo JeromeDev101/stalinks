@@ -5,9 +5,9 @@ namespace App\Repositories\Traits;
 use App\Events\BestPriceGenerationEnd;
 use App\Events\BestPriceGenerationStart;
 use App\Events\Buyer\BuyEvent;
-use App\Events\BuyerDebited;
+use App\Events\BuyerDebitedEvent;
 use App\Events\GenerateBestPricesDone;
-use App\Events\SellerPaid;
+use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Models\Notif;
 
@@ -40,7 +40,7 @@ trait NotificationTrait
             'notification' => 'Your account has been debited of '. $totalAmount .' for the different order '. implode(', ', $backlinkIds) .' thanks'
         ]);
 
-        broadcast(new BuyerDebited($backlink->user_id));
+        broadcast(new BuyerDebitedEvent($backlink->user_id));
     }
 
     public function sellerPaidNotification($seller, $totalAmount, $backlinkIds)
@@ -50,7 +50,7 @@ trait NotificationTrait
             'notification' => 'Your account has been credited of '. $totalAmount .' for the different order '. implode(', ', $backlinkIds) .' thanks'
         ]);
 
-        broadcast(new SellerPaid($seller));
+        broadcast(new SellerPaidEvent($seller));
     }
 
     public function generateBestPricesDoneNotification($userId)
