@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\InboxResource;
 use App\MailSignature;
+use Carbon\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Request;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
@@ -589,77 +591,192 @@ class MailgunController extends Controller
 
     public function status_mail()
     {
-
-        $arr = $this->mg->events()->get('stalinks.com', [
-            'limit' => 300,
-            'event' => 'delivered',
-        ]);
-
-        $arr_failed = $this->mg->events()->get('stalinks.com', [
-            'limit' => 300,
-            'event' => 'failed',
-        ]);
-
-        $delivered = [];
+        $opened = [];
         $failed = [];
+        $rejected = [];
+        $reported = [];
+        $delivered = [];
 
-        //get failed
-        foreach ($arr_failed->getItems() as $item) {
-            if ($item->getEvent() === 'failed') {
-                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
-                    $failed[] = $item->getMessage()['headers']['message-id'];
+        $temp_count = 0;
+        $all_array = [];
+        $message_id_array = [];
+
+        // get last 5 days (current log retention is 5 days), with status 0, 250, 552
+        $start_date = Carbon::now()->subDays(5)->format('Y-m-d');
+
+        Reply::whereIn('status_code', [0, 250, 552])
+            ->where('is_sent', 1)
+            ->where('created_at', '>=', $start_date)
+            ->orderBy('id', 'desc')
+            ->chunk(50, function ($replies) use(&$message_id_array) {
+                $message_ids = implode(' OR ', $replies->pluck('message_id')->all());
+
+                $message_id_array[] = $message_ids;
+            });
+
+        // iterate through message ids
+        foreach ($message_id_array as &$item) {
+            $arr_items = $this->mg->events()->get('stalinks.com', [
+                'message-id' => $item,
+                'limit' => 300,
+                'event' => 'rejected OR failed OR delivered OR opened OR complained',
+                'tags' => 'test1'
+            ]);
+
+            $returned_items = $this->getEmailStatusItems($arr_items);
+
+            $all_array = array_merge($all_array, $returned_items);
+
+            $temp_count = $temp_count + count($returned_items);
+        }
+
+        foreach ($all_array as $key => $value) {
+
+            // get rejected
+            if ($value->getEvent() === 'rejected') {
+                $message = $value->getMessage();
+                $id = $this->messageIdExtractor($message);
+
+                if (!in_array($id, $rejected)) {
+                    $rejected[] = $id;
+                }
+            }
+
+            // get failed
+            if ($value->getEvent() === 'failed') {
+                $message = $value->getMessage();
+                $id = $this->messageIdExtractor($message);
+
+                if (!in_array($id, $failed)) {
+                    $failed[] = $id;
+                }
+            }
+
+            // get delivered
+            if ($value->getEvent() === 'delivered') {
+                $message = $value->getMessage();
+                $id = $this->messageIdExtractor($message);
+
+                if (!in_array($id, $delivered)) {
+                    $delivered[] = $id;
+                }
+            }
+
+            // get opened
+            if ($value->getEvent() === 'opened') {
+                $message = $value->getMessage();
+                $id = $this->messageIdExtractor($message);
+
+                if (!in_array($id, $opened)) {
+                    $opened[] = $id;
+                }
+            }
+
+            // get reported
+            if ($value->getEvent() === 'complained') {
+                $message = $value->getMessage();
+                $id = $this->messageIdExtractor($message);
+
+                if (!in_array($id, $reported)) {
+                    $reported[] = $id;
                 }
             }
         }
 
-        //update failed
-        Reply::where('is_sent', 1)
-            ->whereIn('message_id', $failed)->update([
-                'status_code' => 552,
-                'message_status' => 'FAILED'
-            ]);
+        // get failed items that are not on delivered array
+        $failed_temp = [];
 
-        //get delivered
-        foreach ($arr->getItems() as $item) {
-            if ($item->getDeliveryStatus()['code'] === 250) {
-                if (array_key_exists('message-id', $item->getMessage()['headers'])) {
-                    $delivered[] = $item->getMessage()['headers']['message-id'];
-                }
+        foreach ($failed as $key => $fail) {
+            if (!in_array($fail, $delivered)) {
+                $failed_temp[] = $fail;
             }
+        }
+
+        // update rejected
+        if (count($rejected) !== 0) {
+            Reply::where('is_sent', 1)
+                ->where('status_code', '!=', 250)
+                ->whereIn('message_id', $rejected
+                )->update([
+                    'status_code' => 500,
+                    'message_status' => 'REJECTED'
+                ]);
+        }
+
+        // update failed
+        if (count($failed_temp) !== 0) {
+            Reply::where('is_sent', 1)
+                ->where('status_code', '!=', 250)
+                ->whereIn('message_id', $failed_temp)
+                ->update([
+                    'status_code' => 552,
+                    'message_status' => 'FAILED'
+                ]);
         }
 
         // update delivered
-        Reply::where('is_sent', 1)
-            ->whereIn('message_id', $delivered)->update([
-                'status_code' => 250,
-                'message_status' => 'OK'
-            ]);
+        if (count($delivered) !== 0) {
+            Reply::where('is_sent', 1)
+                ->whereIn('message_id', $delivered)
+                ->update([
+                    'status_code' => 250,
+                    'message_status' => 'DELIVERED'
+                ]);
+        }
 
-//        $aw = $this->mg->events()->get('stalinks.com');
-//
-//        //get all eventsitems
-//        foreach ($aw->getItems() as $kwe) {
-//            //all all message sent/received
-//            foreach ( $kwe->getMessage() as $wa) {
-//                //check if data is array some is not we need to make sure
-//                if (is_array($wa)) {
-//                    //check if mesage_id property exist before using it as condition
-//                    if (array_key_exists("message-id",$wa)) {
-//                        $pending = Reply::where('status_code',0)->get();
-//
-//                        foreach($pending as $get) {
-//                            if($wa['message-id'] == $get->message_id)
-//                            {
-//                                $get->update([
-//                                'status_code'       => $kwe->getDeliveryStatus()['code'],
-//                                'message_status'    => $kwe->getDeliveryStatus()['message']
-//                                ]);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        // update opened
+        if (count($opened) !== 0) {
+            Reply::where('is_sent', 1)
+                ->whereIn('message_id', $opened)
+                ->update([
+                    'status_code' => 260,
+                    'message_status' => 'OPENED'
+                ]);
+        }
+
+        // update reported
+        if (count($reported) !== 0) {
+            Reply::where('is_sent', 1)
+                ->whereIn('message_id', $reported)
+                ->update([
+                    'status_code' => 570,
+                    'message_status' => 'REPORTED'
+                ]);
+        }
+    }
+
+    protected function getEmailStatusItems($result)
+    {
+        $items = $result;
+        $items_array = $items->getItems();
+        $items_count = count($items->getItems());
+
+        while($items_count !== 0) {
+            $next = $this->mg->events()->nextPage($items);
+            $items = $next;
+            $items_count = count($items->getItems());
+
+            if ($items_count !== 0) {
+                $items_array = array_merge($items_array, $items->getItems());
+            }
+        }
+
+        return $items_array;
+    }
+
+    protected function messageIdExtractor($message)
+    {
+        $id = '';
+
+        if (array_key_exists('headers', $message)) {
+            if (array_key_exists('message-id', $message['headers'])) {
+                $id = $message['headers']['message-id'];
+            }
+        }
+
+        if ($id !== '') {
+            return $id;
+        }
     }
 
     public function post_reply(Request $request)
@@ -893,23 +1010,31 @@ class MailgunController extends Controller
             $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
         }
 
-        $mail_logs = $mail_logs->orderBy('created_at', 'desc')->get();
+        $mail_logs = $mail_logs->orderBy('created_at', 'desc')->paginate($request->paginate);
 
+        return $mail_logs;
+    }
 
-        $sent_today = Reply::where('is_sent',1)->where('status_code',250)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();
-
-        $sent = Reply::where('is_sent',1)->where('status_code',250)->count();
-
+    public function mail_logs_totals()
+    {
         $total = Reply::where('is_sent',1)->count();
-
+        $sent_today = Reply::where('is_sent',1)->where('created_at', 'like', '%'.date('Y-m-d').'%')->count();
+        $sent = Reply::where('is_sent',1)->where('status_code', 0)->count();
         $failed = Reply::where('is_sent',1)->where('status_code',552)->count();
+        $delivered = Reply::where('is_sent',1)->where('status_code',250)->count();
+        $rejected = Reply::where('is_sent',1)->where('status_code',500)->count();
+        $opened = Reply::where('is_sent',1)->where('status_code',260)->count();
+        $reported = Reply::where('is_sent',1)->where('status_code',570)->count();
 
         return response()->json([
-            'logs'          => $mail_logs,
             'total_mail'    => $total,
             'sent'          => $sent,
-            'sent_today'          => $sent_today,
+            'sent_today'    => $sent_today,
             'failed'        => $failed,
+            'delivered'     => $delivered,
+            'rejected'      => $rejected,
+            'opened'        => $opened,
+            'reported'      => $reported,
         ]);
     }
 
