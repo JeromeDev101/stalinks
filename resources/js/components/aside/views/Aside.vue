@@ -53,7 +53,8 @@
                 </li>
 
                 <li
-                    v-if="user.isAdmin"
+                    v-if="user.isAdmin ||
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))"
                     :class="{ active: $route.name == 'mail-logs' }"
                 >
                     <router-link
