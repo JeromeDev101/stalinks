@@ -173,7 +173,7 @@
                             <div class="btn-group">
                                 <button :id="'article-' +
                                  scope.row.id"
-                                        @click="doUpdate(scope.row.backlinks, scope.row)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
+                                        @click="doUpdate(scope.row.backlink, scope.row)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                             </div>
                         </template>
 
