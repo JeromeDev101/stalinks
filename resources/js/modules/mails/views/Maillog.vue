@@ -448,6 +448,7 @@
                     .then((res) => {
                         console.log("success check all message status");
                         this.getMaillogs()
+                        this.getMailLogsTotals()
                         loader.hide();
 
                         swal.fire(
@@ -459,6 +460,7 @@
                     .catch((err) => {
                         console.log("Update status failed");
                         this.getMaillogs()
+                        this.getMailLogsTotals()
                         loader.hide();
                     })
             },

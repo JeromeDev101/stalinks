@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('registration:remind')->everyMinute();
         $schedule->command('backup:run')->daily();
         $schedule->command('backup:clean')->daily();
+        $schedule->command('mail_logs_status:update')->daily();
     }
 
     /**
