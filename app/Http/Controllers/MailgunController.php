@@ -593,7 +593,7 @@ class MailgunController extends Controller
     public function status_mail()
     {
         // call job to update mail log status
-        UpdateStatusMailLogs::dispatch();
+        UpdateStatusMailLogs::dispatchNow();
     }
 
     public function post_reply(Request $request)
