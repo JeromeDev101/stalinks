@@ -117,8 +117,8 @@
                                             :data=generateList.data
                                             worksheet="My Worksheet"
                                             name="generate_list.xls">
-                                            <i class="fa fa-download"></i> 
-                                        
+                                            <i class="fa fa-download"></i>
+
                                         </export-excel>
 
                                     </div>
@@ -224,7 +224,7 @@
             </div>
 
         </div>
-        
+
         <!-- Modal Add URL -->
         <div class="modal fade" id="modalAddUrlGenerateList" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog" role="document">
@@ -251,7 +251,7 @@
             </div>
         </div>
         <!-- Modal Add URL -->
-        
+
     </div>
 </template>
 
@@ -348,6 +348,7 @@
                         url: this.filterModel.url,
                         ur: this.filterModel.ur,
                         dr: this.filterModel.dr,
+                        paginate: this.filterModel.paginate,
                         org_kw: this.filterModel.org_kw,
                         org_traffic: this.filterModel.org_traffic,
                         code: this.filterModel.code,
