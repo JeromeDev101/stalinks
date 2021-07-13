@@ -80,14 +80,20 @@ class GenerateListController extends Controller
         }
 
 
-        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-            $result = $generate_list->orderBy('id', 'desc')->get();
-        }else{
-            $result = $generate_list->paginate($paginate);
+//        if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+//            $result = $generate_list->orderBy('id', 'desc')->get();
+//        }else{
+//            $result = $generate_list->paginate($paginate);
+//        }
+
+        if(isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
+            return response()->json([
+                'data' => $generate_list->get(),
+                'total' => $generate_list->count(),
+            ],200);
+        } else {
+            return $generate_list->paginate($paginate);
         }
-
-
-        return $result;
     }
 
     public function importCsv(Request $request) {
@@ -183,7 +189,7 @@ class GenerateListController extends Controller
                 'success' => false,
                 'message' => 'Existing record'
             ],200);
-        } 
+        }
 
         GenerateList::create([
             'url' => $url,
@@ -231,15 +237,15 @@ class GenerateListController extends Controller
         if( is_array($request->ids) ) {
             foreach($request->ids as $id) {
                 $generate_list = GenerateList::where('id', $id)->first();
-                
+
                 $code_1 = $this->compute($generate_list->ur, $generate_list->dr, 'value1');
                 $code_2 = $this->compute($generate_list->backlinks, $generate_list->ref_domain, 'value2');
                 $code_3 = $this->compute($generate_list->org_kw, 0, 'value3');
                 $code_4 = $this->compute($generate_list->org_traffic, 0, 'value4');
                 $code_comb = $code_1.$code_2.$code_3.$code_4;
-                
+
                 $price_list = Pricelist::where('code', strtoupper($code_comb))->first();
-                
+
                 $generate_list->update([
                     'code_1' => $code_1,
                     'code_2' => $code_2,
@@ -248,34 +254,34 @@ class GenerateListController extends Controller
                     'code_comb' => $code_comb,
                     'price' => isset($price_list->price) ? $price_list->price : 0
                 ]);
-                    
+
             }
         }
-        
+
     }
 
     private function compute( $a , $b, $type )
     {
-        
+
         switch ( $type ) {
 
             case "value1":
 
                 $score = $b - $a;
-                
+
                 // ur = $a
                 // dr = $b
 
                 $val = '';
-                           
+
                 if( ($a >= 0 && $a <= 9) || ($b >= 0 && $b <= 9) ){
                     $val = 'E';
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 10 && $a <= 100) && ($b >= 10 && $b <= 19) ) {
-                    
+
                     if( $score >= -9 && $score <= 9 ) {
                         $val = 'D';
                     } else {
@@ -283,9 +289,9 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
+
                 if( ($a >= 10 && $a <= 19) && ($b >= 20 && $b <= 100) ) {
-                    
+
                     if( $score >= 1 && $score <= 15 ) {
                         $val = 'D';
                     } else {
@@ -293,10 +299,10 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 20 && $a <= 100) && ($b >= 20 && $b <= 34) ) {
-                    
+
                     if( $score >= -15 && $score <= -1 ) {
                         $val = 'D';
                     } else if( $score <= -16 ) {
@@ -306,10 +312,10 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 20 && $a <= 34) && ($b >= 35 && $b <= 100) ) {
-                    
+
                     if( $score >= 1 && $score <= 16 ) {
                         $val = 'B';
                     } else {
@@ -317,10 +323,10 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 35 && $a <= 49) && ($b >= 35 && $b <= 49) ) {
-                    
+
                     if( $score >= -9 && $score <= 9 ) {
                         $val = 'B';
                     } else {
@@ -328,10 +334,10 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 50 && $a <= 100) && ($b >= 35 && $b <= 49) ) {
-                    
+
                     if( $score >= -15 && $score <= -5 ) {
                         $val = 'D';
                     } else if( $score <= -16 ) {
@@ -341,10 +347,10 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
-                
+
+
                 if( ($a >= 35 && $a <= 49) && ($b >= 50 && $b <= 100) ) {
-                    
+
                     if( $score >= 1 && $score <= 5 ) {
                         $val = 'A';
                     } else {
@@ -352,9 +358,9 @@ class GenerateListController extends Controller
                     }
                     return $val;
                 }
-                
+
                 if( ($a >= 50 && $a <= 100) && ($b >= 50 && $b <= 100) ) {
-                    
+
                     if( $score >= -5 && $score <= 15 ) {
                         $val = 'A';
                     } else {
@@ -414,5 +420,5 @@ class GenerateListController extends Controller
         }
 
     }
-    
+
 }
