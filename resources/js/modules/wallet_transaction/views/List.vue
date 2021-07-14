@@ -117,7 +117,9 @@
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
                                 <td>
-                                    <div class="btn-group">
+                                    <div
+                                        class="btn-group"
+                                        v-if="user.isAdmin">
                                         <button title="Edit" @click="doUpdate(wallet)" data-target="#modal-wallet-transaction-update" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                                     </div>
                                 </td>
