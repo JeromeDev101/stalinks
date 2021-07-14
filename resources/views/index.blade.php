@@ -14,7 +14,7 @@
     <div class="wrapper">
         <div id="app"></div>
     </div>
-    <script src="https://www.paypal.com/sdk/js?client-id=AZLgsyGy25hU7i6mRjf46jI_IpTgM9fRadQix1cbVqml4-ydrFH2Naakyx4aJxJIOURcFt9pA9-bGEIT&currency=USD" data-sdk-integration-source="button-factory"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_MODE') == 'live' ? env('PAYPAL_LIVE_CLIENT_ID') : env('PAYPAL_SANDBOX_CLIENT_ID') }}&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
