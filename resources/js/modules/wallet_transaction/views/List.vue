@@ -93,8 +93,7 @@
                                 <th>Payment Via</th>
                                 <th>Amount USD</th>
                                 <th>Date</th>
-                                <th>Proof of Doc
-                                <th>Invoice</th>
+                                <th>Proof of Doc</th>
                                 <th>Confirmation</th>
                                 <th>Action</th>
                             </tr>
@@ -109,20 +108,18 @@
                                 <td>{{ wallet.date }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button title="Proof of Documents" @click="doShow(wallet.proof_doc)" data-target="#modal-wallet-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div
-                                        class="btn-group"
-                                        v-if="wallet.invoice">
                                         <button
+                                            v-if="wallet.invoice"
                                             title="Download Invoice" @click="downloadInvoice(wallet.id)" class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
+                                        <button v-else
+                                            title="Proof of Documents" @click="doShow(wallet.proof_doc)" data-target="#modal-wallet-docs" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
                                 <td>
-                                    <div class="btn-group">
+                                    <div
+                                        class="btn-group"
+                                        v-if="user.isAdmin">
                                         <button title="Edit" @click="doUpdate(wallet)" data-target="#modal-wallet-transaction-update" data-toggle="modal" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
                                     </div>
                                 </td>
@@ -514,6 +511,12 @@
                     document.body.appendChild(fileLink);
 
                     fileLink.click();
+                }).catch((error) => {
+                    swal.fire(
+                        'Error',
+                        'File not found.',
+                        'error'
+                    )
                 });
             },
 

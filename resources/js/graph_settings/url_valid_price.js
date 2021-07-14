@@ -8,8 +8,8 @@ export default {
             chart : {
                 type : 'bar',
                 height : 600,
-                stacked: true,
-                stackType: '100%',
+                // stacked: true,
+                // stackType: '100%',
                 toolbar: {
                     show : true,
                     tools : {

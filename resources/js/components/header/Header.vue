@@ -386,13 +386,15 @@ export default {
         },
 
         async submitPay(paypalPayload) {
+            let loading =
+                this.$loading.show();
             this.formData = new FormData();
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
             this.formData.append('user_id_buyer',
                 this.user.id);
 
-            if (this.updateModel.payment_type != 1) {
+            if (this.updateModel.payment_type !== 1) {
                 this.formData.append('file', this.$refs.proof.files[0]);
             } else {
                 this.formData.append('payload',
@@ -403,7 +405,7 @@ export default {
             await this.$store.dispatch('actionAddWallet', this.formData)
             this.isPopupLoading = false;
 
-            if( this.messageForms.action == 'success' ){
+            if( this.messageForms.action === 'success' ){
 
                 this.liveGetWallet();
 
@@ -415,6 +417,7 @@ export default {
                 }
 
                 this.step = 0;
+                loading.hide();
 
                 swal.fire(
                     'Success',
@@ -423,11 +426,10 @@ export default {
                 )
 
                 this.$refs.proof.value = '';
-
-
             }
 
             this.liveGetWallet();
+            loading.hide();
         },
 
         async getListPaymentType(params) {
