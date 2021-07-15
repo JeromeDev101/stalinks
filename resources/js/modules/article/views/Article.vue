@@ -107,7 +107,7 @@
                 <div class="box-header">
                     <h3 class="box-title">Articles</h3>
 
-                    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                    <div v-if="isProcessing" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
                         <strong>Reminder: </strong> Your account is currently on process. Please contact the administrator to process you account status.
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -178,9 +178,17 @@
                             slot-scope="scope"
                             slot="actionButton">
                             <div class="btn-group" >
-                                <button :id="'article-' +
-                                 scope.row.id"
-                                        @click="doUpdate(scope.row.backlink, scope.row)" data-toggle="modal" data-target="#modal-content-edit" :disabled="user.registration.account_validation != 'valid'"  class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>
+                                <button
+                                    :id="'article-' + scope.row.id"
+                                    :disabled="isProcessing"
+                                    class="btn btn-default"
+                                    data-toggle="modal"
+                                    data-target="#modal-content-edit"
+
+                                    @click="doUpdate(scope.row.backlink, scope.row)">
+
+                                    <i class="fa fa-fw fa-pencil"></i>
+                                </button>
                             </div>
                         </template>
 
@@ -535,8 +543,6 @@
             this.getListCountries();
             this.checkTeam();
             this.getListWriter();
-
-            console.log(this.user.registration.account_validation)
         },
 
         computed: {
@@ -547,8 +553,13 @@
                 messageForms: state => state.storeArticles.messageForms,
                 listCountries: state => state.storeArticles.listCountries,
                 user: state => state.storeAuth.currentUser,
-                listWriter: state => state.storeArticles.listWriter,
             }),
+
+            isProcessing() {
+                return this.user.isOurs === 0
+                    ? false
+                    : this.user.registration.account_validation !== 'valid';
+            },
 
             tableConfig() {
                 return [
