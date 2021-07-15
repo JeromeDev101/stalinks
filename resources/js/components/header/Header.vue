@@ -183,6 +183,11 @@
                                         <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+
+                                <div v-if="updateModel.payment_type == 3" class="col-md-12">
+                                    <img src="storage/usdt.png" width="250px" alt="" class="mx-auto d-block">
+                                </div>
+
                                 <div class="col-md-12"
                                      v-if="updateModel.payment_type != 1">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
