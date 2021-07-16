@@ -59,7 +59,7 @@
                                     </select>
                                     <input type="date" class="form-control" v-model="filterModel.date" name="" aria-describedby="helpId">
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -113,13 +113,13 @@
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
-                                <td>{{ article.country.name }}</td>
+                                <td>{{ article.country ? article.country.name : 'N/A' }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>
                                 <td>{{ article.isOurs == 1 ? computeWriterPrice(article):'----'}}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
-                                        <button title="View Content" @click="viewContent( article.backlinks ,article.content, article)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button title="View Content" @click="viewContent( article.backlink ,article.content, article)" data-toggle="modal" data-target="#modal-view-content" class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                     <div class="btn-group" v-if="user.isAdmin">
                                         <button title="Delete" @click="deleteArticle(article.id)" class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
@@ -132,7 +132,7 @@
                 </div>
             </div>
         </div>
-  
+
         <!-- Modal View Content -->
         <div class="modal fade" id="modal-view-content" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
@@ -224,6 +224,8 @@
                     anchor_text: '',
                     seller: '',
                     buyer: '',
+                    url_publisher: '',
+                    link: ''
                 },
                 searchLoading: false,
                 filterModel: {
@@ -355,7 +357,7 @@
                                 'success'
                             )
                         })
-                        
+
                     }
                 });
             },
@@ -380,7 +382,7 @@
 
             viewContent(backlinks, content, article) {
                 this.data = content == null ? '':content;
-                this.viewModel = backlinks
+                this.viewModel = backlinks == null ? this.viewModel : backlinks;
                 this.viewModel.url_publisher = backlinks == null ? '':backlinks.publisher.url;
                 this.viewModel.seller = backlinks == null ? '':backlinks.publisher.user.name;
                 this.viewModel.buyer = backlinks == null ? '':backlinks.user.name;
