@@ -32,14 +32,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="">Language</label>
-                                <v-select multiple
-                                          v-model="filterModel.language_id" label="name" :options="listLanguages.data" :reduce="language => language.id" :searchable="false" placeholder="All"/>
-<!--                                <select name="" class="form-control" v-model="filterModel.language_id">-->
-<!--                                    <option value="">All</option>-->
-<!--                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">-->
-<!--                                        {{ option.name }}-->
-<!--                                    </option>-->
-<!--                                </select>-->
+                                <v-select
+                                    v-model="filterModel.language_id"
+                                    multiple
+                                    label="name"
+                                    placeholder="All"
+                                    :searchable="true"
+                                    :options="listLanguages.data"
+                                    :reduce="language => language.id"/>
                             </div>
                         </div>
 
@@ -392,7 +392,7 @@
                         </template>
 
 
-                        
+
                         <template
                             slot-scope="scope"
                             slot="priceData">
@@ -413,7 +413,7 @@
                             scope.row.inc_article) }}
                         </template>
 
-                       
+
 
                         <template
                             slot-scope="scope"
