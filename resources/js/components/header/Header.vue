@@ -184,8 +184,9 @@
                                     </div>
                                 </div>
 
-                                <div v-if="updateModel.payment_type == 3" class="col-md-12">
-                                    <img src="storage/usdt.png" width="250px" alt="" class="mx-auto d-block">
+                                <div v-if="updateModel.payment_type === 3" class="col-md-12">
+                                    <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <p class="text-center">{{ listPayment.data[2].address }}</p>
                                 </div>
 
                                 <div class="col-md-12"
@@ -287,6 +288,7 @@ export default {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
         this.getListPaymentType();
+        this.getConfigList();
     },
 
     beforeMount() {
@@ -496,7 +498,7 @@ export default {
                 this.seenNotifications(this.user.id);
                 this.getNotifications(this.user.id);
             }
-        }
+        },
     }
 };
 </script>
