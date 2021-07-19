@@ -183,6 +183,12 @@
                                         <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+
+                                <div v-if="updateModel.payment_type === 3" class="col-md-12">
+                                    <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <p class="text-center">{{ listPayment.data[2].address }}</p>
+                                </div>
+
                                 <div class="col-md-12"
                                      v-if="updateModel.payment_type != 1">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
@@ -282,6 +288,7 @@ export default {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
         this.getListPaymentType();
+        this.getConfigList();
     },
 
     beforeMount() {
@@ -491,7 +498,7 @@ export default {
                 this.seenNotifications(this.user.id);
                 this.getNotifications(this.user.id);
             }
-        }
+        },
     }
 };
 </script>

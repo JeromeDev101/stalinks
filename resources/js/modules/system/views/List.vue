@@ -269,7 +269,7 @@
                         </div>
 
 
-                        <div class="col-sm-12" v-for="(configs, typeConfig) in configList.data">
+                        <div class="col-sm-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto'">
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">Config {{ typeConfig }}</h3>
@@ -294,6 +294,34 @@
                                 </div>
                             </div>
                             <!-- /.box -->
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">USDT QR Code</h3>
+                                </div>
+
+                                <div class="box-body">
+                                    <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <p class="text-center">{{ configList.data.crypto[0].value }}</p>
+
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" v-model="cryptoModel.address">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>QR Code Image</label>
+                                        <input type="file" class="form-control" enctype="multipart/form-data" ref="qrcode" name="file">
+                                        <small class="text-muted">Note: It must be JPG type.</small><br/>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer clearfix">
+                                    <button type="button" @click="updateUsdt" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -618,6 +646,10 @@
                     emails: []
                 },
 
+                cryptoModel: {
+                    address: ''
+                },
+
                 filterModel: {
                     name: this.$route.query.name || '',
                     code: this.$route.query.name || '',
@@ -644,6 +676,7 @@
                     additional: '',
                     percentage: '',
                 },
+                formData: null
             };
         },
 
@@ -949,6 +982,27 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageFormSystem');
             },
+
+            updateUsdt() {
+                this.formData = new FormData();
+                this.formData.append('address', this.cryptoModel.address);
+                this.formData.append('file', this.$refs.qrcode.files[0]);
+
+                axios.post('/api/crypto/usdt', this.formData)
+                .then((response) => {
+                    swal.fire(
+                        'Success',
+                        'Successfully Updated',
+                        'success'
+                    )
+                }).catch((error) => {
+                    swal.fire(
+                        'Error',
+                        'Error encountered',
+                        'error'
+                    )
+                });
+            }
         },
     }
 </script>
