@@ -1099,7 +1099,12 @@ export default {
                                 return email !== '';
                             }))
                     } else {
-                        let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
+                        let tag_email = (this.viewContentThread.inbox.from_mail === ''
+                            || this.viewContentThread.inbox.from_mail === '<>')
+                            ? this.viewContentThread.inbox.sender
+                            : this.viewContentThread.inbox.from_mail;
+
+                        let tag = createTag(tag_email, [tag_email]);
                         this.$refs.replyTag.addTag(tag);
                     }
 
@@ -1641,7 +1646,7 @@ export default {
         getFromMail(from_mail) {
             let reply_to = '';
 
-            if (from_mail.search("<") > 0) {
+            if (from_mail.search("<") >= 0) {
                 let spl = from_mail.split("<")[1]
                 reply_to = spl.slice(0, -1);
             }
