@@ -13,7 +13,14 @@ export default {
                 '#FEB019',
                 '#FF4560',
                 '#775DD0',
-                '#3F51B5'
+                '#3F51B5',
+                '#5A2A27',
+                '#1B998B',
+                '#F86624',
+                '#2E294E',
+                '#546E7A',
+                '#90EE7E',
+                '#F9A3A4'
             ],
             stroke : {
                 curve: 'smooth'
