@@ -162,6 +162,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');
+    Route::name('buyers-bought')->get('buyers-bought', 'BackLinkController@getBuyerBought');
     Route::name('delete-backlinks')->post('delete-backlinks', 'BackLinkController@deleteBacklinks');
 
     //Intdomain

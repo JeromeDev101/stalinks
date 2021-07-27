@@ -4,12 +4,14 @@ const BACKLINK_SET_TOTAL = 'BACKLINK_SET_TOTAL';
 const PRICE_SET_TOTAL = 'PRICE_SET_TOTAL';
 const BACKLINK_SET_ERROR = 'BACKLINK_SET_ERROR';
 const LIST_BACKLINK = 'LIST_BACKLINK'
+const LIST_BUYER_BOUGHT = 'LIST_BUYER_BOUGHT'
 const MESSAGE_FORMS = 'MESSAGE_FORMS'
 const FILLTER = 'FILLTER'
 const state = {
     totalBackLink: 0,
     totalPrice: 0,
     listBackLink: {},
+    listBuyerBought: { data:[] },
     error: {},
     fillter: {
         sub_buyer_id: '',
@@ -70,6 +72,10 @@ const mutations = {
         state.listBackLink = listBackLink
     },
 
+    [LIST_BUYER_BOUGHT](state, dataSet){
+        state.listBuyerBought = dataSet.listBuyerBought;
+    },
+
     [MESSAGE_FORMS] (state, payload) {
         state.messageBacklinkForms = payload;
     },
@@ -112,6 +118,20 @@ const actions = {
             let response = await BackLinkService.actionGetBackLink(page, params);
             commit(LIST_BACKLINK, response.data)
         } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(BACKLINK_SET_ERROR, errors);
+            } else {
+                commit(BACKLINK_SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetListBuyerBought({ commit }, params){
+        try {
+            let response = await BackLinkService.getListBuyerBought(params)
+            commit(LIST_BUYER_BOUGHT , { listBuyerBought: response.data });
+        }catch(e) {
             let errors = e.response.data.errors;
             if (errors) {
                 commit(BACKLINK_SET_ERROR, errors);

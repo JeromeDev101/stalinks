@@ -34,8 +34,8 @@
                                 <label for="">Buyer</label>
                                 <select class="form-control" v-model="fillter.buyer">
                                     <option value="">All</option>
-                                    <option v-for="option in listBuyer.data" v-bind:value="option.id">
-                                        {{ option.username == null ? option.name:option.username }}
+                                    <option v-for="option in listBuyerBought" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name : option.username }}
                                     </option>
                                 </select>
                             </div>
@@ -555,6 +555,7 @@
             this.checkAccountType();
             this.getSellerList();
             this.getBuyerList();
+            this.getBuyerBoughtList();
             this.getSubAccount();
             this.getFormula();
         },
@@ -569,6 +570,7 @@
                 messageBacklinkForms: state => state.storeBackLink.messageBacklinkForms,
                 listSeller: state => state.storeAccount.listAccount,
                 listBuyer: state => state.storeFollowupSales.listBuyer,
+                listBuyerBought: state => state.storeBackLink.listBuyerBought,
                 formula: state => state.storeSystem.formula,
             }),
 
@@ -764,6 +766,10 @@
 
             async getBuyerList(params) {
                 await this.$store.dispatch('actionGetListBuyer');
+            },
+
+            async getBuyerBoughtList(params) {
+                await this.$store.dispatch('actionGetListBuyerBought');
             },
 
             async clearSearch() {
