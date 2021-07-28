@@ -269,6 +269,8 @@ Route::middleware('auth:api')->group(function () {
     //Graphs
     Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
     Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
+    Route::name('buyer-valid-graph')->get('/graphs/buyer-valid', 'GraphsController@getBuyerValidGraph');
+    Route::name('writer-valid-graph')->get('/graphs/writer-valid', 'GraphsController@getWriterValidGraph');
     Route::name('url-valid-graph')->get('/graphs/url-valid', 'GraphsController@getUrlValidGraph');
     Route::name('url-valid-graph')->get('/graphs/url-valid-price', 'GraphsController@getUrlValidPriceGraph');
     Route::name('url-seller-statistics')->get('/graphs/url-seller-statistics', 'GraphsController@getUrlSellerStatisticsGraph');

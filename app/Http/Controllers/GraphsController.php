@@ -39,6 +39,30 @@ class GraphsController extends Controller
         return response()->json($data);
     }
 
+    public function getWriterValidGraph(Request $request)
+    {
+        $data = DB::select('call writer_valid_graph(?, ?, ?, ?)', [
+            $request->has('start_date') && $request->get('start_date') != 'null' ? Carbon::parse($request->get('start_date'))->format('Y-m-d') : '2000-01-01',
+            $request->has('end_date') &&  $request->get('end_date') != 'null' ? Carbon::parse($request->get('end_date'))->format('Y-m-d') : '2100-12-31',
+            $request->get('scope'),
+            $request->get('team_in_charge')
+        ]);
+
+        return response()->json($data);
+    }
+
+    public function getBuyerValidGraph(Request $request)
+    {
+        $data = DB::select('call buyer_valid_graph(?, ?, ?, ?)', [
+            $request->has('start_date') && $request->get('start_date') != 'null' ? Carbon::parse($request->get('start_date'))->format('Y-m-d') : '2000-01-01',
+            $request->has('end_date') &&  $request->get('end_date') != 'null' ? Carbon::parse($request->get('end_date'))->format('Y-m-d') : '2100-12-31',
+            $request->get('scope'),
+            $request->get('team_in_charge')
+        ]);
+
+        return response()->json($data);
+    }
+
     public function getUrlValidGraph(Request $request)
     {
         return response()->json($this->graphService->urlValidationQuery($request->all()));
