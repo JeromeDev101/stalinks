@@ -288,7 +288,6 @@ export default {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
         this.getListPaymentType();
-        this.getConfigList();
     },
 
     beforeMount() {
