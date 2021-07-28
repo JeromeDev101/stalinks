@@ -319,7 +319,7 @@ export default {
         domesticTotalPaymentAmount() {
             var total = (+this.updateModel.amount_usd +
                 3e-1) /
-                (1 - (34e-1 / 100));
+                (1 - (39e-1 / 100));
 
             return total.toFixed(2);
         },
@@ -327,7 +327,7 @@ export default {
         internationalTotalPaymentAmount() {
             var total = (+this.updateModel.amount_usd +
                 3e-1) /
-                (1 - (39e-1 / 100));
+                (1 - (44e-1 / 100));
 
             return total.toFixed(2);
         }
