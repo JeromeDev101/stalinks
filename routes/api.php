@@ -129,6 +129,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('seller-incharge')->get('/seller-incharge/{user_id}', 'PublisherController@getListSellerIncharge');
     Route::name('publisher-qc-validation')->post('/publisher/qc-validation', 'PublisherController@qcValidationUpdate');
     Route::name('publisher-domain-zones')->get('/publisher/domain-zones', 'PublisherController@getDomainZoneExtensions');
+    Route::name('generate-country')->post('/publisher/generate-country', 'PublisherController@generateCountry');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');

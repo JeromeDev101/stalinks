@@ -35,5 +35,18 @@ return [
     'status_mails' => [
         'FAILED' => 0,
         'SUCCESS' => 1,
+    ],
+
+//    Languages that are being used in a single country.
+//    language_id => country_id
+    'language_country' => [
+        '10' => 12,
+        '13' => 4,
+        '21' => 188,
+        '23' => 1,
+        '24' => 2,
+        '26' => 190,
+        '29' => 83,
+        '32' => 179
     ]
 ];
