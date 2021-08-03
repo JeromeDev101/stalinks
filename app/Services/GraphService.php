@@ -115,6 +115,7 @@ class GraphService
             COUNT(IF(ext_domains.status = 90, 1, NULL)) AS unqualified,
             COUNT(IF(ext_domains.status = 100, 1, NULL)) AS qualified,
             COUNT(IF(ext_domains.status = 110, 1, NULL)) AS got_email,
+            COUNT(IF(ext_domains.status = 120, 1, NULL)) AS contacted_via_form,
             COUNT(ext_domains.status) AS total
         '));
 

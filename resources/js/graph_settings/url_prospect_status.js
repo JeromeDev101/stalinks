@@ -20,7 +20,8 @@ export default {
                 '#2E294E',
                 '#546E7A',
                 '#90EE7E',
-                '#F9A3A4'
+                '#F9A3A4',
+                '#43BCCD'
             ],
             stroke : {
                 curve: 'smooth'
@@ -105,6 +106,14 @@ export default {
                 return {
                     x: datum.xaxis,
                     y : datum.contacted
+                }
+            }))
+        },{
+            name: 'Contacted via Form',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
+                    y : datum.contacted_via_form
                 }
             }))
         },{
