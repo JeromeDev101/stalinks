@@ -709,7 +709,7 @@
                         var article = res.data[0];
 
                         if( article ){
-                            this.doUpdate(article.backlinks, article);
+                            this.doUpdate(article.backlink, article);
                             $("#modal-content-edit").modal('show')
                         }
                     })
