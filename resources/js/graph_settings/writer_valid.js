@@ -91,14 +91,6 @@ export default {
                     y : datum.total_valid
                 }
             }))
-        },{
-            name: 'Valid with Articles',
-            data : _.toArray(_.map(data, function (datum) {
-                return {
-                    x: datum.xaxis,
-                    y : datum.valid_with_url
-                }
-            }))
         }];
     }
 }

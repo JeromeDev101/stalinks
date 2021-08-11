@@ -73,7 +73,7 @@
                                         :value="user.id"
                                         v-for="user
                                             in
-                                            listSellerTeam.data" v-if="user.id != 0">{{ user.username }}</option>
+                                            listTeamInCharge.data" v-if="user.id != 0">{{ user.username }}</option>
                                 </select>
                             </div>
                         </div>
@@ -112,7 +112,7 @@ export default {
 
     props:[
         'dateRanges',
-        'listSellerTeam'
+        'listTeamInCharge'
     ],
 
     data() {

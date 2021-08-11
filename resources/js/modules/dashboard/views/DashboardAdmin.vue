@@ -18,9 +18,9 @@
 
         <prospect-qualified-vs-registered-graph :date-ranges="dateRanges" v-if="user.isAdmin || isCs"></prospect-qualified-vs-registered-graph>
 
-        <buyer-valid-graph :list-seller-team="listSellerTeam" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></buyer-valid-graph>
+        <buyer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></buyer-valid-graph>
 
-        <writer-valid-graph :list-seller-team="listSellerTeam" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></writer-valid-graph>
+        <writer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></writer-valid-graph>
 
     </div>
 </template>
@@ -111,6 +111,7 @@ export default {
         ...mapState({
             user: state => state.storeAuth.currentUser,
             listSellerTeam: state => state.storeExtDomain.listSellerTeam,
+            listIncharge: state => state.storeAccount.listIncharge,
         }),
 
         isQc() {
@@ -159,9 +160,14 @@ export default {
     mounted() {
         this.fillData('without')
         this.getListSellerTeam();
+        this.getTeamInCharge();
     },
 
     methods: {
+        async getTeamInCharge(){
+            await this.$store.dispatch('actionGetTeamInCharge');
+        },
+
         async getListSellerTeam(params) {
             await this.$store.dispatch('actionGetListSellerTeam', params);
         },
