@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBuyerValidGraphStoredProcedure extends Migration
+class AlterBuyerValidGraphStoredProc extends Migration
 {
     /**
      * Run the migrations.
@@ -47,7 +47,7 @@ class CreateBuyerValidGraphStoredProcedure extends Migration
                 LEFT JOIN users
                 ON registration.team_in_charge = users.id
                     AND users.role_id = 5
-                    AND users.isOurs = 0
+                    AND users.isOurs = 1
                 LEFT JOIN (
                         SELECT id,user_id
                         FROM backlinks
