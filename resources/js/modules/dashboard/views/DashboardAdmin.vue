@@ -8,7 +8,7 @@
 
         <orders-graph :list-seller-team="listSellerTeam" :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></orders-graph>
 
-        <seller-valid-graph :list-seller-team="listSellerTeam" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></seller-valid-graph>
+        <seller-valid-graph :list-seller-team="listSellerTeam" :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></seller-valid-graph>
 
         <url-valid-graph :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></url-valid-graph>
 
@@ -18,9 +18,9 @@
 
         <prospect-qualified-vs-registered-graph :date-ranges="dateRanges" v-if="user.isAdmin || isCs"></prospect-qualified-vs-registered-graph>
 
-        <buyer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></buyer-valid-graph>
+        <buyer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></buyer-valid-graph>
 
-        <writer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQcManager"></writer-valid-graph>
+        <writer-valid-graph :list-team-in-charge="listIncharge" :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></writer-valid-graph>
 
     </div>
 </template>
