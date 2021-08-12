@@ -176,7 +176,7 @@
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
                                         <label for="">Payment Via</label>
                                         <select name="" class="form-control" v-model="updateModel.payment_type">
-                                            <option v-for="option in listPayment.data" v-bind:value="option.id" v-if="option.receive_payment === 'yes'">
+                                            <option v-for="option in listPayment.data" v-bind:value="option.id" v-if="option.send_payment === 'yes'">
                                                 {{ option.type }}
                                             </option>
                                         </select>
