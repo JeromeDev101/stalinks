@@ -12,4 +12,11 @@ class PaymentType extends Model
 
     protected $table = 'payment_type';
     protected $guarded = [];
+
+    protected $fillable = [
+        'type',
+        'show_registration',
+        'receive_payment',
+        'send_payment'
+    ];
 }
