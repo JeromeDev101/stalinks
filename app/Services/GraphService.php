@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ExtDomain;
 use App\Models\Publisher;
+use App\Models\Registration;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -172,7 +173,7 @@ class GraphService
 //            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
 
             $start_date = Carbon::create($request['start_date'])->format('Y-m-d');
-            $end_date = Carbon::create($request['end_date'])->format('Y-m-d');
+            $end_date   = Carbon::create($request['end_date'])->format('Y-m-d');
 
             $query->whereRaw("$date >= '$start_date'");
             $query->whereRaw("$date <= '$end_date'");
@@ -237,6 +238,56 @@ class GraphService
             $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
             $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
+
+        return $query->get();
+    }
+
+    public function sellerValidQuery($request)
+    {
+        switch ($request['scope']) {
+            case 'global':
+                $xaxis      = "CONCAT(MONTHNAME(MAX(registration.created_at)), ' ', YEAR(MAX(registration.created_at))) AS xaxis,
+                    MONTHNAME(MAX(registration.created_at)) AS month,
+                    YEAR(MAX(registration.created_at)) AS year";
+                $xaxisGroup = [
+                    "MONTH(registration.created_at)",
+                    "YEAR(registration.created_at)"
+                ];
+                $xaxisOrder = [
+                    "YEAR(registration.created_at)",
+                    "MONTH(registration.created_at)"
+                ];
+                break;
+
+            default:
+                $xaxis      = "IF(registration.team_in_charge IS NOT NULL AND users.name IS NOT NULL, users.name, 'Deleted Users') AS xaxis";
+                $xaxisGroup = ["xaxis"];
+                $xaxisOrder = ["xaxis"];
+                break;
+        }
+
+        $query = Registration::select(DB::raw(
+            "COUNT(IF(registration.account_validation = 'valid', 1, NULL)) AS total_valid,
+                    COUNT(registration.id) AS total_registration,
+                    COUNT(IF((SELECT COUNT(id) FROM publisher WHERE user_id = u2.id) > 0, 1, NULL)) AS valid_with_url," .
+            $xaxis
+        ))
+            ->leftJoin('users', 'registration.team_in_charge', 'users.id')
+            ->leftJoin('users as u2', 'registration.email', 'u2.email')
+            ->where('registration.type', 'Seller')
+            ->where('registration.created_at', '>=', $request['start_date'])
+            ->where('registration.created_at', '<=', $request['end_date'])
+            ->where('users.role_id', 6)
+            ->where('users.isOurs', 0);
+
+        if ($request['team_in_charge'] == 0 || $request['scope'] == 'team') {
+            $query->whereNotNull('registration.team_in_charge');
+        } else {
+            $query->where('registration.team_in_charge', $request['team_in_charge']);
+        }
+
+        $query->groupBy($xaxisGroup);
+        $query->orderBy($xaxisOrder);
 
         return $query->get();
     }

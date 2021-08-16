@@ -29,12 +29,14 @@ class GraphsController extends Controller
 
     public function getSellerValidGraph(Request $request)
     {
+
         $data = DB::select('call seller_valid_graph(?, ?, ?, ?)', [
             $request->has('start_date') && $request->get('start_date') != 'null' ? Carbon::parse($request->get('start_date'))->format('Y-m-d') : '2000-01-01',
             $request->has('end_date') &&  $request->get('end_date') != 'null' ? Carbon::parse($request->get('end_date'))->format('Y-m-d') : '2100-12-31',
             $request->get('scope'),
             $request->get('team_in_charge')
         ]);
+
 
         return response()->json($data);
     }

@@ -96,7 +96,7 @@ export default {
             data : _.toArray(_.map(data, function (datum) {
                 return {
                     x: datum.xaxis,
-                    y : datum.total_valid
+                    y : datum.valid_with_url
                 }
             }))
         }];
