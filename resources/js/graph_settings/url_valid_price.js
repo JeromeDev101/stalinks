@@ -50,7 +50,10 @@ export default {
                     offsetX : 0,
                     offsetY : 0
                 },
-                tickPlacement: 'on'
+                tickPlacement: 'on',
+                labels: {
+                    rotate: -45
+                },
             },
             yaxis : {
                 tickAmount : 10,
@@ -81,7 +84,7 @@ export default {
             name: 'Upload (Total: '+ __.sum(uploads) +')',
             data : _.toArray(_.map(data, function (datum) {
                 return {
-                    x: datum.xaxis,
+                    x: datum.xaxis + '(%GP: '+ ((datum.quality_price / datum.valid) * 100).toFixed(1) +'%)',
                     y : datum.upload
                 }
             }))
