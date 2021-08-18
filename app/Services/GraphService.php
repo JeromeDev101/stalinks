@@ -38,7 +38,7 @@ class GraphService
                 'CONCAT(MONTHNAME(MAX(publisher.created_at)), " ", YEAR(MAX(publisher.created_at))) AS xaxis,
                         COUNT(publisher.id) AS upload,
                         COUNT(IF(publisher.valid = \'valid\', 1, NULL)) AS valid,
-                        COUNT(IF(publisher.price_basis IN (\'good\', \'average\') AND publisher.valid = \'valid\', 1, NULL)) AS quality_price'
+                        COUNT(IF(publisher.price_basis IN (\'good\') AND publisher.valid = \'valid\', 1, NULL)) AS quality_price'
             ))
                 ->groupBy(DB::raw('MONTH(publisher.created_at)'))
                 ->groupBy(DB::raw('YEAR(publisher.created_at)'))
@@ -60,7 +60,7 @@ class GraphService
                 'IF(registration.team_in_charge IS NOT NULL AND users2.name IS NOT NULL, users2.name, \'Deleted Users\') AS xaxis,
                     COUNT(publisher.id) AS upload,
                     COUNT(IF(publisher.valid = \'valid\', 1, NULL)) AS valid,
-                    COUNT(IF(publisher.valid = \'valid\' AND publisher.price_basis IN (\'good\', \'average\'), 1, NULL)) AS quality_price'
+                    COUNT(IF(publisher.valid = \'valid\' AND publisher.price_basis IN (\'good\'), 1, NULL)) AS quality_price'
             ))
                 ->join('users', 'publisher.user_id', 'users.id')
                 ->leftJoin('registration', 'users.email', 'registration.email')
