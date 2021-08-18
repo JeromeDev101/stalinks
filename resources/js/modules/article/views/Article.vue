@@ -237,7 +237,7 @@
                             slot="statusData">
                             {{ scope.row.status_writer ==
                             null ?
-                            scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue' :scope.row.status_writer
+                            (scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue') :scope.row.status_writer
                             }}
                         </template>
 
