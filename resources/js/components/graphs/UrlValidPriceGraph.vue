@@ -77,6 +77,21 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
+                            <label
+                                style="color: #333">Show Numbers
+                            </label>
+                            <v-select
+                                v-model="filterModel.show_numbers"
+                                multiple
+                                placeholder="All"
+                                :searchable="true"
+                                :options="seriesList"
+                                :reduce="series => series.index"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
                             <label for="">Action</label>
                             <br>
                             <button
@@ -91,7 +106,8 @@
 
                 <div class="small">
                     <apexchart type="bar" height="350"
-                               :options="urlValidPriceChartOptions"
+                               ref="chart"
+                               :options="urlValidOption"
                                :series="urlValidPriceData"></apexchart>
                 </div>
             </div>
@@ -122,22 +138,55 @@ export default {
                         endDate: null
                     },
                 },
+                show_numbers: []
             },
-            urlValidPriceData : []
+            seriesList: [{
+                index : 0,
+                label : 'Upload'
+            },{
+                index : 1,
+                label : 'Valid'
+            },{
+                index : 2,
+                label : 'Quality Price'
+            },{
+                index : 3,
+                label : 'GP'
+            },{
+                index : 4,
+                label : 'UV'
+            }],
+            urlValidPriceData : [],
+            urlValidOption: {}
         };
     },
 
     mounted() {
+        this.getUrlValidPriceChartOptions();
         this.getUrlValidPriceData();
     },
 
-    computed : {
-        urlValidPriceChartOptions() {
-            return url_valid_price.urlValidPriceGraphSetting();
-        },
-    },
-
     methods : {
+        getUrlValidPriceChartOptions() {
+            this.urlValidOption = url_valid_price.urlValidPriceGraphSetting();
+        },
+
+        filterNumbers() {
+            this.filterModel.show_numbers = this.filterModel.show_numbers.length === 0 ? [
+                0,
+                1,
+                2,
+                3,
+                4
+            ] : this.filterModel.show_numbers;
+
+            this.urlValidOption = {
+                dataLabels : {
+                    enabledOnSeries : this.filterModel.show_numbers
+                }
+            };
+        },
+
         filterUrlValidPrice() {
             if
             (this.filterModel.urlValidPrice.dateRange.startDate !=
@@ -151,7 +200,10 @@ export default {
                     Date(this.filterModel.urlValidPrice.dateRange.endDate).toJSON();
             }
 
+            this.filterNumbers();
             this.getUrlValidPriceData(this.filterModel.urlValidPrice.dateRange.startDate, this.filterModel.urlValidPrice.dateRange.endDate);
+
+
         },
 
         clearUrlValidPriceFilter() {
@@ -161,6 +213,9 @@ export default {
                     endDate : null
                 }
             };
+
+            this.filterModel.show_numbers = [];
+            this.filterNumbers();
 
             this.filterModel.urlValidPrice.scope = 'global';
 
