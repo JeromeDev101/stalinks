@@ -815,6 +815,7 @@ class MailgunController extends Controller
 
     public function mail_logs(Request $request)
     {
+
         $mail_logs = DB::table('replies')
                         ->where('replies.is_sent',1)
                         ->select('replies.from_mail as from','replies.sender as user_mail','replies.received as to','replies.status_code as status','replies.created_at as date');
@@ -825,6 +826,10 @@ class MailgunController extends Controller
 
         if( isset($request->user_email) && $request->user_email != '') {
             $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
+        }
+
+        if( isset($request->recipient) && $request->recipient != '') {
+            $mail_logs = $mail_logs->where('replies.received', 'like', '%' . $request->recipient . '%');
         }
 
         $mail_logs = $mail_logs->orderBy('created_at', 'desc')->paginate($request->paginate);
