@@ -299,6 +299,7 @@ class DashboardController extends Controller
         $list = ExtDomain::select($columns)
                 ->leftJoin('users', 'ext_domains.user_id', '=', 'users.id')
                 ->whereNotNull('user_id')
+                ->whereNotNull('users.username')
                 ->groupBy('users.username')
                 ->orderBy('users.username', 'asc')
                 ->get();
