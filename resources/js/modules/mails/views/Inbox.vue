@@ -74,6 +74,17 @@
 
                                     <i class="fa fa-fw fa-trash"></i>
                                 </button>
+
+                                <button
+                                    type="button"
+                                    title="Retrieve Email"
+                                    class="btn btn-default"
+                                    v-if="$route.name === 'Trash'"
+
+                                    @click="retrieveDeletedMessage">
+
+                                    <i class="fa fa-fw fa-recycle"></i>
+                                </button>
                             </div>
 
                             <div class="pull-right">
@@ -1799,6 +1810,20 @@ export default {
         updateInboxUnreadCountInParent(count) {
             this.$emit('updateInboxUnreadCount', count)
         },
+
+        retrieveDeletedMessage() {
+            axios.post('/api/mail/retrieve-deleted-email', {
+                ids : this.checkIds
+            }).then((response) => {
+                swal.fire(
+                    'Send',
+                    'Successfully Retrieved Email',
+                    'success'
+                )
+
+                this.getInbox();
+            });
+        }
     }
 }
 </script>
