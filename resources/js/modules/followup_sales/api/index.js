@@ -21,7 +21,7 @@ export default class followupSalesService {
     }
 
     static updateSales(params) {
-        return axios.put('api/sales', params)
+        return axios.post('api/sales', params)
             .then(response => response)
             .catch(error => error)
     }

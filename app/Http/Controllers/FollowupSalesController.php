@@ -112,7 +112,25 @@ class FollowupSalesController extends Controller
         //             ->where('backlinks.id',$request->id)
         //             ->first();
 
+        $filename = '';
+
+        if ($request->file != 'undefined') {
+            $request->validate([
+                'file' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+
+            $filename = time() . '-followup.' . $request->file->getClientOriginalExtension();
+            move_file_to_storage($request->file, 'images/followup', $filename);
+        }
+
         $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed', 'anchor_text');
+
+        // add file to input
+
+        if ($filename) {
+            $input['reason_file'] = '/images/followup/' . $filename;
+        }
+
         $backlink = Backlink::findOrFail($request->id);
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
