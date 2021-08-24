@@ -6,6 +6,7 @@ return [
     'EXT_STATUS_CONTACTS_NULL' => 20,
     'EXT_STATUS_GOT_CONTACTS' => 30,
     'EXT_STATUS_CONTACTED' => 50,
+    'EXT_STATUS_CONTACTED_VIA_FORM' => 120,
     'EXT_STATUS_NO_ANSWER' => 55,
     'EXT_STATUS_REFUSED' => 60,
     'EXT_STATUS_IN_TOUCHED' => 70,
@@ -34,5 +35,18 @@ return [
     'status_mails' => [
         'FAILED' => 0,
         'SUCCESS' => 1,
+    ],
+
+//    Languages that are being used in a single country.
+//    language_id => country_id
+    'language_country' => [
+        '10' => 12,
+        '13' => 4,
+        '21' => 188,
+        '23' => 1,
+        '24' => 2,
+        '26' => 190,
+        '29' => 83,
+        '32' => 179
     ]
 ];

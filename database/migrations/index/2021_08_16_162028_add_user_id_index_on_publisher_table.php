@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePaymentTypeTable extends Migration
+class AddUserIdIndexOnPublisherTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreatePaymentTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_type', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('type');
-            $table->softDeletes('deleted_at', 0);
-            $table->timestamps();
+        Schema::table('publisher', function (Blueprint $table) {
+            $table->index('user_id');
         });
     }
 
@@ -28,6 +25,9 @@ class CreatePaymentTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_type');
+        Schema::table('publisher', function (Blueprint $table)
+        {
+            $table->dropIndex(['user_id']);
+        });
     }
 }

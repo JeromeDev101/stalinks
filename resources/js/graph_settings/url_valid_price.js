@@ -6,11 +6,10 @@ export default {
     urlValidPriceGraphSetting() {
         return {
             chart : {
-                type : 'bar',
-                height : 600,
-                // stacked: true,
+                type : 'line',
+                height : 350,
                 // stackType: '100%',
-                toolbar: {
+                /*toolbar: {
                     show : true,
                     tools : {
                         download : true,
@@ -21,7 +20,7 @@ export default {
                         pan : true,
                         customIcons : []
                     },
-                }
+                }*/
             },
             colors : [
                 '#008FFB',
@@ -34,11 +33,38 @@ export default {
             plotOptions : {
                 bar : {
                     horizontal : false,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom,
+                    },
                 },
+            },
+            dataLabels: {
+                enabled: true,
+                enabledOnSeries : [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                offsetY: -20,
+                formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+                    return seriesIndex === 3 || seriesIndex === 4 ? val + '%' : val;
+                },
+                style: {
+                    fontSize: '12px',
+                    colors : [
+                        "#008FFB",
+                        "#00E396",
+                        "#FEB019",
+                        "#FF4560",
+                        "#775DD0"
+                    ]
+                }
             },
             stroke : {
                 width : 1,
-                colors : ['#fff']
+                curve: 'smooth'
             },
             xaxis : {
                 type: 'category',
@@ -50,11 +76,123 @@ export default {
                     offsetX : 0,
                     offsetY : 0
                 },
-                tickPlacement: 'on'
+                tickPlacement: 'on',
             },
-            yaxis : {
-                tickAmount : 10,
-            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#008FFB'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#008FFB',
+                        }
+                    },
+                    title: {
+                        text: "Total Uploads",
+                        style: {
+                            color: '#008FFB',
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },{
+                    seriesName: 'Upload',
+                    show:false,
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#FF4560'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#FF4560',
+                        },
+                    },
+                    title: {
+                        style: {
+                            color: '#FF4560',
+                        }
+                    }
+                },{
+                    seriesName: 'Upload',
+                    show:false,
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#FF4560'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#FF4560',
+                        },
+                    },
+                    title: {
+                        style: {
+                            color: '#FF4560',
+                        }
+                    }
+                },{
+                    seriesName: 'GP',
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#FF4560'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#FF4560',
+                        },
+                        formatter: function (val) {
+                            return val + '%';
+                        },
+                    },
+                    title: {
+                        style: {
+                            color: '#FF4560',
+                        }
+                    }
+                },{
+                    seriesName: 'GP',
+                    show: false,
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#775DD0'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#775DD0',
+                        },
+                        formatter: function (val) {
+                            return val + '%';
+                        },
+                    },
+                    title: {
+                        text: "Upload vs Valid %",
+                        style: {
+                            color: '#775DD0',
+                        }
+                    }
+                }
+            ],
             tooltip : {
                 y : {
                     formatter : function (val) {
@@ -75,18 +213,25 @@ export default {
     },
 
     urlValidPriceGraphData(data) {
-        var uploads = _.pluck(data, 'upload');
+        // var uploads = _.pluck(data, 'upload');
 
         return [{
-            name: 'Upload (Total: '+ __.sum(uploads) +')',
+            name: 'Upload',
+            type: 'column',
             data : _.toArray(_.map(data, function (datum) {
                 return {
+                    /*x: [
+                        datum.xaxis,
+                        '(GP: '+ ((datum.quality_price / datum.valid) * 100).toFixed(1) +'%)',
+                        '(UV: '+ ((datum.valid / datum.upload) * 100).toFixed(1) +'%)'
+                    ],*/
                     x: datum.xaxis,
                     y : datum.upload
                 }
             }))
         },{
             name: 'Valid',
+            type: 'column',
             data : _.toArray(_.map(data, function (datum) {
                 return {
                     x: datum.xaxis,
@@ -95,10 +240,29 @@ export default {
             }))
         },{
             name: 'Quality Price',
+            type: 'column',
             data : _.toArray(_.map(data, function (datum) {
                 return {
                     x: datum.xaxis,
                     y : datum.quality_price
+                }
+            }))
+        },{
+            name: 'GP',
+            type: 'line',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
+                    y : ((datum.quality_price / datum.valid) * 100).toFixed(1)
+                }
+            }))
+        },{
+            name: 'UV',
+            type: 'line',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
+                    y : ((datum.valid / datum.upload) * 100).toFixed(1)
                 }
             }))
         }];

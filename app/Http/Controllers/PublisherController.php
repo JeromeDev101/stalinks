@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BestPriceGenerator;
 use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
+use App\Jobs\GenerateCountryByLanguageJob;
 use App\Models\DomainZone;
 use App\Services\HttpClient;
 use GuzzleHttp\Client;
@@ -411,5 +412,12 @@ class PublisherController extends Controller
             'data' => $zones->get(),
             'count' => 0,
         ],200);
+    }
+
+    public function generateCountry(Request $request)
+    {
+        GenerateCountryByLanguageJob::dispatch($request->get('ids'));
+
+        return response()->json('success');
     }
 }

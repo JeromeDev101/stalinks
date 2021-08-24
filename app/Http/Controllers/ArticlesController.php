@@ -163,6 +163,7 @@ class ArticlesController extends Controller
         if( isset($filter['status']) && $filter['status'] != ""){
             if( $filter['status'] == 'Queue' ){
                 $list->whereNull('article.status_writer');
+                $list->whereNotIn('backlinks.status', ['Issue', 'Canceled']);
             }else if( $filter['status'] == 'Canceled' || $filter['status'] == 'Issue' ){
                 $list->whereHas('backlink', function($query) use ($filter) {
                     return $query->where('status', $filter['status']);

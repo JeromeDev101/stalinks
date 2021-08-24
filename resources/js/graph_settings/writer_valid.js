@@ -3,7 +3,7 @@ import __ from 'lodash';
 
 export default {
 
-    sellerValidGraphSetting() {
+    graphSetting() {
         return {
             chart : {
                 type : 'bar',
@@ -72,7 +72,7 @@ export default {
         };
     },
 
-    sellerValidGraphData(data) {
+    graphData(data) {
         var registers = _.pluck(data, 'total_registration');
 
         return [{
@@ -89,14 +89,6 @@ export default {
                 return {
                     x: datum.xaxis,
                     y : datum.total_valid
-                }
-            }))
-        },{
-            name: 'Valid with URLs',
-            data : _.toArray(_.map(data, function (datum) {
-                return {
-                    x: datum.xaxis,
-                    y : datum.valid_with_url
                 }
             }))
         }];

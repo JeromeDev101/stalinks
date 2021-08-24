@@ -26,6 +26,7 @@
                                             <th>New <span class="text-primary">({{ ext_domain.num_new }})</span></th>
                                             <th>GotContacts <span class="text-primary">({{ ext_domain.num_got_contact }})</span></th>
                                             <th>Contacted <span class="text-primary">({{ ext_domain.num_contacted }})</span></th>
+                                            <th>Contacted Via Form <span class="text-primary">({{ ext_domain.num_contacted_via_form }})</span></th>
                                             <th>InTouched <span class="text-primary">({{ ext_domain.num_in_touched }})</span></th>
                                             <th>Qualified <span class="text-primary">({{ ext_domain.num_qualified }})</span></th>
                                             <th>NoAnswer <span class="text-primary">({{ ext_domain.num_no_answer }})</span></th>
@@ -43,6 +44,7 @@
                                             <td>{{ ext_domain.num_new }}</td>
                                             <td>{{ ext_domain.num_got_contact }}</td>
                                             <td>{{ ext_domain.num_contacted }}</td>
+                                            <td>{{ ext_domain.num_contacted_via_form }}</td>
                                             <td>{{ ext_domain.num_in_touched }}</td>
                                             <td>{{ ext_domain.num_qualified }}</td>
                                             <td>{{ ext_domain.num_no_answer }}</td>
@@ -415,6 +417,7 @@ export default {
                 num_unqualified: 0,
                 num_got_contact: 0,
                 num_contacted: 0,
+                num_contacted_via_form: 0,
                 num_no_answer: 0,
                 num_refused: 0,
             },
@@ -541,6 +544,7 @@ export default {
                 this.ext_domain.num_total += parseInt(ext_domain[index].num_total);
                 this.ext_domain.num_got_contact += parseInt(ext_domain[index].num_got_contact);
                 this.ext_domain.num_contacted += parseInt(ext_domain[index].num_contacted);
+                this.ext_domain.num_contacted_via_form += parseInt(ext_domain[index].num_contacted_via_form);
                 this.ext_domain.num_no_answer += parseInt(ext_domain[index].num_no_answer);
                 this.ext_domain.num_refused += parseInt(ext_domain[index].num_refused);
                 ext_domain_ctr++;

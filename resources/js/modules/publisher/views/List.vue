@@ -489,6 +489,7 @@
                                         <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
                                         <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
                                         <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+                                        <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8">Generate Country</a>
                                     </div>
                                 </div>
 
@@ -2106,6 +2107,27 @@
         },
 
         methods: {
+            generateCountry() {
+                axios.post('/api/publisher/generate-country', {
+                    ids : this.checkIds
+                }).then((response) => {
+                    swal.fire({
+                        icon: 'success',
+                        title: "Success",
+                        text:
+                            'The system is now generating countries, please wait...',
+                        confirmButtonText: "Ok",
+                    });
+                }).catch((err) => {
+                    swal.fire({
+                        icon: 'error',
+                        title: "Error",
+                        text:
+                            'An error was encountered...',
+                    });
+                })
+            },
+
             sortPublisher(data) {
                 this.filterModel.sort = data.filter(item => item.sort !== '' && item.hidden !== true)
                 this.getPublisherList();

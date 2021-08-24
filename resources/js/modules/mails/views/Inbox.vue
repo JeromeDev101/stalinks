@@ -74,6 +74,17 @@
 
                                     <i class="fa fa-fw fa-trash"></i>
                                 </button>
+
+                                <button
+                                    type="button"
+                                    title="Retrieve Email"
+                                    class="btn btn-default"
+                                    v-if="$route.name === 'Trash'"
+
+                                    @click="retrieveDeletedMessage">
+
+                                    <i class="fa fa-fw fa-recycle"></i>
+                                </button>
                             </div>
 
                             <div class="pull-right">
@@ -1099,7 +1110,12 @@ export default {
                                 return email !== '';
                             }))
                     } else {
-                        let tag = createTag(this.viewContentThread.inbox.from_mail, [this.viewContentThread.inbox.from_mail]);
+                        let tag_email = (this.viewContentThread.inbox.from_mail === ''
+                            || this.viewContentThread.inbox.from_mail === '<>')
+                            ? this.viewContentThread.inbox.sender
+                            : this.viewContentThread.inbox.from_mail;
+
+                        let tag = createTag(tag_email, [tag_email]);
                         this.$refs.replyTag.addTag(tag);
                     }
 
@@ -1641,7 +1657,7 @@ export default {
         getFromMail(from_mail) {
             let reply_to = '';
 
-            if (from_mail.search("<") > 0) {
+            if (from_mail.search("<") >= 0) {
                 let spl = from_mail.split("<")[1]
                 reply_to = spl.slice(0, -1);
             }
@@ -1794,6 +1810,20 @@ export default {
         updateInboxUnreadCountInParent(count) {
             this.$emit('updateInboxUnreadCount', count)
         },
+
+        retrieveDeletedMessage() {
+            axios.post('/api/mail/retrieve-deleted-email', {
+                ids : this.checkIds
+            }).then((response) => {
+                swal.fire(
+                    'Send',
+                    'Successfully Retrieved Email',
+                    'success'
+                )
+
+                this.getInbox();
+            });
+        }
     }
 }
 </script>

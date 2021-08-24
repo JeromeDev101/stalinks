@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Models\Config;
 use App\Models\Log;
 use App\Models\PaymentType;
 use App\Repositories\Contracts\CountryRepositoryInterface;
@@ -284,6 +285,8 @@ class UserController extends Controller
     public function getPaymentList()
     {
         $list = PaymentType::all();
+
+        $list[2]->address = Config::where('code', 'usdt_address')->first()->value;
 
         return response()->json([
             'data' => $list

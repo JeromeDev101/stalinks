@@ -38,6 +38,12 @@ export default class BackLinkService {
             .catch(error => error);
     }
 
+    static getListBuyerBought(params) {
+        return axios.get('api/buyers-bought', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static actionSaveBacklink (params) {
         if (params.id) {
             return axios.put(`/api/backlinks/${params.id}`, params)

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\User;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\UserWorkMails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Models\Formula;
@@ -269,4 +271,25 @@ class ConfigController extends Controller
         PriceBasisJob::dispatch();
     }
 
+    public function updateCryptoAddress(Request $request)
+    {
+        $file = $request->file('file');
+
+        if ($file) {
+            Storage::disk('local')->put('usdt.jpg', file_get_contents($file));
+        }
+
+        if ($request->has('address')) {
+            Config::updateOrCreate([
+                'code' => 'usdt_address'
+            ], [
+                'name' => 'USDT Address',
+                'code' => 'usdt_address',
+                'value' => $request->get('address'),
+                'type' => 'crypto'
+            ]);
+        }
+
+        return 'OK';
+    }
 }

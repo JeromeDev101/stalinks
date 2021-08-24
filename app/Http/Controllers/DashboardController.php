@@ -278,6 +278,7 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN ext_domains.status = "70" THEN 1 ELSE 0 END) AS num_in_touched'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "100" THEN 1 ELSE 0 END) AS num_qualified'),
             DB::raw('SUM(CASE WHEN ext_domains.status = "90" THEN 1 ELSE 0 END) AS num_unqualified'),
+            DB::raw('SUM(CASE WHEN ext_domains.status = "120" THEN 1 ELSE 0 END) AS num_contacted_via_form'),
             DB::raw('
                 SUM(CASE WHEN ext_domains.status = "90"
                 OR ext_domains.status = "10"
@@ -290,6 +291,7 @@ class DashboardController extends Controller
                 OR ext_domains.status = "70"
                 OR ext_domains.status = "100"
                 OR ext_domains.status = "0"
+                OR ext_domains.status = "120"
                 THEN 1 ELSE 0 END) AS num_total
             '),
         ];
@@ -297,6 +299,7 @@ class DashboardController extends Controller
         $list = ExtDomain::select($columns)
                 ->leftJoin('users', 'ext_domains.user_id', '=', 'users.id')
                 ->whereNotNull('user_id')
+                ->whereNotNull('users.username')
                 ->groupBy('users.username')
                 ->orderBy('users.username', 'asc')
                 ->get();

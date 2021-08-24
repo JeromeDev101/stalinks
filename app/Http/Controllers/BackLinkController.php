@@ -69,6 +69,15 @@ class BackLinkController extends Controller
         return response()->json($backLinks);
     }
 
+    public function getBuyerBought()
+    {
+        return Backlink::select('backlinks.user_id as id', 'users.username', 'users.name')
+            ->leftJoin('users', 'users.id', '=', 'backlinks.user_id')
+            ->groupBy('backlinks.user_id', 'users.username')
+            ->orderBy('users.username', 'asc')
+            ->get();
+    }
+
     public function reports(Request $request)
     {
         $input = $request->all();

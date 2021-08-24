@@ -176,13 +176,19 @@
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
                                         <label for="">Payment Via</label>
                                         <select name="" class="form-control" v-model="updateModel.payment_type">
-                                            <option v-for="option in listPayment.data" v-bind:value="option.id">
+                                            <option v-for="option in listPayment.data" v-bind:value="option.id" v-if="option.send_payment === 'yes'">
                                                 {{ option.type }}
                                             </option>
                                         </select>
                                         <span v-if="messageForms.errors.payment_type" v-for="err in messageForms.errors.payment_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+
+                                <div v-if="updateModel.payment_type === 3" class="col-md-12">
+                                    <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <p class="text-center">{{ listPayment.data[2].address }}</p>
+                                </div>
+
                                 <div class="col-md-12"
                                      v-if="updateModel.payment_type != 1">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
@@ -313,7 +319,7 @@ export default {
         domesticTotalPaymentAmount() {
             var total = (+this.updateModel.amount_usd +
                 3e-1) /
-                (1 - (34e-1 / 100));
+                (1 - (39e-1 / 100));
 
             return total.toFixed(2);
         },
@@ -321,7 +327,7 @@ export default {
         internationalTotalPaymentAmount() {
             var total = (+this.updateModel.amount_usd +
                 3e-1) /
-                (1 - (39e-1 / 100));
+                (1 - (44e-1 / 100));
 
             return total.toFixed(2);
         }
@@ -491,7 +497,7 @@ export default {
                 this.seenNotifications(this.user.id);
                 this.getNotifications(this.user.id);
             }
-        }
+        },
     }
 };
 </script>

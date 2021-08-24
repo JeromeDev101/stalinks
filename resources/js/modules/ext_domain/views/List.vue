@@ -127,6 +127,7 @@
                             <div class="input-group">
                                 <date-range-picker
                                     ref="picker"
+                                    opens="left"
                                     v-model="filterModel.alexa_date_upload"
                                     :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                     :dateRange="filterModel.alexa_date_upload"
@@ -501,6 +502,7 @@
                            <label style="color: #333">Status</label>
                            <select class="form-control" v-model="extModel.status">
                               <option value="50">Contacted</option>
+                              <option value="120">Contacted Via Form</option>
                               <option value="60">Refused</option>
                               <option value="70">InTouched</option>
                               <option value="90">Unqualified</option>

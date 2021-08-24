@@ -546,9 +546,9 @@
                     'Content In Writing',
                     'Content Done',
                     'Content sent',
-                    'Live',
                     'Live in Process',
                     'Issue',
+                    'Live',
                     'Canceled'
                 ],
                 writer_status: ['In Writing', 'Done'],

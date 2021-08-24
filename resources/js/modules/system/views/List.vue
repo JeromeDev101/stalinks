@@ -166,6 +166,9 @@
                                     <tr class="label-primary">
                                         <th>#</th>
                                         <th>Type</th>
+                                        <th>Receive Payment</th>
+                                        <th>Send Payment</th>
+                                        <th>Registration</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -173,6 +176,9 @@
                                     <tr v-for="(item, index) in paymentList.data" :key="index">
                                         <td>{{ index + 1}}</td>
                                         <td>{{ item.type }}</td>
+                                        <td>{{ item.receive_payment }}</td>
+                                        <td>{{ item.send_payment }}</td>
+                                        <td>{{ item.show_registration }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="submit" @click="doEditPayment(item)" data-toggle="modal" data-target="#modal-update-payment" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
@@ -269,7 +275,7 @@
                         </div>
 
 
-                        <div class="col-sm-12" v-for="(configs, typeConfig) in configList.data">
+                        <div class="col-sm-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto'">
                             <div class="box">
                                 <div class="box-header">
                                     <h3 class="box-title">Config {{ typeConfig }}</h3>
@@ -295,6 +301,34 @@
                             </div>
                             <!-- /.box -->
                         </div>
+
+                        <div class="col-sm-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">USDT QR Code</h3>
+                                </div>
+
+                                <div class="box-body">
+                                    <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <p class="text-center">{{ configList.data.crypto[0].value }}</p>
+
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" v-model="cryptoModel.address">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>QR Code Image</label>
+                                        <input type="file" class="form-control" enctype="multipart/form-data" ref="qrcode" name="file">
+                                        <small class="text-muted">Note: It must be JPG type.</small><br/>
+                                    </div>
+                                </div>
+
+                                <div class="box-footer clearfix">
+                                    <button type="button" @click="updateUsdt" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -319,6 +353,36 @@
                             <label for="">Payment Type</label>
                             <input type="text" v-model="paymentUpdate.type" class="form-control" placeholder="Enter Payment Type" required>
                             <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                        </div>
+
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.receive_payment}" class="form-group">
+                            <label for="">Receive Payment</label>
+                            <select name="" id="" class="form-control" v-model="paymentUpdate.receive_payment">
+                                <option value=""></option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                            <span v-if="messageForms.errors.receive_payment" v-for="err in messageForms.errors.receive_payment" class="text-danger">{{ err }}</span>
+                        </div>
+
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.send_payment}" class="form-group">
+                            <label for="">Send Payment</label>
+                            <select name="" id="" class="form-control" v-model="paymentUpdate.send_payment">
+                                <option value=""></option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                            <span v-if="messageForms.errors.send_payment" v-for="err in messageForms.errors.send_payment" class="text-danger">{{ err }}</span>
+                        </div>
+
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.show_registration}" class="form-group">
+                            <label for="">Show in Registration</label>
+                            <select name="" id="" class="form-control" v-model="paymentUpdate.show_registration">
+                                <option value=""></option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                            <span v-if="messageForms.errors.show_registration" v-for="err in messageForms.errors.show_registration" class="text-danger">{{ err }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -597,7 +661,10 @@
 
                 paymentUpdate: {
                     id: 0,
-                    type: ''
+                    type: '',
+                    show_registration : '',
+                    receive_payment : '',
+                    send_payment: ''
                 },
 
                 languageModel: {
@@ -616,6 +683,10 @@
                     username: '',
                     work_mail: '',
                     emails: []
+                },
+
+                cryptoModel: {
+                    address: ''
                 },
 
                 filterModel: {
@@ -644,6 +715,7 @@
                     additional: '',
                     percentage: '',
                 },
+                formData: null
             };
         },
 
@@ -949,6 +1021,27 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageFormSystem');
             },
+
+            updateUsdt() {
+                this.formData = new FormData();
+                this.formData.append('address', this.cryptoModel.address);
+                this.formData.append('file', this.$refs.qrcode.files[0]);
+
+                axios.post('/api/crypto/usdt', this.formData)
+                .then((response) => {
+                    swal.fire(
+                        'Success',
+                        'Successfully Updated',
+                        'success'
+                    )
+                }).catch((error) => {
+                    swal.fire(
+                        'Error',
+                        'Error encountered',
+                        'error'
+                    )
+                });
+            }
         },
     }
 </script>

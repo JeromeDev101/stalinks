@@ -129,6 +129,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('seller-incharge')->get('/seller-incharge/{user_id}', 'PublisherController@getListSellerIncharge');
     Route::name('publisher-qc-validation')->post('/publisher/qc-validation', 'PublisherController@qcValidationUpdate');
     Route::name('publisher-domain-zones')->get('/publisher/domain-zones', 'PublisherController@getDomainZoneExtensions');
+    Route::name('generate-country')->post('/publisher/generate-country', 'PublisherController@generateCountry');
 
     //External Domain List Page
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
@@ -162,6 +163,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');
+    Route::name('buyers-bought')->get('buyers-bought', 'BackLinkController@getBuyerBought');
     Route::name('delete-backlinks')->post('delete-backlinks', 'BackLinkController@deleteBacklinks');
 
     //Intdomain
@@ -246,6 +248,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('delete-signature')->delete('/delete-signature/{id}','MailSignatureController@destroy');
         Route::name('post-signature-image')->post('/post-signature-image','MailSignatureController@storeSignatureImage');
         Route::name('delete-signature-image')->post('/delete-signature-image','MailSignatureController@deleteSignatureImage');
+        Route::name('retrieve-deleted-message')->post('/retrieve-deleted-email', 'MailgunController@retrieveMessage');
     });
 
     Route::name('labels')->resource('/label','LabelController');
@@ -268,6 +271,8 @@ Route::middleware('auth:api')->group(function () {
     //Graphs
     Route::name('orders-graph')->get('/graphs/orders', 'GraphsController@getOrdersGraph');
     Route::name('seller-valid-graph')->get('/graphs/seller-valid', 'GraphsController@getSellerValidGraph');
+    Route::name('buyer-valid-graph')->get('/graphs/buyer-valid', 'GraphsController@getBuyerValidGraph');
+    Route::name('writer-valid-graph')->get('/graphs/writer-valid', 'GraphsController@getWriterValidGraph');
     Route::name('url-valid-graph')->get('/graphs/url-valid', 'GraphsController@getUrlValidGraph');
     Route::name('url-valid-graph')->get('/graphs/url-valid-price', 'GraphsController@getUrlValidPriceGraph');
     Route::name('url-seller-statistics')->get('/graphs/url-seller-statistics', 'GraphsController@getUrlSellerStatisticsGraph');
@@ -277,6 +282,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('download-paypal-invoice')->get('/files/invoice/paypal/{id}', 'WalletTransactionController@downloadPaypalInvoice');
     Route::name('download-paypal-proof-seller')->get('/files/proof/paypal/seller/{id}', 'SellerBillingController@downloadPaypalProof');
     Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
+
+    Route::name('crypto-address-update')->post('/crypto/usdt', 'ConfigController@updateCryptoAddress');
 });
 
 //Mailgun external

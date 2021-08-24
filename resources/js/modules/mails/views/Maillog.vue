@@ -188,6 +188,14 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Recipient (to)</label>
+                                <input type="text" class="form-control" v-model="filterModel.recipient">
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Status</label>
@@ -314,6 +322,7 @@
                     paginate: this.$route.query.paginate || 50,
                     user_email: this.$route.query.user_email || '',
                     status: this.$route.query.status || '',
+                    recipient: '',
                 },
                 listUserEmail: [],
 
@@ -400,7 +409,8 @@
                     page: 1,
                     status: '',
                     paginate: 50,
-                    user_email: ''
+                    user_email: '',
+                    recipient: '',
                 }
 
                 this.$router.replace({'query': null});

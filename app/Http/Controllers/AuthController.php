@@ -78,6 +78,7 @@ class AuthController extends Controller
         // dd($request->all());
         $response = ['success' => false];
         $input = $request->except(
+            'access',
             'avatar',
             'countries_accessable',
             'created_at',
@@ -90,7 +91,8 @@ class AuthController extends Controller
             'purchased',
             'total_wallet',
             'registration',
-            'isOurs'
+            'isOurs',
+            'work_mail_orig'
         );
 
         unset($input['c_password']);
