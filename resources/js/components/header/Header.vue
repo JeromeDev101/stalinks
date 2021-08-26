@@ -280,7 +280,7 @@ export default {
                 amount_usd: '',
                 payment_region: 'domestic'
             },
-            step: 0
+            step: 0,
         };
     },
 

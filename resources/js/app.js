@@ -21,6 +21,8 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueApexCharts from 'vue-apexcharts'
 import excel from 'vue-excel-export'
+import VueI18n from 'vue-i18n';
+import langs from './../lang/Modules/Help/main';
 
 require('./bootstrap');
 
@@ -31,6 +33,7 @@ Vue.use(Toast);
 Vue.use(Loading);
 Vue.use(VueApexCharts)
 Vue.use(excel)
+Vue.use(VueI18n);
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
@@ -40,6 +43,11 @@ Vue.component('compact-picker', Compact)
 Vue.component('date-range-picker', DateRangePicker);
 Vue.component('vue-tags-input', VueTagsInput);
 Vue.component('apexchart', VueApexCharts)
+
+const i18n = new VueI18n({
+    locale: 'en',
+    messages : langs
+})
 
 const router = new VueRouter({
     mode: 'history',
@@ -110,6 +118,7 @@ const toast = swal.mixin({
 new Vue({
     el: '#app',
     render: h => h(App),
+    i18n,
     router,
     store
 });
