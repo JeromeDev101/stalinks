@@ -24,12 +24,36 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label>URL</label>
+
+                                <input
+                                    v-model="filterModel.url"
+                                    type="text"
+                                    placeholder="Search URL"
+                                    class="form-control pull-right">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label>Username</label>
 
                                 <input
                                     v-model="filterModel.username"
                                     type="text"
                                     placeholder="Search Username"
+                                    class="form-control pull-right">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Details</label>
+
+                                <input
+                                    v-model="filterModel.details"
+                                    type="text"
+                                    placeholder="Search Details"
                                     class="form-control pull-right">
                             </div>
                         </div>
@@ -85,8 +109,10 @@
                         <tr class="label-primary">
                             <th>#ID</th>
                             <th>Tool</th>
+                            <th>URL</th>
                             <th>Username</th>
                             <th>Password</th>
+                            <th>Details</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -95,6 +121,12 @@
                             <tr v-for="(tool, index) in listTools.data" :key="index">
                                 <td class="center-content">{{ tool.id }}</td>
                                 <td>{{ tool.name }}</td>
+                                <td>
+                                    <a v-if="tool.url" :href="'//' + tool.url" target="_blank">
+                                        {{ tool.url }}
+                                    </a>
+                                    <span v-else>N/A</span>
+                                </td>
                                 <td>{{ tool.username }}</td>
                                 <td>
                                     <span>
@@ -104,6 +136,9 @@
                                     <span :ref="'badge' + index" class="badge badge-secondary">hidden</span>
 
                                     <span :ref="'pass' + index" style="display: none">{{ tool.password }}</span>
+                                </td>
+                                <td>
+                                    <div style="white-space: pre-line;">{{ tool.details }}</div>
                                 </td>
                                 <td>
                                     <div class="text-center">
@@ -154,7 +189,7 @@
                     <div class="modal-body relative">
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.name}">
                                     <label>Tool</label>
                                     <input
@@ -166,6 +201,25 @@
                                     <span
                                         v-if="messageFormsTools.errors.name"
                                         v-for="err in messageFormsTools.errors.name"
+                                        class="text-danger">
+
+                                    {{ err }}
+                                </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.url}">
+                                    <label>URL</label>
+                                    <input
+                                        v-model="modelUrl"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter Url">
+
+                                    <span
+                                        v-if="messageFormsTools.errors.url"
+                                        v-for="err in messageFormsTools.errors.url"
                                         class="text-danger">
 
                                     {{ err }}
@@ -206,6 +260,26 @@
                                     <span
                                         v-if="messageFormsTools.errors.password"
                                         v-for="err in messageFormsTools.errors.password"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.details}">
+                                    <label>Details</label>
+                                    <textarea
+                                        v-model="modelDetails"
+                                        rows="5"
+                                        class="form-control">
+
+                                    </textarea>
+
+                                    <span
+                                        v-if="messageFormsTools.errors.details"
+                                        v-for="err in messageFormsTools.errors.details"
                                         class="text-danger">
 
                                         {{ err }}
@@ -265,22 +339,28 @@ export default {
 
             // filter model
             filterModel: {
+                url: this.$route.query.url || '',
                 page: this.$route.query.page || 0,
                 name: this.$route.query.name || '',
+                details: this.$route.query.details || '',
                 paginate: this.$route.query.paginate || 10,
-                username: this.$route.query.username || ''
+                username: this.$route.query.username || '',
             },
 
             // tool model
             toolModel: {
+                url: '',
                 name: '',
+                details: '',
                 username: '',
                 password: '',
             },
 
             updateToolModel: {
                 id: '',
+                url: '',
                 name: '',
+                details: '',
                 username: '',
                 password: '',
             }
@@ -311,6 +391,19 @@ export default {
             }
         },
 
+        modelUrl: {
+            get () {
+                return this.modalMode === 'add' ? this.toolModel.url : this.updateToolModel.url
+            },
+            set (val) {
+                if (this.modalMode === 'add') {
+                    this.toolModel.url = val
+                } else {
+                    this.updateToolModel.url = val
+                }
+            }
+        },
+
         modelUsername: {
             get () {
                 return this.modalMode === 'add' ? this.toolModel.username : this.updateToolModel.username
@@ -333,6 +426,19 @@ export default {
                     this.toolModel.password = val
                 } else {
                     this.updateToolModel.password = val
+                }
+            }
+        },
+
+        modelDetails: {
+            get () {
+                return this.modalMode === 'add' ? this.toolModel.details : this.updateToolModel.details
+            },
+            set (val) {
+                if (this.modalMode === 'add') {
+                    this.toolModel.details = val
+                } else {
+                    this.updateToolModel.details = val
                 }
             }
         },
@@ -459,7 +565,9 @@ export default {
 
         updateTool(data) {
             this.updateToolModel.id = data.id;
+            this.updateToolModel.url = data.url;
             this.updateToolModel.name = data.name;
+            this.updateToolModel.details = data.details;
             this.updateToolModel.username = data.username;
             this.updateToolModel.password = data.password;
         },
@@ -482,21 +590,27 @@ export default {
         clearModel(mod) {
             if (mod === 'add') {
                 this.toolModel = {
+                    url: '',
                     name: '',
+                    details: '',
                     username: '',
                     password: '',
                 }
             } else if (mod === 'update') {
                 this.updateToolModel = {
                     id: '',
+                    url: '',
                     name: '',
+                    details: '',
                     username: '',
                     password: '',
                 }
             } else {
                 this.filterModel = {
+                    url: '',
                     page: 1,
                     name: '',
+                    details: '',
                     username: '',
                     paginate: 10
                 }

@@ -10,7 +10,9 @@ class Tool extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'url',
         'name',
+        'details',
         'username',
         'password',
     ];

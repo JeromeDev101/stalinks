@@ -54,7 +54,8 @@ const router = new VueRouter({
     routes,
 });
 // // Auto logout
-var idleMax = 120; // Logout after 1hr of IDLE
+// var idleMax = 120; // Logout after 1hr of IDLE
+var idleMax = 480; // Logout after 4 hrs of IDLE
 var idleTime = 0;
 
 var idleInterval = setInterval(timerIncrement, 5000);  // 1 minute interval

@@ -32,6 +32,7 @@ class ToolRequest extends FormRequest
                         return $query->where('deleted_at', null);
                     })
                 ],
+                'details' => 'required',
                 'username' => 'required',
                 'password' => 'required',
             ];
@@ -43,6 +44,7 @@ class ToolRequest extends FormRequest
                         return $query->where('deleted_at', null);
                     })
                 ],
+                'details' => 'required',
                 'username' => 'required',
                 'password' => 'required',
             ];
