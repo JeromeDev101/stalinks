@@ -7,6 +7,9 @@ export default {
                 type : 'line',
                 height : 600,
             },
+            markers : {
+                size: 5
+            },
             colors : [
                 '#008FFB',
                 '#00E396',

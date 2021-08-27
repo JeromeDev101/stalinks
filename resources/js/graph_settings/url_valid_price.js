@@ -22,12 +22,15 @@ export default {
                     },
                 }*/
             },
+            markers : {
+                size: 5
+            },
             colors : [
                 '#008FFB',
                 '#00E396',
                 '#FEB019',
-                '#FF4560',
                 '#775DD0',
+                '#FF4560',
                 '#3F51B5'
             ],
             plotOptions : {
@@ -47,7 +50,7 @@ export default {
                     3,
                     4
                 ],
-                offsetY: -20,
+                offsetY: -10,
                 formatter: function (val, { seriesIndex, dataPointIndex, w }) {
                     return seriesIndex === 3 || seriesIndex === 4 ? val + '%' : val;
                 },
@@ -57,8 +60,8 @@ export default {
                         "#008FFB",
                         "#00E396",
                         "#FEB019",
-                        "#FF4560",
-                        "#775DD0"
+                        "#775DD0",
+                        "#FF4560"
                     ]
                 }
             },
@@ -76,7 +79,7 @@ export default {
                     offsetX : 0,
                     offsetY : 0
                 },
-                tickPlacement: 'on',
+                tickPlacement: 'between',
             },
             yaxis: [
                 {
@@ -207,7 +210,6 @@ export default {
             legend : {
                 position : 'top',
                 horizontalAlign : 'left',
-                offsetX : 40
             }
         };
     },
@@ -248,21 +250,21 @@ export default {
                 }
             }))
         },{
-            name: 'GP',
-            type: 'line',
-            data : _.toArray(_.map(data, function (datum) {
-                return {
-                    x: datum.xaxis,
-                    y : ((datum.quality_price / datum.valid) * 100).toFixed(1)
-                }
-            }))
-        },{
             name: 'UV',
             type: 'line',
             data : _.toArray(_.map(data, function (datum) {
                 return {
                     x: datum.xaxis,
                     y : ((datum.valid / datum.upload) * 100).toFixed(1)
+                }
+            }))
+        },{
+            name: 'GP',
+            type: 'line',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
+                    y : ((datum.quality_price / datum.valid) * 100).toFixed(1)
                 }
             }))
         }];

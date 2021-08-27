@@ -15,6 +15,28 @@ export default {
                 '#775DD0',
                 '#3F51B5'
             ],
+            plotOptions : {
+                bar : {
+                    horizontal : false,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom,
+                    },
+                },
+            },
+            dataLabels: {
+                enabled: true,
+                offsetY: -15,
+                style: {
+                    fontSize: '12px',
+                    colors : [
+                        "#008FFB",
+                        "#00E396",
+                        "#FEB019",
+                        "#775DD0",
+                        "#FF4560"
+                    ]
+                }
+            },
             stroke : {
                 width : 1,
                 colors : ['#fff']

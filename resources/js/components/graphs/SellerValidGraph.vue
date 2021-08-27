@@ -81,6 +81,21 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
+                            <label
+                                style="color: #333">Show Numbers
+                            </label>
+                            <v-select
+                                v-model="filterModel.show_numbers"
+                                multiple
+                                placeholder="All"
+                                :searchable="true"
+                                :options="seriesList"
+                                :reduce="series => series.index"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
                             <label for="">Action</label>
                             <br>
                             <button
@@ -95,7 +110,7 @@
 
                 <div class="small">
                     <apexchart type="bar" height="350"
-                               :options="sellerValidChartOptions"
+                               :options="sellerValidOption"
                                :series="sellerValidData"></apexchart>
                 </div>
             </div>
@@ -126,22 +141,55 @@ export default {
                     scope: 'global',
                     team_in_charge: 0
                 },
+                show_numbers: []
             },
-            sellerValidData: []
+            seriesList: [{
+                index : 0,
+                label : 'Registration'
+            },{
+                index : 1,
+                label : 'Valid'
+            },{
+                index : 2,
+                label : 'Valid with URLs'
+            },{
+                index : 3,
+                label : '% Valid'
+            },{
+                index : 4,
+                label : '% URL'
+            }],
+            sellerValidData: [],
+            sellerValidOption: {}
         };
     },
 
     mounted() {
+        this.getSellerValidChartOptions();
         this.getSellerValidData();
     },
 
-    computed : {
-        sellerValidChartOptions() {
-            return seller_valid.sellerValidGraphSetting();
-        },
-    },
-
     methods: {
+        getSellerValidChartOptions() {
+            this.sellerValidOption = seller_valid.sellerValidGraphSetting();
+        },
+
+        filterNumbers() {
+            this.filterModel.show_numbers = this.filterModel.show_numbers.length === 0 ? [
+                0,
+                1,
+                2,
+                3,
+                4
+            ] : this.filterModel.show_numbers;
+
+            this.sellerValidOption = {
+                dataLabels : {
+                    enabledOnSeries : this.filterModel.show_numbers
+                }
+            };
+        },
+
         filterSellerValid() {
             if (this.filterModel.sellerValid.dateRange.startDate != null && this.filterModel.sellerValid.dateRange.endDate != null) {
                 this.filterModel.sellerValid.dateRange.startDate =
@@ -152,6 +200,7 @@ export default {
                     Date(this.filterModel.sellerValid.dateRange.endDate).toJSON();
             }
 
+            this.filterNumbers();
             this.getSellerValidData(this.filterModel.sellerValid.dateRange.startDate, this.filterModel.sellerValid.dateRange.endDate);
         },
 
@@ -163,6 +212,9 @@ export default {
                     endDate : null
                 }
             };
+
+            this.filterModel.show_numbers = [];
+            this.filterNumbers();
 
             this.filterModel.sellerValid.scope = 'global';
             this.filterModel.sellerValid.team_in_charge =
