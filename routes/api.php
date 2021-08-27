@@ -284,6 +284,12 @@ Route::middleware('auth:api')->group(function () {
     Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
 
     Route::name('crypto-address-update')->post('/crypto/usdt', 'ConfigController@updateCryptoAddress');
+
+    // tools
+    Route::name('tools-get')->get('/tools', 'ToolController@index');
+    Route::name('tools-store')->post('/tools', 'ToolController@store');
+    Route::name('tools-update')->put('/tools','ToolController@update');
+    Route::name('tools-delete')->delete('/tools/{id}','ToolController@destroy');
 });
 
 //Mailgun external
@@ -308,3 +314,4 @@ Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp
 
 // updating price basis
 Route::name('update-price-basis-publisher')->get('/update-price-basis-publisher', 'ConfigController@updatePriceBasis');
+
