@@ -141,30 +141,6 @@ export default {
                     },
                     axisBorder: {
                         show: true,
-                        color: '#FF4560'
-                    },
-                    labels: {
-                        style: {
-                            colors: '#FF4560',
-                        },
-                        formatter: function (val) {
-                            return val + '%';
-                        },
-                    },
-                    title: {
-                        style: {
-                            color: '#FF4560',
-                        }
-                    }
-                },{
-                    seriesName: '% Valid',
-                    show: false,
-                    opposite: true,
-                    axisTicks: {
-                        show: true,
-                    },
-                    axisBorder: {
-                        show: true,
                         color: '#775DD0'
                     },
                     labels: {
@@ -176,9 +152,33 @@ export default {
                         },
                     },
                     title: {
-                        text: "Registration vs Valid w/ URLs %",
                         style: {
                             color: '#775DD0',
+                        }
+                    }
+                },{
+                    seriesName: '% Valid',
+                    show: false,
+                    opposite: true,
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#FF4560'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#FF4560',
+                        },
+                        formatter: function (val) {
+                            return val + '%';
+                        },
+                    },
+                    title: {
+                        text: "Registration vs Valid w/ URLs %",
+                        style: {
+                            color: '#FF4560',
                         }
                     }
                 }

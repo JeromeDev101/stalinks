@@ -147,7 +147,7 @@ export default {
                         }
                     }
                 },{
-                    seriesName: 'GP',
+                    seriesName: '%GP',
                     opposite: true,
                     axisTicks: {
                         show: true,
@@ -170,7 +170,7 @@ export default {
                         }
                     }
                 },{
-                    seriesName: 'GP',
+                    seriesName: '%GP',
                     show: false,
                     opposite: true,
                     axisTicks: {
@@ -250,7 +250,7 @@ export default {
                 }
             }))
         },{
-            name: 'UV',
+            name: '%V',
             type: 'line',
             data : _.toArray(_.map(data, function (datum) {
                 return {
@@ -259,7 +259,7 @@ export default {
                 }
             }))
         },{
-            name: 'GP',
+            name: '%GP',
             type: 'line',
             data : _.toArray(_.map(data, function (datum) {
                 return {
