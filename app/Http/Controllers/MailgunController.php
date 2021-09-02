@@ -539,7 +539,7 @@ class MailgunController extends Controller
                         || (in_array($item->received, $received_array) && $value->sender === $item_from_mail)
                     );
                 }
-            })->sortBy('id')->values();
+            })->sortByDesc('id')->values();
 
             unset($item['thread']);
             $item['thread'] = $threads;
