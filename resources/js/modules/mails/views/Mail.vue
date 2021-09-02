@@ -3,28 +3,48 @@
         <div class="row">
 
             <!-- Side menu section -->
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
                 <div v-if="user.isAdmin">
                     <div class="form-group">
                         <label>Login As:</label>
-                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
-                            <option value="all">All</option>
-                            <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">
-                                [{{ option.role.name }}] {{ option.work_mail }}
-                            </option>
-                        </select>
+<!--                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">-->
+<!--                            <option value="all">All</option>-->
+<!--                            <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">-->
+<!--                                {{ option.work_mail }} [{{ option.role.name }}]-->
+<!--                            </option>-->
+<!--                        </select>-->
+
+                        <v-select
+                            v-model="user.work_mail"
+                            label="work_mail_position"
+                            :clearable="false"
+                            :searchable="true"
+                            :options="adminAccessOptions"
+                            :reduce="access => access.work_mail"
+
+                            @input="selectWorkMail"/>
                     </div>
                 </div>
 
                 <div v-if="!user.isAdmin && user.access.length !== 0">
                     <div class="form-group">
                         <label>Login As:</label>
-                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">
-                            <option v-for="option in emailAccessOptions" v-bind:value="option.work_mail">
-                                [{{ option.user.role.name }}] {{ option.work_mail }}
-                            </option>
-                        </select>
+<!--                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">-->
+<!--                            <option v-for="option in emailAccessOptions" v-bind:value="option.work_mail">-->
+<!--                                {{ option.work_mail }} [{{ option.user.role.name }}]-->
+<!--                            </option>-->
+<!--                        </select>-->
+
+                        <v-select
+                            v-model="user.work_mail"
+                            label="work_mail_position"
+                            :clearable="false"
+                            :searchable="true"
+                            :options="emailAccessOptions"
+                            :reduce="access => access.work_mail"
+
+                            @input="selectWorkMail"/>
                     </div>
                 </div>
 
@@ -128,7 +148,7 @@
                 </div>
             </div>
 
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <router-view @updateInboxUnreadCount="updateUnreadInboxCount"></router-view>
             </div>
 
@@ -217,6 +237,8 @@ export default {
                 if (item.work_mail === self.user.work_mail_orig) {
                     item.role.name = 'Me';
                 }
+
+                item.work_mail_position = item.work_mail + ' [' + item.role.name + ']'
             });
 
             return emails;
@@ -238,6 +260,10 @@ export default {
             if (!emails.some(obj => obj.work_mail === this.user.work_mail_orig)) {
                 emails.push(obj)
             }
+
+            emails.forEach(item => {
+                item.work_mail_position = item.work_mail + ' [' + item.user.role.name + ']'
+            });
 
             return emails;
         },
@@ -262,7 +288,7 @@ export default {
     methods: {
         selectWorkMail() {
             this.setQueryLabel(null)
-            this.$children[6].getInbox()
+            this.$children[7].getInbox()
             this.getListLabels()
         },
 

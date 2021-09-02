@@ -1761,6 +1761,7 @@ export default {
 
         getInbox(page = 1){
         //    this.loadingMessage = true;
+            let loader = this.$loading.show();
             if(this.user.work_mail) {
                 axios.get('/api/mail/filter-recipient?page=' + page, {
                     params : {
@@ -1790,10 +1791,12 @@ export default {
                         this.paginate.prev = page;
                     }
 
+                    loader.hide();
                 })
                 .catch((error) => {
                     console.log(error);
                     error => error;
+                    loader.hide();
                 });
             }
 
