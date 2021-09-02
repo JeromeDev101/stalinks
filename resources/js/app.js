@@ -23,6 +23,7 @@ import VueApexCharts from 'vue-apexcharts'
 import excel from 'vue-excel-export'
 import VueI18n from 'vue-i18n';
 import langs from './../lang/Modules/Help/main';
+import {Constants} from "./mixins/constants";
 
 require('./bootstrap');
 
@@ -53,8 +54,9 @@ const router = new VueRouter({
     mode: 'history',
     routes,
 });
-// // Auto logout
-var idleMax = 120; // Logout after 1hr of IDLE
+
+// Auto logout
+var idleMax = Constants.AUTO_LOGOUT_DURATION; // Logout after 1hr of IDLE
 var idleTime = 0;
 
 var idleInterval = setInterval(timerIncrement, 60000);  // 1 minute interval
@@ -75,7 +77,8 @@ function timerIncrement() {
       router.push({ name: 'login' });
   }
 }
-// //End auto logout
+//End auto logout
+
 router.beforeEach((to, from, next) => {
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
