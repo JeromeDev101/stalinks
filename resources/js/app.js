@@ -54,23 +54,25 @@ const router = new VueRouter({
     routes,
 });
 // // Auto logout
-// var idleMax = 120; // Logout after 1hr of IDLE
-var idleMax = 480; // Logout after 4 hrs of IDLE
+var idleMax = 120; // Logout after 1hr of IDLE
 var idleTime = 0;
 
-var idleInterval = setInterval(timerIncrement, 5000);  // 1 minute interval
+var idleInterval = setInterval(timerIncrement, 60000);  // 1 minute interval
 $( "body" ).mousemove(function( event ) {
     idleTime = 0; // reset to zero
+    localStorage.setItem('idleTime', idleTime);
 });
 
 // count minutes
 function timerIncrement() {
   idleTime = idleTime + 1;
-  if (idleTime > idleMax) {
-    store.dispatch('logout')
-    localStorage.clear();
-    Cookies.remove('vuex');
-    router.push({ name: 'login' });
+  localStorage.setItem('idleTime', idleTime);
+
+  if (localStorage.getItem('idleTime') > idleMax) {
+      store.dispatch('logout')
+      localStorage.clear();
+      Cookies.remove('vuex');
+      router.push({ name: 'login' });
   }
 }
 // //End auto logout
