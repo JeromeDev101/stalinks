@@ -213,4 +213,14 @@ class SellerBillingController extends Controller
 
         return $file;
     }
+
+    public function updateBillings(Request $request)
+    {
+        $response = Backlink::whereIn('id', $request->ids)
+            ->update([
+                'payment_status' => 'Voided'
+            ]);
+
+        return response()->json($response);
+    }
 }

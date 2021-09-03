@@ -49,6 +49,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
     Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');
+    Route::name('update-seller-billing')->put('seller-billing/update/multiple', 'SellerBillingController@updateBillings');
     Route::name('get-writer-billing')->get('writer-billing', 'WriterBillingController@getList');
     Route::name('pay-writer-billing')->post('writer-billing', 'WriterBillingController@payBilling');
     Route::name('get-seller-info')->post('get-seller-info', 'SellerBillingController@getSellerInfo');

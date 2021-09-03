@@ -105,6 +105,8 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" @click="doUpdatePayment" href="#" >Pay</a>
+
+                                        <a class="dropdown-item" @click="updatePayment" href="#" >Void</a>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +147,7 @@
                                 <td>{{ seller.date_billing == null || seller.date_billing === '' ? 'Pending' : seller.date_billing}}</td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
-                                <td>{{ seller.admin_confirmation == null ? 'Not Paid':'Paid' }}</td>
+                                <td>{{ seller.admin_confirmation == null ? seller.payment_status == 'Voided' ? seller.payment_status : 'Not Paid' :'Paid' }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button
@@ -623,6 +625,31 @@
 
                     fileLink.click();
                 });
+            },
+
+            updatePayment() {
+                let ids = this.checkIds;
+                $('#tbl_seller_billing').DataTable().destroy();
+
+                axios({
+                    url : '/api/seller-billing/update/multiple',
+                    method : 'PUT',
+                    data: {ids : ids}
+                }).then((response) => {
+                    swal.fire(
+                        'Success',
+                        'Payment Voided',
+                        'success'
+                    )
+
+                    this.getSellerBilling();
+                }).catch((error) => {
+                    swal.fire(
+                        'Error',
+                        'Error',
+                        'error'
+                    )
+                })
             }
         },
     }
