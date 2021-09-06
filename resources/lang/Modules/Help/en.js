@@ -9,47 +9,47 @@ export default {
         p4 : 'Take your site\'s ranking & traffic to the next level with us! Click on the required guide to learn more. To climb up the Google\'s ladder and choose relevant backlink pages for your links, benefit from Backlink Inventory.',
         b1 : {
             text : 'How to navigate the dashboard',
-            url : 'https://tools.stalinks.com/help/buyer-guide-1'
+            url : '/help/buyer-guide-1'
         },
         b2 : {
             text : 'How to Purchase backlink that fits your website',
-            url : 'https://tools.stalinks.com/help/buyer-guide-2'
+            url : '/help/buyer-guide-2'
         },
         b3 : {
             text : 'How to Follow up your orders',
-            url : 'https://tools.stalinks.com/help/buyer-guide-3'
+            url : '/help/buyer-guide-3'
         },
         h4 : 'Seller\'s Guide',
         p5 : 'As a StaLinks publisher, you will earn monthly reoccurring revenue for each link that an advertiser chooses to purchase on your site(s). From there, you will continue to earn credits for each link every month, as long as the link(s) are active.',
         b4 : {
             text : 'Learn about the dashboard',
-            url : 'https://tools.stalinks.com/help/seller-guide-1'
+            url : '/help/seller-guide-1'
         },
         b5 : {
             text : 'How to Upload your list of urls',
-            url : 'https://tools.stalinks.com/help/seller-guide-2'
+            url : '/help/seller-guide-2'
         },
         b6 : {
             text : 'How to Follow up your orders',
-            url : 'https://tools.stalinks.com/help/seller-guide-3'
+            url : '/help/seller-guide-3'
         },
         b7 : {
             text : 'How to get Pay',
-            url : 'https://tools.stalinks.com/help/seller-guide-4'
+            url : '/help/seller-guide-4'
         },
         h5 : 'Writer\'s Guide',
         p6 : 'Writers are responsible for writing quality content that will become the backbone in building backlinks. The writer team will need to collaborate with the SEO team, Customer Service Sellers, and country managers to create the content for StaLinks clients. The writer must know how to research and write content based on various topics and industry trends that match the target website',
         b8 : {
             text : 'How to Register and setup your price',
-            url : 'https://tools.stalinks.com/help/writer-guide-1'
+            url : 'h/help/writer-guide-1'
         },
         b9 : {
             text : 'How to start writing content',
-            url : 'https://tools.stalinks.com/help/seller-guide-3'
+            url : '/help/seller-guide-3'
         },
         b10 : {
             text : 'How to Follow up your income ',
-            url : 'https://tools.stalinks.com/help/seller-guide-4'
+            url : '/help/seller-guide-4'
         },
     }
 }
