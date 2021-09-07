@@ -18,47 +18,53 @@
                                {{ $t('message.p4') }}
                            </p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle">
-                                    <div class="image-overlay "> </div>
-                              <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">-->
+<!--                                    <div class="image-overlay "> </div>-->
+<!--                              <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>-->
 
-                                 </div>
+<!--                                 </div>-->
+
+                                  <img src="../../../images/step-icons/Buyer_Navigate.png" alt="">
 
                                  <router-link :to="{ path: $t('message.b1.url') }">
                                      {{ $t('message.b1.text') }}
                                  </router-link>
 
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">
-                                  <div class="image-overlay "> </div>
-                                   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3">
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+
+                                  <img src="../../../images/step-icons/Buyer_Backlink.png" alt="">
                                  <router-link :to="{ path: $t('message.b2.url') }">
                                      {{ $t('message.b2.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">
-                                  <div class="image-overlay "> </div>
-                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3">
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Buyer_Follow Up.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b3.url') }">
                                      {{ $t('message.b3.text') }}
                                  </router-link>
@@ -67,53 +73,61 @@
                            <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h4') }}</h4>
                            <p>{{ $t('message.p5') }}</p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle">
-                                  <div class="image-overlay "> </div>
-                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>
-                                    </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>-->
+<!--                                    </div>-->
+                                  <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b4.url') }">
                                      {{ $t('message.b4.text') }}
                                  </router-link>
                                  </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Seller_Upload.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b5.url') }">
                                      {{ $t('message.b5.text') }}
                                  </router-link> </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Seller_Follow Up.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b6.url') }">
                                      {{ $t('message.b6.text') }}
                                  </router-link>  </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 4
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 4-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b7.url') }">
                                      {{ $t('message.b7.text') }}
                                  </router-link>
@@ -122,39 +136,45 @@
                            <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h5') }}</h4>
                            <p>{{ $t('message.p6') }}</p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>  </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>  </div>-->
+                                  <img src="../../../images/step-icons/Writer_Register.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b8.url') }">
                                      {{ $t('message.b8.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Writer_Content.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b9.url') }">
                                      {{ $t('message.b9.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div>
-                                 </div>
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Writer_Income.png" alt="">
+
                                  <router-link :to="{ path: $t('message.b10.url') }">
                                      {{ $t('message.b10.text') }}
                                  </router-link>
