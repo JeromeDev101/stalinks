@@ -23,8 +23,9 @@
                                 <label for="">Status Billing </label>
                                 <select name="" class="form-control" v-model="filterModel.status_billing">
                                     <option value="">All</option>
-                                    <option value="Done">Done</option>
                                     <option value="Not Yet">Not Yet</option>
+                                    <option value="Done">Done</option>
+                                    <option value="Voided">Voided</option>
                                 </select>
                             </div>
                         </div>
@@ -146,7 +147,7 @@
                                 <td>{{ seller.price == null || seller.price == '' ? 'Record Deleted': '$ ' + formatPrice(seller.price) }}</td>
                                 <td>{{ seller.date_billing == null || seller.date_billing === '' ? 'Pending' : seller.date_billing}}</td>
                                 <td>{{ seller.live_date }}</td>
-                                <td>{{ seller.admin_confirmation == null ? 'Not Yet':'Done' }}</td>
+                                <td>{{ seller.admin_confirmation == null ? seller.payment_status == 'Voided' ? 'Not Paid' : 'Not Yet':'Done' }}</td>
                                 <td>{{ seller.admin_confirmation == null ? seller.payment_status == 'Voided' ? seller.payment_status : 'Not Paid' :'Paid' }}</td>
                                 <td>
                                     <div class="btn-group">
