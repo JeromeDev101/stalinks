@@ -1,248 +1,241 @@
 <template>
-    <div class="row">
-        <div class="col-sm-12">
+    <div>
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0"></h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
 
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Filter</h3>
-                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fa fa-plus"></i> Show Filter
-                    </button>
-                </div>
-
-                <div class="box-body m-3 collapse" id="collapseExample">
-
-                    <div class="row">
-
-                        <div class="col-md-12 col-lg-2">
-                            <div class="form-group">
-                                <label for="">Search ID article</label>
-                                <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Search ID backlink</label>
-                                <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Language</label>
-                                <select name="" class="form-control" v-model="filterModel.language_id">
-                                    <option value="">All</option>
-                                    <option v-for="option in listCountries.data" v-bind:value="option.id">
-                                        {{ option.name }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Writer</label>
-                                <select name="" class="form-control" v-model="filterModel.writer">
-                                    <option value="">All</option>
-                                    <option v-for="option in listWriter.data" v-bind:value="option.id">
-                                        {{ option.username }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select name="" class="form-control" v-model="filterModel.status">
-                                    <option value="">All</option>
-                                    <option value="Queue">Queue</option>
-                                    <option value="In Writing">In Writing</option>
-                                    <option value="Done">Done</option>
-                                    <option value="Canceled">Canceled</option>
-                                    <option value="Issue">Issue</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Topic</label>
-                                <!-- <select name="" class="form-control" v-model="filterModel.topic">
-                                    <option value="">All</option>
-                                    <option v-for="option in topic" v-bind:value="option">
-                                        {{ option }}
-                                    </option>
-                                </select> -->
-                                <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Accept Casino & Betting Sites</label>
-                                <select name="" class="form-control" v-model="filterModel.casino_sites">
-                                    <option value="">All</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Filter</h3>
+                        <div class="card-tools" style="float: left!important;">
+                            <button class="btn btn-primary ml-5"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#collapseExample"
+                                    aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                <i class="fa fa-plus"></i> Show Filter
+                            </button>
                         </div>
                     </div>
+                    <div class="card-body collapse" id="collapseExample">
+                        <div class="row">
 
+                            <div class="col-md-12 col-lg-3">
+                                <div class="form-group">
+                                    <label for="">Search ID article</label>
+                                    <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Search ID backlink</label>
+                                    <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Language</label>
+                                    <select name="" class="form-control" v-model="filterModel.language_id">
+                                        <option value="">All</option>
+                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Writer</label>
+                                    <select name="" class="form-control" v-model="filterModel.writer">
+                                        <option value="">All</option>
+                                        <option v-for="option in listWriter.data" v-bind:value="option.id">
+                                            {{ option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Status</label>
+                                    <select name="" class="form-control" v-model="filterModel.status">
+                                        <option value="">All</option>
+                                        <option value="Queue">Queue</option>
+                                        <option value="In Writing">In Writing</option>
+                                        <option value="Done">Done</option>
+                                        <option value="Canceled">Canceled</option>
+                                        <option value="Issue">Issue</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Topic</label>
+                                    <!-- <select name="" class="form-control" v-model="filterModel.topic">
+                                        <option value="">All</option>
+                                        <option v-for="option in topic" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select> -->
+                                    <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <select name="" class="form-control" v-model="filterModel.casino_sites">
+                                        <option value="">All</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Articles</h3>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Articles</h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div v-if="isProcessing" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                            <strong>Reminder: </strong> Your account is currently on process. Please contact the
+                                                        administrator to process you account status.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-                    <div v-if="isProcessing" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                        <strong>Reminder: </strong> Your account is currently on process. Please contact the administrator to process you account status.
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <div class="input-group input-group-sm float-right" style="width: 100px">
+                            <select name=""
+                                    class="form-control float-right"
+                                    @change="doSearch"
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;">
+                                <option v-for="option in paginate" v-bind:value="option">
+                                    {{ option }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <button v-if="isTeam"
+                                data-toggle="modal"
+                                @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i
+                            class="fa fa-plus"></i> Create Article
                         </button>
-                    </div>
 
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select name="" class="form-control float-right" @change="doSearch" v-model="filterModel.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <button v-if="isTeam" data-toggle="modal" @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i class="fa fa-plus"></i> Create Article</button>
-                </div>
-
-                <div class="box-body no-padding relative">
-                    <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text">
                         <b>Showing {{ listArticles.from }} to {{ listArticles.to }} of {{ listArticles.total }} entries.</b>
                     </span>
 
-<!--                    <table id="tbl_articles" class="table table-hover table-bordered table-striped rlink-table">-->
-<!--                        <thead>-->
-<!--                            <tr class="label-primary">-->
-<!--                                <th>#</th>-->
-<!--                                <th>ID Article</th>-->
-<!--                                <th>ID Backlink</th>-->
-<!--                                <th>Language</th>-->
-<!--                                <th>Writer</th>-->
-<!--                                <th>Topic</th>-->
-<!--                                <th>Accept Casino & Betting Sites</th>-->
-<!--                                <th>Date Start</th>-->
-<!--                                <th>Date Completed</th>-->
-<!--                                <th>Status</th>-->
-<!--                                <th>Content</th>-->
-<!--                            </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                            <tr v-for="(article, index) in listArticles.data" :key="index">-->
-<!--                                <td>{{ index + 1 }}</td>-->
-<!--                                <td>{{ article.id }}</td>-->
-<!--                                <td>{{ article.id_backlink }}</td>-->
-<!--                                <td>{{ article.country == null ? 'N/A': article.country.name }}</td>-->
-<!--                                <td>{{ article.writer }}</td>-->
-<!--                                <td>{{ article.topic == null ? 'N/A' : article.topic }}</td>-->
-<!--                                <td>{{ article.casino_sites == null ? 'N/A' : article.casino_sites }}</td>-->
-<!--                                <td>{{ article.date_start == null ? '-':article.date_start }}</td>-->
-<!--                                <td>{{ article.date_complete == null ? '-':article.date_complete}}</td>-->
-<!--                                <td>{{ article.status_writer == null ? 'Queue':article.status_writer  }}</td>-->
-<!--                                <td>-->
-<!--                                    <div class="btn-group">-->
-<!--                                        <button :id="'article-' + article.id" @click="doUpdate(article.backlinks, article)" data-toggle="modal" data-target="#modal-content-edit" class="btn btn-default"><i class="fa fa-fw fa-pencil"></i></button>-->
-<!--                                    </div>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-                    <vue-virtual-table
-                        v-if="!tableLoading"
-                        width="100%"
-                        :height="600"
-                        :bordered="true"
-                        :item-height="60"
-                        :config="tableConfig"
-                        :data="listArticles.data">
-                        <template
-                            slot-scope="scope"
-                            slot="actionButton">
-                            <div class="btn-group" >
-                                <button
-                                    :id="'article-' + scope.row.id"
-                                    :disabled="isProcessing"
-                                    class="btn btn-default"
-                                    data-toggle="modal"
-                                    data-target="#modal-content-edit"
+                        <vue-virtual-table
+                            v-if="!tableLoading"
+                            width="100%"
+                            :height="600"
+                            :bordered="true"
+                            :item-height="60"
+                            :config="tableConfig"
+                            :data="listArticles.data">
+                            <template
+                                slot-scope="scope"
+                                slot="actionButton">
+                                <div class="btn-group" >
+                                    <button
+                                        :id="'article-' + scope.row.id"
+                                        :disabled="isProcessing"
+                                        class="btn btn-default"
+                                        data-toggle="modal"
+                                        data-target="#modal-content-edit"
 
-                                    @click="doUpdate(scope.row.backlink, scope.row)">
+                                        @click="doUpdate(scope.row.backlink, scope.row)">
 
-                                    <i class="fa fa-fw fa-pencil"></i>
-                                </button>
-                            </div>
-                        </template>
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </div>
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="languageData">
-                            {{ scope.row.country == null ?
-                            'N/A':
-                            scope.row.country.name }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="languageData">
+                                {{ scope.row.country == null ?
+                                'N/A':
+                                scope.row.country.name }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="topicData">
-                            {{ scope.row.topic == null ?
-                            'N/A' :
-                            scope.row.topic }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="topicData">
+                                {{ scope.row.topic == null ?
+                                'N/A' :
+                                scope.row.topic }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="casinoSiteData">
-                            {{ scope.row.casino_sites ==
+                            <template
+                                slot-scope="scope"
+                                slot="casinoSiteData">
+                                {{ scope.row.casino_sites ==
                             null ?
-                            'N/A' :
-                            scope.row.casino_sites }}
-                        </template>
+                                'N/A' :
+                                scope.row.casino_sites }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="dateStartData">
-                            {{ scope.row.date_start == null ?
-                            '-':scope.row.date_start }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="dateStartData">
+                                {{ scope.row.date_start == null ?
+                                '-':scope.row.date_start }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="dateCompleteData">
-                            {{ scope.row.date_complete ==
+                            <template
+                                slot-scope="scope"
+                                slot="dateCompleteData">
+                                {{ scope.row.date_complete ==
                             null ?
-                            '-':scope.row.date_complete}}
-                        </template>
+                                '-':scope.row.date_complete}}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="statusData">
-                            {{ scope.row.status_writer ==
+                            <template
+                                slot-scope="scope"
+                                slot="statusData">
+                                {{ scope.row.status_writer ==
                             null ?
-                            (scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue') :scope.row.status_writer
-                            }}
-                        </template>
+                                (scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue') :scope.row.status_writer
+                                }}
+                            </template>
 
-                    </vue-virtual-table>
-                    <pagination :data="listArticles" @pagination-change-page="getListArticles" :limit="8"></pagination>
+                        </vue-virtual-table>
+                        <pagination :data="listArticles" @pagination-change-page="getListArticles" :limit="8"></pagination>
+                    </div>
                 </div>
             </div>
         </div>
@@ -438,7 +431,6 @@
             </div>
         </div>
         <!-- End of Modal Add Article -->
-
     </div>
 </template>
 
