@@ -1,195 +1,171 @@
 <template>
-    <div>
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0"></h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
+    <div class="row">
+        <div class="col-sm-12">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
-                        <div class="card-tools" style="float: left!important;">
-                            <button class="btn btn-primary ml-5"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#collapseExample"
-                                    aria-expanded="false"
-                                    aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
-                            </button>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
+                </div>
+
+                <div class="box-body m-3 collapse" id="collapseExample">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
+                            </div>
                         </div>
+
+                        <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select class="form-control" v-model="fillter.seller">
+                                    <option value="">All</option>
+                                    <option v-for="seller in listSeller.data" v-bind:value="seller.id">{{ seller.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select class="form-control" v-model="fillter.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listBuyerBought" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name : option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Search URL Advertiser</label>
+                                <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <v-select multiple
+                                          v-model="fillter.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+<!--                                <select class="form-control" v-model="fillter.status">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
+<!--                                </select>-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Process Date
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="fillter.process_date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="fillter.process_date"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="fillter.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="fillter.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" v-if="listSubAccounts.length > 0">
+                            <div class="form-group">
+                                <label for="">User Buyer</label>
+                                <select class="form-control" v-model="fillter.sub_buyer_id">
+                                    <option value="">All</option>
+                                    <option v-for="buyer in listSubAccounts" v-bind:value="buyer.user_id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="card-body collapse" id="collapseExample">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
-                                </div>
-                            </div>
 
-                            <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
-                                <div class="form-group">
-                                    <label for="">Seller</label>
-                                    <select class="form-control" v-model="fillter.seller">
-                                        <option value="">All</option>
-                                        <option v-for="seller in listSeller.data" v-bind:value="seller.id">{{ seller.username }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
-                                <div class="form-group">
-                                    <label for="">Buyer</label>
-                                    <select class="form-control" v-model="fillter.buyer">
-                                        <option value="">All</option>
-                                        <option v-for="option in listBuyerBought" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Search URL Advertiser</label>
-                                    <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Status</label>
-                                    <v-select multiple
-                                              v-model="fillter.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
-                                    <!--                                <select class="form-control" v-model="fillter.status">-->
-                                    <!--                                    <option value="">All</option>-->
-                                    <!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
-                                    <!--                                </select>-->
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Process Date
-                                    </label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            ref="picker"
-                                            v-model="fillter.process_date"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            :dateRange="fillter.process_date"
-                                            :linkedCalendars="true"
-                                            opens="left"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Date Completed
-                                    </label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            ref="picker"
-                                            v-model="fillter.date_completed"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            :dateRange="fillter.date_completed"
-                                            :linkedCalendars="true"
-                                            opens="left"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-if="listSubAccounts.length > 0">
-                                <div class="form-group">
-                                    <label for="">User Buyer</label>
-                                    <select class="form-control" v-model="fillter.sub_buyer_id">
-                                        <option value="">All</option>
-                                        <option v-for="buyer in listSubAccounts" v-bind:value="buyer.user_id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Follow up Backlinks</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
+            <div class="box">
 
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                                        <select class="form-control float-right"
-                                                @change="getBackLinkList"
-                                                v-model="fillter.paginate"
-                                                style="height: 37px;">
-                                            <option v-for="option in paginate" v-bind:value="option">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
+                <div class="box-header">
+                    <h3 class="box-title">Follow up Backlinks</h3>
 
-                                    <div v-if="Object.keys(listBackLink).length !== 0" class="float-right">
-                                        <download-csv
-                                            :data="listBackLink.data"
-                                            :fileds="data_filed"
-                                            :nameFile="file_csv">
-                                        </download-csv>
-                                    </div>
+                    <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
 
-                                    <button data-toggle="modal"
-                                            data-target="#modal-setting-followup-backlinks"
-                                            class="btn btn-default float-right mr-3"><i class="fa fa-cog"></i></button>
-                                </td>
-                            </tr>
-                        </table>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select class="form-control float-right" @change="getBackLinkList" v-model="fillter.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
 
-                        <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text">
-                            <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{
-                                    listBackLink.total
-                               }} entries.</b>
-                        </span>
+                                <div v-if="Object.keys(listBackLink).length !== 0" class="pull-right">
+                                    <download-csv
+                                        :data = "listBackLink.data"
+                                        :fileds = "data_filed"
+                                        :nameFile = "file_csv">
+                                    </download-csv>
+                                </div>
 
-                        <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
+
+                                <button data-toggle="modal" data-target="#modal-setting-followup-backlinks" class="btn btn-default float-right mr-3"><i class="fa fa-cog"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <div class="box-body no-padding">
+
+                    <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text">
+                        <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.</b>
+                    </span>
+
+                    <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th v-show="tblFollowupBacklinksOpt.id_backlink">ID Bck</th>
@@ -210,18 +186,18 @@
                                 <th v-show="tblFollowupBacklinksOpt.status">Status</th>
                                 <th>Action</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
                                  0 && !user.isAdmin) ||
                                  user.isAdmin">{{
-                                        backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
+                                               backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.buyer">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
                                 <td v-show="tblFollowupBacklinksOpt.url_publisher">
-                                    <!--                                    {{ backLink.publisher == null ? 'N/A' : replaceCharacters(backLink.publisher.url) }}-->
+<!--                                    {{ backLink.publisher == null ? 'N/A' : replaceCharacters(backLink.publisher.url) }}-->
                                     <span v-if="backLink.publisher == null">
                                         N/A
                                     </span>
@@ -232,7 +208,7 @@
                                     </span>
                                 </td>
                                 <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)">
-                                    <!--                                    {{ backLink.url_advertiser }}-->
+<!--                                    {{ backLink.url_advertiser }}-->
                                     <span v-if="backLink.url_advertiser == null">
                                         N/A
                                     </span>
@@ -270,12 +246,14 @@
                                     </div>
                                 </td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+
+                <!-- <pagination :data="listBackLink" @pagination-change-page="getBackLinkList($event)"></pagination> -->
             </div>
         </div>
+
 
         <!-- Modal settings default Followup Backlink -->
         <div class="modal fade" id="modal-setting-followup-backlinks" style="display: none;">
@@ -283,6 +261,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
@@ -344,6 +324,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Follow up Backlinks Information</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                            <span v-if="messageBacklinkForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageBacklinkForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageBacklinkForms.message }}
+                            </span>
+                        </div>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
@@ -453,7 +439,7 @@
                                     <div>
                                         <label>Status</label>
                                         <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer || user.role_id == 8">
-                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                          <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
                                         <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
                                     </div>

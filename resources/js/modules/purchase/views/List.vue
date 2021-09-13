@@ -1,153 +1,125 @@
 <template>
-    <div>
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0"></h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
-                        <div class="card-tools" style="float: left!important;">
-                            <button class="btn btn-primary ml-5"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#collapseExample"
-                                    aria-expanded="false"
-                                    aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body collapse" id="collapseExample">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
-                                </div>
-                            </div>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
+                </div>
 
-                            <div class="col-md-4" v-if="user.isOurs != 1">
-                                <div class="form-group">
-                                    <label for="">Seller</label>
-                                    <select class="form-control" name="" v-model="filterModel.seller">
-                                        <option value="">All</option>
-                                        <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
-                                    </select>
-                                </div>
-                            </div>
+                <div class="box-body m-3 collapse" id="collapseExample">
 
-                            <div class="col-md-4" v-if="user.isAdmin || user.user_type.is_sub_account != 1">
-                                <div class="form-group">
-                                    <label for="">Buyer</label>
-                                    <select class="form-control" name="" v-model="filterModel.buyer">
-                                        <option value="">All</option>
-                                        <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
-                                    </select>
-                                </div>
-                            </div>
+<!--                    {{ this.$route. }}-->
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="">Payment Status</label>
-                                    <select name="" id="" class="form-control" v-model="filterModel.payment_status">
-                                        <option value="">All</option>
-                                        <option value="Paid">Paid</option>
-                                        <option value="Not paid">Not paid</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Date Completed</label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            v-model="filterModel.date_completed"
-                                            :linkedCalendars="true"
-                                            :dateRange="filterModel.date_completed"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            ref="picker"
-                                            opens="left"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
+                        <div class="col-md-4" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select class="form-control" name="" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" v-if="user.isAdmin || user.user_type.is_sub_account != 1">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select class="form-control" name="" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="">Payment Status</label>
+                                <select name="" id="" class="form-control" v-model="filterModel.payment_status">
+                                    <option value="">All</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Not paid">Not paid</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Date Completed</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        v-model="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        ref="picker"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Purchase</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <span class="ml-5 text-primary"
-                              v-show="user.role_id == 5">Wallet: <b>${{
-                                (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet : 0
-                                                                    }}</b></span>
-                        <span class="ml-5 text-primary"
-                              v-show="user.role_id == 5">Deposit: <b>${{
-                                (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit : 0
-                                                                     }}</b></span>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Purchase</h3>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Wallet: <b>${{ (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet:0 }}</b></span>
+                    <span class="ml-5 text-primary" v-show="user.role_id == 5">Deposit: <b>${{ (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit:0 }}</b></span>
 
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
 
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                                        <select name=""
-                                                class="form-control float-right"
-                                                @change="getPurchaseList"
-                                                v-model="filterModel.paginate"
-                                                style="height: 37px;">
-                                            <option v-for="option in paginate" v-bind:value="option">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getPurchaseList" v-model="filterModel.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
 
-                        <span v-if="listPurchase.total > 10" class="pagination-custom-footer-text">
-                        <b>Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{
-                                listPurchase.total
-                           }} entries.</b>
+                </div>
+
+                <div class="box-body no-padding">
+
+                    <span v-if="listPurchase.total > 10" class="pagination-custom-footer-text">
+                        <b>Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{ listPurchase.total }} entries.</b>
                     </span>
 
-                        <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
+                    <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th>Backlink ID</th>
@@ -159,17 +131,15 @@
                                 <th>Status</th>
                                 <th>Status Payment</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <tr v-for="(purchase, index) in listPurchase.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ purchase.id }}</td>
-                                <td v-show="user.isAdmin || user.isOurs === 0">
-                                    {{ purchase.publisher == null ? 'Record Deleted' : purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username }}
-                                </td>
+                                <td v-show="user.isAdmin || user.isOurs === 0">{{ purchase.publisher == null ? 'Record Deleted':purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username}}</td>
                                 <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
                                 <td>
-                                    <!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
+<!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
                                     <span v-if="purchase.publisher == null">
                                         Record Deleted
                                     </span>
@@ -184,11 +154,13 @@
                                 <td>{{ purchase.status }}</td>
                                 <td>{{ purchase.payment_status }}</td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
+
                 </div>
+
             </div>
+
         </div>
 
         <!-- Modal Update -->
@@ -242,6 +214,7 @@
             </div>
         </div>
         <!-- End of Modal Update -->
+
     </div>
 </template>
 

@@ -1,31 +1,31 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm-12" v-show="cardInbox">
-                <div class="card card-outline card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $route.name }}</h3>
-                        <div class="card-tools">
+
+            <div class="col-md-12" v-show="cardInbox">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ $route.name }}</h3>
+
+                        <div class="box-tools pull-right">
+                            <!-- <div class="has-feedback">
+                                <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                            </div>
+                            <button class="btn btn-default">S</button> -->
                             <div class="input-group">
-                                <input type="text"
-                                       class="form-control input-sm"
-                                       placeholder="Search Mail"
-                                       v-model="search_mail">
+                                <input type="text" class="form-control input-sm" placeholder="Search Mail" v-model="search_mail">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" title="Search" @click="getInbox">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-default"
-                                            title="Clear"
-                                            @click="clearSearchMail">
+                                    <button type="button" class="btn btn-default" title="Clear" @click="clearSearchMail">
                                         <i class="fa fa-close"></i>
                                     </button>
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="box-body no-padding">
                         <div class="mailbox-controls">
 
                             <button type="button" class="btn btn-default">
@@ -39,7 +39,7 @@
 
                                     @click="refeshInbox">
 
-                                    <i class="fas fa-sync"></i>
+                                    <i class="fa fa-fw fa-refresh"></i>
                                 </button>
 
                                 <button
@@ -88,7 +88,7 @@
                             </div>
 
                             <div class="pull-right">
-                                {{ paginate.from + '-' + paginate.to + " / " + paginate.total }}
+                                {{paginate.from + '-' + paginate.to + " / " + paginate.total}}
                                 <div class="btn-group">
                                     <button
                                         type="button"
@@ -176,7 +176,7 @@
                                         </span>
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index, $route.name)">{{ inbox.subject }}</td>
+                                    <td @click="viewMessage(inbox, index, $route.name)">{{inbox.subject}}</td>
 
                                     <td style="width:30px;" class="text-right" v-if="$route.name !== 'Trash'">
                                         <i
@@ -215,9 +215,7 @@
                                         </i>
                                     </td>
 
-                                    <td @click="viewMessage(inbox, index, $route.name)" class="text-right">
-                                        {{ inbox.clean_date }}
-                                    </td>
+                                    <td @click="viewMessage(inbox, index, $route.name)" class="text-right">{{inbox.clean_date}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -226,18 +224,15 @@
                 </div>
             </div>
 
-            <div class="col-sm-12" v-show="cardReadMessage">
-                <div class="card">
+            <div class="col-md-12" v-show="cardReadMessage">
+                <div class="box box-primary">
                     <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
                         No items Selected
                     </div>
 
                     <div v-show="MessageDisplay" class="box-header with-border">
                         <h3 class="box-title">
-                            <button type="button"
-                                    title="Back"
-                                    class="btn btn-default btn-sm mr-3"
-                                    @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
+                            <button type="button" title="Back" class="btn btn-default btn-sm mr-3" @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
                             Read Mail
                         </h3>
 
@@ -251,15 +246,13 @@
                     <div v-show="MessageDisplay" class="box-body no-padding">
                         <div class="mailbox-read-info">
                             <h3>{{ viewContent.subject }}</h3>
-                            <h5 v-show="viewContent.is_sent == 0">From: {{ viewContent.from }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
-                            <h5 v-show="viewContent.is_sent == 1">To: {{ checkEmail(viewContent.received) }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
+                            <h5 v-show="viewContent.is_sent == 0">From: {{ viewContent.from }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
+                            <h5 v-show="viewContent.is_sent == 1">To: {{ checkEmail(viewContent.received) }} <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
                         </div>
 
                         <div class="mailbox-read-message">
-                            <!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
-                            <!--                            <div id="htmlDiv" v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
+<!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
+<!--                            <div id="htmlDiv" v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
                             <div>
                                 <iframe
                                     ref="iframe"
@@ -306,9 +299,7 @@
                                         {{ viewContent.attachment.display_name }}
                                     </a>
 
-                                    <span class="mailbox-attachment-size">{{
-                                            bytesToSize(viewContent.attachment.size)
-                                                                          }}</span>
+                                    <span class="mailbox-attachment-size">{{ bytesToSize(viewContent.attachment.size) }}</span>
                                 </div>
                             </li>
 
@@ -331,30 +322,20 @@
                         </ul>
                     </div>
 
-                    <div v-show="MessageDisplay" class="card-footer">
+                    <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
-                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
-                                    type="button"
-                                    class="btn btn-default"
-                                    data-toggle="modal"
-                                    @click="doReply($route.name)"
-                                    data-target="#modal-email-reply">
+                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'" type="button" class="btn btn-default" data-toggle="modal" @click="doReply($route.name)" data-target="#modal-email-reply">
                                 <i class="fa fa-reply"></i>
                                 {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
                         </div>
-                        <button type="button"
-                                class="btn btn-default"
-                                v-show="viewContent.deleted_at == null"
-                                @click="deleteMessage(viewContent.id, viewContent.index, false)">
-                            <i class="fa fa-trash-o"></i> Delete
-                        </button>
+                        <button type="button" class="btn btn-default" v-show="viewContent.deleted_at == null" @click="deleteMessage(viewContent.id, viewContent.index, false)"><i class="fa fa-trash-o"></i> Delete</button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-12" v-show="cardReadMessageThread">
-                <div class="card">
+            <div class="col-md-12" v-show="cardReadMessageThread">
+                <div class="box box-primary">
                     <!-- email header -->
                     <div v-show="MessageDisplay" class="box-header with-border">
                         <h3 class="box-title">
@@ -496,7 +477,7 @@
                     </div>
 
                     <!-- email footer buttons -->
-                    <div v-show="MessageDisplay" class="card-footer">
+                    <div v-show="MessageDisplay" class="box-footer">
                         <div class="pull-right">
                             <button
                                 v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
@@ -524,6 +505,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!-- Modal Send Email -->
@@ -538,14 +520,9 @@
                         <blockquote class="primary">
                             <p>Note</p>
                             <ul>
-                                <li>You can send an email to multiple recipients <strong>'contact01|contact02|contact03'
-                                                                                         or
-                                                                                         'contact01,contact02,contact03'</strong>
-                                </li>
+                                <li>You can send an email to multiple recipients <strong>'contact01|contact02|contact03' or 'contact01,contact02,contact03'</strong></li>
                                 <li>For bulk sending, <strong>only 10 recipients are allowed per email</strong></li>
-                                <li>You can edit the tags by clicking it and pressing <strong>enter key</strong>
-                                    afterwards
-                                </li>
+                                <li>You can edit the tags by clicking it and pressing <strong>enter key</strong> afterwards</li>
                             </ul>
                         </blockquote>
 
@@ -553,10 +530,7 @@
                             <div class="col-md-12">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withBcc"
-                                               @click="toggleBcc">
+                                        <input type="checkbox" class="form-check-input" v-model="withBcc" @click="toggleBcc">
                                         With Bcc
                                     </label>
                                 </div>
@@ -568,9 +542,7 @@
                                     <div class="col-md-3">
                                         <label style="color: #333">Language</label>
                                         <div>
-                                            <select class="form-control pull-right"
-                                                    v-model="countryMailId"
-                                                    v-on:change="getTemplateList">
+                                            <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
                                                 <option value=""></option>
                                                 <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
@@ -579,14 +551,11 @@
                                         </div>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="form-group">
+                                        <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate('send')"
-                                                        class="form-control pull-right"
-                                                        v-model="mailInfo">
-                                                    <option v-for="option in listMailTemplate.data"
-                                                            v-bind:value="option.id">
+                                                <select v-on:change="getTemplate('send')" class="form-control pull-right" v-model="mailInfo">
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
                                                 </select>
@@ -604,8 +573,8 @@
                                     }"
                                     class="form-group">
 
-                                    <label style="color: #333">To:</label>
-                                    <!--                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">-->
+                                    <label style="color: #333" >To:</label>
+<!--                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">-->
 
                                     <p
                                         v-if="emailContent.email.length"
@@ -646,39 +615,26 @@
 
                             <div class="col-md-12" v-show="withBcc" style="margin-top: 15px;">
                                 <div class="form-group">
-                                    <label style="color: #333">Bcc:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="emailContent.cc">
+                                    <label style="color: #333" >Bcc:</label>
+                                    <input type="text" class="form-control" required="required" v-model="emailContent.cc">
                                 </div>
                             </div>
 
+
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}"
-                                     class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">Titles</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="emailContent.title">
-                                    <span v-if="messageForms.errors.title"
-                                          v-for="err in messageForms.errors.title"
-                                          class="text-danger">{{ err }}</span>
+                                    <input type="text" class="form-control" required="required" v-model="emailContent.title">
+                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}"
-                                     class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
-                                    <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>-->
-                                    <tiny-editor editor-id="composeEditor"
-                                                 v-model="emailContent.content"
-                                                 ref="composeEditor"></tiny-editor>
-                                    <span v-if="messageForms.errors.content"
-                                          v-for="err in messageForms.errors.content"
-                                          class="text-danger">{{ err }}</span>
+<!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>-->
+                                    <tiny-editor editor-id="composeEditor" v-model="emailContent.content" ref="composeEditor"></tiny-editor>
+                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -692,15 +648,14 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Send')">Close
-                        </button>
-                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('compose')">
-                            Send <i class="fa fa-send fa-fw"></i></button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Send')">Close</button>
+                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('compose')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- End Send Email -->
+
 
         <!-- Modal Send Reply Email -->
         <div id="modal-email-reply" class="modal fade" ref="modalReply" data-backdrop="static">
@@ -712,19 +667,17 @@
                     <div class="modal-body relative">
                         <form class="row" action="">
 
-                            <!--                            <div class="col-md-12">-->
-                            <!--                                <blockquote class="default">-->
-                            <!--                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>-->
-                            <!--                                </blockquote>-->
-                            <!--                            </div>-->
+<!--                            <div class="col-md-12">-->
+<!--                                <blockquote class="default">-->
+<!--                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>-->
+<!--                                </blockquote>-->
+<!--                            </div>-->
+
 
                             <div class="col-md-6">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withTemplate"
-                                               @click="toggleTemplate">
+                                        <input type="checkbox" class="form-check-input" v-model="withTemplate" @click="toggleTemplate">
                                         With Template
                                     </label>
                                 </div>
@@ -733,10 +686,7 @@
                             <div class="col-md-6">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withBcc"
-                                               @click="toggleBcc">
+                                        <input type="checkbox" class="form-check-input" v-model="withBcc" @click="toggleBcc">
                                         With Bcc
                                     </label>
                                 </div>
@@ -748,9 +698,7 @@
                                     <div class="col-md-3">
                                         <label style="color: #333">Language</label>
                                         <div>
-                                            <select class="form-control pull-right"
-                                                    v-model="countryMailId"
-                                                    v-on:change="getTemplateList">
+                                            <select class="form-control pull-right" v-model="countryMailId" v-on:change="getTemplateList">
                                                 <option value=""></option>
                                                 <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                     {{ option.name }}
@@ -759,14 +707,11 @@
                                         </div>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="form-group">
+                                        <div  class="form-group">
                                             <label style="color: #333">Select template</label>
                                             <div>
-                                                <select v-on:change="getTemplate('reply')"
-                                                        class="form-control pull-right"
-                                                        v-model="mailInfo">
-                                                    <option v-for="option in listMailTemplate.data"
-                                                            v-bind:value="option.id">
+                                                <select v-on:change="getTemplate('reply')" class="form-control pull-right" v-model="mailInfo">
+                                                    <option  v-for="option in listMailTemplate.data" v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
                                                 </select>
@@ -777,10 +722,9 @@
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}"
-                                     class="form-group">
-                                    <label style="color: #333">To:</label>
-                                    <!--                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">-->
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
+                                    <label style="color: #333" >To:</label>
+<!--                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">-->
 
                                     <vue-tags-input
                                         v-model="tag"
@@ -795,48 +739,31 @@
                                         @tags-changed="newTags => replyContent.email = newTags"
                                     />
 
-                                    <span v-if="messageForms.errors.email"
-                                          v-for="err in messageForms.errors.email"
-                                          class="text-danger">{{ err }}</span>
+                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;" v-show="withBcc">
                                 <div class="form-group">
-                                    <label style="color: #333">Bcc:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="replyContent.cc">
+                                    <label style="color: #333" >Bcc:</label>
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.cc">
                                 </div>
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}"
-                                     class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">Titles</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="replyContent.title"
-                                           :disabled="true">
-                                    <span v-if="messageForms.errors.title"
-                                          v-for="err in messageForms.errors.title"
-                                          class="text-danger">{{ err }}</span>
+                                    <input type="text" class="form-control" required="required" v-model="replyContent.title" :disabled="true">
+                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}"
-                                     class="form-group">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
                                     <label style="color: #333">Contents</label>
-                                    <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>-->
-                                    <tiny-editor editor-id="replyEditor"
-                                                 v-model="replyContent.content"
-                                                 ref="replyEditor"></tiny-editor>
-                                    <span v-if="messageForms.errors.content"
-                                          v-for="err in messageForms.errors.content"
-                                          class="text-danger">{{ err }}</span>
+<!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>-->
+                                    <tiny-editor editor-id="replyEditor" v-model="replyContent.content" ref="replyEditor"></tiny-editor>
+                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -850,10 +777,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Reply')">Close
-                        </button>
-                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('reply')">
-                            Send <i class="fa fa-send fa-fw"></i></button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Reply')">Close</button>
+                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('reply')">Send <i class="fa fa-send fa-fw"></i></button>
                     </div>
                 </div>
             </div>
@@ -874,9 +799,7 @@
                                     <label for="">Label Name</label>
                                     <select class="form-control" v-model="updateModel.label_id">
                                         <option value=""></option>
-                                        <option v-for="(label, index) in $parent._data.listLabel"
-                                                v-bind:value="label.id"
-                                                :key="index">
+                                        <option v-for="(label, index) in $parent._data.listLabel" v-bind:value="label.id" :key="index">
                                             {{ label.name }}
                                         </option>
                                     </select>
@@ -893,89 +816,85 @@
             </div>
         </div>
         <!-- End Label -->
+
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import {mapState} from 'vuex';
-import {createTag, createTags} from '@johmun/vue-tags-input';
+import { mapState } from 'vuex';
+import { createTag, createTags } from '@johmun/vue-tags-input';
 import TinyEditor from "../../../components/editor/TinyEditor";
 
 export default {
-    name : 'AppInbox',
-    components : {TinyEditor},
+    name: 'AppInbox',
+    components: {TinyEditor},
     data() {
         return {
-            search_mail : '',
+            search_mail: '',
             emailContent : {
-                cc : '',
-                email : [],
-                title : '',
-                content : ''
+                cc: '',
+                email: [],
+                title: '',
+                content: ''
             },
             replyContent : {
-                cc : '',
-                email : [],
-                title : '',
-                content : ''
+                cc: '',
+                email: [],
+                title: '',
+                content: ''
             },
             viewContent : {
-                received : '',
-                is_sent : '',
-                from_mail : '',
-                index : '',
-                id : '',
-                date : '',
-                from : '',
-                subject : '',
-                strippedHtml : '',
-                deleted_at : '',
-                attachment : {
-                    url : '',
-                    size : '',
-                    name : '',
+                received: '',
+                is_sent: '',
+                from_mail: '',
+                index: '',
+                id: '',
+                date: '',
+                from: '',
+                subject: '',
+                strippedHtml: '',
+                deleted_at: '',
+                attachment: {
+                    url: '',
+                    size: '',
+                    name: '',
                 },
             },
-            viewContentThread : {
-                inbox : {},
-                threads : [],
+            viewContentThread: {
+                inbox: {},
+                threads: [],
             },
-            records : [],
-            loadingMessage : false,
-            selectedMessage : true,
-            MessageDisplay : false,
-            checkIds : [],
-            btnEnable : true,
+            records: [],
+            loadingMessage: false,
+            selectedMessage: true,
+            MessageDisplay: false,
+            checkIds: [],
+            btnEnable: true,
             inboxCount : 0,
-            mailInfo : {},
-            countryMailId : '',
-            updateModel : {
-                label_id : '',
+            mailInfo: {},
+            countryMailId: '',
+            updateModel: {
+                label_id: '',
             },
-            allSelected : false,
-            withTemplate : false,
-            withBcc : false,
-            sendBtn : false,
-            paginate : {
-                next : 0,
-                prev : 0,
-                from : 0,
-                to : 0,
-                total : 0,
+            allSelected: false,
+            withTemplate: false,
+            withBcc: false,
+            sendBtn: false,
+            paginate: {
+                next: 0,
+                prev: 0,
+                from: 0,
+                to: 0,
+                total: 0,
             },
-            cardInbox : true,
-            cardReadMessage : false,
-            cardReadMessageThread : false,
+            cardInbox: true,
+            cardReadMessage: false,
+            cardReadMessageThread: false,
 
             // for tag input component
-            tag : '',
-            separators : [
-                ';',
-                ',',
-                '|',
-                ' '
-            ]
+            tag: '',
+            separators: [';', ',', '|', ' ']
         }
     },
 
@@ -984,23 +903,23 @@ export default {
         this.$root.$refs.AppInbox = this;
 
         let language = this.listLanguages.data;
-        if (language.length === 0) {
+        if( language.length === 0 ){
             this.getListLanguages();
         }
     },
 
-    computed : {
+    computed: {
         ...mapState({
-            user : state => state.storeAuth.currentUser,
-            listCountryAll : state => state.storePublisher.listCountryAll,
-            listMailTemplate : state => state.storeExtDomain.listMailTemplate,
-            messageForms : state => state.storeMailgun.messageForms,
-            listLanguages : state => state.storePublisher.listLanguages,
+            user: state => state.storeAuth.currentUser,
+            listCountryAll: state => state.storePublisher.listCountryAll,
+            listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+            messageForms: state => state.storeMailgun.messageForms,
+            listLanguages: state => state.storePublisher.listLanguages,
         })
     },
 
-    watch : {
-        $route(to, from) {
+    watch:{
+        $route (to, from){
             this.getInbox();
             this.clearCheckIds();
             this.clearViewing();
@@ -1012,7 +931,7 @@ export default {
         this.getInbox();
     },
 
-    methods : {
+    methods: {
         modalCloser(mode) {
             if (mode === 'Send') {
 
@@ -1022,22 +941,22 @@ export default {
                     || this.emailContent.cc) {
 
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Email contents will be removed",
-                        icon : "warning",
-                        showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
                     })
-                        .then((result) => {
-                            if (result.isConfirmed) {
-                                // remove all images inserted on editor
-                                this.$refs.composeEditor.deleteImages('All');
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted on editor
+                            this.$refs.composeEditor.deleteImages('All');
 
-                                this.closeModal(mode)
-                                this.clearModel(mode)
-                            }
-                        });
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
 
                 } else {
                     this.$refs.composeEditor.deleteImages('All');
@@ -1050,22 +969,22 @@ export default {
                     || this.replyContent.cc) {
 
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Email contents will be removed",
-                        icon : "warning",
-                        showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
                     })
-                        .then((result) => {
-                            if (result.isConfirmed) {
-                                // remove all images inserted on editor
-                                this.$refs.replyEditor.deleteImages('All');
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // remove all images inserted on editor
+                            this.$refs.replyEditor.deleteImages('All');
 
-                                this.closeModal(mode)
-                                this.clearModel(mode)
-                            }
-                        });
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
 
                 } else {
                     this.$refs.replyEditor.deleteImages('All');
@@ -1088,17 +1007,17 @@ export default {
         clearModel(mode) {
             if (mode === 'Send') {
                 this.emailContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
                 }
             } else {
                 this.replyContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
                 }
             }
         },
@@ -1125,9 +1044,9 @@ export default {
                     ? element.from_mail === self.user.work_mail
                         ? 'me'
                         : element.from_mail
-                    : from === self.user.work_mail
-                        ? 'me'
-                        : from;
+                        : from === self.user.work_mail
+                            ? 'me'
+                            : from;
             })
 
             senders = senders.filter((item, index) => senders.indexOf(item) === index);
@@ -1156,10 +1075,10 @@ export default {
                 var spl = email.split("|")
 
                 for (var index in spl) {
-                    result += '<' + spl[index] + '> ';
+                    result += '<'+spl[index]+'> ';
                 }
             } else {
-                result = '<' + email + '>';
+                result = '<'+email+'>';
             }
 
             return result;
@@ -1223,11 +1142,11 @@ export default {
             }
 
             axios.post('/api/mail/get-reply', {
-                email : route !== 'Trash' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
+                email: route !== 'Trash' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
             })
-                .then((res) => {
-                    // console.log(res.data)
-                })
+            .then((res) => {
+                // console.log(res.data)
+            })
         },
 
         toggleTemplate() {
@@ -1252,63 +1171,63 @@ export default {
                 this.deleteMessageThread(null, 'all')
             } else {
                 swal.fire({
-                    title : "Are you sure ?",
-                    html : "Delete these message?",
-                    icon : "warning",
-                    showCancelButton : true,
-                    confirmButtonText : 'Yes, delete it!',
-                    cancelButtonText : 'No, keep it'
+                    title: "Are you sure ?",
+                    html: "Delete these message?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
                 })
-                    .then((result) => {
-                        if (result.isConfirmed) {
+                .then((result) => {
+                    if (result.isConfirmed) {
 
-                            let ids = [];
-                            for (var chk in this.checkIds) {
-                                ids.push(this.checkIds[chk].id);
-                            }
-
-                            axios.get('/api/mail/delete-message', {params : {id : is_all ? ids : id}})
-                                .then((res) => {
-                                    if (is_all) {
-                                        this.getInbox();
-                                        this.paginate.total -= ids.length;
-                                    } else {
-                                        this.records.data.splice(index, 1);
-                                        this.paginate.total--;
-                                    }
-                                })
-
-                            this.selectedMessage = true;
-                            this.MessageDisplay = false;
-                            this.viewContent = {
-                                received : '',
-                                is_sent : '',
-                                from_mail : '',
-                                index : '',
-                                id : '',
-                                date : '',
-                                from : '',
-                                subject : '',
-                                strippedHtml : '',
-                                deleted_at : '',
-                                attachment : {
-                                    url : '',
-                                    size : '',
-                                    name : '',
-                                },
-                            }
-
-                            this.checkIds = [];
-
-                            this.clearViewing()
-
-                            swal.fire(
-                                'Deleted!',
-                                'Messages is move to Trash.',
-                                'success'
-                            )
+                        let ids = [];
+                        for (var chk in this.checkIds) {
+                            ids.push(this.checkIds[chk].id);
                         }
-                    });
+
+                        axios.get('/api/mail/delete-message',{ params: { id: is_all ? ids : id } })
+                            .then((res) => {
+                                if (is_all) {
+                                    this.getInbox();
+                                    this.paginate.total -= ids.length;
+                                }else{
+                                    this.records.data.splice(index, 1);
+                                    this.paginate.total--;
+                                }
+                            })
+
+                        this.selectedMessage = true;
+                        this.MessageDisplay = false;
+                        this.viewContent = {
+                            received: '',
+                            is_sent: '',
+                            from_mail: '',
+                            index: '',
+                            id: '',
+                            date: '',
+                            from: '',
+                            subject: '',
+                            strippedHtml: '',
+                            deleted_at: '',
+                            attachment: {
+                                url: '',
+                                size: '',
+                                name: '',
+                            },
+                        }
+
+                        this.checkIds = [];
+
+                        this.clearViewing()
+
+                        swal.fire(
+                            'Deleted!',
+                            'Messages is move to Trash.',
+                            'success'
+                        )
+                    }
+                });
             }
         },
 
@@ -1316,37 +1235,37 @@ export default {
             let self = this
 
             swal.fire({
-                title : mod === 'single' ? "Delete thread" : "Delete selected threads",
-                html : mod === 'single' ? "Delete all emails in this thread?" : "Delete all emails in selected threads?",
-                icon : "warning",
-                showCancelButton : true,
-                confirmButtonText : 'Yes, delete them!',
-                cancelButtonText : 'No, keep them.'
+                title: mod === 'single' ? "Delete thread" : "Delete selected threads",
+                html: mod === 'single' ? "Delete all emails in this thread?" : "Delete all emails in selected threads?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete them!',
+                cancelButtonText: 'No, keep them.'
             })
-                .then((result) => {
-                    if (result.isConfirmed) {
+            .then((result) => {
+                if (result.isConfirmed) {
 
-                        let ids = self.getThreadIds(thread, mod)
+                    let ids = self.getThreadIds(thread, mod)
 
-                        axios.post('/api/mail/delete-message-thread', {ids : ids})
-                            .then((res) => {
-                                self.clearViewing()
-                                self.getInbox()
-                                self.checkIds = [];
-                                self.checkSelected()
+                    axios.post('/api/mail/delete-message-thread', { ids: ids})
+                        .then((res) => {
+                            self.clearViewing()
+                            self.getInbox()
+                            self.checkIds = [];
+                            self.checkSelected()
 
-                                if (mod !== 'single') {
-                                    self.allSelected = !self.allSelected
-                                }
+                            if (mod !== 'single') {
+                                self.allSelected = !self.allSelected
+                            }
 
-                                swal.fire(
-                                    'Deleted!',
-                                    'Deleted emails moved to trash.',
-                                    'success'
-                                )
-                            })
-                    }
-                })
+                            swal.fire(
+                                'Deleted!',
+                                'Deleted emails moved to trash.',
+                                'success'
+                            )
+                        })
+                }
+            })
         },
 
         getThreadIds(thread, mod) {
@@ -1384,47 +1303,47 @@ export default {
             }
 
             axios.post('/api/mail/labeling', {
-                ids : ids,
-                label_id : this.updateModel.label_id
+                ids: ids,
+                label_id: this.updateModel.label_id
             })
-                .then((res) => {
+            .then((res) => {
 
-                    // for (var rec in this.records.data) {
-                    //     for (var chk in this.checkIds) {
-                    //         if (this.checkIds[chk].id == this.records.data[rec].id) {
-                    //             this.records.data[rec].label_id = this.updateModel.label_id;
-                    //         }
-                    //     }
-                    // }
+                // for (var rec in this.records.data) {
+                //     for (var chk in this.checkIds) {
+                //         if (this.checkIds[chk].id == this.records.data[rec].id) {
+                //             this.records.data[rec].label_id = this.updateModel.label_id;
+                //         }
+                //     }
+                // }
 
-                    this.getInbox()
+                this.getInbox()
 
-                    $("#modal-label-selection").modal('hide')
+                $("#modal-label-selection").modal('hide')
 
-                })
+            })
         },
 
         submitLabelThread() {
             let self = this
 
-            if (self.$route.name === 'Trash') {
+            if(self.$route.name === 'Trash') {
                 self.submitLabel()
             } else {
                 let ids = self.getThreadIds(null, 'all')
 
                 axios.post('/api/mail/labeling-thread', {
-                    ids : ids,
-                    label_id : this.updateModel.label_id
+                    ids: ids,
+                    label_id: this.updateModel.label_id
                 })
-                    .then((res) => {
-                        self.getInbox()
-                        $("#modal-label-selection").modal('hide')
-                    })
+                .then((res) => {
+                    self.getInbox()
+                    $("#modal-label-selection").modal('hide')
+                })
             }
         },
 
         async getTemplateList() {
-            await this.$store.dispatch('getListMails', {params : {country_id : this.countryMailId, full_page : 1}});
+            await this.$store.dispatch('getListMails', { params: { country_id: this.countryMailId, full_page: 1} });
         },
 
         getTemplate(mod) {
@@ -1437,7 +1356,7 @@ export default {
             template['content'] = this.convertLineBreaks(template['content'])
 
             for (let key in template) {
-                if (template.hasOwnProperty(key)) {
+                if(template.hasOwnProperty(key)){
                     content[key] = template[key]
                 }
             }
@@ -1455,8 +1374,9 @@ export default {
             let id_mail = is_all ? this.checkIds : id;
 
             if (!is_all) {
-                this.records.data[position].is_starred = is_starred == 1 ? 0 : 1;
-            } else {
+                this.records.data[position].is_starred = is_starred == 1 ? 0:1;
+            }
+            else {
                 for (var rec in this.records.data) {
                     for (var chk in this.checkIds) {
                         if (this.checkIds[chk].id == this.records.data[rec].id) {
@@ -1467,16 +1387,16 @@ export default {
             }
 
             axios.get('/api/mail/starred', {
-                params : {
-                    id : id_mail,
-                    is_starred : is_starred,
+                params: {
+                    id: id_mail,
+                    is_starred: is_starred,
                 }
             })
-                .then((res) => {
-                    if (is_all) {
-                        this.getInbox();
-                    }
-                })
+            .then((res) => {
+                if (is_all){
+                    this.getInbox();
+                }
+            })
         },
 
         submitStarredThread(inbox, index, mod) {
@@ -1499,27 +1419,27 @@ export default {
             ids = self.getThreadIds(thread, mod)
 
             axios.post('/api/mail/starred-thread', {
-                id : ids,
-                is_starred : starred,
+                id: ids,
+                is_starred: starred,
             })
-                .then((res) => {
-                    if (mod !== 'single') {
-                        self.getInbox();
-                    }
+            .then((res) => {
+                if (mod !== 'single'){
+                    self.getInbox();
+                }
 
-                    self.checkIds = [];
-                    self.checkSelected()
-                    self.clearViewing()
+                self.checkIds = [];
+                self.checkSelected()
+                self.clearViewing()
 
-                    if (mod !== 'single') {
-                        self.allSelected = !self.allSelected
-                    }
-                })
+                if (mod !== 'single') {
+                    self.allSelected = !self.allSelected
+                }
+            })
         },
 
         checkSelected() {
             this.btnEnable = true;
-            if (this.checkIds.length > 0) {
+            if( this.checkIds.length > 0 ){
                 this.btnEnable = false;
             }
         },
@@ -1534,13 +1454,7 @@ export default {
         },
 
         bytesToSize(bytes) {
-            var sizes = [
-                'Bytes',
-                'KB',
-                'MB',
-                'GB',
-                'TB'
-            ];
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             if (bytes == 0) return '0 Byte';
             var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
             return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
@@ -1563,21 +1477,21 @@ export default {
                 let is_sent = inbox.is_sent;
                 let reply_to = '';
 
-                if (inbox.attachment != '' && inbox.attachment != '[]') {
+                if(inbox.attachment != '' && inbox.attachment != '[]') {
                     let attach = JSON.parse(inbox.attachment);
-                    this.viewContent.attachment = attach;
+                    this.viewContent.attachment  = attach;
 
                     if (is_sent == 0) {
-                        for (let index in attach) {
+                        for(let index in attach) {
                             axios.post('/api/mail/show-attachment', {
-                                url : attach[index]['url']
-                            }, {responseType : 'arraybuffer'})
+                                url: attach[index]['url']
+                            },{ responseType: 'arraybuffer' })
                                 .then((res) => {
 
-                                    let blob = new Blob([res.data], {type : res.headers['content-type']})
+                                    let blob = new Blob([res.data], { type: res.headers['content-type'] })
                                     var res = res.headers['content-type'].split("/");
 
-                                    let link = document.getElementById('link-download-href-' + index);
+                                    let link = document.getElementById( 'link-download-href-' + index );
                                     link.href = window.URL.createObjectURL(blob);
                                     link.download = attach[index]['name'];
                                 })
@@ -1586,9 +1500,9 @@ export default {
 
                 } else {
                     this.viewContent.attachment = {
-                        url : '',
-                        size : '',
-                        name : '',
+                        url: '',
+                        size: '',
+                        name: '',
                     }
                 }
 
@@ -1609,8 +1523,8 @@ export default {
                 this.viewContent.is_sent = is_sent;
                 this.viewContent.received = inbox.received;
 
-                if (inbox.is_viewed == 0) {
-                    axios.get('/api/mail/is-viewed', {params : {id : inbox.id}})
+                if (inbox.is_viewed == 0){
+                    axios.get('/api/mail/is-viewed',{ params: { id: inbox.id } })
                     this.records.data[index].is_viewed = 1
                 }
 
@@ -1654,7 +1568,7 @@ export default {
 
             // is_viewed function
             if (viewed_emails.length !== 0) {
-                axios.post('/api/mail/is-viewed-thread', {ids : viewed_emails})
+                axios.post('/api/mail/is-viewed-thread',{ ids: viewed_emails} )
 
                 // update unread messages in inbox count on parent component
                 this.updateInboxUnreadCountInParent(this.inboxCount - 1);
@@ -1662,21 +1576,21 @@ export default {
         },
 
         emailAttachmentSorter(inbox, attachments, index) {
-            if (attachments !== '' && attachments !== '[]') {
+            if(attachments !== '' && attachments !== '[]') {
                 let attach = JSON.parse(attachments);
-                this.viewContentThread.threads[index].attachment = attach
+                this.viewContentThread.threads[index].attachment  = attach
 
                 if (inbox.is_sent === 0) {
                     attach.forEach(function (att, ind) {
                         axios.post('/api/mail/show-attachment', {
-                            url : att.url
-                        }, {responseType : 'arraybuffer'})
+                            url: att.url
+                        },{ responseType: 'arraybuffer' })
                             .then((res) => {
 
-                                let blob = new Blob([res.data], {type : res.headers['content-type']})
+                                let blob = new Blob([res.data], { type: res.headers['content-type'] })
                                 let result = res.headers['content-type'].split("/");
 
-                                let link = document.getElementById('link-download-href-' + ind + inbox.id);
+                                let link = document.getElementById( 'link-download-href-' + ind + inbox.id);
                                 link.href = window.URL.createObjectURL(blob);
                                 link.download = att.name;
                             })
@@ -1687,9 +1601,9 @@ export default {
                 }
             } else {
                 this.viewContentThread.threads[index].attachment = {
-                    url : '',
-                    size : '',
-                    name : '',
+                    url: '',
+                    size: '',
+                    name: '',
                 }
             }
         },
@@ -1754,9 +1668,9 @@ export default {
         async sendEmail(type) {
             let cc = '';
             if (type == 'reply') {
-                cc = (typeof (this.replyContent.cc) == "undefined") ? "" : this.replyContent.cc;
+                cc = (typeof(this.replyContent.cc) == "undefined" ) ? "": this.replyContent.cc;
             } else {
-                cc = (typeof (this.emailContent.cc) == "undefined") ? "" : this.emailContent.cc;
+                cc = (typeof(this.emailContent.cc) == "undefined" ) ? "": this.emailContent.cc;
             }
 
             // this.sendBtn = true;
@@ -1802,17 +1716,17 @@ export default {
                 }
 
                 this.emailContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
                 }
 
                 this.replyContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
+                    cc: '',
+                    email: [],
+                    title: '',
+                    content: ''
                 }
 
                 // clear attachments
@@ -1845,45 +1759,45 @@ export default {
                 })
         },
 
-        getInbox(page = 1) {
-            //    this.loadingMessage = true;
+        getInbox(page = 1){
+        //    this.loadingMessage = true;
             let loader = this.$loading.show();
-            if (this.user.work_mail) {
+            if(this.user.work_mail) {
                 axios.get('/api/mail/filter-recipient?page=' + page, {
                     params : {
-                        'email' : this.user.work_mail,
-                        'param' : this.$route.name,
-                        'search_mail' : this.search_mail,
-                        'label_id' : this.$route.query.label_id,
+                        'email': this.user.work_mail,
+                        'param': this.$route.name,
+                        'search_mail': this.search_mail,
+                        'label_id': this.$route.query.label_id,
                     }
                 })
-                    .then((response) => {
-                        this.records = response.data.inbox;
-                        this.inboxCount = response.data.count;
+                .then((response) => {
+                    this.records = response.data.inbox;
+                    this.inboxCount = response.data.count;
 
-                        this.updateInboxUnreadCountInParent(this.inboxCount);
+                    this.updateInboxUnreadCountInParent(this.inboxCount);
 
-                        this.paginate.to = this.records.to == null ? 0 : this.records.to;
-                        this.paginate.total = this.records.total == null ? 0 : this.records.total;
-                        this.paginate.from = this.records.from == null ? 0 : this.records.from;
+                    this.paginate.to = this.records.to == null ? 0:this.records.to;
+                    this.paginate.total = this.records.total == null ? 0:this.records.total;
+                    this.paginate.from = this.records.from == null ? 0:this.records.from;
 
-                        if (this.records.next_page_url != null) {
-                            let page = this.records.next_page_url.split("=")[1];
-                            this.paginate.next = page;
-                        }
+                    if(this.records.next_page_url != null) {
+                        let page = this.records.next_page_url.split("=")[1];
+                        this.paginate.next = page;
+                    }
 
-                        if (this.records.prev_page_url != null) {
-                            let page = this.records.prev_page_url.split("=")[1];
-                            this.paginate.prev = page;
-                        }
+                    if(this.records.prev_page_url != null) {
+                        let page = this.records.prev_page_url.split("=")[1];
+                        this.paginate.prev = page;
+                    }
 
-                        loader.hide();
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        error => error;
-                        loader.hide();
-                    });
+                    loader.hide();
+                })
+                .catch((error) => {
+                    console.log(error);
+                    error => error;
+                    loader.hide();
+                });
             }
 
         },
@@ -1892,10 +1806,8 @@ export default {
             this.$store.dispatch('clearMessageform');
         },
 
-        checkEmailValidationError(error) {
-            return Object.keys(error).some(function (err) {
-                return ~err.indexOf("email.")
-            })
+        checkEmailValidationError(error){
+            return Object.keys(error).some(function(err){ return ~err.indexOf("email.") })
         },
 
         updateInboxUnreadCountInParent(count) {
@@ -1935,11 +1847,11 @@ export default {
     border: 1px solid #ced4da;
     background-clip: padding-box;
     /*height: calc(1.5em + .75rem + 2px);*/
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.vue-tags-input .ti-tag {
-    background-color: floralwhite !important;
+.vue-tags-input .ti-tag{
+    background-color: floralwhite !important ;
     color: #495057;
     border: 1px solid grey;
 }

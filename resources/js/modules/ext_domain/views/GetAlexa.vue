@@ -1,58 +1,46 @@
 <template>
-    <div>
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0"></h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
+    <div class="alexa-container">
+        <div class="row alexa-get-row">
+            <div class="col-md-3 col-lg-2">
+                <div class="input-group input-group-sm">
+                    <label>Country: </label>
+                    <select v-model="filterModel2.country_id" class="form-control pull-right">
+                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+                </div>
+            </div>
 
+            <div class="col-md-3 col-lg-2">
+                <div class="input-group input-group-sm">
+                    <label>Start: </label>
+                    <input type="text" v-model="filterModel2.start"  class="form-control pull-right" placeholder="Start">
+                </div>
+            </div>
+
+            <div class="col-md-3 col-lg-2">
+                <div class="input-group input-group-sm">
+                    <label>Count: </label>
+                    <input type="text" v-model="filterModel2.count"  class="form-control pull-right" placeholder="Count">
+                </div>
+            </div>
+
+            <div class="col-md-3 col-lg-2">
+                <button @click="doGetAlexaRank" type="submit" class="btn btn-default">
+                    <i class="fa fa-refresh fa-spin" v-if="isLoadingTable"></i><i v-if="!isLoadingTable" class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Get Alexa External Domain</h3>
-                        <div class="card-tools">
-                        </div>
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Get Alexa External Domain</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row alexa-get-row">
-                            <div class="col-md-3 col-lg-2">
-                                <div class="input-group input-group-sm">
-                                    <label>Country: </label>
-                                    <select v-model="filterModel2.country_id" class="form-control pull-right">
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 col-lg-2">
-                                <div class="input-group input-group-sm">
-                                    <label>Start: </label>
-                                    <input type="text" v-model="filterModel2.start"  class="form-control pull-right" placeholder="Start">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 col-lg-2">
-                                <div class="input-group input-group-sm">
-                                    <label>Count: </label>
-                                    <input type="text" v-model="filterModel2.count"  class="form-control pull-right" placeholder="Count">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 col-lg-2">
-                                <button @click="doGetAlexaRank" type="submit" class="btn btn-default">
-                                    <i class="fa fa-refresh fa-spin" v-if="isLoadingTable"></i><i v-if="!isLoadingTable" class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
                         <table class="table table-hover table-bordered table-striped rlink-table">
                             <tbody>
                             <tr class="label-primary">
@@ -86,7 +74,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- /.box-body -->
                 </div>
+                <!-- /.box -->
             </div>
         </div>
     </div>

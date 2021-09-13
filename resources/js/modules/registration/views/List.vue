@@ -1,313 +1,290 @@
 <template>
-    <div>
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0"></h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- <section class="content-header col-sm-12">
+                <h1>Accounts</h1>
+            </section> -->
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
-                        <div class="card-tools" style="float: left!important;">
-                            <button
-                                type="button"
-                                aria-expanded="false"
-                                data-toggle="collapse"
-                                class="btn btn-primary ml-5"
-                                data-target="#collapseFilterRegistration"
-                                aria-controls="collapseFilterRegistration">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                    <button
+                        type="button"
+                        aria-expanded="false"
+                        data-toggle="collapse"
+                        class="btn btn-primary ml-5"
+                        data-target="#collapseFilterRegistration"
+                        aria-controls="collapseFilterRegistration">
 
-                                <i class="fa fa-plus"></i> Show Filter
-                            </button>
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
+                </div>
+
+                <div class="box-body m-3 collapse" id="collapseFilterRegistration">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Search Name, Email & Username</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" v-model="filterModel.status">
+                                    <option value="">Select Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account type</label>
+                                <select class="form-control" v-model="filterModel.type">
+                                    <option value="">Select Type</option>
+                                    <option value="seller">Seller</option>
+                                    <option value="buyer">Buyer</option>
+                                    <option value="writer">Writer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select class="form-control" name="" v-model="filterModel.country">
+                                    <option value="">Select Country</option>
+                                    <option value="none">None</option>
+                                    <option v-for="option in listCountryAll.data" :value="option.id" :key="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <select class="form-control" name="" v-model="filterModel.language_id">
+                                    <option value="">Select Language</option>
+                                    <option value="none">None</option>
+                                    <option v-for="option in listLanguages.data" :value="option.id" :key="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Commission</label>
+                                <select class="form-control" name="" v-model="filterModel.commission">
+                                    <option value="">Select Commission</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Credit Authorization</label>
+                                <select class="form-control" name="" v-model="filterModel.credit_auth">
+                                    <option value="">Select Credit Authorization</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                            <div class="form-group">
+                                <label>Team In-charge</label>
+                                <select class="form-control" v-model="filterModel.team_in_charge">
+                                    <option value="">All</option>
+                                    <option value="none">None</option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company Type</label>
+                                <select class="form-control" v-model="filterModel.company_type">
+                                    <option value="">All</option>
+                                    <option value="1">Freelancer</option>
+                                    <option value="0">Company</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input
+                                    v-model="filterModel.company_name"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Company URL</label>
+                                <input
+                                    v-model="filterModel.company_url"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Validation</label>
+                                <select class="form-control" v-model="filterModel.account_validation">
+                                    <option value="">All</option>
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Date of Registration</label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        v-model="filterModel.created_at"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.created_at"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        ref="picker"
+                                        opens="left"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Account Verified</label>
+                                <select class="form-control"
+                                        v-model="filterModel.account_verification">
+                                    <option value="">All</option>
+                                    <option value="Yes">Yes
+                                    </option>
+                                    <option value="No">No
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body collapse" id="collapseFilterRegistration">
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Search Name, Email & Username</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           v-model="filterModel.search"
-                                           aria-describedby="helpId"
-                                           placeholder="Type here">
-                                </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select class="form-control" v-model="filterModel.status">
-                                        <option value="">Select Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Account type</label>
-                                    <select class="form-control" v-model="filterModel.type">
-                                        <option value="">Select Type</option>
-                                        <option value="seller">Seller</option>
-                                        <option value="buyer">Buyer</option>
-                                        <option value="writer">Writer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <select class="form-control" name="" v-model="filterModel.country">
-                                        <option value="">Select Country</option>
-                                        <option value="none">None</option>
-                                        <option v-for="option in listCountryAll.data"
-                                                :value="option.id"
-                                                :key="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Language</label>
-                                    <select class="form-control" name="" v-model="filterModel.language_id">
-                                        <option value="">Select Language</option>
-                                        <option value="none">None</option>
-                                        <option v-for="option in listLanguages.data"
-                                                :value="option.id"
-                                                :key="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Commission</label>
-                                    <select class="form-control" name="" v-model="filterModel.commission">
-                                        <option value="">Select Commission</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Credit Authorization</label>
-                                    <select class="form-control" name="" v-model="filterModel.credit_auth">
-                                        <option value="">Select Credit Authorization</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
-                                <div class="form-group">
-                                    <label>Team In-charge</label>
-                                    <select class="form-control" v-model="filterModel.team_in_charge">
-                                        <option value="">All</option>
-                                        <option value="none">None</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Company Type</label>
-                                    <select class="form-control" v-model="filterModel.company_type">
-                                        <option value="">All</option>
-                                        <option value="1">Freelancer</option>
-                                        <option value="0">Company</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Company Name</label>
-                                    <input
-                                        v-model="filterModel.company_name"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Company URL</label>
-                                    <input
-                                        v-model="filterModel.company_url"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Account Validation</label>
-                                    <select class="form-control" v-model="filterModel.account_validation">
-                                        <option value="">All</option>
-                                        <option value="valid">Valid</option>
-                                        <option value="invalid">Invalid</option>
-                                        <option value="processing">Processing</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Date of Registration</label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            v-model="filterModel.created_at"
-                                            :linkedCalendars="true"
-                                            :dateRange="filterModel.created_at"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            ref="picker"
-                                            opens="left"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Account Verified</label>
-                                    <select class="form-control"
-                                            v-model="filterModel.account_verification">
-                                        <option value="">All</option>
-                                        <option value="Yes">Yes
-                                        </option>
-                                        <option value="No">No
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
-                                </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i
-                                    class="fa fa-refresh fa-spin"
-                                    v-if="isSearchLoading"></i></button>
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">Accounts</h3>
-                        <div class="card-tools">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Accounts</h3>
+                </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-left">
+                                <div class="btn-group">
+                                    <button
+                                        class="btn btn-default"
+                                        @click="selectAll">
+
+                                        {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Send Email"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="doSendEmail(null)">
+
+                                        <i class="fa fa-fw fa-envelope-o"></i>
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        title="Update multiple in charges"
+                                        class="btn btn-default"
+                                        :disabled="isDisabledAction"
+
+                                        @click="multipleUpdateInCharge">
+
+                                        <i class="fa fa-fw fa-user"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm float-right" style="width: 100px">
+                                <select
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;"
+                                    class="form-control float-right"
+
+                                    @change="getAccountList">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-setting"
+                                class="btn btn-default float-right mr-2">
+
+                                <i class="fa fa-cog"></i>
+                            </button>
+
+                            <button
+                                data-toggle="modal"
+                                data-target="#modal-registration"
+                                class="btn btn-success pull-right mr-2"
+
+                                @click="clearMessageform">
+
+                                Register
+                            </button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group input-group-sm float-left">
-                                    <div class="btn-group">
-                                        <button
-                                            class="btn btn-default"
-                                            @click="selectAll">
+                </div>
 
-                                            {{ !allSelected ? 'Select All' : 'Deselect All' }}
-                                        </button>
+                <div class="box-body no-padding relative">
 
-                                        <button
-                                            type="submit"
-                                            title="Send Email"
-                                            class="btn btn-default"
-                                            :disabled="isDisabledAction"
-
-                                            @click="doSendEmail(null)">
-
-                                            <i class="far fa-envelope"></i>
-                                        </button>
-
-                                        <button
-                                            type="submit"
-                                            title="Update multiple in charges"
-                                            class="btn btn-default"
-                                            :disabled="isDisabledAction"
-
-                                            @click="multipleUpdateInCharge">
-
-                                            <i class="fa fa-fw fa-user"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="input-group input-group-sm float-right" style="width: 100px">
-                                    <select
-                                        v-model="filterModel.paginate"
-                                        style="height: 37px;"
-                                        class="form-control float-right"
-
-                                        @change="getAccountList">
-
-                                        <option v-for="option in paginate" v-bind:value="option">
-                                            {{ option }}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <button
-                                    data-toggle="modal"
-                                    data-target="#modal-setting"
-                                    class="btn btn-default float-right mr-2">
-
-                                    <i class="fa fa-cog"></i>
-                                </button>
-
-                                <button
-                                    data-toggle="modal"
-                                    data-target="#modal-registration"
-                                    class="btn btn-success float-right mr-2"
-
-                                    @click="clearMessageform">
-
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-
-                        <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
-                        <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{
-                                listAccount.total
-                           }} entries.</b>
+                    <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
+                        <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.</b>
                     </span>
 
-                        <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
-                            <thead>
+                    <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
+                        <thead>
                             <tr class="label-primary">
                                 <th>#</th>
                                 <th></th>
@@ -330,8 +307,8 @@
                                 <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
                                 <th>Status</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <tr v-for="(account, index) in listAccount.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>
@@ -369,16 +346,13 @@
 
                                             @click="doSendEmail(account)">
 
-                                            <i class="far fa-envelope"></i>
+                                            <i class="fa fa-fw fa-envelope-o"></i>
                                         </button>
                                     </div>
                                 </td>
-                                <td v-show="tblAccountsOpt.user_id">
-                                    {{ account.user == null ? 'Not yet Verified' : account.user.id }}
-                                </td>
+                                <td v-show="tblAccountsOpt.user_id">{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                 <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
-                                <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin"
-                                    v-html="displayEmailPayment(account)"></td>
+                                <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin" v-html="displayEmailPayment(account)"></td>
                                 <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
                                 <td v-show="tblAccountsOpt.in_charge">
                                     {{
@@ -386,7 +360,7 @@
                                             ? 'N/A'
                                             : account.is_sub_account == 1
                                                 ? 'Sub'
-                                                : account.team_in_charge.username
+                                                :account.team_in_charge.username
                                     }}
 
                                     <span
@@ -398,15 +372,9 @@
                                 </td>
                                 <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                 <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
-                                <td v-show="tblAccountsOpt.country">
-                                    {{ account.country === null ? 'N/A' : account.country.name }}
-                                </td>
-                                <td v-show="tblAccountsOpt.language">
-                                    {{ account.language === null ? 'N/A' : account.language.name }}
-                                </td>
-                                <td v-show="tblAccountsOpt.company_type">
-                                    {{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}
-                                </td>
+                                <td v-show="tblAccountsOpt.country">{{ account.country === null ? 'N/A' : account.country.name }}</td>
+                                <td v-show="tblAccountsOpt.language">{{ account.language === null ? 'N/A' : account.language.name }}</td>
+                                <td v-show="tblAccountsOpt.company_type">{{ account.is_freelance == 1 ? 'Freelancer':'Company' }}</td>
                                 <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
                                 <td v-show="tblAccountsOpt.company_url">
                                     <a
@@ -416,25 +384,309 @@
                                     </a>
                                 </td>
                                 <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
-                                <td v-show="tblAccountsOpt.sub_account">{{
-                                        account.is_sub_account == 0 ? 'No' : 'Yes'
-                                                                        }}
-                                </td>
-                                <td v-show="tblAccountsOpt.under_of_main_buyer">
-                                    {{ account.is_sub_account == 0 ? '' : account.team_in_charge.username }}
-                                </td>
+                                <td v-show="tblAccountsOpt.sub_account">{{ account.is_sub_account == 0 ? 'No':'Yes' }}</td>
+                                <td v-show="tblAccountsOpt.under_of_main_buyer">{{ account.is_sub_account == 0 ?  '':account.team_in_charge.username }}</td>
                                 <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
                                 <td>{{ account.status }}</td>
                             </tr>
-                            </tbody>
+                        </tbody>
+                    </table>
+                    <pagination :data="listAccount" @pagination-change-page="getAccountList" :limit="8"></pagination>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal Update Registration -->
+        <div class="modal fade" id="modal-update-registration" ref="modalUpdateAccount" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Account</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                    </div>
+                    <div class="modal-body">
+
+                        <h4 class="text-primary">Account Information</h4>
+                        <hr/>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-warning" v-show="!isVerified">
+                                    <p>
+                                        This account is not yet verified. Please click 'Verified Account' to proceed.
+                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">Verified Account</button>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Account Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
+                                        <option value="Seller">Seller</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Writer">Writer</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Username <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Skype</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
+                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
+                                        <option value="Company">Company</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
+                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-show="updateCompanyName">
+                                <div class="form-group">
+                                    <label>Company URL</label>
+                                    <input type="text" class="form-control" v-model="accountUpdate.company_url">
+                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <select class="form-control" v-model="accountUpdate.country_id">
+                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Language</label>
+                                    <select class="form-control" v-model="accountUpdate.language_id">
+                                        <option value=null>None</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <textarea class="form-control" v-model="accountUpdate.address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Info</label>
+                                    <textarea class="form-control" v-model="accountUpdate.info"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr/>
+                        <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                        <hr/>
+
+                        <div class="row" v-show="updateDisplayWriterPrice">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Pricing type</label>
+                                    <select class="form-control" v-model="accountUpdate.rate_type">
+                                        <option value="ppw">Pay Per Words (PPW)</option>
+                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" >
+                                <div class="form-group">
+                                    <label>Price (USD)<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
+                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <hr/>
+                        <h4 class="text-primary">Payment Information</h4>
+                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
+
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label>Paypal Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.paypal_account">
+                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label>BTC Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.btc_account">
+                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label>Skril Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.skrill_account">
+                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;">
+                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
                         </table>
-                        <pagination :data="listAccount"
-                                    @pagination-change-page="getAccountList"
-                                    :limit="8"></pagination>
+
+                        <hr/>
+                        <h4 class="text-primary">Internal Information</h4>
+                        <hr/>
+
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Commission <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.commission">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>Status</label>
+                                <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>Credit Authorization</label>
+                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label>Team In-charge</label>
+                                <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
+                                    <option value="">N/A</option>
+                                    <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                        {{ option.username == null || option.username == '' ? option.name:option.username}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
+                                <label>Account Validation <span class="text-danger">*</span></label>
+                                <select class="form-control" name="" v-model="accountUpdate.account_validation">
+                                    <option value="valid">Valid</option>
+                                    <option value="invalid">Invalid</option>
+                                    <option value="processing">Processing</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- End of Modal Update Registration -->
 
         <!-- Modal Registration -->
         <div class="modal fade" id="modal-registration" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -732,6 +984,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
                     </div>
 
                     <div class="modal-body relative">
@@ -761,6 +1015,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Send email</h4>
+                        <div class="modal-load overlay float-right">
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                            <span
+                                v-if="messageForms.message != ''"
+                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                                {{ messageForms.message }}
+                            </span>
+                        </div>
                     </div>
 
                     <div class="modal-body relative">
@@ -868,15 +1130,15 @@
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                                     <label style="color: #333">Content</label>
 
-                                    <!--                                    <textarea-->
-                                    <!--                                        v-model="modelMail.content"-->
-                                    <!--                                        value=""-->
-                                    <!--                                        rows="10"-->
-                                    <!--                                        type="text"-->
-                                    <!--                                        required="required"-->
-                                    <!--                                        class="form-control">-->
+<!--                                    <textarea-->
+<!--                                        v-model="modelMail.content"-->
+<!--                                        value=""-->
+<!--                                        rows="10"-->
+<!--                                        type="text"-->
+<!--                                        required="required"-->
+<!--                                        class="form-control">-->
 
-                                    <!--                                    </textarea>-->
+<!--                                    </textarea>-->
 
                                     <tiny-editor editor-id="registrationEmailEditor" v-model="modelMail.content" ref="registrationEmailEditor"></tiny-editor>
 
@@ -921,296 +1183,6 @@
             </div>
         </div>
         <!-- End Modal Send Email -->
-
-        <!-- Modal Update Registration -->
-        <div class="modal fade" id="modal-update-registration" ref="modalUpdateAccount" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Account</h5>
-                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
-
-                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
-                            {{ messageForms.message }}
-                        </span>
-                    </div>
-                    <div class="modal-body">
-
-                        <h4 class="text-primary">Account Information</h4>
-                        <hr/>
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-warning" v-show="!isVerified">
-                                    <p>
-                                        This account is not yet verified. Please click 'Verified Account' to proceed.
-                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">Verified Account</button>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Account Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Username <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Email <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Skype</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Confirm Password</label>
-                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
-                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>Company URL</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_url">
-                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <select class="form-control" v-model="accountUpdate.country_id">
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Language</label>
-                                    <select class="form-control" v-model="accountUpdate.language_id">
-                                        <option value=null>None</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <textarea class="form-control" v-model="accountUpdate.address"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Info</label>
-                                    <textarea class="form-control" v-model="accountUpdate.info"></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <hr/>
-                        <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
-                        <hr/>
-
-                        <div class="row" v-show="updateDisplayWriterPrice">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Pricing type</label>
-                                    <select class="form-control" v-model="accountUpdate.rate_type">
-                                        <option value="ppw">Pay Per Words (PPW)</option>
-                                        <option value="ppa">Pay Per Article (PPA)</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6" >
-                                <div class="form-group">
-                                    <label>Price (USD)<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <hr/>
-                        <h4 class="text-primary">Payment Information</h4>
-                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
-
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>Paypal Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.paypal_account">
-                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>BTC Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.btc_account">
-                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>Skril Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.skrill_account">
-                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                        </table>
-
-                        <hr/>
-                        <h4 class="text-primary">Internal Information</h4>
-                        <hr/>
-
-                        <div class="row">
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Commission <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.commission">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <label>Status</label>
-                                <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <label>Credit Authorization</label>
-                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <label>Team In-charge</label>
-                                <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
-                                    <option value="">N/A</option>
-                                    <option v-for="option in listTeamIncharge" v-bind:value="option.id">
-                                        {{ option.username == null || option.username == '' ? option.name:option.username}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
-                                <label>Account Validation <span class="text-danger">*</span></label>
-                                <select class="form-control" name="" v-model="accountUpdate.account_validation">
-                                    <option value="valid">Valid</option>
-                                    <option value="invalid">Invalid</option>
-                                    <option value="processing">Processing</option>
-                                </select>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End of Modal Update Registration -->
 
         <!-- Modal Multiple Update In Charge -->
         <div
@@ -1275,854 +1247,841 @@ import {createTags} from "@johmun/vue-tags-input";
 import TinyEditor from "../../../components/editor/TinyEditor";
 
 export default {
-    components : {TermsAndConditions, TinyEditor},
-    data() {
-        return {
-            paginate : [
-                15,
-                25,
-                50,
-                100,
-                200,
-                250,
-                'All'
-            ],
-            accountModel : {
-                name : '',
-                email : '',
-                phone : '',
-                password : '',
-                c_password : '',
-                type : '',
-                company_name : '',
-                company_url : '',
-                skype : '',
-                id_payment_type : '',
-                payment_email : '',
-                payment_account : '',
-                skrill_account : '',
-                paypal_account : '',
-                btc_account : '',
-                commission : '',
-                team_in_charge : '',
-                account_validation : '',
-                address : '',
-                info : '',
-                country_id : '',
-                language_id : '',
-                company_type : 'Company',
-                writer_price : '',
-                rate_type : '',
-            },
-
-            filterModel : {
-                type : this.$route.query.type || '',
-                search : this.$route.query.search || '',
-                status : this.$route.query.status || '',
-                paginate : this.$route.query.paginate || '15',
-                team_in_charge : this.$route.query.team_in_charge || '',
-                country : this.$route.query.country || '',
-                language_id : this.$route.query.language_id || '',
-                commission : this.$route.query.commission || '',
-                credit_auth : this.$route.query.credit_auth || '',
-                company_type : this.$route.query.company_type || '',
-                company_name : this.$route.query.company_name || '',
-                company_url : this.$route.query.company_url || '',
-                account_validation : this.$route.query.account_validation || '',
-                created_at : {
-                    startDate : null,
-                    endDate : null
+        components: {TermsAndConditions, TinyEditor},
+        data() {
+            return {
+                paginate: [15,25,50,100,200,250,'All'],
+                accountModel: {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    c_password: '',
+                    type: '',
+                    company_name: '',
+                    company_url: '',
+                    skype: '',
+                    id_payment_type: '',
+                    payment_email: '',
+                    payment_account: '',
+                    skrill_account:'',
+                    paypal_account:'',
+                    btc_account:'',
+                    commission: '',
+                    team_in_charge: '',
+                    account_validation: '',
+                    address: '',
+                    info: '',
+                    country_id: '',
+                    language_id: '',
+                    company_type: 'Company',
+                    writer_price: '',
+                    rate_type: '',
                 },
-                account_verification :
+
+                filterModel: {
+                    type: this.$route.query.type || '',
+                    search: this.$route.query.search || '',
+                    status: this.$route.query.status || '',
+                    paginate: this.$route.query.paginate || '15',
+                    team_in_charge: this.$route.query.team_in_charge || '',
+                    country: this.$route.query.country || '',
+                    language_id: this.$route.query.language_id || '',
+                    commission: this.$route.query.commission || '',
+                    credit_auth: this.$route.query.credit_auth || '',
+                    company_type: this.$route.query.company_type || '',
+                    company_name: this.$route.query.company_name || '',
+                    company_url: this.$route.query.company_url || '',
+                    account_validation: this.$route.query.account_validation || '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    account_verification:
                     this.$route.query.account_verification || ''
-            },
+                },
 
-            accountUpdate : {
-                id : '',
-                name : '',
-                email : '',
-                phone : '',
-                password : '',
-                c_password : '',
-                type : '',
-                company_name : '',
-                company_url : '',
-                skype : '',
-                id_payment_type : '',
-                payment_email : '',
-                payment_account : '',
-                commission : '',
-                status : '',
-                skrill_account : '',
-                paypal_account : '',
-                btc_account : '',
-                username : '',
-                team_in_charge : '',
-                account_validation : '',
-                address : '',
-                info : '',
-                country_id : '',
-                language_id : '',
-                company_type : '',
-                writer_price : '',
-                rate_type : '',
-            },
+                accountUpdate: {
+                    id: '',
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    c_password: '',
+                    type: '',
+                    company_name: '',
+                    company_url: '',
+                    skype: '',
+                    id_payment_type: '',
+                    payment_email: '',
+                    payment_account: '',
+                    commission: '',
+                    status: '',
+                    skrill_account:'',
+                    paypal_account:'',
+                    btc_account:'',
+                    username:'',
+                    team_in_charge:'',
+                    account_validation: '',
+                    address: '',
+                    info: '',
+                    country_id: '',
+                    language_id: '',
+                    company_type: '',
+                    writer_price: '',
+                    rate_type: '',
+                },
 
-            isPopupLoading : false,
-            isSearchLoading : false,
-            isDisabled : true,
-            isTeamSeller : true,
-            isSearching : false,
-            addCompanyName : true,
-            updateCompanyName : true,
-            listTeamIncharge : [],
-            isVerified : true,
-            btnTermsAndConditions : false,
-            isDisableSubmit : true,
-            allowSending : false,
+                isPopupLoading: false,
+                isSearchLoading: false,
+                isDisabled: true,
+                isTeamSeller: true,
+                isSearching: false,
+                addCompanyName: true,
+                updateCompanyName: true,
+                listTeamIncharge: [],
+                isVerified: true,
+                btnTermsAndConditions: false,
+                isDisableSubmit: true,
+                allowSending: false,
 
-            // for email sending
-            mailInfo : {
-                tpl : 0,
-                ids : '',
-                receiver_text : '',
-                country : {
-                    id : 0,
-                    name : '',
-                    code : ''
-                }
-            },
-
-            modelMail : {
-                title : '',
-                content : '',
-                mail_name : '',
-            },
-            email_to : '',
-            registrationEmails : [],
-            separators : [
-                ';',
-                ',',
-                '|',
-                ' '
-            ],
-            addDisplayWriterPrice : false,
-            updateDisplayWriterPrice : false,
-
-            checkIds : [],
-            isDisabledAction : true,
-            allSelected : false,
-            updateMultipleInCharge : '',
-
-            listUserEmail : [],
-        }
-    },
-
-    async created() {
-        this.getAccountList();
-        this.getPaymentTypeList();
-        this.checkAccessRole();
-        this.getTeamInCharge();
-        this.checkTeamSeller();
-        this.getListCountries();
-        this.getListLanguages();
-        this.getListEmails();
-    },
-
-    computed : {
-        ...mapState({
-            tblAccountsOpt : state => state.storeAccount.tblAccountsOpt,
-            messageForms : state => state.storeAccount.messageForms,
-            messageFormsExt : state => state.storeExtDomain.messageForms,
-            messageFormsMail : state => state.storeMailgun.messageForms,
-            listAccount : state => state.storeAccount.listAccount,
-            listPayment : state => state.storeAccount.listPayment,
-            listIncharge : state => state.storeAccount.listIncharge,
-            user : state => state.storeAuth.currentUser,
-            listCountryAll : state => state.storePublisher.listCountryAll,
-            listLanguages : state => state.storePublisher.listLanguages,
-            listMailTemplate : state => state.storeExtDomain.listMailTemplate,
-        }),
-
-        adminAccessOptions() {
-            let self = this;
-            const emails = self.listUserEmail;
-
-            emails.forEach(item => {
-                if (item.work_mail === self.user.work_mail_orig) {
-                    item.role.name = 'Me';
-                }
-            });
-
-            return emails;
-        },
-    },
-
-    methods : {
-        ...mapActions({
-            clearMessageFormEmail : "clearMessageform",
-        }),
-
-        modalCloser() {
-            if (this.modelMail.title || this.modelMail.content) {
-
-                swal.fire({
-                    title : "Are you sure?",
-                    text : "Email contents will be removed",
-                    icon : "warning",
-                    showCancelButton : true,
-                    confirmButtonText : 'Yes',
-                    cancelButtonText : 'No'
-                })
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            // remove all images inserted on editor
-                            this.$refs.registrationEmailEditor.deleteImages('All');
-
-                            this.closeModal()
-                            this.clearMailModel()
-                        }
-                    });
-
-            } else {
-                this.$refs.registrationEmailEditor.deleteImages('All');
-                this.clearMailModel()
-                this.closeModal()
-            }
-        },
-
-        closeModal() {
-            let element = this.$refs.modalEmailRegistration
-            $(element).modal('hide')
-        },
-
-        clearMailModel() {
-            this.modelMail = {
-                title : '',
-                content : '',
-                mail_name : '',
-            }
-        },
-
-        getListEmails() {
-            axios.get('/api/mail/get-mail-list').then((response) => {
-                this.listUserEmail = response.data;
-            });
-        },
-
-        selectAll() {
-            this.checkIds = [];
-            if (!this.allSelected) {
-                for (let account in this.listAccount.data) {
-                    this.checkIds.push(this.listAccount.data[account]);
-                }
-            }
-            this.allSelected = !this.allSelected;
-            this.checkSelected()
-        },
-
-        checkSelected() {
-            this.isDisabledAction = this.checkIds.length <= 0;
-        },
-
-        doSendEmail(data) {
-            this.registrationEmails = [];
-            let emails = [];
-
-            if (this.user.work_mail) {
-
-                if (data === null) {
-
-                    if (this.checkIds.length === 0) {
-                        swal.fire('Invalid', 'Selection is empty.', 'error');
-                    } else if (this.checkIds.length > 10) {
-                        swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
-                    } else {
-                        this.checkIds.forEach(function (item) {
-                            if (item.email !== "" || item.email != null) {
-                                if (typeof (item.email) === "string") {
-                                    emails.push(item.email.split('|'))
-                                } else {
-                                    emails.push(item.email.map(a => a.text))
-                                }
-                            }
-                        })
-
-                        this.registrationEmails = createTags(emails.flat())
-
-                        this.openSendEmailModal();
+                // for email sending
+                mailInfo: {
+                    tpl: 0,
+                    ids: '',
+                    receiver_text: '',
+                    country: {
+                        id: 0,
+                        name: '',
+                        code: ''
                     }
+                },
+
+                modelMail: {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                },
+                email_to: '',
+                registrationEmails: [],
+                separators: [';', ',', '|', ' '],
+                addDisplayWriterPrice: false,
+                updateDisplayWriterPrice: false,
+
+                checkIds: [],
+                isDisabledAction: true,
+                allSelected: false,
+                updateMultipleInCharge: '',
+
+                listUserEmail: [],
+            }
+        },
+
+        async created() {
+            this.getAccountList();
+            this.getPaymentTypeList();
+            this.checkAccessRole();
+            this.getTeamInCharge();
+            this.checkTeamSeller();
+            this.getListCountries();
+            this.getListLanguages();
+            this.getListEmails();
+        },
+
+        computed: {
+            ...mapState({
+                tblAccountsOpt: state => state.storeAccount.tblAccountsOpt,
+                messageForms: state => state.storeAccount.messageForms,
+                messageFormsExt: state => state.storeExtDomain.messageForms,
+                messageFormsMail: state => state.storeMailgun.messageForms,
+                listAccount: state => state.storeAccount.listAccount,
+                listPayment: state => state.storeAccount.listPayment,
+                listIncharge: state => state.storeAccount.listIncharge,
+                user: state => state.storeAuth.currentUser,
+                listCountryAll: state => state.storePublisher.listCountryAll,
+                listLanguages: state => state.storePublisher.listLanguages,
+                listMailTemplate: state => state.storeExtDomain.listMailTemplate,
+            }),
+
+            adminAccessOptions() {
+                let self = this;
+                const emails = self.listUserEmail;
+
+                emails.forEach(item => {
+                    if (item.work_mail === self.user.work_mail_orig) {
+                        item.role.name = 'Me';
+                    }
+                });
+
+                return emails;
+            },
+        },
+
+        methods: {
+            ...mapActions({
+                clearMessageFormEmail: "clearMessageform",
+            }),
+
+            modalCloser() {
+                if (this.modelMail.title || this.modelMail.content) {
+
+                    swal.fire({
+                        title: "Are you sure?",
+                        text: "Email contents will be removed",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                // remove all images inserted on editor
+                                this.$refs.registrationEmailEditor.deleteImages('All');
+
+                                this.closeModal()
+                                this.clearMailModel()
+                            }
+                        });
 
                 } else {
+                    this.$refs.registrationEmailEditor.deleteImages('All');
+                    this.clearMailModel()
+                    this.closeModal()
+                }
+            },
 
-                    if (typeof (data.email) === "string") {
-                        emails = data.email.split('|')
+            closeModal() {
+                let element = this.$refs.modalEmailRegistration
+                $(element).modal('hide')
+            },
+
+            clearMailModel() {
+                this.modelMail = {
+                    title: '',
+                    content: '',
+                    mail_name: '',
+                }
+            },
+
+            getListEmails() {
+                axios.get('/api/mail/get-mail-list').then((response) => {
+                    this.listUserEmail = response.data;
+                });
+            },
+
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (let account in this.listAccount.data) {
+                        this.checkIds.push(this.listAccount.data[account]);
+                    }
+                }
+                this.allSelected = !this.allSelected;
+                this.checkSelected()
+            },
+
+            checkSelected() {
+                this.isDisabledAction = this.checkIds.length <= 0;
+            },
+
+            doSendEmail(data) {
+                this.registrationEmails = [];
+                let emails = [];
+
+                if (this.user.work_mail) {
+
+                    if (data === null) {
+
+                        if (this.checkIds.length === 0) {
+                            swal.fire('Invalid', 'Selection is empty.', 'error');
+                        } else if (this.checkIds.length > 10) {
+                            swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        } else {
+                            this.checkIds.forEach(function (item) {
+                                if (item.email !== "" || item.email != null) {
+                                    if (typeof(item.email) === "string") {
+                                        emails.push(item.email.split('|'))
+                                    } else {
+                                        emails.push(item.email.map(a => a.text))
+                                    }
+                                }
+                            })
+
+                            this.registrationEmails = createTags(emails.flat())
+
+                            this.openSendEmailModal();
+                        }
+
                     } else {
-                        emails = data.email.map(a => a.text);
+
+                        if (typeof(data.email) === "string") {
+                            emails = data.email.split('|')
+                        } else {
+                            emails = data.email.map(a => a.text);
+                        }
+
+                        this.registrationEmails = emails ? createTags(emails) : [];
+
+                        this.openSendEmailModal();
+
+                    }
+                } else {
+                    swal.fire(
+                        'Error',
+                        'Please setup your work mail first.',
+                        'error'
+                    )
+                }
+            },
+
+            openSendEmailModal() {
+                let element = this.$refs.modalEmailRegistration;
+                $(element).modal('show');
+                this.allowSending = true;
+            },
+
+            doChangeEmailCountry() {
+                let that = this, data = {};
+                let list = this.listLanguages.data
+
+                list.forEach(function (item) {
+                    if (item.id === that.mailInfo.country.id) {
+                        data = item;
+                    }
+                });
+
+                this.mailInfo.country.id = data.id;
+                this.mailInfo.country.name = data.name;
+                this.mailInfo.country.code = data.code;
+
+                this.fetchTemplateMail(this.mailInfo.country.id);
+            },
+
+            async fetchTemplateMail(countryId) {
+                await this.$store.dispatch('getListMails', {params: {country_id: countryId, full_page: 1}});
+            },
+
+            async doChangeEmailTemplate() {
+                let that = this;
+                this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+                this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
+            },
+
+            convertLineBreaks(str) {
+                return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            },
+
+            async submitSendMail() {
+                this.allowSending = false;
+
+                // create form data
+
+                let formData = new FormData();
+                formData.append('cc', '');
+                formData.append('email', JSON.stringify(this.registrationEmails));
+                formData.append('title',  this.modelMail.title);
+                formData.append('content', this.modelMail.content);
+                formData.append('work_mail', this.user.work_mail);
+
+                // get attachments
+
+                let attachments = this.$refs.file_send_registration.files;
+
+                if (!attachments.length) {
+                    formData.append('attachment', 'undefined');
+                } else {
+                    for (let i = 0; i < attachments.length; i++) {
+                        formData.append('attachment[]', attachments[i]);
+                    }
+                }
+
+                // await this.$store.dispatch('sendMailWithMailgun', {
+                //     cc: '',
+                //     email: this.registrationEmails,
+                //     title: this.modelMail.title,
+                //     content: this.modelMail.content,
+                //     attachment: 'undefined',
+                // })
+
+                await this.$store.dispatch('actionSendMailgun', formData);
+
+                if (this.messageFormsMail.action === 'success') {
+                    // remove all images inserted on editor
+                    this.$refs.registrationEmailEditor.deleteImages('Removed');
+
+                    this.modelMail = {
+                        title: '',
+                        content: '',
+                        mail_name: '',
                     }
 
-                    this.registrationEmails = emails ? createTags(emails) : [];
+                    $("#modal-email-registration").modal('hide')
 
-                    this.openSendEmailModal();
+                    await swal.fire(
+                        'Success',
+                        'Email successfully sent',
+                        'success'
+                    )
+                    this.allowSending = true;
 
+                    this.checkIds = [];
+                    this.checkSelected();
+                    this.allSelected = false;
+
+                    this.$refs.file_send_registration.value = "";
+
+                    // clear message forms
+
+                    this.clearMessageFormMail()
+                } else {
+                    await swal.fire(
+                        'Error',
+                        'There are some errors while sending the email',
+                        'error'
+                    )
+                    this.allowSending = true;
                 }
-            } else {
-                swal.fire(
-                    'Error',
-                    'Please setup your work mail first.',
-                    'error'
-                )
-            }
-        },
+            },
 
-        openSendEmailModal() {
-            let element = this.$refs.modalEmailRegistration;
-            $(element).modal('show');
-            this.allowSending = true;
-        },
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
-        doChangeEmailCountry() {
-            let that = this, data = {};
-            let list = this.listLanguages.data
+            displayEmailPayment(account) {
+                let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '':account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
+                let btc_email = account.btc_account == null || account.btc_account == '' ? '':account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
+                let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '':account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
+                let email = '';
 
-            list.forEach(function (item) {
-                if (item.id === that.mailInfo.country.id) {
-                    data = item;
-                }
-            });
+                email = paypal_email + btc_email + skrill_email;
 
-            this.mailInfo.country.id = data.id;
-            this.mailInfo.country.name = data.name;
-            this.mailInfo.country.code = data.code;
+                return email;
+            },
 
-            this.fetchTemplateMail(this.mailInfo.country.id);
-        },
+            async verifiedAccount() {
 
-        async fetchTemplateMail(countryId) {
-            await this.$store.dispatch('getListMails', {params : {country_id : countryId, full_page : 1}});
-        },
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
 
-        async doChangeEmailTemplate() {
-            let that = this;
-            this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
-            this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
-        },
+                if (this.messageForms.action === 'verified_account') {
+                    this.isVerified = true;
 
-        convertLineBreaks(str) {
-            return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        },
+                    this.getAccountList();
 
-        async submitSendMail() {
-            this.allowSending = false;
-
-            // create form data
-
-            let formData = new FormData();
-            formData.append('cc', '');
-            formData.append('email', JSON.stringify(this.registrationEmails));
-            formData.append('title', this.modelMail.title);
-            formData.append('content', this.modelMail.content);
-            formData.append('work_mail', this.user.work_mail);
-
-            // get attachments
-
-            let attachments = this.$refs.file_send_registration.files;
-
-            if (!attachments.length) {
-                formData.append('attachment', 'undefined');
-            } else {
-                for (let i = 0; i < attachments.length; i++) {
-                    formData.append('attachment[]', attachments[i]);
-                }
-            }
-
-            // await this.$store.dispatch('sendMailWithMailgun', {
-            //     cc: '',
-            //     email: this.registrationEmails,
-            //     title: this.modelMail.title,
-            //     content: this.modelMail.content,
-            //     attachment: 'undefined',
-            // })
-
-            await this.$store.dispatch('actionSendMailgun', formData);
-
-            if (this.messageFormsMail.action === 'success') {
-                // remove all images inserted on editor
-                this.$refs.registrationEmailEditor.deleteImages('Removed');
-
-                this.modelMail = {
-                    title : '',
-                    content : '',
-                    mail_name : '',
+                    swal.fire(
+                        'Success',
+                        'Account Successfully Verified!',
+                        'success'
+                    );
+                } else {
+                    swal.fire(
+                        'Error',
+                        'Account Not Verified!',
+                        'error'
+                    );
                 }
 
-                $("#modal-email-registration").modal('hide')
+                this.isPopupLoading = false;
 
-                await swal.fire(
-                    'Success',
-                    'Email successfully sent',
-                    'success'
-                )
-                this.allowSending = true;
+                //  axios.post('/api/verify-account', this.accountUpdate)
+                // .then((res) => {
+                //     if( res.data.success === true ) {
+                //         this.isVerified = true;
+                //
+                //         swal.fire(
+                //             'Verify',
+                //             'Successfully Verified!',
+                //             'success'
+                //         );
+                //     }
+                // })
+            },
 
-                this.checkIds = [];
-                this.checkSelected();
-                this.allSelected = false;
-
-                this.$refs.file_send_registration.value = "";
-
-                // clear message forms
-
-                this.clearMessageFormMail()
-            } else {
-                await swal.fire(
-                    'Error',
-                    'There are some errors while sending the email',
-                    'error'
-                )
-                this.allowSending = true;
-            }
-        },
-
-        async getListLanguages() {
-            await this.$store.dispatch('actionGetListLanguages');
-        },
-
-        displayEmailPayment(account) {
-            let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '' : account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
-            let btc_email = account.btc_account == null || account.btc_account == '' ? '' : account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
-            let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '' : account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
-            let email = '';
-
-            email = paypal_email + btc_email + skrill_email;
-
-            return email;
-        },
-
-        async verifiedAccount() {
-
-            this.isPopupLoading = true;
-            await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
-
-            if (this.messageForms.action === 'verified_account') {
-                this.isVerified = true;
-
-                this.getAccountList();
-
-                swal.fire(
-                    'Success',
-                    'Account Successfully Verified!',
-                    'success'
-                );
-            } else {
-                swal.fire(
-                    'Error',
-                    'Account Not Verified!',
-                    'error'
-                );
-            }
-
-            this.isPopupLoading = false;
-
-            //  axios.post('/api/verify-account', this.accountUpdate)
-            // .then((res) => {
-            //     if( res.data.success === true ) {
-            //         this.isVerified = true;
-            //
-            //         swal.fire(
-            //             'Verify',
-            //             'Successfully Verified!',
-            //             'success'
-            //         );
-            //     }
-            // })
-        },
-
-        checkVerified() {
-            axios.get('/api/get-verified-account', {
-                params : {
-                    email : this.accountUpdate.email
-                }
-            })
+            checkVerified() {
+                axios.get('/api/get-verified-account',{
+                    params: {
+                        email: this.accountUpdate.email
+                    }
+                })
                 .then((res) => {
-                    if (res.data.success === true) {
+                    if( res.data.success === true ) {
                         this.isVerified = res.data.success
                     }
                 })
                 .catch(res => {
-                    if (res.response.data.success === false) {
+                    if( res.response.data.success === false ) {
                         this.isVerified = res.response.data.success
                     }
                 })
-        },
+            },
 
-        checkTeamIncharge(method) {
-            let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
+            checkTeamIncharge(method) {
+                let role = (method == 'add') ? this.accountModel.type : this.accountUpdate.type;
 
-            if (role == 'Writer') {
-                this.addDisplayWriterPrice = true;
-                this.updateDisplayWriterPrice = true;
-            } else {
-                this.addDisplayWriterPrice = false;
-                this.updateDisplayWriterPrice = false;
-            }
-
-            axios.get('/api/team-in-charge-per-role', {
-                params : {
-                    role : role
+                if(role == 'Writer') {
+                    this.addDisplayWriterPrice = true;
+                    this.updateDisplayWriterPrice = true;
+                } else{
+                    this.addDisplayWriterPrice = false;
+                    this.updateDisplayWriterPrice = false;
                 }
-            })
-                .then((res) => {
+
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
                     this.listTeamIncharge = res.data
                 })
-        },
+            },
 
-        checkTeamInchargeMultiple(role) {
-            axios.get('/api/team-in-charge-per-role', {
-                params : {
-                    role : role
-                }
-            })
-                .then((res) => {
+            checkTeamInchargeMultiple(role) {
+                axios.get('/api/team-in-charge-per-role',{
+                    params: {
+                        role: role
+                    }
+                })
+                .then((res)=> {
                     this.listTeamIncharge = res.data
                 })
-        },
+            },
 
-        multipleUpdateInCharge() {
+            multipleUpdateInCharge() {
 
-            let self = this;
+                let self = this;
 
-            // check if account types are all the same
+                // check if account types are all the same
 
-            let same = self.checkIds.every(id => id.type === self.checkIds[0].type)
+                let same = self.checkIds.every(id => id.type === self.checkIds[0].type)
 
-            if (same) {
+                if (same) {
 
-                this.checkTeamInchargeMultiple(this.checkIds[0].type)
-
-                let element = this.$refs.modalMultipleUpdateIncharge
-                $(element).modal('show')
-
-            } else {
-                swal.fire('Invalid', 'Selected items must have the same account type', 'error');
-            }
-
-        },
-
-        submitUpdateMultipleInCharge() {
-            let ids = [];
-            for (let index in this.checkIds) {
-                ids.push(this.checkIds[index].id)
-            }
-
-            axios.post('/api/update-multiple-in-charge', {
-                ids : ids,
-                emp_id : this.updateMultipleInCharge
-            }).then((res) => {
-                if (res.data.success === true) {
+                    this.checkTeamInchargeMultiple(this.checkIds[0].type)
 
                     let element = this.$refs.modalMultipleUpdateIncharge
-                    $(element).modal('hide')
+                    $(element).modal('show')
+
+                } else {
+                    swal.fire('Invalid', 'Selected items must have the same account type', 'error');
+                }
+
+            },
+
+            submitUpdateMultipleInCharge() {
+                let ids = [];
+                for(let index in this.checkIds) {
+                    ids.push(this.checkIds[index].id)
+                }
+
+                axios.post('/api/update-multiple-in-charge',{
+                    ids: ids,
+                    emp_id: this.updateMultipleInCharge
+                }).then((res) => {
+                    if(res.data.success === true) {
+
+                        let element = this.$refs.modalMultipleUpdateIncharge
+                        $(element).modal('hide')
+
+                        swal.fire(
+                            'Success',
+                            'Updated Successfully',
+                            'success'
+                        )
+
+                        this.updateMultipleInCharge = '';
+                        this.doSearch()
+                    }
+                })
+            },
+
+            checkCompanyType() {
+                if(this.accountModel.company_type == 'Company') {
+                    this.addCompanyName = true;
+                } else {
+                    this.addCompanyName = false;
+                }
+
+                if(this.accountUpdate.company_type == 'Company') {
+                    this.updateCompanyName = true;
+                } else {
+                    this.updateCompanyName = false;
+                }
+            },
+
+            async getListCountries(params) {
+                await this.$store.dispatch('actionGetListCountries', params);
+            },
+
+            async submitAdd(){
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionAddAccount', this.accountModel);
+                this.isPopupLoading = false;
+
+                if (this.messageForms.action === 'saved_account') {
+                    this.clearAccountModel();
+                    this.getAccountList({
+                        params: this.filterModel
+                    });
 
                     swal.fire(
-                        'Success',
-                        'Updated Successfully',
+                        'Saved',
+                        'Successfully Added!',
                         'success'
-                    )
+                    );
 
-                    this.updateMultipleInCharge = '';
-                    this.doSearch()
+                    this.isDisableSubmit = true;
+                    this.btnTermsAndConditions = false;
                 }
-            })
-        },
+            },
 
-        checkCompanyType() {
-            if (this.accountModel.company_type == 'Company') {
-                this.addCompanyName = true;
-            } else {
-                this.addCompanyName = false;
-            }
+            async submitUpdate(){
+                let self = this
 
-            if (this.accountUpdate.company_type == 'Company') {
-                this.updateCompanyName = true;
-            } else {
-                this.updateCompanyName = false;
-            }
-        },
-
-        async getListCountries(params) {
-            await this.$store.dispatch('actionGetListCountries', params);
-        },
-
-        async submitAdd() {
-            this.isPopupLoading = true;
-            await this.$store.dispatch('actionAddAccount', this.accountModel);
-            this.isPopupLoading = false;
-
-            if (this.messageForms.action === 'saved_account') {
-                this.clearAccountModel();
-                this.getAccountList({
-                    params : this.filterModel
-                });
-
-                swal.fire(
-                    'Saved',
-                    'Successfully Added!',
-                    'success'
-                );
-
-                this.isDisableSubmit = true;
-                this.btnTermsAndConditions = false;
-            }
-        },
-
-        async submitUpdate() {
-            let self = this
-
-            swal.fire({
-                title : "Update Account",
-                html : "Are you sure that you want to update the information?",
-                icon : "question",
-                showCancelButton : true,
-                confirmButtonText : 'Yes',
-                cancelButtonText : 'No'
-            })
+                swal.fire({
+                    title: "Update Account",
+                    html: "Are you sure that you want to update the information?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                })
                 .then((result) => {
                     if (result.isConfirmed) {
                         self.saveUpdate()
                     }
                 });
-        },
+            },
 
-        async saveUpdate() {
-            this.isPopupLoading = true;
-            await this.$store.dispatch('actionUpdateAccount', this.accountUpdate);
-            this.isPopupLoading = false;
+            async saveUpdate() {
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdateAccount', this.accountUpdate);
+                this.isPopupLoading = false;
 
-            if (this.messageForms.action === 'updated_account') {
-                swal.fire(
-                    'Updated',
-                    'Successfully Updated!',
-                    'success'
-                );
+                if (this.messageForms.action === 'updated_account') {
+                    swal.fire(
+                        'Updated',
+                        'Successfully Updated!',
+                        'success'
+                    );
 
-                let element = this.$refs.modalUpdateAccount;
-                $(element).modal('hide');
+                    let element = this.$refs.modalUpdateAccount;
+                    $(element).modal('hide');
 
-                this.getAccountList();
-            } else {
-                swal.fire(
-                    'Error',
-                    'There are some errors while updating the account!',
-                    'error'
-                );
-            }
-        },
-
-        async getTeamInCharge() {
-            await this.$store.dispatch('actionGetTeamInCharge');
-        },
-
-        checkTeamSeller() {
-            if (this.user.isOurs == 0 && this.user.role_id == 6) {
-                this.isTeamSeller = false;
-            }
-        },
-
-        checkAccessRole() {
-            this.isDisabled = true;
-            if (this.user.isAdmin || (this.user.role_id == 7 && this.user.isOurs == 0)) {
-                this.isDisabled = false;
-            }
-        },
-
-        clearMessageform() {
-            this.$store.dispatch('clearMessageFormAccount');
-        },
-
-        clearMessageFormMail() {
-            this.clearMessageFormEmail()
-        },
-
-        doUpdateAccount(account) {
-            this.clearMessageform();
-            let that = JSON.parse(JSON.stringify(account))
-            this.accountUpdate = that
-            this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
-            this.accountUpdate.password = '';
-            this.accountUpdate.c_password = '';
-            this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
-            this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company' : 'Freelancer';
-
-            this.checkTeamIncharge('update');
-            this.checkVerified();
-        },
-
-        async getPaymentTypeList(params) {
-            await this.$store.dispatch('actionGetListPayentType', params);
-        },
-
-        async getAccountList(page = 1) {
-
-            $("#tbl_account").DataTable().destroy();
-            this.isLoadingTable = true;
-            this.isSearchLoading = true;
-            this.isSearching = true;
-            await this.$store.dispatch('actionGetAccount', {
-                params : {
-                    type : this.filterModel.type,
-                    status : this.filterModel.status,
-                    search : this.filterModel.search,
-                    paginate : this.filterModel.paginate,
-                    team_in_charge : this.filterModel.team_in_charge,
-                    country : this.filterModel.country,
-                    language_id : this.filterModel.language_id,
-                    commission : this.filterModel.commission,
-                    credit_auth : this.filterModel.credit_auth,
-                    company_type : this.filterModel.company_type,
-                    company_name : this.filterModel.company_name,
-                    company_url : this.filterModel.company_url,
-                    account_validation : this.filterModel.account_validation,
-                    created_at : this.filterModel.created_at,
-                    account_verification :
-                    this.filterModel.account_verification,
-                    page : page
+                    this.getAccountList();
+                } else {
+                    swal.fire(
+                        'Error',
+                        'There are some errors while updating the account!',
+                        'error'
+                    );
                 }
-            });
-            this.isLoadingTable = false;
-            this.isSearchLoading = false;
-            this.isSearching = false;
+            },
 
-            $("#tbl_account").DataTable({
-                paging : false,
-                searching : false,
-                columnDefs : [
-                    {orderable : true, targets : 0},
-                    {orderable : true, targets : 3},
-                    {orderable : true, targets : 4},
-                    {orderable : true, targets : 5},
-                    {orderable : true, targets : 6},
-                    {orderable : true, targets : 7},
-                    {orderable : true, targets : 8},
-                    {orderable : true, targets : 9},
-                    {orderable : true, targets : 10},
-                    {orderable : true, targets : 11},
-                    {orderable : true, targets : 12},
-                    {orderable : true, targets : 13},
-                    {orderable : true, targets : 14},
-                    {orderable : true, targets : 15},
-                    {orderable : true, targets : 16},
-                    {orderable : true, targets : 17},
-                    {orderable : true, targets : 18},
-                    {orderable : true, targets : 19},
-                    {orderable : false, targets : '_all'}
-                ],
-            });
-        },
+            async getTeamInCharge(){
+                await this.$store.dispatch('actionGetTeamInCharge');
+            },
 
-        clearSearch() {
-            this.filterModel = {
-                type : '',
-                status : '',
-                search : '',
-                paginate : '15',
-                team_in_charge : '',
-                company_type : '',
-                commission : '',
-                credit_auth : '',
-                company_name : '',
-                company_url : '',
-                account_validation : '',
-                country : '',
-                language_id : '',
-                created_at : {
-                    startDate : null,
-                    endDate : null
-                },
-                account_verification : ''
-            }
-
-            this.getAccountList({
-                params : this.filterModel
-            });
-
-            this.$router.replace({'query' : null});
-
-            this.resetSelectAll()
-        },
-
-        async doSearch() {
-            this.$router.push({
-                query : this.filterModel,
-            });
-
-            this.getAccountList({
-                params : {
-                    status : this.filterModel.status,
-                    search : this.filterModel.search,
-                    type : this.filterModel.type,
-                    paginate : this.filterModel.paginate,
-                    team_in_charge : this.filterModel.team_in_charge,
-                    country : this.filterModel.country,
-                    language_id : this.filterModel.language_id,
-                    company_type : this.filterModel.company_type,
-                    commission : this.filterModel.commission,
-                    credit_auth : this.filterModel.credit_auth,
-                    company_name : this.filterModel.company_name,
-                    company_url : this.filterModel.company_url,
-                    account_validation : this.filterModel.account_validation,
-                    created_at : this.filterModel.created_at,
-                    account_verification :
-                    this.filterModel.account_verification
+            checkTeamSeller() {
+                if( this.user.isOurs == 0 && this.user.role_id == 6 ){
+                    this.isTeamSeller = false;
                 }
-            });
+            },
 
-            this.resetSelectAll()
-        },
+            checkAccessRole() {
+                this.isDisabled = true;
+                if( this.user.isAdmin || (this.user.role_id == 7 && this.user.isOurs == 0)){
+                    this.isDisabled = false;
+                }
+            },
 
-        clearAccountModel() {
-            this.accountModel = {
-                name : '',
-                email : '',
-                phone : '',
-                password : '',
-                c_password : '',
-                type : '',
-                company_name : '',
-                company_url : '',
-                skype : '',
-                id_payment_type : '',
-                payment_email : '',
-                payment_account : '',
-                commission : '',
-                team_in_charge : '',
-                info : '',
-                address : '',
-                country_id : '',
-            };
-        },
+            clearMessageform() {
+                this.$store.dispatch('clearMessageFormAccount');
+            },
 
-        resetSelectAll() {
-            this.checkIds = [];
-            this.allSelected = true;
-            this.selectAll();
-        },
+            clearMessageFormMail(){
+                this.clearMessageFormEmail()
+            },
 
-        columnAdjust() {
-            this.$nextTick(() => {
-                $('#tbl_account').DataTable().columns.adjust()
-            });
-        },
+            doUpdateAccount(account){
+                this.clearMessageform();
+                let that = JSON.parse(JSON.stringify(account))
+                this.accountUpdate = that
+                this.accountUpdate.team_in_charge = that.team_in_charge == null ? '':that.team_in_charge.id;
+                this.accountUpdate.password = '';
+                this.accountUpdate.c_password = '';
+                this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '':that.writer_price;
+                this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company':'Freelancer';
 
-        humanize(string) {
-            let i, frags = string.split('_');
+                this.checkTeamIncharge('update');
+                this.checkVerified();
+            },
 
-            for (i = 0; i < frags.length; i++) {
-                frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+            async getPaymentTypeList(params) {
+                await this.$store.dispatch('actionGetListPayentType', params);
+            },
+
+            async getAccountList(page = 1) {
+
+                $("#tbl_account").DataTable().destroy();
+                this.isLoadingTable = true;
+                this.isSearchLoading = true;
+                this.isSearching = true;
+                await this.$store.dispatch('actionGetAccount', {
+                    params: {
+                        type: this.filterModel.type,
+                        status: this.filterModel.status,
+                        search: this.filterModel.search,
+                        paginate: this.filterModel.paginate,
+                        team_in_charge: this.filterModel.team_in_charge,
+                        country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
+                        commission: this.filterModel.commission,
+                        credit_auth: this.filterModel.credit_auth,
+                        company_type: this.filterModel.company_type,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification,
+                        page: page
+                    }
+                });
+                this.isLoadingTable = false;
+                this.isSearchLoading = false;
+                this.isSearching = false;
+
+                $("#tbl_account").DataTable({
+                    paging: false,
+                    searching: false,
+                    columnDefs: [
+                        { orderable: true, targets: 0 },
+                        { orderable: true, targets: 3 },
+                        { orderable: true, targets: 4 },
+                        { orderable: true, targets: 5 },
+                        { orderable: true, targets: 6 },
+                        { orderable: true, targets: 7 },
+                        { orderable: true, targets: 8 },
+                        { orderable: true, targets: 9 },
+                        { orderable: true, targets: 10 },
+                        { orderable: true, targets: 11 },
+                        { orderable: true, targets: 12 },
+                        { orderable: true, targets: 13 },
+                        { orderable: true, targets: 14 },
+                        { orderable: true, targets: 15 },
+                        { orderable: true, targets: 16 },
+                        { orderable: true, targets: 17 },
+                        { orderable: true, targets: 18 },
+                        { orderable: true, targets: 19 },
+                        { orderable: false, targets: '_all' }
+                    ],
+                });
+            },
+
+            clearSearch() {
+                this.filterModel = {
+                    type: '',
+                    status: '',
+                    search: '',
+                    paginate: '15',
+                    team_in_charge: '',
+                    company_type: '',
+                    commission: '',
+                    credit_auth: '',
+                    company_name: '',
+                    company_url: '',
+                    account_validation: '',
+                    country: '',
+                    language_id: '',
+                    created_at: {
+                        startDate: null,
+                        endDate: null
+                    },
+                    account_verification: ''
+                }
+
+                this.getAccountList({
+                    params: this.filterModel
+                });
+
+                this.$router.replace({'query': null});
+
+                this.resetSelectAll()
+            },
+
+            async doSearch(){
+                this.$router.push({
+                    query: this.filterModel,
+                });
+
+                this.getAccountList({
+                    params: {
+                        status: this.filterModel.status,
+                        search: this.filterModel.search,
+                        type: this.filterModel.type,
+                        paginate: this.filterModel.paginate,
+                        team_in_charge: this.filterModel.team_in_charge,
+                        country: this.filterModel.country,
+                        language_id: this.filterModel.language_id,
+                        company_type: this.filterModel.company_type,
+                        commission: this.filterModel.commission,
+                        credit_auth: this.filterModel.credit_auth,
+                        company_name: this.filterModel.company_name,
+                        company_url: this.filterModel.company_url,
+                        account_validation: this.filterModel.account_validation,
+                        created_at: this.filterModel.created_at,
+                        account_verification:
+                        this.filterModel.account_verification
+                    }
+                });
+
+                this.resetSelectAll()
+            },
+
+            clearAccountModel() {
+                this.accountModel = {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    c_password: '',
+                    type: '',
+                    company_name: '',
+                    company_url: '',
+                    skype: '',
+                    id_payment_type: '',
+                    payment_email: '',
+                    payment_account: '',
+                    commission: '',
+                    team_in_charge: '',
+                    info: '',
+                    address: '',
+                    country_id: '',
+                };
+            },
+
+            resetSelectAll(){
+                this.checkIds = [];
+                this.allSelected = true;
+                this.selectAll();
+            },
+
+            columnAdjust(){
+                this.$nextTick(() => {
+                    $('#tbl_account').DataTable().columns.adjust()
+                });
+            },
+
+            humanize(string) {
+                let i, frags = string.split('_');
+
+                for (i=0; i < frags.length; i++) {
+                    frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+                }
+
+                return frags.join(' ');
             }
-
-            return frags.join(' ');
         }
     }
-}
 </script>

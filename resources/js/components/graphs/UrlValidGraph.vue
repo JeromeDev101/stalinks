@@ -1,12 +1,13 @@
 <template>
-    <div class="col-sm-12">
-        <div class="card card-outline card-secondary">
-            <div class="card-header">
-                <h3 class="card-title text-primary">URLs Validation</h3>
-                <div class="card-tools">
-                </div>
+    <div class="col-lg-12">
+        <div class="box box-primary" style="padding-bottom:0.5em;">
+            <div class="box-header">
+                <h3
+                    class="box-title text-primary">URLs Validation
+                </h3>
             </div>
-            <div class="card-body">
+
+            <div class="box-body">
                 <div class="row">
 
                     <div class="col-md-2">
@@ -37,11 +38,9 @@
                             <button
                                 class="btn btn-default col-md-6"
                                 @click="filterUrlValid">
-                                Filter
-                            </button>
+                                Filter</button>
                             <button
-                                class="btn btn-default" @click="clearUrlValidFilter">Clear
-                            </button>
+                                class="btn btn-default" @click="clearUrlValidFilter">Clear</button>
                         </div>
                     </div>
                 </div>
@@ -69,15 +68,15 @@ export default {
 
     data() {
         return {
-            filterModel : {
+            filterModel: {
                 urlValid : {
-                    dateRange : {
-                        startDate : null,
-                        endDate : null
+                    dateRange: {
+                        startDate: null,
+                        endDate: null
                     },
                 },
             },
-            urlValidData : []
+            urlValidData: []
         };
     },
 
@@ -85,13 +84,13 @@ export default {
         this.getUrlValidData();
     },
 
-    computed : {
+    computed: {
         urlValidChartOptions() {
             return url_valid.urlValidGraphSetting();
         },
     },
 
-    methods : {
+    methods: {
         filterUrlValid() {
             if (this.filterModel.urlValid.dateRange.startDate !=
                 null &&

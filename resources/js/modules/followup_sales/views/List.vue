@@ -1,277 +1,256 @@
 <template>
-    <div>
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0"></h1>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
+    <div class="row">
+        <div class="col-sm-12">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
-                        <div class="card-tools" style="float: left!important;">
-                            <button class="btn btn-primary ml-5"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#collapseExample"
-                                    aria-expanded="false"
-                                    aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
-                            </button>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Filter</h3>
+                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fa fa-plus"></i> Show Filter
+                    </button>
+                </div>
+
+                <div class="box-body m-3 collapse" id="collapseExample">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search URL Publisher</label>
+                                <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Search ID Backlink</label>
+                                <input type="text" class="form-control" v-model="filterModel.backlink_id" name="" aria-describedby="helpId" placeholder="Type here">
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <v-select multiple
+                                          v-model="filterModel.status" :options="statusBacklinkQc" :searchable="false" placeholder="All"/>
+<!--                                <select name="" class="form-control" v-model="filterModel.status">-->
+<!--                                    <option value="">All</option>-->
+<!--                                    <option v-for="status in statusBacklinkQc" v-bind:value="status">{{ status }}</option>-->
+<!--                                </select>-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Seller</label>
+                                <select name="" class="form-control" v-model="filterModel.seller">
+                                    <option value="">All</option>
+                                    <option v-for="option in listSeller.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2" v-if="user.isOurs != 1">
+                            <div class="form-group">
+                                <label for="">Buyer</label>
+                                <select name="" class="form-control" v-model="filterModel.buyer">
+                                    <option value="">All</option>
+                                    <option v-for="option in listBuyer.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <select name="" class="form-control" v-model="filterModel.country_id">
+                                    <option value="">All</option>
+                                    <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Article</label>
+                                <select name="" class="form-control" v-model="filterModel.article">
+                                    <option value="">All</option>
+                                    <option value="With">With</option>
+                                    <option value="Without">Without</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">In charge</label>
+                                <select name="" class="form-control" v-model="filterModel.in_charge">
+                                    <option value="">All</option>
+                                    <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                        {{ option.username == null ? option.name:option.username}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Process Date
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.process_date"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.process_date"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="">Date Completed
+                                </label>
+                                <div class="input-group">
+                                    <date-range-picker
+                                        ref="picker"
+                                        v-model="filterModel.date_completed"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        :dateRange="filterModel.date_completed"
+                                        :linkedCalendars="true"
+                                        opens="right"
+                                        style="width: 100%"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
-                    <div class="card-body collapse" id="collapseExample">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
-                                </div>
-                            </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input type="text" class="form-control" v-model="filterModel.backlink_id" name="" aria-describedby="helpId" placeholder="Type here">
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Status</label>
-                                    <v-select multiple
-                                              v-model="filterModel.status" :options="statusBacklinkQc" :searchable="false" placeholder="All"/>
-                                    <!--                                <select name="" class="form-control" v-model="filterModel.status">-->
-                                    <!--                                    <option value="">All</option>-->
-                                    <!--                                    <option v-for="status in statusBacklinkQc" v-bind:value="status">{{ status }}</option>-->
-                                    <!--                                </select>-->
-                                </div>
-                            </div>
-
-                            <div class="col-md-2" v-if="user.isOurs != 1">
-                                <div class="form-group">
-                                    <label for="">Seller</label>
-                                    <select name="" class="form-control" v-model="filterModel.seller">
-                                        <option value="">All</option>
-                                        <option v-for="option in listSeller.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2" v-if="user.isOurs != 1">
-                                <div class="form-group">
-                                    <label for="">Buyer</label>
-                                    <select name="" class="form-control" v-model="filterModel.buyer">
-                                        <option value="">All</option>
-                                        <option v-for="option in listBuyer.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Country</label>
-                                    <select name="" class="form-control" v-model="filterModel.country_id">
-                                        <option value="">All</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Article</label>
-                                    <select name="" class="form-control" v-model="filterModel.article">
-                                        <option value="">All</option>
-                                        <option value="With">With</option>
-                                        <option value="Without">Without</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">In charge</label>
-                                    <select name="" class="form-control" v-model="filterModel.in_charge">
-                                        <option value="">All</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Process Date
-                                    </label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            ref="picker"
-                                            v-model="filterModel.process_date"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            :dateRange="filterModel.process_date"
-                                            :linkedCalendars="true"
-                                            opens="right"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Date Completed
-                                    </label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            ref="picker"
-                                            v-model="filterModel.date_completed"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            :dateRange="filterModel.date_completed"
-                                            :linkedCalendars="true"
-                                            opens="right"
-                                            style="width: 100%"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Follow up Sales</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Follow up Sales</h3>
 
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                                        <select name=""
-                                                class="form-control float-right"
-                                                @change="getListSales"
-                                                v-model="filterModel.paginate"
-                                                style="height: 37px;">
-                                            <option v-for="option in paginate" v-bind:value="option">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <button data-toggle="modal"
-                                            data-target="#modal-setting"
-                                            class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                                </td>
-                            </tr>
-                        </table>
+                    <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
 
-                        <span class="pagination-custom-footer-text">
-                            <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
-                        </span>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select name="" class="form-control float-right" @change="getListSales" v-model="filterModel.paginate" style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
+                <div class="box-body no-padding">
+                    <span class="pagination-custom-footer-text">
+                        <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
+                    </span>
+
+                    <div class="box-body no-padding relative">
                         <table id="tbl-followupsales"
                                class="table table-hover table-bordered table-striped rlink-table" style="height: 650px;">
                             <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th v-show="tblOptions.pub_id">Url Pub</th>
-                                <th v-show="tblOptions.blink_id">Blink</th>
-                                <th v-show="tblOptions.arc_id">Artc</th>
-                                <th v-show="tblOptions.country">Country</th>
-                                <th v-show="tblOptions.in_charge">In-charge</th>
-                                <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
-                                <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
-                                <th v-show="tblOptions.url">URL Publisher</th>
-                                <th v-show="tblOptions.price">Price</th>
-                                <th v-show="tblOptions.link_from">Link From</th>
-                                <th v-show="tblOptions.link_to">Link To</th>
-                                <th v-show="tblOptions.anchor_text">Anchor Text</th>
-                                <th v-show="tblOptions.date_process">Date for Proccess</th>
-                                <th v-show="tblOptions.date_complete">Date Completed</th>
-                                <th v-show="tblOptions.status">Status</th>
-                                <th>Action</th>
-                            </tr>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th v-show="tblOptions.pub_id">Url Pub</th>
+                                    <th v-show="tblOptions.blink_id">Blink</th>
+                                    <th v-show="tblOptions.arc_id">Artc</th>
+                                    <th v-show="tblOptions.country">Country</th>
+                                    <th v-show="tblOptions.in_charge">In-charge</th>
+                                    <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
+                                    <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
+                                    <th v-show="tblOptions.url">URL Publisher</th>
+                                    <th v-show="tblOptions.price">Price</th>
+                                    <th v-show="tblOptions.link_from">Link From</th>
+                                    <th v-show="tblOptions.link_to">Link To</th>
+                                    <th v-show="tblOptions.anchor_text">Anchor Text</th>
+                                    <th v-show="tblOptions.date_process">Date for Proccess</th>
+                                    <th v-show="tblOptions.date_complete">Date Completed</th>
+                                    <th v-show="tblOptions.status">Status</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(sales, index) in listSales.data" :key="index">
-                                <td>{{ index + 1}}</td>
-                                <td
-                                    v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
-                                <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
-                                <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td
-                                    v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
-                                <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td
-                                    v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
-                                <td
-                                    v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
-                                <td v-show="tblOptions.url">
-                                    <!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
-                                    <span v-if="sales.publisher == null">
+                                <tr v-for="(sales, index) in listSales.data" :key="index">
+                                    <td>{{ index + 1}}</td>
+                                    <td
+                                        v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
+                                    <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
+                                    <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
+                                    <td
+                                        v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
+                                    <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
+                                    <td
+                                        v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
+                                    <td
+                                        v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
+                                    <td v-show="tblOptions.url">
+    <!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
+                                        <span v-if="sales.publisher == null">
                                             N/A
                                         </span>
-                                    <span v-else>
+                                        <span v-else>
                                             <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
                                                 {{ replaceCharacters(sales.publisher.url) }}
                                             </a>
                                         </span>
-                                </td>
-                                <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
-                                <td v-show="tblOptions.link_from">
-                                    <div class="dont-break-out">
-                                        {{ sales.link_from }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.link_to">
-                                    <div class="dont-break-out">
-                                        {{ sales.link }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
-                                <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
-                                <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
-                                <td v-show="tblOptions.status">{{ sales.status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
+                                    <td v-show="tblOptions.link_from">
+                                        <div class="dont-break-out">
+                                            {{ sales.link_from }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.link_to">
+                                        <div class="dont-break-out">
+                                            {{ sales.link }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
+                                    <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
+                                    <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
+                                    <td v-show="tblOptions.status">{{ sales.status }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
         <!-- Modal Update Sales -->
@@ -500,6 +479,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Setting Default</h4>
+                        <div class="modal-load overlay float-right">
+                        </div>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
