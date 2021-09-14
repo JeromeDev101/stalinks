@@ -47,7 +47,7 @@ mix.styles([
 mix.scripts([
     'node_modules/treantjs/vendor/raphael.js',
     'node_modules/treantjs/Treant.js',
-    'node_modules/admin-lte/dist/js/adminlte.min.js',
+    'node_modules/admin-lte/dist/js/demo.js',
     'node_modules/alertifyjs/build/alertify.min.js',
     'node_modules/jquery-freeze-table/dist/js/freeze-table.js',
     'node_modules/datatables.net/js/jquery.dataTables.js',
