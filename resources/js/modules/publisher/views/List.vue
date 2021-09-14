@@ -1,417 +1,441 @@
 <template>
-    <div class="row">
-        <div class="col-sm-12">
+    <div>
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0"></h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
 
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Filter</h3>
-                    <button class="btn btn-primary ml-5" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fa fa-plus"></i> Show Filter
-                    </button>
-                </div>
-
-                <div class="box-body m-3 collapse" id="collapseExample">
-                    <!-- external users filters -->
-                    <div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Search URL</label>
-                                    <input
-                                        v-model="filterModel.search"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Type here"
-                                        aria-describedby="helpId">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Language</label>
-                                    <select class="form-control" v-model="filterModel.language_id">
-                                        <option value="">All</option>
-                                        <option value="na">N/A</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Continent</label>
-                                    <v-select
-                                        v-model="filterModel.continent_id"
-                                        multiple
-                                        label="name"
-                                        placeholder="All"
-                                        :options="listContinent.data"
-                                        :searchable="true"
-                                        :reduce="continent => continent.id"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Country</label>
-                                    <v-select
-                                        v-model="filterModel.country_id"
-                                        multiple
-                                        label="name"
-                                        placeholder="All"
-                                        :searchable="true"
-                                        :options="filterCountrySelect"
-                                        :reduce="country => country.id"/>
-<!--                                        <select class="form-control" v-model="filterModel.country_id">-->
-<!--                                            <option value="">All</option>-->
-<!--                                            <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
-<!--                                                {{ option.name }}-->
-<!--                                            </option>-->
-<!--                                        </select>-->
-
-                                    <small class="font-italic text-primary" v-if="country_continent_filter_info">
-                                        <i class="fa fa-exclamation-circle"></i>
-                                        {{ country_continent_filter_info }}
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Domain Zone</label>
-                                    <v-select
-                                        v-model="filterModel.domain_zone"
-                                        multiple
-                                        label="name"
-                                        placeholder="All"
-                                        :options="listDomainZones.data"
-                                        :searchable="true"
-                                        :reduce="domain => domain.name"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Is Https?</label>
-                                    <select class="form-control" v-model="filterModel.is_https">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Topic</label>
-                                    <!-- <select class="form-control" v-model="filterModel.topic">
-                                        <option value="">All</option>
-                                        <option v-for="option in topic" v-bind:value="option">
-                                            {{ option }}
-                                        </option>
-                                    </select> -->
-                                    <v-select
-                                        v-model="filterModel.topic"
-                                        multiple
-                                        placeholder="All"
-                                        :options="topicFilter"
-                                        :searchable="false"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-if="!isQc">
-                                <div class="form-group">
-                                    <label for="">Keyword Anchor</label>
-                                    <select class="form-control" v-model="filterModel.kw_anchor">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-3" v-if="!isQc">
-                                <div class="form-group">
-                                    <label>Include Article</label>
-                                    <select class="form-control" v-model="filterModel.inc_article">
-                                        <option value="">All</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-if="!isQc">
-                                <div class="form-group">
-                                    <label>Accept Casino & Betting Sites</label>
-                                    <select class="form-control" v-model="filterModel.casino_sites">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Price Basis</label>
-                                    <v-select
-                                        v-model="filterModel.price_basis"
-                                        multiple
-                                        placeholder="All"
-                                        :searchable="false"
-                                        :options="['Good', 'Average', 'High']"/>
-                                </div>
-                            </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Filter</h3>
+                        <div class="card-tools" style="float: left!important;">
+                            <button class="btn btn-primary ml-5"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#collapseExample"
+                                    aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                <i class="fa fa-plus"></i> Show Filter
+                            </button>
                         </div>
                     </div>
+                    <div class="card-body collapse" id="collapseExample">
+                        <!-- external users filters -->
+                        <div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Search URL</label>
+                                        <input
+                                            v-model="filterModel.search"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Type here"
+                                            aria-describedby="helpId">
+                                    </div>
+                                </div>
 
-                    <!-- internal team filters -->
-                    <div v-if="user.isAdmin || user.isOurs === 0">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>In charge</label>
-                                    <select class="form-control" v-model="filterModel.in_charge">
-                                        <option value="">All</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name:option.username}}
-                                        </option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Language</label>
+                                        <select class="form-control" v-model="filterModel.language_id">
+                                            <option value="">All</option>
+                                            <option value="na">N/A</option>
+                                            <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Continent</label>
+                                        <v-select
+                                            v-model="filterModel.continent_id"
+                                            multiple
+                                            label="name"
+                                            placeholder="All"
+                                            :options="listContinent.data"
+                                            :searchable="true"
+                                            :reduce="continent => continent.id"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Country</label>
+                                        <v-select
+                                            v-model="filterModel.country_id"
+                                            multiple
+                                            label="name"
+                                            placeholder="All"
+                                            :searchable="true"
+                                            :options="filterCountrySelect"
+                                            :reduce="country => country.id"/>
+                                        <!--                                        <select class="form-control" v-model="filterModel.country_id">-->
+                                        <!--                                            <option value="">All</option>-->
+                                        <!--                                            <option v-for="option in listCountryContinent.data" v-bind:value="option.id">-->
+                                        <!--                                                {{ option.name }}-->
+                                        <!--                                            </option>-->
+                                        <!--                                        </select>-->
+
+                                        <small class="font-italic text-primary" v-if="country_continent_filter_info">
+                                            <i class="fa fa-exclamation-circle"></i>
+                                            {{ country_continent_filter_info }}
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Seller</label>
-                                    <v-select
-                                        v-model="filterModel.seller"
-                                        multiple
-                                        label="username"
-                                        placeholder="All"
-                                        :searchable="true"
-                                        :options="listSeller.data"
-                                        :reduce="seller => seller.id"/>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Domain Zone</label>
+                                        <v-select
+                                            v-model="filterModel.domain_zone"
+                                            multiple
+                                            label="name"
+                                            placeholder="All"
+                                            :options="listDomainZones.data"
+                                            :searchable="true"
+                                            :reduce="domain => domain.name"/>
+                                    </div>
+                                </div>
 
-<!--                                        <select class="form-control" v-model="filterModel.seller">-->
-<!--                                            <option value="">All</option>-->
-<!--                                            <option v-for="option in listSeller.data" v-bind:value="option.id">-->
-<!--                                                {{ option.username == null ? option.name:option.username }}-->
-<!--                                            </option>-->
-<!--                                        </select>-->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Is Https?</label>
+                                        <select class="form-control" v-model="filterModel.is_https">
+                                            <option value="">All</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Topic</label>
+                                        <!-- <select class="form-control" v-model="filterModel.topic">
+                                            <option value="">All</option>
+                                            <option v-for="option in topic" v-bind:value="option">
+                                                {{ option }}
+                                            </option>
+                                        </select> -->
+                                        <v-select
+                                            v-model="filterModel.topic"
+                                            multiple
+                                            placeholder="All"
+                                            :options="topicFilter"
+                                            :searchable="false"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-if="!isQc">
+                                    <div class="form-group">
+                                        <label for="">Keyword Anchor</label>
+                                        <select class="form-control" v-model="filterModel.kw_anchor">
+                                            <option value="">All</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
-                                <div class="form-group">
-                                    <label>Account Validation</label>
-                                    <select class="form-control" v-model="filterModel.account_validation">
-                                        <option value="">All</option>
-                                        <option value="valid">Valid</option>
-                                        <option value="invalid">Invalid</option>
-                                        <option value="processing">Processing</option>
-                                    </select>
+                            <div class="row">
+                                <div class="col-md-3" v-if="!isQc">
+                                    <div class="form-group">
+                                        <label>Include Article</label>
+                                        <select class="form-control" v-model="filterModel.inc_article">
+                                            <option value="">All</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-if="!isQc">
+                                    <div class="form-group">
+                                        <label>Accept Casino & Betting Sites</label>
+                                        <select class="form-control" v-model="filterModel.casino_sites">
+                                            <option value="">All</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Price Basis</label>
+                                        <v-select
+                                            v-model="filterModel.price_basis"
+                                            multiple
+                                            placeholder="All"
+                                            :searchable="false"
+                                            :options="['Good', 'Average', 'High']"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Uploaded</label>
-<!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+                        <!-- internal team filters -->
+                        <div v-if="user.isAdmin || user.isOurs === 0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>In charge</label>
+                                        <select class="form-control" v-model="filterModel.in_charge">
+                                            <option value="">All</option>
+                                            <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                                {{ option.username == null ? option.name:option.username}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                                    <date-range-picker
-                                        v-model="filterModel.uploaded"
-                                        ref="picker"
-                                        opens="right"
-                                        style="width: 100%"
-                                        :linkedCalendars="true"
-                                        :dateRange="filterModel.uploaded"
-                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Seller</label>
+                                        <v-select
+                                            v-model="filterModel.seller"
+                                            multiple
+                                            label="username"
+                                            placeholder="All"
+                                            :searchable="true"
+                                            :options="listSeller.data"
+                                            :reduce="seller => seller.id"/>
+
+                                        <!--                                        <select class="form-control" v-model="filterModel.seller">-->
+                                        <!--                                            <option value="">All</option>-->
+                                        <!--                                            <option v-for="option in listSeller.data" v-bind:value="option.id">-->
+                                        <!--                                                {{ option.username == null ? option.name:option.username }}-->
+                                        <!--                                            </option>-->
+                                        <!--                                        </select>-->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
+                                    <div class="form-group">
+                                        <label>Account Validation</label>
+                                        <select class="form-control" v-model="filterModel.account_validation">
+                                            <option value="">All</option>
+                                            <option value="valid">Valid</option>
+                                            <option value="invalid">Invalid</option>
+                                            <option value="processing">Processing</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3" v-if="!isQc">
-                                <div class="form-group">
-                                    <label>Updated</label>
-<!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Uploaded</label>
+                                        <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
 
-                                    <date-range-picker
-                                        v-model="filterModel.date"
-                                        opens="left"
-                                        ref="picker"
-                                        style="width: 100%"
-                                        :linkedCalendars="true"
-                                        :dateRange="filterModel.date"
-                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                        <date-range-picker
+                                            v-model="filterModel.uploaded"
+                                            ref="picker"
+                                            opens="right"
+                                            style="width: 100%"
+                                            :linkedCalendars="true"
+                                            :dateRange="filterModel.uploaded"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-if="!isQc">
+                                    <div class="form-group">
+                                        <label>Updated</label>
+                                        <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+
+                                        <date-range-picker
+                                            v-model="filterModel.date"
+                                            opens="left"
+                                            ref="picker"
+                                            style="width: 100%"
+                                            :linkedCalendars="true"
+                                            :dateRange="filterModel.date"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Got Ahref</label>
+                                        <select class="form-control" v-model="filterModel.got_ahref">
+                                            <option value="">All</option>
+                                            <option value="With">With</option>
+                                            <option value="Without">Without</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Got Ahref</label>
-                                    <select class="form-control" v-model="filterModel.got_ahref">
-                                        <option value="">All</option>
-                                        <option value="With">With</option>
-                                        <option value="Without">Without</option>
-                                    </select>
+                            <div class="row">
+                                <div class="col-md-3"
+                                     v-show="user.isAdmin || user.role_id === 8">
+                                    <div class="form-group">
+                                        <label>QC Validation</label>
+                                        <select name="" class="form-control" v-model="filterModel.qc_validation">
+                                            <option value="">All</option>
+                                            <option value="na">N/A</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Valid</label>
+                                        <v-select
+                                            v-model="filterModel.valid"
+                                            multiple
+                                            placeholder="All"
+                                            :searchable="false"
+                                            :options="['valid','invalid','unchecked']"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8">
+                                    <div class="form-group">
+                                        <label>Show Duplicates</label>
+                                        <select class="form-control" v-model="filterModel.show_duplicates">
+                                            <option value="">All</option>
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-3"
-                                 v-show="user.isAdmin || user.role_id === 8">
-                                <div class="form-group">
-                                    <label>QC Validation</label>
-                                    <select name="" class="form-control" v-model="filterModel.qc_validation">
-                                        <option value="">All</option>
-                                        <option value="na">N/A</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Valid</label>
-                                    <v-select
-                                        v-model="filterModel.valid"
-                                        multiple
-                                        placeholder="All"
-                                        :searchable="false"
-                                        :options="['valid','invalid','unchecked']"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8">
-                                <div class="form-group">
-                                    <label>Show Duplicates</label>
-                                    <select class="form-control" v-model="filterModel.show_duplicates">
-                                        <option value="">All</option>
-                                        <option value="no">No</option>
-                                        <option value="yes">Yes</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                            <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="box">
-
-                <div class="box-header">
-                    <h3 class="box-title">Publisher URL List</h3>
-
-                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                        <select class="form-control float-right" @change="getPublisherList" v-model="filterModel.paginate" style="height: 37px;">
-                            <option v-for="option in paginate" v-bind:value="option">
-                                {{ option }}
-                            </option>
-                        </select>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Publisher URL List</h3>
+                        <div class="card-tools">
+                        </div>
                     </div>
-
-                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
-                    <button data-toggle="modal" @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()" data-target="#modal-add-url" class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL</button>
-                    <button v-if="user.isAdmin ||
-                    user.role_id == 8"
-                        class="btn btn-primary float-right" :disabled="isGenerating" @click="generateBestPrices">
-                        <span v-if="isGenerating">
-                            <i
-                                class="fa fa-spin fa-cog"></i> Generating...
-                        </span>
-                        <span v-else>
-                            Generate Best Price
-                        </span>
-                    </button>
-
-                    <div class="form-row">
-                        <div class="col-md-8 col-lg-6 my-3">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" v-on:change="checkDataExcel(); checkAccountValidity()" enctype="multipart/form-data" ref="excel" name="file">
-                                        <div class="input-group-btn">
-                                            <button
-                                                title="Upload CSV File"
-                                                class="btn btn-primary btn-flat"
-                                                :disabled="isEnableBtn || checkAccountValidity()"
-
-                                                @click="submitUpload">
-                                                <i class="fa fa-upload"></i>
-                                            </button>
-
-                                            <button
-                                                title="Download CSV Template"
-                                                class="btn btn-primary btn-flat"
-
-                                                @click="downloadTemplate">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-
-                                            <export-excel
-                                                name="master_list.xls"
-                                                worksheet="My Worksheet"
-                                                class="btn btn-primary btn-flat"
-                                                :data=masterListDataMethod()>
-
-                                                <i class="fa fa-list"></i>
-                                                Download List
-
-                                            </export-excel>
-                                        </div>
-                                    </div>
-                                    <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
-                                    <span v-if="messageForms.action == 'uploaded'" class="text-success">{{ messageForms.message }}</span>
-                                </div>
-                            </div>
-
-<!--                            <div class="row mt-3" v-show="showLang">-->
-<!--                                <div class="col-sm-12">-->
-<!--                                    <select class="form-control" name="language" ref="language" v-on:change="checkData">-->
-<!--                                        <option value="">Select language</option>-->
-<!--                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">-->
-<!--                                            {{ option.name }}-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                    <div class="card-body">
+                        <div class="input-group input-group-sm float-right" style="width: 100px">
+                            <select class="form-control float-right"
+                                    @change="getPublisherList"
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px;">
+                                <option v-for="option in paginate" v-bind:value="option">
+                                    {{ option }}
+                                </option>
+                            </select>
                         </div>
 
-                    </div>
+                        <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i
+                            class="fa fa-cog"></i></button>
+                        <button data-toggle="modal"
+                                @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()"
+                                data-target="#modal-add-url"
+                                class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL
+                        </button>
+                        <button v-if="user.isAdmin ||
+                    user.role_id == 8"
+                                class="btn btn-primary float-right"
+                                :disabled="isGenerating"
+                                @click="generateBestPrices">
+                            <span v-if="isGenerating">
+                                <i
+                                    class="fa fa-spin fa-cog"></i> Generating...
+                            </span>
+                                <span v-else>
+                                Generate Best Price
+                            </span>
+                        </button>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div
-                                v-if="checkAccountValidity() && showLang"
-                                class="alert alert-error">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="file"
+                                           class="form-control"
+                                           v-on:change="checkDataExcel(); checkAccountValidity()"
+                                           enctype="multipart/form-data"
+                                           ref="excel"
+                                           name="file">
+                                    <div class="input-group-btn">
+                                        <button
+                                            title="Upload CSV File"
+                                            class="btn btn-primary btn-flat"
+                                            :disabled="isEnableBtn || checkAccountValidity()"
 
-                                <p class="mb-0">
-                                    <strong>Unable to add URL because of the following:</strong>
-                                </p>
+                                            @click="submitUpload">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
 
-                                <ul class="font-italic">
-                                    <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
-                                    <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
-                                </ul>
+                                        <button
+                                            title="Download CSV Template"
+                                            class="btn btn-primary btn-flat"
 
-                                <div class="mb-0">
+                                            @click="downloadTemplate">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+
+                                        <export-excel
+                                            name="master_list.xls"
+                                            worksheet="My Worksheet"
+                                            class="btn btn-primary btn-flat"
+                                            :data=masterListDataMethod()>
+
+                                            <i class="fa fa-list"></i>
+                                            Download List
+
+                                        </export-excel>
+                                    </div>
+                                </div>
+                                <span v-if="messageForms.errors.file"
+                                      v-for="err in messageForms.errors.file"
+                                      class="text-danger">{{ err }}</span>
+                                <span v-if="messageForms.action == 'uploaded'"
+                                      class="text-success">{{ messageForms.message }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div
+                                    v-if="checkAccountValidity() && showLang"
+                                    class="alert alert-error">
+
+                                    <p class="mb-0">
+                                        <strong>Unable to add URL because of the following:</strong>
+                                    </p>
+
+                                    <ul class="font-italic">
+                                        <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
+                                        <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
+                                    </ul>
+
+                                    <div class="mb-0">
                                     <span>
                                         Logout and re-login to complete the process.
                                         <span v-if="this.isAccountPaymentNotComplete">
@@ -427,232 +451,228 @@
                                             for account validation.
                                         </span>
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <small v-show="user.isOurs == 0" class="text-secondary">
-                                Reminder: The uploaded data is for Seller -List Publisher.
-                                The columns for the CSV file are URL, Price, Inc Article, Seller ID,
-                                Accept C&B, KW Anchor,
-                                Language, Topic,
-                                Country and KW Anchor. The
-                                columns should be separated using comma (,).
-                                Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
-                                Keyword Anchor yes if accept KW no if only |URL|.
-                                Select the main language of the site for the language.
-                            </small>
-
-                            <small v-show="user.isOurs == 1" class="text-secondary">
-                                Reminder: The uploaded data is for Seller -List Publisher.
-                                The columns for the CSV
-                                file are URL, Price, Inc
-                                Article, Accept C&B, KW
-                                Anchor, Language, Topic
-                                and Country. The columns
-                                should be separated using comma (,).
-                                If you only have URL and Price is fine too. Price are in USD.
-                                Inc Article value is Yes/No. Keyword Anchor yes if accept KW no if only |URL|.
-                                Select the main language of the site for the language.
-                            </small>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="box-body no-padding" style="overflow:auto!important;">
-
-                    <div class="row mx-2">
-                        <div class="col-md-6 my-3">
-
-                            <div class="input-group">
-                                <button class="btn btn-default mr-2"
-                                        @click="selectAll">{{
-                                        allSelected
-                                            ?
-                                            "Deselect"
-                                            : "Select"
-                                    }} All
-                                </button>
-
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Selected Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
-                                        <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                        <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
-                                        <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
-                                        <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
-                                        <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
-                                        <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
-                                        <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
-                                        <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8">Generate Country</a>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="col-sm-12">
+                                <small v-show="user.isOurs == 0" class="text-secondary">
+                                    Reminder: The uploaded data is for Seller -List Publisher.
+                                    The columns for the CSV file are URL, Price, Inc Article, Seller ID,
+                                    Accept C&B, KW Anchor,
+                                    Language, Topic,
+                                    Country and KW Anchor. The
+                                    columns should be separated using comma (,).
+                                    Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
+                                    Keyword Anchor yes if accept KW no if only |URL|.
+                                    Select the main language of the site for the language.
+                                </small>
+
+                                <small v-show="user.isOurs == 1" class="text-secondary">
+                                    Reminder: The uploaded data is for Seller -List Publisher.
+                                    The columns for the CSV
+                                    file are URL, Price, Inc
+                                    Article, Accept C&B, KW
+                                    Anchor, Language, Topic
+                                    and Country. The columns
+                                    should be separated using comma (,).
+                                    If you only have URL and Price is fine too. Price are in USD.
+                                    Inc Article value is Yes/No. Keyword Anchor yes if accept KW no if only |URL|.
+                                    Select the main language of the site for the language.
+                                </small>
                             </div>
                         </div>
 
-                        <div class="col-md-6 my-3">
-                            <div class="d-flex flex-column align-items-end">
-                                <Sort
-                                    ref="sortComponent"
-                                    :sorted="isSorted"
-                                    :items="sortOptions"
+                        <div class="row mx-2">
+                            <div class="col-md-6 my-3">
 
-                                    @submitSort="sortPublisher"
-                                    @updateOptions="updateSortOptions">
-                                </Sort>
+                                <div class="input-group">
+                                    <button class="btn btn-default mr-2"
+                                            @click="selectAll">{{
+                                            allSelected
+                                                ?
+                                                "Deselect"
+                                                : "Select"
+                                                               }} All
+                                    </button>
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Selected Action
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
+                                            <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
+                                            <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                            <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
+                                            <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
+                                            <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
+                                            <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
+                                            <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
+                                            <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8">Generate Country</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 my-3">
+                                <div class="d-flex flex-column align-items-end">
+                                    <Sort
+                                        ref="sortComponent"
+                                        :sorted="isSorted"
+                                        :items="sortOptions"
+
+                                        @submitSort="sortPublisher"
+                                        @updateOptions="updateSortOptions">
+                                    </Sort>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text">
                         <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
                     </span>
 
-                    <vue-virtual-table
-                        v-if="!tableLoading"
-                        width="100%"
-                        :height="600"
-                        :bordered="true"
-                        :item-height="60"
-                        :config="tableConfig"
-                        :data="listPublish.data">
-                        <template
-                            slot-scope="scope"
-                            slot="actionSelectRow">
-                            <input type="checkbox"
-                                   class="custom-checkbox"
-                                   @change="checkSelected"
-                                   :id="scope.row.id"
-                                   :value="scope.row.id"
-                                   v-model="checkIds">
-                        </template>
+                        <vue-virtual-table
+                            v-if="!tableLoading"
+                            width="100%"
+                            :height="600"
+                            :bordered="true"
+                            :item-height="60"
+                            :config="tableConfig"
+                            :data="listPublish.data">
+                            <template
+                                slot-scope="scope"
+                                slot="actionSelectRow">
+                                <input type="checkbox"
+                                       class="custom-checkbox"
+                                       @change="checkSelected"
+                                       :id="scope.row.id"
+                                       :value="scope.row.id"
+                                       v-model="checkIds">
+                            </template>
 
-                        <!-- <template
-                            slot-scope="scope"
-                            slot="createdData">
-                            {{
-                            displayDate(scope.row.created_at) }}
-                        </template>
+                            <!-- <template
+                                slot-scope="scope"
+                                slot="createdData">
+                                {{
+                                displayDate(scope.row.created_at) }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="updatedData">
-                            {{
-                            displayDate(scope.row.updated_at) }}
-                        </template> -->
+                            <template
+                                slot-scope="scope"
+                                slot="updatedData">
+                                {{
+                                displayDate(scope.row.updated_at) }}
+                            </template> -->
 
-                        <template
-                            slot-scope="scope"
-                            slot="continentData">
-                            {{
-                                (scope.row.country_continent == null && scope.row.publisher_continent == null)
-                                    ? 'N/A'
-                                    : scope.row.publisher_continent
-                                        ? scope.row.publisher_continent
-                                        : scope.row.country_continent
-                            }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="continentData">
+                                {{
+                                    (scope.row.country_continent == null && scope.row.publisher_continent == null)
+                                        ? 'N/A'
+                                        : scope.row.publisher_continent
+                                            ? scope.row.publisher_continent
+                                            : scope.row.country_continent
+                                }}
+                            </template>
 
-                        <!-- <template
-                            slot-scope="scope"
-                            slot="topicData">
-                            {{ scope.row.topic == null ?
-                            'N/A':scope.row.topic }}
-                        </template> -->
+                            <!-- <template
+                                slot-scope="scope"
+                                slot="topicData">
+                                {{ scope.row.topic == null ?
+                                'N/A':scope.row.topic }}
+                            </template> -->
 
-                        <template
-                            slot-scope="scope"
-                            slot="inChargeData">
-                            {{ scope.row.in_charge == null ?
-                            'N/A':scope.row.in_charge }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="inChargeData">
+                                {{ scope.row.in_charge == null ?
+                                'N/A':scope.row.in_charge }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="usernameData">
-                            {{ scope.row.username ?
-                            scope.row.username :
-                            scope.row.user_name }}
+                            <template
+                                slot-scope="scope"
+                                slot="usernameData">
+                                {{ scope.row.username ?
+                                scope.row.username :
+                                scope.row.user_name }}
 
-                            <span
-                                v-if="scope.row.user_account_validation === 'invalid'
+                                <span
+                                    v-if="scope.row.user_account_validation === 'invalid'
                                 && (user.isAdmin
                                 || user.role_id === 8
                                 || user.role_id === 6)"
-                                class="badge badge-danger">
+                                    class="badge badge-danger">
                                 Invalid
                             </span>
-                        </template>
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="urlData">
-<!--                            {{ replaceCharacters(scope.row.url) }}-->
+                            <template
+                                slot-scope="scope"
+                                slot="urlData">
+                                <!--                            {{ replaceCharacters(scope.row.url) }}-->
 
-                            <a :href="'//' + scope.row.custom_url" target="_blank">
-                                {{ scope.row.custom_url }}
-                            </a>
-                        </template>
+                                <a :href="'//' + scope.row.custom_url" target="_blank">
+                                    {{ scope.row.custom_url }}
+                                </a>
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="priceData">
-                            {{ scope.row.price == '' ||
+                            <template
+                                slot-scope="scope"
+                                slot="priceData">
+                                {{ scope.row.price == '' ||
                             scope.row.price == null ?
-                            '':'$'}} {{
-                            scope.row.price }}
-                        </template>
+                                '':'$'}} {{
+                                    scope.row.price }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="priceBasisData">
-                            <i
-                                v-if="scope.row.price_basis == 'Good'" class="fa fa-star"
-                                style="color: green;"></i>
-                            <i
-                                v-else-if="scope.row.price_basis == 'Average'" class="fa fa-star"
-                               style="color: orange;"></i>
-                            <i
-                                v-else-if="scope.row.price_basis == 'High'"
-                               class="fa fa-star"
-                               style="color: red;"></i>
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="priceBasisData">
+                                <i
+                                    v-if="scope.row.price_basis == 'Good'" class="fa fa-star"
+                                    style="color: green;"></i>
+                                <i
+                                    v-else-if="scope.row.price_basis == 'Average'" class="fa fa-star"
+                                    style="color: orange;"></i>
+                                <i
+                                    v-else-if="scope.row.price_basis == 'High'"
+                                    class="fa fa-star"
+                                    style="color: red;"></i>
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="orgKeywordData">
-                            {{
-                            formatPrice(scope.row.org_keywords) }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="orgKeywordData">
+                                {{
+                                    formatPrice(scope.row.org_keywords) }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="orgTrafficData">
-                            {{
-                            formatPrice(scope.row.org_traffic) }}
-                        </template>
+                            <template
+                                slot-scope="scope"
+                                slot="orgTrafficData">
+                                {{
+                                    formatPrice(scope.row.org_traffic) }}
+                            </template>
 
-                        <template
-                            slot-scope="scope"
-                            slot="actionButtons">
-                            <div class="btn-group">
-                                <button
-                                    data-toggle="modal"
-                                    @click="doUpdate(scope.row)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                            </div>
-                        </template>
-                    </vue-virtual-table>
-                    <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
+                            <template
+                                slot-scope="scope"
+                                slot="actionButtons">
+                                <div class="btn-group">
+                                    <button
+                                        data-toggle="modal"
+                                        @click="doUpdate(scope.row)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                </div>
+                            </template>
+                        </vue-virtual-table>
+                        <pagination :data="listPublish" @pagination-change-page="getPublisherList" :limit="8"></pagination>
 
+                    </div>
                 </div>
             </div>
-
         </div>
 
         <!-- Modal Update Publisher -->
@@ -1011,8 +1031,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Setting Default</h4>
-                        <div class="modal-load overlay float-right">
-                        </div>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
@@ -1323,7 +1341,6 @@
             </div>
         </div>
         <!-- End Multiple Edit -->
-
     </div>
 </template>
 

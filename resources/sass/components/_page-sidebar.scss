@@ -1,24 +1,24 @@
-.page-sidebar {
-    background: $black-light;
-    width: 100%;
-    height: 100vh;
-    display: inline-block;
-    vertical-align: top;
-
-    &__item {
-        display: block;
-        padding: 8px 15px;
-        color: $white;
-        @include transition(all, .3s);
-
-        &:hover {
-            color: $white;
-            background: $black-lighter;
-            text-decoration: none;
-        }
-
-    }
-}
+//.page-sidebar {
+//    background: $black-light;
+//    width: 100%;
+//    height: 100vh;
+//    display: inline-block;
+//    vertical-align: top;
+//
+//    &__item {
+//        display: block;
+//        padding: 8px 15px;
+//        color: $white;
+//        //@include transition(all, .3s);
+//
+//        &:hover {
+//            color: $white;
+//            background: $black-lighter;
+//            text-decoration: none;
+//        }
+//
+//    }
+//}
 .skin-blue {
 .sidebar-menu{
 
@@ -60,15 +60,29 @@
 }
 
 .main-header-custom {
-    .logo-custom{
-        background-color:$white!important;
-        min-height: 69px!important;
-
-    img{
-        margin: 23px auto!important;
+    //.logo-custom{
+    //    background-color:$white!important;
+    //    min-height: 69px!important;
+    //
+    //    img{
+    //        margin: 23px auto!important;
+    //    }
+    //}
+    min-height: 70px;
+    background-color: #3c8dbc;
+    .nav-item > a {
+        color: #ffffff!important;
     }
-    }
 
+    .user-footer {
+        color: #333333;
+    }
 }
 
+.user-header {
+    background-color: #3c8dbc;
 
+    p {
+        color : #fff;
+    }
+}

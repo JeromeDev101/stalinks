@@ -3,10 +3,11 @@
 
 // Variables
 @import 'variables';
-@import "node_modules/font-awesome/scss/font-awesome.scss";
+@import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
+@import "~admin-lte/plugins/flag-icon-css/css/flag-icon.min.css";
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/bootstrap';
 
 @import 'components/login';
 @import 'components/page-sidebar';
@@ -14,3 +15,4 @@
 @import 'components/mail';
 @import 'components/notification';
 @import 'common';
+

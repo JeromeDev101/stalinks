@@ -27,9 +27,9 @@ mix.js('resources/js/app.js', 'public/build/js');
 mix.sass('resources/sass/app.scss', 'public/build/css');
 
 mix.styles([
-    'node_modules/bootstrap/dist/css/bootstrap.min.css',
+    // 'node_modules/bootstrap/dist/css/bootstrap.min.css',
     'node_modules/Ionicons/css/ionicons.min.css',
-    'node_modules/admin-lte/dist/css/AdminLTE.css',
+    'node_modules/admin-lte/dist/css/adminlte.min.css',
     'node_modules/admin-lte/dist/css/skins/_all-skins.min.css',
     'node_modules/morris.js/morris.css',
     'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
@@ -47,7 +47,7 @@ mix.styles([
 mix.scripts([
     'node_modules/treantjs/vendor/raphael.js',
     'node_modules/treantjs/Treant.js',
-    'node_modules/admin-lte/dist/js/demo.js',
+    'node_modules/admin-lte/dist/js/adminlte.min.js',
     'node_modules/alertifyjs/build/alertify.min.js',
     'node_modules/jquery-freeze-table/dist/js/freeze-table.js',
     'node_modules/datatables.net/js/jquery.dataTables.js',
