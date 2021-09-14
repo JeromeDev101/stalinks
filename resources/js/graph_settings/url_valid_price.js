@@ -40,6 +40,16 @@ export default {
                         position: 'top', // top, center, bottom,
                     },
                 },
+                style: {
+                    fontSize: '12px',
+                    colors : [
+                        "#008FFB",
+                        "#00E396",
+                        "#FEB019",
+                        "#775DD0",
+                        "#FF4560"
+                    ]
+                }
             },
             dataLabels: {
                 enabled: true,
