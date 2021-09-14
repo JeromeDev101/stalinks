@@ -35,6 +35,13 @@
                     </li>
 
                     <li style="margin-left:-50px;margin-bottom:-55px;">
+                        <select name="language" id="language" class="form-control" style="margin-left: -245px" v-model="pageLanguage">
+                            <option value="en">English</option>
+                            <option value="jp">Japanese</option>
+                        </select>
+                    </li>
+
+                    <li style="margin-left:-50px;margin-bottom:-55px;">
                         <a
                             href="#"
                             class="dropdown-toggle"
@@ -280,7 +287,8 @@ export default {
                 amount_usd: '',
                 payment_region: 'domestic'
             },
-            step: 0
+            step: 0,
+            pageLanguage: 'en'
         };
     },
 
@@ -305,6 +313,12 @@ export default {
         channel.bind('user.notify', (e) => {
             this.getNotifications(this.user.id);
         });
+    },
+
+    watch : {
+        pageLanguage(newvalue, oldValue) {
+            this.$i18n.locale = newvalue;
+        }
     },
 
     computed: {

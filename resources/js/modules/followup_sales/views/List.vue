@@ -173,77 +173,79 @@
                         <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
                     </span>
 
-                    <table id="tbl-followupsales"
-                           class="table table-hover table-bordered table-striped rlink-table" style="height: 650px;">
-                        <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th v-show="tblOptions.pub_id">Url Pub</th>
-                                <th v-show="tblOptions.blink_id">Blink</th>
-                                <th v-show="tblOptions.arc_id">Artc</th>
-                                <th v-show="tblOptions.country">Country</th>
-                                <th v-show="tblOptions.in_charge">In-charge</th>
-                                <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
-                                <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
-                                <th v-show="tblOptions.url">URL Publisher</th>
-                                <th v-show="tblOptions.price">Price</th>
-                                <th v-show="tblOptions.link_from">Link From</th>
-                                <th v-show="tblOptions.link_to">Link To</th>
-                                <th v-show="tblOptions.anchor_text">Anchor Text</th>
-                                <th v-show="tblOptions.date_process">Date for Proccess</th>
-                                <th v-show="tblOptions.date_complete">Date Completed</th>
-                                <th v-show="tblOptions.status">Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(sales, index) in listSales.data" :key="index">
-                                <td>{{ index + 1}}</td>
-                                <td
-                                    v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
-                                <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
-                                <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
-                                <td
-                                    v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
-                                <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td
-                                    v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
-                                <td
-                                    v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
-                                <td v-show="tblOptions.url">
-<!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
-                                    <span v-if="sales.publisher == null">
-                                        N/A
-                                    </span>
-                                    <span v-else>
-                                        <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
-                                            {{ replaceCharacters(sales.publisher.url) }}
-                                        </a>
-                                    </span>
-                                </td>
-                                <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
-                                <td v-show="tblOptions.link_from">
-                                    <div class="dont-break-out">
-                                        {{ sales.link_from }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.link_to">
-                                    <div class="dont-break-out">
-                                        {{ sales.link }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
-                                <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
-                                <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
-                                <td v-show="tblOptions.status">{{ sales.status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="box-body no-padding relative">
+                        <table id="tbl-followupsales"
+                               class="table table-hover table-bordered table-striped rlink-table" style="height: 650px;">
+                            <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th v-show="tblOptions.pub_id">Url Pub</th>
+                                    <th v-show="tblOptions.blink_id">Blink</th>
+                                    <th v-show="tblOptions.arc_id">Artc</th>
+                                    <th v-show="tblOptions.country">Country</th>
+                                    <th v-show="tblOptions.in_charge">In-charge</th>
+                                    <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
+                                    <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
+                                    <th v-show="tblOptions.url">URL Publisher</th>
+                                    <th v-show="tblOptions.price">Price</th>
+                                    <th v-show="tblOptions.link_from">Link From</th>
+                                    <th v-show="tblOptions.link_to">Link To</th>
+                                    <th v-show="tblOptions.anchor_text">Anchor Text</th>
+                                    <th v-show="tblOptions.date_process">Date for Proccess</th>
+                                    <th v-show="tblOptions.date_complete">Date Completed</th>
+                                    <th v-show="tblOptions.status">Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(sales, index) in listSales.data" :key="index">
+                                    <td>{{ index + 1}}</td>
+                                    <td
+                                        v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
+                                    <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
+                                    <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
+                                    <td
+                                        v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
+                                    <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
+                                    <td
+                                        v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
+                                    <td
+                                        v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
+                                    <td v-show="tblOptions.url">
+    <!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
+                                        <span v-if="sales.publisher == null">
+                                            N/A
+                                        </span>
+                                        <span v-else>
+                                            <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
+                                                {{ replaceCharacters(sales.publisher.url) }}
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
+                                    <td v-show="tblOptions.link_from">
+                                        <div class="dont-break-out">
+                                            {{ sales.link_from }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.link_to">
+                                        <div class="dont-break-out">
+                                            {{ sales.link }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
+                                    <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
+                                    <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
+                                    <td v-show="tblOptions.status">{{ sales.status }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
 
@@ -415,15 +417,51 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12" v-show="showReasonText">
+                            <div class="col-md-12" v-show="showReason">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Details of Issue/Cancelled</label>
+                                        <label style="color: #333">Notes (Issue/Cancelled)</label>
                                         <textarea class="form-control" v-model="updateModel.reason_detailed"></textarea>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="col-md-12" v-show="showReason">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
+                                    <label>Issue/Cancel File</label>
+
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" :value="updateModel.reason_file" disabled>
+
+                                        <div class="input-group-append">
+                                            <button
+                                                :disabled="updateModel.reason_file === '' || updateModel.reason_file == null"
+                                                class="btn btn-primary"
+                                                title="View Issue/Cancel File"
+                                                data-toggle="modal"
+                                                data-target="#modal-view-issue-cancel-file"
+
+                                                @click="doShowIssueCancelFile(updateModel.reason_file)">
+
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </button>
+
+                                            <a
+                                                download
+                                                :href="updateModel.reason_file"
+                                                :disabled="updateModel.reason_file === '' || updateModel.reason_file == null"
+                                                title="Reason File"
+                                                class="btn btn-primary">
+                                                <em class="fa fa-download"></em>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <input type="file" class="form-control" enctype="multipart/form-data" ref="issue_file" name="file">
+                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small><br/>
+                                    <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -502,6 +540,29 @@
         </div>
         <!-- End of Modal Settings -->
 
+        <!-- Modal View Issue File -->
+        <div class="modal fade" id="modal-view-issue-cancel-file" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Issue/Cancel File</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <img class="img-fluid"
+                                     :src="issueCancelFilePreview"
+                                     alt="Proof of Billing" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View Issue File -->
     </div>
 </template>
 
@@ -612,6 +673,8 @@
                     'Other'
                 ],
                 listReason: '',
+
+                issueCancelFilePreview: '',
             }
         },
 
@@ -886,6 +949,10 @@
                 this.$router.replace({'query': null});
             },
 
+            doShowIssueCancelFile(src) {
+                this.issueCancelFilePreview = src;
+            },
+
             doUpdate(sales) {
                 this.clearMessageform()
                 let that = JSON.parse( JSON.stringify(sales) )
@@ -922,11 +989,40 @@
             },
 
             async submitUpdate(params) {
+
+                // make form data for file
+                let form_data = new FormData();
+
+                for ( let key in this.updateModel ) {
+                    // if value is null or undefined, make empty string
+                    let val = (this.updateModel[key] == null || this.updateModel[key] == undefined)
+                        ? ''
+                        : this.updateModel[key];
+
+                    form_data.append(key, val);
+                }
+
+                // append file on form data
+                form_data.append('file', this.$refs.issue_file.files[0]);
+
                 $('#tbl-followupsales').DataTable().destroy();
                 this.isPopupLoading = true;
-                await this.$store.dispatch('actionUpdateSales', this.updateModel)
+                await this.$store.dispatch('actionUpdateSales', form_data)
                 this.isPopupLoading = false;
-                this.getListSales()
+
+                if (this.messageForms.action === 'updated') {
+                    $("#modal-view-issue-cancel-file").modal('hide')
+                    $("#modal-update-sales").modal('hide')
+                    this.getListSales()
+                    this.$refs.issue_file.value = '';
+
+                    swal.fire(
+                        'Success',
+                        'Updated Successfully',
+                        'success'
+                    )
+
+                }
             },
 
             clearMessageform() {

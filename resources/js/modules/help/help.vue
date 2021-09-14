@@ -7,158 +7,176 @@
                   <div class="box-header">
                      <div class="row">
                         <div class="col-md-12 help-content">
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">Welcome on Stalinks</h4>
-                           <p>StaLinks is a link building company designed to cater to all business niche. We provide perfect and reliable solutions for both publishers and link advertisers. We connect thousands of different professionals from bloggers, SEO professionals and webmasters in one reliable and easy-to-use platform. Whether you are interested in buying or selling backlink from your website, Stalinks has all the features you need. </p>
-                           <p style="font-weight: 600;color: #497EB1; font-size:20px;">How does StaLinks work?</p>
-                           <p>Backlink remains to be the highest and most important ranking factor of Google. This the main reasons why many website owners buy or sell backlinks. However, not all backlinks are safe. In fact, low quality links can do more harm than good to your website. That is where StaLinks steps in.</p>
-                           <p> We are using reliable tools to generate SEO scores. We don’t allow any advertisers to post any pages that resemble spam links. All the domains and pages on our platforms follow s industry practices. These pages were hand-picked and verified by our team. We also provide you in advance urls and generate SEO scores from ahref.</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h1') }}</h4>
+                           <p>{{ $t('message.p1') }}</p>
+                           <p style="font-weight: 600;color: #497EB1; font-size:20px;">{{ $t('message.h2') }}</p>
+                           <p>{{ $t('message.p2') }}</p>
+                           <p>{{ $t('message.p3') }}</p>
                            <!-- Buyer -->
-                           <h4 class="bg-primary text-white p-2 mt-3 text-bold">Buyer's Guide</h4>
+                           <h4 class="bg-primary text-white p-2 mt-3 text-bold">{{ $t('message.h3') }}</h4>
                            <p>
-                              Take your site's ranking & traffic to the next level with us! Click on the required
-                              guide to learn more. To climb up the Google's ladder and choose relevant backlink pages
-                              for your links, benefit from Backlink Inventory.
+                               {{ $t('message.p4') }}
                            </p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle">
-                                    <div class="image-overlay "> </div>
-                              <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">-->
+<!--                                    <div class="image-overlay "> </div>-->
+<!--                              <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                  
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>
-                                 
-                                 </div>
-                                
-                                 <router-link :to="{ path: '/help/buyer-guide-1' }">
-                                    How to navigate the dashboard
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>-->
+
+<!--                                 </div>-->
+
+                                  <img src="../../../images/step-icons/Buyer_Navigate.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b1.url') }">
+                                     {{ $t('message.b1.text') }}
                                  </router-link>
-                                 
-                              </li>
-                              <li class="flex" >
-                                 <div class="circle">  
-                                  <div class="image-overlay "> </div>
-                                   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
 
-                                 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div> 
-                                 </div>
-                                 <router-link :to="{ path: '/help/buyer-guide-2' }"> 
-                                    How to Purchase backlink that fits your website
+                              </li>
+                              <li class="flex mb-3">
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+
+                                  <img src="../../../images/step-icons/Buyer_Backlink.png" alt="">
+                                 <router-link :to="{ path: $t('message.b2.url') }">
+                                     {{ $t('message.b2.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle"> 
-                                  <div class="image-overlay "> </div>
-                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3">
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div>
-                                 </div>
-                                 <router-link :to="{ path: '/help/buyer-guide-3' }">
-                                    How to Follow up your orders
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Buyer_Follow Up.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b3.url') }">
+                                     {{ $t('message.b3.text') }}
                                  </router-link>
                               </li>
                            </ul>
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">Seller's Guide</h4>
-                           <p>As a StaLinks publisher, you will earn monthly reoccurring revenue for each link that an advertiser chooses to purchase on your site(s). From there, you will continue to earn credits for each link every month, as long as the link(s) are active.</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h4') }}</h4>
+                           <p>{{ $t('message.p5') }}</p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle"> 
-                                  <div class="image-overlay "> </div>
-                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">-->
+<!--                                  <div class="image-overlay "> </div>-->
+<!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>
-                                    </div>
-                                 <router-link :to="{ path: '/help/seller-guide-1' }">
-                                    Learn about the dashboard
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>-->
+<!--                                    </div>-->
+                                  <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b4.url') }">
+                                     {{ $t('message.b4.text') }}
                                  </router-link>
                                  </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div>
-                                 </div>
-                                 <router-link :to="{ path: '/help/seller-guide-2' }">
-                                    How to Upload your list of urls 
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Seller_Upload.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b5.url') }">
+                                     {{ $t('message.b5.text') }}
                                  </router-link> </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div> 
-                                 </div>
-                                 <router-link :to="{ path: '/help/seller-guide-3' }">
-                                    How to Follow up your orders
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Seller_Follow Up.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b6.url') }">
+                                     {{ $t('message.b6.text') }}
                                  </router-link>  </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 4
-                                    </div>
-                                 </div>
-                                 <router-link :to="{ path: '/help/seller-guide-4' }">
-                                    How to get Pay
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 4-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b7.url') }">
+                                     {{ $t('message.b7.text') }}
                                  </router-link>
                               </li>
                            </ul>
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">Writer's Guide</h4>
-                           <p>             Writers are responsible for writing quality content that will become the backbone in building backlinks. The writer team will need to collaborate with the SEO team, Customer Service Sellers, and country managers to create the content for StaLinks clients. The writer must know how to research and write content based on various topics and industry trends that match the target website.</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h5') }}</h4>
+                           <p>{{ $t('message.p6') }}</p>
                            <ul class="no-dot">
-                              <li class="flex" >
-                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 1
-                                    </div>  </div>
-                                 <router-link :to="{ path: '/help/writer-guide-1' }">
-                                    How to Register and setup your price
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 1-->
+<!--                                    </div>  </div>-->
+                                  <img src="../../../images/step-icons/Writer_Register.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b8.url') }">
+                                     {{ $t('message.b8.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 2
-                                    </div>
-                                 </div>
-                                 <router-link :to="{ path: '/help/writer-guide-2' }">
-                                    How to start writing content
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 2-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Writer_Content.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b9.url') }">
+                                     {{ $t('message.b9.text') }}
                                  </router-link>
                               </li>
-                              <li class="flex" >
-                                 <div class="circle">  <div class="image-overlay "> </div>
-                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span> 
+                              <li class="flex mb-3" >
+<!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
+<!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
 
-                                 
-                                    <div class="caption">
-                                                STEP 3
-                                    </div>
-                                 </div>
-                                 <router-link :to="{ path: '/help/writer-guide-3' }">
-                                    How to  Follow up your income
+
+<!--                                    <div class="caption">-->
+<!--                                                STEP 3-->
+<!--                                    </div>-->
+<!--                                 </div>-->
+                                  <img src="../../../images/step-icons/Writer_Income.png" alt="">
+
+                                 <router-link :to="{ path: $t('message.b10.url') }">
+                                     {{ $t('message.b10.text') }}
                                  </router-link>
                               </li>
                            </ul>
@@ -174,6 +192,14 @@
       </div>
    </div>
 </template>
+
+<script>
+export default {
+    mounted() {
+    }
+}
+</script>
+
 <style>
   .circle {
      position: relative;
@@ -189,8 +215,8 @@
     border: 0;
     margin: 10px;
     color: #fff;
-   
- 
+
+
 }
 
 .circle .image {
@@ -202,7 +228,7 @@
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
- 
+
   transition: .25s;
 }
 
@@ -223,7 +249,7 @@
    }
    .no-dot a{
    text-decoration: none;
-    
+
     font-weight: 600;
     font-size: 16px;
     position: relative;
@@ -231,17 +257,17 @@
     left: 2%;
     transform: translateY( -50%);
    }
- 
+
    .help-content p{
    font-size:16px;
    line-height:30px;
    margin: 20px 0;
    }
- 
+
    .image-overlay{
    position:absolute;
    border-radius:50%;
- 
+
    position: absolute;
    z-index: 1;
    top: 0;
@@ -250,7 +276,7 @@
  max-width: 95px;
     height: 100%;
     max-height: 80px;
-   background-image: linear-gradient( 
+   background-image: linear-gradient(
    45deg
    , #000, #497eb1);
    opacity: .8;
@@ -258,6 +284,6 @@
 .box-header{
    padding:25px!important;
 }
-    
-   
+
+
 </style>

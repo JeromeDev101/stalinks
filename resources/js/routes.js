@@ -64,6 +64,9 @@ import BuyerGuide1 from '@/modules/help/buyer_guide/views/Help_1.vue'
 import BuyerGuide2 from '@/modules/help/buyer_guide/views/Help_2.vue'
 import BuyerGuide3 from '@/modules/help/buyer_guide/views/Help_3.vue'
 
+// tools
+import Tools from '@/modules/tools/views/Tools.vue'
+
 const routes = [
   {
     path: '/login',
@@ -360,6 +363,11 @@ const routes = [
         name: 'generate-list',
         component: GenerateList
       },
+        {
+            path: 'tools',
+            name: 'tools',
+            component: Tools
+        },
       {
         path: '*',
         name: 'error-page',

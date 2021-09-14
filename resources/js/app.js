@@ -21,6 +21,9 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueApexCharts from 'vue-apexcharts'
 import excel from 'vue-excel-export'
+import VueI18n from 'vue-i18n';
+import langs from './../lang/Modules/Help/main';
+import {Constants} from "./mixins/constants";
 
 require('./bootstrap');
 
@@ -31,6 +34,7 @@ Vue.use(Toast);
 Vue.use(Loading);
 Vue.use(VueApexCharts)
 Vue.use(excel)
+Vue.use(VueI18n);
 
 Vue.component('downloadExcel', JsonExcel)
 Vue.component('pagination', Pagination)
@@ -41,30 +45,41 @@ Vue.component('date-range-picker', DateRangePicker);
 Vue.component('vue-tags-input', VueTagsInput);
 Vue.component('apexchart', VueApexCharts)
 
+const i18n = new VueI18n({
+    locale: 'en',
+    messages : langs
+})
+
 const router = new VueRouter({
     mode: 'history',
     routes,
 });
-// // Auto logout
-var idleMax = 120; // Logout after 1hr of IDLE
+
+// Auto logout
+var idleMax = Constants.AUTO_LOGOUT_DURATION; // Logout after 1hr of IDLE
 var idleTime = 0;
 
-var idleInterval = setInterval(timerIncrement, 5000);  // 1 minute interval
+var idleInterval = setInterval(timerIncrement, 60000);  // 1 minute interval
 $( "body" ).mousemove(function( event ) {
     idleTime = 0; // reset to zero
+    localStorage.setItem('idleTime', idleTime);
+
 });
 
 // count minutes
 function timerIncrement() {
   idleTime = idleTime + 1;
-  if (idleTime > idleMax) {
-    store.dispatch('logout')
-    localStorage.clear();
-    Cookies.remove('vuex');
-    router.push({ name: 'login' });
+  localStorage.setItem('idleTime', idleTime);
+
+  if (localStorage.getItem('idleTime') > idleMax) {
+      store.dispatch('logout')
+      localStorage.clear();
+      Cookies.remove('vuex');
+      router.push({ name: 'login' });
   }
 }
-// //End auto logout
+//End auto logout
+
 router.beforeEach((to, from, next) => {
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -110,6 +125,7 @@ const toast = swal.mixin({
 new Vue({
     el: '#app',
     render: h => h(App),
+    i18n,
     router,
     store
 });

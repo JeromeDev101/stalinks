@@ -26,6 +26,20 @@
                 </li>
 
                 <li
+                    v-if="user.isAdmin"
+                    :class="{ active: $route.name == 'tools' }"
+                >
+                    <router-link
+                        class="page-sidebar__item custom-padding"
+                        :to="{ path: '/tools' }"
+                    >
+                        <img src="../../../../images/admin-settings.png" />
+                        <span>Tools</span>
+                        <span class="pull-right-container"></span>
+                    </router-link>
+                </li>
+
+                <li
                     v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller))"
                     :class="{ active: $route.name == 'dashboard' }"
                 >

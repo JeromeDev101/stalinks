@@ -49,6 +49,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
     Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');
+    Route::name('update-seller-billing')->put('seller-billing/update/multiple', 'SellerBillingController@updateBillings');
     Route::name('get-writer-billing')->get('writer-billing', 'WriterBillingController@getList');
     Route::name('pay-writer-billing')->post('writer-billing', 'WriterBillingController@payBilling');
     Route::name('get-seller-info')->post('get-seller-info', 'SellerBillingController@getSellerInfo');
@@ -159,7 +160,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Followup Sales
     Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');
-    Route::name('update-sales')->put('sales', 'FollowupSalesController@update');
+    Route::name('update-sales')->post('sales', 'FollowupSalesController@update');
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');
@@ -284,6 +285,12 @@ Route::middleware('auth:api')->group(function () {
     Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
 
     Route::name('crypto-address-update')->post('/crypto/usdt', 'ConfigController@updateCryptoAddress');
+
+    // tools
+    Route::name('tools-get')->get('/tools', 'ToolController@index');
+    Route::name('tools-store')->post('/tools', 'ToolController@store');
+    Route::name('tools-update')->put('/tools','ToolController@update');
+    Route::name('tools-delete')->delete('/tools/{id}','ToolController@destroy');
 });
 
 //Mailgun external
@@ -308,3 +315,4 @@ Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp
 
 // updating price basis
 Route::name('update-price-basis-publisher')->get('/update-price-basis-publisher', 'ConfigController@updatePriceBasis');
+

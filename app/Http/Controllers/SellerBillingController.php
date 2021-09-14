@@ -49,8 +49,12 @@ class SellerBillingController extends Controller
         if( isset($filter['status_billing']) && !empty($filter['status_billing']) ){
             if( $filter['status_billing'] == 'Done'){
                 $list = $list->where('billing.admin_confirmation', '=', '1');
+            }else if($filter['status_billing'] == 'Voided'){
+                $list = $list->whereNull('billing.admin_confirmation')
+                    ->where('backlinks.payment_status', '=', 'Voided');
             }else{
-                $list = $list->whereNull('billing.admin_confirmation');
+                $list = $list->whereNull('billing.admin_confirmation')
+                ->where('backlinks.payment_status', '!=', 'Voided');
             }
         }
 
@@ -212,5 +216,15 @@ class SellerBillingController extends Controller
         $file = Storage::get('STAL-SELLER-' . $id . '.pdf');
 
         return $file;
+    }
+
+    public function updateBillings(Request $request)
+    {
+        $response = Backlink::whereIn('id', $request->ids)
+            ->update([
+                'payment_status' => 'Voided'
+            ]);
+
+        return response()->json($response);
     }
 }

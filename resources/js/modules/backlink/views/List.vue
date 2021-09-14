@@ -180,7 +180,7 @@
                                 <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin">Code Comb</th>
                                 <th v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">Code Price</th>
                                 <th v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">Price Basis</th>
-                                <th v-if="(user.isOurs == 1 && !user.isAdmin) ">Anchor Text</th>
+                                <th v-if="(user.isOurs == 1 && !user.isAdmin)">Anchor Text</th>
                                 <th v-show="tblFollowupBacklinksOpt.date_for_process">Date for Proccess</th>
                                 <th v-show="tblFollowupBacklinksOpt.date_completed">Date Completed</th>
                                 <th v-show="tblFollowupBacklinksOpt.status">Status</th>
@@ -269,7 +269,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.id_backlink ? 'checked':''" v-model="tblFollowupBacklinksOpt.id_backlink">ID backlinks</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.seller ? 'checked':''" v-model="tblFollowupBacklinksOpt.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-4">
@@ -278,25 +278,25 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_publisher ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_publisher">URL Publisher</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 5)" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_advertiser ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_advertiser">URL Advertiser</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_from ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_from">Link From</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="user.isAdmin" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price ? 'checked':''" v-model="tblFollowupBacklinksOpt.price">Price</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.prices ? 'checked':''" v-model="tblFollowupBacklinksOpt.prices">Prices</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="user.isAdmin" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_comb ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_comb">Code combination</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="user.isAdmin" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_price ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_price">Code Price</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div v-if="user.isAdmin" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price_basis ? 'checked':''" v-model="tblFollowupBacklinksOpt.price_basis">Price Basis</label>
                             </div>
                             <div class="checkbox col-md-4">

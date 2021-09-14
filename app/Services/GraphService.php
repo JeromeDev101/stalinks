@@ -211,6 +211,8 @@ class GraphService
                     FROM registration
                     WHERE registration.deleted_at IS NULL
                     AND registration.team_in_charge = ext_domains.user_id
+                    AND MONTH(registration.created_at) = MONTH(MAX(ext_domains.created_at))
+                    AND YEAR(registration.created_at) = YEAR(MAX(ext_domains.created_at))
                 ) AS total,';
                 break;
         }
