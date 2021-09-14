@@ -20,7 +20,7 @@
                     <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-flat pull-right"><span><b>Login</b></span></button>
+                    <button type="submit" class="btn btn-primary btn-flat float-right"><span><b>Login</b></span></button>
                 </div>
                 <div class="form-group">
                     <button type="button" @click="registrationPage" class="btn btn-default btn-flat">Register</button>

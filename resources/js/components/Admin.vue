@@ -1,23 +1,21 @@
 <template>
     <div>
-        <div class="wrapper" v-if="!errorPage.status" style="position: relative">
+        <div class="wrapper" v-if="!errorPage.status">
             <div class="splash-screen" v-show="mainLoading.show">
                 <div class="splash-overlay"></div>
                 <div class="splash-spinner"></div>
             </div>
-            <div>
-                <app-header></app-header>
-                <app-aside></app-aside>
-                <div class="content-wrapper">
-                    <app-breadcrumd></app-breadcrumd>
-                    <section class="content">
-                        <router-view></router-view>
-                    </section>
-                </div>
-                <app-footer></app-footer>
-                <app-control-siderbar></app-control-siderbar>
-                <div class="control-sidebar-bg"></div>
+            <app-header></app-header>
+            <app-aside></app-aside>
+            <div class="content-wrapper">
+                <app-breadcrumd></app-breadcrumd>
+                <section class="content">
+                    <router-view></router-view>
+                </section>
             </div>
+            <app-footer></app-footer>
+<!--            <app-control-siderbar></app-control-siderbar>-->
+<!--            <div class="control-sidebar-bg"></div>-->
         </div>
         <div v-else>
             <error-page></error-page>

@@ -10,9 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="{{ asset('/css/app.css') }}">
 </head>
-<body class="sidebar-mini layout-fixed layout-navbar-fixed skin-blue">
-    <div class="wrapper">
-        <div id="app"></div>
+<body class="sidebar-mini layout-fixed skin-blue">
+    <div id="app" class="wrapper">
     </div>
     <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_MODE') == 'live' ? env('PAYPAL_LIVE_CLIENT_ID') : env('PAYPAL_SANDBOX_CLIENT_ID') }}&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
