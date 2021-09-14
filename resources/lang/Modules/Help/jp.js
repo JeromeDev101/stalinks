@@ -49,7 +49,7 @@ export default {
         },
         b10 : {
             text : '収入の管理方法',
-            url : '/help/writer-guide-2'
+            url : '/help/writer-guide-3'
         },
     }
 }
