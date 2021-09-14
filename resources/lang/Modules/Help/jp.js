@@ -45,11 +45,11 @@ export default {
         },
         b9 : {
             text : 'コンテンツ制作の始め方',
-            url : '/help/seller-guide-3'
+            url : '/help/writer-guide-2'
         },
         b10 : {
             text : '収入の管理方法',
-            url : '/help/seller-guide-4'
+            url : '/help/writer-guide-2'
         },
     }
 }

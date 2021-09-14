@@ -41,15 +41,15 @@ export default {
         p6 : 'Writers are responsible for writing quality content that will become the backbone in building backlinks. The writer team will need to collaborate with the SEO team, Customer Service Sellers, and country managers to create the content for StaLinks clients. The writer must know how to research and write content based on various topics and industry trends that match the target website',
         b8 : {
             text : 'How to Register and setup your price',
-            url : 'h/help/writer-guide-1'
+            url : '/help/writer-guide-1'
         },
         b9 : {
             text : 'How to start writing content',
-            url : '/help/seller-guide-3'
+            url : '/help/writer-guide-2'
         },
         b10 : {
             text : 'How to Follow up your income ',
-            url : '/help/seller-guide-4'
+            url : '/help/writer-guide-3'
         },
     }
 }
