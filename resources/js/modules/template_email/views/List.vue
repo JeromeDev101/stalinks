@@ -1,103 +1,90 @@
 <template>
-    <div class="row">
-        <!-- <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-green">
-                <div class="inner">
-                    <h3>{{ emailList.total }}</h3>
-                    <p>Total Template Email</p>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-anchor"></i>
-                </div>
-            </div>
-        </div> -->
-
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="box box-primary">
-                        <div class="box-header">
-                            <h3 class="box-title">Mail Template</h3>
-                            <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
-                            <div class="input-group input-group-sm float-right" style="width: 65px">
-                                <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
-                                    <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body no-padding relative">
-                            <table class="table table-hover table-bordered table-striped rlink-table">
-                                <tbody>
-                                <tr class="label-primary">
-                                    <th>#</th>
-                                    <th>Template Name</th>
-                                    <th>Title</th>
-                                    <th>Language</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr>
-                                    <td style="max-width: 30px;">
-                                    </td>
-
-                                    <td>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" v-model="filterModel.mail_name_temp"  class="form-control pull-right" placeholder="Search Email Name">
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" v-model="filterModel.title_temp"  class="form-control pull-right" placeholder="Search Title">
-                                        </div>
-                                    </td>
-
-<!--                                    <td>-->
-<!--                                        <div class="input-group input-group-sm">-->
-<!--                                            <input type="text" v-model="filterModel.content_temp"  class="form-control pull-right" placeholder="Search Content">-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-
-                                    <td>
-                                        <div class="input-group input-group-sm">
-                                            <select v-model="filterModel.country_id_temp" class="form-control pull-right">
-                                                <option value="0"></option>
-                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                                    {{ option.name }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr v-for="(item, index) in emailList.data" :key="index">
-                                    <td class="center-content">{{ index + 1 }}</td>
-                                    <td>{{ item.mail_name }}</td>
-                                    <td>{{ item.title }}</td>
-                                    <td>{{ (item.language) ? item.language.name : '' }}</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button @click="doEdit(item)" data-toggle="modal" data-target="#modal-update" type="submit" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                            <button @click="doDelete(item)" data-toggle="modal" title="Delete" class="btn btn-default"><i class="fa fa-fw fa-times"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="overlay" v-if="isLoadingTable">
-                                <i class="fa fa-refresh fa-spin"></i>
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer clearfix">
-                            <component :is="pagination" :callMethod="goToPage"></component>
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Mail Template</h3>
+                        <div class="card-tools">
                         </div>
                     </div>
-                    <!-- /.box -->
+                    <div class="card-body">
+                        <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                        <div class="input-group input-group-sm float-right" style="width: 65px">
+                            <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
+                                <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
+                            </select>
+                        </div>
+
+                        <table class="table table-hover table-bordered table-striped rlink-table">
+                            <tbody>
+                            <tr class="label-primary">
+                                <th>#</th>
+                                <th>Template Name</th>
+                                <th>Title</th>
+                                <th>Language</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td style="max-width: 30px;">
+                                </td>
+
+                                <td>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" v-model="filterModel.mail_name_temp"  class="form-control pull-right" placeholder="Search Email Name">
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" v-model="filterModel.title_temp"  class="form-control pull-right" placeholder="Search Title">
+                                    </div>
+                                </td>
+
+                                <!--                                    <td>-->
+                                <!--                                        <div class="input-group input-group-sm">-->
+                                <!--                                            <input type="text" v-model="filterModel.content_temp"  class="form-control pull-right" placeholder="Search Content">-->
+                                <!--                                        </div>-->
+                                <!--                                    </td>-->
+
+                                <td>
+                                    <div class="input-group input-group-sm">
+                                        <select v-model="filterModel.country_id_temp" class="form-control pull-right">
+                                            <option value="0"></option>
+                                            <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-for="(item, index) in emailList.data" :key="index">
+                                <td class="center-content">{{ index + 1 }}</td>
+                                <td>{{ item.mail_name }}</td>
+                                <td>{{ item.title }}</td>
+                                <td>{{ (item.language) ? item.language.name : '' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button @click="doEdit(item)" data-toggle="modal" data-target="#modal-update" type="submit" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        <button @click="doDelete(item)" data-toggle="modal" title="Delete" class="btn btn-default"><i class="fa fa-fw fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="overlay" v-if="isLoadingTable">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <component :is="pagination" :callMethod="goToPage"></component>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,13 +95,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Language</h4>
-                        <div class="modal-load overlay float-right">
-                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
-
-                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
-                                {{ messageForms.message }}
-                            </span>
-                        </div>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
@@ -178,13 +158,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Update Template</h4>
-                        <div class="modal-load overlay float-right">
-                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
-
-                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
-                                {{ messageForms.message }}
-                            </span>
-                        </div>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
