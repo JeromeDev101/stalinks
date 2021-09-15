@@ -1,5 +1,4 @@
 import _ from "underscore";
-import __ from 'lodash';
 
 export default {
 

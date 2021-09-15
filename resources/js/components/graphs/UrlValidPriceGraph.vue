@@ -104,6 +104,18 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-sm-1">
+                        <h6 class="mb-2">Total: {{ total }}</h6>
+                    </div>
+                    <div class="col-sm-1">
+                        <h6 class="mb-2">Valid: {{ valid }}</h6>
+                    </div>
+                    <div class="col-sm-2">
+                        <h6 class="mb-2">Good Price: {{ good_price }}</h6>
+                    </div>
+                </div>
+
                 <div class="small">
                     <apexchart type="bar" height="350"
                                ref="chart"
@@ -118,6 +130,8 @@
 <script>
 import url_valid_price from "../../graph_settings/url_valid_price";
 import axios from "axios";
+import _ from 'underscore';
+import __ from 'lodash';
 
 export default {
     name : "UrlValidPriceGraph",
@@ -129,6 +143,7 @@ export default {
 
     data() {
         return {
+            rawData : null,
             filterModel : {
                 urlValidPrice : {
                     scope: 'global',
@@ -159,6 +174,20 @@ export default {
             urlValidPriceData : [],
             urlValidOption: {}
         };
+    },
+
+    computed : {
+        total() {
+            return __.sum(_.pluck(this.rawData, 'upload'));
+        },
+
+        valid() {
+            return __.sum(_.pluck(this.rawData, 'valid'));
+        },
+
+        good_price() {
+            return __.sum(_.pluck(this.rawData, 'quality_price'));
+        }
     },
 
     mounted() {
@@ -231,6 +260,7 @@ export default {
                 .then(response => {
                     let data = response.data;
 
+                    this.rawData = data;
                     this.urlValidPriceData =
                         url_valid_price.urlValidPriceGraphData(data);
                 });
