@@ -521,6 +521,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $topic = trim_special_characters($line[6]);
                     $country = trim_special_characters($line[7]);
 
+                    // remove http
+
+                    $url = $this->remove_http($url);
+
+                    // remove space
+
+                    $url = trim($url, " ");
+
                     $isCheckDuplicate  = $this->checkDuplicate($url, $id);
 
                     if (preg_grep("/".$language_excel."/i", $language_name_list)){
@@ -532,17 +540,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 if (!$isCheckDuplicate) {
 
                                     if( trim($url, " ") != '' ){
-                                        $url_remove_http = $this->remove_http($url);
                                         $lang = $this->getLanguage($language_excel);
                                         $count = $this->getCountry($country);
-                                        $valid = $this->checkValid($url_remove_http);
+                                        $valid = $this->checkValid($url);
 
                                         Publisher::create([
                                             'user_id' => $id,
                                             'language_id' => $lang,
                                             'continent_id' => $count->continent_id,
                                             'country_id' => $count->id,
-                                            'url' => $url_remove_http,
+                                            'url' => $url,
                                             'ur' => 0,
                                             'dr' => 0,
                                             'backlinks' => 0,
@@ -555,7 +562,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                             'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                             'kw_anchor' => ucwords( strtolower( trim($kw_anchor, " ") ) ),
                                             'topic' => $topic,
-                                            'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
+                                            'is_https' => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
                                         ]);
                                     }
                                 } else {
@@ -617,6 +624,14 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $country = trim_special_characters($line[7]);
                     $kw_anchor = trim_special_characters($line[8]);
 
+                    // remove http
+
+                    $url = $this->remove_http($url);
+
+                    // remove space
+
+                    $url = trim($url, " ");
+
                     $isCheckDuplicate  = $this->checkDuplicate($url, $seller_id);
 
                     if (in_array($seller_id, $user_id_list)){
@@ -629,17 +644,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                                     if (!$isCheckDuplicate) {
                                         if( trim($url, " ") != '' ){
-                                            $url_remove_http = $this->remove_http($url);
                                             $lang = $this->getLanguage($language_excel);
                                             $count = $this->getCountry($country);
-                                            $valid = $this->checkValid($url_remove_http);
+                                            $valid = $this->checkValid($url);
 
                                             Publisher::create([
                                                 'user_id' => $seller_id ,
                                                 'language_id' => $lang,
                                                 'continent_id' => $count->continent_id,
                                                 'country_id' => $count->id,
-                                                'url' => $url_remove_http,
+                                                'url' => $url,
                                                 'ur' => 0,
                                                 'dr' => 0,
                                                 'backlinks' => 0,
@@ -652,7 +666,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                 'casino_sites' => ucwords( strtolower( trim($accept, " ") ) ),
                                                 'topic' => $topic,
                                                 'kw_anchor' => $kw_anchor,
-                                                'is_https' => $this->httpClient->getProtocol($url_remove_http) == 'https' ? 'yes' : 'no',
+                                                'is_https' => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
                                             ]);
                                         }
                                     } else {

@@ -1200,7 +1200,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Failed to Upload</h4>
-                        <div class="modal-load overlay float-right">
+                        <div>
                         </div>
                     </div>
                     <div class="modal-body">
