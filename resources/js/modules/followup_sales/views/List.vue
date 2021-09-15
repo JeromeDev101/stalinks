@@ -199,7 +199,7 @@
                         </span>
 
                         <table id="tbl-followupsales"
-                               class="table table-hover table-bordered table-striped rlink-table" style="height: 650px;">
+                               class="table table-hover table-bordered table-striped rlink-table">
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -853,6 +853,7 @@
                     paging: false,
                     searching: false,
                     columnDefs: columnDefs,
+                    scrollX: '100%'
                 });
 
                 this.searchLoading = false;
