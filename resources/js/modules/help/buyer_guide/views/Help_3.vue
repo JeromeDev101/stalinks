@@ -1,8 +1,8 @@
 
-  
+
 <template>
 
-  
+
   <div>
     <div class='row'>
       <div class='col-sm-12'>
@@ -18,21 +18,21 @@
                     />
                   </router-link>
                   STEP 3: FOLLOW UP YOUR ORDERS
-                   <router-link :to="{ path: '/help/seller-guide-1'  }"> 
+                   <router-link :to="{ path: '/help'  }">
                       <img
-                     
+
                       src='../../../../../images/writer-guide/next.png'
                     />
-                   </router-link> 
-                 
+                   </router-link>
+
                 </h1>
-               
+
                  <p class="text-underline">How to place orders?  </p>
-                 
-                 <p>Go to the “list of backlinks to buy” at the buyer page.  <br/> From the list of domains, select the best one for your website. Consider comparing the SEO score and the price before buying. We also recommend to visit the site first before making any purchase decision. 
+
+                 <p>Go to the “list of backlinks to buy” at the buyer page.  <br/> From the list of domains, select the best one for your website. Consider comparing the SEO score and the price before buying. We also recommend to visit the site first before making any purchase decision.
 </p>
                  <img class="up" src='../../../../../images/buyer-guide/buyer-guide-5.png' /> <br/>
-                 
+
                   <p>
                      Use the Filter to help you to look for what you need</p>
 
@@ -67,9 +67,9 @@
                          <li>Link to:  Yoursite.com/example</li>
                          <li>Url Advertiser: Yoursite.com  </li>
                      </ol>
-                     
 
-                
+
+
               </div>
             </div>
           </div>
@@ -80,6 +80,6 @@
 </template>
 
 <style>
-     
-        
+
+
     </style>

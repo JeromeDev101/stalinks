@@ -14,19 +14,19 @@
                     />
                   </router-link>
                  STEP 4: GET PAID
-                   <router-link :to="{ path: '/help/writer-guide-1' }">
+                   <router-link :to="{ path: '/help' }">
                       <img
                       class=''
                       src='../../../../../images/writer-guide/next.png'
                     />
                       </router-link>
                 </h1>
-                   
-              
-               
+
+
+
                 <p>
-               How to use Incomes 
-Here a resume of all your sells and how much you made 
+               How to use Incomes
+Here a resume of all your sells and how much you made
 
 
                 </p>
@@ -36,11 +36,11 @@ Here a resume of all your sells and how much you made
                     <li>	You also can check the proof of payment </li>
                 </ol>
                   <img class="income-img"src="../../../../../images/seller-guide/income-guide-1.png"/>
-            
+
  <p>
 
 
-Thanks for using Stalinks 
+Thanks for using Stalinks
 
  </p>
               </div>
