@@ -493,7 +493,7 @@
                                 <template
                                     slot-scope="scope"
                                     slot="statusData">
-                        <span :class="['label', 'label-'
+                        <span :class="['badge', 'badge-'
                         + (listStatusText[scope.row.status] ?
                         listStatusText[scope.row.status].label :
                         'warning')]">{{
