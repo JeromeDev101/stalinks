@@ -240,8 +240,25 @@
                                              :class="{
                                     active: $route.name == 'wallet-transaction'
                                 }">
-                                    <i class="far fa-money-bill-alt"></i>
+                                    <i class="far fa-money-bill-alt nav-icon"></i>
                                     <span>Wallet Transaction</span>
+                                    <span class="pull-right-container"></span>
+                                </router-link>
+                            </li>
+
+                            <li class="nav-item"
+                                v-if="user.isAdmin ||
+                            isManager || isBuyer || isQc || isQcSeller ||
+                                     isQcBilling"
+                                :class="{
+                                active: $route.name == 'wallet-summary'
+                            }">
+                                <router-link :to="{ path: '/wallet-summary' }" class="nav-link"
+                                             :class="{
+                                    active: $route.name == 'wallet-summary'
+                                }">
+                                    <i class="fas fa-bars nav-icon"></i>
+                                    <span>Wallet Summary</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
                             </li>
@@ -295,7 +312,7 @@
                             <li class="nav-item">
                                 <router-link :to="{ path: '/url-prospect' }" class="nav-link"
                                              :class="{ active: $route.name == 'ExtDomain' }">
-                                    <i class="fas fa-bars"></i>
+                                    <i class="fas fa-bars nav-icon"></i>
                                     <span>URL Prospect</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -313,7 +330,7 @@
                                         $route.name == 'Trash'
                                 }"
                                 >
-                                    <i class="fas fa-envelope-open"></i>
+                                    <i class="fas fa-envelope-open nav-icon"></i>
                                     <span>Mails</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -365,7 +382,7 @@
                                     :to="{ path: '/publisher' }"
                                     :class="{ active: $route.name == 'publisher' }"
                                 >
-                                    <i class="fa fa-fw fa-reorder"></i>
+                                    <i class="fas fa-bars nav-icon"></i>
                                     <span>List Publisher</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -377,7 +394,7 @@
                                     :to="{ path: '/followup-sales' }"
                                     :class="{ active: $route.name == 'followup-sales' }"
                                 >
-                                    <i class="fa fa-fw fa-share"></i>
+                                    <i class="fa fa-fw fa-share nav-icon"></i>
                                     <span>Follow up Sale</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -385,11 +402,11 @@
 
                             <li class="nav-item">
                                 <router-link
-                                    class="page-sidebar__item"
+                                    class="nav-link"
                                     :to="{ path: '/incomes' }"
                                     :class="{ active: $route.name == 'incomes' }"
                                 >
-                                    <i class="fa fa-fw fa-dollar"></i>
+                                    <i class="fas fa-dollar-sign nav-icon"></i>
                                     <span>Incomes</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -428,7 +445,7 @@
                                     :to="{ path: '/list-backlinks' }"
                                     :class="{ active: $route.name == 'list-backlinks' }"
                                 >
-                                    <i class="fa fa-fw fa-reorder"></i>
+                                    <i class="fas fa-bars nav-icon"></i>
                                     <span>List Backlinks to Buy</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -440,7 +457,7 @@
                                     :to="{ path: '/followup-backlinks' }"
                                     :class="{ active: $route.name == 'BackLink' }"
                                 >
-                                    <i class="fa fa-fw fa-share"></i>
+                                    <i class="fa fa-fw fa-share nav-icon"></i>
                                     <span>Follow up Backlinks</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -452,7 +469,7 @@
                                     :to="{ path: '/purchase' }"
                                     :class="{ active: $route.name == 'purchase' }"
                                 >
-                                    <i class="fa fa-fw fa-btc"></i>
+                                    <i class="fab fa-btc nav-icon"></i>
                                     <span>Purchase</span>
                                     <span class="pull-right-container"></span>
                                 </router-link>
@@ -473,7 +490,7 @@
                             $route.name == 'seller-guide-4'
                     }"
                         >
-                            <i class="fa fa-question-circle"></i>
+                            <i class="fa fa-question-circle nav-icon"></i>
                             <span>Help</span>
                         </router-link>
                     </li>
@@ -481,17 +498,17 @@
             </nav>
             <!-- /.sidebar-menu -->
         </div>
-<!--        <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">-->
-<!--            <div class="os-scrollbar-track">-->
-<!--                <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden">-->
-<!--            <div class="os-scrollbar-track">-->
-<!--                <div class="os-scrollbar-handle" style="height: 69.1117%; transform: translate(0px, 0px);"></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="os-scrollbar-corner"></div>-->
+        <!--        <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">-->
+        <!--            <div class="os-scrollbar-track">-->
+        <!--                <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden">-->
+        <!--            <div class="os-scrollbar-track">-->
+        <!--                <div class="os-scrollbar-handle" style="height: 69.1117%; transform: translate(0px, 0px);"></div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        <div class="os-scrollbar-corner"></div>-->
         <!-- /.sidebar -->
     </aside>
 </template>
