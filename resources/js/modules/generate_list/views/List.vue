@@ -181,12 +181,21 @@
                                                 <i class="fa fa-upload"></i>
                                             </button>
 
+                                            <button
+                                                title="Download CSV Template"
+                                                class="btn btn-primary btn-flat"
+
+                                                @click="downloadTemplate">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+
                                             <export-excel
                                                 class="btn btn-primary btn-flat"
                                                 :data=generateList.data
                                                 worksheet="My Worksheet"
                                                 name="generate_list.xls">
-                                                <i class="fa fa-download"></i>
+                                                <i class="fa fa-list"></i>
+                                                Export
 
                                             </export-excel>
 
@@ -356,11 +365,13 @@
 import {mapState} from 'vuex';
 import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
+import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
 
 export default {
     components : {
         VueVirtualTable,
     },
+    mixins: [csvTemplateMixin],
     data() {
         return {
             filterModel : {
@@ -741,6 +752,16 @@ export default {
                 this.getGenerateList();
             })
         },
+
+        downloadTemplate() {
+            let headers = [];
+
+            let rows = ['URL'];
+
+            headers.push(rows);
+
+            this.downloadCsvTemplate(headers, 'generate_list_csv_template');
+        }
     }
 }
 </script>
