@@ -294,6 +294,14 @@
                                     (scope.row.backlinks == 0 || scope.row.ref_domain == 0) ? 0 : (scope.row.backlinks / scope.row.ref_domain).toFixed(2)
                                 }}
                             </template>
+
+                            <template
+                                slot-scope="scope"
+                                slot="orgTrafficData">
+                                {{
+                                    formatPrice(scope.row.org_traffic)
+                                }}
+                            </template>
                         </vue-virtual-table>
 
                         <pagination v-if="generateList.data"
@@ -365,7 +373,7 @@
 import {mapState} from 'vuex';
 import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
-import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
+import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
 
 export default {
     components : {
@@ -522,10 +530,10 @@ export default {
                     eClass : this.tableConfigColorClasses('code3_numeral_value'),
                 },
                 {
-                    prop : 'org_traffic',
+                    prop : '_action',
                     name : 'Org Traffic',
+                    actionName : 'orgTrafficData',
                     width : 100,
-                    sortable : true,
                     isHidden : false
                 },
                 {
@@ -751,6 +759,10 @@ export default {
                 this.checkIds = [];
                 this.getGenerateList();
             })
+        },
+
+        formatPrice(value) {
+            return (value / 1).toFixed(0);
         },
 
         downloadTemplate() {
