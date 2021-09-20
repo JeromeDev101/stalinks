@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:run')->daily();
         $schedule->command('backup:clean')->daily();
         $schedule->command('mail_logs_status:update')->daily();
+        $schedule->command('system-logs:flush')->daily();
     }
 
     /**

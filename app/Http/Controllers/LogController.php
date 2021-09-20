@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
+use App\Models\User;
 use App\Repositories\Contracts\LogRepositoryInterface;
 use App\Repositories\Contracts\MailLogRepositoryInterface;
 use Illuminate\Http\Request;
@@ -31,6 +33,11 @@ class LogController extends Controller
     }
 
     public function getList(Request $request) {
+        $users = User::select([
+            'username',
+            'email',
+            'id'
+        ])->get();
         $input = $request->all();
         $userEmail = '';
         $perPage = config('common.paginate.default');
@@ -57,6 +64,7 @@ class LogController extends Controller
 
         $data = $this->logRepository->paginate($perPage, $userEmail, $filters);
         $data['paginate'] = $this->addPaginationRaw($data['paginate']);
+        $data['users'] = $users;
         return response()->json($data);
     }
 

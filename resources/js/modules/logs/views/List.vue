@@ -53,9 +53,9 @@
                                 Filter
                             </td>
 
-                            <td>
+                            <td style="overflow: inherit!important;">
                                 <div class="input-group input-group-sm">
-                                    <input type="text" v-model="filterModel.email_temp"  class="form-control pull-right" placeholder="Search Email">
+                                    <v-select class="col-sm-12" v-model="filterModel.email_temp" :options="log_users" :reduce="logUser => logUser.email" label="username" />
                                 </div>
                             </td>
 
@@ -164,6 +164,7 @@
                 messageForms: state => state.storeLog.messageForms,
                 listLogs: state => state.storeLog.listLogs,
                 counter: state => state.storeLog.counter,
+                log_users: state => state.storeLog.log_users,
             }),
 
             pagination() {
