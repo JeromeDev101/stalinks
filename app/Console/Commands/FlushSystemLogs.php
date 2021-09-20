@@ -39,10 +39,10 @@ class FlushSystemLogs extends Command
      */
     public function handle()
     {
-        $logs = Log::where('created_at', '<', Carbon::now()->addMonth(3))->get();
+        $logs = Log::where('created_at', '<', Carbon::now()->subMonth(3))->get();
 
         if ($logs) {
-            Log::where('created_at', '<', Carbon::now()->addMonth(3))->delete();
+            Log::where('created_at', '<', Carbon::now()->subMonth(3))->delete();
         }
     }
 }
