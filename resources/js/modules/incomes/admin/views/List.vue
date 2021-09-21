@@ -150,8 +150,8 @@
                                         incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
                                                                       }}
                                 </td>
-                                <td v-show="tblOptIncomesAdmin.fee_charges">0</td>
-                                <td v-show="tblOptIncomesAdmin.content_charges">0</td>
+                                <td v-show="tblOptIncomesAdmin.fee_charges">$0</td>
+                                <td v-show="tblOptIncomesAdmin.content_charges">$ {{ incomes_admin.billing_count }}</td>
                                 <!-- static only -->
                                 <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
                             </tr>
@@ -266,7 +266,8 @@ export default {
 
     methods : {
         computeNetIncomes(incomes) {
-            return 0;
+            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(incomes.billing_count);
+            return result > 0 ? result:0;
         },
 
         computeGross(selling_price, price) {

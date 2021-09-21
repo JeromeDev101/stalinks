@@ -38,4 +38,10 @@ class Article extends Model
     {
         return $this->belongsTo('App\Models\Language', 'id_language', 'id');
     }
+
+    public function writer_fee()
+    {
+        return $this->belongsTo('App\Models\BillingWriter', 'id_article');
+    }
+
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
+use Illuminate\Support\Facades\DB;
 
 class IncomesAdminController extends Controller
 {
@@ -13,7 +14,11 @@ class IncomesAdminController extends Controller
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
 
         $list = Backlink::where('status', 'Live')
-                ->with('publisher');
+                ->with('publisher')
+                ->withCount(['billing' => function ($query) {
+                    return $query->select(DB::raw('SUM(fee) AS fee'));
+                }]);
+                
 
         if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
             $list = $list->where('id', $filter['backlink_id']);
