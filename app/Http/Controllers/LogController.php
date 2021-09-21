@@ -6,7 +6,9 @@ use App\Models\Log;
 use App\Models\User;
 use App\Repositories\Contracts\LogRepositoryInterface;
 use App\Repositories\Contracts\MailLogRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
@@ -23,31 +25,35 @@ class LogController extends Controller
     /**
      * LogController constructor.
      *
-     * @param LogRepositoryInterface $logRepository
+     * @param LogRepositoryInterface     $logRepository
      * @param MailLogRepositoryInterface $mailLogRepository
      */
     public function __construct(LogRepositoryInterface $logRepository, MailLogRepositoryInterface $mailLogRepository)
     {
-        $this->logRepository = $logRepository;
+        $this->logRepository     = $logRepository;
         $this->mailLogRepository = $mailLogRepository;
     }
 
-    public function getList(Request $request) {
-        $users = User::select([
+    public function getList(Request $request)
+    {
+        $users     = User::select([
             'username',
             'email',
             'id'
         ])->get();
-        $input = $request->all();
+        $input     = $request->all();
         $userEmail = '';
-        $perPage = config('common.paginate.default');
-        $filters = [
+        $perPage   = config('common.paginate.default');
+        $filters   = [
             'whereIn' => [],
-            'where' => []
+            'where'   => []
         ];
 
         if (isset($input['action']) && $input['action'] != '') {
-            $filters['where'][] = ['action', $input['action']];
+            $filters['where'][] = [
+                'action',
+                $input['action']
+            ];
         }
 
         if (isset($input['email']) && $input['email'] != '') {
@@ -55,30 +61,38 @@ class LogController extends Controller
         }
 
         if (isset($input['table']) && $input['table'] != '') {
-            $filters['where'][] = ['table', $input['table']];
+            $filters['where'][] = [
+                'table',
+                $input['table']
+            ];
         }
 
         if (isset($input['per_page'])) {
             $perPage = $input['per_page'];
         }
 
-        $data = $this->logRepository->paginate($perPage, $userEmail, $filters);
+        $data             = $this->logRepository->paginate($perPage, $userEmail, $filters);
         $data['paginate'] = $this->addPaginationRaw($data['paginate']);
-        $data['users'] = $users;
+        $data['users']    = $users;
+
         return response()->json($data);
     }
 
-    public function getMailList(Request $request) {
-        $input = $request->all();
+    public function getMailList(Request $request)
+    {
+        $input     = $request->all();
         $userEmail = '';
-        $perPage = config('common.paginate.default');
-        $filters = [
+        $perPage   = config('common.paginate.default');
+        $filters   = [
             'whereIn' => [],
-            'where' => []
+            'where'   => []
         ];
 
         if (isset($input['action']) && $input['action'] != '') {
-            $filters['where'][] = ['action', $input['action']];
+            $filters['where'][] = [
+                'action',
+                $input['action']
+            ];
         }
 
         if (isset($input['email']) && $input['email'] != '') {
@@ -86,36 +100,51 @@ class LogController extends Controller
         }
 
         if (isset($input['status']) && $input['status'] != '') {
-            $filters['where'][] = ['status', $input['status']];
+            $filters['where'][] = [
+                'status',
+                $input['status']
+            ];
         }
 
         if (isset($input['from']) && $input['from'] != '') {
-            $filters['where'][] = ['from', 'like', '%'.$input['from'].'%'];
+            $filters['where'][] = [
+                'from',
+                'like',
+                '%' . $input['from'] . '%'
+            ];
         }
 
         if (isset($input['to']) && $input['to'] != '') {
-            $filters['where'][] = ['to', 'like', '%'.$input['to'].'%'];
+            $filters['where'][] = [
+                'to',
+                'like',
+                '%' . $input['to'] . '%'
+            ];
         }
 
         if (isset($input['ext']) && $input['ext'] != '') {
-            $filters['where'][] = ['ext_domain', 'like', '%'.$input['ext'].'%'];
+            $filters['where'][] = [
+                'ext_domain',
+                'like',
+                '%' . $input['ext'] . '%'
+            ];
         }
 
         if (isset($input['per_page'])) {
             $perPage = $input['per_page'];
         }
 
-        $data = $this->mailLogRepository->paginate($perPage, $userEmail, $filters);
+        $data             = $this->mailLogRepository->paginate($perPage, $userEmail, $filters);
         $data['paginate'] = $this->addPaginationRaw($data['paginate']);
 
         return response()->json($data);
     }
 
-    public function getTables() {
+    public function getTables()
+    {
         $path = app_path('Models');
 
         $models = $this->logRepository->getModels($path);
-
 
         foreach ($models as $model) {
             $data[$model] = with(new $model())->getTable();
@@ -144,14 +173,42 @@ class LogController extends Controller
         return response()->json($data);
     }
 
-    public function getActions() {
+    public function getActions()
+    {
         $data = [
             config('constant.ACTION_CREATE') => 'Create',
             config('constant.ACTION_UPDATE') => 'Update',
             config('constant.ACTION_DELETE') => 'Delete',
-            config('constant.ACTION_ALEXA') => 'Alexa'
+            config('constant.ACTION_ALEXA')  => 'Alexa'
         ];
 
         return response()->json($data);
+    }
+
+    /**
+     * Get last 3 months for filter purposes
+     */
+    public function getMonths()
+    {
+        $log = Log::selectRaw('MONTHNAME(created_at) AS month_name, MONTH(created_at) AS month')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        return response()->json($log);
+    }
+
+    /**
+     * Delete data within selected month
+     */
+    public function flushMonth($month)
+    {
+        $dateStart = Carbon::parse('01-' . $month . '-' . date("Y"));
+        $dateEnd   = Carbon::parse('31-' . $month . '-' . date("Y"));
+
+        Log::where('created_at', '>', $dateStart)
+            ->where('created_at', '<', $dateEnd)
+            ->delete();
+
+        return 'OK';
     }
 }

@@ -34,75 +34,94 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group input-group-sm float-right" style="width: 65px">
-                            <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
-                                <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
-                            </select>
+                        <div class="row mb-4">
+                            <div class="col-2">
+                                <select class="form-control" v-model="deleteModel.month">
+                                    <option value="">--- SELECT MONTH ---</option>
+                                    <option v-for="value in months" :value="value.month">{{ value.month_name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-4">
+                                <button type="button" @click="deleteMonth" class="btn btn-danger col col-2">Delete</button>
+                            </div>
+
+                            <div class="col">
+                                <div class="input-group input-group-sm float-right" style="width: 65px">
+                                    <select @change="doSearchList" class="form-control" v-model="filterModel.per_page" style="height: 37px;">
+                                        <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
-                        <table class="table table-hover table-bordered table-striped rlink-table">
-                            <tbody>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Username</th>
-                                <th>Table</th>
-                                <th>Action</th>
-                                <th>Time</th>
-                            </tr>
-                            <td style="max-width: 30px;">
-                                Filter
-                            </td>
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-hover table-bordered table-striped rlink-table">
+                                    <tbody>
+                                    <tr class="label-primary">
+                                        <th>#</th>
+                                        <th>Username</th>
+                                        <th>Table</th>
+                                        <th>Action</th>
+                                        <th>Time</th>
+                                    </tr>
+                                    <td style="max-width: 30px;">
+                                        Filter
+                                    </td>
 
-                            <td style="overflow: inherit!important;">
-                                <div class="input-group input-group-sm">
-                                    <v-select class="col-sm-12" v-model="filterModel.email_temp" :options="log_users" :reduce="logUser => logUser.email" label="username" />
-                                </div>
-                            </td>
+                                    <td style="overflow: inherit!important;">
+                                        <div class="input-group input-group-sm">
+                                            <v-select class="col-sm-12" v-model="filterModel.email_temp" :options="log_users" :reduce="logUser => logUser.email" label="username" />
+                                        </div>
+                                    </td>
 
-                            <td>
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group input-group-sm" style="width: 100%;">
-                                        <select v-model="filterModel.table_temp" class="form-control pull-right">
-                                            <option value="">-- All Tables --</option>
-                                            <option v-for="(option, key) in listTable" v-bind:value="key">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group input-group-sm" style="width: 100%;">
-                                        <select v-model="filterModel.action_temp" class="form-control pull-right">
-                                            <option value="">-- All Actions --</option>
-                                            <option v-for="(option, key) in listAction" v-bind:value="key">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                                </div>
-                            </td>
-                            <tr>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group input-group-sm" style="width: 100%;">
+                                                <select v-model="filterModel.table_temp" class="form-control pull-right">
+                                                    <option value="">-- All Tables --</option>
+                                                    <option v-for="(option, key) in listTable" v-bind:value="key">
+                                                        {{ option }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group input-group-sm" style="width: 100%;">
+                                                <select v-model="filterModel.action_temp" class="form-control pull-right">
+                                                    <option value="">-- All Actions --</option>
+                                                    <option v-for="(option, key) in listAction" v-bind:value="key">
+                                                        {{ option }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
+                                        </div>
+                                    </td>
+                                    <tr>
 
-                            </tr>
-                            <tr v-for="(item, index) in listLogs.data" :key="index">
-                                <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ item.user.username
-                                    }}</td>
-                                <td>{{ listTable[item.table]
-                                    ? listTable[item.table] :
-                                    item.table }}</td>
-                                <td>{{ listAction[item.action] ? listAction[item.action] : '' }}</td>
-                                <td>{{ item.created_at }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    </tr>
+                                    <tr v-for="(item, index) in listLogs.data" :key="index">
+                                        <td class="center-content">{{ index + 1 }}</td>
+                                        <td>{{ item.user.username
+                                            }}</td>
+                                        <td>{{ listTable[item.table]
+                                            ? listTable[item.table] :
+                                            item.table }}</td>
+                                        <td>{{ listAction[item.action] ? listAction[item.action] : '' }}</td>
+                                        <td>{{ item.created_at }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                         <div class="overlay" v-if="isLoadingTable">
                             <i class="fa fa-refresh fa-spin"></i>
@@ -119,6 +138,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: 'LogsList',
@@ -132,13 +152,16 @@
                     action: this.$route.query.action || '',
                     action_temp: this.$route.query.action_temp || '',
                     page: this.$route.query.page || 0,
-                    per_page: this.$route.query.per_page || 5,
+                    per_page: this.$route.query.per_page || 5
                 },
-
+                deleteModel : {
+                    month: ''
+                },
                 listPageOptions: [5, 10, 25, 50, 100],
                 isLoadingTable: false,
                 isPopupLoading: false,
-                actionMeta: []
+                actionMeta: [],
+                months: []
             };
         },
 
@@ -154,6 +177,7 @@
             this.getTableList();
             this.getActionList();
             this.getLogsList();
+            this.getMonthFilter();
         },
 
         computed: {
@@ -223,6 +247,37 @@
                 that.filterModel.action = that.filterModel.action_temp;
                 this.goToPage(0);
             },
+
+            getMonthFilter() {
+                axios.get('/api/admin/logs/months')
+                .then((response) => {
+                    this.months = response.data;
+                })
+            },
+
+            deleteMonth() {
+                swal.fire({
+                    icon: 'warning',
+                    title : 'Please confirm',
+                    text : 'Are you sure you want to delete this?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete('/api/admin/logs/flush/' + this.deleteModel.month)
+                            .then((response) => {
+                                this.getLogsList();
+
+                                swal.fire({
+                                    icon: 'success',
+                                    title: "Success",
+                                    text:
+                                        'Deleted successfully',
+                                });
+                            })
+                    }
+                })
+            }
         }
     }
 </script>

@@ -211,6 +211,8 @@ Route::middleware('auth:api')->group(function () {
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
         Route::name('get-email-access')->get('/email-access', 'ConfigController@getEmailAccessList');
         Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
+        Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
+        Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
     });
 
     //Formula
