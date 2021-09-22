@@ -30,7 +30,6 @@ const mutations = {
     [LOG_LIST_LOGS](state, listLogs) {
         state.listLogs = listLogs.paginate;
         state.counter = listLogs.counter;
-        state.log_users = listLogs.users;
     },
 
     [LOG_LIST_LOGS_MAIL](state, listLogs) {

@@ -36,11 +36,6 @@ class LogController extends Controller
 
     public function getList(Request $request)
     {
-        $users     = User::select([
-            'username',
-            'email',
-            'id'
-        ])->get();
         $input     = $request->all();
         $userEmail = '';
         $perPage   = config('common.paginate.default');
@@ -73,7 +68,6 @@ class LogController extends Controller
 
         $data             = $this->logRepository->paginate($perPage, $userEmail, $filters);
         $data['paginate'] = $this->addPaginationRaw($data['paginate']);
-        $data['users']    = $users;
 
         return response()->json($data);
     }
@@ -147,7 +141,10 @@ class LogController extends Controller
         $models = $this->logRepository->getModels($path);
 
         foreach ($models as $model) {
-            $data[$model] = with(new $model())->getTable();
+            $data[] = [
+                'id' => $model,
+                'value' => with(new $model())->getTable()
+            ];
         }
 
 //        $data = [
@@ -176,10 +173,22 @@ class LogController extends Controller
     public function getActions()
     {
         $data = [
-            config('constant.ACTION_CREATE') => 'Create',
-            config('constant.ACTION_UPDATE') => 'Update',
-            config('constant.ACTION_DELETE') => 'Delete',
-            config('constant.ACTION_ALEXA')  => 'Alexa'
+            [
+                'id' => config('constant.ACTION_CREATE'),
+                'value' => 'Create'
+            ],
+            [
+                'id' => config('constant.ACTION_UPDATE'),
+                'value' => 'Update'
+            ],
+            [
+                'id' => config('constant.ACTION_DELETE'),
+                'value' => 'Delete'
+            ],
+            [
+                'id' => config('constant.ACTION_ALEXA'),
+                'value' => 'Alexa'
+            ]
         ];
 
         return response()->json($data);
