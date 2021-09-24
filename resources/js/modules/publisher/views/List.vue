@@ -432,7 +432,9 @@
 
                                     <ul class="font-italic">
                                         <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
+                                        <li v-if="isAccountInvalid">Account status is
+                                            <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
+                                        </li>
                                     </ul>
 
                                     <div class="mb-0">
@@ -869,7 +871,9 @@
 
                                     <ul class="font-italic">
                                         <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is <strong>invalid</strong>.</li>
+                                        <li v-if="isAccountInvalid">Account status is
+                                            <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
+                                        </li>
                                     </ul>
 
                                     <div class="mb-0">
@@ -2974,7 +2978,7 @@
                     }
 
                     if (this.user.user_type) {
-                        if (this.user.user_type.account_validation == 'invalid') {
+                        if (this.user.user_type.account_validation == 'invalid' || this.user.user_type.account_validation == 'processing') {
                             this.isAccountInvalid = true;
                         }
                     }
