@@ -1,132 +1,100 @@
 <template>
-  <div>
-    <div class='row'>
-      <div class='col-sm-12'>
-        <div class='box'>
-          <div class='box-header'>
-            <div class='row'>
-              <div class='col-md-12'>
-                <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                   <router-link :to="{ path: '/help/buyer-guide-3' }">
-                   <img
-                    class=''
-                    src='../../../../../images/writer-guide/back.png'
-                  /> 
-                  </router-link>
-                STEP 1: LEARN ABOUT THE DASHBOARD
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="box">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="bg-primary text-white p-2 mt-3 with-arrow">
+                                    <router-link :to="{ path: '/help/buyer-guide-3' }">
+                                        <img
+                                            class=""
+                                            src="../../../../../images/writer-guide/back.png"
+                                        />
+                                    </router-link>
+                                    {{ $t('message.seller_1.h1') }}
 
-                  <router-link :to="{ path: '/help/seller-guide-2' }">
-                      <img
-                      class=''
-                      src='../../../../../images/writer-guide/next.png'
-                    />
-                  </router-link>
-                    
-                </h1>
-                <p class =' text-uppercase'> How to sell backlinks at StaLinks?</h2>
-                <p>Now that you are login into our desk management</p>
-               
-                <p>
-                  Upon logging in, you will automatically send to the Dashboard
-                  page. The Dashboard is the tools you can use to track your
-                  progress. However, if you click on each column, it can
-                  rearrange from lower to higher or vice versa. There are 3
-                  sections on the dashboard:
-                </p>
-                <ol class="content-style">
-                  <li>Seller List</li>
-                  <ul class="list-style-none">
-                    <li>
-                      Seller List will have all the information about the
-                      account you have registered.
-                    </li>
+                                    <router-link :to="{ path: '/help/seller-guide-2' }">
+                                        <img
+                                            class=""
+                                            src="../../../../../images/writer-guide/next.png"
+                                        />
+                                    </router-link>
 
-                    <li>It has 6 columns:</li>
-                  </ul>
-                  <ol class="content-style" type='a'>
-                    <li>In-charge - This will show your CS name</li>
-                    <li>Seller - Your seller’s username</li>
-                    <li>
-                      No. Sites - Total number of URLs registered on their
-                      profile
-                    </li>
-                    <li>
-                      No. Valid - Total number of their URLs that fits our
-                      criteria
-                    </li>
-                    <li>
-                      No. Unchecked - Total number of their URLs waiting to be
-                      checked by QC (follow up with QC)
-                    </li>
-                    <li>No. Invalid - Not good URLs</li>
-                  </ol>
-                  <img class="buyer-img" src='../../../../../images/seller-guide/seller-guide-1.png' />
+                                </h1>
+                                <p class=" text-uppercase">{{ $t('message.seller_1.p1') }}</p>
+                                <p>{{ $t('message.seller_1.p2') }}</p>
 
-                  <li>Total Backlink (Seller)</li>
-                  <ul class="list-style-none">
-                    <li>All the information about to track the orders</li>
+                                <p>{{ $t('message.seller_1.p3') }}</p>
+                                <ol class="content-style">
+                                    <li>{{ $t('message.seller_1.ol1') }}</li>
+                                    <ul class="list-style-none">
+                                        <li>{{ $t('message.seller_1.ul1') }}</li>
 
-                    <li>It has 8 columns:</li>
-                  </ul>
-                  <ol class="content-style" type='a'>
-                    <li>Total of orders</li>
-                    <li>
-                      Processing - order is made the writer will have to start
-                      writing
-                    </li>
-                    <li>Content Writing - at this moment, writers are on it</li>
-                    <li>
-                      Content Done - This content is ready to be post to be sure
-                      your seller go it or you sent it
-                    </li>
-                    <li>
-                      Content Sent - CS has send the content and are expecting
-                      the seller to put it in live process
-                    </li>
-                    <li>
-                      Live - checked by QC and approve now we can pay the seller
-                    </li>
-                    <li>Issue - the seller has a problem of timing</li>
-                    <li>
-                      Cancelled - the seller is not able to proceed anymore
-                    </li>
-                  </ol>
-                  <img class="buyer-img " src='../../../../../images/seller-guide/seller-guide-2.png' />
-                  <li>Income</li>
-                </ol>
+                                        <li>{{ $t('message.seller_1.ul2') }}</li>
+                                    </ul>
+                                    <ol class="content-style" type="a">
+                                        <li>{{ $t('message.seller_1.ul3') }}</li>
+                                        <li>{{ $t('message.seller_1.ul4') }}</li>
+                                        <li>{{ $t('message.seller_1.ul5') }}</li>
+                                        <li>{{ $t('message.seller_1.ul6') }}</li>
+                                        <li>{{ $t('message.seller_1.ul7') }}</li>
+                                        <li>{{ $t('message.seller_1.ul8') }}</li>
+                                    </ol>
+                                    <img class="buyer-img" src="../../../../../images/seller-guide/seller-guide-1.png"/>
 
-                <p>
-                  We do our best to be sure our seller got pay on time usually
-                  not more than 48h working day
-                </p>
-                <img class="buyer-img "src='../../../../../images/seller-guide/seller-guide-3.png' />
+                                    <li>{{ $t('message.seller_1.ol2') }}</li>
+                                    <ul class="list-style-none">
+                                        <li>{{ $t('message.seller_1.ul9') }}</li>
 
-                <p>Thanks for using Stalinks</p>
-              </div>
+                                        <li>{{ $t('message.seller_1.ul10') }}</li>
+                                    </ul>
+                                    <ol class="content-style" type="a">
+                                        <li>{{ $t('message.seller_1.ul11') }}</li>
+                                        <li>{{ $t('message.seller_1.ul12') }}</li>
+                                        <li>{{ $t('message.seller_1.ul13') }}</li>
+                                        <li>{{ $t('message.seller_1.ul14') }}</li>
+                                        <li>{{ $t('message.seller_1.ul15') }}</li>
+                                        <li>{{ $t('message.seller_1.ul16') }}</li>
+                                        <li>{{ $t('message.seller_1.ul17') }}</li>
+                                        <li>{{ $t('message.seller_1.ul18') }}</li>
+                                    </ol>
+                                    <img class="buyer-img "
+                                         src="../../../../../images/seller-guide/seller-guide-2.png"/>
+                                    <li>{{ $t('message.seller_1.ol3') }}</li>
+                                </ol>
+
+                                <p>{{ $t('message.seller_1.p4') }}</p>
+                                <img class="buyer-img " src="../../../../../images/seller-guide/seller-guide-3.png"/>
+
+                                <p>{{ $t('message.seller_1.p5') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 <style>
-        .buyer-img{
-            width: 100%;
-            padding: 20px;
-        }
-        .content-style li {
-            font-size:17px;
-            line-height:2em;
-            padding:20px;
-            font-weight:600;
-        }
-      
+.buyer-img {
+    width: 100%;
+    padding: 20px;
+}
 
-          .with-arrow{
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-        }
-        
-    </style>
+.content-style li {
+    font-size: 17px;
+    line-height: 2em;
+    padding: 20px;
+    font-weight: 600;
+}
+
+
+.with-arrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+</style>

@@ -7,15 +7,15 @@
                   <div class="box-header">
                      <div class="row">
                         <div class="col-md-12 help-content">
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h1') }}</h4>
-                           <p>{{ $t('message.p1') }}</p>
-                           <p style="font-weight: 600;color: #497EB1; font-size:20px;">{{ $t('message.h2') }}</p>
-                           <p>{{ $t('message.p2') }}</p>
-                           <p>{{ $t('message.p3') }}</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h1') }}</h4>
+                           <p>{{ $t('message.help.p1') }}</p>
+                           <p style="font-weight: 600;color: #497EB1; font-size:20px;">{{ $t('message.help.h2') }}</p>
+                           <p>{{ $t('message.help.p2') }}</p>
+                           <p>{{ $t('message.help.p3') }}</p>
                            <!-- Buyer -->
-                           <h4 class="bg-primary text-white p-2 mt-3 text-bold">{{ $t('message.h3') }}</h4>
+                           <h4 class="bg-primary text-white p-2 mt-3 text-bold">{{ $t('message.help.h3') }}</h4>
                            <p>
-                               {{ $t('message.p4') }}
+                               {{ $t('message.help.p4') }}
                            </p>
                            <ul class="no-dot">
                               <li class="flex mb-3" >
@@ -32,8 +32,8 @@
 
                                   <img src="../../../images/step-icons/Buyer_Navigate.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b1.url') }">
-                                     {{ $t('message.b1.text') }}
+                                 <router-link :to="{ path: $t('message.help.b1.url') }">
+                                     {{ $t('message.help.b1.text') }}
                                  </router-link>
 
                               </li>
@@ -49,8 +49,8 @@
 <!--                                 </div>-->
 
                                   <img src="../../../images/step-icons/Buyer_Backlink.png" alt="">
-                                 <router-link :to="{ path: $t('message.b2.url') }">
-                                     {{ $t('message.b2.text') }}
+                                 <router-link :to="{ path: $t('message.help.b2.url') }">
+                                     {{ $t('message.help.b2.text') }}
                                  </router-link>
                               </li>
                               <li class="flex mb-3">
@@ -65,13 +65,13 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Buyer_Follow Up.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b3.url') }">
-                                     {{ $t('message.b3.text') }}
+                                 <router-link :to="{ path: $t('message.help.b3.url') }">
+                                     {{ $t('message.help.b3.text') }}
                                  </router-link>
                               </li>
                            </ul>
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h4') }}</h4>
-                           <p>{{ $t('message.p5') }}</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h4') }}</h4>
+                           <p>{{ $t('message.help.p5') }}</p>
                            <ul class="no-dot">
                               <li class="flex mb-3" >
 <!--                                 <div class="circle">-->
@@ -85,8 +85,8 @@
 <!--                                    </div>-->
                                   <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b4.url') }">
-                                     {{ $t('message.b4.text') }}
+                                 <router-link :to="{ path: $t('message.help.b4.url') }">
+                                     {{ $t('message.help.b4.text') }}
                                  </router-link>
                                  </li>
                               <li class="flex mb-3" >
@@ -100,8 +100,8 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Seller_Upload.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b5.url') }">
-                                     {{ $t('message.b5.text') }}
+                                 <router-link :to="{ path: $t('message.help.b5.url') }">
+                                     {{ $t('message.help.b5.text') }}
                                  </router-link> </li>
                               <li class="flex mb-3" >
 <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
@@ -114,8 +114,8 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Seller_Follow Up.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b6.url') }">
-                                     {{ $t('message.b6.text') }}
+                                 <router-link :to="{ path: $t('message.help.b6.url') }">
+                                     {{ $t('message.help.b6.text') }}
                                  </router-link>  </li>
                               <li class="flex mb-3" >
 <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
@@ -128,13 +128,13 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b7.url') }">
-                                     {{ $t('message.b7.text') }}
+                                 <router-link :to="{ path: $t('message.help.b7.url') }">
+                                     {{ $t('message.help.b7.text') }}
                                  </router-link>
                               </li>
                            </ul>
-                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.h5') }}</h4>
-                           <p>{{ $t('message.p6') }}</p>
+                           <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h5') }}</h4>
+                           <p>{{ $t('message.help.p6') }}</p>
                            <ul class="no-dot">
                               <li class="flex mb-3" >
 <!--                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
@@ -145,8 +145,8 @@
 <!--                                    </div>  </div>-->
                                   <img src="../../../images/step-icons/Writer_Register.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b8.url') }">
-                                     {{ $t('message.b8.text') }}
+                                 <router-link :to="{ path: $t('message.help.b8.url') }">
+                                     {{ $t('message.help.b8.text') }}
                                  </router-link>
                               </li>
                               <li class="flex mb-3" >
@@ -160,8 +160,8 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Writer_Content.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b9.url') }">
-                                     {{ $t('message.b9.text') }}
+                                 <router-link :to="{ path: $t('message.help.b9.url') }">
+                                     {{ $t('message.help.b9.text') }}
                                  </router-link>
                               </li>
                               <li class="flex mb-3" >
@@ -175,8 +175,8 @@
 <!--                                 </div>-->
                                   <img src="../../../images/step-icons/Writer_Income.png" alt="">
 
-                                 <router-link :to="{ path: $t('message.b10.url') }">
-                                     {{ $t('message.b10.text') }}
+                                 <router-link :to="{ path: $t('message.help.b10.url') }">
+                                     {{ $t('message.help.b10.text') }}
                                  </router-link>
                               </li>
                            </ul>

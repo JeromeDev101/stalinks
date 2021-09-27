@@ -22,7 +22,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import VueApexCharts from 'vue-apexcharts'
 import excel from 'vue-excel-export'
 import VueI18n from 'vue-i18n';
-import langs from './../lang/Modules/Help/main';
+import langs from '../lang/Modules/main';
 import {Constants} from "./mixins/constants";
 
 require('./bootstrap');

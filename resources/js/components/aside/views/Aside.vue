@@ -492,6 +492,7 @@
                         >
                             <i class="fa fa-question-circle nav-icon"></i>
                             <span>Help</span>
+                            <span class="pull-right-container"></span>
                         </router-link>
                     </li>
                 </ul>

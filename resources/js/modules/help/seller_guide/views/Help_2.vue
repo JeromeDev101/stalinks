@@ -1,147 +1,104 @@
 <template>
-  <div>
-    <div class='row'>
-      <div class='col-sm-12'>
-        <div class='box'>
-          <div class='box-header'>
-            <div class='row'>
-              <div class='col-md-12'>
-                <h1 class='bg-primary text-white p-2 mt-3 with-arrow'>
-                   <router-link :to="{ path: '/help/seller-guide-1' }">
-                      <img
-                      class=''
-                      src='../../../../../images/writer-guide/back.png'
-                    />
-                  </router-link>
-                 STEP 2: UPLOAD YOUR LIST OF URLS WITH PRICE AND OTHER CRITERIA
-                  <router-link :to="{ path: '/help/seller-guide-3' }">
-                      <img
-                      class=''
-                      src='../../../../../images/writer-guide/next.png'
-                    />
-                  </router-link>
-                </h1>
-                   
-                <p>Now is time to upload your URLs</p>
-               
-                <p>
-                 In the menu look for LIST Publisher:
-Add more url There are two ways to upload URLs to the publisher list. You can do it manually or by uploading the CSV files.
-At the left corner of the screen, go to the “Seller” menu and “List Publisher List” tab.
-On the menu bar, click on Seller → List Publisher
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="box">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="bg-primary text-white p-2 mt-3 with-arrow">
+                                    <router-link :to="{ path: '/help/seller-guide-1' }">
+                                        <img
+                                            class=""
+                                            src="../../../../../images/writer-guide/back.png"
+                                        />
+                                    </router-link>
+                                    {{ $t('message.seller_2.h1') }}
+                                    <router-link :to="{ path: '/help/seller-guide-3' }">
+                                        <img
+                                            class=""
+                                            src="../../../../../images/writer-guide/next.png"
+                                        />
+                                    </router-link>
+                                </h1>
 
-                </p>
-                  <img class="buyer-img "src="../../../../../images/seller-guide/url-guide-1.png"/>
-              <p>
-                  If you choose to do it manually:
-                On the right side, click on the add URL button
+                                <p>{{ $t('message.seller_2.p1') }}</p>
 
-              </p>
-               <img src="../../../../../images/seller-guide/url-guide-2.png"/>
-                <p>
-                A pop-up window will show and fill out the information
+                                <p>{{ $t('message.seller_2.p2') }}</p>
+                                <img class="buyer-img " src="../../../../../images/seller-guide/url-guide-1.png"/>
+                                <p>{{ $t('message.seller_2.p3') }}</p>
+                                <img src="../../../../../images/seller-guide/url-guide-2.png"/>
+                                <p>{{ $t('message.seller_2.p4') }}</p>
+                                <ol type="a">
+                                    <li>{{ $t('message.seller_2.ol1') }}</li>
+                                    <li>{{ $t('message.seller_2.ol2') }}</li>
+                                    <li>{{ $t('message.seller_2.ol3') }}</li>
+                                    <li>{{ $t('message.seller_2.ol4') }}</li>
+                                    <li>{{ $t('message.seller_2.ol5') }}</li>
+                                    <li>{{ $t('message.seller_2.ol6') }}</li>
+                                    <li>{{ $t('message.seller_2.ol7') }}</li>
+                                    <li>{{ $t('message.seller_2.ol8') }}</li>
+                                </ol>
+                                <img class="buyer-img" src="../../../../../images/seller-guide/url-guide-3.png"/>
+                                <p>{{ $t('message.seller_2.p5') }}</p>
 
-              </p>
-                  <ol type='a'>
-                    <li>Seller</li>
-                    <li>
-                      Include article: yes / no
-                    </li>
-                    <li>URL</li>
-                    <li>
-                    Language
-                    </li>
-                    <li>
-                     Country
-                    </li>
-                    <li>
-                     Price in ( USD )
-                    </li>
-                    <li>Accept Casino / Betting sites : yes / no </li>
-                    <li>
-                     Topic 
-                    </li>
-                  </ol>
-<img class="buyer-img"src="../../../../../images/seller-guide/url-guide-3.png"/>
-                 <p>Click Add</p>
-                    
+                                <p>{{ $t('message.seller_2.p6') }}</p>
+                                <img class="buyer-img" src="../../../../../images/seller-guide/url-guide-4.png"/>
 
-                  <p>
-                   If you choose to upload the CSV File:
-you must prepare a CSV Excel file first containing the details of the URL’s (URL, Price, Inc Article, Accept C&B, KW Anchor and Language).
-We have made a template for you 
+                                <p>{{ $t('message.seller_2.p7') }}</p>
 
-                  </p>
-                   <img class="buyer-img"src="../../../../../images/seller-guide/url-guide-4.png"/> 
-              
-
-                <p>When your CSV is ready 
-Click “Choose File” then click the upload icon.
-</p>
-
-  <img class="buyer-img"src="../../../../../images/seller-guide/url-guide-5.png"/> 
- <p>
-     You always can edit or delete urls info 
-We are the on to generate ahref score for you 
-You can also check the price of URL the indicator is based on the color of the start 
-Red…price to high 
-Orange … average price
-Green … Price is good you will have more chance to get orders soon 
-Just wait for some buyer to order you some backlinks 
-
-
-Thanks for using Stalinks 
-
- </p>
-              </div>
+                                <img class="buyer-img" src="../../../../../images/seller-guide/url-guide-5.png"/>
+                                <p>{{ $t('message.seller_2.p8') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <style>
-        .buyer-img{
-            width: 100%;
-            padding: 20px;
-        }
-        .content-style li {
-            font-size:17px;
-            line-height:2em;
-            padding:20px;
-            font-weight:600;
-        }
-     
+.buyer-img {
+    width: 100%;
+    padding: 20px;
+}
 
-          .with-arrow{
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-        }
-        
-    </style>
+.content-style li {
+    font-size: 17px;
+    line-height: 2em;
+    padding: 20px;
+    font-weight: 600;
+}
 
+
+.with-arrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+</style>
 
 <script>
-    import { mapState } from 'vuex';
-    export default {
-        data() {
-            return {
-                //
-            }
-        },
-        async created() {
+import {mapState} from 'vuex';
+
+export default {
+    data() {
+        return {
             //
-        },
-        computed: {
-            ...mapState({
-                user: state => state.storeAuth.currentUser,
-            }),
-        },
-        methods: {
-            //
-        },
-    }
+        }
+    },
+    async created() {
+        //
+    },
+    computed : {
+        ...mapState({
+            user : state => state.storeAuth.currentUser,
+        }),
+    },
+    methods : {
+        //
+    },
+}
 </script>
