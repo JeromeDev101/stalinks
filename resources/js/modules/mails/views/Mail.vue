@@ -116,7 +116,7 @@
                         <ul class="list-group" v-for="(label, index) in generalLabels" :key="index">
                             <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
                                 <a href="#" @click="setQueryLabel(label.id)" >
-                                    <i class="far fa-circle" :style="{'color': label.color}"></i> {{ label.name }}
+                                    <i class="fa fa-circle" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
                                 <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
                             </li>
@@ -128,13 +128,19 @@
                     <div class="card-header">
                         <h3 class="card-title text-primary">User Labels</h3>
                         <div class="card-tools">
+                            <i
+                                class="fa fa-plus"
+                                style="cursor: pointer"
+                                data-toggle="modal"
+                                data-target="#modal-add-label">
+                            </i>
                         </div>
                     </div>
                     <div class="card-body">
                         <ul class="list-group" v-for="(label, index) in userLabels" :key="index">
                             <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
                                 <a href="#" @click="setQueryLabel(label.id)" >
-                                    <i class="fa fa-circle-o" :style="{'color': label.color}"></i> {{ label.name }}
+                                    <i class="fa fa-circle" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
                                 <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
                             </li>
