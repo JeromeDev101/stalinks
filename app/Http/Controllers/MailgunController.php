@@ -310,7 +310,8 @@ class MailgunController extends Controller
                     MAX(replies.from_mail) AS from_mail,
                     MAX(replies.created_at) AS created_at,
                     MAX(replies.attachment) AS attachment,
-                    MAX(replies.is_starred) AS is_starred
+                    MAX(replies.is_starred) AS is_starred,
+                    MAX(replies.status_code) AS status
                 ')
                     ->leftJoin('labels', 'replies.label_id', '=', 'labels.id');
             } else {

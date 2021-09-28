@@ -150,6 +150,12 @@
                                             @change="checkSelected">
                                     </td>
 
+                                    <td v-if="$route.name === 'Sent'">
+                                        <span class="badge" :class="statusClass(inbox.status)">
+                                            {{ statusLabel(inbox.status) }}
+                                        </span>
+                                    </td>
+
                                     <td @click="viewMessage(inbox, index, $route.name)">
                                         <i
                                             v-show="inbox.label_id != 0"
@@ -1914,7 +1920,38 @@ export default {
 
                 this.getInbox();
             });
-        }
+        },
+
+        statusClass(status) {
+            return {
+                'bg-warning': status === 0,
+                'bg-maroon': status === 500,
+                'bg-gray-dark': status === 570,
+                'bg-danger': status === 552,
+                'bg-success': status === 250,
+                'bg-navy': status === 260
+            }
+        },
+
+        statusLabel(code) {
+            let label = '';
+
+            if (code === 0) {
+                label = 'Sent'
+            } else if(code === 250){
+                label = 'Delivered'
+            } else if(code === 500){
+                label = 'Rejected'
+            } else if(code === 552){
+                label = 'Failed'
+            } else if(code === 260){
+                label = 'Opened'
+            } else {
+                label = 'Reported'
+            }
+
+            return label;
+        },
     }
 }
 </script>
