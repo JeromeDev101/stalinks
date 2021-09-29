@@ -140,19 +140,19 @@
                     <div class="modal-header">
                         <h4 class="modal-title">{{ modalMode === 'Add' ? 'Add' : 'Update' }} Email Signature</h4>
 
-                        <div class="modal-load overlay float-right">
-                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+<!--                        <div class="modal-load overlay float-right">-->
+<!--                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>-->
 
-                            <span
-                                v-if="messageForms.message !== '' && !isPopupLoading"
-                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+<!--                            <span-->
+<!--                                v-if="messageForms.message !== '' && !isPopupLoading"-->
+<!--                                :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">-->
 
-                                {{ messageForms.message }}
-                            </span>
-                        </div>
+<!--                                {{ messageForms.message }}-->
+<!--                            </span>-->
+<!--                        </div>-->
                     </div>
 
-                    <div class="modal-body relative">
+                    <div class="modal-body">
 
                         <div class="alert alert-info">
                             <i class="fa fa-exclamation-circle"></i>
@@ -223,7 +223,7 @@
                             </div>
                         </form>
 
-                        <div class="overlay" v-if="isPopupLoading"></div>
+<!--                        <div class="overlay" v-if="isPopupLoading"></div>-->
                     </div>
 
                     <div class="modal-footer">
@@ -470,6 +470,12 @@ export default {
                 await self.clearModel();
                 await self.getSignatureList()
                 this.addImages = [];
+
+                await swal.fire(
+                    'Added!',
+                    'Email signature added.',
+                    'success'
+                )
             }
         },
 
@@ -539,6 +545,12 @@ export default {
                 this.updateSignatureTemp.name = this.updateSignatureModel.name
                 this.updateSignatureTemp.content = this.updateSignatureModel.content
                 this.updateSignatureTemp.work_mail = this.updateSignatureModel.work_mail
+
+                await swal.fire(
+                    'Updated!',
+                    'Email signature updated.',
+                    'success'
+                )
             }
         },
 

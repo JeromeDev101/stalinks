@@ -121,37 +121,48 @@ class MailgunController extends Controller
 
         $signature = $signature ? "<div style='width:100%'>" . $signature->content . "</div>" : '';
 
-        // get inline images source
+        // content data
 
-        $inlineImagesSrc = $this->imageSrcExtractor($signature);
+        $send_content = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $request->content);
+        $send_signature = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $signature);
 
-        // replace html string images source for mailgun
+        $data = [
+            'content' => $send_content,
+            'signature' => $send_signature,
+        ];
 
-        $send_signature = str_replace("/storage/uploads/", "cid:", $signature);
-
-        // for html content
-
-        $inlineImagesContentSrc = $this->imageSrcExtractor($request->content);
-
-        $send_content = str_replace("/storage/uploads/", "cid:", $request->content);
-
-        // merge all inline images src
-
-        $inlineImagesAllSrc = array_merge($inlineImagesSrc, $inlineImagesContentSrc);
+//        // get inline images source
+//
+//        $inlineImagesSrc = $this->imageSrcExtractor($signature);
+//
+//        // replace html string images source for mailgun
+//
+//        $send_signature = str_replace("/storage/uploads/", "cid:", $signature);
+//
+//        // for html content
+//
+//        $inlineImagesContentSrc = $this->imageSrcExtractor($request->content);
+//
+//        $send_content = str_replace("/storage/uploads/", "cid:", $request->content);
+//
+//        // merge all inline images src
+//
+//        $inlineImagesAllSrc = array_merge($inlineImagesSrc, $inlineImagesContentSrc);
 
         $params = [
             'from'                => $work_mail,
             'to'                  => array($str),
             'subject'             => $request->title,
-            //            'html'                  => "<div style='white-space: pre'>" . $request->content . "</div>",
-            'html'                => "<div style='white-space: pre'>" . $send_content . $send_signature . "</div>",
+//            'html'                => "<div style='white-space: pre'>" . $request->content . "</div>",
+//            'html'                => "<div style='white-space: pre'>" . $send_content . $send_signature . "</div>",
+            'html'                => view('send_email', $data)->render(),
             'recipient-variables' => json_encode($object),
             'attachment'          => $atth,
             'o:tag'               => array('test1'),
             'o:tracking'          => 'yes',
             'o:tracking-opens'    => 'yes',
             'o:tracking-clicks'   => 'yes',
-            'inline'              => $inlineImagesAllSrc
+//            'inline'              => $inlineImagesAllSrc
         ];
 
         if (isset($request->cc) && $request->cc != "") {
