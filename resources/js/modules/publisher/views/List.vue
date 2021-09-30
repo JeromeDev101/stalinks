@@ -2676,6 +2676,11 @@
             async submitUpload() {
                 $('#tbl-publisher').DataTable().destroy();
 
+                // clear error messages
+
+                this.failedUpload.total = 0;
+                this.failedUpload.message = [];
+
                 swal.fire({
                     title: "Uploading CSV...",
                     text: "Please wait",

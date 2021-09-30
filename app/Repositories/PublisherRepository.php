@@ -513,8 +513,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         $datas = [];
         $existing_datas = [];
+
         while (($line = fgetcsv($csv)) !== FALSE) {
             if (Auth::user()->isOurs == 1) {
+
                 if (count($line) > 8 || count($line) < 8) {
                     $message = "Please check the header: Url, Price, Inc Article, Accept C&B, KW Anchor, Language, Topic and Country only.";
                     $file_message = "Invalid Header format. " . $message;
@@ -523,6 +525,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 if ($ctr > 0) {
+
                     $url = trim_special_characters($line[0]);
                     $price = trim_special_characters($line[1]);
                     $article = trim_special_characters($line[2]);
@@ -542,38 +545,59 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                     $isCheckDuplicate = $this->checkDuplicate($url, $id);
 
-                    if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
-                        if (preg_grep("/" . $topic . "/i", $topic_list)) {
-                            if (preg_grep("/" . $country . "/i", $country_name_list)) {
-                                if (!$isCheckDuplicate) {
-                                    if (trim($url, " ") != '') {
-                                        $lang = $this->getLanguage($language_excel);
-                                        $count = $this->getCountry($country);
-                                        $valid = $this->checkValid($url);
+                    if($url != ''
+                        && $topic != ''
+                        && $price != ''
+                        && $accept != ''
+                        && $article != ''
+                        && $country != ''
+                        && $kw_anchor != ''
+                        && $language_excel != '')  {
 
-                                        Publisher::create([
-                                            'user_id'      => $id,
-                                            'language_id'  => $lang,
-                                            'continent_id' => $count->continent_id,
-                                            'country_id'   => $count->id,
-                                            'url'          => $url,
-                                            'ur'           => 0,
-                                            'dr'           => 0,
-                                            'backlinks'    => 0,
-                                            'ref_domain'   => 0,
-                                            'org_keywords' => 0,
-                                            'org_traffic'  => 0,
-                                            'price'        => preg_replace('/[^0-9.\-]/', '', $price),
-                                            'inc_article'  => ucwords(strtolower(trim($article, " "))),
-                                            'valid'        => $valid,
-                                            'casino_sites' => ucwords(strtolower(trim($accept, " "))),
-                                            'kw_anchor'    => ucwords(strtolower(trim($kw_anchor, " "))),
-                                            'topic'        => $topic,
-                                            'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                        if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
+
+                            if (preg_grep("/" . $topic . "/i", $topic_list)) {
+
+                                if (preg_grep("/" . $country . "/i", $country_name_list)) {
+
+                                    if (!$isCheckDuplicate) {
+
+                                        if (trim($url, " ") != '') {
+                                            $lang = $this->getLanguage($language_excel);
+                                            $count = $this->getCountry($country);
+                                            $valid = $this->checkValid($url);
+
+                                            Publisher::create([
+                                                'user_id'      => $id,
+                                                'language_id'  => $lang,
+                                                'continent_id' => $count->continent_id,
+                                                'country_id'   => $count->id,
+                                                'url'          => $url,
+                                                'ur'           => 0,
+                                                'dr'           => 0,
+                                                'backlinks'    => 0,
+                                                'ref_domain'   => 0,
+                                                'org_keywords' => 0,
+                                                'org_traffic'  => 0,
+                                                'price'        => preg_replace('/[^0-9.\-]/', '', $price),
+                                                'inc_article'  => ucwords(strtolower(trim($article, " "))),
+                                                'valid'        => $valid,
+                                                'casino_sites' => ucwords(strtolower(trim($accept, " "))),
+                                                'kw_anchor'    => ucwords(strtolower(trim($kw_anchor, " "))),
+                                                'topic'        => $topic,
+                                                'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                                            ]);
+                                        }
+                                    } else {
+                                        $file_message = "You have already uploaded this url: " . $url . ", Check in line " . (intval($ctr) + 1);
+                                        $result = true;
+
+                                        array_push($existing_datas, [
+                                            'message' => $file_message
                                         ]);
                                     }
                                 } else {
-                                    $file_message = "You have already uploaded this url: " . $url . ", Check in line " . (intval($ctr) + 1);
+                                    $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
                                     $result = true;
 
                                     array_push($existing_datas, [
@@ -581,7 +605,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     ]);
                                 }
                             } else {
-                                $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
+                                $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
                                 $result = true;
 
                                 array_push($existing_datas, [
@@ -589,7 +613,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 ]);
                             }
                         } else {
-                            $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
+                            $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
                             $result = true;
 
                             array_push($existing_datas, [
@@ -597,7 +621,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             ]);
                         }
                     } else {
-                        $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
+                        $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
                         $result = true;
 
                         array_push($existing_datas, [
@@ -634,39 +658,63 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                     $isCheckDuplicate = $this->checkDuplicate($url, $seller_id);
 
-                    if (in_array($seller_id, $user_id_list)) {
-                        if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
-                            if (preg_grep("/" . $topic . "/i", $topic_list)) {
-                                if (preg_grep("/" . $country . "/i", $country_name_list)) {
-                                    if (!$isCheckDuplicate) {
-                                        if (trim($url, " ") != '') {
-                                            $lang = $this->getLanguage($language_excel);
-                                            $count = $this->getCountry($country);
-                                            $valid = $this->checkValid($url);
+                    if($url != ''
+                        && $price != ''
+                        && $topic != ''
+                        && $accept != ''
+                        && $article != ''
+                        && $country != ''
+                        && $kw_anchor != ''
+                        && $seller_id != ''
+                        && $language_excel != '')  {
 
-                                            Publisher::create([
-                                                'user_id'      => $seller_id,
-                                                'language_id'  => $lang,
-                                                'continent_id' => $count->continent_id,
-                                                'country_id'   => $count->id,
-                                                'url'          => $url,
-                                                'ur'           => 0,
-                                                'dr'           => 0,
-                                                'backlinks'    => 0,
-                                                'ref_domain'   => 0,
-                                                'org_keywords' => 0,
-                                                'org_traffic'  => 0,
-                                                'price'        => preg_replace('/[^0-9.\-]/', '', $price),
-                                                'inc_article'  => ucwords(strtolower(trim($article, " "))),
-                                                'valid'        => $valid,
-                                                'casino_sites' => ucwords(strtolower(trim($accept, " "))),
-                                                'topic'        => $topic,
-                                                'kw_anchor'    => $kw_anchor,
-                                                'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                        if (in_array($seller_id, $user_id_list)) {
+
+                            if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
+
+                                if (preg_grep("/" . $topic . "/i", $topic_list)) {
+
+                                    if (preg_grep("/" . $country . "/i", $country_name_list)) {
+
+                                        if (!$isCheckDuplicate) {
+
+                                            if (trim($url, " ") != '') {
+
+                                                $lang = $this->getLanguage($language_excel);
+                                                $count = $this->getCountry($country);
+                                                $valid = $this->checkValid($url);
+
+                                                Publisher::create([
+                                                    'user_id'      => $seller_id,
+                                                    'language_id'  => $lang,
+                                                    'continent_id' => $count->continent_id,
+                                                    'country_id'   => $count->id,
+                                                    'url'          => $url,
+                                                    'ur'           => 0,
+                                                    'dr'           => 0,
+                                                    'backlinks'    => 0,
+                                                    'ref_domain'   => 0,
+                                                    'org_keywords' => 0,
+                                                    'org_traffic'  => 0,
+                                                    'price'        => preg_replace('/[^0-9.\-]/', '', $price),
+                                                    'inc_article'  => ucwords(strtolower(trim($article, " "))),
+                                                    'valid'        => $valid,
+                                                    'casino_sites' => ucwords(strtolower(trim($accept, " "))),
+                                                    'topic'        => $topic,
+                                                    'kw_anchor'    => $kw_anchor,
+                                                    'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                                                ]);
+                                            }
+                                        } else {
+                                            $file_message = " URL and Seller ID already exist, Check in line " . (intval($ctr) + 1);
+                                            $result = true;
+
+                                            array_push($existing_datas, [
+                                                'message' => $file_message
                                             ]);
                                         }
                                     } else {
-                                        $file_message = " URL and Seller ID already exist, Check in line " . (intval($ctr) + 1);
+                                        $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
                                         $result = true;
 
                                         array_push($existing_datas, [
@@ -674,7 +722,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         ]);
                                     }
                                 } else {
-                                    $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
+                                    $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
                                     $result = true;
 
                                     array_push($existing_datas, [
@@ -682,7 +730,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     ]);
                                 }
                             } else {
-                                $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
+                                $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
                                 $result = true;
 
                                 array_push($existing_datas, [
@@ -690,7 +738,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 ]);
                             }
                         } else {
-                            $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
+                            $file_message = "No Seller ID of " . $seller_id . $message . ". Check in line " . (intval($ctr) + 1);
                             $result = true;
 
                             array_push($existing_datas, [
@@ -698,7 +746,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                             ]);
                         }
                     } else {
-                        $file_message = "No Seller ID of " . $seller_id . $message . ". Check in line " . (intval($ctr) + 1);
+                        $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
                         $result = true;
 
                         array_push($existing_datas, [
