@@ -164,14 +164,14 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button class="btn btn-default">
+                                        <label class="btn btn-default">
                                             <input type="checkbox"
                                                    :disabled="seller.proof_doc_path != null"
                                                    v-on:change="checkSelected"
                                                    :id="seller.id"
                                                    :value="seller"
                                                    v-model="checkIds">
-                                        </button>
+                                        </label>
                                     </div>
                                 </td>
                                 <td>{{ seller.id }}</td>
