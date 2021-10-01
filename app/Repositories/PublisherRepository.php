@@ -24,6 +24,33 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
     protected $httpClient;
 
+    private $topic_list = [
+        'Art',
+        'Beauty',
+        'Charity',
+        'Cooking',
+        'Crypto',
+        'Education',
+        'Fashion',
+        'Finance',
+        'Games',
+        'Health',
+        'History',
+        'Job',
+        'Marketing',
+        'Movies & Music',
+        'News',
+        'Pet',
+        'Photograph',
+        'Real Estate',
+        'Religion',
+        'Shopping',
+        'Sports',
+        'Tech',
+        'Travel',
+        'Unlisted',
+    ];
+
     public function __construct(Publisher $model, HttpClient $httpClient)
     {
         parent::__construct($model);
@@ -474,32 +501,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $user_id_list = User::pluck('id')->toArray();
         $country_name_list = Country::pluck('name')->toArray();
         $language_name_list = Language::pluck('name')->toArray();
-        $topic_list = [
-            'Art',
-            'Beauty',
-            'Charity',
-            'Cooking',
-            'Crypto',
-            'Education',
-            'Fashion',
-            'Finance',
-            'Games',
-            'Health',
-            'History',
-            'Job',
-            'Marketing',
-            'Movies & Music',
-            'News',
-            'Pet',
-            'Photograph',
-            'Real Estate',
-            'Religion',
-            'Shopping',
-            'Sports',
-            'Tech',
-            'Travel',
-            'Unlisted',
-        ];
+
 //        $language = $file['language'];
         $csv_file = $file['file'];
 
@@ -536,14 +538,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $country = trim_special_characters($line[7]);
 
                     // remove http
-
                     $url = $this->remove_http($url);
 
                     // remove space
-
                     $url = trim($url, " ");
 
+                    // remove /
+                    $url = rtrim($url,"/");
+
                     $isCheckDuplicate = $this->checkDuplicate($url, $id);
+                    $isCheckedTopic = $this->checkTopic($topic);
 
                     if($url != ''
                         && $topic != ''
@@ -556,7 +560,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                         if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
 
-                            if (preg_grep("/" . $topic . "/i", $topic_list)) {
+                            if ($isCheckedTopic) {
 
                                 if (preg_grep("/" . $country . "/i", $country_name_list)) {
 
@@ -649,14 +653,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $kw_anchor = trim_special_characters($line[8]);
 
                     // remove http
-
                     $url = $this->remove_http($url);
 
                     // remove space
-
                     $url = trim($url, " ");
 
+                    // remove /
+                    $url = rtrim($url,"/");
+
                     $isCheckDuplicate = $this->checkDuplicate($url, $seller_id);
+                    $isCheckedTopic = $this->checkTopic($topic);
 
                     if($url != ''
                         && $price != ''
@@ -672,7 +678,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                             if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
 
-                                if (preg_grep("/" . $topic . "/i", $topic_list)) {
+                                if ($isCheckedTopic) {
 
                                     if (preg_grep("/" . $country . "/i", $country_name_list)) {
 
@@ -769,6 +775,44 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ],
             "exist"   => $existing_datas,
         ];
+    }
+
+    private function checkTopic($topic) {
+        $result = false;
+
+        // list of topics
+        $topic_list = $this->topic_list;
+
+        // remove spaces
+        $topic = preg_replace('/\s+/', '', $topic);
+
+        // checking if has comma
+        if( strpos($topic, ',') !== false ) {
+            
+            $_topics = explode(',', $topic);
+            $_topic_result = [];
+
+            //checking if one of the topic is exist or not exist
+            foreach($_topics as $_topic){
+                if(preg_grep("/" . $_topic . "/i", $topic_list)){
+                    array_push($_topic_result, true);
+                } else {
+                    array_push($_topic_result, false);
+                }
+            }
+
+            if(!in_array(false, $_topic_result, true)) {
+                $result = true;
+            }
+
+        } else { // no commas or single topic
+
+            if(preg_grep("/" . $topic . "/i", $topic_list)){
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 
     private function checkDuplicate($url, $seller_id)
