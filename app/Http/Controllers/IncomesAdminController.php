@@ -18,7 +18,7 @@ class IncomesAdminController extends Controller
                 ->withCount(['billing' => function ($query) {
                     return $query->select(DB::raw('SUM(fee) AS fee'));
                 }]);
-                
+
 
         if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
             $list = $list->where('id', $filter['backlink_id']);
@@ -34,13 +34,15 @@ class IncomesAdminController extends Controller
         }
         $sellerPrice = $list->sum('prices');
         $buyerPrice = $list->sum('price');
+        $billingCount = $list->get()->sum('billing_count');
 
 
         $list = $list->orderBy('id', 'desc')->paginate($paginate);
 
         $totals = collect([
-            'seller_price_sum' => number_format($sellerPrice, 2),
-            'buyer_price_sum' => number_format($buyerPrice, 2)
+            'seller_price_sum' => $sellerPrice,
+            'buyer_price_sum' => $buyerPrice,
+            'billing_count_sum' => $billingCount
         ]);
 
         return response()->json($totals->merge($list));

@@ -93,12 +93,12 @@
                         <div class="d-flex justify-content-center">
                             <div class="col">
                                 <h6>Seller Price:
-                                    ${{ listIncomesAdmin.seller_price_sum }}</h6>
+                                    ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
                                 <h6>Buyer Price:
-                                    ${{ listIncomesAdmin.buyer_price_sum }}</h6>
+                                    ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
@@ -113,7 +113,7 @@
 
                             <div class="col">
                                 <h6>Net Incomes:
-                                    $0.00</h6>
+                                    ${{ totalNetIncome }}</h6>
                             </div>
 
                         </div>
@@ -124,7 +124,8 @@
                            }} entries.</b>
                     </span>
 
-                        <table id="tbl_incomes_admin" class="table table-hover table-bordered table-striped rlink-table">
+                        <table id="tbl_incomes_admin"
+                               class="table table-hover table-bordered table-striped rlink-table">
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -227,6 +228,7 @@
 
 <script>
 import {mapState} from 'vuex';
+import _ from 'lodash';
 
 export default {
     data() {
@@ -236,7 +238,7 @@ export default {
                 150,
                 250,
                 350,
-                'All'
+                'All',
             ],
             isSearchLoading : false,
             filterModel : {
@@ -244,7 +246,7 @@ export default {
                 backlink_id : this.$route.query.backlink_id || '',
                 date_completed : {
                     startDate : null,
-                    endDate : null
+                    endDate : null,
                 },
             },
             isSearchingLoading : false,
@@ -261,13 +263,19 @@ export default {
             tblOptIncomesAdmin : state => state.storeIncomesAdmin.tblOptIncomesAdmin,
             messageForms : state => state.storeIncomesAdmin.messageForms,
             user : state => state.storeAuth.currentUser,
-        })
+        }),
+
+        totalNetIncome() {
+            let result = parseFloat(this.listIncomesAdmin.seller_price_sum) - parseFloat(this.listIncomesAdmin.buyer_price_sum) - parseFloat(this.listIncomesAdmin.billing_count_sum);
+
+            return result.toFixed(2);
+        },
     },
 
     methods : {
         computeNetIncomes(incomes) {
             let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(incomes.billing_count);
-            return result > 0 ? result:0;
+            return result > 0 ? result : 0;
         },
 
         computeGross(selling_price, price) {
@@ -298,7 +306,7 @@ export default {
             $('#tbl_incomes_admin').DataTable({
                 paging : false,
                 searching : false,
-                columnDefs : {orderable : true, targets : '_all'}
+                columnDefs : {orderable : true, targets : '_all'},
             });
 
             this.isSearchLoading = false;
@@ -314,8 +322,8 @@ export default {
                 params : {
                     paginate : this.filterModel.paginate,
                     backlink_id : this.filterModel.backlink_id,
-                    date_completed : this.filterModel.date_completed
-                }
+                    date_completed : this.filterModel.date_completed,
+                },
             });
         },
 
@@ -325,12 +333,12 @@ export default {
                 backlink_id : '',
                 date_completed : {
                     startDate : null,
-                    endDate : null
+                    endDate : null,
                 },
             }
 
             this.getListIncomesAdmin({
-                params : this.filterModel
+                params : this.filterModel,
             });
 
             this.$router.replace({'query' : null});
