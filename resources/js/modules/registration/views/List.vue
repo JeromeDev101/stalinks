@@ -1956,6 +1956,7 @@ export default {
 
             this.checkTeamIncharge('update');
             this.checkVerified();
+            this.checkCompanyType();
         },
 
         async getPaymentTypeList(params) {
