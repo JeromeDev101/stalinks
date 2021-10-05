@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\InboxResource;
+use App\Jobs\DeleteEmailAttachments;
 use App\MailSignature;
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -971,5 +974,19 @@ class MailgunController extends Controller
             'success' => true,
             'message' => $sender
         ], 200);
+    }
+
+
+    /**
+     * Deletes email attachments with timestamp < 30 days/1 month
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteOldAttachments () {
+
+        // call job to delete email attachments older than 30 days
+        DeleteEmailAttachments::dispatchNow();
+
+        return response('Success', 200);
     }
 }
