@@ -494,11 +494,11 @@ class ExtDomainController extends Controller
             if ($hasContactInfo) {
                 array_push($listStatusExclude, config('constant.EXT_STATUS_GOT_CONTACTS'));
             } else {
-                Validator::make($input, [
-                    'facebook' => 'required',
-                    'email' => 'required',
-                    'phone' => 'required',
-                ])->validate();
+//                Validator::make($input, [
+//                    'facebook' => 'required',
+//                    'email' => 'required',
+//                    'phone' => 'required',
+//                ])->validate();
             }
         } else {
             array_push($listStatusExclude, config('constant.EXT_STATUS_AHREAFED'));
