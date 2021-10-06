@@ -1189,6 +1189,10 @@ export default {
                 address : ''
             },
 
+            skrillModel : {
+                email : ''
+            },
+
             filterModel : {
                 name : this.$route.query.name || '',
                 code : this.$route.query.name || '',

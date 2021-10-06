@@ -103,140 +103,6 @@
             </li>
         </ul>
 
-
-
-
-
-
-
-
-<!--        <ul class="nav navbar-nav">
-            <li
-                v-if="isBuyer"
-                style="margin-left:-400px;margin-bottom:-55px;"
-            >
-                <a href="#">
-                    &lt;!&ndash; Deposit: <strong>$ {{ money.deposit }} <span ref="deposit"></span></strong>
-                    &nbsp;
-                    Wallet: <strong>$ {{ money.wallet }}</strong>
-                    &nbsp; &ndash;&gt;
-                    Credit: <strong>$ {{ money.credit }}</strong>
-                </a>
-                <button
-                    v-if="user.registration.is_sub_account == 0 && user.registration.account_validation == 'valid'"
-                    class="btn btn-round btn-success"
-                    data-toggle="modal"
-                    data-target="#modal-add-wallet-header"><i
-                    class="fa fa-plus"></i> Add Credit
-                </button>
-            </li>
-
-            <li class="nav-item d-none d-sm-inline-block">
-                <select name="language" id="language" class="form-control" v-model="pageLanguage">
-                    <option value="en">English</option>
-                    <option value="jp">Japanese</option>
-                </select>
-            </li>
-
-            <li class="nav-item d-none d-sm-inline-block">
-                <a
-                    href="#"
-                    class="dropdown-toggle"
-                    data-toggle="dropdown"
-                    @click="notificationsSeen"
-                >
-                    <i
-                        class="fa fa-bell-o"
-                        v-if="notifications.new_notifications < 1"></i>
-                    <i
-                        class="fa fa-bell text-red"
-                        v-else></i>
-                </a>
-
-                <ul class="dropdown-menu notification-menu-custom overflow-auto" style="height: 300px;">
-                    <li>
-                        <div class="vertical-menu">
-                            <a href="#"
-                               v-for="notification in notifications.data">{{ notification.data.message }}</a>
-                        </div>
-
-                    </li>
-                    <li class="footer"><a href="#">View all</a></li>
-                </ul>
-            </li>
-
-            <li class="dropdown user user-menu">
-                <a
-                    href="#"
-                    class="dropdown-toggle"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <img
-                        :src="user.avatar"
-                        class="user-image"
-                        alt="User Image"
-                    />
-                    <span class="hidden-xs">{{ user.username }}</span>
-                    <span class="hidden-xs" v-if="user.isOurs == 0"
-                    >({{ user.role ? user.role.name : null }})</span
-                    >
-                    <span class="hidden-xs" v-if="user.isOurs == 1"
-                    >({{
-                            user.user_type ? user.user_type.type : ""
-                     }})</span
-                    >
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="user-header">
-                        <img
-                            :src="user.avatar"
-                            class="img-circle"
-                            alt="User Image"
-                        />
-                        <p>{{ user.username }}</p>
-                        <p
-                            style="margin-top:-5%"
-                            v-if="user.isOurs == 0"
-                        >
-                            {{ user.role ? user.role.name : null }}
-                        </p>
-                        <p
-                            style="margin-top:-5%"
-                            v-if="user.isOurs == 1"
-                        >
-                            {{
-                                user.user_type
-                                    ? user.user_type.type
-                                    : ""
-                            }}
-                        </p>
-                    </li>
-                    <li class="user-footer">
-                        <div class="pull-left">
-                            <router-link
-                                :to="{ path: `/profile/${user.id}` }"
-                            >
-                                <a
-                                    href="#"
-                                    class="btn btn-default btn-flat"
-                                >Profile</a
-                                >
-                            </router-link>
-                        </div>
-                        <div class="pull-right">
-                            <a
-                                href="#"
-                                @click="logoutAndRedirect"
-                                class="btn btn-default btn-flat"
-                            >Sign out</a
-                            >
-                        </div>
-                    </li>
-                </ul>
-            </li>
-        </ul>-->
-
         <!-- Modal Add Wallet -->
         <div class="modal fade"
              id="modal-add-wallet-header"
@@ -290,6 +156,12 @@
                             <div v-if="updateModel.payment_type === 3" class="col-md-12">
                                 <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
                                 <p class="text-center">{{ listPayment.data[2].address }}</p>
+                            </div>
+
+                            <div v-if="updateModel.payment_type === 2" class="col-md-12">
+                                <p class="text-center">
+                                    Skrill E-mail: {{ listPayment.data[1].email }}
+                                </p>
                             </div>
 
                             <div class="col-md-12"

@@ -287,6 +287,7 @@ class UserController extends Controller
         $list = PaymentType::all();
 
         $list[2]->address = Config::where('code', 'usdt_address')->first()->value;
+        $list[1]->email = Config::where('code', 'skrill')->first()->value;
 
         return response()->json([
             'data' => $list
