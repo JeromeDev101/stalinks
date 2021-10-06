@@ -88,6 +88,14 @@ export default {
             data : _.toArray(_.map(data, function (datum) {
                 return {
                     x: datum.xaxis,
+                    y : datum.total - datum.qualified
+                }
+            }))
+        },{
+            name: 'Total',
+            data : _.toArray(_.map(data, function (datum) {
+                return {
+                    x: datum.xaxis,
                     y : datum.total
                 }
             }))
