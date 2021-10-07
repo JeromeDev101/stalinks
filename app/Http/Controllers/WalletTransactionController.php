@@ -22,7 +22,7 @@ class WalletTransactionController extends Controller
         $deposit = 0;
 
         $list = WalletTransaction::select('wallet_transactions.*')
-                        ->with('user:id,name')
+                        ->with('user:id,name,username')
                         ->with('payment_type:id,type')
                         ->orderBy('id', 'desc');
 

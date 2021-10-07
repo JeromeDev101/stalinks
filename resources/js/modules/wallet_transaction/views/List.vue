@@ -123,7 +123,7 @@
                             <tr v-for="(wallet, index) in listWallet.data" :key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ wallet.user_id }}</td>
-                                <td>{{ wallet.user.name}}</td>
+                                <td>{{ wallet.user.username}}</td>
                                 <td>{{ wallet.payment_type.type }}</td>
                                 <td>$ {{ wallet.amount_usd }}</td>
                                 <td>{{ wallet.date }}</td>
