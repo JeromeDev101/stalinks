@@ -525,9 +525,13 @@ export default {
         },
 
         nextPage() {
-            this.step = 1;
+            if (this.updateModel.payment_type === 1) {
+                this.step = 1;
 
-            setTimeout(this.initPaypalButtons, 300);
+                setTimeout(this.initPaypalButtons, 300);
+            } else {
+                this.submitPay();
+            }
         },
 
         async submitPay(paypalPayload) {
