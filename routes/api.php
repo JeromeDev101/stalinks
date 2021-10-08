@@ -166,6 +166,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('backlinks', 'BackLinkController');
     Route::name('buyers-bought')->get('buyers-bought', 'BackLinkController@getBuyerBought');
     Route::name('delete-backlinks')->post('delete-backlinks', 'BackLinkController@deleteBacklinks');
+    Route::name('backlinks-summary-status')->get('backlinks-summary-status', 'BackLinkController@statusSummary');
 
     //Intdomain
     Route::resource('intdomains', 'IntDomainController')->only(['index', 'show']);

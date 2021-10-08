@@ -109,6 +109,15 @@ class BackLinkController extends Controller
         return response()->json($total);
     }
 
+    public function statusSummary() {
+        $statuses = Backlink::select('status')
+                                ->selectRaw('count(*) as total')
+                                ->groupBy('status')
+                                ->get();
+
+        return $statuses;
+    }
+
     public function reportsPrice(Request $request)
     {
         $input = $request->only('country_id', 'country_id_of_user', 'employee_id');

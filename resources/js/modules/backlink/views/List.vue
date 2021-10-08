@@ -156,6 +156,16 @@
                         <table width="100%">
                             <tr>
                                 <td>
+                                    <table class="mb-3 bg-info">
+                                        <tr>
+                                            <td v-for="stat in statusSummary" :key="stat" class="p-3">
+                                                {{ stat.status }} 
+                                                <b>{{' ('+ stat.total +')' }}</b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
                                     <div class="input-group input-group-sm float-right" style="width: 100px">
                                         <select class="form-control float-right"
                                                 @change="getBackLinkList"
@@ -258,7 +268,8 @@
                                 <td v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':'$ '+backLink.publisher.code_price }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':backLink.publisher.price_basis }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
-                                <td v-show="tblFollowupBacklinksOpt.date_for_process">{{ backLink.date_process }}</td>
+                                <!-- date_process before  -->
+                                <td v-show="tblFollowupBacklinksOpt.date_for_process">{{ backLink.created_at }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.date_completed">{{ backLink.live_date }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.status">{{ backLink.status }}</td>
                                 <td>
@@ -561,6 +572,7 @@
                 isSearching: false,
                 listSubAccounts: [],
                 updateFormula: {},
+                statusSummary: [],
             }
         },
         async created() {
@@ -572,6 +584,7 @@
             this.getBuyerBoughtList();
             this.getSubAccount();
             this.getFormula();
+            this.getSummaryStatus();
         },
 
         computed: {
@@ -663,6 +676,24 @@
                 selling_price = parseFloat(selling_price).toFixed(0);
 
                 return selling_price;
+            },
+
+            getSummaryStatus() {
+                axios.get('/api/backlinks-summary-status')
+                .then((res)=> {
+                    let _res = res.data
+                    for(let index in this.statusBaclink) {
+                        let _result = _res.find( ({ status }) => status === this.statusBaclink[index] );
+                        let data = {
+                            "status": this.statusBaclink[index],
+                            "total": (typeof(_result) != "undefined") ? _result.total:0
+                        }
+                        
+                        this.statusSummary.push(data)
+                    }
+
+                    console.log(this.statusSummary)
+                })
             },
 
             getSubAccount() {
