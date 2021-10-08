@@ -11,6 +11,8 @@ use App\Models\Backlink;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Models\Article;
+use App\Models\User;
+use App\Models\Registration;
 use App\Events\ArticleEvent;
 use Illuminate\Support\Facades\DB;
 
@@ -110,8 +112,22 @@ class BackLinkController extends Controller
     }
 
     public function statusSummary() {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+        
+
         $statuses = Backlink::select('status')
                                 ->selectRaw('count(*) as total')
+                                ->when($user->role_id == 5, function($query) use ($user, $sub_buyer_ids){
+                                    $UserId[] = $user->id;
+
+                                    if(count($sub_buyer_ids) > 0) {
+                                        return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                                    } else {
+                                        return $query->whereIn('user_id', $UserId);
+                                    }
+                                })
                                 ->groupBy('status')
                                 ->get();
 
