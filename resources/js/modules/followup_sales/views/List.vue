@@ -385,7 +385,7 @@
                                             v-model="updateModel.status"
                                             style="height: 37px;"
                                             class="form-control pull-right"
-                                            :disabled="isLive && user.role_id != 8"
+                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue"
 
                                             @change="checkStatus()">
 
@@ -723,8 +723,13 @@
                 user: state => state.storeAuth.currentUser,
                 listCountryAll: state => state.storePublisher.listCountryAll,
                 listIncharge: state => state.storeAccount.listIncharge,
-
             }),
+
+            isCancelledIssue() {
+                let disabled = ['Canceled', 'Issue']
+
+                return disabled.includes(this.updateModel.status) && this.user.isOurs === 1;
+            },
         },
 
         methods: {
