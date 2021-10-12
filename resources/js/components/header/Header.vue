@@ -302,8 +302,18 @@
                             </div>
 
                             <div v-if="updateModel.payment_type === 3" class="col-md-12">
-                                <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                <img src="storage/btc.jpg" width="250px" alt="" class="mx-auto d-block">
                                 <p class="text-center">{{ listPayment.data[2].address }}</p>
+                            </div>
+
+                            <div v-if="updateModel.payment_type === 7" class="col-md-12">
+                                <img src="storage/eth.jpg" width="250px" alt="" class="mx-auto d-block">
+                                <p class="text-center">{{ listPayment.data[3].address }}</p>
+                            </div>
+
+                            <div v-if="updateModel.payment_type === 6" class="col-md-12">
+                                <img src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                <p class="text-center">{{ listPayment.data[4].address }}</p>
                             </div>
 
                             <div v-if="updateModel.payment_type === 2" class="col-md-12">
