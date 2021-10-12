@@ -292,4 +292,49 @@ class ConfigController extends Controller
 
         return 'OK';
     }
+
+
+    public function updateCryptoAddressBtc(Request $request)
+    {
+        $file = $request->file('file');
+
+        if ($file) {
+            Storage::disk('local')->put('btc.jpg', file_get_contents($file));
+        }
+
+        if ($request->has('address')) {
+            Config::updateOrCreate([
+                'code' => 'btc_address'
+            ], [
+                'name' => 'BTC Address',
+                'code' => 'btc_address',
+                'value' => $request->get('address'),
+                'type' => 'crypto'
+            ]);
+        }
+
+        return 'OK';
+    }
+
+    public function updateCryptoAddressEth(Request $request)
+    {
+        $file = $request->file('file');
+
+        if ($file) {
+            Storage::disk('local')->put('eth.jpg', file_get_contents($file));
+        }
+
+        if ($request->has('address')) {
+            Config::updateOrCreate([
+                'code' => 'eth_address'
+            ], [
+                'name' => 'ETH Address',
+                'code' => 'eth_address',
+                'value' => $request->get('address'),
+                'type' => 'crypto'
+            ]);
+        }
+
+        return 'OK';
+    }
 }

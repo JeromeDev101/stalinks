@@ -291,6 +291,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('download-paypal-proof-writer')->get('/files/proof/paypal/writer/{id}', 'WriterBillingController@downloadPaypalProof');
 
     Route::name('crypto-address-update')->post('/crypto/usdt', 'ConfigController@updateCryptoAddress');
+    Route::name('crypto-address-update-btc')->post('/crypto/btc', 'ConfigController@updateCryptoAddressBtc');
+    Route::name('crypto-address-update-eth')->post('/crypto/eth', 'ConfigController@updateCryptoAddressEth');
 
     // tools
     Route::name('tools-get')->get('/tools', 'ToolController@index');

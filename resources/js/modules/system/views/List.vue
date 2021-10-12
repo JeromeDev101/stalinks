@@ -287,6 +287,69 @@
                     </div>
                     <!--                        END CONFIG USDT-->
                 </div>
+
+                <div class="col-sm-12">
+                    <!--                        CONFIG BTC-->
+                    <div class="card card-outline card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">BTC QR Code</h3>
+                            <div class="card-tools">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <img src="storage/btc.jpg" width="250px" alt="" class="mx-auto d-block">
+                            <p class="text-center">{{ configList.data.crypto[1].value }}</p>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" class="form-control" v-model="cryptoModelBtc.address">
+                            </div>
+
+                            <div class="form-group">
+                                <label>QR Code Image</label>
+                                <input type="file" class="form-control" enctype="multipart/form-data" ref="qrcodeBtc" name="file">
+                                <small class="text-muted">Note: It must be JPG type.</small><br/>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="button" @click="updateBtc" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                    <!--                        END CONFIG USDT-->
+                </div>
+
+                <div class="col-sm-12">
+                    <!--                        CONFIG ETH-->
+                    <div class="card card-outline card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">ETH QR Code</h3>
+                            <div class="card-tools">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <img src="storage/eth.jpg" width="250px" alt="" class="mx-auto d-block">
+                            <p class="text-center">{{ configList.data.crypto[2].value }}</p>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" class="form-control" v-model="cryptoModelEth.address">
+                            </div>
+
+                            <div class="form-group">
+                                <label>QR Code Image</label>
+                                <input type="file" class="form-control" enctype="multipart/form-data" ref="qrcodeEth" name="file">
+                                <small class="text-muted">Note: It must be JPG type.</small><br/>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="button" @click="updateEth" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                    <!--                        END CONFIG ETH-->
+                </div>
+
             </div>
         </div>
 
@@ -1189,6 +1252,14 @@ export default {
                 address : ''
             },
 
+            cryptoModelBtc : {
+                address : ''
+            },
+
+            cryptoModelEth : {
+                address : ''
+            },
+
             skrillModel : {
                 email : ''
             },
@@ -1537,6 +1608,48 @@ export default {
             this.formData.append('file', this.$refs.qrcode.files[0]);
 
             axios.post('/api/crypto/usdt', this.formData)
+                .then((response) => {
+                    swal.fire(
+                        'Success',
+                        'Successfully Updated',
+                        'success'
+                    )
+                }).catch((error) => {
+                swal.fire(
+                    'Error',
+                    'Error encountered',
+                    'error'
+                )
+            });
+        },
+
+        updateBtc() {
+            this.formData = new FormData();
+            this.formData.append('address', this.cryptoModelBtc.address);
+            this.formData.append('file', this.$refs.qrcodeBtc.files[0]);
+
+            axios.post('/api/crypto/btc', this.formData)
+                .then((response) => {
+                    swal.fire(
+                        'Success',
+                        'Successfully Updated',
+                        'success'
+                    )
+                }).catch((error) => {
+                swal.fire(
+                    'Error',
+                    'Error encountered',
+                    'error'
+                )
+            });
+        },
+
+        updateEth() {
+            this.formData = new FormData();
+            this.formData.append('address', this.cryptoModelEth.address);
+            this.formData.append('file', this.$refs.qrcodeEth.files[0]);
+
+            axios.post('/api/crypto/eth', this.formData)
                 .then((response) => {
                     swal.fire(
                         'Success',
