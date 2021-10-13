@@ -177,6 +177,13 @@
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
                                             <input type="password" class="form-control" v-model="new_password" placeholder="Type New Password">
+                                            <span
+                                                v-if="messageForms.errors.password"
+                                                v-for="err in messageForms.errors.password"
+                                                class="text-danger">
+
+                                                {{ err }}
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -611,7 +618,7 @@ export default {
                     location.reload();
                 })
             }
-            
+
         },
 
         getListCountry() {
