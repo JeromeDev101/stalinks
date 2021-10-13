@@ -15,6 +15,8 @@ import DetailHosting from '@/modules/hosting/views/DetailHosting.vue'
 import DetailDomain from '@/modules/domain/views/DetailDomain.vue'
 import Domain from '@/modules/domain/views/Domain.vue'
 import System from '@/modules/system/views/List.vue'
+import Finance from "./modules/system/views/Finance";
+import IT from "./modules/system/views/IT";
 import MailTemplate from '@/modules/template_email/views/List.vue'
 // import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue'
@@ -68,313 +70,323 @@ import BuyerGuide3 from '@/modules/help/buyer_guide/views/Help_3.vue'
 import Tools from '@/modules/tools/views/Tools.vue'
 
 const routes = [
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/registration',
-    name: 'registration',
-    component: RegistrationPage
-  },
-  {
-    path: '/forgot-password',
-    name: 'forgot-password',
-    component: ForgotPassword
-  },
-  {
-    path: '/reset-password',
-    name: 'Reset Password',
-    component: ResetPassword
-  },
-  {
-    path: '/test-aw',
-    name: 'test_aw',
-    component: TestPush
-  },
-  {
-    path: '/verification/:code',
-    name: 'verification',
-    component: Verification
-  },
-  {
-    path: '/',
-    component: Admin,
-    meta: { requiresAuth: true },
-    name: 'Dashboard',
-    redirect: '/',
-    children: [
-      {
-        path: '/',
-        component: Dashboard
-      },
-      {
-        path: '/users',
-        name: 'List User',
-        component: ListUser
-      },
-      {
-        path: '/help',
-        name: 'help',
-        component: Help,
-        children: [
-          {
-            path: 'seller-guide-1',
-            name: 'seller-guide-1',
-            component: SellerGuide1
-          },
-          {
-            path: 'seller-guide-2',
-            name: 'seller-guide-2',
-            component: SellerGuide2
-          },
-          {
-            path: 'seller-guide-3',
-            name: 'seller-guide-3',
-            component: SellerGuide3
-          },
-          {
-            path: 'seller-guide-4',
-            name: 'seller-guide-4',
-            component: SellerGuide4
-          },
-          {
-            path: 'writer-guide-1',
-            name: 'writer-guide-1',
-            component: WriterGuide1
-          },
-          {
-            path: 'writer-guide-2',
-            name: 'writer-guide-2',
-            component: WriterGuide2
-          },
-          {
-            path: 'writer-guide-3',
-            name: 'writer-guide-3',
-            component: WriterGuide3
-          },
-          {
-            path: 'buyer-guide-1',
-            name: 'buyer-guide-1',
-            component: BuyerGuide1
-          },
-          {
-            path: 'buyer-guide-2',
-            name: 'buyer-guide-2',
-            component: BuyerGuide2
-          },
-          {
-            path: 'buyer-guide-3',
-            name: 'buyer-guide-3',
-            component: BuyerGuide3
-          }
-        ]
-      },
-      {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: DashboardAdmin
-      },
-      {
-        path: '/articles-list',
-        name: 'articles-list',
-        component: ArticleList
-      },
-      {
-        path: '/overall-incomes',
-        name: 'overall-incomes',
-        component: OverAllIncomes
-      },
-      {
-        path: '/mails',
-        name: 'mails',
-        component: Mails,
-        children: [
-          {
-            path: 'sent',
-            name: 'Sent',
-            component: Inbox
-          },
-          {
-            path: 'inbox',
-            name: 'Inbox',
-            component: Inbox
-          },
-          {
-            path: 'starred',
-            name: 'Starred',
-            component: Inbox
-          },
-          {
-            path: 'trash',
-            name: 'Trash',
-            component: Inbox
-          },
-          {
-            path: 'template',
-            name: 'mail-template',
-            component: MailTemplate
-          },
+    {
+        path : '/login',
+        name : 'login',
+        component : Login,
+    },
+    {
+        path : '/registration',
+        name : 'registration',
+        component : RegistrationPage,
+    },
+    {
+        path : '/forgot-password',
+        name : 'forgot-password',
+        component : ForgotPassword,
+    },
+    {
+        path : '/reset-password',
+        name : 'Reset Password',
+        component : ResetPassword,
+    },
+    {
+        path : '/test-aw',
+        name : 'test_aw',
+        component : TestPush,
+    },
+    {
+        path : '/verification/:code',
+        name : 'verification',
+        component : Verification,
+    },
+    {
+        path : '/',
+        component : Admin,
+        meta : {requiresAuth : true},
+        name : 'Dashboard',
+        redirect : '/',
+        children : [
             {
-                path: 'signature',
-                name: 'mail-signature',
-                component: MailSignature
-            }
-        ]
-      },
-      // {
-      //     path: '/sent',
-      //     name: 'sent',
-      //     component: SentMails,
-      // },
-      // {
-      //     path: '/deleted',
-      //     name: 'deleted',
-      //     component: DeleteMails,
-      // },
-      {
-        path: '/articles',
-        name: 'articles',
-        component: Article
-      },
-      {
-        path: '/followup-sales',
-        name: 'followup-sales',
-        component: FollowupSales
-      },
-      {
-        path: '/wallet-transaction',
-        name: 'wallet-transaction',
-        component: WalletTransaction
-      },
-      {
-        path: '/wallet-summary',
-        name: 'wallet-summary',
-        component: WalletSummary
-      },
-      {
-        path: '/buyer-billing',
-        name: 'buyer-billing',
-        component: BillingBuyer
-      },
-      {
-        path: '/writer-billing',
-        name: 'writer-billing',
-        component: BillingWriter
-      },
-      {
-        path: '/publisher',
-        name: 'publisher',
-        component: Publisher
-      },
-      {
-        path: '/seller-billing',
-        name: 'seller-billing',
-        component: BillingSeller
-      },
-      {
-        path: '/purchase',
-        name: 'purchase',
-        component: Purchase
-      },
-      {
-        path: '/profile/:id',
-        name: 'Profile',
-        component: Profile
-      },
-      {
-        path: '/url-prospect',
-        name: 'ExtDomain',
-        component: ExtDomain
-      },
-      {
-        path: '/ext/alexa',
-        name: 'AlexaDomain',
-        component: AlexaDomain
-      },
-      {
-        path: '/followup-backlinks',
-        name: 'BackLink',
-        component: BackLink
-      },
-      {
-        path: '/list-backlinks',
-        name: 'list-backlinks',
-        component: Buy
-      },
-      {
-        path: '/incomes',
-        name: 'incomes',
-        component: Incomes
-      },
-      {
-        path: '/accounts',
-        name: 'Registration',
-        component: Registration
-      },
-      {
-        path: 'intdomains',
-        name: 'int-domains',
-        component: IntDomain
-      },
-      {
-        path: 'hostings',
-        name: 'hostings',
-        component: Hosting
-      },
-      {
-        path: 'logs',
-        name: 'logs',
-        component: Log
-      },
-      {
-        path: 'hostings/:id',
-        name: 'detail-hosting',
-        component: DetailHosting
-      },
-      {
-        path: 'domains',
-        name: 'domains',
-        component: Domain
-      },
-      {
-        path: 'domains/:id',
-        name: 'detail-domains',
-        component: DetailDomain
-      },
-      {
-        path: 'system',
-        name: 'system',
-        component: System
-      },
-      // {
-      //     path: 'mail-template',
-      //     name: 'mail-template',
-      //     component: MailTemplate,
-      // },
-      {
-        path: 'mail-logs',
-        name: 'mail-logs',
-        component: Maillog
-      },
-      {
-        path: 'generate-list',
-        name: 'generate-list',
-        component: GenerateList
-      },
-        {
-            path: 'tools',
-            name: 'tools',
-            component: Tools
-        },
-      {
-        path: '*',
-        name: 'error-page',
-        component: ErrorPage
-      }
-    ]
-  }
+                path : '/',
+                component : Dashboard,
+            },
+            {
+                path : '/users',
+                name : 'List User',
+                component : ListUser,
+            },
+            {
+                path : '/help',
+                name : 'help',
+                component : Help,
+                children : [
+                    {
+                        path : 'seller-guide-1',
+                        name : 'seller-guide-1',
+                        component : SellerGuide1,
+                    },
+                    {
+                        path : 'seller-guide-2',
+                        name : 'seller-guide-2',
+                        component : SellerGuide2,
+                    },
+                    {
+                        path : 'seller-guide-3',
+                        name : 'seller-guide-3',
+                        component : SellerGuide3,
+                    },
+                    {
+                        path : 'seller-guide-4',
+                        name : 'seller-guide-4',
+                        component : SellerGuide4,
+                    },
+                    {
+                        path : 'writer-guide-1',
+                        name : 'writer-guide-1',
+                        component : WriterGuide1,
+                    },
+                    {
+                        path : 'writer-guide-2',
+                        name : 'writer-guide-2',
+                        component : WriterGuide2,
+                    },
+                    {
+                        path : 'writer-guide-3',
+                        name : 'writer-guide-3',
+                        component : WriterGuide3,
+                    },
+                    {
+                        path : 'buyer-guide-1',
+                        name : 'buyer-guide-1',
+                        component : BuyerGuide1,
+                    },
+                    {
+                        path : 'buyer-guide-2',
+                        name : 'buyer-guide-2',
+                        component : BuyerGuide2,
+                    },
+                    {
+                        path : 'buyer-guide-3',
+                        name : 'buyer-guide-3',
+                        component : BuyerGuide3,
+                    },
+                ],
+            },
+            {
+                path : '/dashboard',
+                name : 'dashboard',
+                component : DashboardAdmin,
+            },
+            {
+                path : '/articles-list',
+                name : 'articles-list',
+                component : ArticleList,
+            },
+            {
+                path : '/overall-incomes',
+                name : 'overall-incomes',
+                component : OverAllIncomes,
+            },
+            {
+                path : '/mails',
+                name : 'mails',
+                component : Mails,
+                children : [
+                    {
+                        path : 'sent',
+                        name : 'Sent',
+                        component : Inbox,
+                    },
+                    {
+                        path : 'inbox',
+                        name : 'Inbox',
+                        component : Inbox,
+                    },
+                    {
+                        path : 'starred',
+                        name : 'Starred',
+                        component : Inbox,
+                    },
+                    {
+                        path : 'trash',
+                        name : 'Trash',
+                        component : Inbox,
+                    },
+                    {
+                        path : 'template',
+                        name : 'mail-template',
+                        component : MailTemplate,
+                    },
+                    {
+                        path : 'signature',
+                        name : 'mail-signature',
+                        component : MailSignature,
+                    },
+                ],
+            },
+            // {
+            //     path: '/sent',
+            //     name: 'sent',
+            //     component: SentMails,
+            // },
+            // {
+            //     path: '/deleted',
+            //     name: 'deleted',
+            //     component: DeleteMails,
+            // },
+            {
+                path : '/articles',
+                name : 'articles',
+                component : Article,
+            },
+            {
+                path : '/followup-sales',
+                name : 'followup-sales',
+                component : FollowupSales,
+            },
+            {
+                path : '/wallet-transaction',
+                name : 'wallet-transaction',
+                component : WalletTransaction,
+            },
+            {
+                path : '/wallet-summary',
+                name : 'wallet-summary',
+                component : WalletSummary,
+            },
+            {
+                path : '/buyer-billing',
+                name : 'buyer-billing',
+                component : BillingBuyer,
+            },
+            {
+                path : '/writer-billing',
+                name : 'writer-billing',
+                component : BillingWriter,
+            },
+            {
+                path : '/publisher',
+                name : 'publisher',
+                component : Publisher,
+            },
+            {
+                path : '/seller-billing',
+                name : 'seller-billing',
+                component : BillingSeller,
+            },
+            {
+                path : '/purchase',
+                name : 'purchase',
+                component : Purchase,
+            },
+            {
+                path : '/profile/:id',
+                name : 'Profile',
+                component : Profile,
+            },
+            {
+                path : '/url-prospect',
+                name : 'ExtDomain',
+                component : ExtDomain,
+            },
+            {
+                path : '/ext/alexa',
+                name : 'AlexaDomain',
+                component : AlexaDomain,
+            },
+            {
+                path : '/followup-backlinks',
+                name : 'BackLink',
+                component : BackLink,
+            },
+            {
+                path : '/list-backlinks',
+                name : 'list-backlinks',
+                component : Buy,
+            },
+            {
+                path : '/incomes',
+                name : 'incomes',
+                component : Incomes,
+            },
+            {
+                path : '/accounts',
+                name : 'Registration',
+                component : Registration,
+            },
+            {
+                path : 'intdomains',
+                name : 'int-domains',
+                component : IntDomain,
+            },
+            {
+                path : 'hostings',
+                name : 'hostings',
+                component : Hosting,
+            },
+            {
+                path : 'logs',
+                name : 'logs',
+                component : Log,
+            },
+            {
+                path : 'hostings/:id',
+                name : 'detail-hosting',
+                component : DetailHosting,
+            },
+            {
+                path : 'domains',
+                name : 'domains',
+                component : Domain,
+            },
+            {
+                path : 'domains/:id',
+                name : 'detail-domains',
+                component : DetailDomain,
+            },
+            /*{
+                path : 'system',
+                name : 'system',
+                component : System,
+            },*/
+            {
+                path : 'system/it',
+                name : 'system-it',
+                component : IT,
+            },
+            {
+                path : 'system/finance',
+                name : 'system-finance',
+                component : Finance,
+            },
+            // {
+            //     path: 'mail-template',
+            //     name: 'mail-template',
+            //     component: MailTemplate,
+            // },
+            {
+                path : 'mail-logs',
+                name : 'mail-logs',
+                component : Maillog,
+            },
+            {
+                path : 'generate-list',
+                name : 'generate-list',
+                component : GenerateList,
+            },
+            {
+                path : 'tools',
+                name : 'tools',
+                component : Tools,
+            },
+            {
+                path : '*',
+                name : 'error-page',
+                component : ErrorPage,
+            },
+        ],
+    },
 ]
 
 export default routes

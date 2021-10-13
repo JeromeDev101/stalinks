@@ -1,0 +1,89 @@
+<template>
+    <div>
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Admin Settings / Finance</h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <payment-method :is-popup-loading="isPopupLoading" :message-forms="messageForms"></payment-method>
+                </div>
+
+                <div class="col-sm-12">
+                    <btc v-on:getconfiglist="getConfigList"></btc>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <Formula :message-forms="messageForms"></Formula>
+                </div>
+
+                <div class="col-sm-12">
+                    <Usdt v-on:getconfiglist="getConfigList"></Usdt>
+                </div>
+
+                <div class="col-sm-12">
+                    <eth v-on:getconfiglist="getConfigList"></eth>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import PaymentMethod from "./PaymentMethod";
+import Formula from "./Formula";
+import Usdt from "./Usdt";
+import Btc from "./Btc";
+import Eth from "./Eth";
+import {mapState} from "vuex";
+
+export default {
+    name : "Finance",
+
+    data() {
+        return {
+            isPopupLoading : false,
+        }
+    },
+
+    components : {
+        PaymentMethod,
+        Formula,
+        Usdt,
+        Btc,
+        Eth
+    },
+
+    created() {
+        this.getConfigList();
+    },
+
+    computed : {
+        ...mapState({
+            messageForms : state => state.storeSystem.messageForms,
+            configList : state => state.storeSystem.configList,
+
+        }),
+    },
+
+    methods : {
+        async getConfigList() {
+            await this.$store.dispatch('actionGetConfigList');
+        },
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

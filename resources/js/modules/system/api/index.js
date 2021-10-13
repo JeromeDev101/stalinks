@@ -56,19 +56,19 @@ export default class SystemService {
      * @param {AxiosPromise} params
      */
     static getPaymentList(params) {
-        return axios.get('api/admin/payments', params)
+        return axios.get('/api/admin/payments', params)
             .then(response => response)
             .catch(error => error);
     }
 
     static getLanguageList(params) {
-        return axios.get('api/admin/language', params)
+        return axios.get('/api/admin/language', params)
             .then(response => response)
             .catch(error => error);
     }
 
     static getEmailAccessList(params) {
-        return axios.get('api/admin/email-access', params)
+        return axios.get('/api/admin/email-access', params)
             .then(response => response)
             .catch(error => error);
     }

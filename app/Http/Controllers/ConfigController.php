@@ -129,10 +129,10 @@ class ConfigController extends Controller
             ->with('role')
             ->orderBy('work_mail', 'asc');
 
-        return [
+        return response()->json([
             'data' => $email_access->get(),
             'total' => $email_access->count(),
-        ];
+        ]);
     }
 
     public function addEmailAccess(Request $request)
