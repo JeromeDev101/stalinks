@@ -35,6 +35,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-type')->get('/user/type', 'UserController@getTypes');
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
     Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
+    Route::name('upload-avatar')->post('/user-upload-avatar', 'UserController@uploadAvatar');
 
     //Article
     Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');

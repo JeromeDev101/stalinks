@@ -10,14 +10,20 @@
                     <div class="box-body no-padding">
                         <ul class="users-list avatar clearfix">
                             <li>
-                                <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image">
+                                <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image" class="img-fluid avatar-img">
                             </li>
                             <li>
                                 <label>Username</label>
                                 <h3>{{ user.username }}</h3>
                             </li>
                             <li>
-                                <button class="btn btn-block btn-default btn-sm">Upload photo</button>
+                                <input type="file"
+                                           class="form-control mb-2"
+                                           enctype="multipart/form-data"
+                                           ref="photo"
+                                           accept="image/png, image/gif, image/jpeg"
+                                           name="photo">
+                                <button class="btn btn-block btn-default btn-sm" @click="submitUpload">Upload photo</button>
                             </li>
                             <li>
                                 <p>
@@ -461,6 +467,15 @@
     </div>
 </template>
 
+<style scoped>
+    .avatar-img {
+        height: 300px;
+        width: 300px;
+        object-fit: cover;
+        border: 8px solid silver;
+    }
+</style>
+
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
@@ -586,6 +601,18 @@ export default {
     },
 
     methods: {
+        submitUpload() {
+            this.formData = new FormData();
+            this.formData.append('photo', this.$refs.photo.files[0]);
+
+            if( this.$refs.photo.value != '' ) {
+                axios.post('/api/user-upload-avatar', this.formData)
+                .then((res) => {
+                    location.reload();
+                })
+            }
+            
+        },
 
         getListCountry() {
             axios.get('/api/registration-country-list')

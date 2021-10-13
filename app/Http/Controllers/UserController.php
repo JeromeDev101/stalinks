@@ -6,6 +6,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\Config;
 use App\Models\Log;
 use App\Models\PaymentType;
+use App\Models\User;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\IntDomainRepositoryInterface;
 use Illuminate\Http\Request;
@@ -294,6 +295,21 @@ class UserController extends Controller
         return response()->json([
             'data' => $list
         ]);
+    }
+
+    public function uploadAvatar(Request $request) {
+        $filename = 'photo_avatar_' . Auth::id() . '.' . $request->photo->getClientOriginalExtension();
+        $extension = $request->photo->getClientOriginalExtension();
+        move_file_to_storage($request->photo, 'images/avatar', $filename);
+
+        $user = User::find(Auth::id());
+        if($user) {
+            $user->update([
+                'avatar' => '/images/avatar/'.$filename
+            ]);
+        }
+
+        return response()->json(['result' => true, 'extension'=> $extension], 200);
     }
 
 }
