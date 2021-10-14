@@ -573,7 +573,7 @@ class AccountController extends Controller
 
     public function updateSubAccount(Request $request) {
         // dd($request->all());
-        $input = $request->only('username', 'name', 'status');
+        $input = $request->only('username', 'name', 'status', 'credit_auth');
         if ($request->password != '') {
             $request->validate([
                 'c_password' => 'required|same:password'

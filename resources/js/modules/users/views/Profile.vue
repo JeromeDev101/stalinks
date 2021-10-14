@@ -384,6 +384,7 @@
                             <tr class="label-primary">
                                 <th >Username</th>
                                 <th>Email</th>
+                                <th>Credit Authorization</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -392,10 +393,11 @@
                             <tr v-for="(account, index) in ListSubAccounts" :key="index">
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.email }}</td>
+                                <td>{{ account.credit_auth }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <button class="btn btn-default" title="Edit" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
-                                        <i class="fa fa-pencil"></i>
+                                        <i class="fas fa-pencil-alt"></i>
                                     </button>
                                     <button class="btn btn-default" title="Delete" @click="deleteSubAccount(account.id)"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -456,6 +458,15 @@
                                     <select class="form-control" v-model="updateModelSubAccount.status">
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Credit Authorization</label>
+                                    <select class="form-control" v-model="updateModelSubAccount.credit_auth">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
                                     </select>
                                 </div>
                             </div>
@@ -553,6 +564,7 @@ export default {
                 status: '',
                 password: '',
                 c_password: '',
+                credit_auth : ''
             },
             messageErrors:{
                 c_password: '',
@@ -646,6 +658,7 @@ export default {
                     status: this.updateModelSubAccount.status,
                     password: this.updateModelSubAccount.password,
                     c_password: this.updateModelSubAccount.c_password,
+                    credit_auth: this.updateModelSubAccount.credit_auth
                 }
             })
             .then((res) => {
@@ -705,6 +718,7 @@ export default {
             this.updateModelSubAccount.username = account.username;
             this.updateModelSubAccount.status = account.status;
             this.updateModelSubAccount.email = account.email;
+            this.updateModelSubAccount.credit_auth = account.credit_auth;
         },
 
         getListSubAccount() {

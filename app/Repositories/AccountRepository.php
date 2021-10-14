@@ -49,7 +49,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
         // ---------------------------------------------------
 
-        $user = User::where('email', $account->email);
+        $user = User::where('email', $account->email)->first();
 
         if (isset($input['password']) && $input['password'] != '') {
             $user->update(['password' => $input['password']]);
@@ -57,6 +57,16 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
         if (isset($input['credit_auth']) && $input['credit_auth'] != '') {
             $user->update(['credit_auth' => $input['credit_auth']]);
+
+            $emails = $user->subBuyers()->pluck('email');
+
+            User::whereIn('email', $emails)->update([
+                'credit_auth' => $input['credit_auth']
+            ]);
+
+            Registration::whereIn('email', $emails)->update([
+                'credit_auth' => $input['credit_auth']
+            ]);
         }
 
         if (isset($input['email']) && $input['email'] != '') {
