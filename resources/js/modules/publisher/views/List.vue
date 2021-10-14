@@ -284,7 +284,7 @@
 
                             <div class="row">
                                 <div class="col-md-3"
-                                     v-show="user.isAdmin || user.role_id === 8">
+                                     v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 6 && user.isOurs === 0)">
                                     <div class="form-group">
                                         <label>QC Validation</label>
                                         <select name="" class="form-control" v-model="filterModel.qc_validation">
