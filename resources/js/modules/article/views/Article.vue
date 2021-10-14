@@ -241,7 +241,7 @@
         </div>
 
         <!-- Modal Content -->
-        <div class="modal fade" id="modal-content-edit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
+        <div class="modal fade" id="modal-content-edit" tabindex="-1" ref="modalComposeArticle" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -340,7 +340,11 @@
 
                         <div class="row mt-3">
                             <div class="col-sm-12">
-                                <tinymce id="articleContent" v-model="data" :other_options="options"></tinymce>
+                                <!-- <tinymce id="articleContent" v-model="data" :other_options="options"></tinymce> -->
+
+                                <tiny-editor editor-id="composeEditorArticle"
+                                                 v-model="data"
+                                                 ref="composeEditorArticle"></tiny-editor>
                             </div>
                         </div>
                     </div>
@@ -439,10 +443,12 @@
     import 'tinymce/skins/lightgray/skin.min.css';
     import VueVirtualTable from 'vue-virtual-table';
     import axios from 'axios';
+    import TinyEditor from "../../../components/editor/TinyEditor";
 
     export default {
         components: {
             VueVirtualTable,
+            TinyEditor,
         },
         data() {
             return {
@@ -637,6 +643,44 @@
         },
 
         methods: {
+
+            modalCloser() {
+
+                if (this.data) {
+                    swal.fire({
+                        title : "Are you sure?",
+                        text : "Email contents will be removed",
+                        icon : "warning",
+                        showCancelButton : true,
+                        confirmButtonText : 'Yes',
+                        cancelButtonText : 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.$refs.composeEditorArticle.deleteImages('All');
+
+                            this.closeModal()
+                            this.clearModel()
+                        }
+                    });
+
+                } else {
+                    this.$refs.composeEditorArticle.deleteImages('All');
+                    this.clearModel()
+                    this.closeModal()
+                }
+                
+            },
+
+            closeModal() {
+                let element = this.$refs.modalComposeArticle
+                $(element).modal('hide')
+            },
+
+            clearModel() {
+                this.data = '';
+            },
+
             async getListWriter(params) {
                 await this.$store.dispatch('actionGetListWriter', params);
             },
@@ -721,6 +765,9 @@
             },
 
             clearQuery() {
+
+                this.modalCloser();
+
                 let id = this.id_article;
                 if( id != '' ){
                     this.$router.replace({'query': null});
