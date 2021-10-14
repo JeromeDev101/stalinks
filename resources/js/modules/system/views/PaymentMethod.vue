@@ -48,7 +48,8 @@
              tabindex="-1"
              role="dialog"
              aria-labelledby="modelTitleId"
-             aria-hidden="true">
+             aria-hidden="true"
+            ref="modalAddPaymentType">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -80,7 +81,8 @@
              tabindex="-1"
              role="dialog"
              aria-labelledby="modelTitleId"
-             aria-hidden="true">
+             aria-hidden="true"
+            ref="modalUpdatePaymentType">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -203,9 +205,27 @@ export default {
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'saved_payment') {
+                await swal.fire(
+                    'Success!',
+                    'Payment type successfully added.',
+                    'success'
+                )
+
+                this.closeModal('add')
                 this.clearModel();
                 this.getPaymentList();
+            } else {
+                await swal.fire(
+                    'Error!',
+                    'There were some errors while adding the payment type.',
+                    'error'
+                )
             }
+        },
+
+        closeModal(mod) {
+            let element = mod === 'add' ? this.$refs.modalAddPaymentType : this.$refs.modalUpdatePaymentType
+            $(element).modal('hide')
         },
 
         clearModel() {
@@ -233,6 +253,20 @@ export default {
                         break;
                     }
                 }
+
+                await swal.fire(
+                    'Success!',
+                    'Payment type successfully updated.',
+                    'success'
+                )
+
+                this.closeModal('update')
+            }  else {
+                await swal.fire(
+                    'Error!',
+                    'There were some errors while updating the payment type.',
+                    'error'
+                )
             }
         },
     },
