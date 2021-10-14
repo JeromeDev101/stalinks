@@ -632,6 +632,19 @@
 
                             <template
                                 slot-scope="scope"
+                                slot="pricesData">
+                                {{
+                                    scope.row.price == '' ||
+                                    scope.row.price
+                                    == null ? '' : '$'
+                                }} {{
+                                    computePriceStalinks(scope.row.price,
+                                        scope.row.inc_article)
+                                }}
+                            </template>
+
+                            <template
+                                slot-scope="scope"
                                 slot="priceBasisData">
                                 <i
                                     v-if="scope.row.price_basis == 'Good'" class="fa fa-star"
@@ -1125,6 +1138,13 @@
                                 tblPublisherOpt.price)"
                                     :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
                             </div>
+                            <div class="checkbox col-md-6" v-if="user.isOurs != 1">
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(14,
+                                tblPublisherOpt.prices)"
+                                    :checked="tblPublisherOpt.prices ? 'checked':''" v-model="tblPublisherOpt.prices">Prices</label>
+                            </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
@@ -1553,6 +1573,7 @@
                 country_continent_filter_info: '',
 
                 sort_options: [],
+                updateFormula: {},
             }
         },
 
@@ -1569,6 +1590,7 @@
             this.getListSellerIncharge();
             this.getListContinents();
             this.getListDomainZones();
+            this.getFormula();
 
             // let countries = this.listCountries.data;
             // if( countries.length === 0 ){
@@ -1734,6 +1756,7 @@
                 listAhrefsPublisher: state => state.storePublisher.listAhrefsPublisher,
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
+                formula : state => state.storeSystem.formula,
                 isGeneratorOn: state =>
                     state.storePublisher.bestPriceGeneratorOn
             }),
@@ -2051,6 +2074,13 @@
                     },
                     {
                         prop : '_action',
+                        name : 'Prices',
+                        actionName : 'pricesData',
+                        width: 100,
+                        isHidden: !this.tblPublisherOpt.prices
+                    },
+                    {
+                        prop : '_action',
                         name : 'Price Basis',
                         actionName : 'priceBasisData',
                         width: 100,
@@ -2127,6 +2157,11 @@
         },
 
         methods: {
+            async getFormula() {
+                await this.$store.dispatch('actionGetFormula');
+                this.updateFormula = this.formula.data[0];
+            },
+
             generateCountry() {
                 axios.post('/api/publisher/generate-country', {
                     ids : this.checkIds
@@ -2575,6 +2610,44 @@
                 }
             },
 
+            computePriceStalinks(price, article) {
+
+                let selling_price = price
+                let percent = parseFloat(this.formula.data[0].percentage);
+                let additional = parseFloat(this.formula.data[0].additional);
+
+                let commission = 'yes';
+
+                if (price != '' && price != null) { // check if price has a value
+
+                    if (article.toLowerCase() == 'yes') { //check if with article
+
+                        if (commission == 'yes') {
+                            let percentage = this.percentage(percent, price)
+                            selling_price = parseFloat(percentage) + parseFloat(price)
+                        }
+                    }
+
+                    if (article.toLowerCase() == 'no') { //check if without article
+
+                        if (commission == 'yes') {
+                            let percentage = this.percentage(percent, price)
+                            selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                        }
+
+                    }
+
+                }
+
+                selling_price = parseFloat(selling_price).toFixed(0);
+
+                return selling_price;
+            },
+
+            percentage(percent, total) {
+                return ((percent / 100) * total).toFixed(2)
+            },
+
             doMultipleEdit() {
                 this.clearCountryContinentInfo();
                 this.updateMultiple = {
@@ -2739,6 +2812,11 @@
                     if( that.user_type.type == 'Seller' ){
                         this.isSeller = true;
                     }
+                }
+
+                // checking is external seller
+                if(that.isOurs == 1) {
+                    this.tblPublisherOpt.prices = false;
                 }
             },
 

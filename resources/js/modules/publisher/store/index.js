@@ -39,6 +39,7 @@ const state = {
         valid: true,
         url: true,
         price: true,
+        prices: true,
         price_basis: true,
         inc_article: true,
         kw_anchor: true,
