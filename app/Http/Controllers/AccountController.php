@@ -106,6 +106,8 @@ class AccountController extends Controller
         $company_name = $request->company_name;
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
+        $is_sub_account = ($request->is_sub_account == '' || $request->is_sub_account == null)
+            ? null : ($request->is_sub_account == 1 ? 'Sub' : 'Not');
         $created_at = json_decode($request->created_at);
         $isTeamSeller = $this->checkTeamSeller();
 
@@ -156,6 +158,9 @@ class AccountController extends Controller
             return $query->where( 'company_url', 'like', '%' . $company_url . '%' );
         })->when( $account_validation, function($query) use ($account_validation){
             return $query->where( 'account_validation', $account_validation);
+        })->when( $is_sub_account, function($query) use ($is_sub_account){
+            $is_sub = $is_sub_account == 'Sub' ? 1 : 0;
+            return $query->where( 'is_sub_account', $is_sub);
         })->when( $created_at->startDate, function($query) use ($created_at){
             return $query->where('created_at', '>=', Carbon::create($created_at->startDate)->format('Y-m-d'))
                 ->where('created_at', '<=', Carbon::create($created_at->endDate)->format('Y-m-d'));

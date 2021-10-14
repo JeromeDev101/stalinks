@@ -204,6 +204,17 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Sub Account</label>
+                                    <select class="form-control" v-model="filterModel.is_sub_account">
+                                        <option value="">All</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -1334,7 +1345,8 @@ export default {
                     endDate : null
                 },
                 account_verification :
-                    this.$route.query.account_verification || ''
+                    this.$route.query.account_verification || '',
+                is_sub_account : this.$route.query.is_sub_account || '',
             },
 
             accountUpdate : {
@@ -1987,6 +1999,7 @@ export default {
                     created_at : this.filterModel.created_at,
                     account_verification :
                     this.filterModel.account_verification,
+                    is_sub_account : this.filterModel.is_sub_account,
                     page : page
                 }
             });
@@ -2040,7 +2053,8 @@ export default {
                     startDate : null,
                     endDate : null
                 },
-                account_verification : ''
+                account_verification : '',
+                is_sub_account: '',
             }
 
             this.getAccountList({
@@ -2074,7 +2088,8 @@ export default {
                     account_validation : this.filterModel.account_validation,
                     created_at : this.filterModel.created_at,
                     account_verification :
-                    this.filterModel.account_verification
+                    this.filterModel.account_verification,
+                    is_sub_account : this.filterModel.is_sub_account,
                 }
             });
 
