@@ -467,7 +467,7 @@ class AccountController extends Controller
     }
 
     public function getTeamInCharge() {
-        $team_in_charge = [5,6,7,1];
+        $team_in_charge = [5,6,7,1,8];
 
         $team = User::select('id','name', 'username')
             ->where('isOurs',0)
