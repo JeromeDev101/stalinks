@@ -12,14 +12,18 @@ class RegistrationReminderEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $token;
+    public $notification;
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $token
+     * @param $name
      */
-    public function __construct($token)
+    public function __construct($token, $notification)
     {
         $this->token = $token;
+        $this->notification = $notification;
     }
 
     /**

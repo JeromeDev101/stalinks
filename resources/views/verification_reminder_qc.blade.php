@@ -51,6 +51,9 @@
             mso-table-lspace: 0pt;
             mso-table-rspace: 0pt;
         }
+        td{
+
+        }
 
         img {
             -ms-interpolation-mode: bicubic;
@@ -67,6 +70,11 @@
 
         table {
             border-collapse: collapse !important;
+            table-layout: fixed;
+        }
+
+        th,td {
+            word-wrap: break-word;
         }
 
         body {
@@ -74,6 +82,7 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
+            background-color: black;
         }
 
         /* iOS BLUE LINKS */
@@ -87,10 +96,18 @@
         }
 
         /* MOBILE STYLES */
-        @media screen and (max-width:600px) {
+        @media all and (max-width: 480px) {
             h1 {
-                font-size: 32px !important;
+                font-size: 0.7em !important;
                 line-height: 32px !important;
+            }
+
+            .main-td {
+                padding: 0 5% !important;
+            }
+
+            .main-text, .button-text {
+                font-size: .9em !important;
             }
         }
 
@@ -101,11 +118,13 @@
     </style>
 </head>
 
-<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+<body style="background-image: url('{{ asset('/images/background-login2.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
+<!-- HIDDEN PREHEADER TEXT -->
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     <tr>
-        <td bgcolor="#FFA73B" align="center">
+        <td align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
@@ -114,21 +133,27 @@
         </td>
     </tr>
     <tr>
-        <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <td align="center" class="main-td" style="padding: 0 15%">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                        <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Registration Reminder</h1>
+                        <img src="{{ asset('/images/banner2.png') }}" style="background-repeat: no-repeat;background-attachment: fixed;background-size: cover; max-width: 350px; width: 100%; height: auto;" >
+                    </td>
+                </tr>
+
+                <tr>
+                    <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+                        <h1 style="font-size: 48px; font-weight: 400; margin: 2; color: #007E93">Registration Reminder</h1>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <td  align="center" class="main-td" style="padding: 0 15%">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                    <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                    <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                         <p style="margin: 0;">Hi <strong></strong>,  we would like to let you know that one of your users ({{ $username }}) hasn't verified their email yet. You may verify their account by clicking the button below or just let them know.</p>
                     </td>
                 </tr>
@@ -139,7 +164,7 @@
                                 <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                     <table border="0" cellspacing="0" cellpadding="0">
                                         <tr>
-                                            <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="{{ url('/accounts') }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Verify Users</a></td>
+                                            <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00"><a href="{{ url('/accounts') }}" target="_blank" class="button-text" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Verify Users</a></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -148,9 +173,18 @@
                     </td>
                 </tr> <!-- COPY -->
                 <tr>
-                    <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                        <p style="margin: 0;">Cheers,<br>Stalinks System</p>
+                    <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                        <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                     </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
                 </tr>
             </table>
         </td>
