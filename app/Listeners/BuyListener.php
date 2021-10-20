@@ -27,6 +27,6 @@ class BuyListener
      */
     public function handle(BuyEvent $event)
     {
-        $event->user->notify(new Buy($event->backlink));
+        $event->user->notify(new Buy($event->backlink, $event->user));
     }
 }

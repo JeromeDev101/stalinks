@@ -12,15 +12,18 @@ class BacklinkLive extends Notification implements ShouldQueue
     use Queueable;
 
     protected $backlink;
+    protected $user;
 
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param $backlink
+     * @param $user
      */
-    public function __construct($backlink)
+    public function __construct($backlink, $user)
     {
         $this->backlink = $backlink;
+        $this->user = $user;
     }
 
     /**
@@ -31,21 +34,20 @@ class BacklinkLive extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Order Live')
+            ->markdown('buyer.backlink_live', ['backlink'=>$this->backlink, 'user'=>$this->user]);
     }
 
     /**

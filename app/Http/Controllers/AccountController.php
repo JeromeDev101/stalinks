@@ -683,11 +683,6 @@ class AccountController extends Controller
             'verification_code' => ''
         ]);
 
-        // update registration and user account
-
-        $inputs = $request->all();
-        $this->accountRepository->updateAccount($inputs);
-
         $role_id = 0;
         if( $registered->type == 'Seller' ){
             $role_id = 6;
@@ -712,6 +707,11 @@ class AccountController extends Controller
         $data['role_id'] = $role_id;
 
         User::create($data);
+
+        // update registration and user account
+
+        $inputs = $request->all();
+        $this->accountRepository->updateAccount($inputs);
 
         return response()->json(['success' => true]);
 

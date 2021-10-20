@@ -122,54 +122,23 @@
 <!-- HIDDEN PREHEADER TEXT -->
 <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <!-- LOGO -->
 
     <!-- LOGO -->
     @component('components.email_header')
-        Email Verification
+        Purchase Successful
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hi <strong>{{ $name}}</strong>,</p> <br /> <br />
-                    <p style="margin: 0;">We’re excited to welcome you to StaLinks!. Before we get started, we need you to confirm your account by clicking the button down below.</p> <br /> <br />
-                @endslot
-
-                @slot('button')
-                    <tr>
-                        <td bgcolor="#ffffff" align="left">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                        <table border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00"><a href="{{ url('/verification/' . $verification_code) }}" target="_blank" class="button-text" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Confirm Account</a></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                @endslot
-
-                @slot('link')
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If that doesn’t work, please copy this link and paste into your browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/verification/' . $verification_code) }}</a></p>
-                        </td>
-                    </tr>
+                    <p style="margin: 0;">Hello {{ $user }},</p> <br /> <br />
+                    <p style="margin: 0;">Thank you for choosing and trusting StaLinks! We will process your order accordingly with our best in-house content writer.</p> <br /> <br />
+                    <p style="margin: 0;">The content will be on live 5 working days after you purchased the order. Please do not hesitate to contact us if your have any further question.</p>
                 @endslot
 
                 @slot('closing')
-                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
+                    <p style="margin: 0;">Best Regards,<br>StaLinks Team</p>
                 @endslot
             @endcomponent
         </td>

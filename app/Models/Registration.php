@@ -46,7 +46,8 @@ class Registration extends Model
         'reminded_days',
         'writer_price',
         'rate_type',
-        ];
+        'email_via'
+    ];
 
     public function team_in_charge() {
         return $this->belongsTo('App\Models\User', 'team_in_charge');

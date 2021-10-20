@@ -27,6 +27,6 @@ class BacklinkLiveListener
      */
     public function handle(BacklinkLiveEvent $event)
     {
-        $event->user->notify(new BacklinkLive($event->backlink));
+        $event->user->notify(new BacklinkLive($event->backlink, $event->user));
     }
 }
