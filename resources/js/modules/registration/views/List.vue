@@ -598,9 +598,9 @@
 
                         </div>
 
-                        <hr/>
+                        <hr v-show="addDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
-                        <hr/>
+                        <hr v-show="addDisplayWriterPrice"/>
 
                         <div class="row" v-show="addDisplayWriterPrice">
                             <div class="col-sm-6">
@@ -626,9 +626,28 @@
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
-                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
+                        <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please select default payment type</span>
+                        <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
 
                         <table class="table">
+                            <tr>
+                                <td></td>
+                                <td>Default</td>
+                            </tr>
+                            <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                <td>
+                                    <div class="form-group">
+                                        <label>{{ payment_method.type }} Account</label>
+                                        <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- <table class="table">
                             <tr>
                                 <td>
                                     <div class="form-group">
@@ -665,7 +684,7 @@
                                     <input type="radio" name="payment_default" v-bind:value="2" v-model="accountModel.id_payment_type">
                                 </td>
                             </tr>
-                        </table>
+                        </table> -->
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -973,7 +992,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Username <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -988,7 +1007,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Email <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
+                                    <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -1090,9 +1109,9 @@
 
                         </div>
 
-                        <hr/>
+                        <hr v-show="updateDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
-                        <hr/>
+                        <hr v-show="updateDisplayWriterPrice"/>
 
                         <div class="row" v-show="updateDisplayWriterPrice">
                             <div class="col-sm-6">
@@ -1119,8 +1138,28 @@
 
                         <hr/>
                         <h4 class="text-primary">Payment Information</h4>
-                        <span v-if="messageForms.errors.id_payment_type" v-for="err in messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
+                        <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
+                        <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
 
+                        <table class="table">
+                            <tr>
+                                <td></td>
+                                <td>Default</td>
+                            </tr>
+                            <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                <td>
+                                    <div class="form-group">
+                                        <label>{{ payment_method.type }} Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
+                                    </div>
+                                </td>
+                                <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--
                         <table class="table">
                             <tr>
                                 <td>
@@ -1159,6 +1198,8 @@
                                 </td>
                             </tr>
                         </table>
+
+                        -->
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -1278,6 +1319,12 @@
     </div>
 </template>
 
+<style scoped>
+    .btn-radio-custom {
+        transform: scale(2);
+    }
+</style>
+
 <script>
 import {mapActions, mapState} from 'vuex';
 import axios from 'axios';
@@ -1309,7 +1356,7 @@ export default {
                 company_url : '',
                 skype : '',
                 id_payment_type : '',
-                payment_email : '',
+                // payment_email : '',
                 payment_account : '',
                 skrill_account : '',
                 paypal_account : '',
@@ -1324,6 +1371,7 @@ export default {
                 company_type : 'Company',
                 writer_price : '',
                 rate_type : '',
+                add_method_payment_type: [],
             },
 
             filterModel : {
@@ -1361,7 +1409,7 @@ export default {
                 company_url : '',
                 skype : '',
                 id_payment_type : '',
-                payment_email : '',
+                // payment_email : '',
                 payment_account : '',
                 commission : '',
                 status : '',
@@ -1378,6 +1426,7 @@ export default {
                 company_type : '',
                 writer_price : '',
                 rate_type : '',
+                update_method_payment_type: [],
             },
 
             isPopupLoading : false,
@@ -1425,8 +1474,10 @@ export default {
             isDisabledAction : true,
             allSelected : false,
             updateMultipleInCharge : '',
-
             listUserEmail : [],
+            paymentMethodList:[],
+            validate_error_type: false,
+            validate_error_type_update: false,
         }
     },
 
@@ -1439,6 +1490,7 @@ export default {
         this.getListCountries();
         this.getListLanguages();
         this.getListEmails();
+        this.getListPaymentMethod();
     },
 
     computed : {
@@ -1474,6 +1526,13 @@ export default {
         ...mapActions({
             clearMessageFormEmail : "clearMessageform",
         }),
+
+        getListPaymentMethod() {
+            axios.get('/api/payment-list-registration')
+                .then((res) => {
+                    this.paymentMethodList = res.data.data
+                })
+        },
 
         modalCloser() {
             if (this.modelMail.title || this.modelMail.content) {
@@ -1701,12 +1760,17 @@ export default {
         },
 
         displayEmailPayment(account) {
-            let paypal_email = account.paypal_account == null || account.paypal_account == '' ? '' : account.paypal_account + ' <span class="badge badge-success">(Paypal)</span> <br/>';
-            let btc_email = account.btc_account == null || account.btc_account == '' ? '' : account.btc_account + ' <span class="badge badge-success">(BTC)</span> <br/>';
-            let skrill_email = account.skrill_account == null || account.skrill_account == '' ? '' : account.skrill_account + ' <span class="badge badge-success">(Skrill)</span> <br/>';
             let email = '';
-
-            email = paypal_email + btc_email + skrill_email;
+            
+            if(typeof account.user != "undefined" && account.user != null){
+                if(account.user.user_payment_types.length > 0) {
+                    for(let index in account.user.user_payment_types) {
+                        if(account.user.user_payment_types[index].is_default === 1 ) {
+                            email = account.user.user_payment_types[index].account + '<br/>';
+                        } 
+                    }
+                }
+            }
 
             return email;
         },
@@ -1867,12 +1931,19 @@ export default {
         },
 
         async submitAdd() {
+            let id_payment_type = this.accountModel.id_payment_type;
+
+            if(!this.accountModel.add_method_payment_type[id_payment_type]) {
+                this.validate_error_type = true;
+                return false;
+            }
+
             this.isPopupLoading = true;
             await this.$store.dispatch('actionAddAccount', this.accountModel);
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'saved_account') {
-                this.clearAccountModel();
+
                 this.getAccountList({
                     params : this.filterModel
                 });
@@ -1885,6 +1956,29 @@ export default {
 
                 this.isDisableSubmit = true;
                 this.btnTermsAndConditions = false;
+                this.validate_error_type = false;
+
+                // empty model
+                this.accountModel = {
+                    name : '',
+                    email : '',
+                    phone : '',
+                    password : '',
+                    c_password : '',
+                    type : '',
+                    company_name : '',
+                    company_url : '',
+                    skype : '',
+                    id_payment_type : '',
+                    // payment_email : '',
+                    payment_account : '',
+                    commission : '',
+                    team_in_charge : '',
+                    info : '',
+                    address : '',
+                    country_id : '',
+                    add_method_payment_type: []
+                };
             }
         },
 
@@ -1907,6 +2001,13 @@ export default {
         },
 
         async saveUpdate() {
+            let id_payment_type = this.accountUpdate.id_payment_type;
+
+            if(!this.accountUpdate.update_method_payment_type[id_payment_type]) {
+                this.validate_error_type_update = true;
+                return false;
+            }
+
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateAccount', this.accountUpdate);
             this.isPopupLoading = false;
@@ -1919,6 +2020,7 @@ export default {
                 );
 
                 let element = this.$refs.modalUpdateAccount;
+                this.validate_error_type_update = false;
                 $(element).modal('hide');
 
                 this.getAccountList();
@@ -1959,13 +2061,43 @@ export default {
         doUpdateAccount(account) {
             this.clearMessageform();
             let that = JSON.parse(JSON.stringify(account))
-            this.accountUpdate = that
-            this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
+
+            this.accountUpdate.id = that.id
+            this.accountUpdate.type = that.type
+            this.accountUpdate.username = that.username
+            this.accountUpdate.name = that.name
+            this.accountUpdate.email = that.email
+            this.accountUpdate.phone = that.phone
+            this.accountUpdate.skype = that.skype
             this.accountUpdate.password = '';
             this.accountUpdate.c_password = '';
-            this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
             this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company' : 'Freelancer';
+            this.accountUpdate.country_id = that.country_id
+            this.accountUpdate.language_id = that.language_id
+            this.accountUpdate.address = that.address
+            this.accountUpdate.info = that.info
+            this.accountUpdate.id_payment_type = that.id_payment_type
+            this.accountUpdate.commission = that.commission
+            this.accountUpdate.status = that.status
+            this.accountUpdate.credit_auth = that.credit_auth
+            this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
+            this.accountUpdate.account_validation = that.account_validation
+            this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
+            this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
+            
+            if(typeof account.user != "undefined"){
+                if(account.user.user_payment_types.length > 0) {
+                    for(let index in account.user.user_payment_types) {
+                        var payment_id = account.user.user_payment_types[index].payment_id;
 
+                        this.accountUpdate.update_method_payment_type[payment_id] = account.user.user_payment_types[index].account
+                    }
+                } else {
+                    this.accountUpdate.update_method_payment_type = [];
+                    this.accountUpdate.id_payment_type = ''
+                }
+            }
+            
             this.checkTeamIncharge('update');
             this.checkVerified();
             this.checkCompanyType();
@@ -2094,28 +2226,6 @@ export default {
             });
 
             this.resetSelectAll()
-        },
-
-        clearAccountModel() {
-            this.accountModel = {
-                name : '',
-                email : '',
-                phone : '',
-                password : '',
-                c_password : '',
-                type : '',
-                company_name : '',
-                company_url : '',
-                skype : '',
-                id_payment_type : '',
-                payment_email : '',
-                payment_account : '',
-                commission : '',
-                team_in_charge : '',
-                info : '',
-                address : '',
-                country_id : '',
-            };
         },
 
         resetSelectAll() {

@@ -53,7 +53,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                             ->with('registration:id,email,is_sub_account,account_validation')
                             ->with('total_wallet')
                             ->with('access.user.role')
-                            ->with('UserType','role', 'countriesAccessable')->findOrFail($id);
+                            ->with('UserType','role', 'countriesAccessable', 'userPaymentTypes')->findOrFail($id);
 
         $user->isAdmin = $user->isAdmin();
         return $user;

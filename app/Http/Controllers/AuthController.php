@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UsersPaymentType;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -74,9 +76,11 @@ class AuthController extends Controller
         return response()->json(['success' => true, 'data' => $userCreate]);
     }
 
+    // UpdateUserRequest
     public function edit(UpdateUserRequest $request) {
-        // dd($request->all());
+        
         $response = ['success' => false];
+        $input_2 = $request->only('payment_type');
         $input = $request->except(
             'access',
             'avatar',
@@ -92,8 +96,11 @@ class AuthController extends Controller
             'total_wallet',
             'registration',
             'isOurs',
-            'work_mail_orig'
+            'work_mail_orig',
+            'payment_type',
+            'user_payment_types'
         );
+
 
         unset($input['c_password']);
         unset($input['role']);
@@ -150,6 +157,28 @@ class AuthController extends Controller
 
             $registered->update($dataRegistered);
         }
+
+        $users_payment_type = UsersPaymentType::where('user_id', $input['id']);
+        $users_payment_type->delete();
+
+        // Insert users payments types
+        $insert_input_users_payment_type = [];
+        if(is_array($input_2['payment_type'])) {
+            foreach($input_2['payment_type'] as $key => $types) {
+                if($types != '') {
+                    array_push($insert_input_users_payment_type, [
+                        'user_id' => $input['id'],
+                        'payment_id' => $key,
+                        'account' => $types,
+                        'is_default' => $key == $input['id_payment_type'] ? 1:0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
+        }
+    
+        UsersPaymentType::insert($insert_input_users_payment_type);
 
         $response['success'] = true;
         return response()->json($response);

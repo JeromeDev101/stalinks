@@ -25,6 +25,7 @@ Route::name('registration-get-update-info')->post('/registration-get-update-info
 Route::name('forgot-password')->post('/forgot-password','AccountController@forgotPassword');
 Route::name('check-reset-password-token')->post('/validate-reset-password-token', 'AccountController@validateResetPasswordToken');
 Route::name('reset-password')->post('/reset-password', 'AccountController@resetPassword');
+Route::name('get-payment-list-registration')->get('/payment-list-registration', 'AccountController@getPaymentList');
 
 Route::middleware('auth:api')->group(function () {
 
@@ -99,6 +100,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-verified-account')->get('/get-verified-account', 'AccountController@checkVerifiedAccount');
     Route::name('verify-account')->post('/verify-account', 'AccountController@verifyAccount');
     Route::name('update-multiple-in-charge')->post('/update-multiple-in-charge', 'AccountController@updateMultipleInCharge');
+    Route::name('transfer-payment-info')->get('/transfer-payment-info', 'AccountController@transferPaymentInfo');
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');

@@ -5,9 +5,11 @@ namespace App\Repositories;
 use App\Events\UserValidateEvent;
 use App\Models\User;
 use App\Models\Registration;
+use App\Models\UsersPaymentType;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 
 class AccountRepository extends BaseRepository implements AccountRepositoryInterface
@@ -31,8 +33,11 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     {
 
         $response['success'] = false;
+        $input_2 = collect($data)->only('update_method_payment_type')->toArray();
         $input = collect($data)->except('company_type', 'user')->toArray();
+  
         $input['is_freelance'] = $data['company_type'] == 'Freelancer' ? 1:0;
+
         unset($input['c_password']);
 
         if (isset($input['password']) && $input['password'] != '') {
@@ -122,6 +127,30 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         if(!is_null($user)) {
             $user->update($dataUser);
         }
+
+        // ---------------------------------------------------
+
+        $users_payment_type = UsersPaymentType::where('user_id', $user->id);
+        $users_payment_type->delete();
+
+        // Insert users payments types
+        $insert_input_users_payment_type = [];
+        if(is_array($input_2['update_method_payment_type'])) {
+            foreach($input_2['update_method_payment_type'] as $key => $types) {
+                if($types != '') {
+                    array_push($insert_input_users_payment_type, [
+                        'user_id' => $user->id,
+                        'payment_id' => $key,
+                        'account' => $types,
+                        'is_default' => $key == $input['id_payment_type'] ? 1:0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
+        }
+    
+        UsersPaymentType::insert($insert_input_users_payment_type);
 
         $response['success'] = true;
         return response()->json($response);

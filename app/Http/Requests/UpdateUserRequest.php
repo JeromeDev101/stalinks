@@ -82,15 +82,15 @@ class UpdateUserRequest extends FormRequest
                 'id_payment_type' => [
                     'required'
                 ],
-                'user_type.paypal_account' => [
-                    'required_if:id_payment_type,==,1'
-                ],
-                'user_type.btc_account' => [
-                    'required_if:id_payment_type,==,3'
-                ],
-                'user_type.skrill_account' => [
-                    'required_if:id_payment_type,==,2'
-                ],
+                // 'user_type.paypal_account' => [
+                //     'required_if:id_payment_type,==,1'
+                // ],
+                // 'user_type.btc_account' => [
+                //     'required_if:id_payment_type,==,3'
+                // ],
+                // 'user_type.skrill_account' => [
+                //     'required_if:id_payment_type,==,2'
+                // ],
             ];
         }
 

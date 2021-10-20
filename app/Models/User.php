@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->where('isOurs', 0);
     }
 
+    public function userPaymentTypes()
+    {
+        return $this->hasMany('App\Models\UsersPaymentType', 'user_id');
+    }
+
     public function role()
     {
         return $this->belongsTo('App\Models\Role', 'role_id');

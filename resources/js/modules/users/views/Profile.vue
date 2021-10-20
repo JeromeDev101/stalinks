@@ -232,6 +232,24 @@
                         <div class="table-responsive">
                             <table class="table no-margin">
                                 <tbody>
+                                    <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} Account</label>
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="billing.payment_default">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" v-model="billing.payment_type[payment_method.id]">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- <table class="table no-margin">
+                                <tbody>
                                 <tr>
                                     <td><b>Paypal Account</b></td>
                                     <td style="width: 50px;padding-top:20px;">
@@ -320,7 +338,8 @@
                                     </td>
                                 </tr>
                                 </tbody>
-                            </table>
+                            </table> -->
+
                         </div>
                     </div>
 
@@ -492,6 +511,10 @@
         object-fit: cover;
         border: 8px solid silver;
     }
+
+    .btn-radio-custom {
+        transform: scale(2);
+    }
 </style>
 
 <script>
@@ -553,6 +576,7 @@ export default {
                 paypal_account: '',
                 skrill_account: '',
                 payment_default: '',
+                payment_type: [],
             },
             new_password: '',
             c_password: '',
@@ -573,6 +597,7 @@ export default {
             CompanyName: true,
             countryList: [],
             country_id: '',
+            paymentMethodList: [],
         };
     },
 
@@ -601,8 +626,9 @@ export default {
         this.checkAccountType();
         this.getPublisherSummaryCountry();
         this.bindPayment();
+        this.getListPaymentMethod();
 
-        console.log(this.user)
+        // console.log(this.user)
 
         if(this.user.user_type) {
             this.company_type = this.user.user_type.is_freelance == '0' ? 'Company':'Freelancer';
@@ -620,6 +646,14 @@ export default {
     },
 
     methods: {
+
+        getListPaymentMethod() {
+            axios.get('/api/payment-list-registration')
+                .then((res) => {
+                    this.paymentMethodList = res.data.data
+                })
+        },
+
         submitUpload() {
             this.formData = new FormData();
             this.formData.append('photo', this.$refs.photo.files[0]);
@@ -730,12 +764,24 @@ export default {
 
         bindPayment() {
             let that = this.user.user_type
+
+            // console.log(this.user)
             if( this.currentUser.isOurs == 1 ) {
-                this.billing.paypal_account = that.paypal_account;
-                this.billing.skrill_account = that.skrill_account;
-                this.billing.btc_account = that.btc_account;
+                // this.billing.paypal_account = that.paypal_account;
+                // this.billing.skrill_account = that.skrill_account;
+                // this.billing.btc_account = that.btc_account;
                 this.billing.payment_default = this.user.id_payment_type;
-            }
+
+                if(typeof this.user.user_payment_types != "undefined" && this.user.user_payment_types != null){
+                    if(this.user.user_payment_types.length > 0) {
+                        for(let index in this.user.user_payment_types) {
+                            var payment_id = this.user.user_payment_types[index].payment_id;
+
+                            this.billing.payment_type[payment_id] = this.user.user_payment_types[index].account
+                        }
+                    }
+                }
+            } 
         },
 
         async addSubAccount() {
@@ -774,9 +820,11 @@ export default {
             this.isPopupLoading = true;
 
             if( this.currentUser.isOurs == 1 ) {
-                this.user.user_type.paypal_account = this.billing.paypal_account;
-                this.user.user_type.skrill_account = this.billing.skrill_account;
-                this.user.user_type.btc_account = this.billing.btc_account;
+                // this.user.user_type.paypal_account = this.billing.paypal_account;
+                // this.user.user_type.skrill_account = this.billing.skrill_account;
+                // this.user.user_type.btc_account = this.billing.btc_account;
+
+                this.user.payment_type = this.billing.payment_type;
                 this.user.id_payment_type = this.billing.payment_default;
                 this.user.user_type.company_type = this.company_type;
                 this.user.user_type.country_id = this.country_id;

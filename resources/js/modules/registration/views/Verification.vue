@@ -8,7 +8,7 @@
                         <!-- Set password Form -->
                         <div v-if="formSetPassword">
                             <h3>Complete Registration</h3> 
-                            <hr class="mb-4"/>
+                            <hr class="mb-5"/>
 
                             <h4 class="text-primary">Account Information</h4> 
                             <hr/>
@@ -116,9 +116,28 @@
 
                             <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4> 
                             <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
+                            <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
                             <div class="row">
-                                
+
                                 <table class="table">
+                                    <tr>
+                                        <td></td>
+                                        <td>Default</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} Account</label>
+                                                <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="regModel.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <!-- <table class="table">
                                     <tr>
                                         <td>
                                             <div class="form-group">
@@ -155,7 +174,7 @@
                                             <input type="radio" name="payment_default" v-bind:value="2" v-model="regModel.id_payment_type">
                                         </td>
                                     </tr>
-                                </table>
+                                </table> -->
 
                                 <!-- <div class="col-md-12">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.password}">
@@ -174,16 +193,19 @@
                                 </div> -->
 
                                 <div class="col-md-12 mt-4">
-                                    <button class="btn btn-primary btn-flat" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
+                                    <button class="btn btn-primary btn-lg btn-block btn-flat my-5" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Verification Form -->
                         <div v-if="formVerified">
+                            <center class="my-3">
+                                <i class="far fa-check-circle fa-10x text-success"></i>
+                            </center>
                             <h3 class="text-center my-5">Successfully Registered!</h3>
 
-                            <button class="btn btn-default btn-block" @click="redirectToLogin">Go to Login</button>
+                            <button class="btn btn-default btn-lg btn-block" @click="redirectToLogin">Go to Login</button>
                         </div>
                             
                     </div>
@@ -193,6 +215,12 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    .btn-radio-custom {
+        transform: scale(2);
+    }
+</style>
 
 <script>
     import { mapState } from 'vuex';
@@ -225,10 +253,13 @@
                     id_payment_type: '',
                     writer_price: '',
                     rate_type: '',
+                    payment_type: [],
                 },
                 countryList: [],
                 errorMessage: [],
                 isCompany: true,
+                paymentMethodList: [],
+                validate_error_type: false,
             }
         },
 
@@ -238,6 +269,7 @@
 
         created() {
             this.getListCountry();
+            this.getListPaymentMethod();
         },
 
         computed: {
@@ -247,6 +279,13 @@
         },
 
         methods: {
+            getListPaymentMethod() {
+            axios.get('/api/payment-list-registration')
+                    .then((res) => {
+                        this.paymentMethodList = res.data.data
+                    })
+            },
+
             checkCompanyType() {
                 if(this.regModel.company_type == 'Company') {
                     this.isCompany = true;
@@ -290,6 +329,16 @@
             },
 
             submitRegister() {
+                let id_payment_type = this.regModel.id_payment_type;
+
+                if(!this.regModel.payment_type[id_payment_type]) {
+                    this.validate_error_type = true;
+                    return false;
+                } else {
+                    this.validate_error_type = false;
+                }
+
+
                 axios.post('/api/registration-get-update-info', this.regModel)
                     .then((res) => {
                         console.log(res.data)
