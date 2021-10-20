@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Mail\SendValidatedEmail;
+use App\Events\UserValidateEvent;
 use App\Models\User;
 use App\Models\Registration;
 use App\Repositories\Contracts\AccountRepositoryInterface;
@@ -104,7 +104,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
         if (isset($input['account_validation']) && $input['account_validation'] === 'valid') {
             if ($account->email_via !== 'account_validated') {
-                Mail::to($input['email'])->send(new SendValidatedEmail($input['name']));
+                event(new UserValidateEvent($input, $user));
                 $input['email_via'] = 'account_validated';
             }
         } else if (isset($input['account_validation']) && $input['account_validation'] !== 'valid') {

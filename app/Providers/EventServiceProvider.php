@@ -11,6 +11,7 @@ use App\Events\BuyEvent;
 use App\Events\NewArticleEvent;
 use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Events\UserValidateEvent;
 use App\Events\WriterPaidEvent;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
@@ -21,6 +22,7 @@ use App\Listeners\BuyListener;
 use App\Listeners\NewArticleListener;
 use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
+use App\Listeners\UserValidateListener;
 use App\Listeners\WriterPaidListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -88,6 +90,10 @@ class EventServiceProvider extends ServiceProvider
 
         WriterPaidEvent::class => [
             WriterPaidListener::class
+        ],
+
+        UserValidateEvent::class => [
+            UserValidateListener::class
         ]
     ];
 

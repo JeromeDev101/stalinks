@@ -131,9 +131,15 @@
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello {{ $name }},</p> <br /> <br />
-                    <p style="margin: 0;">Thank you for completing your data on StaLinks!. We have already validated your account.</p> <br /> <br />
+                    <p style="margin: 0;">Hello {{ $name }},</p> <br />
+                    <p style="margin: 0;">Thank you for completing your data on StaLinks!. We have already validated your account.</p> <br />
                     <p style="margin: 0;">You can start adding credit to your balance and purchasing the order!. If there’s anything you would like to ask, feel free to contact us!</p>
+                @endslot
+
+                @slot('button')
+                @endslot
+
+                @slot('link')
                 @endslot
 
                 @slot('closing')

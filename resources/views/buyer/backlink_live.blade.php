@@ -138,6 +138,12 @@
                     <p style="margin: 0;">Do not hesitate to send us feedback.</p>
                 @endslot
 
+                @slot('button')
+                @endslot
+
+                @slot('link')
+                @endslot
+
                 @slot('closing')
                     <p style="margin: 0;">Best Regards,<br>StaLinks Team</p>
                 @endslot

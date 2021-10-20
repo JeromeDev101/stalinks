@@ -122,19 +122,19 @@
 <!-- HIDDEN PREHEADER TEXT -->
 <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-
     <!-- LOGO -->
     @component('components.email_header')
-        Purchase Successful
+        Account Validated
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello {{ $user }},</p> <br /> <br />
-                    <p style="margin: 0;">Thank you for choosing and trusting StaLinks! We will process your order accordingly with our best in-house content writer.</p> <br /> <br />
-                    <p style="margin: 0;">The content will be on live 5 working days after you purchased the order. Please do not hesitate to contact us if your have any further question.</p>
+                    <p style="margin: 0;">Hello {{ $name }},</p> <br />
+                    <p style="margin: 0;">We are happy to welcome you on StaLinks!.</p> <br />
+                    <p style="margin: 0;">We have validated your account to receive an order and you can start writing a content from our buyers!</p> <br />
+                    <p style="margin: 0;">If you have any problem, feel free to contact us. Thank you!</p> <br />
                 @endslot
 
                 @slot('button')
@@ -144,7 +144,7 @@
                 @endslot
 
                 @slot('closing')
-                    <p style="margin: 0;">Best Regards,<br>StaLinks Team</p>
+                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                 @endslot
             @endcomponent
         </td>
