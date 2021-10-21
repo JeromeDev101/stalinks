@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\AddWalletEvent;
 use App\Events\ArticleDoneEvent;
 use App\Events\BacklinkLiveEvent;
+use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkStatusChangedEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\BuyEvent;
@@ -16,6 +17,7 @@ use App\Events\WriterPaidEvent;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
 use App\Listeners\BacklinkLiveListener;
+use App\Listeners\BacklinkLiveSellerListener;
 use App\Listeners\BacklinkStatusChangedListener;
 use App\Listeners\BuyerDebittedListener;
 use App\Listeners\BuyListener;
@@ -62,6 +64,10 @@ class EventServiceProvider extends ServiceProvider
 
         BacklinkLiveEvent::class => [
             BacklinkLiveListener::class
+        ],
+
+        BacklinkLiveSellerEvent::class => [
+            BacklinkLiveSellerListener::class
         ],
 
         BuyerDebitedEvent::class => [

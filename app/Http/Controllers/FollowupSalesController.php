@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkStatusChangedEvent;
+use App\Notifications\BacklinkLiveSeller;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -132,6 +134,7 @@ class FollowupSalesController extends Controller
         }
 
         $backlink = Backlink::findOrFail($request->id);
+
         $input['payment_status'] = 'Not Paid';
         if( $input['status'] == 'Live' ){
             if( empty($request->title) && empty($request->link_from) ){
@@ -144,6 +147,21 @@ class FollowupSalesController extends Controller
                 ],422);
             }
 
+
+            // send email and notification for seller and buyer
+
+            if ($backlink->publisher) {
+                $seller = $backlink->publisher->user ?: null;
+            } else {
+                $seller = null;
+            }
+
+            // notify seller
+            if ($seller) {
+                event(new BacklinkLiveSellerEvent($backlink, $seller));
+            }
+
+            // notify buyer
             event(new BacklinkLiveEvent($backlink, $backlink->user));
 
             $input['live_date'] = date('Y-m-d');

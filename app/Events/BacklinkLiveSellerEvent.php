@@ -12,23 +12,23 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BacklinkLiveEvent implements ShouldBroadcast
+class BacklinkLiveSellerEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $seller;
     public $backlink;
 
     /**
      * Create a new event instance.
      *
      * @param Backlink $backlink
-     * @param User $user
+     * @param User $seller
      */
-    public function __construct(Backlink $backlink, User $user)
+    public function __construct(Backlink $backlink, User $seller)
     {
         $this->backlink = $backlink;
-        $this->user = $user;
+        $this->seller = $seller;
     }
 
     /**
@@ -38,7 +38,7 @@ class BacklinkLiveEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->user->id);
+        return new PrivateChannel('user.' . $this->seller->id);
     }
 
     public function broadcastAs()
