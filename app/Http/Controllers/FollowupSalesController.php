@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\BacklinkLiveSellerEvent;
+use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
 use App\Notifications\BacklinkLiveSeller;
 use App\Repositories\Contracts\NotificationInterface;
@@ -147,22 +148,36 @@ class FollowupSalesController extends Controller
                 ],422);
             }
 
+            if ($backlink->status !== 'Live') {
+                // notify buyer
+                event(new BacklinkLiveEvent($backlink, $backlink->user));
 
-            // send email and notification for seller and buyer
-
-            if ($backlink->publisher) {
-                $seller = $backlink->publisher->user ?: null;
-            } else {
+                // notify seller
                 $seller = null;
-            }
 
-            // notify seller
-            if ($seller) {
-                event(new BacklinkLiveSellerEvent($backlink, $seller));
-            }
+                if ($backlink->publisher) {
+                    $seller = $backlink->publisher->user ?: null;
+                }
 
-            // notify buyer
-            event(new BacklinkLiveEvent($backlink, $backlink->user));
+                if ($seller) {
+                    event(new BacklinkLiveSellerEvent($backlink, $seller));
+                }
+
+                // notify writer
+                $writer = null;
+
+                if ($backlink->article) {
+                    if ($backlink->article->status_writer) {
+                        if ($backlink->article->status_writer === 'Done') {
+                            $writer = $backlink->article->user ?: null;
+                        }
+                    }
+                }
+
+                if ($writer) {
+                    event(new BacklinkLiveWriterEvent($backlink, $writer));
+                }
+            }
 
             $input['live_date'] = date('Y-m-d');
         }

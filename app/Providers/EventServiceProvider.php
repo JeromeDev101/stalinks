@@ -6,6 +6,7 @@ use App\Events\AddWalletEvent;
 use App\Events\ArticleDoneEvent;
 use App\Events\BacklinkLiveEvent;
 use App\Events\BacklinkLiveSellerEvent;
+use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\BuyEvent;
@@ -18,6 +19,7 @@ use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
 use App\Listeners\BacklinkLiveListener;
 use App\Listeners\BacklinkLiveSellerListener;
+use App\Listeners\BacklinkLiveWriterListener;
 use App\Listeners\BacklinkStatusChangedListener;
 use App\Listeners\BuyerDebittedListener;
 use App\Listeners\BuyListener;
@@ -68,6 +70,10 @@ class EventServiceProvider extends ServiceProvider
 
         BacklinkLiveSellerEvent::class => [
             BacklinkLiveSellerListener::class
+        ],
+
+        BacklinkLiveWriterEvent::class => [
+            BacklinkLiveWriterListener::class
         ],
 
         BuyerDebitedEvent::class => [
