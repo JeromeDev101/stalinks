@@ -1936,6 +1936,8 @@ export default {
             if(!this.accountModel.add_method_payment_type[id_payment_type]) {
                 this.validate_error_type = true;
                 return false;
+            } else {
+                this.validate_error_type = false;
             }
 
             this.isPopupLoading = true;
@@ -2072,6 +2074,7 @@ export default {
             this.accountUpdate.password = '';
             this.accountUpdate.c_password = '';
             this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company' : 'Freelancer';
+            this.accountUpdate.company_name = that.is_freelance == '0' ? that.company_name : '';
             this.accountUpdate.country_id = that.country_id
             this.accountUpdate.language_id = that.language_id
             this.accountUpdate.address = that.address

@@ -200,7 +200,7 @@ class SellerBillingController extends Controller
         }
 
         if( isset($check[0]) ){
-            $seller_info = User::where('id', $check[0])->with(['paymentType', 'registration'])->get();
+            $seller_info = User::where('id', $check[0])->with(['paymentType', 'registration', 'userPaymentTypes'])->get();
 
             $result = [
                 'data' => $seller_info,
