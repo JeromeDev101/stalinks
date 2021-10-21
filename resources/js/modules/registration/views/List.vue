@@ -2087,8 +2087,10 @@ export default {
             this.accountUpdate.account_validation = that.account_validation
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
             this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
+
+            // console.log(that)
             
-            if(typeof account.user != "undefined"){
+            if(typeof account.user != "undefined" && account.user){
                 if(account.user.user_payment_types.length > 0) {
                     for(let index in account.user.user_payment_types) {
                         var payment_id = account.user.user_payment_types[index].payment_id;
