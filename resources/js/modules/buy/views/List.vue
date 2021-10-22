@@ -346,11 +346,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="ml-5 text-primary" v-show="user.role_id == 5">Credit Left: <b>${{
-                                listBuy.credit
-                                                                                                   }}</b></span>
+                        <span class="ml-5 text-primary" v-show="user.role_id == 5">
+                            Credit Left: <b>${{listBuy.credit }}</b>
+                        </span>
 
-                        <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <div class="input-group input-group-sm float-right ml-3" style="width: 100px">
                             <select name=""
                                     class="form-control float-right"
                                     @change="getBuyList"
@@ -392,6 +392,17 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="float-right mb-3">
+                            <Sort
+                                ref="sortComponent"
+                                :sorted="isSorted"
+                                :items="sortOptions"
+
+                                @submitSort="sortBuyBacklinks"
+                                @updateOptions="updateSortOptions">
+                            </Sort>
                         </div>
 
                         <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
@@ -936,10 +947,12 @@
 <script>
 import {mapState} from 'vuex';
 import VueVirtualTable from 'vue-virtual-table';
+import Sort from '@/components/sort/Sort';
 
 export default {
     components : {
         VueVirtualTable,
+        Sort,
     },
     data() {
         return {
@@ -1046,6 +1059,7 @@ export default {
             generatorLoader : null,
 
             country_continent_filter_info : '',
+            sort_options: [],
         }
     },
 
@@ -1146,6 +1160,142 @@ export default {
                 : this.listCountryAll.data.filter(item => this.filterModel.continent_id.includes(item.continent_id))
         },
 
+        isSorted() {
+            // return this.filterModel.sort !== '' && this.filterModel.sort.length !== 0;
+            return this.filterModel.sort !== '';
+        },
+
+        sortOptions() {
+                return [
+                    {
+                        name: 'Seller',
+                        sort: '',
+                        column: 'users.username',
+                        hidden: !this.tblBuyOptions.seller
+                    },
+                    {
+                        name: 'Topic',
+                        sort: '',
+                        column: 'topic',
+                        hidden: !this.tblBuyOptions.topic
+                    },
+                    {
+                        name: 'Casino & Betting sites',
+                        sort: '',
+                        column: 'casino_sites',
+                        hidden: !this.tblBuyOptions.casino_sites
+                    },
+                    {
+                        name: 'Language',
+                        sort: '',
+                        column: 'languages.name',
+                        hidden: !this.tblBuyOptions.language
+                    },
+                    {
+                        name: 'Country',
+                        sort: '',
+                        column: 'countries.name',
+                        hidden: !this.tblBuyOptions.country
+                    },
+                    {
+                        name: 'Continent',
+                        sort: '',
+                        column: 'publisher_continent',
+                        hidden: !this.tblBuyOptions.continent
+                    },
+                    {
+                        name: 'URL',
+                        sort: '',
+                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
+                        hidden: !this.tblBuyOptions.url
+                    },
+                    {
+                        name: 'Https',
+                        sort: '',
+                        column: 'is_https',
+                        hidden: false
+                    },
+                    {
+                        name: 'UR',
+                        sort: '',
+                        column: 'ur',
+                        hidden: !this.tblBuyOptions.ur
+                    },
+                    {
+                        name: 'DR',
+                        sort: '',
+                        column: 'dr',
+                        hidden: !this.tblBuyOptions.dr
+                    },
+                    {
+                        name: 'Blinks',
+                        sort: '',
+                        column: 'backlinks',
+                        hidden: !this.tblBuyOptions.backlinks
+                    },
+                    {
+                        name: 'Ref Domain',
+                        sort: '',
+                        column: 'ref_domain',
+                        hidden: !this.tblBuyOptions.ref_domains
+                    },
+                    {
+                        name: 'Org Kw',
+                        sort: '',
+                        column: 'org_keywords',
+                        hidden: !this.tblBuyOptions.org_keywords
+                    },
+                    {
+                        name: 'Ratio',
+                        sort: '',
+                        column: 'ratio_value',
+                        hidden: !this.tblBuyOptions.ratio
+                    },
+                    {
+                        name: 'Org Traffic',
+                        sort: '',
+                        column: 'cast(org_traffic as unsigned)',
+                        hidden: !this.tblBuyOptions.org_traffic
+                    },
+                    {
+                        name: 'Price',
+                        sort: '',
+                        column: 'cast(price as unsigned)',
+                        hidden: !this.tblBuyOptions.price
+                    },
+                    // {
+                    //     name: 'Prices',
+                    //     sort: '',
+                    //     column: 'cast(dr as unsigned)', // for checking
+                    //     hidden: !this.tblBuyOptions.prices
+                    // },
+                    // {
+                    //     name: 'Status',
+                    //     sort: '',
+                    //     column: 'cast(backlinks as unsigned)', // for checking
+                    //     hidden: !this.tblBuyOptions.status
+                    // },
+                    {
+                        name: 'Code Comb',
+                        sort: '',
+                        column: 'code_comb',
+                        hidden: !this.tblBuyOptions.code_comb
+                    },
+                    {
+                        name: 'Code Price',
+                        sort: '',
+                        column: 'code_price',
+                        hidden: !this.tblBuyOptions.code_price
+                    },
+                    {
+                        name: 'Price Basis',
+                        sort: '',
+                        column: 'price_basis',
+                        hidden: !this.tblBuyOptions.price_basis
+                    },
+                ]
+            },
+
         tableConfig() {
             return [
                 {
@@ -1164,7 +1314,7 @@ export default {
                 {
                     prop : 'user_name',
                     name : 'Seller',
-                    sortable : true,
+                    // sortable : true,
                     width : 100,
                     isHidden : this.user.role_id == 5 &&
                         this.user.isOurs == 1
@@ -1186,14 +1336,14 @@ export default {
                 {
                     prop : 'language_name',
                     name : 'Language',
-                    sortable : true,
+                    // sortable : true,
                     width : 110,
                     isHidden : false
                 },
                 {
                     prop : 'country_name',
                     name : 'Country',
-                    sortable : true,
+                    // sortable : true,
                     width : 120,
                     isHidden : false
                 },
@@ -1214,35 +1364,35 @@ export default {
                 {
                     prop : 'is_https',
                     name : 'Https',
-                    sortable : true,
+                    // sortable : true,
                     width : 200,
                     isHidden : false
                 },
                 {
                     prop : 'ur',
                     name : 'UR',
-                    sortable : true,
+                    // sortable : true,
                     width : 50,
                     isHidden : false
                 },
                 {
                     prop : 'dr',
                     name : 'DR',
-                    sortable : true,
+                    // sortable : true,
                     width : 50,
                     isHidden : false
                 },
                 {
                     prop : 'backlinks',
                     name : 'Blinks',
-                    sortable : true,
+                    // sortable : true,
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'ref_domain',
                     name : 'Ref Domain',
-                    sortable : true,
+                    // sortable : true,
                     width : 125,
                     isHidden : false
                 },
@@ -1295,14 +1445,14 @@ export default {
                 {
                     prop : 'code_comb',
                     name : 'Code Comb',
-                    sortable : true,
+                    // sortable : true,
                     width : 125,
                     isHidden : false
                 },
                 {
                     prop : 'code_price',
                     name : 'Code Price',
-                    sortable : true,
+                    // sortable : true,
                     prefix : '$ ',
                     width : 120,
                     isHidden : this.user.role_id == 5 &&
@@ -1311,7 +1461,7 @@ export default {
                 {
                     prop : 'price_basis',
                     name : 'Price Basis',
-                    sortable : true,
+                    // sortable : true,
                     width : 120,
                     isHidden :
                         !this.isExtBuyerWithCommission
@@ -1345,6 +1495,15 @@ export default {
     },
 
     methods : {
+        updateSortOptions(data) {
+            this.sort_options = data;
+        },
+
+        sortBuyBacklinks(data) {
+            this.filterModel.sort = data.filter(item => item.sort !== '' && item.hidden !== true)
+            this.getBuyList();
+        },
+
         async saveColumnSetting() {
             let loader = this.$loading.show();
             this.toggleTableLoading();
@@ -1489,7 +1648,8 @@ export default {
                     this.buttonState.price,
                     page : page,
                     domain_zone : this.filterModel.domain_zone,
-                    is_https : this.filterModel.is_https
+                    is_https : this.filterModel.is_https,
+                    sort: this.filterModel.sort
                 }
             })
 
@@ -1617,7 +1777,8 @@ export default {
                     org_traffic : this.filterModel.org_traffic,
                     org_traffic_direction :
                     this.buttonState.org_traffic,
-                    is_https : this.filterModel.is_https
+                    is_https : this.filterModel.is_https,
+                    sort: this.filterModel.sort
                 }
             });
         },
@@ -1668,21 +1829,24 @@ export default {
 
             if (price != '' && price != null) { // check if price has a value
 
-                if (article.toLowerCase() == 'yes') { //check if with article
+                if(article){
 
-                    if (commission == 'yes') {
-                        let percentage = this.percentage(percent, price)
-                        selling_price = parseFloat(percentage) + parseFloat(price)
-                    }
-                }
+                    if (article.toLowerCase() == 'yes') { //check if with article
 
-                if (article.toLowerCase() == 'no') { //check if without article
-
-                    if (commission == 'yes') {
-                        let percentage = this.percentage(percent, price)
-                        selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                        if (commission == 'yes') {
+                            let percentage = this.percentage(percent, price)
+                            selling_price = parseFloat(percentage) + parseFloat(price)
+                        }
                     }
 
+                    if (article.toLowerCase() == 'no') { //check if without article
+
+                        if (commission == 'yes') {
+                            let percentage = this.percentage(percent, price)
+                            selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                        }
+
+                    }
                 }
 
             }
@@ -1708,29 +1872,32 @@ export default {
 
                     if (type == 'Buyer') { // check if the user_type is a 'Buyer'
 
-                        if (article.toLowerCase() == 'yes') { //check if with article
+                        if(article) {
 
-                            if (commission == 'no') {
-                                selling_price = price
+                            if (article.toLowerCase() == 'yes') { //check if with article
+
+                                if (commission == 'no') {
+                                    selling_price = price
+                                }
+
+                                if (commission == 'yes') {
+                                    let percentage = this.percentage(percent, price)
+                                    selling_price = parseFloat(percentage) + parseFloat(price)
+                                }
                             }
 
-                            if (commission == 'yes') {
-                                let percentage = this.percentage(percent, price)
-                                selling_price = parseFloat(percentage) + parseFloat(price)
+                            if (article.toLowerCase() == 'no') { //check if without article
+
+                                if (commission == 'no') {
+                                    selling_price = parseFloat(price) + additional
+                                }
+
+                                if (commission == 'yes') {
+                                    let percentage = this.percentage(percent, price)
+                                    selling_price = parseFloat(percentage) + parseFloat(price) + additional
+                                }
+
                             }
-                        }
-
-                        if (article.toLowerCase() == 'no') { //check if without article
-
-                            if (commission == 'no') {
-                                selling_price = parseFloat(price) + additional
-                            }
-
-                            if (commission == 'yes') {
-                                let percentage = this.percentage(percent, price)
-                                selling_price = parseFloat(percentage) + parseFloat(price) + additional
-                            }
-
                         }
                     }
 

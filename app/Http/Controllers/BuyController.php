@@ -53,6 +53,7 @@ class BuyController extends Controller
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased',
+            DB::raw('org_keywords/org_traffic as ratio_value')
         ];
 
         $list = Publisher::select($columns)
@@ -266,6 +267,15 @@ class BuyController extends Controller
             } else {
                 $list = $list->where('publisher.topic', 'like', '%'. $filter['topic'].'%');
             }
+        }
+
+        if (isset($filter['sort']) && !empty($filter['sort'])) {
+            foreach ($filter['sort'] as &$sort) {
+                $sort = \GuzzleHttp\json_decode($sort);
+                $list = $list->orderByRaw("$sort->column $sort->sort");
+            }
+        } else {
+            $list->orderBy('created_at', 'desc');
         }
 
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
