@@ -93,7 +93,7 @@ class PublisherController extends Controller
             }),
         ]);
 
-        $url_copy = $this->remove_http($request->url);
+        $url_copy = remove_http($request->url);
 
         $isDuplicate = $this->checkDuplicate($url_copy, $request->seller);
 
@@ -139,16 +139,6 @@ class PublisherController extends Controller
         return $publisher->count() > 0;
     }
 
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
     public function updateMultiple(Request $request) {
         // dd($request->all());
         foreach( $request->ids as $id ) {
@@ -180,7 +170,7 @@ class PublisherController extends Controller
             'kw_anchor' => 'required',
         ]);
 
-        $request['url'] = $this->remove_http($request->url);
+        $request['url'] = remove_http($request->url);
 
         $isDuplicate = $this->checkDuplicateUpdate($request->url, $request->user_id, $request->id);
 

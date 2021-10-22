@@ -123,7 +123,7 @@ class GenerateListController extends Controller
                 $url = trim_special_characters($line[0]);
 
                 if( trim($url, " ") != '' ){
-                    $url_remove_http = $this->remove_http($url);
+                    $url_remove_http = remove_http($url);
 
                     GenerateList::create([
                         'url' => $url_remove_http,
@@ -168,19 +168,9 @@ class GenerateListController extends Controller
         }
     }
 
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
     public function store(Request $request) {
         $request->validate(['url' => 'required']);
-        $url = $this->remove_http($request->url);
+        $url = remove_http($request->url);
 
         $generate_list = GenerateList::where('url', 'like', '%'.$url.'%')->count();
 

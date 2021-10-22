@@ -35,7 +35,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         $response['success'] = false;
         $input_2 = collect($data)->only('update_method_payment_type')->toArray();
         $input = collect($data)->except('company_type', 'user')->toArray();
-  
+
         $input['is_freelance'] = $data['company_type'] == 'Freelancer' ? 1:0;
 
         unset($input['c_password']);
@@ -52,7 +52,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {
-            $input['company_url'] = $this->remove_http($input['company_url']);
+            $input['company_url'] = remove_http($input['company_url']);
         }
 
         // ---------------------------------------------------
@@ -149,20 +149,10 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                 }
             }
         }
-    
+
         UsersPaymentType::insert($insert_input_users_payment_type);
 
         $response['success'] = true;
         return response()->json($response);
-    }
-
-    public function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-            if(strpos($url, $d) === 0) {
-                return str_replace($d, '', $url);
-            }
-        }
-        return $url;
     }
 }

@@ -200,16 +200,6 @@ class ExtDomainController extends Controller
     //     return $result;
     // }
 
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.', '/');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
     public function store(Request $request) {
         $id = Auth::user()->id;
         $input = $request->only(['info','skype','domain', 'country_id', 'alexa_rank',
@@ -247,7 +237,7 @@ class ExtDomainController extends Controller
             'ref_domains' => 'required|integer|gte:0'
         ])->validate();
 
-        $url_remove_http = $this->remove_http($input['domain']);
+        $url_remove_http = remove_http($input['domain']);
 
 //        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$url_remove_http.'%');
 //        $checkPublisher = Publisher::where('url', 'like', '%'.$url_remove_http.'%');
@@ -535,7 +525,7 @@ class ExtDomainController extends Controller
 
         // check if status is 'Qualified'
         if( $input['status'] === '100'){
-            $url = $this->remove_http($request->pub['url']);
+            $url = remove_http($request->pub['url']);
             $publisher = Publisher::where('url', 'like', '%'.$url.'%')->count();
 
             // create a copy if unique URl in list publisher

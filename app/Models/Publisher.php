@@ -51,7 +51,7 @@ class Publisher extends Model
         ];
 
     public function getCustomUrlAttribute() {
-        return $this->remove_http($this->url);
+        return remove_http($this->url);
     }
 
     public function getCustomUsernameAttribute() {
@@ -104,16 +104,6 @@ class Publisher extends Model
 
     public function backlinks() {
         return $this->hasMany('App\Models\Backlink', 'publisher_id', 'id');
-    }
-
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
     }
 
     // private function percentage($percent, $total) {

@@ -40,3 +40,42 @@ if (!function_exists('move_file_to_storage')) {
         return $filename;
     }
 }
+
+if (!function_exists('remove_http')) {
+
+    /**
+     * clean url
+     *
+     * @param $url
+     * @return string|string[]
+     */
+    function remove_http($url) {
+        $disallowed = array(
+            'http://',
+            'https://',
+            'http//',
+            'https//',
+            'https',
+            'http',
+            'www.',
+            '?',
+            ':'
+        );
+
+        foreach($disallowed as $d) {
+            if(strpos($url, $d) !== false) {
+                $url = str_replace($d, '', $url);
+            }
+        }
+
+        // remove www.
+        $url = preg_replace('#^www\.(.+\.)#i', '$1', $url);
+
+        // remove path, assuming that url is = sampledomain.com/path/path
+        if(strstr($url, '/')){
+            $url = substr($url, 0, strpos($url, '/'));
+        }
+
+        return $url;
+    }
+}

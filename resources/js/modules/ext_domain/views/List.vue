@@ -1692,14 +1692,12 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Existing Domain</h4>
-                        <div class="modal-load overlay float-right">
-                        </div>
+                        <h4 class="modal-title">Failed to Upload</h4>
                     </div>
                     <div class="modal-body">
                         <table class="table table-condensed">
                             <tr>
-                                <th colspan="2">Total Existing Domain ({{ existingDomain.total }})</th>
+                                <th colspan="2">Total failed ({{ existingDomain.total }})</th>
                             </tr>
                             <tr v-for="(ext, index) in existingDomain.data" :key="index">
                                 <td>{{ ext }}</td>
@@ -2375,6 +2373,12 @@ export default {
         async submitUpload() {
             let loader = this.$loading.show();
             this.isEnableBtn = true;
+
+            // clear error messages
+
+            this.existingDomain.total = 0;
+            this.existingDomain.data = [];
+
             this.formData = new FormData();
             this.formData.append('file', this.$refs.excel.files[0]);
             // this.formData.append('language', this.$refs.language.value);
@@ -2410,8 +2414,6 @@ export default {
                     'Successfully Uploaded.',
                     'success'
                 )
-
-                console.log(this.existingDomain);
             }
 
             loader.hide();

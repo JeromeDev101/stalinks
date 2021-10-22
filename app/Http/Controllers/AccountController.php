@@ -49,7 +49,7 @@ class AccountController extends Controller
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {
-            $input['company_url'] = $this->accountRepository->remove_http($input['company_url']);
+            $input['company_url'] = remove_http($input['company_url']);
         }
 
         $isTeamSeller = $this->checkTeamSeller();
@@ -65,7 +65,7 @@ class AccountController extends Controller
 
         // DB transaction
         DB::beginTransaction();
-        
+
             // insert in registration
             $registration = Registration::create($input);
 
@@ -113,7 +113,7 @@ class AccountController extends Controller
                     }
                 }
             }
-        
+
             $users_payment_type = UsersPaymentType::insert($insert_input_users_payment_type);
 
         if($users_payment_type && $user && $registration) {
@@ -121,7 +121,10 @@ class AccountController extends Controller
         } else {
             DB::rollBack();
         }
-        
+
+
+
+
         return response()->json(['success' => true], 200);
     }
 
@@ -236,7 +239,7 @@ class AccountController extends Controller
                     $sub->where('payment_id', $payment_info)->where('is_default', 1);
                 });
             });
-        }) 
+        })
         ->with('team_in_charge:id,name,username,status')
         ->with(['user' => function($query) {
             $query->with(['userPaymentTypes' => function($sub) {
@@ -297,9 +300,9 @@ class AccountController extends Controller
             'data' => $list
         ]);
     }
-    
+
     /**
-     * 
+     *
      * transfer payment information from registration to users_payment_type table
      */
     public function transferPaymentInfo() {
@@ -350,7 +353,7 @@ class AccountController extends Controller
                         ]);
                     }
                 }
-                
+
             }
         }
 
@@ -426,7 +429,7 @@ class AccountController extends Controller
                 }
             }
         }
-    
+
         UsersPaymentType::insert($insert_input_users_payment_type);
 
         return response()->json(['success' => true], 200);

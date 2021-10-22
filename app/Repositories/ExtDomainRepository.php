@@ -102,6 +102,15 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                 $country = trim_special_characters($line[2]);
                 $email = trim_special_characters($line[3]);
 
+                // remove http
+                $url = remove_http($url);
+
+                // remove space
+                $url = trim($url, " ");
+
+                // remove /
+                $url = rtrim($url,"/");
+
                 $isExistDomain = $this->checkDomain($url);
 //                $isExistEmail = $this->checkEmail($email);
 
@@ -127,7 +136,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
                                     ExtDomain::create([
                                         'user_id' => $id,
-                                        'domain' => $this->remove_http($url),
+                                        'domain' => $url,
                                         'country_id' => $lang,
                                         'ahrefs_rank' => 0,
                                         'no_backlinks' => 0,
@@ -183,16 +192,6 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         ];
     }
 
-    private function remove_http($url) {
-        $disallowed = array('http://', 'https://', 'www.', '/');
-        foreach($disallowed as $d) {
-           if(strpos($url, $d) === 0) {
-              return str_replace($d, '', $url);
-           }
-        }
-        return $url;
-    }
-
     private function getStatusCode($status){
         $result = 0;
 
@@ -222,7 +221,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
     private function checkDomain($domain) {
         $result = true;
 
-        $domain = $this->remove_http($domain);
+        $domain = remove_http($domain);
 
 //        $checkExtDomain = ExtDomain::where('domain', 'like', '%'.$domain.'%');
 //        $checkPublisher = Publisher::where('url', 'like', '%'.$domain.'%');

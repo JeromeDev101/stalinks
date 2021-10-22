@@ -539,7 +539,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $country = trim_special_characters($line[7]);
 
                     // remove http
-                    $url = $this->remove_http($url);
+                    $url = remove_http($url);
 
                     // remove space
                     $url = trim($url, " ");
@@ -679,7 +679,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $kw_anchor = trim_special_characters($line[8]);
 
                     // remove http
-                    $url = $this->remove_http($url);
+                    $url = remove_http($url);
 
                     // remove space
                     $url = trim($url, " ");
@@ -870,22 +870,6 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $publisher = Publisher::where('url', 'like', '%' . $url . '%')->where('user_id', $seller_id);
 
         return $publisher->count() > 0;
-    }
-
-    private function remove_http($url)
-    {
-        $disallowed = array(
-            'http://',
-            'https://',
-            'www.'
-        );
-        foreach ($disallowed as $d) {
-            if (strpos($url, $d) === 0) {
-                $url = str_replace($d, '', $url);
-            }
-        }
-
-        return $url;
     }
 
     private function checkValid($url)
