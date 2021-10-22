@@ -789,7 +789,8 @@ class AccountController extends Controller
         }
 
         $user->update([
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'reset_password_token' => null
         ]);
 
         return response()->json(['success' => true]);

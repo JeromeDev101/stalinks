@@ -67,7 +67,7 @@
                     .then((res) => {
                         swal.fire(
                             'Success',
-                            'Resetting password has been send, Please check now your email',
+                            'Reset password link has been sent. Please check your email.',
                             'success'
                         );
 

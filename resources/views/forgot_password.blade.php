@@ -51,6 +51,9 @@
             mso-table-lspace: 0pt;
             mso-table-rspace: 0pt;
         }
+        td{
+
+        }
 
         img {
             -ms-interpolation-mode: bicubic;
@@ -67,6 +70,11 @@
 
         table {
             border-collapse: collapse !important;
+            table-layout: fixed;
+        }
+
+        th,td {
+            word-wrap: break-word;
         }
 
         body {
@@ -74,6 +82,7 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
+            background-color: black;
         }
 
         /* iOS BLUE LINKS */
@@ -87,10 +96,18 @@
         }
 
         /* MOBILE STYLES */
-        @media screen and (max-width:600px) {
+        @media all and (max-width: 480px) {
             h1 {
-                font-size: 32px !important;
+                font-size: 0.7em !important;
                 line-height: 32px !important;
+            }
+
+            .main-td {
+                padding: 0 5% !important;
+            }
+
+            .main-text, .button-text {
+                font-size: .9em !important;
             }
         }
 
@@ -101,37 +118,24 @@
     </style>
 </head>
 
-<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <!-- LOGO -->
-        <tr>
-            <td bgcolor="#FFA73B" align="center">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Change Password</h1>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Hi <strong></strong>, Please don't share these information to avoid losing of account . Just press the button below.</p>
-                        </td>
-                    </tr>
+<body style="background-image: url('{{ asset('/images/background-login2.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
+<!-- HIDDEN PREHEADER TEXT -->
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <!-- LOGO -->
+    @component('components.email_header')
+        Reset Password
+    @endcomponent
+
+    <tr>
+        <td  align="center" class="main-td" style="padding: 0 15%">
+            @component('components.email_body')
+                @slot('main')
+                    <p style="margin: 0;">Hi,</p> <br />
+                    <p style="margin: 0;">Please don't share this information to avoid loss of account. To continue the process, please click the button below.</p>
+                @endslot
+
+                @slot('button')
                     <tr>
                         <td bgcolor="#ffffff" align="left">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -139,33 +143,40 @@
                                     <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="{{ url('/reset-password?t=' . $token . '&e=' . $email) }}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Change password</a></td>
+                                                <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00"><a href="{{ url('/reset-password?t=' . $token . '&e=' . $email) }}" target="_blank" class="button-text" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Change password</a></td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
                             </table>
                         </td>
+                    </tr>
+                @endslot
+
+                @slot('link')
+                    <tr>
+                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                            <p style="margin: 0;">If that doesn’t work, please copy this link and paste into your browser:</p>
+                        </td>
                     </tr> <!-- COPY -->
                     <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If that doesn't work, copy and paste the following link in your browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FFA73B;">{{ url('/reset-password?t=' . $token . '&e=' . $email) }}</a></p>
+                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/reset-password?t=' . $token . '&e=' . $email) }}</a></p>
                         </td>
                     </tr>
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cheers,<br>Stalinks System</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+                @endslot
+
+                @slot('closing')
+                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
+                @endslot
+            @endcomponent
+        </td>
+    </tr>
+    <tr>
+        @component('components.email_footer')
+        @endcomponent
+    </tr>
+</table>
 </body>
 
 </html>
