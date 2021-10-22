@@ -122,13 +122,12 @@ class AccountController extends Controller
             DB::rollBack();
         }
         
-        
-
         return response()->json(['success' => true], 200);
     }
 
     public function getList(Request $request)
     {
+        // dd($request->all());
         $user_id = Auth::user()->id;
         $status = $request->status;
         $type = $request->type;
@@ -144,6 +143,7 @@ class AccountController extends Controller
         $company_name = $request->company_name;
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
+        $payment_info = $request->payment_info;
         $is_sub_account = ($request->is_sub_account == '' || $request->is_sub_account == null)
             ? null : ($request->is_sub_account == 1 ? 'Sub' : 'Not');
         $created_at = json_decode($request->created_at);
@@ -230,9 +230,18 @@ class AccountController extends Controller
 
             return $query;
         })
+        ->when(isset($payment_info), function($query) use ($payment_info){
+            $query->whereHas('user', function($_query) use ($payment_info){
+                $_query->whereHas('userPaymentTypes', function($sub) use ($payment_info) {
+                    $sub->where('payment_id', $payment_info)->where('is_default', 1);
+                });
+            });
+        }) 
         ->with('team_in_charge:id,name,username,status')
         ->with(['user' => function($query) {
-            $query->with('userPaymentTypes');
+            $query->with(['userPaymentTypes' => function($sub) {
+                $sub->with('paymentType');
+            }]);
         }])
         ->with('country:id,name')
         ->with('language:id,name')

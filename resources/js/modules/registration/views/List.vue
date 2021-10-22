@@ -215,6 +215,21 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Payment Info</label>
+
+                                    <select class="form-control" v-model="filterModel.payment_info">
+                                        <option value="">Default</option>
+                                        <option v-for="(option, index) in paymentMethodList" v-bind:value="option.id" :key="index">
+                                            {{ option.type }}
+                                        </option>
+                                    </select>
+                                   
+                                
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -1388,6 +1403,7 @@ export default {
                 company_name : this.$route.query.company_name || '',
                 company_url : this.$route.query.company_url || '',
                 account_validation : this.$route.query.account_validation || '',
+                payment_info : this.$route.query.payment_info || '',
                 created_at : {
                     startDate : null,
                     endDate : null
@@ -1766,7 +1782,11 @@ export default {
                 if(account.user.user_payment_types.length > 0) {
                     for(let index in account.user.user_payment_types) {
                         if(account.user.user_payment_types[index].is_default === 1 ) {
-                            email = account.user.user_payment_types[index].account + '<br/>';
+                            let _type = '';
+                            if(account.user.user_payment_types[index].payment_type) {
+                                _type = account.user.user_payment_types[index].payment_type.type
+                            }
+                            email = account.user.user_payment_types[index].account + ' <span class="badge badge-success">'+ _type +'</span>';
                         } 
                     }
                 }
@@ -2133,6 +2153,7 @@ export default {
                     company_name : this.filterModel.company_name,
                     company_url : this.filterModel.company_url,
                     account_validation : this.filterModel.account_validation,
+                    payment_info : this.filterModel.payment_info,
                     created_at : this.filterModel.created_at,
                     account_verification :
                     this.filterModel.account_verification,
@@ -2184,6 +2205,7 @@ export default {
                 company_name : '',
                 company_url : '',
                 account_validation : '',
+                payment_info : '',
                 country : '',
                 language_id : '',
                 created_at : {
@@ -2223,6 +2245,7 @@ export default {
                     company_name : this.filterModel.company_name,
                     company_url : this.filterModel.company_url,
                     account_validation : this.filterModel.account_validation,
+                    payment_info : this.filterModel.payment_info,
                     created_at : this.filterModel.created_at,
                     account_verification :
                     this.filterModel.account_verification,
