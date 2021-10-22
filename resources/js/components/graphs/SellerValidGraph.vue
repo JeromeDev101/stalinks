@@ -103,6 +103,18 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-sm-1">
+                        <h6 class="mb-2">Total: {{ total }}</h6>
+                    </div>
+                    <div class="col-sm-1">
+                        <h6 class="mb-2">Valid: {{ valid }}</h6>
+                    </div>
+                    <div class="col-sm-2">
+                        <h6 class="mb-2">Good Price: {{ with_url }}</h6>
+                    </div>
+                </div>
+
                 <div class="small">
                     <apexchart type="bar" height="350"
                                :options="sellerValidOption"
@@ -116,6 +128,8 @@
 <script>
 import seller_valid from "../../graph_settings/seller_valid";
 import axios from "axios";
+import __ from "lodash";
+import _ from "underscore";
 
 export default {
     name : "SellerValidGraph",
@@ -155,8 +169,23 @@ export default {
                 label : '% URL'
             }],
             sellerValidData: [],
-            sellerValidOption: {}
+            sellerValidOption: {},
+            rawData : null
         };
+    },
+
+    computed : {
+        total() {
+            return __.sum(_.pluck(this.rawData, 'total_registration'));
+        },
+
+        valid() {
+            return __.sum(_.pluck(this.rawData, 'total_valid'));
+        },
+
+        with_url() {
+            return __.sum(_.pluck(this.rawData, 'valid_with_url'));
+        }
     },
 
     mounted() {
@@ -222,6 +251,8 @@ export default {
             axios.get('/api/graphs/seller-valid?start_date=' + start + '&end_date=' + end + '&scope=' + this.filterModel.sellerValid.scope+'&team_in_charge='+this.filterModel.sellerValid.team_in_charge)
                 .then(response => {
                     let data = response.data;
+
+                    this.rawData = data;
 
                     this.sellerValidData =
                         seller_valid.sellerValidGraphData(data);
