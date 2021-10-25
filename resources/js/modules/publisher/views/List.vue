@@ -508,9 +508,9 @@
                                             <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
-                                            <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8">QC Validation Yes</a>
-                                            <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8">QC Validation No</a>
-                                            <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8">Generate Country</a>
+                                            <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10 ">QC Validation Yes</a>
+                                            <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">QC Validation No</a>
+                                            <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">Generate Country</a>
                                         </div>
                                     </div>
 
@@ -824,7 +824,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8">
+                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8 || user.role_id === 10">
                                 <div class="form-group">
                                     <label for="">QC Validation</label>
                                     <select class="form-control" v-model="updateModel.qc_validation">
@@ -1345,7 +1345,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8">
+                            <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8 || user.role_id === 10">
                                 <div class="form-group">
                                     <label>QC Validation</label>
                                     <select class="form-control" v-model="updateMultiple.qc_validation">
