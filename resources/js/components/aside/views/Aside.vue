@@ -396,7 +396,8 @@
                                 user.isAdmin ||
                                 isManager ||
                                 isPostingWriter ||
-                                isQc
+                                isQc ||
+                                isQcSeller
                         "
                         :class="{
                             active:

@@ -224,7 +224,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 6">
+                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 10 || user.role_id === 6">
                                     <div class="form-group">
                                         <label>Account Validation</label>
                                         <select class="form-control" v-model="filterModel.account_validation">
@@ -284,7 +284,7 @@
 
                             <div class="row">
                                 <div class="col-md-3"
-                                     v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 6 && user.isOurs === 0)">
+                                     v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 6 && user.isOurs === 0) || user.role_id === 10">
                                     <div class="form-group">
                                         <label>QC Validation</label>
                                         <select name="" class="form-control" v-model="filterModel.qc_validation">
@@ -308,7 +308,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8">
+                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 10">
                                     <div class="form-group">
                                         <label>Show Duplicates</label>
                                         <select class="form-control" v-model="filterModel.show_duplicates">
@@ -605,6 +605,7 @@
                                     v-if="scope.row.user_account_validation === 'invalid'
                                 && (user.isAdmin
                                 || user.role_id === 8
+                                || user.role_id === 10
                                 || user.role_id === 6)"
                                     class="badge badge-danger">
                                 Invalid
