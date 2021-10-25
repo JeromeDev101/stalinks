@@ -182,8 +182,10 @@ class FollowupSalesController extends Controller
             $input['live_date'] = date('Y-m-d');
         }
 
-        if ($backlink->publisher->user_id) {
-            event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
+        if ($backlink->publisher) {
+            if  ($backlink->publisher->user_id) {
+                event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
+            }
         }
 
         $backlink->update($input);
