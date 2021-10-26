@@ -109,8 +109,8 @@ export default {
         },
 
         // get removed images from current content
-        getRemovedImages() {
-            let images = this.getImages(this.editorData)
+        getRemovedImages(temp = null) {
+            let images = temp ? this.getImages(temp) : this.getImages(this.editorData);
 
             return this.addImages.filter(img => !images.includes(img))
         },
@@ -127,11 +127,11 @@ export default {
         },
 
         // delete images function
-        deleteImages(mode) {
+        deleteImages(mode, temp = null) {
             if (mode === 'All') {
                 this.deleteRemovedImages(this.addImages)
             } else {
-                this.deleteRemovedImages(this.getRemovedImages())
+                this.deleteRemovedImages(this.getRemovedImages(temp))
             }
         }
     },

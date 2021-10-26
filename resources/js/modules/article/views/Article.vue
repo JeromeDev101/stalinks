@@ -342,15 +342,18 @@
                             <div class="col-sm-12">
                                 <!-- <tinymce id="articleContent" v-model="data" :other_options="options"></tinymce> -->
 
-                                <tiny-editor editor-id="composeEditorArticle"
-                                                 v-model="data"
-                                                 ref="composeEditorArticle"></tiny-editor>
+                                <tiny-editor
+                                    v-model="data"
+                                    ref="composeEditorArticle"
+                                    editor-id="composeEditorArticle">
+
+                                </tiny-editor>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
-                        <button @click="clearQuery" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button @click="clearQuery" type="button" class="btn btn-default">Close</button>
                         <button @click="submitSave" v-show="contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue'" type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
@@ -477,6 +480,7 @@
                     language_id: '',
                 },
                 isPopupLoading: false,
+
                 contentModel: {
                     id: '',
                     title: '',
@@ -491,6 +495,18 @@
                     note: '',
                     meta_keyword: '',
                 },
+
+                contentModelTemp: {
+                    title: '',
+                    status: '',
+                    note: '',
+                    meta_keyword: '',
+                    meta_description: '',
+                    data: ''
+                },
+
+                isSaved: false,
+
                 filterModel: {
                     paginate: this.$route.query.paginate || '50',
                     search_article: this.$route.query.search_article || '',
@@ -646,10 +662,10 @@
 
             modalCloser() {
 
-                if (this.data) {
+                if (this.compareData() && !this.isSaved) {
                     swal.fire({
                         title : "Are you sure?",
-                        text : "Email contents will be removed",
+                        text : "Changes will not be saved.",
                         icon : "warning",
                         showCancelButton : true,
                         confirmButtonText : 'Yes',
@@ -657,7 +673,7 @@
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
-                            this.$refs.composeEditorArticle.deleteImages('All');
+                            this.$refs.composeEditorArticle.deleteImages('Update', this.contentModelTemp.data);
 
                             this.closeModal()
                             this.clearModel()
@@ -665,11 +681,10 @@
                     });
 
                 } else {
-                    this.$refs.composeEditorArticle.deleteImages('All');
                     this.clearModel()
                     this.closeModal()
                 }
-                
+
             },
 
             closeModal() {
@@ -774,6 +789,17 @@
                 }
             },
 
+            compareData() {
+                return (
+                    (this.contentModel.title !== this.contentModelTemp.title)
+                    || (this.contentModel.status !== this.contentModelTemp.status)
+                    || (this.contentModel.note !== this.contentModelTemp.note)
+                    || (this.contentModel.meta_keyword !== this.contentModelTemp.meta_keyword)
+                    || (this.contentModel.meta_description !== this.contentModelTemp.meta_description)
+                    || (this.data !== this.contentModelTemp.data)
+                )
+            },
+
             doUpdate(backlink, article){
                 this.clearMessageform()
                 this.data = article.content == null ? '':article.content;
@@ -790,6 +816,16 @@
                 this.contentModel.meta_description = article.meta_description;
                 this.contentModel.meta_keyword = article.meta_keyword;
                 this.contentModel.note = article.note;
+
+                // add article data to temp
+                this.contentModelTemp.data = this.data;
+                this.contentModelTemp.title = this.contentModel.title;
+                this.contentModelTemp.status = this.contentModel.status;
+                this.contentModelTemp.note = this.contentModel.note;
+                this.contentModelTemp.meta_keyword = this.contentModel.meta_keyword;
+                this.contentModelTemp.meta_description = this.contentModel.meta_description;
+
+                this.isSaved = false;
 
                 $('#modal-content-edit').modal('show');
             },
@@ -844,7 +880,17 @@
                 });
                 this.isPopupLoading = false;
 
+                // delete removed images before saving
+                this.$refs.composeEditorArticle.deleteImages('Update');
+                this.isSaved = true;
+
                 this.getListArticles();
+
+                await swal.fire(
+                    'Updated!',
+                    'Article is updated.',
+                    'success'
+                )
             },
 
             displayInfo() {
