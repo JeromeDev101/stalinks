@@ -400,16 +400,6 @@
                                             <i class="fa fa-download"></i>
                                         </button>
 
-                                        <export-excel
-                                            name="master_list.xls"
-                                            worksheet="My Worksheet"
-                                            class="btn btn-primary btn-flat"
-                                            :data=masterListDataMethod()>
-
-                                            <i class="fa fa-list"></i>
-                                            Download List
-
-                                        </export-excel>
                                     </div>
                                 </div>
                                 <span v-if="messageForms.errors.file"
@@ -513,6 +503,18 @@
                                             <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">Generate Country</a>
                                         </div>
                                     </div>
+
+                                    <export-excel
+                                        name="master_list.xls"
+                                        worksheet="My Worksheet"
+                                        class="btn btn-default ml-5"
+                                        :data=masterListDataMethod()>
+
+                                        Download List
+
+                                    </export-excel>
+
+                                    <i class="fa fa-question-circle text-primary" title="Download List is the List of Country, Langauge and Topic were you can use in uploading of your CSV."></i>
 
                                 </div>
                             </div>
