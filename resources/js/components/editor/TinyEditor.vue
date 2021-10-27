@@ -28,7 +28,8 @@ export default {
                 allow_script_urls: false,
                 forced_root_block : false,
                 file_picker_types: 'image',
-                menubar: 'edit insert format tools table',
+                menubar: 'file edit insert format tools table',
+                toolbar1: 'fullscreen  preview print | formatselect | bold italic  strikethrough  forecolor backcolor | link image | charmap | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
                 images_upload_handler: function (blobInfo, success, failure) {
                     let xhr, formData;
                     let token = document.head.querySelector('meta[name="csrf-token"]');
