@@ -164,6 +164,8 @@ const actions = {
         try {
             let response = await PublisherService.getList(params);
             commit(PUBLISHER_LIST, { listPublish: response.data });
+
+            commit(MESSAGE_FORMS, { action: 'get_list', message: 'Get List !', errors: {} });
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

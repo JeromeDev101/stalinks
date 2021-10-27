@@ -1392,13 +1392,13 @@
 </style>
 
 <script>
-    import { mapState } from 'vuex';
-    import axios from 'axios';
-    import VueVirtualTable from 'vue-virtual-table';
-    import { csvTemplateMixin } from "../../../mixins/csvTemplateMixin";
-    import Sort from '@/components/sort/Sort';
+import {mapState} from 'vuex';
+import axios from 'axios';
+import VueVirtualTable from 'vue-virtual-table';
+import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
+import Sort from '@/components/sort/Sort';
 
-    export default {
+export default {
         components: {
             VueVirtualTable,
             Sort,
@@ -1577,6 +1577,10 @@
 
                 sort_options: [],
                 updateFormula: {},
+
+                // for removed items in list
+
+                removedItems: [],
             }
         },
 
@@ -1741,7 +1745,7 @@
                         ? this.updateMultiple.country
                         : '';
                 }
-            }
+            },
         },
 
         computed:{
@@ -2486,6 +2490,10 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
+                if (this.messageForms.action === 'get_list') {
+                    this.removeItemsFromList(this.removedItems);
+                }
+
                 loader.hide();
             },
 
@@ -2824,6 +2832,8 @@
             },
 
             clearSearch() {
+                this.removedItems = [];
+
                 this.filterModel = {
                     continent_id: '',
                     country_id: '',
@@ -2873,7 +2883,54 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_publisher') {
-                    this.getPublisherList();
+
+                    // for qc seller
+                    if (this.user.role_id === 10) {
+                        swal.fire({
+                            title: "Publisher has been updated.",
+                            text: "Do you want to remove the data from the list?",
+                            icon: "info",
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                this.removeItemFromList(this.updateModel.id)
+
+                                // add to removed items
+                                this.removedItems.push(this.updateModel.id)
+
+                                $("#modal-update-publisher").modal('hide')
+                            } else {
+                                this.getPublisherList();
+                            }
+                        });
+                    } else {
+
+                        this.getPublisherList();
+
+                        swal.fire(
+                            'Updated!',
+                            'Publisher has been updated.',
+                            'success'
+                        )
+                    }
+
+                }
+            },
+
+            removeItemFromList(id) {
+                let index = this.listPublish.data.map(x => x.id).indexOf(id)
+
+                this.listPublish.data.splice(index, 1);
+            },
+
+            removeItemsFromList(ids) {
+                if (this.user.role_id === 10) {
+                    if (this.removedItems.length !== 0) {
+                        this.listPublish.data = this.listPublish.data.filter(el => !ids.includes(el.id));
+                    }
                 }
             },
 
@@ -2985,6 +3042,8 @@
             },
 
             doSearch() {
+                this.removedItems = [];
+
                 this.$router.push({
                     query: this.filterModel,
                 });
