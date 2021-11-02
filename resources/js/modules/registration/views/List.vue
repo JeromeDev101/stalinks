@@ -226,8 +226,8 @@
                                             {{ option.type }}
                                         </option>
                                     </select>
-                                   
-                                
+
+
                                 </div>
                             </div>
                         </div>
@@ -1777,7 +1777,7 @@ export default {
 
         displayEmailPayment(account) {
             let email = '';
-            
+
             if(typeof account.user != "undefined" && account.user != null){
                 if(account.user.user_payment_types.length > 0) {
                     for(let index in account.user.user_payment_types) {
@@ -1787,7 +1787,7 @@ export default {
                                 _type = account.user.user_payment_types[index].payment_type.type
                             }
                             email = account.user.user_payment_types[index].account + ' <span class="badge badge-success">'+ _type +'</span>';
-                        } 
+                        }
                     }
                 }
             }
@@ -2001,6 +2001,12 @@ export default {
                     country_id : '',
                     add_method_payment_type: []
                 };
+            } else {
+                await swal.fire(
+                    'Error',
+                    'There were some errors while saving the data.',
+                    'error'
+                );
             }
         },
 
@@ -2109,7 +2115,7 @@ export default {
             this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
 
             // console.log(that)
-            
+
             if(typeof account.user != "undefined" && account.user){
                 if(account.user.user_payment_types.length > 0) {
                     for(let index in account.user.user_payment_types) {
@@ -2122,7 +2128,7 @@ export default {
                     this.accountUpdate.id_payment_type = ''
                 }
             }
-            
+
             this.checkTeamIncharge('update');
             this.checkVerified();
             this.checkCompanyType();
