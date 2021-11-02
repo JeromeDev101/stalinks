@@ -1513,6 +1513,7 @@ export default {
                 },
                 topicFilter: [
                     'N/A',
+                    'Adult',
                     'Art',
                     'Beauty',
                     'Charity',
@@ -1539,6 +1540,7 @@ export default {
                     'Unlisted',
                 ],
                 topic: [
+                    'Adult',
                     'Art',
                     'Beauty',
                     'Charity',

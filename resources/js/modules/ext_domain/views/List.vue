@@ -1879,6 +1879,7 @@ export default {
             isQualified : false,
             formAddUrl : false,
             topic : [
+                'Adult',
                 'Art',
                 'Beauty',
                 'Charity',
