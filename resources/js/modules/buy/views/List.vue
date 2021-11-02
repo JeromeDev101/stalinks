@@ -764,141 +764,119 @@
                             <div class="checkbox col-md-6" v-if="user.role_id != 5 && user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(2, tblBuyOptions.seller)"
                                     :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(3, tblBuyOptions.topic)"
                                     :checked="tblBuyOptions.topic ? 'checked':''"
                                     v-model="tblBuyOptions.topic">Topic</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(4, tblBuyOptions.casino_sites)"
                                     :checked="tblBuyOptions.casino_sites ? 'checked':''"
                                     v-model="tblBuyOptions.casino_sites">Casino & Betting Sites</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(5, tblBuyOptions.language)"
                                     :checked="tblBuyOptions.language ? 'checked':''"
                                     v-model="tblBuyOptions.language">Language</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(6, tblBuyOptions.country)"
                                     :checked="tblBuyOptions.country ? 'checked':''"
                                     v-model="tblBuyOptions.country">Country</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(7, tblBuyOptions.continent)"
                                     :checked="tblBuyOptions.continent ? 'checked':''"
                                     v-model="tblBuyOptions.continent">Continent</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(8, tblBuyOptions.url)"
                                     :checked="tblBuyOptions.url ? 'checked':''"
                                     v-model="tblBuyOptions.url">URL</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(9, tblBuyOptions.ur)"
                                     :checked="tblBuyOptions.ur ? 'checked':''"
                                     v-model="tblBuyOptions.ur">UR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(10, tblBuyOptions.dr)"
                                     :checked="tblBuyOptions.dr ? 'checked':''"
                                     v-model="tblBuyOptions.dr">DR</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(11, tblBuyOptions.backlinks)"
                                     :checked="tblBuyOptions.backlinks ? 'checked':''"
                                     v-model="tblBuyOptions.backlinks">Backlinks</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(12, tblBuyOptions.ref_domains)"
                                     :checked="tblBuyOptions.ref_domains ? 'checked':''"
                                     v-model="tblBuyOptions.ref_domains">Ref Domains</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(13, tblBuyOptions.org_keywords)"
                                     :checked="tblBuyOptions.org_keywords ? 'checked':''"
                                     v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(14, tblBuyOptions.ratio)"
                                     :checked="tblBuyOptions.ratio ? 'checked':''"
                                     v-model="tblBuyOptions.ratio">Ratio</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(15, tblBuyOptions.org_traffic)"
                                     :checked="tblBuyOptions.org_traffic ? 'checked':''"
                                     v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(16, tblBuyOptions.price)"
                                     :checked="tblBuyOptions.price ? 'checked':''"
                                     v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices' : 'Price' }}</label>
                             </div>
-                            <div class="checkbox col-md-6" v-show="user.isAdmin">
+                            <div class="checkbox col-md-6" v-if="user.isAdmin">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(17, tblBuyOptions.prices)"
                                     :checked="tblBuyOptions.prices ? 'checked':''"
                                     v-model="tblBuyOptions.prices">Prices</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(18, tblBuyOptions.status)"
                                     :checked="tblBuyOptions.status ? 'checked':''"
                                     v-model="tblBuyOptions.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-6" v-show="user.role_id != 5">
+                            <div class="checkbox col-md-6" v-show="user.role_id != 5 && user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
-                                    @click="toggleColumn(19, tblBuyOptions.code_comb)"
                                     :checked="tblBuyOptions.code_comb ? 'checked':''"
                                     v-model="tblBuyOptions.code_comb">Code Combination</label>
                             </div>
                             <div
                                 class="checkbox col-md-6"
-                                @click="toggleColumn(20,
-                                tblBuyOptions.code_price)"
-                                v-show="user.role_id != 5">
+                                v-show="user.role_id != 5 && user.isOurs != 1">
                                 <label><input type="checkbox"
                                               :checked="tblBuyOptions.code_price ? 'checked':''"
                                               v-model="tblBuyOptions.code_price">Code Price</label>
                             </div>
                             <div
                                 class="checkbox col-md-6"
-                                @click="toggleColumn(21,
-                                tblBuyOptions.code_price)"
                                 v-if="isExtBuyerWithCommission">
                                 <label><input type="checkbox"
                                               :checked="tblBuyOptions.code_price ? 'checked':''"
@@ -1058,7 +1036,7 @@ export default {
                 'Unlisted',
             ],
 
-            isExtBuyerWithCommission : true,
+            isExtBuyerWithCommission : false,
             updateFormula : {},
             generatorLoader : null,
 
@@ -1328,7 +1306,7 @@ export default {
                     name : 'Topic',
                     actionName : 'topicData',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.topic
                 },
                 {
                     prop : '_action',
@@ -1342,28 +1320,28 @@ export default {
                     name : 'Language',
                     // sortable : true,
                     width : 110,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.language
                 },
                 {
                     prop : 'country_name',
                     name : 'Country',
                     // sortable : true,
                     width : 120,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.country
                 },
                 {
                     prop : '_action',
                     name : 'Continent',
                     actionName : 'continentData',
                     width : 150,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.continent
                 },
                 {
                     prop : '_action',
                     name : 'URL',
                     actionName : 'urlData',
                     width : 175,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.url
                 },
                 {
                     prop : 'is_https',
@@ -1377,35 +1355,35 @@ export default {
                     name : 'UR',
                     // sortable : true,
                     width : 50,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.ur
                 },
                 {
                     prop : 'dr',
                     name : 'DR',
                     // sortable : true,
                     width : 50,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.dr
                 },
                 {
                     prop : 'backlinks',
                     name : 'Blinks',
                     // sortable : true,
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.backlinks
                 },
                 {
                     prop : 'ref_domain',
                     name : 'Ref Domain',
                     // sortable : true,
                     width : 125,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.ref_domains
                 },
                 {
                     prop : '_action',
                     name : 'Org Kw',
                     actionName : 'orgKeywordData',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.org_keywords
                 },
                 {
                     prop : '_action',
@@ -1419,7 +1397,7 @@ export default {
                     name : 'Org Traffic',
                     actionName : 'orgTrafficData',
                     width : 120,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.org_traffic
                 },
                 {
                     prop : '_action',
@@ -1428,7 +1406,7 @@ export default {
                     // sortable: true,
                     // prefix: '$',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.price
                 },
                 {
                     prop : '_action',
@@ -1437,21 +1415,21 @@ export default {
                     // sortable: true,
                     // prefix: '$',
                     width : 100,
-                    isHidden : !this.user.isAdmin
+                    isHidden : !this.user.isAdmin || !this.tblBuyOptions.prices
                 },
                 {
                     prop : '_action',
                     name : 'Status',
                     actionName : 'statusData',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.status
                 },
                 {
                     prop : 'code_comb',
                     name : 'Code Comb',
                     // sortable : true,
                     width : 125,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.code_comb
                 },
                 {
                     prop : 'code_price',
@@ -1459,8 +1437,7 @@ export default {
                     // sortable : true,
                     prefix : '$ ',
                     width : 120,
-                    isHidden : this.user.role_id == 5 &&
-                        this.user.isOurs == 1
+                    isHidden : !this.tblBuyOptions.code_price
                 },
                 {
                     prop : 'price_basis',
@@ -1468,7 +1445,7 @@ export default {
                     // sortable : true,
                     width : 120,
                     isHidden :
-                        !this.isExtBuyerWithCommission
+                        !this.isExtBuyerWithCommission || !this.tblBuyOptions.price_basis
                 },
                 {
                     prop : '_action',
@@ -1490,7 +1467,7 @@ export default {
         this.getListSeller();
         this.getListDomainZones();
         // this.columnShow();
-        // this.checkBuyerCommission();
+        this.checkBuyerCommission();
 
         let language = this.listLanguages.data;
         if (language.length === 0) {
@@ -1522,7 +1499,7 @@ export default {
 
         toggleColumn(index, columnState) {
             this.tableConfig[index].isHidden =
-                columnState;
+                !columnState;
         },
 
         toggleTableLoading() {
@@ -1557,12 +1534,7 @@ export default {
 
         checkBuyerCommission() {
             let email = this.user.email;
-            this.getBuyerCommission(email).then(res => {
-                let commission = res.data.commission;
-                if (commission == 'yes') {
-                    this.isExtBuyerWithCommission = true;
-                }
-            })
+            this.getBuyerCommission(email);
         },
 
         async getFormula() {
@@ -1576,8 +1548,12 @@ export default {
                     params : {
                         email : email,
                     }
+                }).then(res => {
+                    let commission = res.data.commission;
+                    if (commission == 'yes') {
+                        this.isExtBuyerWithCommission = true;
+                    }
                 });
-                return response;
             } catch (error) {
                 console.error(error);
             }
