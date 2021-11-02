@@ -898,7 +898,17 @@ class MailgunController extends Controller
 
     public function get_mail_list()
     {
-        $user_email = User::select('id', 'role_id', 'work_mail')
+//        $user_email = User::selectRaw('id, role_id, work_mail')
+//            ->where('work_mail', '!=', '')
+//            ->with('role')
+//            ->with('unreadReplies')
+//            ->orderBy('work_mail', 'asc')
+//            ->groupBy('work_mail')
+//            ->get();
+
+        // get unread emails count
+
+        $user_email = User::selectRaw('id, role_id, work_mail, (select count(distinct CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))) as aggregate from replies where is_viewed = 0 and is_sent = 0 and deleted_at is null and replies.received like CONCAT("%", users.work_mail ,"%")) as unread_count')
             ->where('work_mail', '!=', '')
             ->with('role')
             ->orderBy('work_mail', 'asc')

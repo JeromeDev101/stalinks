@@ -17,12 +17,6 @@
                 <div v-if="user.isAdmin">
                     <div class="form-group">
                         <label>Login As:</label>
-                        <!--                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">-->
-                        <!--                            <option value="all">All</option>-->
-                        <!--                            <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">-->
-                        <!--                                {{ option.work_mail }} [{{ option.role.name }}]-->
-                        <!--                            </option>-->
-                        <!--                        </select>-->
 
                         <v-select
                             v-model="user.work_mail"
@@ -32,18 +26,26 @@
                             :options="adminAccessOptions"
                             :reduce="access => access.work_mail"
 
-                            @input="selectWorkMail"/>
+                            @input="selectWorkMail">
+
+                            <template v-slot:option="option">
+                                {{ option.work_mail }}
+
+                                <span class="badge badge-primary">
+                                    {{ option.role.name }}
+                                </span>
+
+                                <span v-if="option.unread_count !== 0" class="badge badge-danger">
+                                    {{ option.unread_count }}
+                                </span>
+                            </template>
+                        </v-select>
                     </div>
                 </div>
 
                 <div v-if="!user.isAdmin && user.access.length !== 0">
                     <div class="form-group">
                         <label>Login As:</label>
-                        <!--                        <select class="form-control" v-model="user.work_mail" @change="selectWorkMail">-->
-                        <!--                            <option v-for="option in emailAccessOptions" v-bind:value="option.work_mail">-->
-                        <!--                                {{ option.work_mail }} [{{ option.user.role.name }}]-->
-                        <!--                            </option>-->
-                        <!--                        </select>-->
 
                         <v-select
                             v-model="user.work_mail"
@@ -53,7 +55,20 @@
                             :options="emailAccessOptions"
                             :reduce="access => access.work_mail"
 
-                            @input="selectWorkMail"/>
+                            @input="selectWorkMail">
+
+                            <template v-slot:option="option">
+                                {{ option.work_mail }}
+
+                                <span class="badge badge-primary">
+                                    {{ option.user.role.name }}
+                                </span>
+
+                                <span v-if="option.unread_count !== 0" class="badge badge-danger">
+                                    {{ option.unread_count }}
+                                </span>
+                            </template>
+                        </v-select>
                     </div>
                 </div>
 
@@ -69,7 +84,8 @@
                                 <router-link :to="{path:'/mails/inbox', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }" >
                                     <i class="fa fa-fw fa-inbox"></i>
                                     Inbox
-                                    <span class="label label-primary pull-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
+
+                                    <span class="badge badge-primary float-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
@@ -262,6 +278,15 @@ export default {
 
             emails.forEach(item => {
                 item.work_mail_position = item.work_mail + ' [' + item.user.role.name + ']'
+                item.unread_count = 0;
+
+                let value = this.listUserEmail.find(x => x.work_mail === item.work_mail);
+
+                if (value) {
+                    if (value.hasOwnProperty('unread_count')) {
+                        item.unread_count = value.unread_count;
+                    }
+                }
             });
 
             return emails;
@@ -277,7 +302,7 @@ export default {
     },
 
     mounted() {
-        this.displayInboxCnt = this.$children[5]._data.inboxCount;
+        this.displayInboxCnt = this.$children[7]._data.inboxCount;
         this.setQueryLabel(null)
         // console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
