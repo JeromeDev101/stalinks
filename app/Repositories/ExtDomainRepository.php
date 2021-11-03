@@ -375,6 +375,14 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $page = 0;
         $perPage = 50;
 
+        $query = $query->select(
+            'ext_domains.*',
+            'countries.name AS country_name',
+            'A.name',
+            'A.username as user_name',
+            'A.isOurs'
+        );
+
         // Employee Filter
         if (isset($input['employee_id']) && !empty($input['employee_id'])) {
             if (is_array($input['employee_id'])) {
@@ -474,6 +482,18 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         }, 'users' => function($query) {
             $query->select('id','username', 'status');
         }]);
+
+        // joins
+
+        $query = $query->leftJoin('users as A', 'ext_domains.user_id', '=', 'A.id')
+            ->leftJoin('countries', 'ext_domains.country_id', '=', 'countries.id');
+
+        if (isset($input['adv_sort']) && !empty($input['adv_sort'])) {
+            foreach ($input['adv_sort'] as &$sort) {
+                $sort = \GuzzleHttp\json_decode($sort);
+                $query = $query->orderByRaw("$sort->column $sort->sort");
+            }
+        }
 
         return $query->paginate($perPage, ['*'], 'page', $page);
     }

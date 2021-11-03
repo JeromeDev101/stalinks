@@ -284,7 +284,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12 ml-3">
+                            <div class="col-md-6">
                                 <div class="input-group input-group-sm">
                                     <div class="btn-group">
                                         <button
@@ -354,9 +354,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="d-flex flex-column align-items-end">
+                                    <Sort
+                                        ref="sortComponent"
+                                        :sorted="isSorted"
+                                        :items="sortOptions"
+
+                                        @submitSort="sortSubmit"
+                                        @updateOptions="updateSortOptions">
+                                    </Sort>
+                                </div>
+                            </div>
                         </div>
 
-                        <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
+                    <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
                <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
                    <b v-if="!isResultCrawled">Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
                    <b v-else>Showing {{ listExt.data.length }} crawled items. Click search or clear filter to refresh the list.</b>
@@ -501,13 +514,13 @@
                                      }}</span>
                                 </template>
 
-                                <template
-                                    slot-scope="scope"
-                                    slot="totalSpentData">
-                                    {{
-                                        convertPrice(scope.row.total_spent)
-                                    }}
-                                </template>
+<!--                                <template-->
+<!--                                    slot-scope="scope"-->
+<!--                                    slot="totalSpentData">-->
+<!--                                    {{-->
+<!--                                        convertPrice(scope.row.total_spent)-->
+<!--                                    }}-->
+<!--                                </template>-->
 
                                 <template
                                     slot-scope="scope"
@@ -1292,12 +1305,12 @@
                                               @change="toggleColumn(11, tableShow.status)"
                                               :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-4">
-                                <label><input type="checkbox"
-                                              @change="toggleColumn(12, tableShow.total_spent)"
-                                              :checked="tableShow.total_spent ? 'checked':''"
-                                              v-model="tableShow.total_spent">Total Spent</label>
-                            </div>
+<!--                            <div class="checkbox col-md-4">-->
+<!--                                <label><input type="checkbox"-->
+<!--                                              @change="toggleColumn(12, tableShow.total_spent)"-->
+<!--                                              :checked="tableShow.total_spent ? 'checked':''"-->
+<!--                                              v-model="tableShow.total_spent">Total Spent</label>-->
+<!--                            </div>-->
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(13, tableShow.ahrefs_rank)"
@@ -1735,12 +1748,14 @@ import VueVirtualTable from 'vue-virtual-table';
 import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
 import _ from 'underscore';
 import TinyEditor from "../../../components/editor/TinyEditor";
+import Sort from '@/components/sort/Sort';
 
 export default {
     components : {
         DownloadCsv,
         VueVirtualTable,
-        TinyEditor
+        TinyEditor,
+        Sort
     },
     name : 'ExtList',
     mixins : [csvTemplateMixin],
@@ -1796,6 +1811,7 @@ export default {
                     endDate : null
                 },
                 domain_zone : this.$route.query.domain_zone || '',
+                adv_sort: ''
             },
             listPageOptions : [
                 50,
@@ -1924,6 +1940,8 @@ export default {
             tableLoading : false,
             updateMultiEmployee : '',
             isResultCrawled : false,
+
+            sort_options: [],
         };
     },
     async created() {
@@ -2096,13 +2114,13 @@ export default {
                     width : 100,
                     isHidden : false
                 },
-                {
-                    prop : '_action',
-                    name : 'Total Spent',
-                    actionName : 'totalSpentData',
-                    width : 100,
-                    isHidden : true
-                },
+                // {
+                //     prop : '_action',
+                //     name : 'Total Spent',
+                //     actionName : 'totalSpentData',
+                //     width : 100,
+                //     isHidden : true
+                // },
                 {
                     prop : 'ahrefs_rank',
                     name : 'Ahrefs Rank',
@@ -2153,7 +2171,120 @@ export default {
                     isHidden : false
                 }
             ];
-        }
+        },
+
+        // for sort
+
+        isSorted() {
+            return this.filterModel.adv_sort !== '' && this.filterModel.adv_sort.length !== 0;
+        },
+
+        sortOptions() {
+            return [
+                {
+                    name: 'ID',
+                    sort: '',
+                    column: 'id',
+                    hidden: !this.tableShow.id
+                },
+                {
+                    name: 'Employee',
+                    sort: '',
+                    column: 'A.username',
+                    hidden: !this.tableShow.employee
+                },
+                {
+                    name: 'Date Upload',
+                    sort: '',
+                    column: 'created_at',
+                    hidden: false
+                },
+                {
+                    name: 'Country',
+                    sort: '',
+                    column: 'countries.name',
+                    hidden: !this.tableShow.country
+                },
+                {
+                    name: 'URL',
+                    sort: '',
+                    column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(domain,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
+                    hidden: !this.tableShow.domain
+                },
+                {
+                    name: 'Email',
+                    sort: '',
+                    column: 'email',
+                    hidden: !this.tableShow.email
+                },
+                {
+                    name: 'Facebook',
+                    sort: '',
+                    column: 'facebook',
+                    hidden: !this.tableShow.facebook
+                },
+                {
+                    name: 'Phone',
+                    sort: '',
+                    column: 'phone',
+                    hidden: !this.tableShow.phone
+                },
+                {
+                    name: 'Alexa Rank',
+                    sort: '',
+                    column: 'cast(alexa_rank as unsigned)',
+                    hidden: !this.tableShow.rank
+                },
+                {
+                    name: 'Status',
+                    sort: '',
+                    column: 'status',
+                    hidden: !this.tableShow.status
+                },
+                {
+                    name: 'Ahrefs Rank',
+                    sort: '',
+                    column: 'cast(ahrefs_rank as unsigned)',
+                    hidden: !this.tableShow.ahrefs_rank
+                },
+                {
+                    name: 'No. of Backlinks',
+                    sort: '',
+                    column: 'cast(no_backlinks as unsigned)',
+                    hidden: !this.tableShow.no_backlinks
+                },
+                {
+                    name: 'UR',
+                    sort: '',
+                    column: 'cast(url_rating as unsigned)',
+                    hidden: !this.tableShow.url_rating
+                },
+                {
+                    name: 'DR',
+                    sort: '',
+                    column: 'cast(domain_rating as unsigned)',
+                    hidden: !this.tableShow.domain_rating
+                },
+                {
+                    name: 'Ref Domains',
+                    sort: '',
+                    column: 'cast(ref_domains as unsigned)',
+                    hidden: !this.tableShow.ref_domains
+                },
+                {
+                    name: 'Org Keywords',
+                    sort: '',
+                    column: 'cast(organic_keywords as unsigned)',
+                    hidden: !this.tableShow.organic_keywords
+                },
+                {
+                    name: 'Org Traffic',
+                    sort: '',
+                    column: 'cast(organic_traffic as unsigned)',
+                    hidden: !this.tableShow.organic_traffic
+                },
+            ]
+        },
     },
     mounted() {
         let that = this;
@@ -2471,7 +2602,7 @@ export default {
                 'ref_domains' : {text : 'Ref Domains'},
                 'organic_keywords' : {text : 'Organic keywords'},
                 'organic_traffic' : {text : 'Organic traffic'},
-                'total_spent' : {text : 'Total Spent'},
+                // 'total_spent' : {text : 'Total Spent'},
             };
             this.listSortValue = {
                 'asc' : {text : 'Ascending '},
@@ -2495,7 +2626,13 @@ export default {
         async getExtList(params) {
             let loader = this.$loading.show();
             this.isLoadingTable = true;
+
+            if (this.isSorted) {
+                params.params.adv_sort = this.getSortData()
+            }
+
             await this.$store.dispatch('getListExt', params);
+
             this.isLoadingTable = false;
             $('.freeze-table').freezeTable({'columnNum' : 4, 'shadow' : true, 'scrollable' : true});
             this.isResultCrawled = false;
@@ -2554,6 +2691,22 @@ export default {
                 }
             });
         },
+
+        sortSubmit(data) {
+            this.filterModel.adv_sort = data.filter(item => item.sort !== '' && item.hidden !== true)
+            this.getExtList({
+                params : this.filterModel
+            });
+        },
+
+        updateSortOptions(data) {
+            this.sort_options = data;
+        },
+
+        getSortData() {
+            return this.sort_options.filter(item => item.sort !== '' && item.hidden !== true)
+        },
+
         async doCrawlExtList() {
             let loader = this.$loading.show();
             this.isCrawling = true;
