@@ -291,7 +291,7 @@
                                     <select name="" class="form-control" v-model="updateModel.payment_type">
                                         <option v-for="option in listPayment.data"
                                                 v-bind:value="option.id"
-                                                v-if="option.send_payment === 'yes'">
+                                                v-if="option.receive_payment === 'yes'">
                                             {{ option.type }}
                                         </option>
                                     </select>

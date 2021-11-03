@@ -15,9 +15,8 @@
                 <tr class="label-primary">
                     <th>#</th>
                     <th>Type</th>
-                    <th>Receive Payment</th>
-                    <th>Send Payment</th>
-                    <th>Registration</th>
+                    <th>We Can Receive Payment</th>
+                    <th>We Can Send Payment</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -27,7 +26,6 @@
                     <td>{{ item.type }}</td>
                     <td>{{ item.receive_payment }}</td>
                     <td>{{ item.send_payment }}</td>
-                    <td>{{ item.show_registration }}</td>
                     <td>
                         <div class="btn-group">
                             <button type="submit"
@@ -126,19 +124,6 @@
                                   v-for="err in messageForms.errors.send_payment"
                                   class="text-danger">{{ err }}</span>
                         </div>
-
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.show_registration}"
-                             class="form-group">
-                            <label for="">Show in Registration</label>
-                            <select name="" id="" class="form-control" v-model="paymentUpdate.show_registration">
-                                <option value=""></option>
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                            <span v-if="messageForms.errors.show_registration"
-                                  v-for="err in messageForms.errors.show_registration"
-                                  class="text-danger">{{ err }}</span>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -166,7 +151,6 @@ export default {
             paymentUpdate : {
                 id : 0,
                 type : '',
-                show_registration : '',
                 receive_payment : '',
                 send_payment : ''
             },
@@ -268,6 +252,8 @@ export default {
                     'error'
                 )
             }
+
+            this.getPaymentList();
         },
     },
 }

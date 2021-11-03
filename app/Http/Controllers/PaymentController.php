@@ -37,7 +37,6 @@ class PaymentController extends Controller
     {
         $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
-        $input['show_registration'] = $request->show_registration;
         $input['receive_payment'] = $request->receive_payment;
         $input['send_payment'] = $request->send_payment;
         $payment = PaymentType::findOrFail($request->id);
