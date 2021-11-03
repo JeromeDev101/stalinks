@@ -180,6 +180,8 @@ class FollowupSalesController extends Controller
             }
 
             $input['live_date'] = date('Y-m-d');
+        } else {
+            $input['live_date'] = null;
         }
 
         if ($backlink->publisher) {
