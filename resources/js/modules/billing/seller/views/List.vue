@@ -338,6 +338,7 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
+import _ from 'lodash';
 
 export default {
     data() {
@@ -370,6 +371,7 @@ export default {
                 payment_type_id : '',
                 account : '',
                 amount : '',
+                payment_types: null
             },
             isDisabledPay : true,
             isSearching : false,
@@ -491,27 +493,18 @@ export default {
                 let data = this.sellerInfo.data[0]
                 let account = 'Not yet setup';
                 let total = 0;
-                $("#modal-payment").modal('show');
 
                 this.info.seller = data.username;
-                this.info.payment_type = data.payment_type == null ? 'Not yet setup' : data.payment_type.type;
-                this.info.payment_type_id = data.payment_type == null ? null : data.payment_type.id;
+                this.info.payment_types = data.user_payment_types;
+                this.info.payment_type = data.payment_type.type;
 
-                if (data.payment_type != null && data.registration != null) {
+                if (this.info.payment_types) {
                     this.isDisabledPay = false;
 
-                    switch (data.payment_type.id) {
-                        case 1:
-                            account = data.registration.paypal_account == null ? 'Not yet setup' : data.registration.paypal_account;
-                            break;
-                        case 2:
-                            account = data.registration.skrill_account == null ? 'Not yet setup' : data.registration.skrill_account;
-                            break;
-                        case 3:
-                            account = data.registration.btc_account == null ? 'Not yet setup' : data.registration.btc_account;
-                            break;
-                        default:
-                            account = "Not yet setup";
+                    let paymentType = _.find(this.info.payment_types, {'payment_id' : data.id_payment_type} );
+
+                    if (paymentType) {
+                        account = paymentType.account;
                     }
                 }
 
@@ -541,6 +534,9 @@ export default {
                     'error'
                 )
             }
+
+            $("#modal-payment").modal('show');
+
 
             this.clearMessageform();
         },
