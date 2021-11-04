@@ -412,7 +412,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         // Email Filter
         if (isset($input['email'])) {
-            $query->where('email', 'like', '%' . $input['email'] . '%');
+            $query->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
         }
 
         // Country Filter
@@ -428,7 +428,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         // Email Required filter
         if (isset($input['required_email']) && $input['required_email'] > 0) {
-            $query->where('email', '!=', '');
+            $query->where('ext_domains.email', '!=', '');
         }
 
         // Domain Filter
@@ -439,9 +439,9 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         // Status Filter
         if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
             if (is_array($input['status'])) {
-                $query->whereIn('status', $input['status']);
+                $query->whereIn('ext_domains.status', $input['status']);
             } else {
-                $query->where('status', $input['status']);
+                $query->where('ext_domains.status', $input['status']);
             }
         }
 
@@ -472,8 +472,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
 
         if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
-            $query->where('created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
-            $query->where('created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+            $query->where('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+            $query->where('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
         }
 
         // Include relationships

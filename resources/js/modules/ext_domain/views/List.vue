@@ -3495,11 +3495,14 @@ export default {
                     endDate : null
                 },
                 domain_zone : '',
+                adv_sort: '',
             };
 
             this.getExtList({
                 params : this.filterModel
             });
+
+            this.$refs.sortComponent.resetSort();
 
             this.$router.replace({'query' : null});
         },
