@@ -35,7 +35,7 @@ class UpdateAccountRequest extends FormRequest
                 'required',
                 'between:6,60',
                 'email',
-                new ValidateEmailRule,
+//                new ValidateEmailRule,
             ],
             'phone' => [
                 'nullable'
