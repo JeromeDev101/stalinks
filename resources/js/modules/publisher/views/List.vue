@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-if="!isQc">
+                                <div class="col-md-3" v-if="!isQc || user.role_id === 8">
                                     <div class="form-group">
                                         <label>Accept Casino & Betting Sites</label>
                                         <select class="form-control" v-model="filterModel.casino_sites">
