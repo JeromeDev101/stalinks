@@ -65,6 +65,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
     Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
+    Route::name('get-payment-image')->get('/payments/image', 'PaymentController@getPaymentTypeImageList');
+
 
     //Wallet Summary
     Route::name('get-wallet-summary')->get('wallet-summary', 'WalletSummaryController@getList');

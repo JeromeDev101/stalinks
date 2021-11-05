@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PaymentTypeImage;
 use Illuminate\Http\Request;
 use App\Models\PaymentType;
 
@@ -18,6 +19,13 @@ class PaymentController extends Controller
         return response()->json(['data'=> $list]);
     }
 
+    public function getPaymentTypeImageList()
+    {
+        $response = PaymentTypeImage::all();
+
+        return response()->json($response);
+    }
+
     /**
      * Add new payment type
      *
@@ -32,9 +40,9 @@ class PaymentController extends Controller
         return response()->json(['success' => true, 'data' => $payment], 200);
     }
 
-
     public function edit(Request $request)
     {
+        dd($request->all());
         $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
         $input['receive_payment'] = $request->receive_payment;

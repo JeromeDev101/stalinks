@@ -365,6 +365,10 @@
                                         updateModel.payment_region == 'international' ? internationalTotalPaymentAmount : domesticTotalPaymentAmount
                                    }}</b>
                             </div>
+
+                            <div class="col-md-12 text-center">
+                                <img v-for="img in paymentImages" class="payment-logo" :src="'storage/' + img.path" alt="">
+                            </div>
                         </div>
 
                         <div class="row" v-else-if="step
@@ -424,6 +428,7 @@ export default {
             },
             step : 0,
             pageLanguage : 'en',
+            paymentImages : null
         };
     },
 
@@ -448,6 +453,8 @@ export default {
         channel.bind('user.notify', (e) => {
             this.getNotifications(this.user.id);
         });
+
+        this.getPaymentTypeImages();
     },
 
     watch : {
@@ -488,6 +495,13 @@ export default {
             getNotifications : "getUserNotifications",
             seenNotifications : "seenUserNotifications",
         }),
+
+        getPaymentTypeImages() {
+            axios.get('/api/payments/image')
+            .then((response) => {
+                this.paymentImages = response.data;
+            });
+        },
 
         initPaypalButtons() {
             let vm = this;
@@ -668,5 +682,9 @@ export default {
 <style>
 .modal-backdrop {
     z-index: -1;
+}
+
+.payment-logo {
+    height: 40px;
 }
 </style>
