@@ -294,7 +294,7 @@ class AccountController extends Controller
     }
 
     public function getPaymentList() {
-        $list = PaymentType::where('show_registration', 'yes')->get();
+        $list = PaymentType::all();
 
         return response()->json([
             'data' => $list

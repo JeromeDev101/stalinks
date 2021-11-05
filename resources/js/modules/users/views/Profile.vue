@@ -230,9 +230,11 @@
                     </span>
 
                         <div class="table-responsive">
-                            <table class="table no-margin">
+
+                            <!-- payment for seller and writer -->
+                            <table class="table no-margin" v-if="user.user_type.type === 'Seller' || user.user_type.type === 'Writer'">
                                 <tbody>
-                                    <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                    <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
                                             <div class="form-group">
                                                 <label>{{ payment_method.type }} Account</label>
@@ -247,98 +249,27 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <!-- end of payment for seller and writer -->
 
-                            <!-- <table class="table no-margin">
+                            <!-- payment for buyer -->
+                            <table class="table no-margin" v-if="user.user_type.type === 'Buyer'">
                                 <tbody>
-                                <tr>
-                                    <td><b>Paypal Account</b></td>
-                                    <td style="width: 50px;padding-top:20px;">
-                                        <input
-                                            v-bind:value="1"
-                                            v-model="billing.payment_default"
-                                            type="radio"
-                                            name="payment_default"
-                                            style="width: 20px; height: 20px">
-                                    </td>
-                                    <td>
-                                        <div
-                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.paypal_account')}"
-                                            class="form-group">
-                                            <input
-                                                v-model="billing.paypal_account"
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Enter Paypal Account">
-
-                                            <span
-                                                v-if="messageForms.errors.hasOwnProperty('user_type.paypal_account')"
-                                                class="text-danger">
-                                                 The paypal account field is required when you have selected paypal
-                                                 as a payment solution.
-                                             </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><b>Skrill Account</b></td>
-                                    <td style="width: 50px;padding-top:20px;">
-                                        <input
-                                            v-bind:value="2"
-                                            v-model="billing.payment_default"
-                                            type="radio"
-                                            name="payment_default"
-                                            style="width: 20px; height: 20px">
-                                    </td>
-                                    <td>
-                                        <div
-                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.skrill_account')}"
-                                            class="form-group">
-                                            <input
-                                                v-model="billing.skrill_account"
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Enter Skrill Account">
-
-                                            <span
-                                                v-if="messageForms.errors.hasOwnProperty('user_type.skrill_account')"
-                                                class="text-danger">
-                                                 The skrill account field is required when you have selected skill
-                                                 as a payment solution.
-                                             </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><b>BTC Account</b></td>
-                                    <td style="width: 50px;padding-top:20px;">
-                                        <input
-                                            v-bind:value="3"
-                                            v-model="billing.payment_default"
-                                            type="radio"
-                                            name="payment_default"
-                                            style="width: 20px; height: 20px">
-                                    </td>
-                                    <td>
-                                        <div
-                                            :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.btc_account')}"
-                                            class="form-group">
-                                            <input
-                                                v-model="billing.btc_account"
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Enter BTC Account">
-
-                                            <span
-                                                v-if="messageForms.errors.hasOwnProperty('user_type.btc_account')"
-                                                class="text-danger">
-                                                 The BTC account field is required when you have selected BTC
-                                                 as a payment solution.
-                                             </span>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} Account</label>
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="billing.payment_default">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" v-model="billing.payment_type[payment_method.id]">
+                                        </td>
+                                    </tr>
                                 </tbody>
-                            </table> -->
+                            </table>
+                            <!-- end of payment for buyer -->
 
                         </div>
                     </div>
@@ -613,6 +544,14 @@ export default {
             listUser: state => state.storeUser.listUser,
             summaryPublish: state => state.storePublisher.summaryPublish,
         }),
+
+        paymentMethodListSendPayment: function() {
+            return this.paymentMethodList.filter(i => i.send_payment === 'yes')
+        },
+
+        paymentMethodListReceivePayment: function() {
+            return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
+        },
     },
 
     async created() {

@@ -644,12 +644,20 @@
                         <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please select default payment type</span>
                         <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
 
-                        <table class="table">
+                        <!-- empty account type -->
+                        <table class="table" v-if="accountModel.type == ''">
+                            <tr>
+                                <td class="text-center text-danger">Please select Account type First</td>
+                            </tr>
+                        </table>
+
+                        <!-- payment for seller and writer -->
+                        <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
                             <tr>
                                 <td></td>
                                 <td>Default</td>
                             </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                            <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                 <td>
                                     <div class="form-group">
                                         <label>{{ payment_method.type }} Account</label>
@@ -661,45 +669,27 @@
                                 </td>
                             </tr>
                         </table>
+                        <!-- end of payment for seller and writer -->
 
-                        <!-- <table class="table">
+                        <!-- payment for buyer -->
+                        <table class="table" v-if="accountModel.type === 'Buyer'">
                             <tr>
+                                <td></td>
+                                <td>Default</td>
+                            </tr>
+                            <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
                                 <td>
                                     <div class="form-group">
-                                        <label>Paypal Account</label>
-                                        <input type="text" class="form-control" v-model="accountModel.paypal_account">
-                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
+                                        <label>{{ payment_method.type }} Account</label>
+                                        <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
                                     </div>
                                 </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountModel.id_payment_type">
+                                <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>BTC Account</label>
-                                        <input type="text" class="form-control" v-model="accountModel.btc_account">
-                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountModel.id_payment_type">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>Skril Account</label>
-                                        <input type="text" class="form-control" v-model="accountModel.skrill_account">
-                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountModel.id_payment_type">
-                                </td>
-                            </tr>
-                        </table> -->
+                        </table>
+                        <!-- end of payment for buyer -->
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -1156,12 +1146,13 @@
                         <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
                         <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
 
-                        <table class="table">
+                        <!-- payment for seller and writer -->
+                        <table class="table" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
                             <tr>
                                 <td></td>
                                 <td>Default</td>
                             </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                            <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
                                 <td>
                                     <div class="form-group">
                                         <label>{{ payment_method.type }} Account</label>
@@ -1173,48 +1164,27 @@
                                 </td>
                             </tr>
                         </table>
+                        <!-- end of payment for seller and writer -->
 
-                        <!--
-                        <table class="table">
+                        <!-- payment for buyer -->
+                        <table class="table" v-if="accountUpdate.type === 'Buyer'">
                             <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>Paypal Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.paypal_account">
-                                        <span v-if="messageForms.errors.paypal_account" v-for="err in messageForms.errors.paypal_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="1" v-model="accountUpdate.id_payment_type">
-                                </td>
+                                <td></td>
+                                <td>Default</td>
                             </tr>
-                            <tr>
+                            <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
                                 <td>
                                     <div class="form-group">
-                                        <label>BTC Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.btc_account">
-                                        <span v-if="messageForms.errors.btc_account" v-for="err in messageForms.errors.btc_account" class="text-danger">{{ err }}</span>
+                                        <label>{{ payment_method.type }} Account</label>
+                                        <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                     </div>
                                 </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="3" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label>Skril Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.skrill_account">
-                                        <span v-if="messageForms.errors.skrill_account" v-for="err in messageForms.errors.skrill_account" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;">
-                                    <input type="radio" name="payment_default" v-bind:value="2" v-model="accountUpdate.id_payment_type">
+                                <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
                                 </td>
                             </tr>
                         </table>
-
-                        -->
+                        <!-- end of payment for buyer -->
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -1523,6 +1493,14 @@ export default {
             listLanguages : state => state.storePublisher.listLanguages,
             listMailTemplate : state => state.storeExtDomain.listMailTemplate,
         }),
+
+        paymentMethodListSendPayment: function() {
+            return this.paymentMethodList.filter(i => i.send_payment === 'yes')
+        },
+
+        paymentMethodListReceivePayment: function() {
+            return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
+        },
 
         adminAccessOptions() {
             let self = this;

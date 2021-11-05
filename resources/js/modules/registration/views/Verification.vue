@@ -117,14 +117,16 @@
                             <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4> 
                             <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
                             <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
+                            
                             <div class="row">
 
-                                <table class="table">
+                                <!-- payment for seller and writer -->
+                                <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
                                     <tr>
                                         <td></td>
                                         <td>Default</td>
                                     </tr>
-                                    <tr v-for="(payment_method, index) in paymentMethodList" :key="index">
+                                    <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
                                             <div class="form-group">
                                                 <label>{{ payment_method.type }} Account</label>
@@ -136,61 +138,27 @@
                                         </td>
                                     </tr>
                                 </table>
-                                
-                                <!-- <table class="table">
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="">Paypal Account</label>
-                                                <input type="text" class="form-control" v-model="regModel.paypal_account">
-                                                <span v-show="errorMessage.hasOwnProperty('paypal_account')" class="text-danger">Please provide Paypal Account</span>
-                                            </div>
-                                        </td>
-                                        <td style="width: 50px;vertical-align:middle;">
-                                            <input type="radio" name="payment_default" v-bind:value="1" v-model="regModel.id_payment_type">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="">BTC Account</label>
-                                                <input type="text" class="form-control" v-model="regModel.btc_account">
-                                                <span v-show="errorMessage.hasOwnProperty('btc_account')" class="text-danger">Please provide BTC Account</span>
-                                            </div>
-                                        </td>
-                                        <td style="width: 50px;vertical-align:middle;">
-                                            <input type="radio" name="payment_default" v-bind:value="3" v-model="regModel.id_payment_type">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="">Skril Account</label>
-                                                <input type="text" class="form-control" v-model="regModel.skrill_account">
-                                                <span v-show="errorMessage.hasOwnProperty('skrill_account')" class="text-danger">Please provide Skrill Account</span>
-                                            </div>
-                                        </td>
-                                        <td style="width: 50px;vertical-align:middle;">
-                                            <input type="radio" name="payment_default" v-bind:value="2" v-model="regModel.id_payment_type">
-                                        </td>
-                                    </tr>
-                                </table> -->
+                                <!-- end of payment for seller and writer -->
 
-                                <!-- <div class="col-md-12">
-                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.password}">
-                                        <label for="">Password</label>
-                                        <input type="password" class="form-control" v-model="verifyModel.password" placeholder="Enter  password">
-                                        <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}">
-                                        <label for="">Confirm Password</label>
-                                        <input type="password" class="form-control" v-model="verifyModel.c_password" placeholder="Enter confirm password">
-                                        <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                    </div>
-                                </div> -->
+                                <!-- payment for buyer -->
+                                <table class="table" v-if="regModel.type === 'Buyer'">
+                                    <tr>
+                                        <td></td>
+                                        <td>Default</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} Account</label>
+                                                <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="regModel.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- end of payment for buyer -->
 
                                 <div class="col-md-12 mt-4">
                                     <button class="btn btn-primary btn-lg btn-block btn-flat my-5" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
@@ -276,6 +244,14 @@
             ...mapState({
                 messageForms: state => state.storeAccount.messageForms,
             }),
+
+            paymentMethodListSendPayment: function() {
+                return this.paymentMethodList.filter(i => i.send_payment === 'yes')
+            },
+
+            paymentMethodListReceivePayment: function() {
+                return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
+            },
         },
 
         methods: {
