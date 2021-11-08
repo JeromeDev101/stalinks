@@ -13,7 +13,7 @@ class Reply extends Model
     protected $guarded = [];
     protected $table = 'replies';
 
-    protected $appends = ['clean_date', 'full_clean_date'];
+    protected $appends = ['clean_date', 'full_clean_date', 'duration_date'];
 
     public function getCleanDateAttribute()
     {
@@ -33,6 +33,13 @@ class Reply extends Model
         $carbonDate = Carbon::parse($this->created_at);
 
         return $carbonDate->format('M j Y, g:i A');
+    }
+
+    public function getDurationDateAttribute()
+    {
+        $created = Carbon::parse($this->created_at);
+
+        return $created->diffInDays(Carbon::now());
     }
 
     public function thread() {

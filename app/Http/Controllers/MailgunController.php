@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\InboxResource;
 use App\Jobs\DeleteEmailAttachments;
+use App\Jobs\StoreEmailAttachments;
 use App\MailSignature;
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
@@ -324,6 +326,7 @@ class MailgunController extends Controller
                     MAX(replies.from_mail) AS from_mail,
                     MAX(replies.created_at) AS created_at,
                     MAX(replies.attachment) AS attachment,
+                    MAX(replies.stored_attachments) AS stored_attachments,
                     MAX(replies.is_starred) AS is_starred,
                     MAX(replies.status_code) AS status
                 ')
@@ -439,8 +442,8 @@ class MailgunController extends Controller
                             ->whereNotNull('replies.deleted_at')
                             ->where('replies.deleted_at', '!=', 1)
                             ->where(function ($sub) use ($request) {
-                                $sub->where('replies.sender', $request->email)
-                                    ->orWhere('replies.received', $request->email);
+                                $sub->orWhere('replies.sender', 'like', '%' . $request->email . '%')
+                                    ->orWhere('replies.received', 'like', '%' . $request->email . '%');
                             });
                     }
 
@@ -631,6 +634,14 @@ class MailgunController extends Controller
 
     public function post_reply(Request $request)
     {
+        // get all attachments from request
+        $files = $request->allFiles();
+
+        // call job to store email attachments
+        $stored_attachments = StoreEmailAttachments::dispatchNow($files);
+
+        $stored_attachments_data = count($stored_attachments) > 0 ? json_encode($stored_attachments) : null;
+
         $message_id    = $request->only('Message-Id');
         $message_id    = preg_replace("/[<>]/", "", $message_id['Message-Id']);
         $in_reply_to   = null;
@@ -697,6 +708,7 @@ class MailgunController extends Controller
             'stripped_html'   => $stripped_html,
             'body_html'       => $body_html,
             'attachment'      => json_encode($r_attachment),
+            'stored_attachments'      => $stored_attachments_data,
             // 'attachment'        => '',
             'from_mail'       => $request->from,
             'date'            => '',
