@@ -40,7 +40,7 @@ class SellerBillingController extends Controller
                         $q->with('user:id,name,username');
                     }])
                     ->with('user:id,name,username')
-                    ->whereIn('status', ['Live','Live in Process']);
+                    ->whereIn('status', ['Live']);
 
         if (!auth()->user()->isAdmin() && auth()->user()->role_id != 8) {
             $list->where('publisher.user_id', auth()->user()->id);
