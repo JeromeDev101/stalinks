@@ -627,23 +627,14 @@
                             <template
                                 slot-scope="scope"
                                 slot="priceData">
-                                {{ scope.row.price == '' ||
-                            scope.row.price == null ?
-                                '':'$'}} {{
-                                    scope.row.price }}
+                                {{ scope.row.price == '' || scope.row.price == null ? '' : '$' }} {{ formatPrice(scope.row.price) }}
                             </template>
 
                             <template
                                 slot-scope="scope"
                                 slot="pricesData">
-                                {{
-                                    scope.row.price == '' ||
-                                    scope.row.price
-                                    == null ? '' : '$'
-                                }} {{
-                                    computePriceStalinks(scope.row.price,
-                                        scope.row.inc_article)
-                                }}
+                                {{ scope.row.price == '' || scope.row.price == null ? '' : '$' }}
+                                {{ computePriceStalinks(scope.row.price, scope.row.inc_article) }}
                             </template>
 
                             <template
@@ -2598,8 +2589,7 @@ export default {
             },
 
             formatPrice(value) {
-                let val = (value/1).toFixed(0)
-                return val;
+                return (value / 1).toFixed(0);
             },
 
             replaceCharacters(str) {
