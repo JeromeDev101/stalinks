@@ -124,6 +124,30 @@
                                   v-for="err in messageForms.errors.send_payment"
                                   class="text-danger">{{ err }}</span>
                         </div>
+
+                        <div class="form-group">
+                            <label for="">Upload logo</label>
+                            <div class="row">
+                                <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo">
+
+                                <button type="button" @click="uploadImage" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" v-for="image in paymentImages">
+                            <div class="col-2 mr-4">
+                                <img :src="'/storage/' + image.path" width="100%" alt="">
+                            </div>
+                            <div class="col-3 d-flex align-items-center mr-4">
+                                <a href="">{{ image.path }}</a>
+                            </div>
+                            <div class="col-1 d-flex align-items-center">
+                                <a href="" @click.prevent="deleteImage(image.id)" style="color: #444"><i class="fas fa-times"></i></a>
+                            </div>
+                        </div>
+
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -137,6 +161,7 @@
 
 <script>
 import {mapState} from "vuex";
+import _ from 'lodash';
 
 export default {
     name : "PaymentMethod",
@@ -152,12 +177,13 @@ export default {
                 id : 0,
                 type : '',
                 receive_payment : '',
-                send_payment : ''
+                send_payment : '',
             },
             paymentModel : {
                 id : 0,
                 type : ''
             },
+            paymentImages : null
         }
     },
 
@@ -172,6 +198,42 @@ export default {
     },
 
     methods : {
+        uploadImage() {
+            let formData = new FormData();
+            formData.append('file', this.$refs.logo.files[0]);
+
+            axios.post('/api/admin/payment-type/image/' + this.paymentUpdate.id, formData)
+                .then((response) => {
+                    swal.fire(
+                        'Success!',
+                        'Image uploaded successfully!',
+                        'success'
+                    )
+
+                    this.getPaymentImages(response.data.payment_type_id)
+                });
+        },
+
+        deleteImage(id) {
+            axios.delete('/api/admin/payment-type/image/' + id)
+            .then((response) => {
+                swal.fire(
+                    'Success!',
+                    'Image deleted successfully!',
+                    'success'
+                )
+
+                this.getPaymentImages(response.data)
+            })
+        },
+
+        getPaymentImages(id) {
+            axios.get('/api/payments/image?payment_type_id=' + id)
+                .then((response) => {
+                    this.paymentImages = response.data;
+                });
+        },
+
         clearMessageform() {
             this.$store.dispatch('clearMessageFormSystem');
         },
@@ -180,6 +242,7 @@ export default {
             this.clearMessageform();
             this.$store.dispatch('clearMessageFormSystem');
             this.paymentUpdate = JSON.parse(JSON.stringify(item))
+            this.getPaymentImages(this.paymentUpdate.id);
         },
 
         async submitAddPayment() {
@@ -227,29 +290,23 @@ export default {
 
         async submitUpdatePayment() {
             this.isPopupLoading = true;
+
             await this.$store.dispatch('actionUpdatePayment', this.paymentUpdate);
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated_payment') {
-                for (var index in this.paymentList.data) {
-                    if (this.paymentList.data[index].id === this.paymentUpdate.id) {
-                        this.paymentList.data[index] = this.paymentUpdate;
-                        break;
-                    }
-                }
-
                 await swal.fire(
                     'Success!',
                     'Payment type successfully updated.',
-                    'success'
+                    'success',
                 )
 
                 this.closeModal('update')
-            }  else {
+            } else {
                 await swal.fire(
                     'Error!',
                     'There were some errors while updating the payment type.',
-                    'error'
+                    'error',
                 )
             }
 

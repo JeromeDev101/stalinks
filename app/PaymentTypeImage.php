@@ -8,6 +8,11 @@ class PaymentTypeImage extends Model
 {
     protected $table = 'payment_type_image';
 
+    protected $fillable = [
+        'payment_type_id',
+        'path'
+    ];
+  
     public function payment_type()
     {
         return $this->belongsTo('App\Models\PaymentType', 'payment_type_id');

@@ -67,7 +67,6 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
     Route::name('get-payment-image')->get('/payments/image', 'PaymentController@getPaymentTypeImageList');
 
-
     //Wallet Summary
     Route::name('get-wallet-summary')->get('wallet-summary', 'WalletSummaryController@getList');
 
@@ -215,10 +214,13 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-payment')->get('/payments', 'PaymentController@getList');
         Route::name('add-payment')->post('/payments', 'PaymentController@store');
         Route::name('update-payment')->put('/payments', 'PaymentController@edit');
+        Route::name('delete-payment-image')->delete('/payment-type/image/{id}', 'PaymentController@deletePaymentTypeImage');
+        Route::name('add-payment-image')->post('/payment-type/image/{id}', 'PaymentController@uploadPaymentTypeImage');
         Route::name('get-email-access')->get('/email-access', 'ConfigController@getEmailAccessList');
         Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
         Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
         Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
+
     });
 
     //Formula
