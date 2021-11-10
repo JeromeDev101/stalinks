@@ -111,7 +111,7 @@
                         <h6 class="mb-2">Valid: {{ valid }}</h6>
                     </div>
                     <div class="col-sm-2">
-                        <h6 class="mb-2">Good Price: {{ with_url }}</h6>
+                        <h6 class="mb-2">Valid with URLs: {{ with_url }}</h6>
                     </div>
                 </div>
 
