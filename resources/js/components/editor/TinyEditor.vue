@@ -116,6 +116,10 @@ export default {
             return this.addImages.filter(img => !images.includes(img))
         },
 
+        clearAddImages() {
+            this.addImages = [];
+        },
+
         // delete images
         async deleteRemovedImages(images) {
             if (images.length !== 0) {

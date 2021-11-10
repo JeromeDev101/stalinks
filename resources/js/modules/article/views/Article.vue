@@ -830,6 +830,9 @@
 
                 this.isSaved = false;
 
+                // when opening another update modal, always clear the images on the editor
+                this.$refs.composeEditorArticle.clearAddImages();
+
                 $('#modal-content-edit').modal('show');
             },
 

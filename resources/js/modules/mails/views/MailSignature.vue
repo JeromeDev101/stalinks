@@ -490,6 +490,8 @@ export default {
             this.updateSignatureTemp.content = data.content
             this.updateSignatureTemp.work_mail = data.work_mail
 
+            this.updateImages = [];
+
             this.getUpdateSignatureImages(data.content)
         },
 
