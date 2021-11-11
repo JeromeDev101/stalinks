@@ -30,6 +30,8 @@ use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
 use App\Listeners\UserValidateListener;
 use App\Listeners\WriterPaidListener;
+use App\Models\Backlink;
+use App\Observers\BacklinkObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -124,6 +126,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        Backlink::observe(BacklinkObserver::class);
     }
 }
