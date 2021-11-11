@@ -71,6 +71,8 @@ import BuyerGuide3 from '@/modules/help/buyer_guide/views/Help_3.vue'
 // tools
 import Tools from '@/modules/tools/views/Tools.vue'
 
+// CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
+
 const routes = [
     {
         path : '/login',

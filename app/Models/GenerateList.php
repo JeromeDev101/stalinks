@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 
 class GenerateList extends Model
 {
+    use Loggable;
+
     protected $table = 'generate_list';
 
     protected $guarded = [];

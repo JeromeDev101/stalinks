@@ -62,6 +62,13 @@ class LogController extends Controller
             ];
         }
 
+        if (isset($input['path']) && $input['path'] != '') {
+            $filters['where'][] = [
+                'page',
+                $input['path']
+            ];
+        }
+
         if (isset($input['per_page'])) {
             $perPage = $input['per_page'];
         }

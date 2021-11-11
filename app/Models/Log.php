@@ -14,6 +14,7 @@ class Log extends Model
         'action',
         'user_id',
         'payload',
+        'page'
     ];
 
     public function user()

@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MailSignature extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Loggable;
 
     protected $fillable = [
         'name',

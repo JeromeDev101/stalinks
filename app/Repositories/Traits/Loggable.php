@@ -20,11 +20,20 @@ trait Loggable
         foreach (static::getRecordActivityEvents() as $eventName) {
             static::$eventName(function (Model $model) use ($eventName) {
                 try {
+                    $page = null;
+
+                    if (Request()->server()) {
+                        $path = Request()->server()['HTTP_REFERER'];
+
+                        $page = $path ? (new self)->cleanUrlPath($path) : null;
+                    }
+
                     Log::create([
                         'table' => 'App\\Models\\' . class_basename($model),
                         'action' => static::getActionName($eventName),
                         'user_id' => auth()->check() ? auth()->user()->id : 49,
-                        'payload' => json_encode($model->getDirty())
+                        'payload' => json_encode($model->getDirty()),
+                        'page' => $page
                     ]);
                 } catch (\Exception $e) {
                     \Log::error($e);
@@ -73,5 +82,25 @@ trait Loggable
             default:
                 return 'unknown';
         }
+    }
+
+    /**
+     * Removes parameters and root path from url
+     *
+     * @param $path
+     * @return false|string|string[]
+     */
+    private function cleanUrlPath($path) {
+        $root = config('app.url');
+
+        $position = strpos($path, "?");
+
+        if ($position !== false) {
+            $result = substr($path, 0, $position);
+        } else {
+            $result = $path;
+        }
+
+        return str_replace($root, '', $result);
     }
 }

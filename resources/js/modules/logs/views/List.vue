@@ -72,6 +72,15 @@
                             </div>
 
                             <div class="col">
+                                <v-select class="col-sm-12"
+                                          v-model="filterModel.path_temp"
+                                          :options="listPages"
+                                          :reduce="pathTemp => pathTemp.path"
+                                          label="name"
+                                          placeholder="-- All Pages --"/>
+                            </div>
+
+                            <div class="col">
                                 <div class="row">
                                     <button @click="doSearchList"
                                             type="submit"
@@ -127,6 +136,7 @@
                                         <th>Username</th>
                                         <th>Table</th>
                                         <th>Action</th>
+                                        <th>Page</th>
                                         <th>Time</th>
                                     </tr>
                                     </thead>
@@ -141,6 +151,15 @@
                                             {{ tableData(item.table) }}
                                         </td>
                                         <td>{{ tableAction(item.action) }}</td>
+                                        <td>
+                                            <a v-if="item.page !== null && isTablePage(item.page)" :href="item.page" target="_blank">
+                                                {{ tablePage(item.page) }}
+                                            </a>
+
+                                            <span v-else>
+                                                N/A
+                                            </span>
+                                        </td>
                                         <td>{{ item.created_at }}</td>
                                     </tr>
                                     </tbody>
@@ -165,9 +184,11 @@
 import {mapState} from 'vuex';
 import axios from 'axios';
 import _ from 'lodash';
+import {Constants} from "../../../mixins/constants";
 
 export default {
     name : 'LogsList',
+    mixins: [Constants],
     data() {
         return {
             filterModel : {
@@ -177,6 +198,8 @@ export default {
                 table_temp : this.$route.query.table_temp || '',
                 action : this.$route.query.action || '',
                 action_temp : this.$route.query.action_temp || '',
+                path : this.$route.query.path || '',
+                path_temp : this.$route.query.path_temp || '',
                 page : this.$route.query.page || 0,
                 per_page : this.$route.query.per_page || 5
             },
@@ -195,7 +218,9 @@ export default {
             isLoadingTable : false,
             isPopupLoading : false,
             actionMeta : [],
-            months : []
+            months : [],
+
+            tablePages: Constants.LOG_PAGES
         };
     },
 
@@ -242,6 +267,10 @@ export default {
             listUser : state => state.storeUser.listUser
         }),
 
+        listPages() {
+            return Constants.LOG_PAGES;
+        },
+
         pagination() {
             return {
                 props : {
@@ -267,6 +296,8 @@ export default {
                 table_temp : '',
                 action : '',
                 action_temp : '',
+                path : '',
+                path_temp : '',
                 page : 0,
                 per_page : 5
             }
@@ -294,6 +325,23 @@ export default {
             ]).value : itemAction
         },
 
+        tablePage(itemPath) {
+            return _.find(Constants.LOG_PAGES, [
+                'path',
+                itemPath
+            ]) ? _.find(Constants.LOG_PAGES, [
+                'path',
+                itemPath
+            ]).name : 'N/A'
+        },
+
+        isTablePage(itemPath) {
+            return _.find(Constants.LOG_PAGES, [
+                'path',
+                itemPath
+            ])
+        },
+
         async initActionMeta() {
             this.actionMeta['create'] = {icon : 'plus', label : 'green'};
             this.actionMeta['update'] = {icon : 'pencil-alt', label : 'yellow'};
@@ -310,9 +358,11 @@ export default {
         },
 
         async getLogsList(params) {
+            let loader = this.$loading.show();
             this.isLoadingTable = true;
             await this.$store.dispatch('actionGetLogsList', {vue : this, params : params});
             this.isLoadingTable = false;
+            loader.hide();
         },
 
         async getUsersList(params) {
@@ -336,6 +386,7 @@ export default {
             that.filterModel.table = that.filterModel.table_temp;
             that.filterModel.email = that.filterModel.email_temp;
             that.filterModel.action = that.filterModel.action_temp;
+            that.filterModel.path = that.filterModel.path_temp;
             this.goToPage(0);
         },
 
