@@ -15,6 +15,8 @@ use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Events\UserValidateEvent;
 use App\Events\WriterPaidEvent;
+use App\Events\SellerConfirmationEvent;
+use App\Listeners\SellerConfirmationListener;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
 use App\Listeners\BacklinkLiveListener;
@@ -66,6 +68,10 @@ class EventServiceProvider extends ServiceProvider
 
         BacklinkLiveEvent::class => [
             BacklinkLiveListener::class
+        ],
+
+        SellerConfirmationEvent::class => [
+            SellerConfirmationListener::class
         ],
 
         BacklinkLiveSellerEvent::class => [

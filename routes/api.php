@@ -26,6 +26,9 @@ Route::name('forgot-password')->post('/forgot-password','AccountController@forgo
 Route::name('check-reset-password-token')->post('/validate-reset-password-token', 'AccountController@validateResetPasswordToken');
 Route::name('reset-password')->post('/reset-password', 'AccountController@resetPassword');
 Route::name('get-payment-list-registration')->get('/payment-list-registration', 'AccountController@getPaymentList');
+Route::name('get-payment-list-registration')->get('/payment-list-registration', 'AccountController@getPaymentList');
+Route::name('order-confirmation-get-info')->get('/order-confirmation-get-info', 'FollowupSalesController@orderConfirmation');
+Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmation-get-info', 'FollowupSalesController@CancelOrderConfirmation');
 
 Route::middleware('auth:api')->group(function () {
 

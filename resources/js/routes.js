@@ -30,6 +30,8 @@ import Registration from '@/modules/registration/views/List.vue'
 import ForgotPassword from '@/modules/registration/views/ForgotPassword.vue'
 import RegistrationPage from '@/modules/registration/views/Registration.vue'
 import Verification from '@/modules/registration/views/Verification.vue'
+import OrderConfirmation from '@/modules/registration/views/order_verification.vue'
+import CancelOrderConfirmation from '@/modules/registration/views/cancel_order_verification.vue'
 import WalletTransaction from '@/modules/wallet_transaction/views/List.vue'
 import WalletSummary from '@/modules/wallet_transaction/views/wallet_summary.vue'
 import ArticleList from '@/modules/article/views/List.vue'
@@ -99,6 +101,16 @@ const routes = [
         path : '/verification/:code',
         name : 'verification',
         component : Verification,
+    },
+    {
+        path : '/order-confirmation/:id',
+        name : 'order-confirmation',
+        component : OrderConfirmation,
+    },
+    {
+        path : '/cancel-order-confirmation/:id',
+        name : 'cancel-order-confirmation',
+        component : CancelOrderConfirmation,
     },
     {
         path : '/',

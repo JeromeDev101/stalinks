@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
+use App\Events\SellerConfirmationEvent;
 use App\Notifications\BacklinkLiveSeller;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
@@ -180,8 +181,26 @@ class FollowupSalesController extends Controller
             }
 
             $input['live_date'] = date('Y-m-d');
-        } else {
+
+        } else if( $input['status'] == 'Pending' ){
+
+            // notify seller
+            $seller = null;
+
+            if ($backlink->publisher) {
+                $seller = $backlink->publisher->user ?: null;
+            }
+
+            if ($seller) {
+                event(new SellerConfirmationEvent($backlink, $seller));
+            }
+
             $input['live_date'] = null;
+
+        } else {
+
+            $input['live_date'] = null;
+
         }
 
         if ($backlink->publisher) {
@@ -192,5 +211,53 @@ class FollowupSalesController extends Controller
 
         $backlink->update($input);
         return response()->json(['success'=> true], 200);
+    }
+
+    public function orderConfirmation(Request $request) {
+
+        $id = isset($request->code) ? $request->code: null;
+        $result = false;
+        $backlink = '';
+
+        if(!is_null($id)) {
+            if(is_numeric($id)) {
+                $backlink = Backlink::find($id);
+
+                if($backlink) {
+                    if($backlink->status === 'Pending') {
+                        $result = true;
+                        $backlink->update(['status' => 'Processing']);
+                    }
+                }
+            }
+        }
+
+        return response()->json(['success'=> $result, 'record' => $backlink], 200);
+    }
+
+    public function CancelOrderConfirmation(Request $request) {
+
+        $id = isset($request->code) ? $request->code: null;
+        $result = false;
+        $backlink = '';
+
+        if(!is_null($id)) {
+            if(is_numeric($id)) {
+                $backlink = Backlink::find($id);
+
+                if($backlink) {
+                    if($backlink->status === 'Pending') {
+                        $result = true;
+                        $backlink->update([
+                            'status' => 'Canceled',
+                            'reason' => 'Other',
+                            'reason_detailed' => 'automated canceled via Email'
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return response()->json(['success'=> $result, 'record' => $backlink], 200);
     }
 }

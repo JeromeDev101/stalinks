@@ -385,7 +385,7 @@
                                             v-model="updateModel.status"
                                             style="height: 37px;"
                                             class="form-control pull-right"
-                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue"
+                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && user.role_id != 8 && !user.isAdmin)"
 
                                             @change="checkStatus()">
 
@@ -622,6 +622,7 @@
                     'Canceled'
                 ],
                 statusBacklinkQc: [
+                    'Pending',
                     'Processing',
                     'Content In Writing',
                     'Content Done',
