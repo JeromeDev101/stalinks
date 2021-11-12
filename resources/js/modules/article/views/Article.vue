@@ -55,9 +55,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-3" v-if="user.isOurs === 0">
                                 <div class="form-group">
-                                    <label for="">Writer</label>
+                                    <label>Writer</label>
                                     <select name="" class="form-control" v-model="filterModel.writer">
                                         <option value="">All</option>
                                         <option v-for="option in listWriter.data" v-bind:value="option.id">
@@ -227,10 +227,12 @@
                             <template
                                 slot-scope="scope"
                                 slot="statusData">
-                                {{ scope.row.status_writer ==
-                            null ?
-                                (scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled' ? scope.row.backlink_status:'Queue') :scope.row.status_writer
-                                }}
+
+                                {{ scope.row.backlink_status == 'Issue' || scope.row.backlink_status == 'Canceled'
+                                ? scope.row.backlink_status
+                                : scope.row.status_writer == null
+                                    ? 'Queue'
+                                    : scope.row.status_writer }}
                             </template>
 
                         </vue-virtual-table>
@@ -354,7 +356,15 @@
                     <div class="modal-footer">
                         <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
                         <button @click="clearQuery" type="button" class="btn btn-default">Close</button>
-                        <button @click="submitSave" v-show="contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue'" type="button" class="btn btn-primary">Save</button>
+                        <button
+                            v-show="contentModel.backlink_status != 'Canceled'"
+                            type="button"
+                            class="btn btn-primary"
+
+                            @click="submitSave">
+
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>

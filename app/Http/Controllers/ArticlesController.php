@@ -113,7 +113,7 @@ class ArticlesController extends Controller
             'backlinks.status as backlink_status'
         ];
 
-        $isExtWriter = (Auth::user()->role_id == 4 && Auth::user()->isOurs == 1) ? true:false;
+        $isExtWriter = Auth::user()->role_id == 4 && Auth::user()->isOurs == 1;
 
         $list = Article::select($columns)
                         ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
@@ -129,7 +129,11 @@ class ArticlesController extends Controller
                         }])
                         ->when($isExtWriter, function($query) use ($user) {
                             return $query->where(function($sub) use ($user) {
-                                $sub->whereNull('id_writer')->orWhere('id_writer', $user->id);
+                                $sub->where(function ($sub2) {
+                                    $sub2->whereNull('id_writer')
+                                        ->whereNull('status_writer')
+                                        ->where('backlinks.status', '!=', 'Canceled');
+                                })->orWhere('id_writer', $user->id);
                             });
                         })
                         // ->where('backlinks.status' ,'!=', 'Canceled')
