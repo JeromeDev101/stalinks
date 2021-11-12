@@ -89,7 +89,7 @@
                                     <td><b>Pricing Type</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
-                                            <select class="form-control" v-model="user.user_type.rate_type">
+                                            <select class="form-control" disabled>
                                                 <option value="ppw">Pay Per Words (PPW)</option>
                                                 <option value="ppa">Pay Per Article (PPA)</option>
                                             </select>
@@ -103,7 +103,7 @@
                                     <td><b>Writer Price (USD)</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
-                                            <input type="number" v-model="user.user_type.writer_price" class="form-control" value="" required="required" placeholder="Enter Price">
+                                            <input type="number" class="form-control" disabled value="" required="required" placeholder="Enter Price">
                                             <span
                                                 v-if="messageForms.errors.writer_price"
                                                 class="text-danger">
@@ -720,7 +720,7 @@ export default {
                         }
                     }
                 }
-            } 
+            }
         },
 
         async addSubAccount() {
