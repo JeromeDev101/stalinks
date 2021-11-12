@@ -244,7 +244,7 @@
 
         <!-- Modal Content -->
         <div class="modal fade" id="modal-content-edit" tabindex="-1" ref="modalComposeArticle" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Content | Article ID: <b class="text-primary">{{ contentModel.id }}</b></h5>
@@ -315,6 +315,42 @@
                                             {{ option }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-if="contentModel.backlink_status == 'Issue' && contentModel.status == 'Issue'">
+                                <div class="card border border-danger">
+                                    <div class="card-header">
+                                        <i class="fa fa-exclamation-circle text-danger"></i>
+                                        <span class="font-weight-bold">Issue Details</span>
+                                        <br>
+                                        <small class="text-primary">Note: If articles are already revised, set the writer status to 'Done'</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="col-12 mb-2">
+                                            <label>Reason:</label>
+                                            <input v-model="issueModel.reason" type="text" class="form-control" disabled>
+                                        </div>
+
+                                        <div class="col-12 mb-2">
+                                            <label>Details:</label>
+                                            <textarea v-model="issueModel.details" class="form-control" cols="10" disabled>
+
+                                            </textarea>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label>File preview:</label>
+                                            <button
+                                                :disabled="issueModel.file === ''"
+                                                data-toggle="modal"
+                                                data-target="#modal-view-article-issue-cancel-file"
+                                                class="btn btn-default">
+
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -448,6 +484,37 @@
             </div>
         </div>
         <!-- End of Modal Add Article -->
+
+        <!-- Modal View Issue File -->
+        <div
+            tabindex="-1"
+            role="dialog"
+            class="modal fade"
+            id="modal-view-article-issue-cancel-file"
+            aria-hidden="true"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">File</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <img class="img-fluid"
+                                     :src="issueModel.file"
+                                     alt="Issue file">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View Issue File -->
     </div>
 </template>
 
@@ -476,7 +543,7 @@
                     allow_script_urls: false,
                 },
 
-                writer_status: ['In Writing', 'Done'],
+                writer_status: ['In Writing', 'Issue', 'Done'],
                 viewModel: {
                     backlink: '',
                 },
@@ -513,6 +580,12 @@
                     meta_keyword: '',
                     meta_description: '',
                     data: ''
+                },
+
+                issueModel: {
+                    reason: '',
+                    details: '',
+                    file: '',
                 },
 
                 isSaved: false,
@@ -814,6 +887,9 @@
             },
 
             doUpdate(backlink, article){
+
+                this.clearIssue();
+
                 this.clearMessageform()
                 this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price == null ? '':article.price.price;
@@ -838,12 +914,26 @@
                 this.contentModelTemp.meta_keyword = this.contentModel.meta_keyword;
                 this.contentModelTemp.meta_description = this.contentModel.meta_description;
 
+                // if issue
+
+                this.issueModel.reason = backlink.reason
+                this.issueModel.details = backlink.reason_detailed
+                this.issueModel.file = backlink.reason_file
+
                 this.isSaved = false;
 
                 // when opening another update modal, always clear the images on the editor
                 this.$refs.composeEditorArticle.clearAddImages();
 
                 $('#modal-content-edit').modal('show');
+            },
+
+            clearIssue() {
+                this.issueModel = {
+                    reason: '',
+                    details: '',
+                    file: '',
+                }
             },
 
             doSearch() {

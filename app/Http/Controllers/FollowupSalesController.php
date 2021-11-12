@@ -190,7 +190,7 @@ class FollowupSalesController extends Controller
 
             $input['live_date'] = date('Y-m-d');
 
-        } else if( $input['status'] == 'Pending' ){
+        } else if( $input['status'] == 'Pending' ) {
 
             // notify seller
             $seller = null;
@@ -204,6 +204,12 @@ class FollowupSalesController extends Controller
             }
 
             $input['live_date'] = null;
+
+        } else if( $input['status'] == 'Issue' ) {
+
+            if ($backlink->article) {
+                $backlink->article->update(['status_writer' => 'Issue']);
+            }
 
         } else {
 
