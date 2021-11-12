@@ -11,7 +11,7 @@
                 </div><!-- /.container-fluid -->
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -132,7 +132,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -195,7 +195,7 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th>Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
+                                            <th v-if="!isExtWriter">Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
                                             <th>Total <span class="text-primary">({{ backlink_seller.num_total }})</span>
                                             </th>
                                             <th>Processing <span class="text-primary">({{
@@ -223,7 +223,7 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
-                                            <td>{{ upperCase(seller.username) }}</td>
+                                            <td v-if="!isExtWriter">{{ upperCase(seller.username) }}</td>
                                             <td>{{ seller.num_total }}</td>
                                             <td>{{ seller.num_processing }}</td>
                                             <td>{{ seller.writing }}</td>
@@ -243,7 +243,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -280,7 +280,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -342,7 +342,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -388,7 +388,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isExtWriter">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -556,6 +556,18 @@ export default {
                 } else {
                     result = false;
                 } 
+            }
+            
+            return result;
+        },
+
+        isExtWriter() {
+            let result = false;
+
+            if(this.user.isOurs === 1) {
+                if(this.user.role_id === 4) {
+                    result = true;
+                }
             }
             
             return result;
