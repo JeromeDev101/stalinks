@@ -69,7 +69,7 @@ class UserValidated extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Your account is now validated.'
+            'message' => 'Your account is now validated. Please re-login your account to activate.'
         ];
     }
 }

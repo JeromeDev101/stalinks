@@ -417,7 +417,8 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
+
+                            <li class="nav-item" v-if="!isExtWriter">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/publisher' }"
@@ -441,7 +442,7 @@
                                 </router-link>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item" v-if="!isExtWriter">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/incomes' }"
@@ -631,6 +632,18 @@ export default {
                 } else {
                     result = false;
                 } 
+            }
+            
+            return result;
+        },
+
+        isExtWriter() {
+            let result = false;
+
+            if(this.user.isOurs === 1) {
+                if(this.user.role_id === 4) {
+                    result = true;
+                }
             }
             
             return result;
