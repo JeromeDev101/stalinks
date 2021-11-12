@@ -29,8 +29,7 @@ class LoginRequest extends FormRequest
             'email' => [
                 'required',
                 'between:6,60',
-                'email',
-                new ValidateEmailRule,
+                'email'
             ],
             'password' => [
                 'required'

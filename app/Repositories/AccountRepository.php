@@ -89,6 +89,14 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             $user->update(['status' => $input['status']]);
         }
 
+        if (isset($input['account_validation']) && $input['account_validation'] != '') {
+            if ($input['account_validation'] == 'invalid' || $input['account_validation'] == 'Invalid') {
+                $user->update(['status' => 'inactive']);
+
+                $input['status'] = 'inactive';
+            }
+        }
+
         if (isset($input['name']) && $input['name'] != '') {
             $user->update(['name' => $input['name']]);
         }

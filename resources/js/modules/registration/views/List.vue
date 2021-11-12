@@ -1205,10 +1205,15 @@
 
                             <div class="col-sm-6">
                                 <label>Status</label>
+
                                 <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
+
+                                <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
+                                    Account validation is 'invalid'. Status will be automatically set to 'inactive'.
+                                </small>
                             </div>
 
                             <div class="col-sm-6">
