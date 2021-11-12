@@ -211,7 +211,7 @@
                                 <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
                                 <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
                                 <th v-show="tblOptions.url">URL Publisher</th>
-                                <th v-show="tblOptions.price">Price</th>
+                                <th v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">Price</th>
                                 <th v-show="tblOptions.link_from">Link From</th>
                                 <th v-show="tblOptions.link_to">Link To</th>
                                 <th v-show="tblOptions.anchor_text">Anchor Text</th>
