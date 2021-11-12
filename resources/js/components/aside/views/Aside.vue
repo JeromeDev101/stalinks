@@ -390,14 +390,14 @@
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
+                    <li class="nav-item" 
                         v-if="
-                            isSeller ||
+                            (isSeller ||
                                 user.isAdmin ||
                                 isManager ||
                                 isPostingWriter ||
                                 isQc ||
-                                isQcSeller
+                                isQcSeller) && !isExtWriter
                         "
                         :class="{
                             active:
@@ -418,7 +418,7 @@
                         </a>
                         <ul class="nav nav-treeview">
 
-                            <li class="nav-item" v-if="!isExtWriter">
+                            <li class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/publisher' }"
@@ -442,7 +442,7 @@
                                 </router-link>
                             </li>
 
-                            <li class="nav-item" v-if="!isExtWriter">
+                            <li class="nav-item" >
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/incomes' }"
