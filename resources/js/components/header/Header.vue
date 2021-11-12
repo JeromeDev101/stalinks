@@ -18,7 +18,7 @@
 
             <li class="nav-item">
                 <button
-                    v-if="user.registration && user.registration.is_sub_account === 0 && user.registration.account_validation === 'valid'"
+                    v-if="user.registration && user.registration.is_sub_account === 0 && user.registration.account_validation === 'valid' && user.role_id === 5"
                     class="btn btn-round btn-success"
                     data-toggle="modal"
                     data-target="#modal-add-wallet-header"><i

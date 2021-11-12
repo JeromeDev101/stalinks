@@ -47,6 +47,10 @@ class FollowupSalesController extends Controller
 
         if ($user->role_id === 4 && $user->isOurs === 1) {
             $list->whereNotNull('article.id_backlink');
+            $list->where(function ($query) use ($user) {
+                $query->where('article.id_writer', $user->id)
+                    ->orWhere('article.id_writer', null);
+            });
         } else {
             if( isset($filter['article']) && !empty($filter['article']) ){
                 if( $filter['article'] == 'With'){
