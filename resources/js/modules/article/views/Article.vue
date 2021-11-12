@@ -342,7 +342,7 @@
                                         <div class="col-12">
                                             <label>File preview:</label>
                                             <button
-                                                :disabled="issueModel.file === ''"
+                                                :disabled="issueModel.file === '' || issueModel.file === null"
                                                 data-toggle="modal"
                                                 data-target="#modal-view-article-issue-cancel-file"
                                                 class="btn btn-default">
