@@ -246,7 +246,7 @@
                                             </a>
                                         </span>
                                 </td>
-                                <td v-show="tblOptions.price">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
+                                <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
                                 <td v-show="tblOptions.link_from">
                                     <div class="dont-break-out">
                                         {{ sales.link_from }}
@@ -527,7 +527,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">URL Publisher</label>
                             </div>
-                            <div class="checkbox col-md-4">
+                            <div class="checkbox col-md-4" v-if="user.isOurs !== 1 || user.role_id !== 4">
                                 <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">Price</label>
                             </div>
                             <div class="checkbox col-md-4">
