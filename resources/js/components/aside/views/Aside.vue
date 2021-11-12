@@ -6,7 +6,7 @@
         </a>
 
         <!-- Sidebar -->
-        <div class="sidebar" style="overflow-x: hidden;">
+        <div class="sidebar" style="overflow-x: hidden;" v-if="!isProcessing">
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
@@ -540,6 +540,44 @@
             </nav>
             <!-- /.sidebar-menu -->
         </div>
+
+        <!-- display only help when the status is 'Processing' -->
+        <div class="sidebar" style="overflow-x: hidden;" v-if="isProcessing">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
+                    data-widget="treeview"
+                    role="menu"
+                    data-accordion="false">
+
+                        <li class="nav-item">
+                            <router-link :to="{ path: '/' }" class="nav-link"
+                                        :class="{ active: $route.name == 'Dashboard' }">
+                                <img src="../../../../images/dashboard.png"/>
+                                <span> Dashboard</span>
+                            </router-link>
+                        </li>
+
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link"
+                                :to="{ path: '/help' }"
+                                :class="{
+                            active:
+                                $route.name == 'help' ||
+                                $route.name == 'seller-guide-1' ||
+                                $route.name == 'seller-guide-2' ||
+                                $route.name == 'seller-guide-3' ||
+                                $route.name == 'seller-guide-4'
+                        }"
+                            >
+                                <i class="fa fa-question-circle nav-icon"></i>
+                                <span>Help</span>
+                                <span class="pull-right-container"></span>
+                            </router-link>
+                        </li>
+                </ul>
+            </nav>
+        </div>
         <!--        <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">-->
         <!--            <div class="os-scrollbar-track">-->
         <!--                <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>-->
@@ -578,12 +616,33 @@ export default {
     computed : {
         ...mapState({
             user : state => state.storeAuth.currentUser
-        })
+        }),
+
+        isProcessing() {
+            let result = false;
+
+            if(this.user.isOurs === 0) {
+                result = false;
+            } else {
+                if(this.user.registration != null) {
+                    if(this.user.registration.account_validation === 'processing') {
+                        result = true;
+                    }
+                } else {
+                    result = false;
+                } 
+            }
+            
+            return result;
+        },
     },
 
     methods : {
+
         checkAccountType() {
             let that = this.user;
+
+            console.log(that)
 
             // not employee
             if (that.user_type) {
