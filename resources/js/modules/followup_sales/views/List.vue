@@ -90,7 +90,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-2" v-if="user.isOurs !== 1 || user.role_id !== 4">
                                 <div class="form-group">
                                     <label for="">Article</label>
                                     <select name="" class="form-control" v-model="filterModel.article">
@@ -203,7 +203,7 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th v-show="tblOptions.pub_id">Url Pub</th>
+                                <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">Url Pub</th>
                                 <th v-show="tblOptions.blink_id">Blink</th>
                                 <th v-show="tblOptions.arc_id">Artc</th>
                                 <th v-show="tblOptions.country">Country</th>
@@ -225,7 +225,7 @@
                             <tr v-for="(sales, index) in listSales.data" :key="index">
                                 <td>{{ index + 1}}</td>
                                 <td
-                                    v-show="tblOptions.pub_id">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
+                                    v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
                                 <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                 <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
                                 <td
@@ -504,7 +504,7 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-model="tblOptions.pub_id">URL Publisher ID</label>
+                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-if="user.isOurs !== 1 || user.role_id !== 4" v-model="tblOptions.pub_id">URL Publisher ID</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.blink_id ? 'checked':''" v-model="tblOptions.blink_id">Backlink ID</label>

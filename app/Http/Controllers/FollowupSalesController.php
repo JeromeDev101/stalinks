@@ -45,12 +45,16 @@ class FollowupSalesController extends Controller
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
         }
 
-        if( isset($filter['article']) && !empty($filter['article']) ){
-            if( $filter['article'] == 'With'){
-                $list->whereNotNull('article.id_backlink');
-            }
-            if( $filter['article'] == 'Without'){
-                $list->whereNull('article.id_backlink');
+        if ($user->role_id === 4 && $user->isOurs === 1) {
+            $list->whereNotNull('article.id_backlink');
+        } else {
+            if( isset($filter['article']) && !empty($filter['article']) ){
+                if( $filter['article'] == 'With'){
+                    $list->whereNotNull('article.id_backlink');
+                }
+                if( $filter['article'] == 'Without'){
+                    $list->whereNull('article.id_backlink');
+                }
             }
         }
 
