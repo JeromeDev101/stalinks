@@ -185,7 +185,8 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Total Backlink (Seller)</h3>
+                            <h3 class="card-title text-primary" v-if="!isExtWriter">Total Backlink (Seller)</h3>
+                            <h3 class="card-title text-primary" v-if="isExtWriter">Article Summary</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -196,7 +197,7 @@
                                         <thead>
                                         <tr>
                                             <th v-if="!isExtWriter">Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
-                                            <th>Total <span class="text-primary">({{ backlink_seller.num_total }})</span>
+                                            <th v-if="!isExtWriter">Total <span class="text-primary">({{ backlink_seller.num_total }})</span>
                                             </th>
                                             <th>Processing <span class="text-primary">({{
                                                     backlink_seller.num_processing
@@ -224,7 +225,7 @@
                                         <tbody>
                                         <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
                                             <td v-if="!isExtWriter">{{ upperCase(seller.username) }}</td>
-                                            <td>{{ seller.num_total }}</td>
+                                            <td v-if="!isExtWriter">{{ seller.num_total }}</td>
                                             <td>{{ seller.num_processing }}</td>
                                             <td>{{ seller.writing }}</td>
                                             <td>{{ seller.num_done }}</td>

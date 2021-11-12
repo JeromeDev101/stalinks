@@ -157,6 +157,7 @@ class DashboardController extends Controller
     }
 
     private function backlinkSeller() {
+        $user_id = Auth::user()->id;
         $columns = [
             'users.username',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
@@ -186,11 +187,17 @@ class DashboardController extends Controller
                     ->leftJoin('registration', 'users.email', '=', 'registration.email');
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 1 ){
-            $list = $list->where('users.id', Auth::user()->id);
+            $list = $list->where('users.id', $user_id);
         }
 
         if( Auth::user()->role_id == 6 && Auth::user()->isOurs == 0 ){
-            $list = $list->where('registration.team_in_charge', Auth::user()->id);
+            $list = $list->where('registration.team_in_charge', $user_id);
+        }
+
+        if( Auth::user()->role_id == 4 && Auth::user()->isOurs == 1 ) {
+            $list = $list->whereHas('article', function($query) use ($user_id) {
+                return $query->where('id_writer', $user_id);
+            });
         }
 
         return $list->groupBy('publisher.user_id', 'users.username')
