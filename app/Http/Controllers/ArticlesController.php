@@ -191,12 +191,45 @@ class ArticlesController extends Controller
                 $list->whereIn('article.id_backlink', $backlinks_ids);
         }
 
+
         if( isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
-            return $list->paginate(9999999);
+            $list = $list->paginate(9999999);
         }else{
             $paginate = intval($paginate);
-            return $list->paginate($paginate);
+            $list = $list->paginate($paginate);
         }
+
+        $statusSummary = $this->backlinkSeller();
+
+        return response()->json(['data' => $list, 'summary'=> $statusSummary],200);
+
+    }
+
+    private function backlinkSeller() {
+        $user_id = Auth::user()->id;
+        $columns = [
+            'users.username',
+            DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Content Writing" THEN 1 ELSE 0 END) AS writing'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Canceled" THEN 1 ELSE 0 END) AS num_canceled'),
+            DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
+        ];
+
+        $list = Backlink::select($columns)
+                    ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
+                    ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
+                    ->leftJoin('registration', 'users.email', '=', 'registration.email');
+
+        if( Auth::user()->role_id == 4 && Auth::user()->isOurs == 1 ) {
+            $list = $list->whereHas('article', function($query) use ($user_id) {
+                return $query->where('id_writer', $user_id);
+            });
+        }
+
+        return $list->groupBy('publisher.user_id', 'users.username')
+                    ->orderBy('users.username', 'asc')
+                    ->get();
     }
 
     private function getBacklinksForSeller() {

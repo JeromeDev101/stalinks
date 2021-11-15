@@ -127,7 +127,33 @@
                         <div class="card-tools">
                         </div>
                     </div>
+
                     <div class="card-body">
+                        <table class="mb-3 bg-info">
+                            <tr>
+                                <td class="p-3">
+                                    Queue
+                                    <b>{{' ('+ listArticles.summary[0].num_processing +')' }}</b>
+                                </td>
+                                <td class="p-3">
+                                    In Writing
+                                    <b>{{' ('+ listArticles.summary[0].writing +')' }}</b>
+                                </td>
+                                <td class="p-3">
+                                    Done
+                                    <b>{{' ('+ listArticles.summary[0].num_done +')' }}</b>
+                                </td>
+                                <td class="p-3">
+                                    Canceled
+                                    <b>{{' ('+ listArticles.summary[0].num_canceled +')' }}</b>
+                                </td>
+                                <td class="p-3">
+                                    Issue
+                                    <b>{{' ('+ listArticles.summary[0].num_issue +')' }}</b>
+                                </td>
+                            </tr>
+                        </table>
+
                         <div v-if="isProcessing" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
                             <strong>Reminder: </strong> Your account is currently on process. Please contact the
                                                         administrator to process you account status.
@@ -155,7 +181,7 @@
                         </button>
 
                         <span class="pagination-custom-footer-text">
-                        <b>Showing {{ listArticles.from }} to {{ listArticles.to }} of {{ listArticles.total }} entries.</b>
+                        <b>Showing {{ listArticles.data.from }} to {{ listArticles.data.to }} of {{ listArticles.data.total }} entries.</b>
                     </span>
 
                         <vue-virtual-table
@@ -165,7 +191,7 @@
                             :bordered="true"
                             :item-height="60"
                             :config="tableConfig"
-                            :data="listArticles.data">
+                            :data="listArticles.data.data">
                             <template
                                 slot-scope="scope"
                                 slot="actionButton">
@@ -236,7 +262,7 @@
                             </template>
 
                         </vue-virtual-table>
-                        <pagination :data="listArticles" @pagination-change-page="getListArticles" :limit="8"></pagination>
+                        <pagination :data="listArticles.data" @pagination-change-page="getListArticles" :limit="8"></pagination>
                     </div>
                 </div>
             </div>
