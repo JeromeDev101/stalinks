@@ -392,14 +392,14 @@
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklink"
-                                                v-show="user.role_id != 8 && !user.isAdmin">
+                                                v-show="user.role_id != 8 && !user.isAdmin && user.isOurs == 1">
                                                 {{ status }}
                                             </option>
 
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklinkQc"
-                                                v-show="user.role_id == 8 || user.isAdmin">
+                                                v-show="user.role_id == 8 || user.role_id == 6 || user.isAdmin">
                                                 {{ status }}
                                             </option>
                                         </select>
