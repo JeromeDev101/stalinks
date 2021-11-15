@@ -47,26 +47,54 @@
                 </div>
             </li>
 
-            <li class="nav-item dropdown">
-                <a @click="notificationsSeen" class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+            <li class="nav-item dropdown notification-dropdown">
+                <a
+                    class="nav-link notification-dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+
+                    @click="notificationsSeen">
+
                     <i class="far fa-bell"></i>
-                    <span class="badge badge-danger navbar-badge"
-                          v-if="notifications.new_notifications >= 1">{{ notifications.new_notifications }}</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right"
-                     style="left: inherit; right: 0px; max-width: 750px;">
-                    <span class="dropdown-item dropdown-header">{{ notifications.new_notifications }} New Notifications</span>
-                    <div class="dropdown-divider"></div>
+                    <span
+                        class="badge badge-danger navbar-badge"
+                        v-if="notifications.new_notifications >= 1">
 
-                    <span v-for="notification in notifications.data">
-                        <a href="#" class="dropdown-item" style="overflow: auto">
-                            {{ notification.data.message }}
-                        </a>
-                        <div class="dropdown-divider"></div>
+                        {{ notifications.new_notifications }}
                     </span>
+                </a>
+                <div
+                    class="dropdown-menu dropdown-menu-lg dropdown-menu-right"
+                    style="left: inherit; right: 0px; max-width: 750px;">
 
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                    <p class="m-2 text-center">
+                        {{ notifications.new_notifications }}
+                        New Notifications
+                    </p>
+
+                    <ul class="p-0" style="list-style-type: none; overflow-wrap: break-word; width: 750px">
+                        <li
+                            v-for="notification in notifications.data"
+                            class="border border-bottom p-3"
+                            style="">
+
+                            <small v-if="notification.read_at === null" class="badge badge-primary text-uppercase">new</small>
+
+                            <span v-if="notification.data">
+                                {{ JSON.parse(notification.data).message }}
+                            </span>
+
+                            <small class="text-primary d-block mt-2">
+                                {{ notification.human_date }}
+                            </small>
+                        </li>
+                    </ul>
+
+                    <p v-if="notifications.all_notifications !== 0" class="m-2 text-center">
+                        <button class="btn btn-primary btn-sm" @click="viewAllNotifications()">
+                            View All {{ notifications.all_notifications }} Notifications
+                        </button>
+                    </p>
                 </div>
             </li>
 
@@ -395,6 +423,63 @@
             </div>
         </div>
         <!-- End of Modal Add Wallet -->
+
+
+        <!-- Modal All Notifications -->
+        <div
+            style="z-index: 9999"
+            role="dialog"
+            tabindex="-1"
+            class="modal fade"
+            ref="addWalletModal"
+            id="modal-all-notifications"
+            aria-hidden="true"
+            data-backdrop="static"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">All Notifications</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="resetAddWalletModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div v-if="allNotifications.hasOwnProperty('data')">
+                            <table id="all-notifications-table" class="table table-hover table-bordered">
+                                <tbody>
+                                <tr v-for="(notification, index) in allNotifications.data" :key="index">
+                                    <td>
+                                        <span v-if="notification.data">
+                                            {{ JSON.parse(notification.data).message }}
+                                        </span>
+
+                                        <small class="text-primary d-block mt-2">
+                                            {{ notification.human_date }}
+                                        </small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <pagination
+                                :limit="8"
+                                :data="allNotifications"
+                                @pagination-change-page="viewAllNotifications">
+
+                            </pagination>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of modal All notifications -->
     </nav>
 </template>
 
@@ -428,7 +513,9 @@ export default {
             },
             step : 0,
             pageLanguage : 'en',
-            paymentImages : null
+            paymentImages : null,
+
+            allNotifications: []
         };
     },
 
@@ -455,6 +542,11 @@ export default {
         });
 
         this.getPaymentTypeImages();
+
+        // prevent notifiation dropdown from closing when clicked
+        $(document).on('click', '.notification-dropdown .dropdown-menu', function (e) {
+            e.stopPropagation();
+        });
     },
 
     watch : {
@@ -675,6 +767,29 @@ export default {
             };
 
             this.step = 0;
+        },
+
+        viewAllNotifications(page = 1) {
+            $("#modal-all-notifications").modal('show');
+
+            // close notification dropdown
+            $(".notification-dropdown .notification-dropdown-toggle").dropdown('toggle')
+
+            let loader = this.$loading.show();
+
+            axios.get('/api/notifications-all/' + this.user.id,{
+                params: {
+                    page: page
+                }
+            })
+            .then((res) => {
+                this.allNotifications = res.data.data
+                loader.hide();
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+            })
         },
     },
 };

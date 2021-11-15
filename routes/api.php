@@ -274,6 +274,7 @@ Route::middleware('auth:api')->group(function () {
      //Notifications
     Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
     Route::name('notifications.seen')->put('/notifications/{user_id}', 'NotificationController@setUserNotificationsSeen');
+    Route::name('notifications.get-all')->get('/notifications-all/{user_id}', 'NotificationController@getAllUserNotifications');
 
     //Continents
     Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');
