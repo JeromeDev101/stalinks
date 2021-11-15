@@ -109,7 +109,7 @@ class SellerBillingController extends Controller
             foreach( $ids as $data ){
                 $backlink_id = $data->id;
                 $seller = User::find($data->publisher->user->id);
-                $seller_price = $data->publisher->price;
+                $seller_price = $data->price;
                 $backlink_ids[] = $backlink_id;
                 $totalBacklinkAmount += $seller_price;
 
