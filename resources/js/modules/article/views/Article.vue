@@ -133,23 +133,23 @@
                             <tr>
                                 <td class="p-3">
                                     Queue
-                                    <b>{{' ('+ listArticles.summary[0].num_processing +')' }}</b>
+                                    <b>{{' ('+ statusSummary.num_processing +')' }}</b>
                                 </td>
                                 <td class="p-3">
                                     In Writing
-                                    <b>{{' ('+ listArticles.summary[0].writing +')' }}</b>
+                                    <b>{{' ('+ statusSummary.writing +')' }}</b>
                                 </td>
                                 <td class="p-3">
                                     Done
-                                    <b>{{' ('+ listArticles.summary[0].num_done +')' }}</b>
+                                    <b>{{' ('+ statusSummary.num_done +')' }}</b>
                                 </td>
                                 <td class="p-3">
                                     Canceled
-                                    <b>{{' ('+ listArticles.summary[0].num_canceled +')' }}</b>
+                                    <b>{{' ('+ statusSummary.num_canceled +')' }}</b>
                                 </td>
                                 <td class="p-3">
                                     Issue
-                                    <b>{{' ('+ listArticles.summary[0].num_issue +')' }}</b>
+                                    <b>{{' ('+ statusSummary.num_issue +')' }}</b>
                                 </td>
                             </tr>
                         </table>
@@ -659,6 +659,13 @@
                     'Unlisted',
                 ],
                 isSearching: false,
+                statusSummary: {
+                    num_canceled: 0,
+                    num_done: 0,
+                    num_issue: 0,
+                    num_processing: 0,
+                    writing: 0
+                }
             }
         },
 
@@ -772,6 +779,18 @@
 
         methods: {
 
+            displayTotal() {
+                let _status = this.listArticles.summary
+
+                for (var index in _status) {
+                    this.statusSummary.num_processing += parseInt(_status[index].num_processing);
+                    this.statusSummary.writing += parseInt(_status[index].writing);
+                    this.statusSummary.num_done += parseInt(_status[index].num_done);
+                    this.statusSummary.num_issue += parseInt(_status[index].num_issue);
+                    this.statusSummary.num_canceled += parseInt(_status[index].num_canceled);
+                }
+            },
+
             modalCloser() {
 
                 if (this.compareData() && !this.isSaved) {
@@ -833,6 +852,7 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
+                this.displayTotal();
                 this.viewArticle();
                 loader.hide();
             },
