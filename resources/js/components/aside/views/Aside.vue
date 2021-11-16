@@ -81,8 +81,7 @@
                             :class="{ 'active': $route.name == 'tools' }"
                         >
                             <img src="../../../../images/admin-settings.png"/>
-                            <span>Tools</span>
-                            <span class="pull-right-container"></span>
+                            <p>Tools</p>
                         </router-link>
                     </li>
 
@@ -94,8 +93,7 @@
                             :class="{ active: $route.name == 'dashboard' }"
                         >
                             <img src="../../../../images/dashboard.png"/>
-                            <span>Dashboard</span>
-                            <span class="pull-right-container"></span>
+                            <p>Dashboard</p>
                         </router-link>
                     </li>
 
@@ -107,7 +105,7 @@
                             :class="{ active: $route.name == 'List User' }"
                         >
                             <img src="../../../../images/team.png"/>
-                            <span>Team</span>
+                            <p>Team</p>
                         </router-link>
                     </li>
 
@@ -120,8 +118,7 @@
                             :class="{ active: $route.name == 'mail-logs' }"
                         >
                             <img src="../../../../images/mail.png"/>
-                            <span>Mail Logs</span>
-                            <span class="pull-right-container"></span>
+                            <p>Mail Logs</p>
                         </router-link>
                     </li>
 
@@ -133,8 +130,7 @@
                             :class="{ active: $route.name == 'logs' }"
                         >
                             <img src="../../../../images/system-logs.png"/>
-                            <span>System Logs</span>
-                            <span class="pull-right-container"></span>
+                            <p>System Logs</p>
                         </router-link>
                     </li>
 
@@ -149,8 +145,7 @@
                             :class="{ active: $route.name == 'AlexaDomain' }"
                         >
                             <img src="../../../../images/alexa.png"/>
-                            <span>Get Alexa</span>
-                            <span class="pull-right-container"></span>
+                            <p>Get Alexa</p>
                         </router-link>
                     </li>
 
@@ -164,9 +159,8 @@
                             :to="{ path: '/generate-list' }"
                             :class="{ active: $route.name == 'generate-list' }"
                         >
-                            <i class="fas fa-bars nav-icon"></i>
-                            <span>Generate List</span>
-                            <span class="pull-right-container"></span>
+                            <img src="../../../../images/article.png"/>
+                            <p>Generate List</p>
                         </router-link>
                     </li>
 
@@ -185,8 +179,7 @@
                             :class="{ active: $route.name == 'Registration' }"
                         >
                             <img src="../../../../images/registration.png"/>
-                            <span>Registration Accounts</span>
-                            <span class="pull-right-container"></span>
+                            <p>Registration Accounts</p>
                         </router-link>
                     </li>
 
@@ -202,8 +195,7 @@
                             :class="{ active: $route.name == 'articles-list' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <span>Article</span>
-                            <span class="pull-right-container"></span>
+                            <p>Article</p>
                         </router-link>
                     </li>
 
@@ -215,8 +207,7 @@
                             :class="{ active: $route.name == 'overall-incomes' }"
                         >
                             <img src="../../../../images/incomes.png"/>
-                            <span>Incomes</span>
-                            <span class="pull-right-container"></span>
+                            <p>Incomes</p>
                         </router-link>
                     </li>
 
@@ -257,8 +248,7 @@
                                              class="nav-link"
                                              :class="{ active: $route.name == 'seller-billing' }">
                                     <i class="far fa-user nav-icon"></i>
-                                    <span>Seller Billing</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Seller Billing</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -268,8 +258,7 @@
                                 <router-link :to="{ path: '/writer-billing' }" class="nav-link"
                                              :class="{ active: $route.name == 'writer-billing' }">
                                     <i class="far fa-newspaper nav-icon"></i>
-                                    <span>Writer Billing</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Writer Billing</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -281,8 +270,7 @@
                                     active: $route.name == 'wallet-transaction'
                                 }">
                                     <i class="far fa-money-bill-alt nav-icon"></i>
-                                    <span>Wallet Transaction</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Wallet Transaction</p>
                                 </router-link>
                             </li>
 
@@ -298,8 +286,7 @@
                                     active: $route.name == 'wallet-summary'
                                 }">
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <span>Wallet Summary</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Wallet Summary</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -313,7 +300,7 @@
                         <router-link :to="{ path: '/' }" class="nav-link"
                                      :class="{ active: $route.name == 'Dashboard' }">
                             <img src="../../../../images/dashboard.png"/>
-                            <span> Dashboard</span>
+                            <p>Dashboard</p>
                         </router-link>
                     </li>
 
@@ -353,8 +340,7 @@
                                 <router-link :to="{ path: '/url-prospect' }" class="nav-link"
                                              :class="{ active: $route.name == 'ExtDomain' }">
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <span>URL Prospect</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>URL Prospect</p>
                                 </router-link>
                             </li>
 
@@ -371,8 +357,7 @@
                                 }"
                                 >
                                     <i class="fas fa-envelope-open nav-icon"></i>
-                                    <span>Mails</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Mails</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -385,8 +370,7 @@
                             :class="{ active: $route.name == 'articles' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <span>Article</span>
-                            <span class="pull-right-container"></span>
+                            <p>Article</p>
                         </router-link>
                     </li>
 
@@ -425,8 +409,7 @@
                                     :class="{ active: $route.name == 'publisher' }"
                                 >
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <span>List Publisher</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>List Publisher</p>
                                 </router-link>
                             </li>
 
@@ -437,8 +420,7 @@
                                     :class="{ active: $route.name == 'followup-sales' }"
                                 >
                                     <i class="fa fa-fw fa-share nav-icon"></i>
-                                    <span>Follow up Sale</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Follow up Sale</p>
                                 </router-link>
                             </li>
 
@@ -449,8 +431,7 @@
                                     :class="{ active: $route.name == 'incomes' }"
                                 >
                                     <i class="fas fa-dollar-sign nav-icon"></i>
-                                    <span>Incomes</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Incomes</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -488,8 +469,7 @@
                                     :class="{ active: $route.name == 'list-backlinks' }"
                                 >
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <span>List Backlinks to Buy</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>List Backlinks to Buy</p>
                                 </router-link>
                             </li>
 
@@ -500,8 +480,7 @@
                                     :class="{ active: $route.name == 'BackLink' }"
                                 >
                                     <i class="fa fa-fw fa-share nav-icon"></i>
-                                    <span>Follow up Backlinks</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Follow up Backlinks</p>
                                 </router-link>
                             </li>
 
@@ -512,8 +491,7 @@
                                     :class="{ active: $route.name == 'purchase' }"
                                 >
                                     <i class="fab fa-btc nav-icon"></i>
-                                    <span>Purchase</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>Purchase</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -533,8 +511,7 @@
                     }"
                         >
                             <i class="fa fa-question-circle nav-icon"></i>
-                            <span>Help</span>
-                            <span class="pull-right-container"></span>
+                            <p>Help</p>
                         </router-link>
                     </li>
                 </ul>
@@ -554,7 +531,7 @@
                             <router-link :to="{ path: '/' }" class="nav-link"
                                         :class="{ active: $route.name == 'Dashboard' }">
                                 <img src="../../../../images/dashboard.png"/>
-                                <span> Dashboard</span>
+                                <p> Dashboard</p>
                             </router-link>
                         </li>
 
@@ -572,13 +549,13 @@
                         }"
                             >
                                 <i class="fa fa-question-circle nav-icon"></i>
-                                <span>Help</span>
-                                <span class="pull-right-container"></span>
+                                <p>Help</p>
                             </router-link>
                         </li>
                 </ul>
             </nav>
         </div>
+
         <!--        <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">-->
         <!--            <div class="os-scrollbar-track">-->
         <!--                <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>-->
@@ -593,6 +570,12 @@
         <!-- /.sidebar -->
     </aside>
 </template>
+
+<style scoped>
+    .nav-compact .nav-link>p>.right {
+        top: 1.2rem;
+    }
+</style>
 
 <script>
 import {mapActions, mapState} from "vuex";
