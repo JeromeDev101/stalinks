@@ -11,7 +11,7 @@
                 </div><!-- /.container-fluid -->
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isBuyer">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isBuyer">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -132,7 +132,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isBuyer">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -181,7 +181,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" v-if="!isBuyer">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -244,7 +244,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isBuyer">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -446,7 +446,7 @@
         </div>
 
     </div>
-    
+
 </template>
 
 <script>
@@ -556,9 +556,9 @@ export default {
                     }
                 } else {
                     result = false;
-                } 
+                }
             }
-            
+
             return result;
         },
 
@@ -570,8 +570,12 @@ export default {
                     result = true;
                 }
             }
-            
+
             return result;
+        },
+
+        isBuyer() {
+            return this.user.role_id === 5;
         },
     },
 
