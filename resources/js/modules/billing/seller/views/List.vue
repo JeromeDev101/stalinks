@@ -634,6 +634,7 @@ export default {
 
         async doPay() {
             $('#tbl_seller_billing').DataTable().destroy();
+            this.isDisabledPay = true;
 
             let ids = this.checkIds
             this.formData = new FormData();
@@ -661,6 +662,8 @@ export default {
                 )
 
             }
+
+            this.isDisabledPay = false;
 
             this.$root.$refs.AppHeader.liveGetWallet()
         },
