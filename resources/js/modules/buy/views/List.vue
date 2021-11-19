@@ -394,7 +394,7 @@
                             </div>
                         </div>
 
-                        <div class="float-right mb-3">
+                        <div class="float-right col-md-1 mb-3">
                             <Sort
                                 ref="sortComponent"
                                 :sorted="isSorted"

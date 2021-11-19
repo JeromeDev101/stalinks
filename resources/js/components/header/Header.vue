@@ -44,6 +44,11 @@
                        @click="pageLanguage = 'jp'">
                         <i class="flag-icon flag-icon-jp mr-2"></i> Japan
                     </a>
+                    <a href="#" class="dropdown-item"
+                       :class="{'active' : pageLanguage === 'th'}"
+                       @click="pageLanguage = 'th'">
+                        <i class="flag-icon flag-icon-th mr-2"></i> Thailand
+                    </a>
                 </div>
             </li>
 

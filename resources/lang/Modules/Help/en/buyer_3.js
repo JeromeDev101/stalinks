@@ -19,7 +19,7 @@ export default {
     p4 : 'After you have chosen the urls',
     p5 : 'Choose by clicking :',
     ul13 : '"BUY" - To make a direct purchase order. When you found the domain you like, then fill the needed information on the Pop up.',
-    ul14 : '"NOT INTERESTED" - If you don’t want to see the domain on your table.',
+    ul14 : '"INTERESTED" - If you are considering to buy in the future.',
     ul15 : '"NOT INTERESTED" - If you don’t want to see the domain on your table.',
     p6 : 'Enter your',
     ol1 : 'Anchor Text: where the link will be',
