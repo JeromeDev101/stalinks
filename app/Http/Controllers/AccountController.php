@@ -59,6 +59,7 @@ class AccountController extends Controller
             $input['team_in_charge'] = Auth::user()->id;
         }
 
+        $input['commission'] = 'yes'; // default
         $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;

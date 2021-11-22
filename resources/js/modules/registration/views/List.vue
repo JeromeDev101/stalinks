@@ -697,7 +697,7 @@
 
                         <div class="row">
 
-                            <div class="col-sm-6">
+                            <!-- <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountModel.commission">
@@ -707,7 +707,7 @@
                                     </select>
                                     <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-sm-6" v-if="isTeamSeller">
                                 <div class="form-group">
@@ -1195,7 +1195,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Is show Price Basis <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis">
+                                    <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis" :disabled="!user.isAdmin">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -1220,7 +1220,7 @@
 
                             <div class="col-sm-6">
                                 <label>Credit Authorization</label>
-                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="isDisabled">
+                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="!user.isAdmin">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1250,7 +1250,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Commission <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.commission">
+                                    <select class="form-control" name="" v-model="accountUpdate.commission" :disabled="!user.isAdmin">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
