@@ -1194,26 +1194,28 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Commission <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.commission">
+                                    <label>Is show Price Basis <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
-                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                    <span v-if="messageForms.errors.is_show_price_basis" v-for="err in messageForms.errors.is_show_price_basis" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
-                                <label>Status</label>
+                                <div class="form-group">
+                                    <label>Status</label>
 
-                                <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
+                                    <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
 
-                                <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
-                                    Account validation is 'invalid'. Status will be automatically set to 'inactive'.
-                                </small>
+                                    <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
+                                        Account validation is 'invalid'. Status will be automatically set to 'inactive'.
+                                    </small>
+                                </div>
                             </div>
 
                             <div class="col-sm-6">
@@ -1235,12 +1237,25 @@
                             </div>
 
                             <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
-                                <label>Account Validation <span class="text-danger">*</span></label>
-                                <select class="form-control" name="" v-model="accountUpdate.account_validation">
-                                    <option value="valid">Valid</option>
-                                    <option value="invalid">Invalid</option>
-                                    <option value="processing">Processing</option>
-                                </select>
+                                <div class="form-group">
+                                    <label>Account Validation <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.account_validation">
+                                        <option value="valid">Valid</option>
+                                        <option value="invalid">Invalid</option>
+                                        <option value="processing">Processing</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Commission <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountUpdate.commission">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                </div>
                             </div>
 
                         </div>
@@ -1417,6 +1432,7 @@ export default {
                 company_type : '',
                 writer_price : '',
                 rate_type : '',
+                is_show_price_basis : '',
                 update_method_payment_type: [],
             },
 
@@ -2090,6 +2106,7 @@ export default {
             this.accountUpdate.info = that.info
             this.accountUpdate.id_payment_type = that.id_payment_type
             this.accountUpdate.commission = that.commission
+            this.accountUpdate.is_show_price_basis = that.is_show_price_basis == 0 ? 'no':'yes';
             this.accountUpdate.status = that.status
             this.accountUpdate.credit_auth = that.credit_auth
             this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
