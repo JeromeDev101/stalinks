@@ -14,11 +14,10 @@ class IncomesAdminController extends Controller
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
 
         $list = Backlink::where('status', 'Live')
-                ->with(['publisher' => function($query) {
-                    $query->with(['user' => function($sub) {
-                        $sub->with('UserType');
-                    }]);
+                ->with(['user' => function($sub) {
+                    $sub->with('UserType');
                 }])
+                ->with('publisher')
                 ->withCount(['billing' => function ($query) {
                     return $query->select(DB::raw('SUM(fee) AS fee'));
                 }]);
