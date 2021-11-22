@@ -439,7 +439,7 @@ class AccountController extends Controller
         $input = $request->except('c_password');
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
-        $input['commission'] = 'no';
+        $input['commission'] = $request->type == 'Buyer' ? 'yes':'no';
         $input['credit_auth'] = 'No';
         $input['account_validation'] = 'processing';
         $input['password'] = Hash::make($input['password']);

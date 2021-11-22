@@ -37,31 +37,24 @@
                     <div class="col-sm-12">
                         WITH ARTICLE
                     </div>
-                    <div class="col-sm-12 p-3 text-primary">Commission = No
-                        <hr/>
-                    </div>
+                    <div class="col-sm-12 p-3 text-primary">Commission = No</div>
                     <div class="col-sm-12 text-danger">Formula: (Remain selling price)</div>
+                    <hr/>
 
-                    <div class="col-sm-12 p-3 text-primary">Commission = Yes
-                        <hr/>
-                    </div>
+                    <div class="col-sm-12 p-3 text-primary">Commission = Yes</div>
                     <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price</div>
                 </div>
                 <div class="col-md-6">
                     <div class="col-sm-12">
                         WITHOUT ARTICLE
                     </div>
-                    <div class="col-sm-12 p-3 text-primary">Commission = No
-                        <hr/>
-                    </div>
-                    <div class="col-sm-12 text-danger">Formula: selling price + Additional</div>
 
-                    <div class="col-sm-12 p-3 text-primary">Commission = Yes
-                        <hr/>
-                    </div>
-                    <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price +
-                                                       Additional
-                    </div>
+                    <div class="col-sm-12 p-3 text-primary">Commission = No</div>
+                    <div class="col-sm-12 text-danger">Formula: selling price + Additional</div>
+                    <hr/>
+
+                    <div class="col-sm-12 p-3 text-primary">Commission = Yes</div>
+                    <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price + Additional</div>
                 </div>
             </div>
         </div>
