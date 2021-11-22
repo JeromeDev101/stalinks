@@ -132,6 +132,7 @@
                                 <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
                                 <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
                                 <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
+                                <th>Seller Commision</th>
                                 <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
                                 <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
                                 <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
@@ -147,6 +148,7 @@
                                         incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price)
                                                                               }}
                                 </td>
+                                <td>{{ incomes_admin.publisher.user.user_type == null ? 'N/A':incomes_admin.publisher.user.user_type.commission }}</td>
                                 <td v-show="tblOptIncomesAdmin.price">{{
                                         incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
                                                                       }}

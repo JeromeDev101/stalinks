@@ -57,8 +57,7 @@
                                              class="nav-link"
                                              :class="{ active: $route.name == 'system-it' }">
                                     <i class="fas fa-desktop nav-icon"></i>
-                                    <span>IT</span>
-                                    <span class="pull-right-container"></span>
+                                    <p>IT</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -66,8 +65,38 @@
                                 <router-link :to="{ path: '/system/finance' }" class="nav-link"
                                              :class="{ active: $route.name == 'system-finance' }">
                                     <i class="fas fa-hand-holding-usd nav-icon"></i>
-                                    <span>Finance</span>
+                                    <p>Finance</p>
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item"
+                        v-if="user.isAdmin">
+                        <a href="#" class="nav-link">
+                            <img src="../../../../images/admin-settings.png"/>
+                            <p>
+                                Management
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/system/it' }"
+                                             class="nav-link"
+                                             :class="{ active: $route.name == 'system-it' }">
+                                    <i class="fas fa-user nav-icon"></i>
+                                    <p>Role</p>
                                     <span class="pull-right-container"></span>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/system/finance' }" class="nav-link"
+                                             :class="{ active: $route.name == 'system-finance' }">
+                                    <i class="fas fa-bars nav-icon"></i>
+                                    <p>Module</p>
                                 </router-link>
                             </li>
                         </ul>
