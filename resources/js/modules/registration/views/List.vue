@@ -96,7 +96,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Show Price Basis</label>
+                                    <label>Commission</label>
                                     <select class="form-control" name="" v-model="filterModel.commission">
                                         <option value="">Select Answer</option>
                                         <option value="yes">Yes</option>
@@ -1194,7 +1194,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Show Price Basis <span class="text-danger">*</span></label>
+                                    <label>Commission <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.commission">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
