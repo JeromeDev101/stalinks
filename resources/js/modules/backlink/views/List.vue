@@ -159,7 +159,7 @@
                                     <table class="mb-3 bg-info">
                                         <tr>
                                             <td v-for="stat in statusSummary" :key="stat" class="p-3">
-                                                {{ stat.status }} 
+                                                {{ stat.status }}
                                                 <b>{{' ('+ stat.total +')' }}</b>
                                             </td>
                                         </tr>
@@ -532,7 +532,7 @@
             return {
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
-                statusBaclink: ['Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
+                statusBaclink: ['To Be Validated', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
@@ -688,7 +688,7 @@
                             "status": this.statusBaclink[index],
                             "total": (typeof(_result) != "undefined") ? _result.total:0
                         }
-                        
+
                         this.statusSummary.push(data)
                     }
 

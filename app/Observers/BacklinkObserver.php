@@ -4,9 +4,12 @@ namespace App\Observers;
 
 use App\BacklinkStatus;
 use App\Models\Backlink;
+use App\Repositories\Traits\BuyTrait;
 
 class BacklinkObserver
 {
+    use BuyTrait;
+
     /**
      * Handle the backlink "created" event.
      *
@@ -29,10 +32,18 @@ class BacklinkObserver
      */
     public function updated(Backlink $backlink)
     {
-        BacklinkStatus::create([
-            'backlink_id' => $backlink->id,
-            'status' => $backlink->status
-        ]);
+        $editedFields = $backlink->getDirty();
+
+        if (isset($editedFields['status'])) {
+            BacklinkStatus::create([
+                'backlink_id' => $backlink->id,
+                'status' => $backlink->status
+            ]);
+
+            if ($backlink->getOriginal('status') == 'To Be Validated' && $editedFields['status'] == 'Processing') {
+                $this->updateStatus($backlink->publisher_id, 'Purchased', $backlink->publisher_id);
+            }
+        }
     }
 
     /**

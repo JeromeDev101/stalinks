@@ -548,7 +548,7 @@
                                         class="btn btn-default"><i class="fas fa-dollar-sign"></i></button>
                                     <button
                                         :disabled="scope.row.status_purchased == 'Interested'"
-                                        @click="doLike(scope.row.id)"
+                                        @click="doLike(scope.row)"
                                         title="Interested"
                                         class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
                                     <button
@@ -1790,11 +1790,18 @@ export default {
             }
         },
 
-        async doLike(id) {
+        async doLike(data) {
             $('#tbl_buy_backlink').DataTable().destroy();
 
+            let that = JSON.parse(JSON.stringify(data))
+
+            this.updateModel = that
+            this.updateModel.seller_price = that.price;
+            this.updateModel.price = this.computePrice(that.price, that.inc_article);
+            this.updateModel.prices = this.updateModel.price
+
             this.searchLoading = true;
-            await this.$store.dispatch('actionLike', {id : id})
+            await this.$store.dispatch('actionLike',this.updateModel)
             this.searchLoading = false;
 
             this.getBuyList();

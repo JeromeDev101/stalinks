@@ -365,7 +365,10 @@ class BuyController extends Controller
 
         $this->updateStatus($request->id, 'Purchased', $publisher->id);
 
-        $backlink = Backlink::create([
+        $backlink = Backlink::updateOrCreate([
+            'publisher_id' => $publisher->id,
+            'user_id' => $user->id
+        ],[
             'prices' => $request->prices,
             'price' => $request->seller_price,
             'url_advertiser' => $request->url_advertiser,
@@ -414,15 +417,46 @@ class BuyController extends Controller
     }
 
     public function updateLike(Request $request) {
+        $user = auth()->user();
 
         if( is_array($request->id) ){
             foreach( $request->id as $id ){
                 $publisher = Publisher::find($id);
                 $this->updateStatus($id, 'Interested', $publisher->id);
+
+                Backlink::create([
+                    'prices' => $request->prices,
+                    'price' => $request->seller_price,
+                    'url_advertiser' => $request->url_advertiser,
+                    'anchor_text' => $request->anchor_text,
+                    'link' => $request->link,
+                    'publisher_id' => $publisher->id,
+                    'user_id' => $user->id,
+                    'status' => 'To Be Validated',
+                    'date_process' => date('Y-m-d'),
+                    'ext_domain_id' => 0,
+                    'int_domain_id' => 0,
+                    'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
+                ]);
             }
         }else{
             $publisher = Publisher::find($request->id);
             $this->updateStatus($request->id, 'Interested', $publisher->id);
+
+            Backlink::create([
+                'prices' => $request->prices,
+                'price' => $request->seller_price,
+                'url_advertiser' => $request->url_advertiser,
+                'anchor_text' => $request->anchor_text,
+                'link' => $request->link,
+                'publisher_id' => $publisher->id,
+                'user_id' => $user->id,
+                'status' => 'To Be Validated',
+                'date_process' => date('Y-m-d'),
+                'ext_domain_id' => 0,
+                'int_domain_id' => 0,
+                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
+            ]);
         }
 
         return response()->json(['success'=> true], 200);
