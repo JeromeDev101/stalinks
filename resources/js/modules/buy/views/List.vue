@@ -950,7 +950,7 @@
                                     :checked="tblBuyOptions.status ? 'checked':''"
                                     v-model="tblBuyOptions.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-6" v-show="user.role_id != 5 && user.isOurs != 1">
+                            <div class="checkbox col-md-6" v-show="user.role_id != 5 || user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.code_comb ? 'checked':''"
