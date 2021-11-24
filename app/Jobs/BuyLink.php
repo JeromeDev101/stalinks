@@ -53,7 +53,7 @@ class BuyLink implements ShouldQueue
         ]);
 
         //Create or update buyer_purchased record
-        $this->updateStatus($publisher->id, 'Purchased', $publisher->id, $this->userId);
+        $this->updateStatus('Purchased', $publisher->id, $this->userId);
 
         //Create backlinks record
         $backlink = Backlink::create([

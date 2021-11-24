@@ -653,6 +653,94 @@
         </div>
         <!-- End of Modal Buy -->
 
+        <!-- Modal Interested -->
+        <div class="modal fade"
+             id="modal-interested-update"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="modelTitleId"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Interested Backlink</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+
+                        <span v-if="messageForms.message != '' && !isPopupLoading"
+                              :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            {{ messageForms.message }}
+                        </span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">URL</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           v-model="updateModel.url"
+                                           name=""
+                                           aria-describedby="helpId"
+                                           placeholder=""
+                                           disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Prices</label>
+                                    <input type="number"
+                                           class="form-control"
+                                           v-model="updateModel.price"
+                                           name=""
+                                           aria-describedby="helpId"
+                                           placeholder=""
+                                           disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Anchor Text</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           v-model="updateModel.anchor_text"
+                                           name=""
+                                           aria-describedby="helpId"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Link To</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           v-model="updateModel.link"
+                                           name=""
+                                           aria-describedby="helpId"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">URL Advertiser</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           v-model="updateModel.url_advertiser"
+                                           name=""
+                                           aria-describedby="helpId"
+                                           placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" @click="submitInterest" class="btn btn-primary">Interested</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Interested -->
+
         <!-- Modal Buy Selected -->
         <div class="modal fade"
              id="modal-buy-selected"
@@ -1791,8 +1879,6 @@ export default {
         },
 
         async doLike(data) {
-            $('#tbl_buy_backlink').DataTable().destroy();
-
             let that = JSON.parse(JSON.stringify(data))
 
             this.updateModel = that
@@ -1800,11 +1886,9 @@ export default {
             this.updateModel.price = this.computePrice(that.price, that.inc_article);
             this.updateModel.prices = this.updateModel.price
 
-            this.searchLoading = true;
-            await this.$store.dispatch('actionLike',this.updateModel)
-            this.searchLoading = false;
-
-            this.getBuyList();
+            $('#modal-interested-update').modal({
+                show : true
+            });
         },
 
         computePriceStalinks(price, article) {
@@ -1933,6 +2017,19 @@ export default {
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateBuy', this.updateModel);
+            this.isPopupLoading = false;
+
+            if (this.messageForms.action === 'updated') {
+                this.getBuyList();
+                this.$root.$refs.AppHeader.liveGetWallet()
+            }
+        },
+
+        async submitInterest(params) {
+            $('#tbl_buy_backlink').DataTable().destroy();
+
+            this.isPopupLoading = true;
+            await this.$store.dispatch('actionLike', this.updateModel);
             this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated') {

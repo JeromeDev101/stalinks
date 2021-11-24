@@ -481,6 +481,13 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated' && modelBaclink.user_id === user.id">
+                                <div class="row">
+                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">Un-Interested</button>
+                                    <button class="btn btn-success col" @click.prevent="buy">Buy</button>
+                                </div>
+                            </div>
+
 
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -598,6 +605,8 @@
                 listSeller: state => state.storeAccount.listAccount,
                 listBuyer: state => state.storeFollowupSales.listBuyer,
                 listBuyerBought: state => state.storeBackLink.listBuyerBought,
+                listBuy : state => state.storeBuy.listBuy,
+                messageForms : state => state.storeBuy.messageForms,
                 formula: state => state.storeSystem.formula,
             }),
 
@@ -938,7 +947,51 @@
 
             convertPrice(price) {
                 return parseFloat(price).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-            }
+            },
+
+            async buy() {
+                this.modelBaclink.credit_left = parseInt(this.listBuy.credit);
+
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdateBuy', this.modelBaclink);
+                this.isPopupLoading = false;
+
+                if (this.messageForms.action === 'updated') {
+                    swal.fire(
+                        'Bought Successfully!',
+                        'Backlink bought successfully.',
+                        'success'
+                    );
+
+                    $(this.$refs.modalEditBacklink).hide()
+
+                    this.getBackLinkList();
+                    this.$root.$refs.AppHeader.liveGetWallet()
+                }
+            },
+
+            uninterest() {
+                axios.post('/api/buy-uninterested', {
+                    backlink_id : this.modelBaclink.id,
+                    publisher_id : this.modelBaclink.publisher_id
+                }).then((response) => {
+                    swal.fire(
+                        'Success!',
+                        'Successfully removed interest on backlink.',
+                        'success'
+                    )
+
+                    $(this.$refs.modalEditBacklink).hide()
+
+                    this.getBackLinkList();
+                }).catch((error) => {
+                    swal.fire(
+                        'Error!',
+                        'There was an error with your request.',
+                        'error'
+                    )
+                });
+            },
         },
 
         components: {

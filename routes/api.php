@@ -79,6 +79,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-buy')->put('buy','BuyController@update');
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');
+    Route::name('update-uninterested')->post('buy-uninterested', 'BuyController@UpdateUninterested');
 
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');

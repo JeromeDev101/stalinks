@@ -41,7 +41,7 @@ class BacklinkObserver
             ]);
 
             if ($backlink->getOriginal('status') == 'To Be Validated' && $editedFields['status'] == 'Processing') {
-                $this->updateStatus($backlink->publisher_id, 'Purchased', $backlink->publisher_id);
+                $this->updateStatus('Purchased', $backlink->publisher_id);
             }
         }
     }

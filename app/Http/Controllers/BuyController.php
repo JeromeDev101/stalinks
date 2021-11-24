@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\BuyEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Models\BuyerPurchased;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
@@ -351,7 +352,7 @@ class BuyController extends Controller
      * @return response
      */
     public function update(Request $request, NotificationInterface $notification) {
-        $publisher = Publisher::find($request->id);
+        $publisher = Publisher::find($request->publisher_id);
         $user = Auth::user();
 
         if ($user->credit_auth != 'Yes' && $request->credit_left < $request->seller_price) {
@@ -363,7 +364,7 @@ class BuyController extends Controller
             ], 422);
         }
 
-        $this->updateStatus($request->id, 'Purchased', $publisher->id);
+        $this->updateStatus('Purchased', $publisher->id);
 
         $backlink = Backlink::updateOrCreate([
             'publisher_id' => $publisher->id,
@@ -406,11 +407,11 @@ class BuyController extends Controller
         if( is_array($request->id) ){
             foreach( $request->id as $id ){
                 $publisher = Publisher::find($id);
-                $this->updateStatus($id, 'Not interested', $publisher->id);
+                $this->updateStatus('Not interested', $publisher->id);
             }
         }else{
             $publisher = Publisher::find($request->id);
-            $this->updateStatus($request->id, 'Not interested', $publisher->id);
+            $this->updateStatus('Not interested', $publisher->id);
         }
 
         return response()->json(['success'=> true], 200);
@@ -422,7 +423,7 @@ class BuyController extends Controller
         if( is_array($request->id) ){
             foreach( $request->id as $id ){
                 $publisher = Publisher::find($id);
-                $this->updateStatus($id, 'Interested', $publisher->id);
+                $this->updateStatus('Interested', $publisher->id);
 
                 Backlink::create([
                     'prices' => $request->prices,
@@ -441,7 +442,7 @@ class BuyController extends Controller
             }
         }else{
             $publisher = Publisher::find($request->id);
-            $this->updateStatus($request->id, 'Interested', $publisher->id);
+            $this->updateStatus('Interested', $publisher->id);
 
             Backlink::create([
                 'prices' => $request->prices,
@@ -460,6 +461,21 @@ class BuyController extends Controller
         }
 
         return response()->json(['success'=> true], 200);
+    }
+
+    public function UpdateUninterested(Request $request)
+    {
+        $backlink = Backlink::find($request->backlink_id);
+
+        $buyerPurchasedIds = BuyerPurchased::where([
+            'user_id_buyer' => $backlink->user_id,
+            'publisher_id' => $request->publisher_id
+        ])->get()->pluck('id');
+
+        Backlink::destroy($backlink->id);
+        BuyerPurchased::destroy($buyerPurchasedIds);
+
+        return 'OK';
     }
 
     public function checkCreditAuth() {
