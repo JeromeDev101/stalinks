@@ -211,7 +211,7 @@
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Link To</th>
                                 <th v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">Price</th>
                                 <th v-show="tblFollowupBacklinksOpt.prices">Prices</th>
-                                <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin">Code Comb</th>
+                                <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin || user.isOurs != 1">Code Comb</th>
                                 <th v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">Code Price</th>
                                 <th v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">Price Basis</th>
                                 <th v-if="(user.isOurs == 1 && !user.isAdmin)">Anchor Text</th>
@@ -264,7 +264,7 @@
                                 </td>
                                 <td v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.prices">{{ backLink.prices == null || backLink.prices == '' ? 0:'$ ' + formatPrice(backLink.prices) }}</td>
-                                <td v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':backLink.publisher.code_comb }}</td>
+                                <td v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin || user.isOurs != 1">{{ backLink.publisher == null ? 'N/A':backLink.publisher.code_comb }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':'$ '+backLink.publisher.code_price }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin">{{ backLink.publisher == null ? 'N/A':backLink.publisher.price_basis }}</td>
                                 <td v-if="(user.isOurs == 1 && !user.isAdmin)">{{ backLink.anchor_text }}</td>
@@ -321,7 +321,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.prices ? 'checked':''" v-model="tblFollowupBacklinksOpt.prices">Prices</label>
                             </div>
-                            <div v-if="user.isAdmin" class="checkbox col-md-4">
+                            <div v-if="user.isAdmin || user.isOurs != 1" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_comb ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_comb">Code combination</label>
                             </div>
                             <div v-if="user.isAdmin" class="checkbox col-md-4">
