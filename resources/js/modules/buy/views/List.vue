@@ -118,27 +118,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2"
-                                 v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">
-                                <div class="form-group">
-                                    <label for="">Code</label>
-                                    <!-- <select name="" class="form-control" v-model="filterModel.code">
-                                        <option value="">All</option>
-                                        <option v-for="option in listCode" v-bind:value="option">
-                                            {{ option }}
-                                        </option>
-                                    </select> -->
-
-                                    <v-select
-                                        v-model="filterModel.code"
-                                        multiple
-                                        placeholder="All"
-                                        :options="listCode"
-                                        :searchable="false"
-                                    />
-                                </div>
-                            </div>
-
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Accept Casino & Betting Sites</label>
@@ -178,23 +157,6 @@
                                         :options="listDomainZones.data"
                                         :searchable="true"
                                         :reduce="domain => domain.name"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Price Basis</label>
-                                    <v-select multiple
-                                              v-model="filterModel.price_basis"
-                                              :options="['Good', 'Average', 'High']"
-                                              :searchable="false"
-                                              placeholder="All"/>
-                                    <!--                                <select name="" class="form-control" v-model="filterModel.price_basis">-->
-                                    <!--                                    <option value="">All</option>-->
-                                    <!--                                    <option value="Good">Good</option>-->
-                                    <!--                                    <option value="Average">Average</option>-->
-                                    <!--                                    <option value="High">High</option>-->
-                                    <!--                                </select>-->
                                 </div>
                             </div>
 
@@ -319,6 +281,48 @@
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.price">
                                     </div>
+                                </div>
+                            </div>
+
+<!--                            <div-->
+<!--                                class="col-md-2"-->
+<!--                                v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">-->
+
+                            <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
+
+                                <div class="form-group">
+                                    <label>Code</label>
+                                    <!-- <select name="" class="form-control" v-model="filterModel.code">
+                                        <option value="">All</option>
+                                        <option v-for="option in listCode" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select> -->
+
+                                    <v-select
+                                        v-model="filterModel.code"
+                                        multiple
+                                        placeholder="All"
+                                        :options="listCode"
+                                        :searchable="false"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
+                                <div class="form-group">
+                                    <label>Price Basis</label>
+                                    <v-select multiple
+                                              v-model="filterModel.price_basis"
+                                              :options="['Good', 'Average', 'High']"
+                                              :searchable="false"
+                                              placeholder="All"/>
+                                    <!--                                <select name="" class="form-control" v-model="filterModel.price_basis">-->
+                                    <!--                                    <option value="">All</option>-->
+                                    <!--                                    <option value="Good">Good</option>-->
+                                    <!--                                    <option value="Average">Average</option>-->
+                                    <!--                                    <option value="High">High</option>-->
+                                    <!--                                </select>-->
                                 </div>
                             </div>
 
@@ -950,7 +954,7 @@
                                     :checked="tblBuyOptions.status ? 'checked':''"
                                     v-model="tblBuyOptions.status">Status</label>
                             </div>
-                            <div class="checkbox col-md-6" v-show="user.role_id != 5 || user.isOurs != 1">
+                            <div class="checkbox col-md-6" v-show="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.code_comb ? 'checked':''"
@@ -965,9 +969,9 @@
                             </div>
                             <div
                                 class="checkbox col-md-6"
-                                v-if="isExtBuyerWithCommission">
+                                v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <label><input type="checkbox"
-                                              :checked="tblBuyOptions.code_price ? 'checked':''"
+                                              :checked="tblBuyOptions.price_basis ? 'checked':''"
                                               v-model="tblBuyOptions.price_basis">Price Basis</label>
                             </div>
                         </div>
@@ -1014,12 +1018,14 @@
 import {mapState} from 'vuex';
 import VueVirtualTable from 'vue-virtual-table';
 import Sort from '@/components/sort/Sort';
+import {buyerAccess} from "../../../mixins/buyerAccess";
 
 export default {
     components : {
         VueVirtualTable,
         Sort,
     },
+    mixins: [buyerAccess],
     data() {
         return {
             paginate : [
@@ -1350,7 +1356,7 @@ export default {
                         name: 'Code Comb',
                         sort: '',
                         column: 'code_comb',
-                        hidden: !this.tblBuyOptions.code_comb
+                        hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_comb
                     },
                     {
                         name: 'Code Price',
@@ -1362,7 +1368,7 @@ export default {
                         name: 'Price Basis',
                         sort: '',
                         column: 'price_basis',
-                        hidden: !this.tblBuyOptions.price_basis
+                        hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.price_basis
                     },
                 ]
             },
@@ -1518,7 +1524,7 @@ export default {
                     name : 'Code Comb',
                     // sortable : true,
                     width : 125,
-                    isHidden : !this.tblBuyOptions.code_comb
+                    isHidden : !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_comb
                 },
                 {
                     prop : 'code_price',
@@ -1534,7 +1540,7 @@ export default {
                     // sortable : true,
                     width : 120,
                     isHidden :
-                        !this.isExtBuyerWithCommission || !this.tblBuyOptions.price_basis
+                        !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.price_basis
                 },
                 {
                     prop : '_action',

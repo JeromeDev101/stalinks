@@ -37,6 +37,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         $input = collect($data)->except('company_type', 'user')->toArray();
 
         $input['is_freelance'] = $data['company_type'] == 'Freelancer' ? 1:0;
+        $input['is_show_price_basis'] = $data['is_show_price_basis'] == 'yes' ? 1:0;
 
         unset($input['c_password']);
 

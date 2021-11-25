@@ -46,7 +46,8 @@ class Registration extends Model
         'reminded_days',
         'writer_price',
         'rate_type',
-        'email_via'
+        'email_via',
+        'is_show_price_basis'
     ];
 
     public function team_in_charge() {
