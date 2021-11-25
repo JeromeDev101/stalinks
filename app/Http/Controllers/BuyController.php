@@ -352,7 +352,7 @@ class BuyController extends Controller
      * @return response
      */
     public function update(Request $request, NotificationInterface $notification) {
-        $publisher = Publisher::find($request->publisher_id);
+        $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
         $user = Auth::user();
 
         if ($user->credit_auth != 'Yes' && $request->credit_left < $request->seller_price) {
