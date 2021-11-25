@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\BuyEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Events\BacklinkStatusChangedEvent;
 use App\Models\BuyerPurchased;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
 use App\Repositories\Contracts\NotificationInterface;
@@ -377,7 +378,7 @@ class BuyController extends Controller
             'link' => $request->link,
             'publisher_id' => $publisher->id,
             'user_id' => $user->id,
-            'status' => 'Processing',
+            'status' => 'Pending', // default status when buys a URL
             'date_process' => date('Y-m-d'),
             'ext_domain_id' => 0,
             'int_domain_id' => 0,
@@ -386,6 +387,7 @@ class BuyController extends Controller
 
         event(new BuyEvent($backlink, $user));
         event(new SellerReceivesOrderEvent($backlink, $publisher->user));
+        event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
 
         if( isset($backlink->publisher->inc_article) &&  strtolower($backlink->publisher->inc_article) == "no"){
             Article::create([
