@@ -719,16 +719,21 @@ class AccountController extends Controller
     public function updateSubAccount(Request $request) {
         // dd($request->all());
         $input = $request->only('username', 'name', 'status', 'credit_auth');
+        $inputRegistration = $request->only('username', 'name', 'status', 'credit_auth');
+
+        $inputRegistration['is_show_price_basis'] = $request->is_show_price_basis == 'yes' ? 1:0;
+
         if ($request->password != '') {
             $request->validate([
                 'c_password' => 'required|same:password'
             ]);
 
             $input['password'] = Hash::make($request->password);
+            $inputRegistration['password'] = Hash::make($request->password);
         }
 
         $registration = Registration::findOrFail($request->id);
-        $registration->update($input);
+        $registration->update($inputRegistration);
 
         $user = User::where('email', $registration->email)->first();
         $user->update($input);

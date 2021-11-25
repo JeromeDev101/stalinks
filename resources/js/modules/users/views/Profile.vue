@@ -335,6 +335,7 @@
                                 <th >Username</th>
                                 <th>Email</th>
                                 <th>Credit Authorization</th>
+                                <th>Show Price Basis</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -344,6 +345,7 @@
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.email }}</td>
                                 <td>{{ account.credit_auth }}</td>
+                                <td>{{ account.is_show_price_basis === 1 ? 'Yes' : 'No' }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <button class="btn btn-default" title="Edit" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
@@ -370,6 +372,25 @@
                         </button>
                     </div>
                     <div class="modal-body">
+
+                        <div v-if="!isShowPriceBasis(currentUser)" class="row">
+                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                <strong>
+                                    <i class="fa fa-info-circle"></i>
+                                    Note
+                                </strong>
+
+                                <span>
+                                    Your account is currently not able to view price basis. You cannot update the 'is show price basis' field of your sub buyer account.
+                                    Please contact an administrator or person in charge.
+                                </span>
+
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -420,6 +441,19 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Is Show Price Basis</label>
+                                    <select
+                                        v-model="updateModelSubAccount.is_show_price_basis"
+                                        class="form-control"
+                                        :disabled="!isShowPriceBasis(currentUser)">
+
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -454,9 +488,11 @@ import { mapState } from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
+import {buyerAccess} from "../../../mixins/buyerAccess";
 
 export default {
     name: 'Profile',
+    mixins: [buyerAccess],
     components: {TermsAndConditions},
     data() {
         return {
@@ -519,7 +555,8 @@ export default {
                 status: '',
                 password: '',
                 c_password: '',
-                credit_auth : ''
+                credit_auth : '',
+                is_show_price_basis: ''
             },
             messageErrors:{
                 c_password: '',
@@ -631,7 +668,8 @@ export default {
                     status: this.updateModelSubAccount.status,
                     password: this.updateModelSubAccount.password,
                     c_password: this.updateModelSubAccount.c_password,
-                    credit_auth: this.updateModelSubAccount.credit_auth
+                    credit_auth: this.updateModelSubAccount.credit_auth,
+                    is_show_price_basis: this.updateModelSubAccount.is_show_price_basis
                 }
             })
             .then((res) => {
@@ -692,6 +730,7 @@ export default {
             this.updateModelSubAccount.status = account.status;
             this.updateModelSubAccount.email = account.email;
             this.updateModelSubAccount.credit_auth = account.credit_auth;
+            this.updateModelSubAccount.is_show_price_basis = account.is_show_price_basis === 1 ? 'yes' : 'no'
         },
 
         getListSubAccount() {
