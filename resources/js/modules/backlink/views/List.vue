@@ -547,7 +547,7 @@
                     'URL Advertiser': 'url_advertiser',
                     'Link From': 'link_from',
                     'Link To': 'link',
-                    'Price': 'price',
+                    'Price': 'prices',
                     'Anchor Text': 'anchor_text',
                     'Date Completed': 'live_date',
                     'Status': 'status'
