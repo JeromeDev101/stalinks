@@ -144,19 +144,15 @@
 
         <div class="row">
             <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">Follow up Backlinks</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
 
-                        <table width="100%">
+                <div class="card card-outline card-secondary">
+
+                    <div class="card-header py-2">
+
+                        <table width="100%" style="font-size: 0.85rem">
                             <tr>
                                 <td>
-                                    <table class="mb-3 bg-info">
+                                    <table class="bg-info">
                                         <tr>
                                             <td v-for="stat in statusSummary" :key="stat" class="p-3">
                                                 {{ stat.status }}
@@ -165,40 +161,64 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td>
-                                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                                        <select class="form-control float-right"
-                                                @change="getBackLinkList"
-                                                v-model="fillter.paginate"
-                                                style="height: 37px;">
-                                            <option v-for="option in paginate" v-bind:value="option">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div v-if="Object.keys(listBackLink).length !== 0" class="float-right">
-                                        <download-csv
-                                            :data="listBackLink.data"
-                                            :fileds="data_filed"
-                                            :nameFile="file_csv">
-                                        </download-csv>
-                                    </div>
-
-                                    <button data-toggle="modal"
-                                            data-target="#modal-setting-followup-backlinks"
-                                            class="btn btn-default float-right mr-3"><i class="fa fa-cog"></i></button>
-                                </td>
                             </tr>
                         </table>
 
-                        <span v-if="listBackLink.total > 15" class="pagination-custom-footer-text">
-                            <b>Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{
-                                    listBackLink.total
-                               }} entries.</b>
+                    </div>
+
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Follow up Backlinks</h3>
+                        <div class="card-tools"></div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="input-group input-group-sm float-right" style="width: 100px">
+                                    <select class="form-control float-right"
+                                            @change="getBackLinkList"
+                                            v-model="fillter.paginate"
+                                            style="height: 37px;">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div v-if="Object.keys(listBackLink).length !== 0" class="float-right mr-3">
+                                    <download-csv
+                                        :data="listBackLink.data"
+                                        :fileds="data_filed"
+                                        :nameFile="file_csv">
+                                    </download-csv>
+                                </div>
+
+                                <button
+                                    data-toggle="modal"
+                                    data-target="#modal-setting-followup-backlinks"
+                                    class="btn btn-default float-right mr-3">
+
+                                    <i class="fa fa-cog"></i>
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
+
+                        <span class="pagination-custom-footer-text">
+                            <b v-if="fillter.paginate !== 'All'">
+                                Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.
+                            </b>
+
+                            <b v-else>
+                                Showing all {{ listBackLink.total }} entries.
+                            </b>
                         </span>
 
-                        <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table">
+                        <table id="tbl_backlink" class="table table-hover table-bordered table-striped rlink-table" style="font-size: 0.75rem">
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
@@ -777,9 +797,11 @@
                 }
 
                 $("#tbl_backlink").DataTable({
+                    autoWidth: false,
                     paging: false,
                     searching: false,
-                    columnDefs: columnDefs
+                    columnDefs: columnDefs,
+                    scrollX: '100%'
                 });
 
                 this.getTotalAmount()
