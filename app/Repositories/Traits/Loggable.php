@@ -21,6 +21,8 @@ trait Loggable
             static::$eventName(function (Model $model) use ($eventName) {
                 try {
                     $page = null;
+                    $payload = $model->getDirty();
+                    $payload->id = $model->getOriginal('id');
 
                     if (Request()->server()) {
                         $path = Request()->server()['HTTP_REFERER'];
@@ -32,7 +34,7 @@ trait Loggable
                         'table' => 'App\\Models\\' . class_basename($model),
                         'action' => static::getActionName($eventName),
                         'user_id' => auth()->check() ? auth()->user()->id : 49,
-                        'payload' => json_encode($model->getDirty()),
+                        'payload' => json_encode($payload),
                         'page' => $page
                     ]);
                 } catch (\Exception $e) {
