@@ -47,7 +47,8 @@ class Registration extends Model
         'writer_price',
         'rate_type',
         'email_via',
-        'is_show_price_basis'
+        'is_show_price_basis',
+        'can_validate_backlink'
     ];
 
     public function team_in_charge() {

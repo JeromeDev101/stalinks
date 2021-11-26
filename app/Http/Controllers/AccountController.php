@@ -719,7 +719,7 @@ class AccountController extends Controller
     public function updateSubAccount(Request $request) {
         // dd($request->all());
         $input = $request->only('username', 'name', 'status', 'credit_auth');
-        $inputRegistration = $request->only('username', 'name', 'status', 'credit_auth');
+        $inputRegistration = $request->only('username', 'name', 'status', 'credit_auth', 'can_validate_backlink');
 
         $inputRegistration['is_show_price_basis'] = $request->is_show_price_basis == 'yes' ? 1:0;
 

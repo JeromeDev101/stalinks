@@ -336,6 +336,7 @@
                                 <th>Email</th>
                                 <th>Credit Authorization</th>
                                 <th>Show Price Basis</th>
+                                <th>Can Validate Backlink</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -346,6 +347,7 @@
                                 <td>{{ account.email }}</td>
                                 <td>{{ account.credit_auth }}</td>
                                 <td>{{ account.is_show_price_basis === 1 ? 'Yes' : 'No' }}</td>
+                                <td>{{ account.can_validate_backlink === 1 ? 'Yes' : 'No' }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
                                     <button class="btn btn-default" title="Edit" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
@@ -454,6 +456,18 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Can validate Backlinks</label>
+                                    <select
+                                        v-model="updateModelSubAccount.can_validate_backlink"
+                                        class="form-control">
+
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -556,7 +570,8 @@ export default {
                 password: '',
                 c_password: '',
                 credit_auth : '',
-                is_show_price_basis: ''
+                is_show_price_basis: '',
+                can_validate_backlink: 0
             },
             messageErrors:{
                 c_password: '',
@@ -669,7 +684,8 @@ export default {
                     password: this.updateModelSubAccount.password,
                     c_password: this.updateModelSubAccount.c_password,
                     credit_auth: this.updateModelSubAccount.credit_auth,
-                    is_show_price_basis: this.updateModelSubAccount.is_show_price_basis
+                    is_show_price_basis: this.updateModelSubAccount.is_show_price_basis,
+                    can_validate_backlink: this.updateModelSubAccount.can_validate_backlink
                 }
             })
             .then((res) => {
