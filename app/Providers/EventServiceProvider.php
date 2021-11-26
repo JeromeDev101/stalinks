@@ -31,7 +31,11 @@ use App\Listeners\SellerReceivesOrderListener;
 use App\Listeners\UserValidateListener;
 use App\Listeners\WriterPaidListener;
 use App\Models\Backlink;
+use App\Models\Registration;
+use App\Models\User;
 use App\Observers\BacklinkObserver;
+use App\Observers\RegistrationObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -127,5 +131,6 @@ class EventServiceProvider extends ServiceProvider
         parent::boot();
 
         Backlink::observe(BacklinkObserver::class);
+        Registration::observe(RegistrationObserver::class);
     }
 }
