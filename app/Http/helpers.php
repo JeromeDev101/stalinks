@@ -41,6 +41,13 @@ if (!function_exists('move_file_to_storage')) {
     }
 }
 
+if (!function_exists('in_array_custom')) {
+    function in_array_custom($needle, $haystack)
+    {
+        return in_array(strtolower($needle), array_map('strtolower', $haystack));
+    }
+}
+
 if (!function_exists('remove_http')) {
 
     /**

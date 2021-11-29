@@ -50,7 +50,7 @@ class GenerateBestPrice implements ShouldQueue
             $publisher = Publisher::with('user.registration')->where('url', 'like', '%' . $url . '%')->get();
 
             //If duplicates has both Yes and No in inc_article field
-            if (in_array('yes', $publisher->pluck('inc_article')->toArray()) && in_array('no', $publisher->pluck('inc_article')->toArray())) {
+            if (in_array_custom('yes', $publisher->pluck('inc_article')->toArray()) && in_array_custom('no', $publisher->pluck('inc_article')->toArray())) {
                 //Add 15 to price if inc_article is NO
                 $publisher->map(function ($item, $key) use ($publisher) {
                     if ($item->inc_article == 'no') {
@@ -66,7 +66,7 @@ class GenerateBestPrice implements ShouldQueue
                     //If 2 or more URLs has best price
                     if ($publisher->where('price', $bestPrice->price)->count() > 1) {
                         //If 1 of best price's inc_article is YES, set that as Best Price
-                        if (in_array('Yes', $publisher->where('price', $bestPrice->price)->pluck('inc_article')->toArray())) {
+                        if (in_array_custom('yes', $publisher->where('price', $bestPrice->price)->pluck('inc_article')->toArray())) {
                             $bestPrice = $publisher->where('price', $bestPrice->price)->where('user.registration.account_validation', '!=', 'invalid')->where('inc_article', 'Yes')->sortBy('created_at')->first();
                         } else {
                             $bestPrice = $publisher->where('price', $bestPrice->price)->where('user.registration.account_validation', '!=', 'invalid')->sortBy('created_at')->first();
