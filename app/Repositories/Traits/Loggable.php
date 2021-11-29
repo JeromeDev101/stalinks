@@ -21,10 +21,12 @@ trait Loggable
             static::$eventName(function (Model $model) use ($eventName) {
                 try {
                     $page = null;
-                    $payload = $model->getDirty();
-                    $payload->id = $model->getOriginal('id');
+                    $payload = collect([
+                        'payload' => $model->getDirty(),
+                        'id' => $model->getOriginal('id')
+                    ]);
 
-                    if (Request()->server()) {
+                    if (Request()->server() && isset(Request()->server()['HTTP_REFERER'])) {
                         $path = Request()->server()['HTTP_REFERER'];
 
                         $page = $path ? (new self)->cleanUrlPath($path) : null;
