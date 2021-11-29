@@ -47,7 +47,6 @@ class PaymentController extends Controller
 
     public function edit(Request $request)
     {
-        dd($request->all());
         $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
         $input['receive_payment'] = $request->receive_payment;

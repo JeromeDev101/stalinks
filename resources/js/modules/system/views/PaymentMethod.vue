@@ -103,7 +103,6 @@
                              class="form-group">
                             <label for="">Receive Payment</label>
                             <select name="" id="" class="form-control" v-model="paymentUpdate.receive_payment">
-                                <option value=""></option>
                                 <option value="yes">Yes</option>
                                 <option value="no">No</option>
                             </select>
@@ -116,7 +115,6 @@
                              class="form-group">
                             <label for="">Send Payment</label>
                             <select name="" id="" class="form-control" v-model="paymentUpdate.send_payment">
-                                <option value=""></option>
                                 <option value="yes">Yes</option>
                                 <option value="no">No</option>
                             </select>
