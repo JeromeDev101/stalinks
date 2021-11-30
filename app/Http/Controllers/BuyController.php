@@ -367,13 +367,24 @@ class BuyController extends Controller
 
         $this->updateStatus('Purchased', $publisher->id);
 
+        $url_advertiser = $request->url_advertiser;
+
+        // remove http
+        $url = remove_http($url_advertiser);
+
+        // remove space
+        $url = trim($url_advertiser, " ");
+
+        // remove /
+        $url = rtrim($url_advertiser,"/");
+
         $backlink = Backlink::updateOrCreate([
             'publisher_id' => $publisher->id,
             'user_id' => $user->id
         ],[
             'prices' => $request->prices,
             'price' => $request->seller_price,
-            'url_advertiser' => $request->url_advertiser,
+            'url_advertiser' => $url_advertiser,
             'anchor_text' => $request->anchor_text,
             'link' => $request->link,
             'publisher_id' => $publisher->id,
