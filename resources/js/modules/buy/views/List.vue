@@ -544,7 +544,7 @@
                                         v-if="scope.row.price
                                  != '' && scope.row.price
                                   != null"
-                                        :disabled="isCreditAuth"
+                                        :disabled="isCreditAuth || scope.row.status_purchased == 'Purchased'"
                                         title="Buy"
                                         data-target="#modal-buy-update"
                                         @click="doUpdate(scope.row)"
