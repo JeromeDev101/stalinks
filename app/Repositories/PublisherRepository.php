@@ -112,26 +112,22 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
-            $validFilter = isset($filter['valid']) ? 'AND valid IN (' . implode(',', implode_array_to_strings($filter['valid'])) . ')' : '';
-
-            $list = $list->join(DB::raw('(
-                    SELECT url
-                    FROM publisher
-                    WHERE deleted_at IS NULL
-                    ' . $validFilter . '
-                    GROUP BY url
-                    HAVING COUNT(*) > 1
-                    )temp'), 'publisher.url', 'temp.url')
-                ->orderBy('url', 'asc');
-        } else if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'no') {
-            $validFilter = isset($filter['valid']) ? 'AND valid IN (' . implode(',', implode_array_to_strings($filter['valid'])) . ')' : '';
 
             $list = $list->join(DB::raw('(
                     SELECT url, valid
                     FROM publisher
                     WHERE deleted_at IS NULL
                     GROUP BY url
-                    HAVING COUNT(*) < 2 ' . $validFilter . '
+                    HAVING COUNT(*) > 1
+                    )temp'), 'publisher.url', 'temp.url')
+                ->orderBy('url', 'asc');
+        } else if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'no') {
+            $list = $list->join(DB::raw('(
+                    SELECT url, valid
+                    FROM publisher
+                    WHERE deleted_at IS NULL
+                    GROUP BY url
+                    HAVING COUNT(*) < 2
                     )temp'), 'publisher.url', 'temp.url')
                 ->orderBy('url', 'asc');
         } else {
