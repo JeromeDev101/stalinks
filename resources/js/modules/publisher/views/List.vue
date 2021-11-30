@@ -1198,6 +1198,12 @@
                                     @click="toggleColumn(25,
                                 tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
                             </div>
+                            <div class="checkbox col-md-6" v-if="user.isOurs == 0">
+                                <label><input
+                                    type="checkbox"
+                                    @click="toggleColumn(26,
+                                tblPublisherOpt.code_price)" :checked="tblPublisherOpt.code_price ? 'checked':''" v-model="tblPublisherOpt.code_price">Code Price</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -2144,6 +2150,13 @@ export default {
                         actionName : 'orgTrafficData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.org_traffic
+                    },
+                    {
+                        prop : 'code_price',
+                        name : 'Code Price',
+                        prefix: '$ ',
+                        width: 100,
+                        isHidden: !this.tblPublisherOpt.code_price || this.user.isOurs != 0
                     },
                     {
                         prop : '_action',

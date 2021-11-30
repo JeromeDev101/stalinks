@@ -50,6 +50,7 @@ const state = {
         org_keywords: true,
         org_traffic: true,
         qc_validation: true,
+        code_price: true,
     },
     bestPriceGeneratorOn: false,
     bestPriceLogs: {}
