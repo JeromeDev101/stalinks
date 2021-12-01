@@ -241,7 +241,14 @@ class AccountController extends Controller
                 });
             });
         })
-        ->with('team_in_charge:id,name,username,status')
+        ->with([
+            'team_in_charge:id,name,username,status',
+            'team_in_charge' => function ($query) {
+                $query->with(['registration' => function ($query2) {
+                    $query2->with('team_in_charge');
+                }]);
+            }
+        ])
         ->with(['user' => function($query) {
             $query->with(['userPaymentTypes' => function($sub) {
                 $sub->with('paymentType');
@@ -284,7 +291,6 @@ class AccountController extends Controller
             $request->validate([
                 'writer_price' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
-                'id_payment_type' => 'required'
             ]);
 
         }

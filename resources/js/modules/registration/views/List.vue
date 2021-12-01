@@ -411,7 +411,7 @@
                                         account.team_in_charge == null
                                             ? 'N/A'
                                             : account.is_sub_account == 1
-                                                ? 'Sub'
+                                                ? account.team_in_charge.registration.team_in_charge.username
                                                 : account.team_in_charge.username
                                     }}
 
@@ -1141,8 +1141,8 @@
                         </div>
 
 
-                        <hr/>
-                        <h4 class="text-primary">Payment Information</h4>
+                        <hr v-if="accountUpdate.is_sub_account === 0"/>
+                        <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">Payment Information</h4>
                         <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
                         <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
 
@@ -1167,7 +1167,7 @@
                         <!-- end of payment for seller and writer -->
 
                         <!-- payment for buyer -->
-                        <table class="table" v-if="accountUpdate.type === 'Buyer'">
+                        <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
                             <tr>
                                 <td></td>
                                 <td>Default</td>
@@ -1434,6 +1434,7 @@ export default {
                 rate_type : '',
                 is_show_price_basis : '',
                 update_method_payment_type: [],
+                is_sub_account: ''
             },
 
             isPopupLoading : false,
@@ -2030,7 +2031,7 @@ export default {
         async saveUpdate() {
             let id_payment_type = this.accountUpdate.id_payment_type;
 
-            if(!this.accountUpdate.update_method_payment_type[id_payment_type]) {
+            if(this.accountUpdate.is_sub_account === 0 && !this.accountUpdate.update_method_payment_type[id_payment_type]) {
                 this.validate_error_type_update = true;
                 return false;
             }
@@ -2107,6 +2108,7 @@ export default {
             this.accountUpdate.id_payment_type = that.id_payment_type
             this.accountUpdate.commission = that.commission
             this.accountUpdate.is_show_price_basis = that.is_show_price_basis == 0 ? 'no':'yes';
+            this.accountUpdate.is_sub_account = that.is_sub_account;
             this.accountUpdate.status = that.status
             this.accountUpdate.credit_auth = that.credit_auth
             this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;

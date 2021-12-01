@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateEmailRule;
 use App\Rules\SecurePasswordRule;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\RequiredIf;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -26,6 +27,10 @@ class UpdateAccountRequest extends FormRequest
      */
     public function rules()
     {
+        $status = $this->status;
+        $isSubAccount = $this->is_sub_account;
+
+
         return [
             'name' => [ 'required' ],
             'username' => [
@@ -71,7 +76,8 @@ class UpdateAccountRequest extends FormRequest
                 'required'
             ],
             'id_payment_type' => [
-                'required_if:status,==,active'
+                Rule::requiredIf($isSubAccount == 0 && $status == 'active'),
+
             ],
             // 'writer_price' => [
             //     'required_if:type,==,Writer',
