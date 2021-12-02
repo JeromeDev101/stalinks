@@ -154,7 +154,7 @@
                                 <td>
                                     <table class="bg-info">
                                         <tr>
-                                            <td v-for="stat in statusSummary" :key="stat" class="p-3">
+                                            <td v-for="stat in statusSummary" class="p-3">
                                                 {{ stat.status }}
                                                 <b>{{' ('+ stat.total +')' }}</b>
                                             </td>
@@ -241,8 +241,8 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr v-for="(backLink, index) in listBackLink.data" :key="index">
+                            <tbody v-show="!searchLoading">
+                            <tr v-for="(backLink, index) in listBackLink.data">
                                 <td class="center-content">{{ index + 1 }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
                                 <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
@@ -413,7 +413,7 @@
                                     <div>
                                         <label>Price</label>
                                         <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live' || user.role_id == 8" class="form-control" value="" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.price" v-for="err in messageBacklinkForms.errors.price" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.price" v-for="priceErr in messageBacklinkForms.errors.price" class="text-danger">{{ priceErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -433,7 +433,7 @@
                                         <label>Title</label>
 
                                         <input type="text" v-model="modelBaclink.title" class="form-control"  :disabled="user.role_id == 8" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.title" v-for="err in messageBacklinkForms.errors.title" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.title" v-for="titleErr in messageBacklinkForms.errors.title" class="text-danger">{{ titleErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -443,7 +443,7 @@
                                     <div>
                                         <label>Anchor text</label>
                                         <input type="text" v-model="modelBaclink.anchor_text" :disabled="user.role_id == 8" class="form-control" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.anchor_text" v-for="err in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.anchor_text" v-for="anchorTextErr in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ anchorTextErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -453,7 +453,7 @@
                                     <div>
                                         <label>Link From</label>
                                         <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
-                                        <span v-if="messageBacklinkForms.errors.link_from" v-for="err in messageBacklinkForms.errors.link_from" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.link_from" v-for="linkFromErr in messageBacklinkForms.errors.link_from" class="text-danger">{{ linkFromErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -464,7 +464,7 @@
                                         <label>Link To</label>
 
                                         <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter || user.role_id == 8" required="required" >
-                                        <span v-if="messageBacklinkForms.errors.link" v-for="err in messageBacklinkForms.errors.link" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.link" v-for="linkToErr in messageBacklinkForms.errors.link" class="text-danger">{{ linkToErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -474,7 +474,7 @@
                                     <div>
                                         <label>Date Completed</label>
                                         <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer || user.role_id == 8">
-                                        <span v-if="messageBacklinkForms.errors.live_date" v-for="err in messageBacklinkForms.errors.live_date" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.live_date" v-for="dateCompletedErr in messageBacklinkForms.errors.live_date" class="text-danger">{{ dateCompletedErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -486,7 +486,7 @@
                                         <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer || user.role_id == 8">
                                             <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
-                                        <span v-if="messageBacklinkForms.errors.status" v-for="err in messageBacklinkForms.errors.status" class="text-danger">{{ err }}</span>
+                                        <span v-if="messageBacklinkForms.errors.status" v-for="statusErr in messageBacklinkForms.errors.status" class="text-danger">{{ statusErr }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -744,11 +744,11 @@
                 if (page) {
                     this.page = page
                 }
-                this.$router.push({
+                this.$router.replace({
                         query: {
                         page: this.page,
                     },
-                })
+                }).catch(err => {})
 
                 this.searchLoading = true;
                 this.isSearching = true;
@@ -757,8 +757,6 @@
                     page: this.page,
                     params: this.fillter,
                 });
-                this.searchLoading = false;
-                this.isSearching = false;
 
                 let columnDefs = [
                     { orderable: true, targets: 0 },
@@ -803,6 +801,9 @@
                     columnDefs: columnDefs,
                     scrollX: '100%'
                 });
+
+                this.searchLoading = false;
+                this.isSearching = false;
 
                 this.getTotalAmount()
 
@@ -911,7 +912,7 @@
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
 
-                // console.log(that)
+                console.log(that)
                 this.withArticle = that.publisher == null ? false : that.publisher.inc_article == "No" ? true : false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher == null ? null : that.publisher.id
@@ -943,8 +944,7 @@
                             : that.publisher.user.username))
                 this.modelBaclink.id_article = that.article == null ? '':that.article.id
 
-                let element = this.$refs.modalEditBacklink
-                $(element).modal('show')
+                $(this.$refs.modalEditBacklink).modal('show')
             },
 
             closeModalBacklink() {
@@ -1005,7 +1005,7 @@
                         'success'
                     )
 
-                    $(this.$refs.modalEditBacklink).hide()
+                    this.closeModalBacklink()
 
                     this.getBackLinkList();
                 }).catch((error) => {
