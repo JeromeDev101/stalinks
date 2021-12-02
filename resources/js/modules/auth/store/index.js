@@ -12,6 +12,8 @@ const AUTH_SET_COUNTRIES = 'AUTH_SET_COUNTRIES';
 const AUTH_SET_COUNTRIES_EXT = 'AUTH_SET_COUNTRIES_EXT';
 const CURRENT_USER = 'CURRENT_USER';
 const USER_ADMIN = 'USER_ADMIN';
+const USER_UNREAD_EMAILS = 'USER_UNREAD_EMAILS';
+const USER_DRAFTS = 'USER_DRAFTS';
 
 const state = {
     user: null,
@@ -19,6 +21,8 @@ const state = {
     error: {},
     loading: false,
     currentUser: { id: 0 },
+    userUnreadEmails: 0,
+    userDrafts: 0,
 };
 
 const getters = {
@@ -64,6 +68,18 @@ const mutations = {
     [USER_ADMIN](state, isAdmin) {
         return state.currentUser.isAdmin = isAdmin;
     },
+
+    [USER_UNREAD_EMAILS](state, mails) {
+        state.userUnreadEmails = mails;
+    },
+
+    [USER_DRAFTS](state, drafts) {
+        state.userDrafts = drafts;
+    },
+
+    decrementUserUnreadEmailCount(state) {
+        state.userUnreadEmails.count = state.userUnreadEmails.count - 1;
+    }
 
 };
 
@@ -136,6 +152,25 @@ const actions = {
         return Helper.handleError(vue, errorResponse.status);
     },
 
+    async getUserUnreadEmails({commit}, email) {
+        let response = await UserService.getUserUnreadEmails(email);
+
+        if (response.status === 200) {
+            commit(USER_UNREAD_EMAILS, response.data);
+        }
+    },
+
+    async getUserDrafts({commit}) {
+        let response = await UserService.getUserDrafts();
+
+        if (response.status === 200) {
+            commit(USER_DRAFTS, response.data);
+        }
+    },
+
+    updateUnreadEmailsCount({commit}) {
+        commit('decrementUserUnreadEmailCount');
+    },
 };
 const storeAuth = {
     state,

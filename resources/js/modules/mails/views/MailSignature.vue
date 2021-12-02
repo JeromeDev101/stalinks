@@ -83,7 +83,7 @@
 
                                             @click="clearFilter">
 
-                                            <i class="fa fa-fw fa-refresh"></i>
+                                            <i class="fa fa-fw fa-sync"></i>
                                         </button>
                                     </div>
                                 </td>

@@ -19,7 +19,7 @@
                                             class="btn btn-default"
                                             title="Clear"
                                             @click="clearSearchMail">
-                                        <i class="fa fa-close"></i>
+                                        <i class="fa fa-times-circle"></i>
                                     </button>
                                 </span>
                             </div>
@@ -280,6 +280,7 @@
                     <!-- For Attachment -->
                     <div v-show="MessageDisplay && viewAttachmentChecker(viewContent)" class="box-footer">
 
+                        <!-- attachments for inbound emails -->
                         <div v-if="viewContent.stored_attachments !== null">
                             <ul class="mailbox-attachments clearfix">
                                 <li
@@ -311,6 +312,8 @@
 
                         <div v-else>
                             <ul class="mailbox-attachments clearfix">
+
+                                <!-- for old attachments stored in mailgun -->
                                 <li
                                     v-if="viewContent.is_sent == 0 && viewContent.attachment.length != 0"
                                     v-for="(attach, index) in viewContent.attachment"
@@ -330,13 +333,14 @@
                                     </div>
                                 </li>
 
+                                <!-- attachments for outbound emails -->
                                 <li v-if="viewContent.is_sent == 1 && !Array.isArray(viewContent.attachment)">
                                     <div class="mailbox-attachment-info mailbox-attachment-info-custom">
                                         <a
                                             target="_blank"
                                             class="mailbox-attachment-name"
                                             :download="viewContent.attachment.display_name"
-                                            :href="'/attachment/'+viewContent.attachment.filename">
+                                            :href="viewContent.attachment.url">
 
                                             <i class="fa fa-paperclip"></i>
                                             {{ viewContent.attachment.display_name }}
@@ -355,7 +359,7 @@
                                             target="_blank"
                                             class="mailbox-attachment-name"
                                             :download="att.display_name"
-                                            :href="'/attachment/'+att.filename">
+                                            :href="att.url">
 
                                             <i class="fa fa-paperclip"></i>
                                             {{ att.display_name }}
@@ -374,9 +378,8 @@
                             <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
                                     type="button"
                                     class="btn btn-default"
-                                    data-toggle="modal"
-                                    @click="doReply($route.name)"
-                                    data-target="#modal-email-reply">
+
+                                    @click="doReply($route.name)">
                                 <i class="fa fa-reply"></i>
                                 {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
                             </button>
@@ -423,26 +426,50 @@
                             <h6 class="font-weight-bold mb-0">
                                 {{ email.from_mail }}
 
-                                <span class="pull-right">
-                                    <span v-if="viewAttachmentChecker(email)" class="mr-2">
+                                <span class="float-right">
+                                    <span v-if="viewAttachmentChecker(email)" class="mr-2" style="font-size: 13px !important;">
                                         <i class="fa fa-paperclip"></i>
                                     </span>
 
-                                    <span class="mailbox-read-time">
-                                        {{ email.full_clean_date }}
+                                    <!-- toggle quoted messages -->
+                                    <span
+                                        class="mr-2"
+                                        title="Toggle quoted messages"
+                                        style="cursor:pointer; font-size: 13px !important;">
+
+                                        <i
+                                            :id="'toggle' + email.id"
+                                            class="fa fa-angle-double-down"
+
+                                            @click="toggleQuotedMessage('iframe' + email.id)"></i>
                                     </span>
 
+                                    <!-- reply -->
                                     <span
-                                        v-if="$route.name !== 'Inbox' && email.is_sent === 0"
-                                        class="ml-2"
+                                        v-if="($route.name === 'Inbox' || $route.name === 'Sent') && email.is_sent === 0"
+                                        class="mr-2"
                                         title="Reply"
                                         style="cursor: pointer"
-                                        data-toggle="modal"
-                                        data-target="#modal-email-reply"
 
                                         @click="doReply($route.name, email)">
 
                                         <i class="fa fa-reply"></i>
+                                    </span>
+
+                                    <!-- forward -->
+                                    <span
+                                        v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
+                                        class="mr-2"
+                                        title="Forward message"
+                                        style="cursor: pointer"
+
+                                        @click="doForward($route.name, email)">
+
+                                        <i class="fa fa-share"></i>
+                                    </span>
+
+                                    <span class="mailbox-read-time">
+                                        {{ email.full_clean_date }}
                                     </span>
                                 </span>
                             </h6>
@@ -456,6 +483,7 @@
                         <div class="mailbox-read-message">
                             <div>
                                 <iframe
+                                    :id="'iframe' + email.id"
                                     :ref="'iframe' + email.id"
                                     width="100%"
                                     frameborder="0">
@@ -467,6 +495,7 @@
                         <!-- email attachments -->
                         <div v-show="MessageDisplay && viewAttachmentChecker(email)" class="box-footer">
 
+                            <!-- attachments for inbound emails -->
                             <div v-if="email.stored_attachments !== null">
                                 <ul class="mailbox-attachments clearfix">
                                     <li
@@ -500,6 +529,8 @@
 
                             <div v-else>
                                 <ul class="mailbox-attachments clearfix">
+
+                                    <!-- for old attachments stored in mailgun -->
                                     <li
                                         v-if="email.is_sent === 0 && email.attachment.length !== 0"
                                         v-for="(attach, index) in email.attachment"
@@ -521,6 +552,7 @@
                                         </div>
                                     </li>
 
+                                    <!-- attachments for outbound emails -->
                                     <li v-if="email.is_sent === 1 && !Array.isArray(email.attachment)">
                                         <div
                                             v-if="!Array.isArray(email.attachment)"
@@ -529,7 +561,7 @@
                                                 target="_blank"
                                                 class="mailbox-attachment-name"
                                                 :download="email.attachment.display_name"
-                                                :href="'/attachment/'+email.attachment.filename">
+                                                :href="email.attachment.url">
 
                                                 <i class="fa fa-paperclip"></i>
                                                 {{ email.attachment.display_name }}
@@ -549,7 +581,7 @@
                                                 target="_blank"
                                                 class="mailbox-attachment-name"
                                                 :download="att.display_name"
-                                                :href="'/attachment/'+att.filename">
+                                                :href="att.url">
 
                                                 <i class="fa fa-paperclip"></i>
                                                 {{ att.display_name }}
@@ -574,8 +606,6 @@
                                 v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
                                 type="button"
                                 class="btn btn-default"
-                                data-toggle="modal"
-                                data-target="#modal-email-reply"
 
                                 @click="doReply($route.name)">
 
@@ -597,340 +627,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal Send Email -->
-        <div id="modal-compose-email" class="modal fade" ref="modalCompose" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Compose Message</h4>
-                    </div>
-                    <div class="modal-body relative">
-
-                        <blockquote class="primary">
-                            <p>Note</p>
-                            <ul>
-                                <li>You can send an email to multiple recipients <strong>'contact01|contact02|contact03'
-                                                                                         or
-                                                                                         'contact01,contact02,contact03'</strong>
-                                </li>
-                                <li>For bulk sending, <strong>only 10 recipients are allowed per email</strong></li>
-                                <li>You can edit the tags by clicking it and pressing <strong>enter key</strong>
-                                    afterwards
-                                </li>
-                            </ul>
-                        </blockquote>
-
-                        <form class="row" action="">
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withBcc"
-                                               @click="toggleBcc">
-                                        With Bcc
-                                    </label>
-                                </div>
-                                <hr>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label style="color: #333">Language</label>
-                                        <div>
-                                            <select class="form-control pull-right"
-                                                    v-model="countryMailId"
-                                                    v-on:change="getTemplateList">
-                                                <option value=""></option>
-                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                                    {{ option.name }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <label style="color: #333">Select template</label>
-                                            <div>
-                                                <select v-on:change="getTemplate('send')"
-                                                        class="form-control pull-right"
-                                                        v-model="mailInfo">
-                                                    <option v-for="option in listMailTemplate.data"
-                                                            v-bind:value="option.id">
-                                                        {{ option.mail_name }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="margin-top: 15px;">
-                                <div
-                                    :class="{
-                                        'has-error': messageForms.errors.email
-                                        || checkEmailValidationError(messageForms.errors)
-                                    }"
-                                    class="form-group">
-
-                                    <label style="color: #333">To:</label>
-                                    <!--                                    <input type="text" class="form-control" required="required" v-model="emailContent.email">-->
-
-                                    <p
-                                        v-if="emailContent.email.length"
-                                        class="text-primary small"
-                                        style="cursor: pointer"
-
-                                        @click="emailContent.email = []">
-                                        Remove all emails
-                                    </p>
-
-                                    <vue-tags-input
-                                        v-model="tag"
-                                        placeholder=""
-                                        :max-tags="10"
-                                        :allow-edit-tags="true"
-                                        :separators="separators"
-                                        :tags="emailContent.email"
-                                        :class="{
-                                            'vue-tag-error': messageForms.errors.email
-                                            || checkEmailValidationError(messageForms.errors)
-                                        }"
-
-                                        @tags-changed="newTags => emailContent.email = newTags"
-                                    />
-
-                                    <span
-                                        v-if="messageForms.errors.email"
-                                        v-for="err in messageForms.errors.email"
-                                        class="text-danger">
-                                        {{ err }}
-                                    </span>
-
-                                    <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
-                                        The email field must contain valid emails.
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" v-show="withBcc" style="margin-top: 15px;">
-                                <div class="form-group">
-                                    <label style="color: #333">Bcc:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="emailContent.cc">
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}"
-                                     class="form-group">
-                                    <label style="color: #333">Titles</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="emailContent.title">
-                                    <span v-if="messageForms.errors.title"
-                                          v-for="err in messageForms.errors.title"
-                                          class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}"
-                                     class="form-group">
-                                    <label style="color: #333">Contents</label>
-                                    <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="emailContent.content"></textarea>-->
-                                    <tiny-editor editor-id="composeEditor"
-                                                 v-model="emailContent.content"
-                                                 ref="composeEditor"></tiny-editor>
-                                    <span v-if="messageForms.errors.content"
-                                          v-for="err in messageForms.errors.content"
-                                          class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label style="color: #333">Attachment</label>
-                                    <input type="file" multiple class="form-control" id="file_send" ref="file_send">
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Send')">Close
-                        </button>
-                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('compose')">
-                            Send <i class="fa fa-send fa-fw"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Send Email -->
-
-        <!-- Modal Send Reply Email -->
-        <div id="modal-email-reply" class="modal fade" ref="modalReply" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Reply</h4>
-                    </div>
-                    <div class="modal-body relative">
-                        <form class="row" action="">
-
-                            <!--                            <div class="col-md-12">-->
-                            <!--                                <blockquote class="default">-->
-                            <!--                                    <textarea class="form-control message-content text-muted font-italic">{{ viewContent.strippedHtml }}</textarea>-->
-                            <!--                                </blockquote>-->
-                            <!--                            </div>-->
-
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withTemplate"
-                                               @click="toggleTemplate">
-                                        With Template
-                                    </label>
-                                </div>
-                                <hr>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="checkbox"
-                                               class="form-check-input"
-                                               v-model="withBcc"
-                                               @click="toggleBcc">
-                                        With Bcc
-                                    </label>
-                                </div>
-                                <hr>
-                            </div>
-
-                            <div class="col-md-12" v-show="withTemplate">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label style="color: #333">Language</label>
-                                        <div>
-                                            <select class="form-control pull-right"
-                                                    v-model="countryMailId"
-                                                    v-on:change="getTemplateList">
-                                                <option value=""></option>
-                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                                    {{ option.name }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <label style="color: #333">Select template</label>
-                                            <div>
-                                                <select v-on:change="getTemplate('reply')"
-                                                        class="form-control pull-right"
-                                                        v-model="mailInfo">
-                                                    <option v-for="option in listMailTemplate.data"
-                                                            v-bind:value="option.id">
-                                                        {{ option.mail_name }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}"
-                                     class="form-group">
-                                    <label style="color: #333">To:</label>
-                                    <!--                                    <input type="text" class="form-control" required="required" v-model="replyContent.email" :disabled="true">-->
-
-                                    <vue-tags-input
-                                        v-model="tag"
-                                        ref="replyTag"
-                                        placeholder=""
-                                        :allow-edit-tags="true"
-                                        :separators="separators"
-                                        :tags="replyContent.email"
-                                        :disabled="viewContent.is_sent !== 1"
-                                        :class="{'vue-tag-error': messageForms.errors.email}"
-
-                                        @tags-changed="newTags => replyContent.email = newTags"
-                                    />
-
-                                    <span v-if="messageForms.errors.email"
-                                          v-for="err in messageForms.errors.email"
-                                          class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="margin-top: 15px;" v-show="withBcc">
-                                <div class="form-group">
-                                    <label style="color: #333">Bcc:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="replyContent.cc">
-                                </div>
-                            </div>
-
-                            <div class="col-md-12" style="margin-top: 15px;">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}"
-                                     class="form-group">
-                                    <label style="color: #333">Titles</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           required="required"
-                                           v-model="replyContent.title"
-                                           :disabled="true">
-                                    <span v-if="messageForms.errors.title"
-                                          v-for="err in messageForms.errors.title"
-                                          class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.content}"
-                                     class="form-group">
-                                    <label style="color: #333">Contents</label>
-                                    <!--                                    <textarea rows="10" type="text" class="form-control" required="required" v-model="replyContent.content"></textarea>-->
-                                    <tiny-editor editor-id="replyEditor"
-                                                 v-model="replyContent.content"
-                                                 ref="replyEditor"></tiny-editor>
-                                    <span v-if="messageForms.errors.content"
-                                          v-for="err in messageForms.errors.content"
-                                          class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label style="color: #333">Attachment</label>
-                                    <input type="file" multiple id="file_reply" ref="file_reply" class="form-control">
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser('Reply')">Close
-                        </button>
-                        <button type="button" class="btn btn-primary" :disabled="sendBtn" @click="sendEmail('reply')">
-                            Send <i class="fa fa-send fa-fw"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Send Reply Email -->
 
         <!-- Modal Label -->
         <div id="modal-label-selection" class="modal fade">
@@ -965,18 +661,624 @@
             </div>
         </div>
         <!-- End Label -->
+
+        <!-- Balloon wrapper -->
+        <div class="bln-container">
+
+            <!-- Compose Email Balloon -->
+            <Balloon ref="emailBalloon" :title="'Compose Message'">
+
+                <!-- custom header buttons -->
+                <template v-slot:header-buttons>
+                    <i class="fa fa-times" @click="modalCloser('Send')"></i>
+                </template>
+
+                <!-- note -->
+                <div class="accordion" id="noteAccordion">
+                    <div class="card">
+                        <div
+                            id="headingOne"
+                            style="cursor: pointer;"
+                            class="card-header p-2 font-italic text-secondary"
+                            data-toggle="collapse"
+                            data-target="#noteCollapse"
+                            aria-expanded="true"
+                            aria-controls="noteCollapse">
+
+                            <i class="fa fa-exclamation-circle"></i> Note
+                        </div>
+
+                        <div id="noteCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#noteAccordion">
+                            <div class="card-body p-2 text-sm text-secondary">
+                                <ul>
+                                    <li>
+                                        You can send an email to multiple recipients
+                                        <strong>'contact01|contact02|contact03' or 'contact01,contact02,contact03'</strong>
+                                    </li>
+                                    <li>For bulk sending, <strong>only 10 recipients are allowed per email</strong></li>
+                                    <li>
+                                        You can edit the tags by clicking it and pressing
+                                        <strong>enter key</strong>
+                                        afterwards
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- form -->
+                <form class="row" action="" style="font-size: .875rem !important;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withBccCompose"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleBcc('Send')">
+                                        With Bcc
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withTemplateCompose"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleTemplate('Send')">
+                                        With Template
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div class="col-md-12" v-show="withTemplateCompose">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div>
+                                    <select
+                                        v-model="countryMailIdCompose"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="countryMailIdCompose === '' ? 'selected-placeholder' : ''"
+
+                                        @change="getTemplateList('Send')">
+
+                                        <option value="">Select Language</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div>
+                                        <select
+                                            v-model="mailInfoCompose"
+                                            class="form-control form-control-sm pull-right"
+                                            :class="Object.keys(mailInfoCompose).length === 0 ? 'selected-placeholder' : ''"
+
+                                            @change="getTemplate('send')">
+
+                                            <option v-bind:value="{}">Select Template</option>
+                                            <option v-for="option in listMailTemplateCompose.data" v-bind:value="option.id">
+                                                {{ option.mail_name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 py-0 my-0">
+                        <div class="form-group">
+
+                            <small
+                                v-if="emailContent.email.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="emailContent.email = []">
+                                Remove all emails
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tag"
+                                placeholder="Recipients"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="emailContent.email"
+
+                                @tags-changed="newTags => emailContent.email = newTags"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.email"
+                                v-for="err in messageForms.errors.email"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
+                                The email field must contain valid emails.
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" v-show="withBccCompose">
+                        <div class="form-group">
+                            <input
+                                v-model="emailContent.cc"
+                                type="text"
+                                placeholder="Bcc"
+                                class="form-control form-control-sm"
+                                required="required">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div
+                            :class="{'form-group': true, 'has-error': messageForms.errors.title}"
+                            class="form-group">
+                            <input
+                                v-model="emailContent.title"
+                                type="text"
+                                required="required"
+                                placeholder="Subject"
+                                class="form-control form-control-sm">
+
+                            <span
+                                v-if="messageForms.errors.title"
+                                v-for="err in messageForms.errors.title"
+                                class="text-danger">{{ err }}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div
+                            :class="{'form-group': true, 'has-error': messageForms.errors.content}"
+                            class="form-group">
+
+                            <tiny-editor
+                                v-model="emailContent.content"
+                                ref="composeEditor"
+                                editor-id="composeEditor">
+
+                            </tiny-editor>
+
+                            <span
+                                v-if="messageForms.errors.content"
+                                v-for="err in messageForms.errors.content"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 col-xl-12 col-12">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    :disabled="sendBtn"
+
+                                    @click="sendEmail('compose')">
+                                    <i class="fa fa-paper-plane"></i> Send
+                                </button>
+
+                                <button
+                                    type="button"
+                                    title="Attach files"
+                                    class="btn btn-primary btn-sm float-right"
+
+                                    @click="$refs.file_send.click()">
+
+                                    <i class="fa fa-paperclip"></i>
+                                    {{
+                                        attached_files.compose === 0
+                                            ? 'Attach files'
+                                            : attached_files.compose + ' file(s) attached'
+                                    }}
+                                </button>
+                            </div>
+
+                            <div class="col-md-6 col-xl-6 col-12">
+                                <div class="form-group">
+                                    <input
+                                        multiple
+                                        type="file"
+                                        id="file_send"
+                                        ref="file_send"
+                                        class="form-control form-control-sm d-none"
+
+                                        @change="getAttachments('compose')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </Balloon>
+
+            <!-- Reply Email Balloon -->
+            <Balloon ref="emailReplyBalloon" :title="replyContent.title">
+
+                <!-- custom header buttons -->
+                <template v-slot:header-buttons>
+                    <i class="fa fa-times" @click="modalCloser('Reply')"></i>
+                </template>
+
+                <!-- form -->
+                <form class="row" action="" style="font-size: .875rem !important;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withBccReply"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleBcc('Reply')">
+                                        With Bcc
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withTemplateReply"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleTemplate('Reply')">
+                                        With Template
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" v-show="withTemplateReply">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div>
+                                    <select
+                                        v-model="countryMailIdReply"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="countryMailIdReply === '' ? 'selected-placeholder' : ''"
+
+                                        @change="getTemplateList('Reply')">
+
+                                        <option value="">Select Language</option>
+                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <div>
+                                        <select
+                                            v-model="mailInfoReply"
+                                            class="form-control form-control-sm pull-right"
+                                            :class="Object.keys(mailInfoReply).length === 0 ? 'selected-placeholder' : ''"
+
+                                            @change="getTemplate('reply')">
+
+                                            <option v-bind:value="{}">Select Template</option>
+                                            <option v-for="option in listMailTemplateReply.data"
+                                                    v-bind:value="option.id">
+                                                {{ option.mail_name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 py-0 my-0">
+                        <div class="form-group">
+                            <vue-tags-input
+                                v-model="tag"
+                                ref="replyTag"
+                                placeholder=""
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="replyContent.email"
+                                :disabled="viewContent.is_sent !== 1"
+
+                                @tags-changed="newTags => replyContent.email = newTags"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.email"
+                                v-for="err in messageForms.errors.email"
+                                class="text-danger">
+
+                            {{ err }}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" v-show="withBccReply">
+                        <div class="form-group">
+                            <input
+                                v-model="replyContent.cc"
+                                type="text"
+                                placeholder="Bcc"
+                                class="form-control form-control-sm"
+                                required="required">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div
+                            :class="{'form-group': true, 'has-error': messageForms.errors.content}"
+                            class="form-group">
+
+                            <tiny-editor
+                                v-model="replyContent.content"
+                                ref="replyEditor"
+                                editor-id="replyEditor">
+
+                            </tiny-editor>
+
+                            <span
+                                v-if="messageForms.errors.content"
+                                v-for="err in messageForms.errors.content"
+                                class="text-danger">
+
+                            {{ err }}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 col-xl-12 col-12">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    :disabled="sendBtn"
+
+                                    @click="sendEmail('reply')">
+                                    <i class="fa fa-reply"></i> Reply
+                                </button>
+
+                                <button
+                                    type="button"
+                                    title="Attach files"
+                                    class="btn btn-primary btn-sm float-right"
+
+                                    @click="$refs.file_reply.click()">
+
+                                    <i class="fa fa-paperclip"></i>
+                                    {{
+                                        attached_files.reply === 0
+                                            ? 'Attach files'
+                                            : attached_files.reply + ' file(s) attached'
+                                    }}
+                                </button>
+                            </div>
+
+                            <div class="col-md-6 col-xl-6 col-12">
+                                <div class="form-group">
+                                    <input
+                                        multiple
+                                        type="file"
+                                        id="file_reply"
+                                        ref="file_reply"
+                                        class="form-control form-control-sm d-none"
+
+                                        @change="getAttachments('reply')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </Balloon>
+
+            <!-- Forward Email Balloon -->
+            <Balloon ref="emailForwardBalloon" :title="forwardContent.title">
+
+                <!-- custom header buttons -->
+                <template v-slot:header-buttons>
+                    <i class="fa fa-times" @click="modalCloser('Forward')"></i>
+                </template>
+
+                <!-- form -->
+                <form class="row" action="" style="font-size: .875rem !important;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withBccForward"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleBcc('Forward')">
+                                        With Bcc
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 py-0 my-0">
+                        <div class="form-group">
+                            <small
+                                v-if="forwardContent.email.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="forwardContent.email = []">
+                                Remove all emails
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tag"
+                                placeholder="Recipients"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="forwardContent.email"
+
+                                @tags-changed="newTags => forwardContent.email = newTags"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.email"
+                                v-for="err in messageForms.errors.email"
+                                class="text-danger">
+                            {{ err }}
+                        </span>
+
+                            <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
+                            The email field must contain valid emails.
+                        </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" v-show="withBccForward">
+                        <div class="form-group">
+                            <input
+                                v-model="forwardContent.cc"
+                                type="text"
+                                placeholder="Bcc"
+                                class="form-control form-control-sm"
+                                required="required">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div
+                            :class="{'form-group': true, 'has-error': messageForms.errors.content}"
+                            class="form-group">
+
+                            <tiny-editor
+                                v-model="forwardContent.content"
+                                ref="forwardEditor"
+                                editor-id="forwardEditor">
+
+                            </tiny-editor>
+
+                            <span
+                                v-if="messageForms.errors.content"
+                                v-for="err in messageForms.errors.content"
+                                class="text-danger">
+
+                            {{ err }}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div v-if="forwardContent.forwardAttachments" class="col-md-12">
+                        <div class="row">
+                            <div v-for="attachment in forwardContent.forwardAttachments" class="col-md-3">
+                                <div class="card">
+                                    <div
+                                        class="card-body p-1"
+                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+
+                                    <span
+                                        class="text-primary font-weight-bold"
+                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+
+                                        {{ forwardContent.is_sent === 1 ? attachment.display_name : attachment.name }}
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 col-xl-12 col-12">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    :disabled="sendBtn"
+
+                                    @click="sendEmail('forward')">
+                                    <i class="fa fa-share"></i> Forward
+                                </button>
+
+                                <button
+                                    type="button"
+                                    title="Attach files"
+                                    class="btn btn-primary btn-sm float-right"
+
+                                    @click="$refs.file_forward.click()">
+
+                                    <i class="fa fa-paperclip"></i>
+                                    {{
+                                        attached_files.forward === 0
+                                            ? 'Attach files'
+                                            : attached_files.forward + ' file(s) attached'
+                                    }}
+                                </button>
+                            </div>
+
+                            <div class="col-md-6 col-xl-6 col-12">
+                                <div class="form-group">
+                                    <input
+                                        multiple
+                                        type="file"
+                                        id="file_forward"
+                                        ref="file_forward"
+                                        class="form-control form-control-sm d-none"
+
+                                        @change="getAttachments('forward')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </Balloon>
+
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import {mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import {createTag, createTags} from '@johmun/vue-tags-input';
-import TinyEditor from "../../../components/editor/TinyEditor";
+import TinyEditor from "@/components/editor/TinyEditor";
+import Balloon from '@/components/windows/Balloon';
 
 export default {
     name : 'AppInbox',
-    components : {TinyEditor},
+    components : {TinyEditor, Balloon},
     data() {
         return {
             search_mail : '',
@@ -991,6 +1293,14 @@ export default {
                 email : [],
                 title : '',
                 content : ''
+            },
+            forwardContent : {
+                cc : '',
+                email : [],
+                title : '',
+                is_sent : 0,
+                content : '',
+                forwardAttachments: [],
             },
             viewContent : {
                 received : '',
@@ -1020,14 +1330,10 @@ export default {
             checkIds : [],
             btnEnable : true,
             inboxCount : 0,
-            mailInfo : {},
-            countryMailId : '',
             updateModel : {
                 label_id : '',
             },
             allSelected : false,
-            withTemplate : false,
-            withBcc : false,
             sendBtn : false,
             paginate : {
                 next : 0,
@@ -1047,7 +1353,38 @@ export default {
                 ',',
                 '|',
                 ' '
-            ]
+            ],
+
+            // for attachments
+            attached_files: {
+                reply: 0,
+                compose: 0,
+                forward: 0
+            },
+
+            // bcc and template
+
+            withBccCompose : false,
+            withBccReply : false,
+            withBccForward : false,
+
+            withTemplateCompose : false,
+            withTemplateReply : false,
+
+            mailInfoCompose : {},
+            countryMailIdCompose : '',
+
+            mailInfoReply : {},
+            countryMailIdReply : '',
+
+            listMailTemplateCompose: {
+                data: [],
+                total: 0
+            },
+            listMailTemplateReply: {
+                data: [],
+                total: 0
+            }
         }
     },
 
@@ -1085,6 +1422,10 @@ export default {
     },
 
     methods : {
+        ...mapActions({
+            updateUnreadEmailsCount : "updateUnreadEmailsCount",
+        }),
+
         modalCloser(mode) {
             if (mode === 'Send') {
 
@@ -1094,22 +1435,38 @@ export default {
                     || this.emailContent.cc) {
 
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Email contents will be removed",
-                        icon : "warning",
-                        showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        title : "Save as Draft?",
+                        text : "Save email contents as draft?",
+                        icon : "question",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                        cancelButtonText: 'No',
+                        confirmButtonText: 'Yes',
+                        cancelButtonColor: 'red',
+                        confirmButtonColor: 'green',
                     })
-                        .then((result) => {
-                            if (result.isConfirmed) {
-                                // remove all images inserted on editor
-                                this.$refs.composeEditor.deleteImages('All');
+                    .then((result) => {
+                        if (result.isConfirmed) {
 
-                                this.closeModal(mode)
-                                this.clearModel(mode)
-                            }
-                        });
+                            // save message content as draft
+                            this.emailContent.mode = mode;
+
+                            this.saveMessageAsDraft(this.emailContent);
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+
+                        } else if (result.dismiss == 'cancel') {
+
+                            // remove all images inserted on editor
+                            this.$refs.composeEditor.deleteImages('All');
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+
+                        }
+                    });
 
                 } else {
                     this.$refs.composeEditor.deleteImages('All');
@@ -1117,27 +1474,82 @@ export default {
                     this.closeModal(mode)
                 }
 
+            } else if (mode === 'Forward') {
+
+                if (this.forwardContent.content
+                    || this.forwardContent.email.length !== 0
+                    || this.forwardContent.title
+                    || this.forwardContent.cc) {
+
+                    swal.fire({
+                        title : "Save as Draft?",
+                        text : "Save email contents as draft?",
+                        icon : "question",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                        cancelButtonText: 'No',
+                        confirmButtonText: 'Yes',
+                        cancelButtonColor: 'red',
+                        confirmButtonColor: 'green',
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+
+                            // save message content as draft
+                            this.forwardContent.mode = mode;
+
+                            this.saveMessageAsDraft(this.forwardContent);
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+
+                        } else if (result.dismiss == 'cancel') {
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
+
+                } else {
+                    this.closeModal(mode)
+                    this.clearModel(mode)
+                }
+
             } else {
                 if (this.replyContent.content
                     || this.replyContent.cc) {
 
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Email contents will be removed",
-                        icon : "warning",
-                        showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        title : "Save as Draft?",
+                        text : "Save email contents as draft?",
+                        icon : "question",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                        cancelButtonText: 'No',
+                        confirmButtonText: 'Yes',
+                        cancelButtonColor: 'red',
+                        confirmButtonColor: 'green',
                     })
-                        .then((result) => {
-                            if (result.isConfirmed) {
-                                // remove all images inserted on editor
-                                this.$refs.replyEditor.deleteImages('All');
+                    .then((result) => {
+                        if (result.isConfirmed) {
 
-                                this.closeModal(mode)
-                                this.clearModel(mode)
-                            }
-                        });
+                            // save message content as draft
+                            this.replyContent.mode = mode;
+
+                            this.saveMessageAsDraft(this.replyContent);
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+
+                        } else if (result.dismiss == 'cancel') {
+                            // remove all images inserted on editor
+                            this.$refs.replyEditor.deleteImages('All');
+
+                            this.closeModal(mode)
+                            this.clearModel(mode)
+                        }
+                    });
 
                 } else {
                     this.$refs.replyEditor.deleteImages('All');
@@ -1148,30 +1560,51 @@ export default {
         },
 
         closeModal(mode) {
-            if (mode === 'Send') {
-                let element = this.$refs.modalCompose
-                $(element).modal('hide')
-            } else {
-                let element = this.$refs.modalReply
-                $(element).modal('hide')
+            if (mode === 'Send' || mode === 'compose') {
+                this.$refs.emailBalloon.close()
+            } else if (mode === 'Forward' || mode === 'forward') {
+                this.$refs.emailForwardBalloon.close()
+            } else if (mode === 'Reply' || mode === 'reply') {
+                this.$refs.emailReplyBalloon.close()
             }
         },
 
         clearModel(mode) {
-            if (mode === 'Send') {
+            if (mode === 'Send' || mode === 'compose') {
+
                 this.emailContent = {
                     cc : '',
                     email : [],
                     title : '',
                     content : ''
                 }
-            } else {
+
+                this.attached_files.compose = 0
+
+            } else if (mode === 'Forward' || mode === 'forward') {
+
+                this.forwardContent = {
+                    cc : '',
+                    email : [],
+                    title : '',
+                    is_sent : 0,
+                    content : '',
+                    forwardAttachments: [],
+                }
+
+                this.attached_files.forward = 0
+
+            } else if (mode === 'Reply' || mode === 'reply') {
+
                 this.replyContent = {
                     cc : '',
                     email : [],
                     title : '',
                     content : ''
                 }
+
+                this.attached_files.reply = 0
+
             }
         },
 
@@ -1241,12 +1674,15 @@ export default {
 
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
+
             this.replyContent.email = [];
             this.replyContent.title = route !== 'Trash'
                 ? info
                     ? info.subject
                     : this.viewContentThread.inbox.subject
                 : this.viewContent.subject;
+
+            this.$refs.emailReplyBalloon.open();
 
             // add email
             if (route !== 'Trash') {
@@ -1269,7 +1705,10 @@ export default {
                             : this.viewContentThread.inbox.from_mail;
 
                         let tag = createTag(tag_email, [tag_email]);
-                        this.$refs.replyTag.addTag(tag);
+
+                        this.$nextTick(() => {
+                            this.$refs.replyTag.addTag(tag);
+                        });
                     }
 
                 } else {
@@ -1289,32 +1728,98 @@ export default {
                         }))
                 } else {
                     let tag = createTag(this.viewContent.from_mail, [this.viewContent.from_mail]);
-                    this.$refs.replyTag.addTag(tag);
+
+                    this.$nextTick(() => {
+                        this.$refs.replyTag.addTag(tag);
+                    });
                 }
 
             }
 
+            // clear added attachments
+            this.$nextTick(() => {
+                this.clearAttachments('reply');
+            });
+
             axios.post('/api/mail/get-reply', {
                 email : route !== 'Trash' ? this.viewContentThread.inbox.from_mail : this.viewContent.from_mail,
             })
-                .then((res) => {
-                    // console.log(res.data)
-                })
+            .then((res) => {
+                // console.log(res.data)
+            })
         },
 
-        toggleTemplate() {
-            if (this.withTemplate) {
-                this.withTemplate = false;
+        doForward(route, info = null) {
+
+            this.clearMessageform();
+
+            this.forwardContent.is_sent = info.is_sent
+            this.forwardContent.email = [];
+            this.forwardContent.title = route !== 'Trash'
+                ? info
+                    ? info.subject
+                    : this.viewContentThread.inbox.subject
+                : this.viewContent.subject;
+
+            // set title(subject)
+            this.forwardContent.title = 'Fwd: ' + this.forwardContent.title
+
+            // open forward balloon
+            this.$refs.emailForwardBalloon.open();
+
+            // set content
+            let body = JSON.parse(info.body);
+            let body_html = JSON.parse(info.body_html);
+            let stripped_html = JSON.parse(info.stripped_html);
+
+            // create forward header
+            let header = this.createForwardHeader(info)
+
+            this.forwardContent.content = body_html
+                ? header + body_html['body-html']
+                : stripped_html
+                    ? header + stripped_html['stripped-html']
+                    : header + body['body-plain']
+
+            // add forward attachments
+            if (info.is_sent === 0) {
+                this.forwardContent.forwardAttachments = (info.duration_date < 30 && info.stored_attachments)
+                    ? info.stored_attachments
+                    : null;
             } else {
-                this.withTemplate = true;
+                this.forwardContent.forwardAttachments = info.attachment.length !== 0 ? info.attachment : null;
+            }
+
+            // clear added attachments
+            this.$nextTick(() => {
+                this.clearAttachments('forward');
+            });
+        },
+
+        createForwardHeader(info) {
+            return "<<< Forwarded message >>>"
+                + "<div> <span>From: " + info.from_mail + "</span> <br>"
+                + "<span>Date: " + info.full_clean_date + "</span> <br>"
+                + "<span>Subject: " + info.subject + "</span> <br>"
+                + "<span>To: " + info.received + "</span>"
+                + "</div> <br> <br> <br>"
+        },
+
+        toggleTemplate(mode) {
+            if (mode === 'Send') {
+                this.withTemplateCompose = !this.withTemplateCompose;
+            } else {
+                this.withTemplateReply = !this.withTemplateReply;
             }
         },
 
-        toggleBcc() {
-            if (this.withBcc) {
-                this.withBcc = false;
+        toggleBcc(mode) {
+            if (mode === 'Send') {
+                this.withBccCompose = !this.withBccCompose;
+            } else if (mode === 'Reply') {
+                this.withBccReply = !this.withBccReply;
             } else {
-                this.withBcc = true;
+                this.withBccForward = !this.withBccForward;
             }
         },
 
@@ -1495,16 +2000,24 @@ export default {
             }
         },
 
-        async getTemplateList() {
-            await this.$store.dispatch('getListMails', {params : {country_id : this.countryMailId, full_page : 1}});
+        async getTemplateList(mode) {
+            let countryId = mode === 'Send' ? this.countryMailIdCompose : this.countryMailIdReply;
+
+            await this.$store.dispatch('getListMails', {params : {country_id : countryId, full_page : 1}});
+
+            if (mode === 'Send') {
+                this.listMailTemplateCompose = this.listMailTemplate
+            } else {
+                this.listMailTemplateReply = this.listMailTemplate
+            }
         },
 
         getTemplate(mod) {
-            // this.emailContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
-            // this.replyContent = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0];
             let content = mod === 'send' ? this.emailContent : this.replyContent;
 
-            let template = this.listMailTemplate.data.filter(item => item.id === this.mailInfo)[0]
+            let template = mod === 'send'
+                ? this.listMailTemplateCompose.data.filter(item => item.id === this.mailInfoCompose)[0]
+                : this.listMailTemplateReply.data.filter(item => item.id === this.mailInfoReply)[0]
 
             template['content'] = this.convertLineBreaks(template['content'])
 
@@ -1603,6 +2116,8 @@ export default {
 
         refeshInbox() {
             this.getInbox();
+
+            this.$parent.getListEmails();
         },
 
         bytesToSize(bytes) {
@@ -1747,7 +2262,12 @@ export default {
                 axios.post('/api/mail/is-viewed-thread', {ids : viewed_emails})
 
                 // update unread messages in inbox count on parent component
-                this.updateInboxUnreadCountInParent(this.inboxCount - 1);
+                this.updateInboxUnreadCountInParent(this.inboxCount - 1, this.user.work_mail, 'decrement');
+
+                // update value of unread emails in navbar
+                if (this.user.work_mail === this.user.work_mail_orig) {
+                    this.updateUnreadEmailsCount();
+                }
             }
         },
 
@@ -1829,6 +2349,15 @@ export default {
                     doc.write(content)
                     doc.close()
 
+                    // default hide quoted messages
+                    let quotedElement = $('#iframe' + email.id).contents().find('.gmail_quote');
+
+                    if (quotedElement.length !== 0) {
+                        quotedElement.hide();
+                    } else {
+                        $('#toggle' + email.id).hide()
+                    }
+
                     iFrameElement.onload = () => {
                         iFrameElement.style.height = "0"
                         iFrameElement.style.height = doc.body.scrollHeight + 'px';
@@ -1851,6 +2380,18 @@ export default {
             }
         },
 
+        toggleQuotedMessage(iframeElement) {
+            $('#' + iframeElement).contents().find('.gmail_quote').toggle();
+
+            const iframeEl = this.$refs[iframeElement][0];
+            const doc = iframeEl.contentWindow.document
+
+            iframeEl.style.height = "0"
+            this.$nextTick(() => {
+                iframeEl.style.height = doc.body.scrollHeight + 'px';
+            });
+        },
+
         getFromMail(from_mail) {
             let reply_to = '';
 
@@ -1864,27 +2405,45 @@ export default {
 
         async sendEmail(type) {
             let cc = '';
+            let appendEmail = '';
+            let appendTitle = '';
+            let appendContent = '';
+            let attachments = [];
+            let forwardAttachments = [];
+
             if (type == 'reply') {
                 cc = (typeof (this.replyContent.cc) == "undefined") ? "" : this.replyContent.cc;
+                appendTitle = this.replyContent.title;
+                appendContent = this.replyContent.content;
+                appendEmail = JSON.stringify(this.replyContent.email);
+
+                attachments = this.$refs.file_reply.files;
+            } else if (type == 'forward') {
+                cc = (typeof (this.forwardContent.cc) == "undefined") ? "" : this.forwardContent.cc;
+                appendTitle = this.forwardContent.title;
+                appendContent = this.forwardContent.content;
+                appendEmail = JSON.stringify(this.forwardContent.email);
+
+                attachments = this.$refs.file_forward.files;
             } else {
                 cc = (typeof (this.emailContent.cc) == "undefined") ? "" : this.emailContent.cc;
+                appendTitle = this.emailContent.title;
+                appendContent = this.emailContent.content;
+                appendEmail = JSON.stringify(this.emailContent.email);
+
+                attachments = this.$refs.file_send.files;
             }
 
-            // this.sendBtn = true;
+            // request body
             this.formData = new FormData();
             this.formData.append('cc', cc);
-            this.formData.append('email', type == 'reply' ? JSON.stringify(this.replyContent.email) : JSON.stringify(this.emailContent.email));
-            // this.formData.append('email', type == 'reply' ? this.replyContent.email : this.emailContent.email);
-            this.formData.append('title', type == 'reply' ? this.replyContent.title : this.emailContent.title);
-            this.formData.append('content', type == 'reply' ? this.replyContent.content : this.emailContent.content);
+            this.formData.append('email', appendEmail);
+            this.formData.append('title', appendTitle);
+            this.formData.append('type', type);
             this.formData.append('work_mail', this.user.work_mail);
+            this.formData.append('content', appendContent);
 
-            // get attachments
-
-            // this.formData.append('attachment', type == 'reply' ? this.$refs.file_reply.files[0] : this.$refs.file_send.files[0]);
-
-            let attachments = type === 'reply' ? this.$refs.file_reply.files : this.$refs.file_send.files;
-
+            // attachments
             if (!attachments.length) {
                 this.formData.append('attachment', 'undefined');
             } else {
@@ -1893,11 +2452,26 @@ export default {
                 }
             }
 
+            // forward attachments
+            if (type === 'forward') {
+                if (this.forwardContent.forwardAttachments) {
+                    forwardAttachments = this.forwardContent.forwardAttachments
+                }
+            }
+
+            if (!forwardAttachments.length) {
+                this.formData.append('forwardAttachment', 'undefined');
+            } else {
+                for (let i = 0; i < forwardAttachments.length; i++) {
+                    this.formData.append('forwardAttachment[]', JSON.stringify(forwardAttachments[i]));
+                }
+
+                this.formData.append('is_sent', this.forwardContent.is_sent);
+            }
+
             await this.$store.dispatch('actionSendMailgun', this.formData);
 
             if (this.messageForms.action == 'success') {
-                $("#modal-compose-email").modal('hide');
-                $("#modal-email-reply").modal('hide');
 
                 swal.fire(
                     'Send',
@@ -1908,37 +2482,38 @@ export default {
                 // delete removed images on editor
                 if (type === 'compose') {
                     this.$refs.composeEditor.deleteImages('Removed');
-                } else {
+                } else if (type === 'reply') {
                     this.$refs.replyEditor.deleteImages('Removed');
                 }
 
-                this.emailContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
+                // close balloon
+                this.closeModal(type);
+
+                //clear model
+                this.clearModel(type);
+
+                // clear attachments and templates
+                if (type === 'compose') {
+                    this.$refs.file_send.value = ""
+
+                    this.countryMailIdCompose = '';
+                    this.mailInfoCompose = {};
+
+                } else if (type === 'reply') {
+                    this.$refs.file_reply.value = ""
+
+                    this.countryMailIdReply = '';
+                    this.mailInfoReply = {};
+                } else {
+                    this.$refs.file_forward.value = ""
                 }
 
-                this.replyContent = {
-                    cc : '',
-                    email : [],
-                    title : '',
-                    content : ''
-                }
+                // clear attachment count
+                this.attached_files[type] = 0;
 
-                // clear attachments
-
-                this.$refs.file_reply.value = ""
-                this.$refs.file_send.value = ""
-
-                //this.getStatus();
                 this.getInbox();
-                // this.sendBtn = false;
-                this.countryMailId = '';
-                this.mailInfo = {};
 
                 // clear message forms
-
                 this.clearMessageform()
             } else {
                 await swal.fire(
@@ -1972,7 +2547,7 @@ export default {
                         this.records = response.data.inbox;
                         this.inboxCount = response.data.count;
 
-                        this.updateInboxUnreadCountInParent(this.inboxCount);
+                        this.updateInboxUnreadCountInParent(this.inboxCount, this.user.work_mail, 'load');
 
                         this.paginate.to = this.records.to == null ? 0 : this.records.to;
                         this.paginate.total = this.records.total == null ? 0 : this.records.total;
@@ -2009,8 +2584,8 @@ export default {
             })
         },
 
-        updateInboxUnreadCountInParent(count) {
-            this.$emit('updateInboxUnreadCount', count)
+        updateInboxUnreadCountInParent(count, mail, mode) {
+            this.$emit('updateInboxUnreadCount', {count: count, mail: mail, mode: mode})
         },
 
         retrieveDeletedMessage() {
@@ -2057,6 +2632,44 @@ export default {
 
             return label;
         },
+
+        getAttachments(mode) {
+            let attachments = [];
+
+            if (mode === 'reply') {
+                attachments = this.$refs.file_reply.files
+            } else if (mode === 'forward') {
+                attachments = this.$refs.file_forward.files
+            } else {
+                attachments = this.$refs.file_send.files
+            }
+
+            this.attached_files[mode] = attachments.length
+        },
+
+        clearAttachments(type) {
+            // clear attachments and templates
+            if (type === 'forward') {
+                this.$refs.file_forward.value = ""
+
+            } else if (type === 'reply') {
+                this.$refs.file_reply.value = ""
+            }
+
+            // clear attachment count
+            this.attached_files[type] = 0;
+        },
+
+        // drafts methods
+
+        saveMessageAsDraft(data) {
+            axios.post('/api/mail/save-draft', data).then((response) => {
+                swal.fire({
+                    title: 'Message saved as draft!',
+                    icon: 'success'
+                });
+            });
+        },
     }
 }
 </script>
@@ -2068,10 +2681,9 @@ export default {
     max-width: 100% !important;
     color: #495057;
     display: block;
-    font-size: 1rem;
+    font-size: 1.065rem;
     font-weight: 400;
     line-height: 1.5;
-    margin-top: 10px;
     border-radius: .25rem;
     background-color: #fff;
     border: 1px solid #ced4da;
@@ -2092,6 +2704,7 @@ export default {
 
 .ti-input {
     border: none !important;
+    padding: 2px !important;
 }
 
 .ti-tag .ti-actions {
@@ -2109,4 +2722,41 @@ export default {
 .vue-tag-error {
     border-color: red !important;
 }
+
+/* style the placeholders color across all browser */
+.vue-tags-input ::-webkit-input-placeholder {
+    color: #939ba2;
+}
+
+.vue-tags-input ::-moz-placeholder {
+    color: #939ba2;
+}
+
+.vue-tags-input :-ms-input-placeholder {
+    color: #939ba2;
+}
+
+.vue-tags-input :-moz-placeholder {
+    color: #939ba2;
+}
+
+.selected-placeholder {
+    color: #939ba2;
+}
+
+/* Balloon styles */
+
+.bln-container {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1040;
+    position: fixed;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
 </style>

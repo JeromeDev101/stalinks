@@ -180,4 +180,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserWorkMails', 'user_id');
     }
+
+    public function drafts()
+    {
+        return $this->hasMany('App\Models\MailDraft', 'user_id');
+    }
 }

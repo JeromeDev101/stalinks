@@ -126,6 +126,10 @@ export const Constants = {
         {
             name: 'Buyer - Purchase',
             path: '/purchase',
+        },
+        {
+            name: 'Mails - Draft',
+            path: '/mails/drafts',
         }
     ]
 }

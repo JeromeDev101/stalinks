@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Models\MailDraft;
 use App\Models\Config;
 use App\Models\Log;
 use App\Models\PaymentType;
@@ -312,4 +313,23 @@ class UserController extends Controller
         return response()->json(['result' => true, 'extension'=> $extension], 200);
     }
 
+    public function getUnreadEmails($email)
+    {
+        $unread_emails = User::selectRaw('(select count(distinct CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))) as aggregate from replies where is_viewed = 0 and is_sent = 0 and deleted_at is null and replies.received like CONCAT("%", users.work_mail ,"%")) as unread_count')
+            ->where('work_mail', $email)
+            ->get();
+
+        return response()->json([
+            'count' => $unread_emails[0]->unread_count,
+        ]);
+    }
+
+    public function getUserDrafts()
+    {
+        $draft_count = MailDraft::where('user_id', Auth::id())->count();
+
+        return response()->json([
+            'count' => $draft_count
+        ]);
+    }
 }

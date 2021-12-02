@@ -59,17 +59,10 @@ class MailgunController extends Controller
 
         $request->validate(array_merge($emailRule, $rules));
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->messages(),422);
-        // }
-
+        // create attachment object
         if ($request->attachment == "undefined") {
             $atth = null;
         } else {
-//            $atth = [
-//                array('filePath'=>$request->attachment->getRealPath(),'filename'=>$request->attachment->getClientOriginalName()),
-//            ];
-
             if (is_array($request->attachment)) {
                 foreach ($request->attachment as $att) {
                     $atth[] = array(
@@ -80,6 +73,46 @@ class MailgunController extends Controller
             } else {
                 $atth = null;
             }
+        }
+
+        // create forward attachments object
+        if ($request->forwardAttachment == "undefined") {
+            $forward_attachments = null;
+        } else {
+            if ($request->has('is_sent')) {
+                if (is_array($request->forwardAttachment)) {
+                    foreach ($request->forwardAttachment as $att) {
+                        $decode_attach = json_decode($att);
+
+                        if ($request->is_sent == 0) {
+                            $forward_attachments[] = array(
+                                'filePath' => config('app.url') . '/storage/' . $decode_attach->path,
+                                'filename' => $decode_attach->name
+                            );
+                        } else {
+                            $forward_attachments[] = array(
+                                'filePath' => config('app.url') . '/attachment/' . $decode_attach->filename,
+                                'filename' => $decode_attach->display_name
+                            );
+                        }
+                    }
+                } else {
+                    $forward_attachments = null;
+                }
+            }
+        }
+
+        // merge attachments and forward attachments
+        $final_attachments = null;
+
+        if ($atth != null && $forward_attachments != null) {
+            $final_attachments = array_merge($atth, $forward_attachments);
+        } else if ($atth != null && $forward_attachments == null) {
+            $final_attachments = $atth;
+        } else if ($atth == null && $forward_attachments != null) {
+            $final_attachments = $forward_attachments;
+        } else {
+            $final_attachments = null;
         }
 
         $email_to = $request->email;
@@ -136,38 +169,17 @@ class MailgunController extends Controller
             'signature' => $send_signature,
         ];
 
-//        // get inline images source
-//
-//        $inlineImagesSrc = $this->imageSrcExtractor($signature);
-//
-//        // replace html string images source for mailgun
-//
-//        $send_signature = str_replace("/storage/uploads/", "cid:", $signature);
-//
-//        // for html content
-//
-//        $inlineImagesContentSrc = $this->imageSrcExtractor($request->content);
-//
-//        $send_content = str_replace("/storage/uploads/", "cid:", $request->content);
-//
-//        // merge all inline images src
-//
-//        $inlineImagesAllSrc = array_merge($inlineImagesSrc, $inlineImagesContentSrc);
-
         $params = [
             'from'                => $work_mail,
             'to'                  => array($str),
             'subject'             => $request->title,
-//            'html'                => "<div style='white-space: pre'>" . $request->content . "</div>",
-//            'html'                => "<div style='white-space: pre'>" . $send_content . $send_signature . "</div>",
             'html'                => view('send_email', $data)->render(),
             'recipient-variables' => json_encode($object),
-            'attachment'          => $atth,
+            'attachment'          => $final_attachments,
             'o:tag'               => array('test1'),
             'o:tracking'          => 'yes',
             'o:tracking-opens'    => 'yes',
             'o:tracking-clicks'   => 'yes',
-//            'inline'              => $inlineImagesAllSrc
         ];
 
         if (isset($request->cc) && $request->cc != "") {
@@ -177,21 +189,9 @@ class MailgunController extends Controller
         $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
         // saving attachments to database
-
         $attac_object = null;
 
         if ($request->attachment != "undefined") {
-//            $attach = time().'.'.$request->attachment->getClientOriginalExtension();
-//            $request->attachment->move(public_path('/attachment'), $attach);
-//
-//            $attac_object = [
-//                'url'           => url('/attachment/'.$attach),
-//                'size'          => \File::size(public_path('/attachment/'), $attach),
-//                'type'          => $request->attachment->getClientOriginalExtension(),
-//                'filename'      => $attach,
-//                'display_name'  => $request->attachment->getClientOriginalName()
-//            ];
-
             if (is_array($request->attachment)) {
                 foreach ($request->attachment as $att) {
                     $attach = time() . '.' . $att->getClientOriginalExtension();
@@ -208,7 +208,27 @@ class MailgunController extends Controller
             }
         }
 
-//        $input['body-plain'] = $request->content;
+        // add forward attachments
+        if ($request->forwardAttachment != "undefined") {
+            if (is_array($request->forwardAttachment)) {
+                foreach ($request->forwardAttachment as $att) {
+                    $decode_attach = json_decode($att);
+
+                    if ($request->is_sent == 0) {
+                        $attac_object[] = [
+                            'url'          => config('app.url') . '/storage/' . $decode_attach->path,
+                            'size'         => $decode_attach->size,
+                            'type'         => $decode_attach->mime,
+                            'filename'     => str_replace('attachments/', '', $decode_attach->path),
+                            'display_name' => $decode_attach->name
+                        ];
+                    } else {
+                        $attac_object[] = (array) $decode_attach;
+                    }
+                }
+            }
+        }
+
         $input['body-plain'] = "<div style='white-space: pre'>" . $request->content . $signature . "</div>";
 
         $res = preg_replace("/[<->]/", "", $sender->getId());
@@ -354,7 +374,7 @@ class MailgunController extends Controller
             switch ($request->param) {
                 case 'Inbox':
 
-                    if ($request->email == 'jess@stalinks.com' || $request->email == 'all') {
+                    if ($request->email == 'all') {
 //                        $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                         $inbox = $inbox->where('replies.is_sent', 0)
                             ->whereNull('replies.deleted_at')
@@ -394,7 +414,7 @@ class MailgunController extends Controller
 
                     break;
                 case 'Sent':
-                    if ($request->email == 'jess@stalinks.com' || $request->email == 'all') {
+                    if ($request->email == 'all') {
                         $inbox = $inbox->where('replies.is_sent', 1)->where(function ($sub) {
                             $sub->whereNull('deleted_at')
                                 ->orWhere('deleted_at', 1);
@@ -433,9 +453,7 @@ class MailgunController extends Controller
 
                     break;
                 case 'Trash':
-                    // $inbox = $inbox->withTrashed();
-                    // SELECT * FROM `replies` WHERE `deleted_at` != 1 AND `sender` = 'jess@stalinks.com' OR  `deleted_at` != 1 AND `received` = 'jess@stalinks.com'
-                    if ($request->email == 'jess@stalinks.com' || $request->email == 'all') {
+                    if ($request->email == 'all') {
                         $inbox = $inbox->whereNotNull('replies.deleted_at')->where('replies.deleted_at', '!=', 1);
                     } else {
                         $inbox = $inbox
@@ -450,7 +468,7 @@ class MailgunController extends Controller
                     break;
                 case 'Starred':
 
-                    if ($request->email == 'jess@stalinks.com' || $request->email == 'all') {
+                    if ($request->email == 'all') {
                         $inbox = $inbox->where('replies.is_starred', 1)
                             ->where(function ($sub) {
                                 $sub->whereNull('deleted_at')
@@ -509,7 +527,7 @@ class MailgunController extends Controller
             ->where('is_sent', 0)
             ->whereNull('deleted_at');
 
-        if ($request->email !== 'jess@stalinks.com' && $request->email !== 'all') {
+        if ($request->email !== 'all') {
             $cnt = $cnt->where('replies.received', 'like', '%' . $request->email . '%');
         }
 
@@ -572,7 +590,7 @@ class MailgunController extends Controller
     {
         $add_inbox = Reply::whereIn('subject', $subjects);
 
-        if ($request->email !== 'jess@stalinks.com' && $request->email !== 'all') {
+        if ($request->email !== 'all') {
             $add_inbox = $add_inbox->where(function ($sub) use ($request) {
                 $sub->orWhere('sender', 'like', '%' . $request->email . '%')
                     ->orWhere('received', 'like', '%' . $request->email . '%');

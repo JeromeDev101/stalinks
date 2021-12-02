@@ -103,6 +103,19 @@
                 </div>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link">
+
+                    <i class="fa fa-envelope"></i>
+                    <span
+                        class="badge badge-danger navbar-badge"
+                        v-if="unreadEmails.count > 0">
+
+                            {{ unreadEmails.count }}
+                        </span>
+                </a>
+            </li>
+
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <img :src="user.avatar" class="user-image img-circle elevation-2" alt="User Image">
@@ -536,6 +549,7 @@ export default {
 
     mounted() {
         this.getNotifications(this.user.id);
+        this.getUserUnreadEmails(this.user.work_mail_orig);
 
         pusher.logToConsole = true;
 
@@ -563,8 +577,8 @@ export default {
     computed : {
         ...mapState({
             user : state => state.storeAuth.currentUser,
-            notifications : state =>
-                state.storeNotification.notifications,
+            notifications : state => state.storeNotification.notifications,
+            unreadEmails : state => state.storeAuth.userUnreadEmails,
             messageForms : state => state.storeWalletTransaction.messageForms,
             listPayment : state => state.storeWalletTransaction.listPayment,
         }),
@@ -591,6 +605,7 @@ export default {
             logout : "auth/logout",
             getNotifications : "getUserNotifications",
             seenNotifications : "seenUserNotifications",
+            getUserUnreadEmails : "getUserUnreadEmails",
         }),
 
         getPaymentTypeImages() {

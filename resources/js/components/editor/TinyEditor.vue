@@ -2,11 +2,13 @@
     <div>
         <tinymce
             v-model="editorData"
+            ref="tinyVueEditor"
             :id="editorId"
             :value="value"
             :other_options="options"
 
-            @editorChange="changeData">
+            @editorChange="changeData"
+            @editorInit="editorInit">
 
         </tinymce>
     </div>
@@ -28,6 +30,7 @@ export default {
                 allow_script_urls: false,
                 forced_root_block : false,
                 file_picker_types: 'image',
+                extended_valid_elements: 'doctype',
                 menubar: 'file edit insert format tools table',
                 toolbar1: 'fullscreen  preview print | formatselect | bold italic  strikethrough  forecolor backcolor | link image | charmap | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
                 images_upload_handler: function (blobInfo, success, failure) {
@@ -75,6 +78,16 @@ export default {
     },
     methods: {
         changeData() {
+        },
+
+        editorInit() {
+            let content = this.value
+
+            if (content.includes('<!doctype html>')) {
+                content = content.replace('<!doctype html>','');
+            }
+
+            this.$refs.tinyVueEditor.editor.setContent(content);
         },
 
         handleInput (e) {

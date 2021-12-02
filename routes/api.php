@@ -40,6 +40,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
     Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
     Route::name('upload-avatar')->post('/user-upload-avatar', 'UserController@uploadAvatar');
+    Route::name('get-unread-emails')->get('/get-unread-emails/{user_id}', 'UserController@getUnreadEmails');
+    Route::name('get-user-drafts')->get('/get-user-drafts', 'UserController@getUserDrafts');
 
     //Article
     Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');
@@ -267,6 +269,12 @@ Route::middleware('auth:api')->group(function () {
 
         // mailgun attachments
         Route::name('email_attachments')->get('/delete-old-attachments','MailgunController@deleteOldAttachments');
+
+        // drafts
+        Route::name('save-draft')->post('/save-draft','MailDraftController@store');
+        Route::name('get-drafts')->post('/get-drafts','MailDraftController@index');
+        Route::name('delete-draft')->post('/delete-draft','MailDraftController@destroy');
+        Route::name('delete-selected-drafts')->post('/delete-selected-drafts','MailDraftController@destroySelected');
     });
 
     Route::name('labels')->resource('/label','LabelController');
@@ -275,7 +283,7 @@ Route::middleware('auth:api')->group(function () {
      //Notifications
     Route::name('notifications.get')->get('/notifications/{user_id}', 'NotificationController@getUserNotifications');
     Route::name('notifications.seen')->put('/notifications/{user_id}', 'NotificationController@setUserNotificationsSeen');
-    Route::name('notifications.get-all')->get('/notifications-all/{user_id}', 'NotificationController@getAllUserNotifications');
+    Route::name('notifications.get-all')->get('/notifications-all/{email}', 'NotificationController@getAllUserNotifications');
 
     //Continents
     Route::name('get-list-continents')->get('/continent-list', 'ContinentController@getListContinent');

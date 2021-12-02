@@ -12,7 +12,14 @@
 
         <div class="row">
             <div class="col-sm-3">
-                <button class="btn btn-success btn-lg btn-block mb-3" @click="checkWorkMail" >Compose</button>
+                <button
+                    :disabled="$route.name === 'Drafts' || $route.name === 'mail-signature' || $route.name === 'mail-template'"
+                    class="btn btn-success btn-lg btn-block mb-3"
+
+                    @click="checkWorkMail">
+
+                    Compose
+                </button>
 
                 <div v-if="user.isAdmin">
                     <div class="form-group">
@@ -100,6 +107,22 @@
                                     Starred
                                 </router-link>
                             </li>
+                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
+                                <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
+                                    <i class="fa fa-fw fa-trash"></i>
+                                    Trash
+                                </router-link>
+                            </li>
+                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Drafts'}">
+                                <router-link :to="{path:'/mails/drafts', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
+                                    <i class="far fa-file-alt"></i>
+                                    Drafts
+
+                                    <span class="badge badge-primary float-right" v-if="userDrafts.count !== 0">
+                                        {{userDrafts.count}}
+                                    </span>
+                                </router-link>
+                            </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
                                 <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-envelope"></i>
@@ -110,12 +133,6 @@
                                 <router-link :to="{path:'/mails/signature', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-id-card"></i>
                                     Signatures
-                                </router-link>
-                            </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
-                                <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
-                                    <i class="fa fa-fw fa-trash"></i>
-                                    Trash
                                 </router-link>
                             </li>
                         </ul>
@@ -166,7 +183,7 @@
             </div>
 
             <div class="col-md-9">
-                <router-view @updateInboxUnreadCount="updateUnreadInboxCount"></router-view>
+                <router-view ref="mailView" @updateInboxUnreadCount="updateUnreadInboxCount"></router-view>
             </div>
         </div>
 
@@ -210,7 +227,7 @@
 
 <script>
 import axios from 'axios';
-import { mapState } from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import { Compact } from 'vue-color';
 export default {
     data() {
@@ -242,6 +259,7 @@ export default {
         ...mapState({
             user: state => state.storeAuth.currentUser,
             messageForms: state => state.storeMailgun.messageForms,
+            userDrafts : state => state.storeAuth.userDrafts,
         }),
 
         adminAccessOptions() {
@@ -302,17 +320,21 @@ export default {
     },
 
     mounted() {
-        this.displayInboxCnt = this.$children[7]._data.inboxCount;
+        this.displayInboxCnt = this.$refs.mailView._data.inboxCount;
         this.setQueryLabel(null)
-        // console.log(this.$children[5]._data.inboxCount)
         this.getListLabels();
         this.getListEmails();
+        this.getUserDrafts();
     },
 
     methods: {
+        ...mapActions({
+            getUserDrafts : "getUserDrafts",
+        }),
+
         selectWorkMail() {
             this.setQueryLabel(null)
-            this.$children[7].getInbox()
+            this.$refs.mailView.getInbox()
             this.getListLabels()
         },
 
@@ -326,7 +348,9 @@ export default {
 
         checkWorkMail() {
             if (this.user.work_mail) {
-                $("#modal-compose-email").modal('show')
+
+                this.$refs.mailView.$refs.emailBalloon.open();
+
             } else {
                 swal.fire(
                     'Error',
@@ -398,8 +422,20 @@ export default {
             });
         },
 
-        updateUnreadInboxCount(count) {
-            this.displayInboxCnt = count
+        updateUnreadInboxCount({count, mail, mode}) {
+
+            if (mode === 'load') {
+                this.displayInboxCnt = count;
+            } else {
+                this.displayInboxCnt = this.displayInboxCnt - 1;
+
+                // decrease value of unread in list emails
+                let index = this.listUserEmail.findIndex(item => item.work_mail === mail);
+
+                if (index >= 0) {
+                    this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - 1;
+                }
+            }
         }
     }
 }
