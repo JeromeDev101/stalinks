@@ -170,12 +170,12 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         if (!empty($filters->querySearch)) {
             $query = $this->model
             ->whereHas('publisher', function ($query) use ($filters) {
-                $query->where('url', 'like', '%' . $filters->querySearch . '%');
+                $query->where('url', 'like', '%' . remove_http($filters->querySearch) . '%');
             });
         }
 
         if(!empty($filters->url_advertiser)) {
-            $query = $query->where('url_advertiser', 'like', '%' . $filters->url_advertiser . '%');
+            $query = $query->where('url_advertiser', 'like', '%' . remove_http($filters->url_advertiser) . '%');
         }
 
         if(!empty($filters->seller)) {
