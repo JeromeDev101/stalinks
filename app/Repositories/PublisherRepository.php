@@ -51,11 +51,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         'Unlisted',
     ];
 
-    public function __construct(Publisher $model, HttpClient $httpClient)
+    public function __construct()
     {
-        parent::__construct($model);
+        parent::__construct(new Publisher());
 
-        $this->httpClient = $httpClient;
+        $this->httpClient = new HttpClient();
     }
 
     public function getList($filter)
@@ -1026,5 +1026,26 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         foreach ($this->statusList as $value) {
             $dataReturn[$key][$value] = 0;
         }
+    }
+
+    public function getDuplicateUrls()
+    {
+        return Publisher::select('url')->groupBy('url')->havingRaw('count(*) > 1')->get()->pluck('url');
+    }
+
+    public function getNonDuplicateUrls()
+    {
+        return Publisher::select('url')->groupBy('url')->havingRaw('count(*) < 2')->get()->pluck('url');
+    }
+
+    public function getPublisherByUrl($url, $relationships = [])
+    {
+        $query = Publisher::where('url', $url);
+
+        foreach ($relationships as $relationship) {
+            $query->with($relationship);
+        }
+
+        return $query->get();
     }
 }
