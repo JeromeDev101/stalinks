@@ -1463,6 +1463,8 @@ export default {
             },
 
             modelMail : {
+                cc: null,
+                mode: 'send',
                 title : '',
                 content : '',
                 mail_name : '',
@@ -1550,24 +1552,51 @@ export default {
                 })
         },
 
+        saveMessageAsDraft(data) {
+            axios.post('/api/mail/save-draft', data).then((response) => {
+                swal.fire({
+                    title: 'Message saved as draft!',
+                    icon: 'success'
+                });
+            });
+        },
+
         modalCloser() {
             if (this.modelMail.title || this.modelMail.content) {
 
                 swal.fire({
-                    title : "Are you sure?",
-                    text : "Email contents will be removed",
-                    icon : "warning",
-                    showCancelButton : true,
-                    confirmButtonText : 'Yes',
-                    cancelButtonText : 'No'
+                    title : "Save as Draft?",
+                    text : "Save email contents as draft?",
+                    icon : "question",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonText: 'Yes',
+                    cancelButtonColor: 'red',
+                    confirmButtonColor: 'green',
                 })
                     .then((result) => {
                         if (result.isConfirmed) {
+
+                            // save message content as draft
+
+                            // add email array
+                            this.modelMail.email = this.registrationEmails
+
+                            this.saveMessageAsDraft(this.modelMail);
+
+                            this.closeModal()
+                            this.clearMailModel()
+
+                        } else if (result.dismiss == 'cancel') {
+
                             // remove all images inserted on editor
                             this.$refs.registrationEmailEditor.deleteImages('All');
 
                             this.closeModal()
                             this.clearMailModel()
+
                         }
                     });
 
@@ -1738,6 +1767,8 @@ export default {
                 this.$refs.registrationEmailEditor.deleteImages('Removed');
 
                 this.modelMail = {
+                    cc: null,
+                    mode: 'send',
                     title : '',
                     content : '',
                     mail_name : '',

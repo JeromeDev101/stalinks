@@ -117,6 +117,19 @@ class PublisherController extends Controller
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic):$request->topic;
 
         $url = str_replace( '/','',preg_replace('/^www\./i', '', $url_copy));
+
+        // check if url is valid
+        $isValidURL = $this->publisherRepository->isValidURL($url);
+
+        if (!$isValidURL) {
+            return response()->json([
+                "message" => 'The given data was invalid.',
+                "errors" => [
+                    "url" => 'Invalid url format.',
+                ],
+            ],422);
+        }
+
         $input['url'] = $url;
 
         if (!isset($input['kw_anchor']) || $input['kw_anchor'] == null) {

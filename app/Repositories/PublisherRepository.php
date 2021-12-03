@@ -881,7 +881,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $result;
     }
 
-    private function isValidURL($url){
+    public function isValidURL($url){
         return preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $url);
     }
 
