@@ -75,29 +75,34 @@ class MailgunController extends Controller
             }
         }
 
-        // create forward attachments object
-        if ($request->forwardAttachment == "undefined") {
-            $forward_attachments = null;
-        } else {
-            if ($request->has('is_sent')) {
-                if (is_array($request->forwardAttachment)) {
-                    foreach ($request->forwardAttachment as $att) {
-                        $decode_attach = json_decode($att);
+        $forward_attachments = null;
 
-                        if ($request->is_sent == 0) {
-                            $forward_attachments[] = array(
-                                'filePath' => config('app.url') . '/storage/' . $decode_attach->path,
-                                'filename' => $decode_attach->name
-                            );
-                        } else {
-                            $forward_attachments[] = array(
-                                'filePath' => config('app.url') . '/attachment/' . $decode_attach->filename,
-                                'filename' => $decode_attach->display_name
-                            );
+        // create forward attachments object
+
+        if ($request->has('forwardAttachment')) {
+            if ($request->forwardAttachment == "undefined") {
+                $forward_attachments = null;
+            } else {
+                if ($request->has('is_sent')) {
+                    if (is_array($request->forwardAttachment)) {
+                        foreach ($request->forwardAttachment as $att) {
+                            $decode_attach = json_decode($att);
+
+                            if ($request->is_sent == 0) {
+                                $forward_attachments[] = array(
+                                    'filePath' => config('app.url') . '/storage/' . $decode_attach->path,
+                                    'filename' => $decode_attach->name
+                                );
+                            } else {
+                                $forward_attachments[] = array(
+                                    'filePath' => config('app.url') . '/attachment/' . $decode_attach->filename,
+                                    'filename' => $decode_attach->display_name
+                                );
+                            }
                         }
+                    } else {
+                        $forward_attachments = null;
                     }
-                } else {
-                    $forward_attachments = null;
                 }
             }
         }
