@@ -1,8 +1,8 @@
 <template>
-    <div class="custom-dropdown dropdown">
+    <div class="custom-dropdown dropdown" :class="customClass">
         <button
-            class="btn"
-            :class="{'btn-default': checkSortItems, 'btn-primary': !checkSortItems}"
+            class="btn w-100"
+            :class="{'btn-primary': checkSortItems, 'btn-success': !checkSortItems}"
 
             @click="myFunction()">
             Sort
@@ -44,8 +44,12 @@
             <hr/>
 
             <div class="px-2 pb-2 w-100 text-right">
-                <button class="btn btn-primary" @click="submitSort()" :disabled="checkSortItems">Sort</button>
-                <button class="btn btn-success" @click="resetSort()" :disabled="checkSortItems">Clear</button>
+                <button
+                    :class="{'btn-primary': checkSortItems, 'btn-success': !checkSortItems}"
+                    class="btn"
+
+                    @click="submitSort()" :disabled="checkSortItems">Sort</button>
+                <button class="btn btn-danger" @click="resetSort()" :disabled="checkSortItems">Clear</button>
                 <button class="btn btn-default" @click="myFunction()">Close</button>
             </div>
         </div>
@@ -71,6 +75,11 @@
             sorted: {
                 type: Boolean,
                 default: false
+            },
+
+            customClass: {
+                type: Array,
+                default: []
             }
         },
 

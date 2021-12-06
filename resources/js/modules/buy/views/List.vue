@@ -354,59 +354,69 @@
                             Credit Left: <b>${{listBuy.credit }}</b>
                         </span>
 
-                        <div class="input-group input-group-sm float-right ml-3" style="width: 100px">
-                            <select name=""
-                                    class="form-control float-right"
-                                    @change="getBuyList"
-                                    v-model="filterModel.paginate"
-                                    style="height: 37px;">
-                                <option v-for="option in paginate" v-bind:value="option">
-                                    {{ option }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i
-                            class="fa fa-cog"></i></button>
-
-                        <div v-if="isCreditAuth" class="alert alert-warning my-3">
-                            Sorry you cannot Purchase backlinks due to lack of Wallet. Click
-                            <button class="btn btn-link" @click="checkCreditAuth">
-                                Retry
-                            </button>
-                            if you have given permission to purchased
-                        </div>
-
-                        <div class="col-md-2 my-3">
-                            <div class="input-group">
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle"
-                                            :disabled="isDisabled"
-                                            type="button"
-                                            id="dropdownMenuButton"
-                                            data-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false">
-                                        Selected Action
+                        <div class="row">
+                            <div class="col-md-12 mt-0 pt-0">
+                                <div v-if="isCreditAuth" class="alert alert-warning">
+                                    Sorry you cannot Purchase backlinks due to lack of Wallet. Click
+                                    <button class="btn btn-link" @click="checkCreditAuth">
+                                        Retry
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <!-- <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a> -->
-                                        <a class="dropdown-item " @click="interestedSelected">Interested</a>
-                                        <a class="dropdown-item " @click="notInterestedSelected">Not Interested</a>
-                                    </div>
+                                    if you have given permission to purchased
                                 </div>
                             </div>
                         </div>
 
-                        <div class="float-right col-md-1 mb-3">
-                            <Sort
-                                ref="sortComponent"
-                                :sorted="isSorted"
-                                :items="sortOptions"
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle"
+                                                :disabled="isDisabled"
+                                                type="button"
+                                                id="dropdownMenuButton"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Selected Action
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <!-- <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a> -->
+                                            <a class="dropdown-item " @click="interestedSelected">Interested</a>
+                                            <a class="dropdown-item " @click="notInterestedSelected">Not Interested</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                @submitSort="sortBuyBacklinks"
-                                @updateOptions="updateSortOptions">
-                            </Sort>
+                            <div class="col-md-4 d-flex justify-content-end">
+
+                                <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default mr-2">
+                                    <i class="fa fa-cog"></i>
+                                </button>
+
+                                <div class="mr-2 w-25">
+                                    <Sort
+                                        ref="sortComponent"
+                                        :sorted="isSorted"
+                                        :items="sortOptions"
+                                        :custom-class="['w-100']"
+
+                                        @submitSort="sortBuyBacklinks"
+                                        @updateOptions="updateSortOptions">
+                                    </Sort>
+                                </div>
+
+                                <select
+                                    class="form-control w-25"
+                                    @change="getBuyList"
+                                    v-model="filterModel.paginate"
+                                    style="height: 37px; min-width: 100px">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
 
                         <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
