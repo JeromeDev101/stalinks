@@ -262,7 +262,7 @@
                             </template>
 
                         </vue-virtual-table>
-                        <pagination :data="listArticles.data" @pagination-change-page="getListArticles" :limit="8"></pagination>
+                        <pagination :data="listArticles" @pagination-change-page="getListArticles" :limit="8"></pagination>
                     </div>
                 </div>
             </div>
@@ -889,7 +889,7 @@
                 // console.log(this.getArticleInfo())
                 if( this.id_article ) {
                     this.getArticleInfo().then((res) => {
-                        var article = res.data[0];
+                        let article = res.data.data[0];
 
                         if( article ){
                             this.doUpdate(article.backlink, article);

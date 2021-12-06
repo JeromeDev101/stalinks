@@ -227,7 +227,16 @@
                                 <td
                                     v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
                                 <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
-                                <td v-show="tblOptions.arc_id">{{ sales.article_id == null ? 'N/A':'' }} <a href="#" @click="redirectToArticle(sales.article_id)" v-if="sales.article_id != null" title="Go to Article">{{ sales.article_id }}</a></td>
+                                <td v-show="tblOptions.arc_id">
+                                    {{ sales.article_id == null ? 'N/A':'' }}
+                                    <span
+                                        v-if="sales.article_id != null" title="Go to Article"
+                                        style="cursor: pointer; color: #1c85ff"
+
+                                        @click="redirectToArticle(sales.article_id)">
+                                        {{ sales.article_id }}
+                                    </span>
+                                </td>
                                 <td
                                     v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
                                 <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
@@ -908,13 +917,16 @@
             },
 
             redirectToArticle(id) {
-                this.$router.push({
-                    mode: 'history',
-                    name: 'articles',
-                    query: {
-                        id: id,
-                    },
-                });
+                // this.$router.push({
+                //     mode: 'history',
+                //     name: 'articles',
+                //     query: {
+                //         id: id,
+                //     },
+                // });
+
+                let routeData = this.$router.resolve({name: 'articles', query: {id: id}});
+                window.open(routeData.href, '_blank');
             },
 
             doSearch() {
