@@ -672,41 +672,11 @@ class MailgunController extends Controller
         $stripped_html = null;
         $body_html     = null;
 
-        $aw = $this->mg->events()->get('stalinks.com');
-        // $r_attachment = '';
-
-        //get all eventsitems============
-        foreach ($aw->getItems() as $kwe) {
-            //all all message sent/received==========
-            foreach ($kwe->getMessage() as $wa) {
-                //check if data is array some is not we need to make sure=======
-                if (is_array($wa)) {
-                    //check if mesage_id property exist before using it as condition=======
-                    if (array_key_exists("message-id", $wa)) {
-                        if ($wa['message-id'] == $message_id) {
-                            //dd($kwe->getStorage()['url']);=========
-
-                            $aw = $this->mg->messages()->show($kwe->getStorage()['url']);
-
-                            $r_attachment = $aw->getAttachments();
-                            //return response()->json( new ShowMessage($message) ); ============
-                        }
-                    }
-                }
-            }
-        }
+         $r_attachment = [];
 
         $input = $request->all();
 
         DB::table('test_replies')->insert(['alldata' => json_encode($input)]);
-
-        // if( $request->has('attachments') )
-        // {
-
-        //    $attch_obj = json_decode($request->attachments)[0];
-        // }
-
-        // dd($r_attachment);
 
         if (isset($input['In-Reply-To']) && $input['In-Reply-To']) {
             $in_reply_to = preg_replace("/[<>]/", "", $input['In-Reply-To']);
@@ -732,7 +702,6 @@ class MailgunController extends Controller
             'body_html'       => $body_html,
             'attachment'      => json_encode($r_attachment),
             'stored_attachments'      => $stored_attachments_data,
-            // 'attachment'        => '',
             'from_mail'       => $request->from,
             'date'            => '',
             'message_id'      => $message_id,
