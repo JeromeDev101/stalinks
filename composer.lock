@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fc7f5d2f68ec7283dc3647a9e91f57c",
+    "content-hash": "749ea0bef408f1fc86b12e05fee9e479",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1811,6 +1811,63 @@
             "time": "2019-10-08T16:45:24+00:00"
         },
         {
+            "name": "laravel/slack-notification-channel",
+            "version": "v2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/slack-notification-channel.git",
+                "reference": "f428e76b8d0a0a2ff413ab225eeb829b9a8ffc20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/slack-notification-channel/zipball/f428e76b8d0a0a2ff413ab225eeb829b9a8ffc20",
+                "reference": "f428e76b8d0a0a2ff413ab225eeb829b9a8ffc20",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.0|^7.0",
+                "illuminate/notifications": "~5.8.0|^6.0|^7.0|^8.0",
+                "php": "^7.1.3|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Illuminate\\Notifications\\SlackChannelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Notifications\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Slack Notification Channel for laravel.",
+            "keywords": [
+                "laravel",
+                "notifications",
+                "slack"
+            ],
+            "time": "2021-01-26T20:04:54+00:00"
+        },
+        {
             "name": "laravel/tinker",
             "version": "v1.0.10",
             "source": {
@@ -3382,7 +3439,6 @@
                     "homepage": "https://github.com/paypal/paypalhttp_php/contributors"
                 }
             ],
-            "abandoned": true,
             "time": "2019-11-06T21:27:12+00:00"
         },
         {
@@ -4251,6 +4307,201 @@
                 "x509"
             ],
             "time": "2021-04-06T13:56:45+00:00"
+        },
+        {
+            "name": "phpunit/php-timer",
+            "version": "2.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/php-timer.git",
+                "reference": "2454ae1765516d20c4ffe103d85a58a9a3bd5662"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/2454ae1765516d20c4ffe103d85a58a9a3bd5662",
+                "reference": "2454ae1765516d20c4ffe103d85a58a9a3bd5662",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "Utility class for timing",
+            "homepage": "https://github.com/sebastianbergmann/php-timer/",
+            "keywords": [
+                "timer"
+            ],
+            "support": {
+                "issues": "https://github.com/sebastianbergmann/php-timer/issues",
+                "source": "https://github.com/sebastianbergmann/php-timer/tree/2.1.3"
+            },
+            "time": "2020-11-30T08:20:02+00:00"
+        },
+        {
+            "name": "pragmarx/health",
+            "version": "v1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/health.git",
+                "reference": "eff81f2177f0b7b9fd43cd087cf26cb7c67bf1ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/health/zipball/eff81f2177f0b7b9fd43cd087cf26cb7c67bf1ec",
+                "reference": "eff81f2177f0b7b9fd43cd087cf26cb7c67bf1ec",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/support": ">=5.5",
+                "php": ">=7.1",
+                "phpunit/php-timer": "^1.0|^2.0|^3.0|^4.0|^5.0",
+                "pragmarx/yaml": ">=0.1"
+            },
+            "require-dev": {
+                "docusign/esign-client": ">=2.0",
+                "guzzlehttp/guzzle": ">=6.0",
+                "laravel/laravel": ">=5.5",
+                "nesbot/carbon": ">=1.34",
+                "orchestra/testbench": ">=3.5",
+                "phpunit/phpunit": ">=6.5",
+                "predis/predis": ">=1.0",
+                "sensiolabs/security-checker": ">=4.1"
+            },
+            "suggest": {
+                "docusign/esign-client": ">=2.0",
+                "guzzlehttp/guzzle": ">=6.0",
+                "league/flysystem-aws-s3-v3": ">=1.0",
+                "predis/predis": ">=1.0",
+                "sensiolabs/security-checker": ">=4.1",
+                "spatie/ssl-certificate": ">=1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PragmaRX\\Health\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Support/helpers.php"
+                ],
+                "psr-4": {
+                    "PragmaRX\\Health\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "email": "acr@antoniocarlosribeiro.com",
+                    "role": "Creator & Designer"
+                }
+            ],
+            "description": "Laravel Server & App Health Monitor and Notifier",
+            "keywords": [
+                "app",
+                "health",
+                "laravel",
+                "monitor",
+                "notifications",
+                "panel",
+                "pragmarx",
+                "server"
+            ],
+            "time": "2021-12-02T18:34:17+00:00"
+        },
+        {
+            "name": "pragmarx/yaml",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/antonioribeiro/yaml.git",
+                "reference": "9f2b44c4a31f8a71bab77169205aee7184ae3ef4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/antonioribeiro/yaml/zipball/9f2b44c4a31f8a71bab77169205aee7184ae3ef4",
+                "reference": "9f2b44c4a31f8a71bab77169205aee7184ae3ef4",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.5.33",
+                "php": ">=7.0",
+                "symfony/yaml": "^3.4|^4.0|^5.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "3.5|^3.6|^4.0|^5.0",
+                "phpunit/phpunit": "^4.0|^6.4|^7.0|^8.0|^9.0"
+            },
+            "suggest": {
+                "ext-yaml": "Required to use the PECL YAML."
+            },
+            "type": "library",
+            "extra": {
+                "component": "package",
+                "laravel": {
+                    "providers": [
+                        "PragmaRX\\Yaml\\Package\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Yaml": "PragmaRX\\Yaml\\Package\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PragmaRX\\Yaml\\Package\\": "src/package",
+                    "PragmaRX\\Yaml\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Antonio Carlos Ribeiro",
+                    "email": "acr@antoniocarlosribeiro.com",
+                    "role": "Creator & Designer"
+                }
+            ],
+            "description": "Load your Laravel config files using yaml",
+            "keywords": [
+                "config",
+                "laravel",
+                "yaml"
+            ],
+            "time": "2020-05-21T19:46:28+00:00"
         },
         {
             "name": "psr/container",
@@ -5176,6 +5427,7 @@
                 "mail",
                 "mailer"
             ],
+            "abandoned": "symfony/mailer",
             "time": "2021-03-09T12:30:35+00:00"
         },
         {
@@ -7031,6 +7283,64 @@
             "time": "2021-03-27T19:49:03+00:00"
         },
         {
+            "name": "symfony/yaml",
+            "version": "v5.3.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "226638aa877bc4104e619a15f27d8141cd6b4e4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/226638aa877bc4104e619a15f27d8141cd6b4e4a",
+                "reference": "226638aa877bc4104e619a15f27d8141cd6b4e4a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-ctype": "~1.8"
+            },
+            "conflict": {
+                "symfony/console": "<4.4"
+            },
+            "require-dev": {
+                "symfony/console": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command"
+            },
+            "bin": [
+                "Resources/bin/yaml-lint"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Loads and dumps YAML files",
+            "homepage": "https://symfony.com",
+            "time": "2021-11-20T16:42:42+00:00"
+        },
+        {
             "name": "tijsverkoyen/css-to-inline-styles",
             "version": "2.2.3",
             "source": {
@@ -8240,59 +8550,6 @@
                 "source": "https://github.com/sebastianbergmann/php-text-template/tree/1.2.1"
             },
             "time": "2015-06-21T13:50:34+00:00"
-        },
-        {
-            "name": "phpunit/php-timer",
-            "version": "2.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "2454ae1765516d20c4ffe103d85a58a9a3bd5662"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/2454ae1765516d20c4ffe103d85a58a9a3bd5662",
-                "reference": "2454ae1765516d20c4ffe103d85a58a9a3bd5662",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Utility class for timing",
-            "homepage": "https://github.com/sebastianbergmann/php-timer/",
-            "keywords": [
-                "timer"
-            ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-timer/issues",
-                "source": "https://github.com/sebastianbergmann/php-timer/tree/2.1.3"
-            },
-            "time": "2020-11-30T08:20:02+00:00"
         },
         {
             "name": "phpunit/php-token-stream",

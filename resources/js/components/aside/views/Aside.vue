@@ -38,10 +38,12 @@
                         :class="{
                         'active' :
                             $route.name == 'system-it' ||
-                            $route.name == 'system-finance',
+                            $route.name == 'system-finance' ||
+                            $route.name == 'system-dev',
                         'menu-open':
                              $route.name == 'system-it' ||
-                            $route.name == 'system-finance'
+                            $route.name == 'system-finance' ||
+                            $route.name == 'system-dev'
                     }">
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
@@ -66,6 +68,14 @@
                                              :class="{ active: $route.name == 'system-finance' }">
                                     <i class="fas fa-hand-holding-usd nav-icon"></i>
                                     <p>Finance</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/system/dev' }" class="nav-link"
+                                             :class="{ active: $route.name == 'system-dev' }">
+                                    <i class="fas fa-code nav-icon"></i>
+                                    <p>Devs</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -403,7 +413,7 @@
                         </router-link>
                     </li>
 
-                    <li class="nav-item" 
+                    <li class="nav-item"
                         v-if="
                             (isSeller ||
                                 user.isAdmin ||
@@ -643,9 +653,9 @@ export default {
                     }
                 } else {
                     result = false;
-                } 
+                }
             }
-            
+
             return result;
         },
 
@@ -657,7 +667,7 @@ export default {
                     result = true;
                 }
             }
-            
+
             return result;
         },
     },

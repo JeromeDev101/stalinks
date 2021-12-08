@@ -17,6 +17,7 @@ import Domain from '@/modules/domain/views/Domain.vue'
 import System from '@/modules/system/views/List.vue'
 import Finance from "./modules/system/views/Finance";
 import IT from "./modules/system/views/IT";
+import Devs from "./modules/system/views/Devs";
 import MailTemplate from '@/modules/template_email/views/List.vue'
 // import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue'
@@ -379,6 +380,11 @@ const routes = [
                 path : 'system/finance',
                 name : 'system-finance',
                 component : Finance,
+            },
+            {
+                path : 'system/dev',
+                name : 'system-dev',
+                component : Devs,
             },
             // {
             //     path: 'mail-template',

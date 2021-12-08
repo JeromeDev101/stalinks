@@ -1,0 +1,10 @@
+name: Maintenance Mode
+abbreviation: cfgcch
+checker: PragmaRX\Health\Checkers\Expression
+notify: true
+column_size: 3
+error_message: "Application is in Maintenance Mode"
+targets:
+  - default:
+      expression_value: "app()->isDownForMaintenance()"
+      should_return: false
