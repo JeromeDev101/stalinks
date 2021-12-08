@@ -70,7 +70,7 @@ return [
             // 'LaravelServices',
             // 'Latency',
             // 'LocalStorage',
-            'Mail',
+            // 'Mail',
             'MaintenanceMode',
             //'MailgunConnectable',
             // 'MemcachedConnectable',
