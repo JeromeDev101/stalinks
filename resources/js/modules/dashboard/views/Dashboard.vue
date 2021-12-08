@@ -28,7 +28,7 @@
                                             <thead>
                                             <tr
                                                 class="white text-center">
-                                                <th>Team In-charge <span class="text-primary">({{
+                                                <th>Team In-charged <span class="text-primary">({{
                                                         ext_domain.total
                                                                                             }})</span></th>
                                                 <th>Total <span class="text-primary">({{ ext_domain.num_total }})</span>
