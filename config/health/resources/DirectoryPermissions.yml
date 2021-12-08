@@ -8,5 +8,5 @@ targets:
   - default:
       paths:
         - "{{ storage_path() }}"
-        - "{{ storage_path('logs/laravel.log') }}"
+        - "{{ storage_path('logs') }}"
         - "{{ base_path('bootstrap/cache') }}"

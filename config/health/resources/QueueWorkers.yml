@@ -15,7 +15,7 @@ targets:
           message:
             'Process "%s" has not enough instances running: it has %s, when should have at least %s'
         maximum:
-          count: 3
+          count: 10
           message:
             'Process "%s" exceeded the maximum number of running instances: it has %s, when should have at most %s'
       pid_file_missing_error_message: "Process ID file is missing: %s."

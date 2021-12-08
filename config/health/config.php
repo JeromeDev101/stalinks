@@ -80,7 +80,7 @@ return [
             // 'NewrelicDeamon',
             // 'NginxServer',
             // 'PackagesUpToDate',
-            'Php',
+            // 'Php',
             // 'PostgreSqlConnectable',
             // 'PostgreSqlServer',
             'Queue',
@@ -94,7 +94,7 @@ return [
             // 'SecurityChecker',
             // 'SeeTickets',
             // 'Sendinblue',
-            'ServerLoad',
+            // 'ServerLoad',
             // 'ServerVars', ----------- You also need to enable the server-vars route
             'ServerUptime',
             // 'Sshd',
