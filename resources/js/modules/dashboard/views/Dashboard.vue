@@ -15,7 +15,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Total External Domains</h3>
+                            <h3 class="card-title text-primary">Total External Domain</h3>
                             <div class="card-tools">
                             </div>
                         </div>
