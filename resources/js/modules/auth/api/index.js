@@ -49,6 +49,12 @@ export default class UserService {
             .catch(error => error);
     }
 
+    static getUserUnreadEmailList(email) {
+        return axios.get('/api/get-unread-emails-list/' + email + '/false')
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static getUserDrafts() {
         return axios.get('/api/get-user-drafts')
             .then(response => response)

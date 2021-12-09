@@ -7,6 +7,7 @@ use App\Models\MailDraft;
 use App\Models\Config;
 use App\Models\Log;
 use App\Models\PaymentType;
+use App\Models\Reply;
 use App\Models\User;
 use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Repositories\Contracts\IntDomainRepositoryInterface;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Faker\Provider\ar_SA\Payment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -322,6 +324,45 @@ class UserController extends Controller
         return response()->json([
             'count' => $unread_emails[0]->unread_count,
         ]);
+    }
+
+    public function getUnreadEmailList($email, $all)
+    {
+        $inbox = Reply::selectRaw('
+                    MAX(replies.sender) AS sender,
+                    MAX(replies.received) AS received,
+                    MAX(replies.id) AS id,
+                    MIN(replies.subject) as subject,
+                    CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
+                    CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)) as concat_result,
+                    MIN(CONCAT("Re: ", subject)) AS con_sub,
+                    MIN(REPLACE(subject, "Re: ", "")) AS re_sub,
+                    MAX(labels.name) AS label_name,
+                    MAX(replies.is_sent) AS is_sent,
+                    MAX(labels.color) AS label_color,
+                    MAX(replies.label_id) AS label_id,
+                    MAX(replies.from_mail) AS from_mail,
+                    MAX(replies.created_at) AS created_at,
+                    MAX(replies.attachment) AS attachment,
+                    MAX(replies.stored_attachments) AS stored_attachments,
+                    MAX(replies.is_starred) AS is_starred,
+                    MAX(replies.status_code) AS status
+                ')
+            ->leftJoin('labels', 'replies.label_id', '=', 'labels.id')
+            ->where('replies.is_sent', 0)
+            ->where('replies.is_viewed', 0)
+            ->whereNull('replies.deleted_at')
+            ->where('replies.received', 'like', '%' . $email . '%')
+            ->groupBy(DB::raw('CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received'))
+            ->orderBy('id', 'desc');
+
+            if ($all == 'true') {
+                $inbox = $inbox->paginate(10);
+            } else {
+                $inbox = $inbox->take(10)->get();
+            }
+
+        return $inbox;
     }
 
     public function getUserDrafts()

@@ -2115,8 +2115,13 @@ export default {
         },
 
         refeshInbox() {
-            this.getInbox();
+            let label = this.$route.query.label_id;
 
+            if (label !== undefined || label !== 'undefined') {
+                this.$parent.setQueryLabel(label);
+            }
+
+            this.getInbox();
             this.$parent.getListEmails();
         },
 
@@ -2541,6 +2546,7 @@ export default {
                         'param' : this.$route.name,
                         'search_mail' : this.search_mail,
                         'label_id' : this.$route.query.label_id,
+                        'mail_id' : this.$route.query.mail_id,
                     }
                 })
                     .then((response) => {

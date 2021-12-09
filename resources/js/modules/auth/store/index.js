@@ -13,6 +13,7 @@ const AUTH_SET_COUNTRIES_EXT = 'AUTH_SET_COUNTRIES_EXT';
 const CURRENT_USER = 'CURRENT_USER';
 const USER_ADMIN = 'USER_ADMIN';
 const USER_UNREAD_EMAILS = 'USER_UNREAD_EMAILS';
+const USER_UNREAD_EMAIL_LIST = 'USER_UNREAD_EMAIL_LIST';
 const USER_DRAFTS = 'USER_DRAFTS';
 
 const state = {
@@ -23,6 +24,7 @@ const state = {
     currentUser: { id: 0 },
     userUnreadEmails: 0,
     userDrafts: 0,
+    userUnreadEmailList: {},
 };
 
 const getters = {
@@ -71,6 +73,10 @@ const mutations = {
 
     [USER_UNREAD_EMAILS](state, mails) {
         state.userUnreadEmails = mails;
+    },
+
+    [USER_UNREAD_EMAIL_LIST](state, mails) {
+        state.userUnreadEmailList = mails;
     },
 
     [USER_DRAFTS](state, drafts) {
@@ -159,6 +165,15 @@ const actions = {
             commit(USER_UNREAD_EMAILS, response.data);
         }
     },
+
+    async getUserUnreadEmailList({commit}, email) {
+        let response = await UserService.getUserUnreadEmailList(email);
+
+        if (response.status === 200) {
+            commit(USER_UNREAD_EMAIL_LIST, response.data);
+        }
+    },
+
 
     async getUserDrafts({commit}) {
         let response = await UserService.getUserDrafts();

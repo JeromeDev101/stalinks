@@ -57,6 +57,7 @@
                     class="nav-link notification-dropdown-toggle"
                     data-toggle="dropdown"
                     aria-expanded="false"
+                    style="cursor: pointer"
 
                     @click="notificationsSeen">
 
@@ -103,8 +104,14 @@
                 </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link">
+            <li class="nav-item dropdown emails-dropdown">
+                <a
+                    class="nav-link emails-dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                    style="cursor: pointer"
+
+                    @click="viewUnreadEmails()">
 
                     <i class="fa fa-envelope"></i>
                     <span
@@ -114,6 +121,43 @@
                             {{ unreadEmails.count }}
                         </span>
                 </a>
+
+                <div
+                    class="dropdown-menu dropdown-menu-lg dropdown-menu-lg-right"
+                    style="left: inherit; right: 0px; max-width: 750px;">
+
+                    <p class="m-2 text-center">
+                        {{ unreadEmails.count }} Unread Emails
+                    </p>
+
+                    <ul class="p-0" style="list-style-type: none; overflow-wrap: break-word; width: 750px">
+                        <li
+                            v-for="unreadEmail in unreadEmailList"
+                            class="border border-bottom p-3"
+                            style="cursor: pointer"
+
+                            @click="redirectToMails(unreadEmail)">
+
+                            <small class="d-block text-muted mb-2">
+                                {{ unreadEmail.from_mail }}
+                            </small>
+
+                            <span class="font-weight-bold">
+                                {{ unreadEmail.subject }}
+                            </span>
+
+                            <small class="text-primary d-block mt-2">
+                                {{ unreadEmail.clean_date }}
+                            </small>
+                        </li>
+                    </ul>
+
+                    <p v-if="unreadEmails.count !== 0" class="m-2 text-center">
+                        <button class="btn btn-primary btn-sm" @click="viewAllUnreadEmails()">
+                            View All {{ unreadEmails.count }} Unread Emails
+                        </button>
+                    </p>
+                </div>
             </li>
 
             <li class="nav-item dropdown user-menu">
@@ -442,7 +486,6 @@
         </div>
         <!-- End of Modal Add Wallet -->
 
-
         <!-- Modal All Notifications -->
         <div
             style="z-index: 9999"
@@ -459,7 +502,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">All Notifications</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="resetAddWalletModal">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -498,6 +541,71 @@
             </div>
         </div>
         <!-- End of modal All notifications -->
+
+        <!-- Modal All Unread Emails -->
+        <div
+            style="z-index: 9999"
+            role="dialog"
+            tabindex="-1"
+            class="modal fade"
+            ref="modalAllUnreadEmails"
+            id="modal-all-unread-emails"
+            aria-hidden="true"
+            data-backdrop="static"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">All Unread Emails</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div v-if="allUnreadEmails.hasOwnProperty('data')">
+
+                            <p class="mb-2">
+                                {{ allUnreadEmails.from }} - {{ allUnreadEmails.to }} / {{ allUnreadEmails.total }}
+                            </p>
+
+                            <table id="all-unread-emails-table" class="table table-hover table-bordered">
+                                <tbody>
+                                <tr v-for="(unread, index) in allUnreadEmails.data" :key="index">
+                                    <td style="cursor:pointer" @click="redirectToMails(unread)">
+                                        <small class="d-block text-muted mb-2">
+                                            {{ unread.from_mail }}
+                                        </small>
+
+                                        <span class="font-weight-bold">
+                                            {{ unread.subject }}
+                                        </span>
+
+                                        <small class="text-primary d-block mt-2">
+                                            {{ unread.clean_date }}
+                                        </small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <pagination
+                                :limit="8"
+                                :data="allUnreadEmails"
+                                @pagination-change-page="viewAllUnreadEmails">
+
+                            </pagination>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of modal All Unread Emails -->
     </nav>
 </template>
 
@@ -533,7 +641,8 @@ export default {
             pageLanguage : 'en',
             paymentImages : null,
 
-            allNotifications: []
+            allNotifications: [],
+            allUnreadEmails: [],
         };
     },
 
@@ -562,8 +671,13 @@ export default {
 
         this.getPaymentTypeImages();
 
-        // prevent notifiation dropdown from closing when clicked
+        // prevent notification dropdown from closing when clicked
         $(document).on('click', '.notification-dropdown .dropdown-menu', function (e) {
+            e.stopPropagation();
+        });
+
+        // prevent emails dropdown from closing when clicked
+        $(document).on('click', '.emails-dropdown .dropdown-menu', function (e) {
             e.stopPropagation();
         });
     },
@@ -579,6 +693,7 @@ export default {
             user : state => state.storeAuth.currentUser,
             notifications : state => state.storeNotification.notifications,
             unreadEmails : state => state.storeAuth.userUnreadEmails,
+            unreadEmailList : state => state.storeAuth.userUnreadEmailList,
             messageForms : state => state.storeWalletTransaction.messageForms,
             listPayment : state => state.storeWalletTransaction.listPayment,
         }),
@@ -606,7 +721,51 @@ export default {
             getNotifications : "getUserNotifications",
             seenNotifications : "seenUserNotifications",
             getUserUnreadEmails : "getUserUnreadEmails",
+            getUserUnreadEmailList : "getUserUnreadEmailList",
         }),
+
+        viewUnreadEmails () {
+            let self = this;
+
+            if(!$(".emails-dropdown").hasClass('show')) {
+
+                this.getUserUnreadEmails(this.user.work_mail_orig);
+
+                self.getUserUnreadEmailList(self.user.work_mail_orig);
+            }
+        },
+
+        viewAllUnreadEmails (page = 1) {
+            $("#modal-all-unread-emails").modal('show');
+
+            // close notification dropdown
+            $(".emails-dropdown .emails-dropdown-toggle").dropdown('toggle')
+
+            let loader = this.$loading.show();
+
+            axios.get('/api/get-unread-emails-list/' + this.user.work_mail_orig + '/true', {
+                params: {
+                    page: page
+                }
+            })
+            .then((res) => {
+                this.allUnreadEmails = res.data
+                loader.hide();
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+            })
+        },
+
+        redirectToMails (unread) {
+            let routeData = this.$router.resolve({path: '/mails/inbox', query: {
+                label_id: null,
+                mail_id: unread.id
+            }});
+
+            window.open(routeData.href, '_blank');
+        },
 
         getPaymentTypeImages() {
             axios.get('/api/payments/image')

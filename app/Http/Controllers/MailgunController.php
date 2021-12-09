@@ -376,6 +376,10 @@ class MailgunController extends Controller
                 $inbox = $inbox->where('replies.label_id', $request->label_id);
             }
 
+            if (isset($request->mail_id) && $request->mail_id != '') {
+                $inbox = $inbox->where('replies.id', $request->mail_id);
+            }
+
             switch ($request->param) {
                 case 'Inbox':
 

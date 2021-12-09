@@ -148,10 +148,18 @@
                     <div class="card-body">
                         <ul class="list-group" v-for="(label, index) in generalLabels" :key="index">
                             <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
-                                <a href="#" @click="setQueryLabel(label.id)" >
+                                <a @click="setQueryLabel(label.id)" >
                                     <i class="fa fa-circle" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
-                                <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
+                                <i
+                                    v-show="label.id == $route.query.label_id"
+                                    title="Clear"
+                                    style="margin: -29px 21px 0px 0px;"
+                                    class="fa fa-times float-right text-muted"
+
+                                    @click="clearQueryLabel">
+
+                                </i>
                             </li>
                         </ul>
                     </div>
@@ -172,10 +180,17 @@
                     <div class="card-body">
                         <ul class="list-group" v-for="(label, index) in userLabels" :key="index">
                             <li :class="{'list-group-item': true, 'active': label.id == $route.query.label_id}">
-                                <a href="#" @click="setQueryLabel(label.id)" >
+                                <a @click="setQueryLabel(label.id)" >
                                     <i class="fa fa-circle" :style="{'color': label.color}"></i> {{ label.name }}
                                 </a>
-                                <i style="margin: -29px 21px 0px 0px;" @click="clearQueryLabel" v-show="label.id == $route.query.label_id" class="fa fa-close pull-right text-muted" title="Clear"></i>
+                                <i
+                                    v-show="label.id == $route.query.label_id"
+                                    style="margin: -29px 21px 0px 0px;"
+                                    class="fa fa-times float-right text-muted" title="Clear"
+
+                                    @click="clearQueryLabel" >
+
+                                </i>
                             </li>
                         </ul>
                     </div>
@@ -321,7 +336,7 @@ export default {
 
     mounted() {
         this.displayInboxCnt = this.$refs.mailView._data.inboxCount;
-        this.setQueryLabel(null)
+        // this.setQueryLabel(null)
         this.getListLabels();
         this.getListEmails();
         this.getUserDrafts();

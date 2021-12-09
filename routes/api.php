@@ -40,7 +40,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-payment-list')->get('payment-list', 'UserController@getPaymentList');
     Route::name('update-user')->put('/admin/update-user', 'AuthController@edit');
     Route::name('upload-avatar')->post('/user-upload-avatar', 'UserController@uploadAvatar');
-    Route::name('get-unread-emails')->get('/get-unread-emails/{user_id}', 'UserController@getUnreadEmails');
+    Route::name('get-unread-emails')->get('/get-unread-emails/{email}', 'UserController@getUnreadEmails');
+    Route::name('get-unread-emails-list')->get('/get-unread-emails-list/{email}/{all}', 'UserController@getUnreadEmailList');
     Route::name('get-user-drafts')->get('/get-user-drafts', 'UserController@getUserDrafts');
 
     //Article
