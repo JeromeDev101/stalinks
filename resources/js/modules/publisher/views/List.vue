@@ -341,40 +341,9 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group input-group-sm float-right" style="width: 100px">
-                            <select class="form-control float-right"
-                                    @change="getPublisherList"
-                                    v-model="filterModel.paginate"
-                                    style="height: 37px;">
-                                <option v-for="option in paginate" v-bind:value="option">
-                                    {{ option }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default float-right"><i
-                            class="fa fa-cog"></i></button>
-                        <button data-toggle="modal"
-                                @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()"
-                                data-target="#modal-add-url"
-                                class="btn btn-success float-right"><i class="fa fa-plus"></i> Add URL
-                        </button>
-                        <button v-if="user.isAdmin ||
-                    user.role_id == 8"
-                                class="btn btn-primary float-right"
-                                :disabled="isGenerating"
-                                @click="generateBestPrices">
-                            <span v-if="isGenerating">
-                                <i
-                                    class="fa fa-spin fa-cog"></i> Generating...
-                            </span>
-                                <span v-else>
-                                Generate Best Price
-                            </span>
-                        </button>
 
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-12 col-md-12 col-xl-4 mt-2">
                                 <div class="input-group">
                                     <input type="file"
                                            class="form-control"
@@ -382,7 +351,7 @@
                                            enctype="multipart/form-data"
                                            ref="excel"
                                            name="file">
-                                    <div class="input-group-btn">
+
                                         <button
                                             title="Upload CSV File"
                                             class="btn btn-primary btn-flat"
@@ -399,18 +368,62 @@
                                             @click="downloadTemplate">
                                             <i class="fa fa-download"></i>
                                         </button>
-
-                                    </div>
                                 </div>
+
                                 <span v-if="messageForms.errors.file"
                                       v-for="err in messageForms.errors.file"
                                       class="text-danger">{{ err }}</span>
                                 <span v-if="messageForms.action == 'uploaded'"
                                       class="text-success">{{ messageForms.message }}</span>
                             </div>
+
+                            <div class="col-12 col-md-12 col-xl-8 mt-2">
+
+                                <div class="input-group justify-content-end">
+                                    <button
+                                        v-if="user.isAdmin || user.role_id == 8"
+                                        :disabled="isGenerating"
+                                        class="btn btn-primary mr-2"
+
+                                        @click="generateBestPrices">
+
+                                        <span v-if="isGenerating">
+                                            <i class="fa fa-spin fa-cog"></i> Generating...
+                                        </span>
+
+                                        <span v-else>
+                                            Generate Best Price
+                                        </span>
+                                    </button>
+
+                                    <button
+                                        data-toggle="modal"
+                                        data-target="#modal-add-url"
+                                        class="btn btn-success mr-2"
+
+                                        @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()">
+
+                                        <i class="fa fa-plus"></i> Add URL
+                                    </button>
+
+                                    <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default mr-2">
+                                        <i class="fa fa-cog"></i>
+                                    </button>
+
+                                    <select class="form-control w-25 d-inline-block"
+                                            @change="getPublisherList"
+                                            v-model="filterModel.paginate"
+                                            style="min-width: 100px; max-width: 100px">
+                                        <option v-for="option in paginate" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-12">
                                 <div
                                     v-if="checkAccountValidity() && showLang"
@@ -474,8 +487,8 @@
                             </div>
                         </div>
 
-                        <div class="row mx-2">
-                            <div class="col-md-6 my-3">
+                        <div class="row">
+                            <div class="col-md-8 my-3">
 
                                 <div class="input-group">
                                     <button class="btn btn-default mr-2"
@@ -487,7 +500,7 @@
                                                                }} All
                                     </button>
 
-                                    <div class="dropdown">
+                                    <div class="dropdown mr-2">
                                         <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Selected Action
                                         </button>
@@ -505,13 +518,13 @@
                                     </div>
 
                                     <export-excel
+                                        :data=masterListDataMethod()
+                                        type="csv"
                                         name="master_list.xls"
                                         worksheet="My Worksheet"
-                                        class="btn btn-default ml-5"
-                                        :data=masterListDataMethod()>
+                                        class="btn btn-default">
 
                                         Download List
-
                                     </export-excel>
 
                                     <i class="fa fa-question-circle text-primary" title="Download List is the List of Country, Langauge and Topic were you can use in uploading of your CSV."></i>
@@ -519,12 +532,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 my-3">
-                                <div class="d-flex flex-column align-items-end">
+                            <div class="col-md-4 my-3">
+                                <div class="input-group justify-content-end">
                                     <Sort
                                         ref="sortComponent"
                                         :sorted="isSorted"
                                         :items="sortOptions"
+                                        :custom-class="['w-25']"
 
                                         @submitSort="sortPublisher"
                                         @updateOptions="updateSortOptions">
