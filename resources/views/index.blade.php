@@ -13,7 +13,7 @@
 <body class="sidebar-mini layout-fixed skin-blue">
     <div id="app" class="wrapper">
     </div>
-    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_MODE') == 'live' ? env('PAYPAL_LIVE_CLIENT_ID') : env('PAYPAL_SANDBOX_CLIENT_ID') }}&currency=USD" data-sdk-integration-source="button-factory"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('paypal.mode') == 'live' ? config('paypal.live.client_id') : config('paypal.sandbox.client_id') }}&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>
