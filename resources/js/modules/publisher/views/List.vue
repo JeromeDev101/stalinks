@@ -633,8 +633,8 @@
                                 slot="urlData">
                                 <!--                            {{ replaceCharacters(scope.row.url) }}-->
 
-                                <a :href="'//' + scope.row.custom_url" target="_blank">
-                                    {{ scope.row.custom_url }}
+                                <a :href="'//' + scope.row.url" target="_blank">
+                                    {{ scope.row.url }}
                                 </a>
                             </template>
 
@@ -1983,7 +1983,7 @@ export default {
                         isHidden: false
                     },
                     {
-                        prop : 'custom_created',
+                        prop : 'created_at',
                         name : 'Uploaded',
                         // actionName : 'createdData',
                         width: 100,
@@ -1992,7 +1992,7 @@ export default {
                             !this.tblPublisherOpt.created
                     },
                     {
-                        prop : 'custom_updated',
+                        prop : 'updated_at',
                         name : 'Updated',
                         // actionName : 'updatedData',
                         width: 100,
@@ -2024,7 +2024,7 @@ export default {
                         isHidden: !this.tblPublisherOpt.continent
                     },
                     {
-                        prop : 'custom_topic',
+                        prop : 'topic',
                         name : 'Topic',
                         // actionName : 'topicData',
                         // sortable: true,
