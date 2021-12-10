@@ -108,7 +108,7 @@
 
                             <div class="col">
                                 <h6>Content Charges:
-                                    $0.00</h6>
+                                    ${{ totalContentCharges }}</h6>
                             </div>
 
                             <div class="col">
@@ -154,7 +154,7 @@
                                                                       }}
                                 </td>
                                 <td v-show="tblOptIncomesAdmin.fee_charges">$0</td>
-                                <td v-show="tblOptIncomesAdmin.content_charges">$ {{ incomes_admin.billing_count }}</td>
+                                <td v-show="tblOptIncomesAdmin.content_charges">$ {{ computeWriterPrice(incomes_admin, incomes_admin.billing_count) }}</td>
                                 <!-- static only -->
                                 <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
                             </tr>
@@ -252,6 +252,7 @@ export default {
                 },
             },
             isSearchingLoading : false,
+            totalContentCharges: 0,
         }
     },
 
@@ -275,6 +276,47 @@ export default {
     },
 
     methods : {
+        computeSummary() {
+            let total = [];
+            for(let i in this.listIncomesAdmin.data) {
+                total.push( this.computeWriterPrice(this.listIncomesAdmin.data[i], this.listIncomesAdmin.data[i].billing_count) )
+            }
+
+            this.totalContentCharges = total.reduce(this.add,0)
+        },
+
+        add(accumulator, a) {
+            return accumulator + a;
+        },
+
+        computeWriterPrice(incomes, billing_count) {
+            var price = 0;
+            var rate_type = (incomes.rate_type == null || incomes.rate_type == '') ? 'ppw' : (incomes.rate_type).toLowerCase();
+
+            if(incomes.writer_price == null || incomes.article == null || incomes.article.contentnohtml == null) {
+                price = billing_count;
+            } else {
+                var content = incomes.article.contentnohtml
+                var writer_price = parseFloat(incomes.writer_price);
+                
+
+                if (rate_type == 'ppw') {
+                    price = writer_price * this.countWords(content)
+                } else {
+                    price = writer_price
+                }
+            }
+            
+
+            return price;
+        },
+
+        countWords(str) {
+            str = str.replace(/(^\s*)|(\s*$)/gi, "");
+            str = str.replace(/[ ]{2,}/gi, " ");
+            str = str.replace(/\n /, "\n");
+            return str.split(' ').length;
+        },
         computeNetIncomes(incomes) {
             let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(incomes.billing_count);
             return result > 0 ? result : 0;
@@ -313,6 +355,8 @@ export default {
 
             this.isSearchLoading = false;
             this.isSearchingLoading = false;
+
+            this.computeSummary();
         },
 
         doSearch() {

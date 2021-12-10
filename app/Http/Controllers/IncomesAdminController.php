@@ -13,10 +13,15 @@ class IncomesAdminController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
 
-        $list = Backlink::where('status', 'Live')
+        $list = Backlink::select('backlinks.*', 'registration.rate_type', 'registration.writer_price')
+                ->where('backlinks.status', 'Live')
+                ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+                ->leftJoin('users', 'article.id_writer', '=', 'users.id')
+                ->leftjoin('registration', 'users.email', '=' , 'registration.email')
                 ->with(['user' => function($sub) {
                     $sub->with('UserType');
                 }])
+                ->with('article')
                 ->with('publisher')
                 ->withCount(['billing' => function ($query) {
                     return $query->select(DB::raw('SUM(fee) AS fee'));
@@ -24,7 +29,7 @@ class IncomesAdminController extends Controller
 
 
         if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
-            $list = $list->where('id', $filter['backlink_id']);
+            $list = $list->where('backlinks.id', $filter['backlink_id']);
         }
 
         if (isset($filter['date_completed'])) {
