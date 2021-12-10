@@ -16,14 +16,14 @@ class Publisher extends Model
 
     protected $guarded = [];
     protected $table = 'publisher';
-    protected $appends = [
-        'custom_created',
-        'custom_updated',
-        'custom_url',
-        'custom_continent',
-        'custom_username',
-        'custom_topic'
-    ];
+//    protected $appends = [
+//        'custom_created',
+//        'custom_updated',
+//        'custom_url',
+//        'custom_continent',
+//        'custom_username',
+//        'custom_topic'
+//    ];
 
     protected $fillable
         = [

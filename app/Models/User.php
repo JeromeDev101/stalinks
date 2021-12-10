@@ -152,6 +152,11 @@ class User extends Authenticatable
         return $this->hasMany(WalletTransaction::class, 'user_id', 'id');
     }
 
+    public function sub_buyers()
+    {
+        return $this->hasMany(Registration::class, 'team_in_charge', 'id');
+    }
+
     public function subBuyers()
     {
         return Registration::with('user')->where('team_in_charge', $this->id)->get();

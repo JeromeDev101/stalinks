@@ -70,6 +70,7 @@ const actions = {
         }
     },
 
+/*    DUPLICATE METHOD
     async actionGetListSeller({ commit }, params){
         try {
             let response = await SellerBillingService.getListSeller(params)
@@ -82,7 +83,7 @@ const actions = {
                 commit(SET_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
     async actionGetSellerInfo({ commit }, params){
         try {

@@ -78,7 +78,7 @@ const actions = {
         }
     },
 
-    async actionGetListSeller({ commit }, params){
+/*    async actionGetListSeller({ commit }, params){
         try {
             let response = await BuyService.getListSeller(params)
             commit(LIST_SELLER , { listSeller: response.data });
@@ -90,7 +90,7 @@ const actions = {
                 commit(SET_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
     async actionGetListCountries({ commit }, params) {
         try {

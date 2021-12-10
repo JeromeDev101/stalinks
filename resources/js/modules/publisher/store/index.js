@@ -320,6 +320,7 @@ const actions = {
         }
     },
 
+/*    DUPLICATE FUNCTION
     async actionGetListContinents({ commit }, params) {
         try {
             let response = await PublisherService.getListContinents(params);
@@ -332,7 +333,7 @@ const actions = {
                 commit(PUBLISHER_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
     async actionGetListLanguages({ commit }, params) {
         try {

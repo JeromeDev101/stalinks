@@ -34,7 +34,7 @@ const mutations = {
 
     [LIST_BACKLINKS] (state, data) {
         state.listBacklinks = data.listBacklinks
-    }, 
+    },
 
     [LIST_WRITER] (state, data) {
         state.listWriter = data.listWriter
@@ -97,6 +97,7 @@ const actions = {
         }
     },
 
+/*    DUPLICATE METHOD
     async actionGetListCountries({ commit }, params) {
         try {
             let response = await ArticleService.getListCountries(params);
@@ -109,7 +110,7 @@ const actions = {
                 commit(SET_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
     async actionGetListWriter({commit}, params){
         try {

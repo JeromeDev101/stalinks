@@ -67,7 +67,7 @@ const actions = {
         }
     },
 
-    async actionGetListBuyer({ commit }, params){
+/*    async actionGetListBuyer({ commit }, params){
         try {
             let response = await followupSalesService.getListBuyer(params)
             commit(LIST_BUYER , { listBuyer: response.data });
@@ -79,9 +79,9 @@ const actions = {
                 commit(SALES_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
-    async actionGetListSeller({ commit }, params){
+/*    async actionGetListSeller({ commit }, params){
         try {
             let response = await followupSalesService.getListSeller(params)
             commit(LIST_SELLER , { listSeller: response.data });
@@ -93,7 +93,7 @@ const actions = {
                 commit(SALES_ERROR, e.response.data);
             }
         }
-    },
+    },*/
 
     async actionUpdateSales({ commit }, params){
         try {

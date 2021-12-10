@@ -101,7 +101,6 @@ class CountryRepository extends BaseRepository implements CountryRepositoryInter
 
     public function getListCountriesAccess($userId, $forExt = false)
     {
-        $countries = collect([]);
         if ($forExt === false) {
             $countries = UserCountry::where('user_id', $userId)->get();
         } else {
