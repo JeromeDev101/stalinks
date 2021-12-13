@@ -9,7 +9,20 @@
             <app-aside></app-aside>
             <div class="content-wrapper">
                 <app-breadcrumd></app-breadcrumd>
+
+                <div v-if="autoReplyState" class="alert alert-primary m-2 mb-0" role="alert">
+                    <i class="fa fa-info-circle"></i>
+                    AUTO REPLY is active. All inbound emails will be automatically replied. Click
+
+                    <router-link :to="{path:'/mails/auto', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
+                        here
+                    </router-link>
+
+                    to go to auto replies page.
+                </div>
+
                 <section class="content">
+
                     <router-view></router-view>
                 </section>
             </div>
@@ -24,7 +37,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import {mapState, mapGetters, mapActions} from 'vuex';
 import ConfigAxios from '@/library/ConfigAxios';
 import AppHeader from '@/components/header/Header';
 import AppAside from '@/components/aside/views/Aside';
@@ -49,6 +62,7 @@ export default {
             token: state => state.storeAuth.token,
             mainLoading: state => state.storeLoading.mainLoading,
             errorPage: state => state.storeLoading.errorPage,
+            autoReplyState: state => state.storeMailgun.autoReplyState,
         })
     },
 
@@ -58,8 +72,16 @@ export default {
             const accessToken = this.token.access_token;
 
             ConfigAxios.setAuthorizationHeader(tokenType, accessToken);
+
+            this.getAutoReplyState();
         }
     },
+
+    methods: {
+        ...mapActions({
+            getAutoReplyState : "getAutoReplyState",
+        }),
+    }
 
 };
 </script>

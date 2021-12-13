@@ -176,7 +176,7 @@
 
                         <button v-if="isTeam"
                                 data-toggle="modal"
-                                @click="clearModels" data-target="#modal-add-article" class="btn btn-success float-right"><i
+                                @click="clearModels(); clearEditorImages()" data-target="#modal-add-article" class="btn btn-success float-right"><i
                             class="fa fa-plus"></i> Create Article
                         </button>
 
@@ -1077,6 +1077,11 @@
                 this.viewModel = {
                     backlink: '',
                 }
+            },
+
+            clearEditorImages () {
+                // when opening another update modal, always clear the images on the editor
+                // this.$refs.composeEditorArticle.clearAddImages();
             },
 
             clearMessageform() {

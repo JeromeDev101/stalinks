@@ -46,6 +46,7 @@ import ResetPassword from '@/modules/reset_password/views/List.vue'
 import Inbox from '@/modules/mails/views/Inbox.vue'
 import MailSignature from '@/modules/mails/views/MailSignature.vue'
 import MailDrafts from '@/modules/mails/views/MailDrafts.vue'
+import AutoReply from '@/modules/mails/views/AutoReply.vue'
 import Maillog from '@/modules/mails/views/Maillog.vue'
 // import ArticleContent from '@/modules/article/views/Content.vue';
 import Buy from '@/modules/buy/views/List.vue'
@@ -243,6 +244,11 @@ const routes = [
                         path : 'drafts',
                         name : 'Drafts',
                         component : MailDrafts,
+                    },
+                    {
+                        path : 'auto',
+                        name : 'auto-reply',
+                        component : AutoReply,
                     },
                 ],
             },

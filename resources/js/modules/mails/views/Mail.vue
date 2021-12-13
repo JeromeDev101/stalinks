@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <button
-                    :disabled="$route.name === 'Drafts' || $route.name === 'mail-signature' || $route.name === 'mail-template'"
+                    :disabled="$route.name === 'Drafts' || $route.name === 'mail-signature' || $route.name === 'mail-template' || $route.name === 'auto-reply'"
                     class="btn btn-success btn-lg btn-block mb-3"
 
                     @click="checkWorkMail">
@@ -97,7 +97,7 @@
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
                                 <router-link :to="{path:'/mails/sent', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
-                                    <i class="fas fa-reply"></i>
+                                    <i class="fas fa-share"></i>
                                     Sent
                                 </router-link>
                             </li>
@@ -133,6 +133,12 @@
                                 <router-link :to="{path:'/mails/signature', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-id-card"></i>
                                     Signatures
+                                </router-link>
+                            </li>
+                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'auto-reply'}">
+                                <router-link :to="{path:'/mails/auto', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
+                                    <i class="fas fa-reply"></i>
+                                    Auto Replies
                                 </router-link>
                             </li>
                         </ul>

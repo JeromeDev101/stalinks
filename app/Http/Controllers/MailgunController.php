@@ -6,6 +6,7 @@ use App\Http\Resources\InboxResource;
 use App\Jobs\DeleteEmailAttachments;
 use App\Jobs\StoreEmailAttachments;
 use App\MailSignature;
+use App\Models\MailAutoReply;
 use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 use http\Env\Response;
@@ -676,7 +677,7 @@ class MailgunController extends Controller
         $stripped_html = null;
         $body_html     = null;
 
-         $r_attachment = [];
+        $r_attachment = [];
 
         $input = $request->all();
 
@@ -724,7 +725,87 @@ class MailgunController extends Controller
 
         DB::table('replies')->insert($data);
 
+        // send auto reply if on
+
+        $this->sendAutoReply($request);
+
         return response()->json($request->all());
+    }
+
+    public function sendAutoReply ($request) {
+        $user = User::where('work_mail', $request->recipient)->first();
+
+        if ($user->work_mail) {
+            $auto_reply = MailAutoReply::where('user_id', $user->id)->where('active', 1)->first();
+
+            if ($auto_reply) {
+                $sender = $this->getSender($request->from);
+
+                $signature = $this->getEmailSignatureContent($user->work_mail);
+
+                $content_data = $this->getEmailContentData($auto_reply->body, $signature);
+
+                // send auto reply
+                $params = [
+                    'from'                => $user->work_mail,
+                    'to'                  => array($sender),
+                    'subject'             => $auto_reply->subject,
+                    'html'                => view('send_email', $content_data)->render(),
+                    'o:tag'               => array('test1'),
+                    'o:tracking'          => 'yes',
+                    'o:tracking-opens'    => 'yes',
+                    'o:tracking-clicks'   => 'yes',
+                ];
+
+                $email = $this->mg->messages()->send(config('gun.mail_domain'), $params);
+
+                // save to database
+                $input['body-plain'] = "<div style='white-space: pre'>" . $auto_reply->body . $signature . "</div>";
+
+                $message_id = preg_replace("/[<->]/", "", $email->getId());
+
+                Reply::create([
+                    'sender'          => $user->work_mail,
+                    'subject'         => $auto_reply->subject,
+                    'is_sent'         => 1,
+                    'is_viewed'       => 1,
+                    'label_id'        => 0,
+                    'received'        => $sender,
+                    'body'            => json_encode($input),
+                    'from_mail'       => $user->work_mail,
+                    'attachment'      => '',
+                    'date'            => date('Y-m-d'),
+                    'message_id'      => $message_id,
+                    'references_mail' => '',
+                    'status_code'     => 0,
+                    'message_status'  => '',
+                ]);
+            }
+        }
+    }
+
+    public function getSender ($sender) {
+        if (preg_match('/<(.*?)>/', $sender, $match) == 1) {
+            return $match[1];
+        } else {
+            return null;
+        }
+    }
+
+    public function getEmailSignatureContent ($work_mail) {
+        $signature = MailSignature::select('content')->where('work_mail', $work_mail)->first();
+
+        return $signature ? "<div style='width:100%'>" . $signature->content . "</div>" : '';
+    }
+
+    public function getEmailContentData ($content, $signature) {
+        $send_content = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $content);
+        $send_signature = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $signature);
+
+        return [
+            'content' => $send_content,
+            'signature' => $send_signature,
+        ];
     }
 
     public function starred(Request $request)

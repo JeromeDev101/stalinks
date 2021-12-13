@@ -29,4 +29,28 @@ export default class MailServices {
             .then(response => response)
             .catch(error => error);
     }
+
+    static getAutoReply(params) {
+        return axios.post('/api/mail/get-auto-reply', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static addAutoReply(params) {
+        return axios.post('/api/mail/add-auto-reply', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static updateAutoReply(params) {
+        return axios.put('/api/mail/update-auto-reply', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
+    static getAutoReplyState() {
+        return axios.get('/api/mail/get-auto-reply-state')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

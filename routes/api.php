@@ -276,6 +276,14 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-drafts')->post('/get-drafts','MailDraftController@index');
         Route::name('delete-draft')->post('/delete-draft','MailDraftController@destroy');
         Route::name('delete-selected-drafts')->post('/delete-selected-drafts','MailDraftController@destroySelected');
+
+        // auto reply
+        Route::name('get-auto-reply')->post('/get-auto-reply','MailAutoReplyController@index');
+        Route::name('add-auto-reply')->post('/add-auto-reply','MailAutoReplyController@store');
+        Route::name('update-auto-reply')->put('/update-auto-reply','MailAutoReplyController@update');
+        Route::name('delete-auto-reply')->post('/delete-auto-reply','MailAutoReplyController@destroy');
+        Route::name('toggle-auto-reply')->post('/toggle-auto-reply','MailAutoReplyController@toggleAutoReply');
+        Route::name('get-auto-reply-state')->get('/get-auto-reply-state','MailAutoReplyController@getAutoReplyState');
     });
 
     Route::name('labels')->resource('/label','LabelController');

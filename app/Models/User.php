@@ -191,6 +191,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\MailDraft', 'user_id');
     }
 
+    public function autoReplies()
+    {
+        return $this->hasMany('App\Models\MailAutoReply', 'user_id');
+    }
+
     /**
      * Route notifications for the Slack channel.
      *
