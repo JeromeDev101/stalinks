@@ -419,6 +419,7 @@ export default {
                     }).then((res) => {
 
                         this.isAllSelected = false;
+                        this.selectedIds = [];
 
                         swal.fire(
                             'Deleted!',
