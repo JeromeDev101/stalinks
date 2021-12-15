@@ -339,6 +339,8 @@ class MailgunController extends Controller
                 $inbox = Reply::selectRaw('
                     MAX(replies.sender) AS sender,
                     MAX(replies.received) AS received,
+                    MIN(replies.sender) AS min_sender,
+                    MIN(replies.received) AS min_received,
                     MAX(replies.id) AS id,
                     MIN(replies.subject) as subject,
                     CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
@@ -350,6 +352,7 @@ class MailgunController extends Controller
                     MAX(labels.color) AS label_color,
                     MAX(replies.label_id) AS label_id,
                     MAX(replies.from_mail) AS from_mail,
+                    MIN(replies.from_mail) AS min_from_mail,
                     MAX(replies.created_at) AS created_at,
                     MAX(replies.attachment) AS attachment,
                     MAX(replies.stored_attachments) AS stored_attachments,
@@ -552,14 +555,18 @@ class MailgunController extends Controller
 
     private function sortEmailThreads($inbox)
     {
+
         $inbox->transform(function ($item) {
+
             $threads = $item->thread->filter(function ($value) use ($item) {
                 $received_array = $this->removeSpacesAndExplode($value->received);
                 $item_received  = $this->removeSpacesAndExplode($item->received);
+                $min_item_received  = $this->removeSpacesAndExplode($item->min_received);
 
                 // get from_mail
 
                 $item_from_mail     = $this->getFromMail($item->from_mail);
+                $min_item_from_mail     = $this->getFromMail($item->min_from_mail);
                 $received_from_mail = $this->getFromMail($value->from_mail);
 
                 if ($item->is_sent === 1) {
@@ -572,6 +579,31 @@ class MailgunController extends Controller
                         || (in_array($received_from_mail, $item_received) && $value->received === $item->sender)
                         || (in_array($value->received, $item_received) && $value->sender === $item->sender)
                         || (in_array($value->received, $item_received) && $received_from_mail === $item->sender)
+
+
+                        || ($value->received === $item->min_received && $value->sender === $item->sender)
+                        || ($value->received === $item->received && $value->sender === $item->min_sender)
+
+                        || ($value->received === $item->min_received && $received_from_mail === $item->sender)
+                        || ($value->received === $item->received && $received_from_mail === $item->min_sender)
+
+                        || ($value->sender === $item->min_received && $value->received === $item->sender)
+                        || ($value->sender === $item->received && $value->received === $item->min_sender)
+
+                        || ($received_from_mail === $item->min_received && $value->received === $item->sender)
+                        || ($received_from_mail === $item->received && $value->received === $item->min_sender)
+
+                        || (in_array($value->sender, $min_item_received) && $value->received === $item->sender)
+                        || (in_array($value->sender, $item_received) && $value->received === $item->min_sender)
+
+                        || (in_array($received_from_mail, $min_item_received) && $value->received === $item->sender)
+                        || (in_array($received_from_mail, $item_received) && $value->received === $item->min_sender)
+
+                        || (in_array($value->received, $min_item_received) && $value->sender === $item->sender)
+                        || (in_array($value->received, $item_received) && $value->sender === $item->min_sender)
+
+                        || (in_array($value->received, $min_item_received) && $received_from_mail === $item->sender)
+                        || (in_array($value->received, $item_received) && $received_from_mail === $item->min_sender)
                     );
                 } else {
                     return (
@@ -583,6 +615,30 @@ class MailgunController extends Controller
                         || (in_array($item_from_mail, $received_array) && $value->sender === $item->received)
                         || (in_array($item->received, $received_array) && $value->sender === $item->sender)
                         || (in_array($item->received, $received_array) && $value->sender === $item_from_mail)
+
+                        || ($value->received === $item->min_received && $value->sender === $item->sender)
+                        || ($value->received === $item->received && $value->sender === $item->min_sender)
+
+                        || ($value->received === $item->min_received && $value->sender === $item_from_mail)
+                        || ($value->received === $item->received && $value->sender === $min_item_from_mail)
+
+                        || ($value->received === $item->min_sender && $value->sender === $item->received)
+                        || ($value->received === $item->sender && $value->sender === $item->min_received)
+
+                        || ($value->received === $min_item_from_mail && $value->sender === $item->received)
+                        || ($value->received === $item_from_mail && $value->sender === $item->min_received)
+
+                        || (in_array($item->min_sender, $received_array) && $value->sender === $item->received)
+                        || (in_array($item->sender, $received_array) && $value->sender === $item->min_received)
+
+                        || (in_array($min_item_from_mail, $received_array) && $value->sender === $item->received)
+                        || (in_array($item_from_mail, $received_array) && $value->sender === $item->min_received)
+
+                        || (in_array($item->min_received, $received_array) && $value->sender === $item->sender)
+                        || (in_array($item->received, $received_array) && $value->sender === $item->min_sender)
+
+                        || (in_array($item->min_received, $received_array) && $value->sender === $item_from_mail)
+                        || (in_array($item->received, $received_array) && $value->sender === $min_item_from_mail)
                     );
                 }
             })->sortByDesc('id')->values();

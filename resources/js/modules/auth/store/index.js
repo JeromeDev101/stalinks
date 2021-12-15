@@ -83,8 +83,8 @@ const mutations = {
         state.userDrafts = drafts;
     },
 
-    decrementUserUnreadEmailCount(state) {
-        state.userUnreadEmails.count = state.userUnreadEmails.count - 1;
+    decrementUserUnreadEmailCount(state, count) {
+        state.userUnreadEmails.count = state.userUnreadEmails.count - count;
     }
 
 };
@@ -183,8 +183,8 @@ const actions = {
         }
     },
 
-    updateUnreadEmailsCount({commit}) {
-        commit('decrementUserUnreadEmailCount');
+    updateUnreadEmailsCount({commit}, count) {
+        commit('decrementUserUnreadEmailCount', count);
     },
 };
 const storeAuth = {

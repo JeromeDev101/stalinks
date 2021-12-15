@@ -443,18 +443,26 @@ export default {
             });
         },
 
-        updateUnreadInboxCount({count, mail, mode}) {
+        updateUnreadInboxCount({count, mail, mode, thread = null}) {
 
             if (mode === 'load') {
                 this.displayInboxCnt = count;
             } else {
-                this.displayInboxCnt = this.displayInboxCnt - 1;
-
                 // decrease value of unread in list emails
                 let index = this.listUserEmail.findIndex(item => item.work_mail === mail);
 
+                if (mode === 'decrement') {
+                    this.displayInboxCnt = this.displayInboxCnt - 1;
+                } else if (mode === 'mark' && thread !== null) {
+                    this.displayInboxCnt = this.displayInboxCnt - thread;
+                }
+
                 if (index >= 0) {
-                    this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - 1;
+                    if (mode === 'decrement') {
+                        this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - 1;
+                    } else if (mode === 'mark' && thread !== null) {
+                        this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - thread;
+                    }
                 }
             }
         }

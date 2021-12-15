@@ -65,6 +65,18 @@
                                 </button>
 
                                 <button
+                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    :disabled="btnEnable"
+                                    type="button"
+                                    title="Mark as read"
+                                    class="btn btn-default"
+
+                                    @click="markAsReadSelectedEmails()">
+
+                                    <i class="far fa-envelope-open"></i>
+                                </button>
+
+                                <button
                                     type="button"
                                     title="Trash"
                                     class="btn btn-default"
@@ -2102,6 +2114,93 @@ export default {
                 })
         },
 
+        markAsReadSelectedEmails () {
+            let loader = this.$loading.show();
+
+            let idsObject = this.getIsNotViewedEmailIds();
+
+            if (idsObject.ids.length) {
+                axios.post('/api/mail/is-viewed-thread', {ids : idsObject.ids})
+                .then((response) => {
+
+                    let readCount = [... new Set(idsObject.threads)].length;
+
+                    // update unread messages in inbox count on parent component
+                    this.updateInboxUnreadCountInParent(this.inboxCount - 1, this.user.work_mail, 'mark', readCount);
+
+                    // update value of unread emails in navbar
+                    if (this.user.work_mail === this.user.work_mail_orig) {
+                        this.updateUnreadEmailsCount(readCount);
+                    }
+
+                    this.markRecordDataAsRead(idsObject.threads);
+
+                    this.checkIds = [];
+                    this.btnEnable = true;
+
+                    swal.fire(
+                        'Mark as Read',
+                        'Successfully marked selected emails as read',
+                        'success'
+                    )
+
+                    loader.hide();
+                })
+                .catch((err) => {
+                    console.log(err)
+
+                    swal.fire(
+                        'Error',
+                        'Something went wrong while marking the selected emails as read',
+                        'error'
+                    )
+
+                    loader.hide();
+                })
+            } else {
+                swal.fire(
+                    'Selected Emails are already read',
+                    '',
+                    'warning'
+                )
+
+                loader.hide();
+            }
+        },
+
+        getIsNotViewedEmailIds () {
+            let ids = [];
+            let thread_ids = [];
+
+            this.checkIds.forEach(function (email) {
+                if (email.thread) {
+                    email.thread.forEach(function (item) {
+                        if (item.is_viewed === 0) {
+                            ids.push(item.id)
+                            thread_ids.push(email.id)
+                        }
+                    })
+                }
+            })
+
+            return {
+                ids : ids,
+                threads: thread_ids
+            }
+        },
+
+        markRecordDataAsRead (ids) {
+            let self = this;
+
+            self.records.data.forEach(function(record, index) {
+                if (ids.includes(record.id)) {
+                    self.records.data[index].thread.map(item => {
+                        item.is_viewed = 1;
+                    })
+                }
+            })
+        },
+
         checkSelected() {
             this.btnEnable = true;
             if (this.checkIds.length > 0) {
@@ -2271,7 +2370,7 @@ export default {
 
                 // update value of unread emails in navbar
                 if (this.user.work_mail === this.user.work_mail_orig) {
-                    this.updateUnreadEmailsCount();
+                    this.updateUnreadEmailsCount(1);
                 }
             }
         },
@@ -2590,8 +2689,8 @@ export default {
             })
         },
 
-        updateInboxUnreadCountInParent(count, mail, mode) {
-            this.$emit('updateInboxUnreadCount', {count: count, mail: mail, mode: mode})
+        updateInboxUnreadCountInParent(count, mail, mode, thread = null) {
+            this.$emit('updateInboxUnreadCount', {count: count, mail: mail, mode: mode, thread: thread})
         },
 
         retrieveDeletedMessage() {
