@@ -384,6 +384,13 @@ class MailgunController extends Controller
                 $inbox = $inbox->where('replies.id', $request->mail_id);
             }
 
+            if (isset($request->toggle_unread)
+                && $request->toggle_unread == 'true'
+                && ($request->param == 'Inbox' || $request->param == 'Starred')) {
+
+                $inbox = $inbox->where('is_viewed', 0);
+            }
+
             switch ($request->param) {
                 case 'Inbox':
 

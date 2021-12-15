@@ -43,6 +43,29 @@
                                 </button>
 
                                 <button
+                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    type="button"
+                                    title="Toggle show unread emails"
+                                    class="btn btn-default"
+
+                                    @click="toggleShowUnreadMessages()">
+
+                                    <i :class="toggleShowUnreadEmails ? 'fas fa-toggle-on text-primary' : 'fas fa-toggle-off'"></i>
+                                </button>
+
+                                <button
+                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    :disabled="btnEnable"
+                                    type="button"
+                                    title="Mark as read"
+                                    class="btn btn-default"
+
+                                    @click="markAsReadSelectedEmails()">
+
+                                    <i class="far fa-envelope-open"></i>
+                                </button>
+
+                                <button
                                     type="button"
                                     title="Starred"
                                     class="btn btn-default"
@@ -62,18 +85,6 @@
                                     :disabled="btnEnable">
 
                                     <i class="fa fa-fw fa-tag"></i>
-                                </button>
-
-                                <button
-                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
-                                    :disabled="btnEnable"
-                                    type="button"
-                                    title="Mark as read"
-                                    class="btn btn-default"
-
-                                    @click="markAsReadSelectedEmails()">
-
-                                    <i class="far fa-envelope-open"></i>
                                 </button>
 
                                 <button
@@ -1396,7 +1407,9 @@ export default {
             listMailTemplateReply: {
                 data: [],
                 total: 0
-            }
+            },
+
+            toggleShowUnreadEmails: false
         }
     },
 
@@ -2635,6 +2648,12 @@ export default {
                 })
         },
 
+        toggleShowUnreadMessages() {
+            this.toggleShowUnreadEmails = !this.toggleShowUnreadEmails;
+
+            this.getInbox();
+        },
+
         getInbox(page = 1) {
             //    this.loadingMessage = true;
             let loader = this.$loading.show();
@@ -2646,6 +2665,7 @@ export default {
                         'search_mail' : this.search_mail,
                         'label_id' : this.$route.query.label_id,
                         'mail_id' : this.$route.query.mail_id,
+                        'toggle_unread': this.toggleShowUnreadEmails
                     }
                 })
                     .then((response) => {
