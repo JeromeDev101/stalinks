@@ -7,10 +7,10 @@
 
                         <!-- Set password Form -->
                         <div v-if="formSetPassword">
-                            <h3>Complete Registration</h3> 
+                            <h3>Complete Registration</h3>
                             <hr class="mb-5"/>
 
-                            <h4 class="text-primary">Account Information</h4> 
+                            <h4 class="text-primary">Account Information</h4>
                             <hr/>
                             <div class="row">
 
@@ -65,7 +65,7 @@
                                         <input type="text" class="form-control" placeholder="Enter your Company Name" v-model="regModel.company_name">
                                         <span v-show="errorMessage.hasOwnProperty('company_name')" class="text-danger">Please provide Company Name</span>
                                     </div>
-                                </div> 
+                                </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="text-primary my-3"  v-show="regModel.type == 'Writer'">Writer pricing</h4> 
+                            <h4 class="text-primary my-3"  v-show="regModel.type == 'Writer'">Writer pricing</h4>
                             <hr/>
 
                             <div class="row"  v-show="regModel.type == 'Writer'">
@@ -103,7 +103,7 @@
                                         <span v-show="errorMessage.hasOwnProperty('rate_type')" class="text-danger">Please provide Writer Pirce</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('writer_price')}">
                                         <label for="">Writer Price (USD)<span class="text-danger">*</span></label>
@@ -114,10 +114,10 @@
                             </div>
 
 
-                            <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4> 
+                            <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4>
                             <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
                             <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
-                            
+
                             <div class="row">
 
                                 <!-- payment for seller and writer -->
@@ -175,7 +175,7 @@
 
                             <button class="btn btn-default btn-lg btn-block" @click="redirectToLogin">Go to Login</button>
                         </div>
-                            
+
                     </div>
 
                 </div>
@@ -307,17 +307,20 @@
             submitRegister() {
                 let id_payment_type = this.regModel.id_payment_type;
 
-                if(!this.regModel.payment_type[id_payment_type]) {
-                    this.validate_error_type = true;
-                    return false;
-                } else {
-                    this.validate_error_type = false;
+                if (this.regModel.payment_type[id_payment_type]) {
+                    this.regModel.payment_type[id_payment_type] = this.regModel.payment_type[id_payment_type].replace(/\s/g,'');
                 }
 
+                //TODO: REMOVED VALIDATION FOR PAYMENT INFO - MIGHT CHANGE ACCORDING TO BOSS WHEN WE HAVE BUYERS
+                // if(!this.regModel.payment_type[id_payment_type] || this.regModel.payment_type[id_payment_type] == '') {
+                //     this.validate_error_type = true;
+                //     return false;
+                // } else {
+                //     this.validate_error_type = false;
+                // }
 
                 axios.post('/api/registration-get-update-info', this.regModel)
                     .then((res) => {
-                        console.log(res.data)
                         this.formVerified = true;
                         this.formSetPassword = false;
                     })
@@ -330,7 +333,7 @@
 
             // async submitRegister() {
             //     this.isPopupLoading = true
-            //     await this.$store.dispatch('actionSetPassword', { 
+            //     await this.$store.dispatch('actionSetPassword', {
             //         code: this.$route.params.code,
             //         password: this.verifyModel.password,
             //         c_password: this.verifyModel.c_password,

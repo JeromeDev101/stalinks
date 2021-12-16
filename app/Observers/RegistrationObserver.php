@@ -47,10 +47,10 @@ class RegistrationObserver
         }
 
         if (!empty($registrationData)) {
-            $subUserIds = User::where('email', $registration->email)->first()->subBuyers()->pluck('id');
+            $subBuyers = optional(User::where('email', $registration->email)->first())->sub_buyers;
 
-            if (!empty($subUserIds)) {
-                Registration::whereIn('id', $subUserIds->toArray())->update($registrationData);
+            if (!empty($subBuyers)) {
+                Registration::whereIn('id', $subBuyers->pluck('id')->toArray())->update($registrationData);
             }
         }
     }
