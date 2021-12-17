@@ -44,8 +44,11 @@ class WriterPaid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Your account has been credited of $' . $this->price . ' for the different order with Article IDs ['. implode(', ', $this->articleIds) .']')
-                    ->line('Thank you for using our application!');
+            ->subject('Article Paid')
+            ->markdown('writer.article_paid', [
+                'price' => $this->price,
+                'articles' => implode(', ', $this->articleIds)
+            ]);
     }
 
     /**

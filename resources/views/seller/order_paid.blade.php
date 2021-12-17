@@ -124,16 +124,19 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-        Account Validated
+    Account Validated
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello {{ $name }},</p> <br />
-                    <p style="margin: 0;">Thank you for completing your data on StaLinks! We have already validated your account.</p> <br />
-                    <p style="margin: 0;">You can start adding credit to your balance and purchasing the order! If there’s anything you would like to ask, feel free to contact us!</p>
+                    <p style="margin: 0;">Greetings, {{ $name }}!</p> <br />
+                    <p style="margin: 0;">You have completed the order(s) on {{ $date }}.</p> <br />
+                    <p style="margin: 0;">If you received this email meaning you should have already received payment from us and no worries, we also have attached the receipt down below.</p> <br/>
+                    <p style="margin: 0;">Thank you for choosing StaLinks as media selling backlinks! We hope you are satisfy for using our platform.
+                    </p> <br/>
+                    <p style="margin: 0;">Feel free to give us feedback.</p> <br/>
                 @endslot
 
                 @slot('button')

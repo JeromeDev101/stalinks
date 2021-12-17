@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,8 +44,13 @@ class SellerPaid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Your account has been credited of $' . $this->event->totalAmount . ' for the different order IDs ['. implode(', ', $this->event->backlinkIds) .'].')
-                    ->line('Thank you for using our application!');
+            ->subject('Order Paid')
+            ->markdown('seller.paid', [
+                'total_amount' => $this->event->totalAmount,
+                'backlinks' => $this->event->backlinkIds,
+                'name' => $this->event->user->name,
+                'date' => Carbon::now()->format('m-d-Y')
+            ]);
     }
 
     /**

@@ -43,8 +43,8 @@ class AddWalletCredit extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Your wallet has been credited with the amount of $' . $this->amount)
-                    ->line('Thank you for using our application!');
+            ->subject('Wallet Credited')
+            ->markdown('buyer.add_wallet', ['amount' => $this->amount]);
     }
 
     /**

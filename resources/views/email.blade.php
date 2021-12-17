@@ -131,8 +131,9 @@
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hi <strong>{{ $name}}</strong>,</p> <br /> <br />
-                    <p style="margin: 0;">We’re excited to welcome you to StaLinks!. Before we get started, we need you to confirm your account by clicking the button down below.</p> <br /> <br />
+                    <p style="margin: 0;">Hello, <strong>{{ $name}}</strong>!</p> <br /> <br />
+                    <p style="margin: 0;">We’re excited to welcome you to StaLinks! </p> <br /> <br />
+                    <p style="margin: 0;">Before we get started, we need you to click verify colum down below:</p> <br /> <br />
                 @endslot
 
                 @slot('button')
