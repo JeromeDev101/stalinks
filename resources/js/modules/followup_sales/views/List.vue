@@ -394,7 +394,7 @@
                                             v-model="updateModel.status"
                                             style="height: 37px;"
                                             class="form-control pull-right"
-                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && user.role_id != 8 && !user.isAdmin)"
+                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && (user.role_id != 8 || user.role_id != 6) && user.isOurs != 0 && !user.isAdmin)"
 
                                             @change="checkStatus()">
 
@@ -408,7 +408,7 @@
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklinkQc"
-                                                v-show="user.role_id == 8 || user.role_id == 6 || user.isAdmin">
+                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0">
                                                 {{ status }}
                                             </option>
                                         </select>
