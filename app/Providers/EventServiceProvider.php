@@ -16,6 +16,7 @@ use App\Events\SellerReceivesOrderEvent;
 use App\Events\UserValidateEvent;
 use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
+use App\Events\TeamInChargeUpdatedEvent;
 use App\Listeners\SellerConfirmationListener;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
@@ -30,6 +31,7 @@ use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
 use App\Listeners\UserValidateListener;
 use App\Listeners\WriterPaidListener;
+use App\Listeners\TeamInChargeUpdatedListener;
 use App\Models\Backlink;
 use App\Models\Registration;
 use App\Models\User;
@@ -118,6 +120,10 @@ class EventServiceProvider extends ServiceProvider
 
         UserValidateEvent::class => [
             UserValidateListener::class
+        ],
+
+        TeamInChargeUpdatedEvent::class => [
+            TeamInChargeUpdatedListener::class
         ]
     ];
 

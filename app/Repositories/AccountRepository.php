@@ -6,6 +6,7 @@ use App\Events\UserValidateEvent;
 use App\Models\User;
 use App\Models\Registration;
 use App\Models\UsersPaymentType;
+use App\Events\TeamInChargeUpdatedEvent;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -123,6 +124,14 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             }
         } else if (isset($input['account_validation']) && $input['account_validation'] !== 'valid') {
             $input['email_via'] = null;
+        }
+
+        // ---------------------------------------------------
+
+        // notify team in charge if set
+
+        if (isset($input['team_in_charge']) && !empty($input['team_in_charge'])) {
+            event(new TeamInChargeUpdatedEvent($input['team_in_charge'], $user));
         }
 
         $account->update($input);
