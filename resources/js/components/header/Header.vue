@@ -753,7 +753,6 @@ export default {
                 loader.hide();
             })
             .catch((err) => {
-                console.log(err)
                 loader.hide();
             })
         },
@@ -899,7 +898,6 @@ export default {
                     .get("api/wallet-credit")
                     .then(function (res) {
                         let result = res.data;
-                        console.log(result)
                         if (typeof result === "object") {
                             localStorage.setItem(
                                 "wallet",
@@ -966,7 +964,6 @@ export default {
                 loader.hide();
             })
             .catch((err) => {
-                console.log(err)
                 loader.hide();
             })
         },

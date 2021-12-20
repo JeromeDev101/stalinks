@@ -501,7 +501,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated' && (user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0)">
+                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated' && (user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0)">
                                 <div class="row">
                                     <button class="btn btn-danger col mr-2" @click.prevent="uninterest">Un-Interested</button>
                                     <button class="btn btn-success col" @click.prevent="buy">Buy</button>
@@ -722,8 +722,6 @@
 
                         this.statusSummary.push(data)
                     }
-
-                    console.log(this.statusSummary)
                 })
             },
 
@@ -912,7 +910,6 @@
                 this.modalAddBackLink = true
                 let that = Object.assign({}, baclink)
 
-                console.log(that)
                 this.withArticle = that.publisher == null ? false : that.publisher.inc_article == "No" ? true : false;
                 this.modelBaclink.id = that.id
                 this.modelBaclink.publisher_id = that.publisher == null ? null : that.publisher.id
@@ -987,7 +984,9 @@
                         'success'
                     );
 
-                    $(this.$refs.modalEditBacklink).hide()
+                    this.closeModalBacklink()
+
+                    // $(this.$refs.modalEditBacklink).hide()
 
                     this.getBackLinkList();
                     this.$root.$refs.AppHeader.liveGetWallet()
