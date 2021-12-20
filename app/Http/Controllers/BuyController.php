@@ -378,7 +378,7 @@ class BuyController extends Controller
             $backlink = Backlink::find($request->id);
 
             $backlink->update([
-                'status' => 'Processing'
+                'status' => 'Pending'
             ]);
         } else {
             $backlink = Backlink::updateOrCreate([
