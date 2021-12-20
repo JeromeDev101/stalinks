@@ -124,7 +124,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-    Account Validated
+    Wallet Credited
     @endcomponent
 
     <tr>

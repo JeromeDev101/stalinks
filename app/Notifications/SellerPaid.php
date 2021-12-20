@@ -45,7 +45,7 @@ class SellerPaid extends Notification
     {
         return (new MailMessage)
             ->subject('Order Paid')
-            ->markdown('seller.paid', [
+            ->markdown('seller.order_paid', [
                 'total_amount' => $this->event->totalAmount,
                 'backlinks' => $this->event->backlinkIds,
                 'name' => $this->event->user->name,

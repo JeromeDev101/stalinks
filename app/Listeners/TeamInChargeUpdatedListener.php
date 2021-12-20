@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Registration;
 use App\Models\User;
 use App\Notifications\TeamInChargeUpdated;
 use App\Events\TeamInChargeUpdatedEvent;
@@ -31,7 +32,7 @@ class TeamInChargeUpdatedListener
         $team_in_charge_user = User::find($event->team_in_charge);
 
         if ($team_in_charge_user) {
-            $team_in_charge_user->notify(new TeamInChargeUpdated($team_in_charge_user, $event->user));
+            $team_in_charge_user->notify(new TeamInChargeUpdated($team_in_charge_user, $event->user, $event->multiple));
         }
     }
 }

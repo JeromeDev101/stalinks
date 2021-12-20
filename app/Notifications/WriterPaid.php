@@ -45,7 +45,7 @@ class WriterPaid extends Notification
     {
         return (new MailMessage)
             ->subject('Article Paid')
-            ->markdown('writer.article_paid', [
+            ->markdown('writer.writer_paid', [
                 'price' => $this->price,
                 'articles' => implode(', ', $this->articleIds)
             ]);

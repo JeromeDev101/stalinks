@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TeamInChargeUpdatedEvent;
 use App\Mail\SendResetPasswordEmail;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use Carbon\Carbon;
@@ -879,6 +880,12 @@ class AccountController extends Controller
         Registration::whereIn('id', $request->ids)->update([
             'team_in_charge' => $request->emp_id,
         ]);
+
+        // notify in charge
+
+        if (isset($request->emp_id) && !empty($request->emp_id)) {
+            event(new TeamInChargeUpdatedEvent($request->emp_id, null, $request->ids));
+        }
 
         return response()->json(['success' => true],200);
     }

@@ -12,6 +12,7 @@ class TeamInChargeUpdated extends Notification
     use Queueable;
 
     protected $user;
+    protected $multiple;
     protected $team_in_charge;
 
     /**
@@ -19,10 +20,12 @@ class TeamInChargeUpdated extends Notification
      *
      * @param $team_in_charge
      * @param $user
+     * @param $multiple
      */
-    public function __construct($team_in_charge, $user)
+    public function __construct($team_in_charge, $user, $multiple = null)
     {
         $this->user = $user;
+        $this->multiple = $multiple;
         $this->team_in_charge = $team_in_charge;
     }
 
@@ -59,8 +62,14 @@ class TeamInChargeUpdated extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            'message' => 'You are now assigned as the in charge for ' . $this->user->username . ' (ID# ' . $this->user->id . ').'
-        ];
+        if ($this->multiple != null) {
+            return [
+                'message' => 'You are now assigned as the in charge for user(s) with registration id(s): ' . implode(",", $this->multiple)
+            ];
+        } else {
+            return [
+                'message' => 'You are now assigned as the in charge for ' . $this->user->username . ' (User ID# ' . $this->user->id . ').'
+            ];
+        }
     }
 }

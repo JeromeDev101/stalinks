@@ -131,7 +131,9 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         // notify team in charge if set
 
         if (isset($input['team_in_charge']) && !empty($input['team_in_charge'])) {
-            event(new TeamInChargeUpdatedEvent($input['team_in_charge'], $user));
+            if ($account->team_in_charge !== $input['team_in_charge']) {
+                event(new TeamInChargeUpdatedEvent($input['team_in_charge'], $user));
+            }
         }
 
         $account->update($input);

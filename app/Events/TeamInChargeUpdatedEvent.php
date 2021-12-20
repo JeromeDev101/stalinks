@@ -17,17 +17,20 @@ class TeamInChargeUpdatedEvent
 
     public $team_in_charge;
     public $user;
+    public $multiple;
 
     /**
      * Create a new event instance.
      *
      * @param $team_in_charge
-     * @param User $user
+     * @param $user
+     * @param $multiple
      */
-    public function __construct($team_in_charge, User $user)
+    public function __construct($team_in_charge, $user, $multiple = null)
     {
         $this->team_in_charge = $team_in_charge;
         $this->user = $user;
+        $this->multiple = $multiple;
     }
 
     /**
