@@ -501,10 +501,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated' && (user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0)">
+                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated'">
                                 <div class="row">
-                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">Un-Interested</button>
-                                    <button class="btn btn-success col" @click.prevent="buy">Buy</button>
+                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">Un-Interested
+                                    </button>
+                                    <button v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"
+                                            class="btn btn-success col" @click.prevent="buy">Buy
+                                    </button>
                                 </div>
                             </div>
 
