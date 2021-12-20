@@ -561,7 +561,7 @@
             return {
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
-                statusBaclink: ['To Be Validated', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
+                statusBaclink: ['To Be Validated', 'Pending', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
