@@ -202,6 +202,7 @@
                                class="table table-hover table-bordered table-striped rlink-table">
                             <thead>
                             <tr class="label-primary">
+                                <th>Action</th>
                                 <th>#</th>
                                 <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">Url Pub</th>
                                 <th v-show="tblOptions.blink_id">Blink</th>
@@ -218,11 +219,37 @@
                                 <th v-show="tblOptions.date_process">Date for Proccess</th>
                                 <th v-show="tblOptions.date_complete">Date Completed</th>
                                 <th v-show="tblOptions.status">Status</th>
-                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(sales, index) in listSales.data" :key="index">
+                                <td>
+                                    <div class="btn-group">
+                                        <button
+                                            data-toggle="modal"
+                                            data-target="#modal-update-sales"
+                                            title="Edit"
+                                            class="btn btn-default mr-2"
+
+                                            @click="doUpdate(sales)">
+
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <button
+                                            v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1)"
+                                            :disabled="sales.status !== 'Pending'"
+                                            data-toggle="modal"
+                                            data-target="#modal-approve-pending"
+                                            class="btn btn-default"
+                                            title="Confirm Pending Order"
+
+                                            @click="confirmPendingSellerOrder(sales)">
+
+                                            <i class="fas fa-check-circle"></i>
+                                        </button>
+                                    </div>
+                                </td>
                                 <td>{{ index + 1}}</td>
                                 <td
                                     v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
@@ -270,11 +297,6 @@
                                 <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
                                 <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
                                 <td v-show="tblOptions.status">{{ sales.status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button data-toggle="modal" @click="doUpdate(sales)" data-target="#modal-update-sales" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    </div>
-                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -591,6 +613,302 @@
             </div>
         </div>
         <!-- End of Modal View Issue File -->
+
+        <!-- Modal Approve Pending Start -->
+        <div class="modal fade" id="modal-approve-pending" ref="modalApprovePending" style="display: none;" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Seller Confirmation</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle"></i>
+                            <span>
+                                Please confirm/clarify that the details you input, listed below are correct.
+                                Please provide an answer for all <strong>CORRECT/INCORRECT</strong>
+                                buttons for the <strong>CONFIRM/CANCEL</strong> order buttons to appear.
+                            </span>
+                        </div>
+
+                        <!-- details -->
+                        <div v-if="sellerConfirmationData.hasOwnProperty('id')" class="card">
+                            <div class="card-header">
+                                <strong>Details</strong>
+                            </div>
+                            <div class="card-body">
+
+                                <table style="table-layout: fixed; width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 75%"></td>
+                                            <td class="text-center font-weight-bold">Correct</td>
+                                            <td class="text-center font-weight-bold">Incorrect</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="mb-1">
+                                                Backlinks ID:
+                                                <strong>
+                                                    {{ sellerConfirmationData.id }}
+                                                </strong>
+                                            </p>
+                                            <p class="mb-1">
+                                                URL:
+                                                <strong>
+                                                    {{ replaceCharacters(sellerConfirmationData.publisher.url) }}
+                                                </strong>
+                                            </p>
+                                            <p class="mb-1">
+                                                Price:
+                                                <strong>
+                                                    {{ sellerConfirmationData.price == null ? '' : '$' + sellerConfirmationData.price }}
+                                                </strong>
+                                            </p>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-radio">
+                                                <input
+                                                    v-model="sellerConfirmationValues.data"
+                                                    type="radio"
+                                                    :value="true"
+                                                    id="dataRadio1"
+                                                    name="dataRadio"
+                                                    class="custom-control-input text-success">
+
+                                                <label class="custom-control-label" for="dataRadio1">
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-radio">
+                                                <input
+                                                    v-model="sellerConfirmationValues.data"
+                                                    type="radio"
+                                                    :value="false"
+                                                    id="dataRadio2"
+                                                    name="dataRadio"
+                                                    class="custom-control-input text-danger">
+
+                                                <label class="custom-control-label" for="dataRadio2">
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- need to clarify -->
+                        <div v-if="sellerConfirmationData.hasOwnProperty('id')" class="card">
+                            <div class="card-header">
+                                <strong>Need to Clarify</strong>
+                            </div>
+                            <div class="card-body">
+                                <table style="table-layout: fixed; width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 75%"></td>
+                                            <td class="text-center font-weight-bold">Correct</td>
+                                            <td class="text-center font-weight-bold">Incorrect</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border-bottom: 1px solid lightgray;">
+                                            <td style="padding: 15px 0 15px 0">
+                                                <p class="mb-1">
+                                                    Include Article:
+                                                    <strong>
+                                                        {{ sellerConfirmationData.publisher.inc_article }}
+                                                    </strong>
+                                                </p>
+
+                                                <div class="mb-1">
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-danger">No</span>
+                                                        means we will provide the article for you.
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-success">Yes</span>
+                                                        means we're not providing article for you.
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.inc_article"
+                                                        type="radio"
+                                                        :value="true"
+                                                        id="incArticleRadio1"
+                                                        name="incArticleRadio"
+                                                        class="custom-control-input text-success">
+
+                                                    <label class="custom-control-label" for="incArticleRadio1">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.inc_article"
+                                                        type="radio"
+                                                        :value="false"
+                                                        id="incArticleRadio2"
+                                                        name="incArticleRadio"
+                                                        class="custom-control-input text-danger">
+
+                                                    <label class="custom-control-label" for="incArticleRadio2">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr style="border-bottom: 1px solid lightgray;">
+                                            <td style="padding: 15px 0 15px 0">
+                                                <p class="mb-1">
+                                                    Do Follow:
+                                                    <strong>
+                                                        yes
+                                                    </strong>
+                                                </p>
+
+                                                <div class="mb-1">
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-danger">No</span>
+                                                        Accept No-Follow link.
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-success">Yes</span>
+                                                        Accept Do-Follow link.
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.do_follow"
+                                                        type="radio"
+                                                        :value="true"
+                                                        id="doFollowRadio1"
+                                                        name="doFollowRadio"
+                                                        class="custom-control-input text-success">
+
+                                                    <label class="custom-control-label" for="doFollowRadio1">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.do_follow"
+                                                        type="radio"
+                                                        :value="false"
+                                                        id="doFollowRadio2"
+                                                        name="doFollowRadio"
+                                                        class="custom-control-input text-danger">
+
+                                                    <label class="custom-control-label" for="doFollowRadio2">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding: 15px 0 15px 0">
+                                                <p class="mb-1">
+                                                    Permanent Article:
+                                                    <strong>
+                                                        yes
+                                                    </strong>
+                                                </p>
+
+                                                <div class="mb-1">
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-danger">No</span>
+                                                        Article will not be available for lifetime.
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <span class="badge badge-success">Yes</span>
+                                                        Article will be available for lifetime.
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.permanent_article"
+                                                        type="radio"
+                                                        :value="true"
+                                                        id="permArticleRadio1"
+                                                        name="permArticleRadio"
+                                                        class="custom-control-input text-success">
+
+                                                    <label class="custom-control-label" for="permArticleRadio1">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="padding: 15px 0 15px 0">
+                                                <div class="custom-control custom-radio">
+                                                    <input
+                                                        v-model="sellerConfirmationValues.permanent_article"
+                                                        type="radio"
+                                                        :value="false"
+                                                        id="permArticleRadio2"
+                                                        name="permArticleRadio"
+                                                        class="custom-control-input text-danger">
+
+                                                    <label class="custom-control-label" for="permArticleRadio2">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            v-if="isShowConfirmButtonOrders"
+                            type="button"
+                            class="btn btn-success"
+
+                            @click="processPendingSellerOrder(sellerConfirmationData.id, 'approve')">
+
+                            <i class="fa fa-check"></i>
+                            Confirm
+                        </button>
+
+                        <button
+                            v-if="isShowCancelButtonOrders"
+                            type="button"
+                            class="btn btn-danger"
+
+                            @click="processPendingSellerOrder(sellerConfirmationData.id, 'cancel')">
+
+                            <i class="fa fa-times"></i>
+                            Cancel
+                        </button>
+
+                        <button
+                            data-dismiss="modal"
+                            type="button"
+                            class="btn btn-default pull-left"
+
+                            @click="resetConfirmationValues()">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Approve Pending End -->
     </div>
 </template>
 
@@ -616,6 +934,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from "axios";
 
     export default {
         data() {
@@ -704,6 +1023,16 @@
                 listReason: '',
 
                 issueCancelFilePreview: '',
+
+                // for seller confirmation
+
+                sellerConfirmationData: {},
+                sellerConfirmationValues: {
+                    data: null,
+                    do_follow: null,
+                    inc_article: null,
+                    permanent_article: null
+                }
             }
         },
 
@@ -740,6 +1069,48 @@
 
                 return disabled.includes(this.updateModel.status) && this.user.isOurs === 1;
             },
+
+            isShowConfirmButtonOrders() {
+                let obj = this.sellerConfirmationValues
+                let confirm = true;
+
+                for (let key in obj) {
+                    if (obj[key] === null || obj[key] === "") {
+                        confirm = false;
+                    }
+                }
+
+                if (confirm) {
+                    for (let key in obj) {
+                        if (obj[key] === false) {
+                            confirm = false;
+                        }
+                    }
+                }
+
+                return confirm;
+            },
+
+            isShowCancelButtonOrders() {
+                let obj = this.sellerConfirmationValues
+                let cancel = true;
+
+                for (let key in obj) {
+                    if (obj[key] === null || obj[key] === "") {
+                        cancel = false;
+                    }
+                }
+
+                if (cancel) {
+                    for (let key in obj) {
+                        if (obj[key] === false) {
+                            cancel = true;
+                        }
+                    }
+                }
+
+                return (cancel && !this.isShowConfirmButtonOrders);
+            }
         },
 
         methods: {
@@ -1066,6 +1437,64 @@
             clearMessageform() {
                 this.$store.dispatch('clearMessageform');
             },
+
+            confirmPendingSellerOrder(sales) {
+                this.sellerConfirmationData = sales;
+
+                this.resetConfirmationValues();
+            },
+
+            resetConfirmationValues() {
+                this.sellerConfirmationValues = {
+                    data: null,
+                    do_follow: null,
+                    inc_article: null,
+                    permanent_article: null
+                }
+            },
+
+            processPendingSellerOrder(id, process) {
+                let loader = this.$loading.show();
+
+                axios.post('/api/process-pending-order', {
+                    id: id,
+                    process: process
+                }).then((res) => {
+
+                    this.resetConfirmationValues();
+
+                    let orderModal = this.$refs.modalApprovePending
+                    $(orderModal).modal('hide')
+
+                    if (process === 'approve') {
+                        swal.fire(
+                            'Success!',
+                            'Pending order successfully confirmed.',
+                            'success'
+                        )
+                    } else {
+                        swal.fire(
+                            'Cancelled!',
+                            'Pending order successfully cancelled.',
+                            'error'
+                        )
+                    }
+
+                    this.getListSales();
+
+                    loader.hide();
+                }).catch((err) => {
+                    console.log(err)
+
+                    swal.fire(
+                        'Error!',
+                        'Something went wrong while processing the pending order.',
+                        'error'
+                    )
+
+                    loader.hide();
+                })
+            }
         }
     }
 </script>

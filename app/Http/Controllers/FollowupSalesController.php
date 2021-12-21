@@ -278,4 +278,29 @@ class FollowupSalesController extends Controller
             'record' => $backlink
         ], 200);
     }
+
+    public function processPendingOrder(Request $request)
+    {
+        $id = isset($request->id) ? $request->id : null;
+
+        if (!is_null($id)) {
+            if (is_numeric($id)) {
+                $backlink = Backlink::find($id);
+
+                if ($backlink) {
+                    if ($backlink->status === 'Pending') {
+                        if ($request->process === 'approve') {
+                            $backlink->update(['status' => 'Processing']);
+                        } else {
+                            $backlink->update([
+                                'status' => 'Canceled',
+                                'reason' => 'Other',
+                                'reason_detailed' => 'Order details not correct, cancelled by seller'
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

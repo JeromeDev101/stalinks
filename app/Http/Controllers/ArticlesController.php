@@ -136,7 +136,7 @@ class ArticlesController extends Controller
                                 })->orWhere('id_writer', $user->id);
                             });
                         })
-                        // ->where('backlinks.status' ,'!=', 'Canceled')
+                        ->where('backlinks.status' ,'!=', 'Pending')
                         // ->where('backlinks.status' ,'!=', 'Issue')
                         ->orderBy('id', 'desc');
 

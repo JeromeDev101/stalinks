@@ -172,6 +172,7 @@ Route::middleware('auth:api')->group(function () {
     // Followup Sales
     Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');
     Route::name('update-sales')->post('sales', 'FollowupSalesController@update');
+    Route::name('process-pending-order')->post('process-pending-order', 'FollowupSalesController@processPendingOrder');
 
     //Backlink
     Route::resource('backlinks', 'BackLinkController');

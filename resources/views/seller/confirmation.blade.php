@@ -133,27 +133,33 @@
             @component('components.email_body')
                 @slot('main')
                     <p style="margin: 0;">Greetings {{ $user->name }},</p> <br />
-                    <p style="margin: 0;">We just want you to confirm if the details you input was correct.</p> <br />
+                    <p style="margin: 0;">Congratulations! You have one pending order for your website.</p> <br />
 
                     <p style="margin: 0;"><b>Details:</b></p> <br />
-                    <p style="margin: 0;">Backlink ID: <b>{{ $backlink->id }}</b> </p> 
-                    <p style="margin: 0;">Publisher ID: <b>{{ $backlink->publisher->id }}</b> </p> 
-                    <p style="margin: 0;">URL: <b>{{ $backlink->publisher->url }}</b> </p>
+                    <p style="margin: 0;">Backlink ID: <b>{{ $backlink->id }}</b> </p>
+                    <p style="margin: 0;">URL Publisher: <b>{{ $backlink->publisher->url }}</b> </p>
                     <p style="margin: 0;">Price: <b>{{ $backlink->price }}</b> </p> <br />
 
                     <hr/>
+
+                    <p style="margin: 0;">Please confirm few details about your URL to ensure the order can be completed:</p> <br />
                     <p style="margin: 0;"><b>Need to clarify:</b></p><br />
                     <p style="margin: 0;">Include Article: <b>{{ $backlink->publisher->inc_article }}</b> </p> <br />
                     <p style="margin: 0;">"No" - means we will provide the article for you.</p>
                     <p style="margin: 0;">"Yes" - means we're not providing article for you.</p> <br />
 
                     <p style="margin: 0;">Do-Follow: <b>Yes</b> </p> <br />
-                    <p style="margin: 0;">"No" - Accept Do-Follow link.</p>
-                    <p style="margin: 0;">"Yes" - Accept No-Follow link.</p> <br />
+                    <p style="margin: 0;">"No" -  Accept No-Follow link.</p>
+                    <p style="margin: 0;">"Yes" - Accept Do-Follow link.</p> <br />
 
                     <p style="margin: 0;">Permanent Article: <b>Yes</b> </p> <br />
-                    <p style="margin: 0;">"No" - Article will be available for lifetime.</p>
-                    <p style="margin: 0;">"Yes" - Article will not be available for lifetime.</p> <br />
+                    <p style="margin: 0;">"No" - Article will not be available for lifetime.</p>
+                    <p style="margin: 0;">"Yes" - Article will be available for lifetime.</p> <br />
+
+
+                    <br />
+                    <p style="margin: 0;">You can also login to your account to see the details about your order and to confirm the details on the system itself.</p> <br />
+                    <p style="margin: 0;">Thank you for your cooperation, looking forward to working together with you.</p> <br />
 
                 @endslot
 
