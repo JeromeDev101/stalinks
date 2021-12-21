@@ -73,6 +73,7 @@ class WriterBillingController extends Controller
     }
 
     public function payBilling(WriterPayRequest $request, NotificationInterface $notification, InvoiceService $invoice, PaypalInterface $paypal) {
+
         $ids = json_decode($request->ids);
 
         $new_name = null;
@@ -123,7 +124,7 @@ class WriterBillingController extends Controller
             ]);
         }
 
-        event(new WriterPaidEvent($billing->user, $request->price, $article_ids));
+        event(new WriterPaidEvent($billing->user, $request->price, $article_ids, $billing->proof_doc_path));
 
 //        $notification->create([
 //            'user_id' => $ids[0]->id_writer,

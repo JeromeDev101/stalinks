@@ -133,8 +133,8 @@
                 @slot('main')
                     <p style="margin: 0;">Greetings, {{ $name }}!</p> <br />
                     <p style="margin: 0;">You have completed the order(s) on {{ $date }}.</p> <br />
-                    <p style="margin: 0;">If you received this email meaning you should have already received payment from us and no worries, we also have attached the receipt down below.</p> <br/>
-                    <p style="margin: 0;">Thank you for choosing StaLinks as media selling backlinks! We hope you are satisfy for using our platform.
+                    <p style="margin: 0;">If you received this email, you should have already received payment from us. Also attached in this email is the receipt for the transaction.</p> <br/>
+                    <p style="margin: 0;">Thank you for choosing StaLinks as media selling backlinks! We hope you are satisfied for using our platform.
                     </p> <br/>
                     <p style="margin: 0;">Feel free to give us feedback.</p> <br/>
                 @endslot

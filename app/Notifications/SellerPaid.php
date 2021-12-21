@@ -50,7 +50,8 @@ class SellerPaid extends Notification
                 'backlinks' => $this->event->backlinkIds,
                 'name' => $this->event->user->name,
                 'date' => Carbon::now()->format('m-d-Y')
-            ]);
+            ])
+            ->attach(config('app.url') . '/images/billing/' . $this->event->receipt);
     }
 
     /**

@@ -16,20 +16,22 @@ class SellerPaidEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $totalAmount, $backlinkIds;
+    public $totalAmount, $backlinkIds, $receipt;
 
     /**
      * Create a new event instance.
      *
      * @param User $user
-     * @param      $totalAmount
-     * @param      $backlinkIds
+     * @param $totalAmount
+     * @param $backlinkIds
+     * @param $receipt
      */
-    public function __construct(User $user, $totalAmount, $backlinkIds)
+    public function __construct(User $user, $totalAmount, $backlinkIds, $receipt)
     {
         $this->user = $user;
         $this->totalAmount = $totalAmount;
         $this->backlinkIds = $backlinkIds;
+        $this->receipt = $receipt;
     }
 
     /**

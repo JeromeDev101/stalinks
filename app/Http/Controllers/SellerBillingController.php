@@ -161,7 +161,7 @@ class SellerBillingController extends Controller
             event(new BuyerDebitedEvent($backlink, $totalBacklinkAmount, $backlink_ids));
 
             if ($seller) {
-                event(new SellerPaidEvent($seller, $totalBacklinkAmount, $backlink_ids));
+                event(new SellerPaidEvent($seller, $totalBacklinkAmount, $backlink_ids, $filename));
 
             }
 

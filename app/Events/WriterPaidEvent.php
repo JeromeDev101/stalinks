@@ -18,17 +18,22 @@ class WriterPaidEvent implements ShouldBroadcast
     public $user;
     public $price;
     public $articleIds;
+    public $receipt;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param User $user
+     * @param $price
+     * @param $articleIds
+     * @param $receipt
      */
-    public function __construct(User $user, $price, $articleIds)
+    public function __construct(User $user, $price, $articleIds, $receipt)
     {
         $this->user = $user;
         $this->price = $price;
         $this->articleIds = $articleIds;
+        $this->receipt = $receipt;
     }
 
     /**

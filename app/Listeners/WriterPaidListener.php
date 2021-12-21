@@ -27,6 +27,6 @@ class WriterPaidListener
      */
     public function handle(WriterPaidEvent $event)
     {
-        $event->user->notify(new WriterPaid($event->price, $event->articleIds));
+        $event->user->notify(new WriterPaid($event->price, $event->articleIds, $event->receipt));
     }
 }

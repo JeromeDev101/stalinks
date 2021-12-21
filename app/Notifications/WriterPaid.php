@@ -11,17 +11,20 @@ class WriterPaid extends Notification
 {
     use Queueable;
 
-    protected $price, $articleIds;
+    protected $price, $articleIds, $receipt;
 
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param $price
+     * @param $articleIds
+     * @param $receipt
      */
-    public function __construct($price, $articleIds)
+    public function __construct($price, $articleIds, $receipt)
     {
         $this->price = $price;
         $this->articleIds = $articleIds;
+        $this->receipt = $receipt;
     }
 
     /**
@@ -48,7 +51,8 @@ class WriterPaid extends Notification
             ->markdown('writer.writer_paid', [
                 'price' => $this->price,
                 'articles' => implode(', ', $this->articleIds)
-            ]);
+            ])
+            ->attach(config('app.url') . $this->receipt);
     }
 
     /**
