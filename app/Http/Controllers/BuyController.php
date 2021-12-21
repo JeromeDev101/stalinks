@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\BuyEvent;
+use App\Events\SellerConfirmationEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Events\BacklinkStatusChangedEvent;
 use App\Models\BuyerPurchased;
@@ -349,6 +350,7 @@ class BuyController extends Controller
      */
     public function update(Request $request, NotificationInterface $notification)
     {
+
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
         $user = Auth::user();
 
@@ -404,6 +406,17 @@ class BuyController extends Controller
         event(new BuyEvent($backlink, $user));
         event(new SellerReceivesOrderEvent($backlink, $publisher->user));
         event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
+
+        // seller confirmation email
+        $seller_account = null;
+
+        if ($backlink->publisher) {
+            $seller_account = $backlink->publisher->user ?: null;
+        }
+
+        if ($seller_account) {
+            event(new SellerConfirmationEvent($backlink, $seller_account));
+        }
 
         if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
             Article::create([

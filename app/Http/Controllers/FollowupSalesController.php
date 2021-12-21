@@ -194,17 +194,6 @@ class FollowupSalesController extends Controller
 
             $input['live_date'] = date('Y-m-d');
         } else if ($input['status'] == 'Pending') {
-            // notify seller
-            $seller = null;
-
-            if ($backlink->publisher) {
-                $seller = $backlink->publisher->user ?: null;
-            }
-
-            if ($seller) {
-                event(new SellerConfirmationEvent($backlink, $seller));
-            }
-
             $input['live_date'] = null;
         } else if ($input['status'] == 'Issue') {
             if ($backlink->article) {
