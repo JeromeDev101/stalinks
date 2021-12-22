@@ -57,7 +57,6 @@ class GenerateBestPrice implements ShouldQueue
 
             //If duplicates has both Yes and No in inc_article field
             if ($this->urlIncArticleHasYesOrNo($publisherIncArticles)) {
-
                 //Add 15 to price if inc_article is NO
                 $publisher->map(function ($item, $key) use ($publisher) {
                     if (strtolower($item->inc_article) == 'no' && $item->price) {
@@ -69,32 +68,27 @@ class GenerateBestPrice implements ShouldQueue
 
                 $bestPrice = $publisher
                     ->where('price', '!=', null)
+                    ->where('user', '!=', null)
+                    ->where('qc_validation', '!=', 'no')
                     ->where('user.registration.account_validation', '!=', 'invalid')
-                    ->has('user')
-                    ->sortBy('price')
-                    ->first();
+                    ->sortBy('price')->first();
 
                 if ($bestPrice) {
-
                     //If 2 or more URLs has best price
                     if ($publisher->where('price', $bestPrice->price)->count() > 1) {
-
                         $publisherIncArticlesByPrice = $publisher
                             ->where('price', $bestPrice->price)
                             ->pluck('inc_article')->toArray();
 
                         //If 1 of best price's inc_article is YES, set that as Best Price
                         if ($this->oneUrlHasArticle($publisherIncArticlesByPrice)) {
-
                             $bestPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('inc_article', 'Yes')
                                 ->sortBy('created_at')
                                 ->first();
-
                         } else {
-
                             $bestPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
@@ -103,7 +97,6 @@ class GenerateBestPrice implements ShouldQueue
                         }
 
                         if ($bestPrice) {
-
                             //Filter out best price to other URLs
                             $invalidIds = $publisher
                                 ->whereNotIn('id', [$bestPrice->id])
@@ -119,7 +112,6 @@ class GenerateBestPrice implements ShouldQueue
                             ]);
                         }
                     } else {
-
                         //Filter out best price to other URLs
                         $invalidIds = $publisher
                             ->whereNotIn('id', [$bestPrice->id])
@@ -137,14 +129,13 @@ class GenerateBestPrice implements ShouldQueue
                 }
             } else {
                 if ($publisher) {
-
                     //Get best price among URLs
                     $bestPrice = $publisher
                         ->where('price', '!=', null)
+                        ->where('user', '!=', null)
+                        ->where('qc_validation', '!=', 'no')
                         ->where('user.registration.account_validation', '!=', 'invalid')
-                        ->has('user')
-                        ->sortBy('price')
-                        ->first();
+                        ->sortBy('price')->first();
 
                     if ($bestPrice) {
                         //Filter out best price to other URLs
@@ -175,7 +166,6 @@ class GenerateBestPrice implements ShouldQueue
                 $publisher->user &&
                 $publisher->user->registration &&
                 $publisher->user->registration->account_validation == 'valid') {
-
                 $publisher->update([
                     'valid' => 'valid'
                 ]);
@@ -189,12 +179,10 @@ class GenerateBestPrice implements ShouldQueue
                 'valid',
                 'processing'
             ])) {
-
                 $publisher->update([
                     'valid' => 'valid'
                 ]);
             } else {
-
                 $publisher->update([
                     'valid' => 'invalid'
                 ]);
