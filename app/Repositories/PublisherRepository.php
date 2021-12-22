@@ -109,7 +109,9 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
             ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
             ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
-            ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id');
+            ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
+            ->where('registration.account_validation', '!=', 'invalid')
+            ->has('user');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
 
