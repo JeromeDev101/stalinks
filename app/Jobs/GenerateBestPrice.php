@@ -70,6 +70,7 @@ class GenerateBestPrice implements ShouldQueue
                 $bestPrice = $publisher
                     ->where('price', '!=', null)
                     ->where('user.registration.account_validation', '!=', 'invalid')
+                    ->has('user')
                     ->sortBy('price')
                     ->first();
 
@@ -141,6 +142,7 @@ class GenerateBestPrice implements ShouldQueue
                     $bestPrice = $publisher
                         ->where('price', '!=', null)
                         ->where('user.registration.account_validation', '!=', 'invalid')
+                        ->has('user')
                         ->sortBy('price')
                         ->first();
 
