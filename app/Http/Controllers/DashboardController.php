@@ -148,10 +148,12 @@ class DashboardController extends Controller
 //        }
 
         if ($user->isOurs == 1 && $user->role_id == 5) {
-            $sub_buyer_ids = $user->sub_buyers->pluck('id');
 
-            $list = $list->where('backlinks.user_id', $user->id)
-                ->orWhereIn('backlinks.user_id', $sub_buyer_ids);
+            $list = $list->leftJoin('registration', 'users.email', 'registration.email')
+                ->where(function($query) use ($user) {
+                    $query->where('registration.team_in_charge', $user->id)
+                    ->orWhere('users.id', $user->id);
+            });
         }
 
         return $list->groupBy('backlinks.user_id', 'users.username')
@@ -261,10 +263,11 @@ class DashboardController extends Controller
 //        }
 
         if ($user_id->isOurs == 1 && $user_id->role_id == 5) {
-            $sub_buyer_ids = $user_id->sub_buyers->pluck('id');
-
-            $list = $list->where('backlinks.user_id', $user_id->id)
-                ->orWhereIn('backlinks.user_id', $sub_buyer_ids);
+            $list = $list->leftJoin('registration', 'users.email', 'registration.email')
+            ->where(function ($query) use ($user_id) {
+                $query->where('registration.team_in_charge', $user_id->id)
+                    ->orWhere('users.id', $user_id->id);
+            });
         }
 
         return $list->groupBy('backlinks.user_id', 'users.username')
