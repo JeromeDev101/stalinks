@@ -39,6 +39,7 @@ import ArticleList from '@/modules/article/views/List.vue'
 import Article from '@/modules/article/views/Article.vue'
 import Mails from '@/modules/mails/views/Mail.vue'
 import GenerateList from '@/modules/generate_list/views/List.vue'
+import ValidateWriter from '@/modules/writers_validation/views/List.vue'
 
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue'
 import ResetPassword from '@/modules/reset_password/views/List.vue'
@@ -199,6 +200,11 @@ const routes = [
                 path : '/articles-list',
                 name : 'articles-list',
                 component : ArticleList,
+            },
+            {
+                path : '/validate-writer',
+                name : 'validate-writer',
+                component : ValidateWriter,
             },
             {
                 path : '/overall-incomes',

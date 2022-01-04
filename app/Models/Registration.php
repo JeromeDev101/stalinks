@@ -48,7 +48,8 @@ class Registration extends Model
         'rate_type',
         'email_via',
         'is_show_price_basis',
-        'can_validate_backlink'
+        'can_validate_backlink',
+        'is_exam_passed'
     ];
 
     public function team_in_charge() {

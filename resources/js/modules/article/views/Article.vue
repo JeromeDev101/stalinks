@@ -11,6 +11,14 @@
         </div>
 
         <div class="row">
+
+            <!-- alert for external writers that doesn't yet passed the exam -->
+            <div class="col-md-12" v-if="user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed != 1">
+                <div class="alert alert-info">
+                    <p><b>Sorry!</b> you can't still write an article unless you passed the exam. Please complete the Exam. Go to <b>Writer's Validation</b> menu</p>
+                </div>
+            </div>
+
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
@@ -154,7 +162,7 @@
                             </tr>
                         </table>
 
-                        <div v-if="isProcessing" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                        <div v-if="isProcessing && (user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed == 1)" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
                             <strong>Reminder: </strong> Your account is currently on process. Please contact the
                                                         administrator to process you account status.
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -689,9 +697,19 @@
             }),
 
             isProcessing() {
-                return this.user.isOurs === 0
-                    ? false
-                    : this.user.registration.account_validation !== 'valid';
+                // return this.user.isOurs === 0
+                //     ? false
+                //     : this.user.registration.account_validation !== 'valid';
+
+                let result = true;
+
+                if(this.user.isOurs === 0) {
+                    result = false;
+                } else if(this.user.isOurs === 1 && this.user.role.id === 4 && this.user.user_type.is_exam_passed == 1) {
+                    result = false;
+                }
+
+                return result;
             },
 
             tableConfig() {

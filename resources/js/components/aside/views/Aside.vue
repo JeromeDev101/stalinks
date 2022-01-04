@@ -239,6 +239,21 @@
                     </li>
 
                     <li class="nav-item"
+                        v-if="isPostingWriterExt ||
+                                user.isAdmin || isQc || isQcSeller ||
+                                         isQcBilling"
+                    >
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/validate-writer' }"
+                            :class="{ active: $route.name == 'validate-writer' }"
+                        >
+                            <img src="../../../../images/article.png"/>
+                            <p>Writer's Validation</p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item"
                         v-if="user.isAdmin">
                         <router-link
                             class="nav-link"
@@ -627,6 +642,7 @@ export default {
             isBuyer : false,
             isManager : false,
             isPostingWriter : false,
+            isPostingWriterExt: false,
             isQc : false,
             isQcBuyer : false,
             isQcSeller : false,
@@ -705,6 +721,10 @@ export default {
 
             if (that.role.id == 4) {
                 this.isPostingWriter = true;
+            }
+
+            if (that.role.id == 4 && that.isOurs == 1 && that.user_type.is_exam_passed != 1) {
+                this.isPostingWriterExt = true;
             }
 
             if (that.role.id == 8) {

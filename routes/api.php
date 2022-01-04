@@ -157,6 +157,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-get-ext-seller')->get('ext/ext-seller','ExtDomainController@getListExtSeller');
     Route::name('ext-update-multiple-employee')->post('/update-multiple-employee','ExtDomainController@updateMultipleEmployee');
 
+    // Writers Validation
+    Route::name('get-ext-writers')->get('ext-writers', 'WriterValidationController@getList');
+    Route::name('add-exam')->post('add-exam', 'WriterValidationController@store');
+    Route::name('update-exam')->post('update-exam', 'WriterValidationController@update');
+    Route::name('get-exam')->get('get-exam', 'WriterValidationController@getExam');
+    Route::name('check-exam')->post('check-exam', 'WriterValidationController@checkExam');
+
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');
     Route::name('int-create')->post('/int', 'IntDomainController@store');
