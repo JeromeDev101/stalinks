@@ -26,7 +26,7 @@
                     <ahref></ahref>
                 </div>
 
-                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto'">
+                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto' && typeConfig !== 'skrill'">
                     <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
                 </div>
             </div>

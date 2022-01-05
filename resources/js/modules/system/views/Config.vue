@@ -60,6 +60,16 @@ export default {
 
             alert('Saved configs success');
         },
+
+        async saveListConfig(configs) {
+            for (let index in configs) {
+                await this.saveConfig(configs[index]);
+            }
+        },
+
+        async saveConfig(config) {
+            await this.$store.dispatch('actionUpdateConfig', config);
+        },
     },
 }
 </script>

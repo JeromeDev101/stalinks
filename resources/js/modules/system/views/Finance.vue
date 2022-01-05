@@ -26,6 +26,10 @@
                     <Formula :message-forms="messageForms"></Formula>
                 </div>
 
+                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig === 'skrill'">
+                    <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
+                </div>
+
                 <div class="col-sm-12">
                     <Usdt v-on:getconfiglist="getConfigList"></Usdt>
                 </div>
@@ -46,6 +50,7 @@ import Usdt from "./Usdt";
 import Btc from "./Btc";
 import Eth from "./Eth";
 import {mapState} from "vuex";
+import Config from "./Config";
 
 export default {
     name : "Finance",
@@ -61,7 +66,8 @@ export default {
         Formula,
         Usdt,
         Btc,
-        Eth
+        Eth,
+        Config
     },
 
     created() {
