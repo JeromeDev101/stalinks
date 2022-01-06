@@ -81,6 +81,12 @@ Route::middleware('auth:api')->group(function () {
     //Wallet Summary
     Route::name('get-wallet-summary')->get('wallet-summary', 'WalletSummaryController@getList');
 
+    //Backlinks Prospect
+    Route::name('get-backlink-prospect')->get('backlink-prospect', 'BacklinkProspectController@getList');
+    Route::name('backlink-prospect-upload-csv')->post('backlink-prospect-upload-csv', 'BacklinkProspectController@importCsv');
+    Route::name('backlink-prospect-delete')->post('backlink-prospect-delete', 'BacklinkProspectController@delete');
+    Route::name('backlink-prospect-update')->post('backlink-prospect-update', 'BacklinkProspectController@update');
+
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');
     Route::name('get-check-credit-auth')->get('check-credit-auth','BuyController@checkCreditAuth');

@@ -254,6 +254,21 @@
                     </li>
 
                     <li class="nav-item"
+                        v-if="
+                        user.isAdmin ||
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))
+                    ">
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/backlink-prospect' }"
+                            :class="{ active: $route.name == 'backlink-prospect' }"
+                        >
+                            <img src="../../../../images/article.png"/>
+                            <p>Backlinks Prospect</p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item"
                         v-if="user.isAdmin">
                         <router-link
                             class="nav-link"
