@@ -5,7 +5,8 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
 
-            <li class="nav-item" v-if="survey.show">
+
+            <li class="nav-item" v-if="survey.show && isBuyer">
                 <a class="nav-link btn btn-warning" data-toggle="modal"
                    data-target="#modal-survey" href="#" role="button" style="color: #1f2d3d!important"><i
                     class="fas fa-question-circle"></i> Help us improve by answering our survey.</a>
