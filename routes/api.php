@@ -32,6 +32,11 @@ Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmati
 
 Route::middleware('auth:api')->group(function () {
 
+    //Surveys
+    Route::name('store-survey')->post('survey', 'SurveyController@store');
+    Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
+    Route::name('check-user-answered-survey')->get('/survey/check', 'SurveyController@hasUserAnsweredSurvey');
+
     //User
     Route::resource('users', 'UserController');
     Route::name('current-user')->get('current-user', 'UserController@currentInforUser');

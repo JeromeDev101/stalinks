@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CreateSurvey;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    public $singletons = [
+        CreateSurvey::class => CreateSurvey::class
+    ];
 
     /**
      * Bootstrap any application services.
