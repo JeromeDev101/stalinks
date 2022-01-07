@@ -398,7 +398,7 @@
 
                     <div v-show="MessageDisplay" class="card-footer">
                         <div class="float-right">
-                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
+                            <button v-if="$route.name === 'Inbox' || $route.name === 'Sent' || $route.name === 'Starred'"
                                     type="button"
                                     class="btn btn-default"
 
@@ -469,7 +469,7 @@
 
                                     <!-- reply -->
                                     <span
-                                        v-if="($route.name === 'Inbox' || $route.name === 'Sent') && email.is_sent === 0"
+                                        v-if="($route.name === 'Inbox' || $route.name === 'Sent' || $route.name === 'Starred') && email.is_sent === 0"
                                         class="mr-2"
                                         title="Reply"
                                         style="cursor: pointer"
@@ -626,7 +626,7 @@
                     <div v-show="MessageDisplay" class="card-footer">
                         <div class="float-right">
                             <button
-                                v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
+                                v-if="$route.name === 'Inbox' || $route.name === 'Sent' || $route.name === 'Starred'"
                                 type="button"
                                 class="btn btn-default"
 
@@ -1712,7 +1712,7 @@ export default {
             // add email
             if (route !== 'Trash') {
 
-                if (route !== 'Starred') {
+                // if (route !== 'Starred') {
 
                     if (this.viewContentThread.inbox.is_sent === 1) {
 
@@ -1736,13 +1736,13 @@ export default {
                         });
                     }
 
-                } else {
-                    this.replyContent.email = createTags(info.sender.replace(/\s/g, '')
-                        .split(/[|,]/g)
-                        .filter(function (email) {
-                            return email !== '';
-                        }))
-                }
+                // } else {
+                //     this.replyContent.email = createTags(info.sender.replace(/\s/g, '')
+                //         .split(/[|,]/g)
+                //         .filter(function (email) {
+                //             return email !== '';
+                //         }))
+                // }
             } else {
 
                 if (this.viewContent.is_sent === 1) {
