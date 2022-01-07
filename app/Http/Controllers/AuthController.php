@@ -78,7 +78,7 @@ class AuthController extends Controller
 
     // UpdateUserRequest
     public function edit(UpdateUserRequest $request) {
-        
+
         $response = ['success' => false];
         $input_2 = $request->only('payment_type');
         $input = $request->except(
@@ -163,22 +163,27 @@ class AuthController extends Controller
 
         // Insert users payments types
         $insert_input_users_payment_type = [];
-        if(is_array($input_2['payment_type'])) {
-            foreach($input_2['payment_type'] as $key => $types) {
-                if($types != '') {
-                    array_push($insert_input_users_payment_type, [
-                        'user_id' => $input['id'],
-                        'payment_id' => $key,
-                        'account' => $types,
-                        'is_default' => $key == $input['id_payment_type'] ? 1:0,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]);
+
+        if ($input_2) {
+            if(is_array($input_2['payment_type'])) {
+                foreach($input_2['payment_type'] as $key => $types) {
+                    if($types != '') {
+                        array_push($insert_input_users_payment_type, [
+                            'user_id' => $input['id'],
+                            'payment_id' => $key,
+                            'account' => $types,
+                            'is_default' => $key == $input['id_payment_type'] ? 1:0,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now()
+                        ]);
+                    }
                 }
             }
         }
-    
-        UsersPaymentType::insert($insert_input_users_payment_type);
+
+        if (count($insert_input_users_payment_type)) {
+            UsersPaymentType::insert($insert_input_users_payment_type);
+        }
 
         $response['success'] = true;
         return response()->json($response);

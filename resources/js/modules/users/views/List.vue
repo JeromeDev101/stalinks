@@ -112,95 +112,97 @@
                             </select>
                         </div>
 
-                        <table id="tbl-users" class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Work mail</th>
-                                <th>Skype</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                                <th>Action</th>
-                            </tr>
+                        <div class="table-responsive">
+                            <table id="tbl-users" class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Work mail</th>
+                                    <th>Skype</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
 
-                            <!-- <tr>
-                                <td style="max-width: 30px;">
-                                    Filter
-                                </td>
+                                <!-- <tr>
+                                    <td style="max-width: 30px;">
+                                        Filter
+                                    </td>
 
-                                <td style="max-width: 30px;">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Name">
-                                    </div>
-                                </td>
+                                    <td style="max-width: 30px;">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" v-model="filterModel.name_temp"  class="form-control pull-right" placeholder="Search Name">
+                                        </div>
+                                    </td>
 
-                                <td style="max-width: 30px;">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.email_temp"  class="form-control pull-right" placeholder="Search Email">
-                                    </div>
-                                </td>
+                                    <td style="max-width: 30px;">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" v-model="filterModel.email_temp"  class="form-control pull-right" placeholder="Search Email">
+                                        </div>
+                                    </td>
 
-                                <td style="max-width: 30px;">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.work_mail_temp"  class="form-control pull-right" placeholder="Search Work Mail">
-                                    </div>
-                                </td>
+                                    <td style="max-width: 30px;">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" v-model="filterModel.work_mail_temp"  class="form-control pull-right" placeholder="Search Work Mail">
+                                        </div>
+                                    </td>
 
-                                <td style="max-width: 30px;">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.phone_temp"  class="form-control pull-right" placeholder="Search Phone">
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
-                                    </div>
-                                </td>
+                                    <td style="max-width: 30px;">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" v-model="filterModel.phone_temp"  class="form-control pull-right" placeholder="Search Phone">
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
+                                        </div>
+                                    </td>
 
 
-                            </tr> -->
-                            </thead>
+                                </tr> -->
+                                </thead>
 
-                            <tbody>
-                            <tr v-for="(user, index) in listUser.data" :key="index">
-                                <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ user.username == null ? user.name : user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.work_mail }}</td>
-                                <td>{{ user.skype }}</td>
-                                <td>{{ user.role ? user.role.name : '' }}</td>
-                                <td>{{ user.status }}</td>
-                                <td>{{ userTypeList[user.type] }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default"
-                                                @click="doUpdateUser(user)"
-                                                data-toggle="modal"
-                                                data-target="#modal-update"
-                                                title="Edit User Information"><i class="fa fa-fw fa-edit"></i></button>
-                                        <!-- <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button> -->
-                                        <button class="btn btn-default"
-                                                @click="doUpdatePermissionExt(user)"
-                                                data-toggle="modal"
-                                                data-target="#modal-permission-ext"
-                                                title="Edit Country ExtDomain"><i class="fas fa-eye-dropper"></i>
-                                        </button>
-                                        <!-- <button class="btn btn-default" @click="doUpdateInternalPermission(user)" data-toggle="modal" data-target="#modal-int-permission" title="Edit Permission IntDomain"><i class="fa fa-fw fa-anchor"></i></button> -->
-                                        <router-link class="btn btn-default"
-                                                     title="View detail"
-                                                     :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i>
-                                        </router-link>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                <tbody>
+                                <tr v-for="(user, index) in listUser.data" :key="index">
+                                    <td class="center-content">{{ index + 1 }}</td>
+                                    <td>{{ user.username == null ? user.name : user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.work_mail }}</td>
+                                    <td>{{ user.skype }}</td>
+                                    <td>{{ user.role ? user.role.name : '' }}</td>
+                                    <td>{{ user.status }}</td>
+                                    <td>{{ userTypeList[user.type] }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-default"
+                                                    @click="doUpdateUser(user)"
+                                                    data-toggle="modal"
+                                                    data-target="#modal-update"
+                                                    title="Edit User Information"><i class="fa fa-fw fa-edit"></i></button>
+                                            <!-- <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button> -->
+                                            <button class="btn btn-default"
+                                                    @click="doUpdatePermissionExt(user)"
+                                                    data-toggle="modal"
+                                                    data-target="#modal-permission-ext"
+                                                    title="Edit Country ExtDomain"><i class="fas fa-eye-dropper"></i>
+                                            </button>
+                                            <!-- <button class="btn btn-default" @click="doUpdateInternalPermission(user)" data-toggle="modal" data-target="#modal-int-permission" title="Edit Permission IntDomain"><i class="fa fa-fw fa-anchor"></i></button> -->
+                                            <router-link class="btn btn-default"
+                                                         title="View detail"
+                                                         :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i>
+                                            </router-link>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <div class="overlay" v-if="isLoadingTable">
                             <i class="fa fa-refresh fa-spin"></i>
