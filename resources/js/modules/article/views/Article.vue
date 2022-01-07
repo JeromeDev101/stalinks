@@ -705,6 +705,8 @@
 
                 if(this.user.isOurs === 0) {
                     result = false;
+                } else if(this.user.isOurs === 1 && this.user.role.id === 6) {
+                    result = false;
                 } else if(this.user.isOurs === 1 && this.user.role.id === 4 && this.user.user_type.is_exam_passed == 1) {
                     result = false;
                 }
