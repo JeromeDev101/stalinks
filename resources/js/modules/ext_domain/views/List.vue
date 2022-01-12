@@ -1127,7 +1127,12 @@
                                 <h4>Publisher List</h4>
                                 <hr>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12" v-if="isDomainExistListPublisher">
+                                <div class="alert alert-info">
+                                    <b>Information! </b> These Domain is already Exist on List Publisher.
+                                </div>
+                            </div>
+                            <div class="col-md-12" v-if="!isDomainExistListPublisher">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}"
                                      class="form-group">
                                     <label style="color: #333">Seller</label>
@@ -1150,7 +1155,7 @@
                                           class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.inc_article']}"
                                      class="form-group">
                                     <label style="color: #333">Inc Article</label>
@@ -1160,8 +1165,8 @@
                                             v-model="publisherAdd.inc_article"
                                             :disabled="isEditable">
                                         <option value="">Select Include Article</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                     <span v-if="messageForms.errors['pub.inc_article']"
                                           v-for="err in messageForms.errors['pub.inc_article']"
@@ -1942,6 +1947,7 @@ export default {
             isResultCrawled : false,
 
             sort_options: [],
+            isDomainExistListPublisher: false,
         };
     },
     async created() {
@@ -2795,12 +2801,22 @@ export default {
                 //     }
                 // }
 
+                
                 this.getExtList({
                     params : this.filterModel
                 });
+
+                $('#modal-update').modal('hide');
+
             }
             this.toggleTableLoading();
             loader.hide();
+
+            swal.fire(
+                'success',
+                'Updated Successfully!',
+                'success'
+            );
         },
         async doShowBackLink(extDomain) {
             this.extBackLink = extDomain;
@@ -2850,7 +2866,7 @@ export default {
                 var result = res.data
                 if (res.data.success == true) {
                     this.publisherAdd.seller = result.data.user_id
-                    this.publisherAdd.inc_article = result.data.inc_article
+                    this.publisherAdd.inc_article = (result.data.inc_article).toLowerCase();
                     this.publisherAdd.url = result.data.url
                     this.publisherAdd.language_id = result.data.language_id
                     this.publisherAdd.topic = result.data.topic
@@ -2858,6 +2874,7 @@ export default {
                     this.publisherAdd.price = result.data.price
 
                     this.isEditable = true;
+                    this.isDomainExistListPublisher = true;
                 } else {
                     this.publisherAdd.seller = ''
                     this.publisherAdd.inc_article = ''
@@ -2868,6 +2885,7 @@ export default {
                     this.publisherAdd.price = ''
 
                     this.isEditable = false;
+                    this.isDomainExistListPublisher = false;
                 }
 
             });
