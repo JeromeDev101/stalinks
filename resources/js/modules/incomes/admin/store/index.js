@@ -16,6 +16,7 @@ const state = {
         content_charges: true,
         net_incomes: true,
         live_date: true,
+        affiliate_commission: true,
     },
 }
 

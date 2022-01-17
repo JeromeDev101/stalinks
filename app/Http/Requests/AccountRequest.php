@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidateEmailRule;
 use App\Rules\SecurePasswordRule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AccountRequest extends FormRequest
 {
@@ -26,6 +27,8 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
+        $type = $this->type;
+
         $rules = [
             'username' => [
                 'unique:registration,username',
@@ -68,7 +71,7 @@ class AccountRequest extends FormRequest
                 'nullable'
             ],
             'id_payment_type' => [
-                'required'
+                Rule::requiredIf( $type !== 'Affiliate'),
             ],
             // 'paypal_account' => [
             //     'required_if:id_payment_type,==,1'

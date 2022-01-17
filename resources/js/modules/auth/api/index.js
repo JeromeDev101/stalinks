@@ -60,4 +60,10 @@ export default class UserService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static getAffiliateCodeSet() {
+        return axios.get('/api/get-affiliate-code-set')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

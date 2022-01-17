@@ -269,7 +269,7 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="user.isAdmin">
+                        v-if="user.isAdmin || isAffiliate">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/overall-incomes' }"
@@ -365,7 +365,7 @@
                         MAIN NAVIGATION
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!isAffiliate">
                         <router-link :to="{ path: '/' }" class="nav-link"
                                      :class="{ active: $route.name == 'Dashboard' }">
                             <img src="../../../../images/dashboard.png"/>
@@ -432,7 +432,7 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!isAffiliate">
                         <router-link
                             :to="{ path: '/articles' }"
                             class="nav-link"
@@ -662,6 +662,7 @@ export default {
             isQcBuyer : false,
             isQcSeller : false,
             isQcBilling : false,
+            isAffiliate: false,
         };
     },
     created() {
@@ -752,6 +753,10 @@ export default {
 
             if (that.role.id == 10) {
                 this.isQcSeller = true;
+            }
+
+            if (that.role.id == 11) {
+                this.isAffiliate = true;
             }
         }
     }

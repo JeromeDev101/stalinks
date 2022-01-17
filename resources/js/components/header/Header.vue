@@ -112,7 +112,7 @@
                 </div>
             </li>
 
-            <li class="nav-item dropdown emails-dropdown">
+            <li class="nav-item dropdown emails-dropdown" v-if="user.isOurs === 0">
                 <a
                     class="nav-link emails-dropdown-toggle"
                     data-toggle="dropdown"

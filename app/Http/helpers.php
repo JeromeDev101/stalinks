@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Config;
+use Illuminate\Support\Facades\Cache;
+
 if (! function_exists('trim_special_characters')) {
     function trim_special_characters($input)
     {
@@ -85,4 +88,70 @@ if (!function_exists('remove_http')) {
 
         return $url;
     }
+}
+
+if (!function_exists('settings')) {
+
+    /**
+     * retrieves a setting saved in config table
+     *
+     * @param $key
+     * @return string|string[]
+     */
+    function settings($key)
+    {
+        static $settings;
+
+        Cache::forget('settings');
+
+        if(is_null($settings))
+        {
+            $settings = Cache::remember('settings', 24*60, function() {
+                return array_pluck(Config::all()->toArray(), 'value', 'code');
+            });
+        }
+
+        return (is_array($key)) ? array_only($settings, $key) : $settings[$key];
+    }
+
+}
+
+if (!function_exists('get_buyer_id_with_affiliates')) {
+
+    /**
+     * get ids of buyers with affiliate
+     *
+     * @return string|string[]|array
+     */
+    function get_buyer_id_with_affiliates()
+    {
+        static $buyer_with_affiliate_ids;
+
+        Cache::forget('buyer_with_affiliates_ids');
+
+        if(is_null($buyer_with_affiliate_ids))
+        {
+            $buyer_with_affiliate_ids = Cache::remember('buyer_with_affiliates_ids', 24*60, function() {
+
+                $active_affiliates = \App\Models\User::where('role_id', 11)
+                    ->where('status', 'active'
+                    )->pluck('id')
+                    ->toArray();
+
+                $registration_emails = \App\Models\Registration::select('email')
+                    ->whereNotNull('affiliate_id')
+                    ->whereIn('affiliate_id', $active_affiliates)
+                    ->pluck('email')
+                    ->toArray();
+
+                return \App\Models\User::select('id')
+                    ->whereIn('email', $registration_emails)
+                    ->pluck('id')
+                    ->toArray();
+            });
+        }
+
+        return $buyer_with_affiliate_ids;
+    }
+
 }

@@ -62,4 +62,10 @@ export default class AccountService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static getAffiliateList(){
+        return axios.get('api/get-affiliate-list')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

@@ -29,6 +29,7 @@ class UpdateAccountRequest extends FormRequest
     {
         $status = $this->status;
         $isSubAccount = $this->is_sub_account;
+        $type = $this->type;
 
 
         return [
@@ -76,7 +77,7 @@ class UpdateAccountRequest extends FormRequest
                 'required'
             ],
             'id_payment_type' => [
-                Rule::requiredIf($isSubAccount == 0 && $status == 'active'),
+                Rule::requiredIf($isSubAccount == 0 && $status == 'active' && $type !== 'Affiliate'),
 
             ],
             // 'writer_price' => [

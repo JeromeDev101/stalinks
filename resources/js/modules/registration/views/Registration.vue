@@ -68,11 +68,41 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mt-4">
+                            <div class="col-12" v-if="RegisterModel.type === 'Buyer'">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.affiliate_code}">
+                                    <label class="mb-0">Affiliate Code</label>
+                                    <br>
+                                    <small class="font-italic text-secondary">
+                                        <i class="fa fa-info-circle"></i>
+                                        Enter code if you are registering as a buyer under an affiliate
+                                    </small>
+                                    <input
+                                        v-model="RegisterModel.affiliate_code"
+                                        type="text"
+                                        class="form-control mt-2"
+                                        placeholder="Enter code given by affiliate">
+
+                                    <span
+                                        v-if="messageForms.errors.affiliate_code"
+                                        v-for="err in messageForms.errors.affiliate_code"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mt-4">
                                 <p>
                                     <input type="checkbox" v-model="BtnAccept" @change="isEnableSubmit =  isEnableSubmit ? false:true">
                                     I've read and accept the <a href="#" data-toggle="modal" data-target="#modalTermsAndCondition">Terms and Condition</a>
                                 </p>
+                            </div>
+
+                            <div class="col-md-12">
+                                <span>Already have an account? </span>
+                                <router-link :to="{ path: '/login' }">
+                                    Login now.
+                                </router-link>
                             </div>
 
                             <div class="col-md-12 mt-4">
@@ -101,7 +131,7 @@
         components: {TermsAndConditions},
         data() {
             return {
-                accountType: ['Seller', 'Buyer', 'Writer'],
+                accountType: ['Seller', 'Buyer', 'Writer', 'Affiliate'],
                 RegisterModel: {
                     username: '',
                     name: '',
@@ -111,6 +141,7 @@
                     type: '',
                     // company_type: 'Company',
                     country_id: '',
+                    affiliate_code: '',
                 },
 
                 isPopupLoading: false,
@@ -169,6 +200,7 @@
                     // company_type: 'Company',
                     type: '',
                     country_id: '',
+                    affiliate_code: ''
                 }
             },
         }

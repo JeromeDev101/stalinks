@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Registration;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class IncomesAdminController extends Controller
@@ -19,7 +22,7 @@ class IncomesAdminController extends Controller
                 ->leftJoin('users', 'article.id_writer', '=', 'users.id')
                 ->leftjoin('registration', 'users.email', '=' , 'registration.email')
                 ->with(['user' => function($sub) {
-                    $sub->with('UserType');
+                    $sub->with('UserType.affiliate:id,status');
                 }])
                 ->with('article')
                 ->with('publisher')
@@ -40,19 +43,58 @@ class IncomesAdminController extends Controller
                 $list = $list->where('backlinks.live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
             }
         }
-        $sellerPrice = $list->sum('prices');
-        $buyerPrice = $list->sum('price');
-        $billingCount = $list->get()->sum('billing_count');
 
+        // if affiliate - get only data for his buyers
 
-        $list = $list->orderBy('id', 'desc')->paginate($paginate);
+        if (Auth::user()->role_id === 11) {
+            $affiliate_buyer_ids = $this->getAffiliateBuyers(Auth::id());
+
+            $list = $list->whereIn('backlinks.user_id', $affiliate_buyer_ids);
+        }
+
+        // get the list first for billing count and affiliate commission
+
+        $temp = $list->get();
+
+        $sellerPrice = $list->sum('price');
+        $buyerPrice = $list->sum('prices');
+        $billingCount = $temp->sum('billing_count');
+        $affiliateCommission = $temp->sum('affiliate_commission');
+
+        if($paginate === 'All'){
+            $list = [
+                'data' => $list->orderBy('id', 'desc')->get(),
+                'total' => $list->orderBy('id', 'desc')->count(),
+            ];
+        } else {
+            $list = $list->orderBy('id', 'desc')->paginate($paginate);
+        }
 
         $totals = collect([
             'seller_price_sum' => $sellerPrice,
             'buyer_price_sum' => $buyerPrice,
-            'billing_count_sum' => $billingCount
+            'billing_count_sum' => $billingCount,
+            'affiliate_commission_sum' => $affiliateCommission,
         ]);
 
         return response()->json($totals->merge($list));
+    }
+
+    protected function getAffiliateBuyers($affiliate_id)
+    {
+        $affiliate_buyer_ids = [];
+
+        if ($affiliate_id) {
+            $affiliate_buyer_emails = Registration::where('affiliate_id', $affiliate_id)
+                ->where('status', 'active')
+                ->pluck('email')
+                ->toArray();
+
+            if ($affiliate_buyer_emails) {
+                $affiliate_buyer_ids = User::where('email', $affiliate_buyer_emails)->pluck('id')->toArray();
+            }
+        }
+
+        return $affiliate_buyer_ids;
     }
 }

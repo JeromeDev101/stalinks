@@ -26,7 +26,7 @@
                     <Formula :message-forms="messageForms"></Formula>
                 </div>
 
-                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig === 'skrill'">
+                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig === 'skrill' || typeConfig === 'affiliate'">
                     <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
                 </div>
 

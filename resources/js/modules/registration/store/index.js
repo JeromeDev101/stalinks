@@ -5,15 +5,18 @@ const SET_ERROR = 'ACCOUNT_SET_ERROR';
 const LIST_ACCOUNTS = 'LIST_ACCOUNTS';
 const LIST_PAYMENT_TYPE = 'LIST_PAYMENT_TYPE';
 const LIST_IN_CHARGE = 'LIST_IN_CHARGE';
+const LIST_AFFILIATE = 'LIST_AFFILIATE';
 
 const state = {
     messageForms: { action: '', message: '', errors: {} },
     listAccount: { data: [] },
     listPayment: { data: [] },
     listIncharge: { data: [] },
+    listAffiliate: { data: [] },
     tblAccountsOpt: {
         date_registered: true,
         in_charge: true,
+        affiliate: true,
         user_id: true,
         username: true,
         email: true,
@@ -43,6 +46,10 @@ const mutations = {
 
     [LIST_IN_CHARGE] (state, dataSet) {
         state.listIncharge = dataSet.listIncharge;
+    },
+
+    [LIST_AFFILIATE] (state, dataSet) {
+        state.listAffiliate = dataSet.listAffiliate;
     },
 
     [LIST_PAYMENT_TYPE] (state, list) {
@@ -107,6 +114,20 @@ const actions= {
         try {
             let response = await AccountService.getTeamInCharge();
             commit(LIST_IN_CHARGE, { listIncharge: response.data });
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+    async actionGetAffiliateList({ commit }) {
+        try {
+            let response = await AccountService.getAffiliateList();
+            commit(LIST_AFFILIATE, { listAffiliate: response.data });
         } catch (e) {
             let errors = e.response.data.errors;
             if (errors) {

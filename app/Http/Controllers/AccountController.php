@@ -84,6 +84,9 @@ class AccountController extends Controller
                 $role_id = 4;
             }
 
+            if( $registration['type'] == 'Affiliate' ){
+                $role_id = 11;
+            }
 
             // duplicate the record in Users Table
             $data['username'] = $registration['username'];
@@ -116,16 +119,15 @@ class AccountController extends Controller
                 }
             }
 
-            $users_payment_type = UsersPaymentType::insert($insert_input_users_payment_type);
+            if (count($insert_input_users_payment_type)) {
+                 UsersPaymentType::insert($insert_input_users_payment_type);
+            }
 
-        if($users_payment_type && $user && $registration) {
+        if($user && $registration) {
             DB::commit();
         } else {
             DB::rollBack();
         }
-
-
-
 
         return response()->json(['success' => true], 200);
     }
@@ -139,6 +141,7 @@ class AccountController extends Controller
         $search = $request->search;
         $paginate = $request->paginate;
         $team_in_charge = $request->team_in_charge;
+        $affiliate = $request->affiliate;
         $country = $request->country;
         $language_id = $request->language_id;
         $commission = $request->commission;
@@ -176,6 +179,10 @@ class AccountController extends Controller
                     $subquery->where('team_in_charge', $team_in_charge);
                 });
             }
+        })->when( $affiliate, function($query) use ($affiliate){
+            return $query->whereHas('affiliate', function ($subquery) use( $affiliate ) {
+                $subquery->where('affiliate_id', $affiliate);
+            });
         })->when( $country, function($query) use ($country){
             if($country == 'none') {
                 return $query->where('country_id', null);
@@ -255,6 +262,7 @@ class AccountController extends Controller
                 $sub->with('paymentType');
             }]);
         }])
+        ->with('affiliate:id,name,username')
         ->with('country:id,name')
         ->with('language:id,name')
         ->orderBy('id', 'desc');
@@ -375,7 +383,6 @@ class AccountController extends Controller
 
     public function updateRegistrationAccount(Request $request) {
         $input = $request->except('company_type');
-        // dd($input);
 
         $request->validate([
             'country_id' => 'required',
@@ -392,6 +399,11 @@ class AccountController extends Controller
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
 
         $registration = Registration::where('email', $request->email)->first();
+
+        if ($input['type'] === 'Affiliate') {
+            $input['account_validation'] = 'valid';
+        }
+
         $registration->update($input);
 
         $role_id = 6; //default seller
@@ -405,6 +417,10 @@ class AccountController extends Controller
 
         if( $registration->type == 'Writer' ){
             $role_id = 4;
+        }
+
+        if( $registration->type == 'Affiliate' ){
+            $role_id = 11;
         }
 
 
@@ -445,6 +461,42 @@ class AccountController extends Controller
 
     public function register(RegistrationAccountRequest $request){
         $input = $request->except('c_password');
+
+        // if buyer, check affiliate code
+        if ($input['type'] === 'Buyer') {
+            if ($input['affiliate_code']) {
+
+                // find affiliate
+                $affiliate = Registration::where('affiliate_code', $input['affiliate_code'])->first();
+
+                if ($affiliate) {
+                    $affiliate_user = User::where('email', $affiliate->email)->first();
+
+                    if (!$affiliate_user) {
+                        return response()->json([
+                            "message" => 'Invalid affiliate code',
+                            "errors" => [
+                                "affiliate_code" => ['Invalid code. Affiliate not found.'],
+                            ],
+                        ],422);
+                    } else {
+                        // add affiliate_id
+                        $input['affiliate_id'] = $affiliate_user->id;
+
+                        // remove affiliate_code from input
+                        unset($input['affiliate_code']);
+                    }
+                } else {
+                    return response()->json([
+                        "message" => 'Invalid affiliate code',
+                        "errors" => [
+                            "affiliate_code" => ['Invalid code. Affiliate not found.'],
+                        ],
+                    ],422);
+                }
+            }
+        }
+
         $verification_code = md5(uniqid(rand(), true));
         $input['verification_code'] = $verification_code;
         $input['commission'] = 'yes';
@@ -636,6 +688,18 @@ class AccountController extends Controller
         $team = $team->get();
 
         return response()->json(['data'=> $team], 200);
+    }
+
+    public function getAffiliateList ()
+    {
+        $affiliates = User::select('id','name', 'username')
+            ->where('isOurs', 1)
+            ->whereStatus('active')
+            ->whereIn('role_id', array(11))
+            ->orderBy('username', 'asc')
+            ->get();
+
+        return response()->json(['data'=> $affiliates], 200);
     }
 
     public function getTeamInChargePerRole(Request $request) {
@@ -888,5 +952,32 @@ class AccountController extends Controller
         }
 
         return response()->json(['success' => true],200);
+    }
+
+    public function saveAffiliateCode (Request $request)
+    {
+        $affiliate = Registration::findOrFail($request->registration_id);
+
+        $affiliate->update(['affiliate_code' => $request->code]);
+    }
+
+    public function getAffiliateCodeSet ()
+    {
+        $user_email = Auth::user()->email;
+        $is_affiliate_code_set = false;
+
+        if ($user_email) {
+            if (Auth::user()->email) {
+                $affiliate = Registration::select('affiliate_code')->where('email', $user_email)->value('affiliate_code');
+
+                if ($affiliate) {
+                    $is_affiliate_code_set = true;
+                }
+            }
+        }
+
+        return response()->json([
+            'set' => $is_affiliate_code_set
+        ]);
     }
 }

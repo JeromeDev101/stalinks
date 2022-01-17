@@ -196,7 +196,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 0">
+                                <tr>
                                     <td colspan="2">
                                         <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
                                     </td>
@@ -209,11 +209,71 @@
             </div>
         </div>
 
-        <div class="row" v-if="currentUser.isOurs === 1">
+        <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id === 11">
             <div class="col-sm-12">
                 <div class="box box-primary">
-                    <div class="box-header">
-                        <h3 class="box-title">Billing</h3>
+                    <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">Affiliate Code</h3>
+                    </div>
+                </div>
+
+                <div class="box-body no-padding">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="alert alert-info mb-0">
+                                <i class="fa fa-info-circle"></i>
+                                Generate an affiliate code and use it upon inviting potential buyers.
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row" v-if="user.user_type">
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-success"
+
+                                                @click="generateAffiliateCode">
+                                                Generate Affiliate Code
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                title="Copy to clipboard"
+                                                class="btn btn-outline-secondary"
+                                                :disabled="!user.user_type.affiliate_code"
+
+                                                @click="copyAffiliateCode">
+
+                                                <i class="fa fa-copy"></i>
+                                            </button>
+                                        </div>
+
+                                        <input
+                                            v-model="user.user_type.affiliate_code"
+                                            readonly
+                                            type="text"
+                                            ref="affiliateCode"
+                                            class="form-control"
+                                            placeholder="Current code is empty. Please click generate button."
+
+                                            @focus="$event.target.select()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id !== 11">
+            <div class="col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">Billing</h3>
                     </div>
 
                     <div class="box-body no-padding">
@@ -226,8 +286,8 @@
                         <span
                             v-if="messageForms.errors.id_payment_type"
                             class="text-danger mx-2">
-                        Please provide at least one payment type.
-                    </span>
+                            Please provide at least one payment type.
+                        </span>
 
                         <div class="table-responsive">
 
@@ -274,8 +334,10 @@
                         </div>
                     </div>
 
-                    <div class="ml-3">
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                    <div class="row mb-2 pl-3">
+                        <div>
+                            <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -498,7 +560,7 @@
 
 <script>
 import axios from 'axios';
-import { mapState } from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import config from '@/config';
 import Hepler from '@/library/Helper';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
@@ -637,6 +699,9 @@ export default {
     },
 
     methods: {
+        ...mapActions({
+            getAffiliateCodeSet : "getAffiliateCodeSet",
+        }),
 
         getListPaymentMethod() {
             axios.get('/api/payment-list-registration')
@@ -870,6 +935,59 @@ export default {
 
         convertPrice(price) {
             return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        },
+
+        generateAffiliateCode() {
+            let loader = this.$loading.show();
+
+            this.user.user_type.affiliate_code = this.generateRandomString(10);
+
+            axios.post('/api/profile/add-affiliate-code', {
+                code: this.user.user_type.affiliate_code,
+                registration_id: this.user.user_type.id
+            })
+            .then((res) => {
+                loader.hide();
+
+                this.getAffiliateCodeSet();
+
+                swal.fire(
+                    'Saved!',
+                    'Affiliate code successfully generated',
+                    'success'
+                )
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+
+                swal.fire(
+                    'Error!',
+                    'Something went wrong while generating affiliate code',
+                    'error'
+                )
+            })
+        },
+
+        copyAffiliateCode() {
+            this.$refs.affiliateCode.focus();
+            document.execCommand('copy');
+
+            swal.fire(
+                'Copied!',
+                'Affiliate code successfully copied to clipboard',
+                'success'
+            )
+        },
+
+        generateRandomString(length) {
+            let randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+
+            for ( let i = 0; i < length; i++ ) {
+                result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+            }
+            return result;
         }
     }
 

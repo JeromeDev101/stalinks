@@ -49,11 +49,17 @@ class Registration extends Model
         'email_via',
         'is_show_price_basis',
         'can_validate_backlink',
-        'is_exam_passed'
+        'is_exam_passed',
+        'affiliate_id',
+        'affiliate_code'
     ];
 
     public function team_in_charge() {
         return $this->belongsTo('App\Models\User', 'team_in_charge');
+    }
+
+    public function affiliate() {
+        return $this->belongsTo('App\Models\User', 'affiliate_id');
     }
 
     public function user() {

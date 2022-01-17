@@ -9,7 +9,7 @@
             <form action="" role="form">
                 <div v-for="(item) in configs" class="form-group">
                     <label>{{ item.name }}</label>
-                    <input type="text" class="form-control" v-model="item.value" :placeholder="'Enter' + item.name">
+                    <input type="text" class="form-control" v-model="item.value" :placeholder="'Enter ' + item.name">
                 </div>
             </form>
         </div>

@@ -16,6 +16,10 @@ const USER_UNREAD_EMAILS = 'USER_UNREAD_EMAILS';
 const USER_UNREAD_EMAIL_LIST = 'USER_UNREAD_EMAIL_LIST';
 const USER_DRAFTS = 'USER_DRAFTS';
 
+// for affiliate
+
+const IS_AFFILIATE_CODE_SET = 'IS_AFFILIATE_CODE_SET';
+
 const state = {
     user: null,
     token: null,
@@ -25,6 +29,7 @@ const state = {
     userUnreadEmails: 0,
     userDrafts: 0,
     userUnreadEmailList: {},
+    isAffiliateCodeSet: false,
 };
 
 const getters = {
@@ -85,8 +90,11 @@ const mutations = {
 
     decrementUserUnreadEmailCount(state, count) {
         state.userUnreadEmails.count = state.userUnreadEmails.count - count;
-    }
+    },
 
+    [IS_AFFILIATE_CODE_SET] (state, payload) {
+        state.isAffiliateCodeSet = payload;
+    },
 };
 
 const actions = {
@@ -100,7 +108,14 @@ const actions = {
             let response = await UserService.getCurrentUserInfo();
             if (response.status === 200) {
                 commit(CURRENT_USER, { currentUser: response.data });
-                window.location.href = '/';
+
+                console.log(response.data.role)
+
+                if (response.data.role.id === 11) {
+                    window.location.href = '/overall-incomes';
+                } else {
+                    window.location.href = '/';
+                }
             }
 
 
@@ -185,6 +200,14 @@ const actions = {
 
     updateUnreadEmailsCount({commit}, count) {
         commit('decrementUserUnreadEmailCount', count);
+    },
+
+    async getAffiliateCodeSet({commit}) {
+        let response = await UserService.getAffiliateCodeSet();
+
+        if (response.status === 200) {
+            commit(IS_AFFILIATE_CODE_SET, response.data.set);
+        }
     },
 };
 const storeAuth = {

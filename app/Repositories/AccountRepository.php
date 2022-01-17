@@ -113,6 +113,19 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             $user->update(['id_payment_type' => $input['id_payment_type']]);
         }
 
+        // change user role_id according to type
+        if (isset($input['type']) && $input['type'] != '') {
+
+            $user_roles = [
+                'Writer' => 4,
+                'Buyer' => 5,
+                'Seller' => 6,
+                'Affiliate' => 11
+            ];
+
+            $user->update(['role_id' => $user_roles[$input['type']]]);
+        }
+
         // ---------------------------------------------------
 
         // send email - account validated
@@ -170,7 +183,9 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             }
         }
 
-        UsersPaymentType::insert($insert_input_users_payment_type);
+        if (count($insert_input_users_payment_type)) {
+            UsersPaymentType::insert($insert_input_users_payment_type);
+        }
 
         $response['success'] = true;
         return response()->json($response);

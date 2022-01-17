@@ -32,6 +32,9 @@ Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmati
 
 Route::middleware('auth:api')->group(function () {
 
+    //Profile
+    Route::name('add-affiliate-code')->post('/profile/add-affiliate-code', 'AccountController@saveAffiliateCode');
+
     //Surveys
     Route::name('store-survey')->post('survey', 'SurveyController@store');
     Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
@@ -120,6 +123,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('verify-account')->post('/verify-account', 'AccountController@verifyAccount');
     Route::name('update-multiple-in-charge')->post('/update-multiple-in-charge', 'AccountController@updateMultipleInCharge');
     Route::name('transfer-payment-info')->get('/transfer-payment-info', 'AccountController@transferPaymentInfo');
+    Route::name('get-affiliate-list')->get('get-affiliate-list', 'AccountController@getAffiliateList');
+    Route::name('get-affiliate-code-set')->get('/get-affiliate-code-set','AccountController@getAffiliateCodeSet');
 
     //Purchase
     Route::name('get-purchase')->get('purchase', 'PurchaseController@getList');

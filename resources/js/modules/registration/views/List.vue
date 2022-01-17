@@ -60,6 +60,7 @@
                                         <option value="seller">Seller</option>
                                         <option value="buyer">Buyer</option>
                                         <option value="writer">Writer</option>
+                                        <option value="affiliate">Affiliate</option>
                                     </select>
                                 </div>
                             </div>
@@ -123,6 +124,18 @@
                                         <option value="">All</option>
                                         <option value="none">None</option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name : option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                                <div class="form-group">
+                                    <label>Affiliate</label>
+                                    <select class="form-control" v-model="filterModel.affiliate">
+                                        <option value="">All</option>
+                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
                                     </select>
@@ -332,128 +345,148 @@
                            }} entries.</b>
                     </span>
 
-                        <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th></th>
-                                <th>Action</th>
-                                <th v-show="tblAccountsOpt.user_id">User ID</th>
-                                <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
-                                <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
-                                <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
-                                <th v-show="tblAccountsOpt.in_charge">In-charge</th>
-                                <th v-show="tblAccountsOpt.username">Username</th>
-                                <th v-show="tblAccountsOpt.name">Name</th>
-                                <th v-show="tblAccountsOpt.country">Country</th>
-                                <th v-show="tblAccountsOpt.language">Language</th>
-                                <th v-show="tblAccountsOpt.company_type">Company Type</th>
-                                <th v-show="tblAccountsOpt.company_name">Company Name</th>
-                                <th v-show="tblAccountsOpt.company_url">Company URL</th>
-                                <th v-show="tblAccountsOpt.type">Type</th>
-                                <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
-                                <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
-                                <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(account, index) in listAccount.data" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default">
-                                            <input
-                                                v-model="checkIds"
-                                                type="checkbox"
-                                                class="custom-checkbox"
-                                                :id="account.id"
-                                                :value="account"
+                        <div class="table-responsive">
+                            <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">
+                                <thead>
+                                    <tr class="label-primary">
+                                        <th>#</th>
+                                        <th></th>
+                                        <th>Action</th>
+                                        <th v-show="tblAccountsOpt.user_id">User ID</th>
+                                        <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
+                                        <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
+                                        <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
+                                        <th v-show="tblAccountsOpt.in_charge">In-charge</th>
+                                        <th v-show="tblAccountsOpt.affiliate">Affiliate</th>
+                                        <th v-show="tblAccountsOpt.username">Username</th>
+                                        <th v-show="tblAccountsOpt.name">Name</th>
+                                        <th v-show="tblAccountsOpt.country">Country</th>
+                                        <th v-show="tblAccountsOpt.language">Language</th>
+                                        <th v-show="tblAccountsOpt.company_type">Company Type</th>
+                                        <th v-show="tblAccountsOpt.company_name">Company Name</th>
+                                        <th v-show="tblAccountsOpt.company_url">Company URL</th>
+                                        <th v-show="tblAccountsOpt.type">Type</th>
+                                        <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
+                                        <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
+                                        <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(account, index) in listAccount.data" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-default">
+                                                    <input
+                                                        v-model="checkIds"
+                                                        type="checkbox"
+                                                        class="custom-checkbox"
+                                                        :id="account.id"
+                                                        :value="account"
 
-                                                @change="checkSelected">
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button
-                                            title="Edit"
-                                            data-toggle="modal"
-                                            class="btn btn-default"
-                                            data-target="#modal-update-registration"
+                                                        @change="checkSelected">
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button
+                                                    title="Edit"
+                                                    data-toggle="modal"
+                                                    class="btn btn-default"
+                                                    data-target="#modal-update-registration"
 
-                                            @click="doUpdateAccount(account)">
+                                                    @click="doUpdateAccount(account)">
 
-                                            <i class="fa fa-fw fa-edit"></i>
-                                        </button>
+                                                    <i class="fa fa-fw fa-edit"></i>
+                                                </button>
 
-                                        <button
-                                            type="submit"
-                                            title="Send Email"
-                                            data-toggle="modal"
-                                            class="btn btn-default"
+                                                <button
+                                                    type="submit"
+                                                    title="Send Email"
+                                                    data-toggle="modal"
+                                                    class="btn btn-default"
 
-                                            @click="doSendEmail(account)">
+                                                    @click="doSendEmail(account)">
 
-                                            <i class="far fa-envelope"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td v-show="tblAccountsOpt.user_id">
-                                    {{ account.user == null ? 'Not yet Verified' : account.user.id }}
-                                </td>
-                                <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
-                                <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin"
-                                    v-html="displayEmailPayment(account)"></td>
-                                <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
-                                <td v-show="tblAccountsOpt.in_charge">
-                                    {{
-                                        account.team_in_charge == null
-                                            ? 'N/A'
-                                            : account.is_sub_account == 1
-                                                ? account.team_in_charge.registration.team_in_charge.username
-                                                : account.team_in_charge.username
-                                    }}
+                                                    <i class="far fa-envelope"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td v-show="tblAccountsOpt.user_id">
+                                            {{ account.user == null ? 'Not yet Verified' : account.user.id }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.date_registered">{{ account.created_at }}</td>
+                                        <td v-show="tblAccountsOpt.payment_account_email && user.isAdmin"
+                                            v-html="displayEmailPayment(account)"></td>
+                                        <td v-show="tblAccountsOpt.email && user.isAdmin">{{ account.email }}</td>
+                                        <td v-show="tblAccountsOpt.in_charge">
+                                            {{
+                                                account.team_in_charge == null
+                                                    ? 'N/A'
+                                                    : account.is_sub_account == 1
+                                                        ? account.team_in_charge.registration.team_in_charge.username
+                                                        : account.team_in_charge.username
+                                            }}
 
-                                    <span
-                                        v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
-                                        class="badge badge-danger">
+                                            <span
+                                                v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
+                                                class="badge badge-danger">
 
-                                        Inactive
-                                    </span>
-                                </td>
-                                <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
-                                <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
-                                <td v-show="tblAccountsOpt.country">
-                                    {{ account.country === null ? 'N/A' : account.country.name }}
-                                </td>
-                                <td v-show="tblAccountsOpt.language">
-                                    {{ account.language === null ? 'N/A' : account.language.name }}
-                                </td>
-                                <td v-show="tblAccountsOpt.company_type">
-                                    {{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}
-                                </td>
-                                <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
-                                <td v-show="tblAccountsOpt.company_url">
-                                    <a
-                                        :href="'http://' + account.company_url"
-                                        target="_blank">
-                                        {{ account.company_url }}
-                                    </a>
-                                </td>
-                                <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
-                                <td v-show="tblAccountsOpt.sub_account">{{
-                                        account.is_sub_account == 0 ? 'No' : 'Yes'
-                                                                        }}
-                                </td>
-                                <td v-show="tblAccountsOpt.under_of_main_buyer">
-                                    {{ account.is_sub_account == 0 ? '' : account.team_in_charge.username }}
-                                </td>
-                                <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
-                                <td>{{ account.status }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                                Inactive
+                                            </span>
+                                        </td>
+                                        <td v-show="tblAccountsOpt.affiliate">
+                                            {{
+                                                account.affiliate_id == null
+                                                    ? 'N/A'
+                                                    : account.affiliate
+                                                        ? account.affiliate.username
+                                                        : 'N/A'
+                                            }}
+
+                                            <span
+                                                v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
+                                                class="badge badge-danger">
+
+                                                Inactive
+                                            </span>
+                                        </td>
+                                        <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
+                                        <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
+                                        <td v-show="tblAccountsOpt.country">
+                                            {{ account.country === null ? 'N/A' : account.country.name }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.language">
+                                            {{ account.language === null ? 'N/A' : account.language.name }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.company_type">
+                                            {{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.company_name">{{ account.company_name }}</td>
+                                        <td v-show="tblAccountsOpt.company_url">
+                                            <a
+                                                :href="'http://' + account.company_url"
+                                                target="_blank">
+                                                {{ account.company_url }}
+                                            </a>
+                                        </td>
+                                        <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
+                                        <td v-show="tblAccountsOpt.sub_account">{{
+                                                account.is_sub_account == 0 ? 'No' : 'Yes'
+                                            }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.under_of_main_buyer">
+                                            {{ account.is_sub_account == 0 ? '' : account.team_in_charge.username }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
+                                        <td>{{ account.status }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                         <pagination :data="listAccount"
                                     @pagination-change-page="getAccountList"
                                     :limit="8"></pagination>
@@ -486,6 +519,7 @@
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
+                                        <option value="Affiliate">Affiliate</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -639,57 +673,59 @@
 
                         </div>
 
-                        <hr/>
-                        <h4 class="text-primary">Payment Information</h4>
-                        <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please select default payment type</span>
-                        <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
+                        <div v-if="accountModel.type !== 'Affiliate'">
+                            <hr/>
+                            <h4 class="text-primary">Payment Information</h4>
+                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please select default payment type</span>
+                            <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
 
-                        <!-- empty account type -->
-                        <table class="table" v-if="accountModel.type == ''">
-                            <tr>
-                                <td class="text-center text-danger">Please select Account type First</td>
-                            </tr>
-                        </table>
+                            <!-- empty account type -->
+                            <table class="table" v-if="accountModel.type == ''">
+                                <tr>
+                                    <td class="text-center text-danger">Please select Account type First</td>
+                                </tr>
+                            </table>
 
-                        <!-- payment for seller and writer -->
-                        <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
-                            <tr>
-                                <td></td>
-                                <td>Default</td>
-                            </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
-                                <td>
-                                    <div class="form-group">
-                                        <label>{{ payment_method.type }} Account</label>
-                                        <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- end of payment for seller and writer -->
+                            <!-- payment for seller and writer -->
+                            <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
+                                <tr>
+                                    <td></td>
+                                    <td>Default</td>
+                                </tr>
+                                <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
+                                    <td>
+                                        <div class="form-group">
+                                            <label>{{ payment_method.type }} Account</label>
+                                            <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
+                                        </div>
+                                    </td>
+                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- end of payment for seller and writer -->
 
-                        <!-- payment for buyer -->
-                        <table class="table" v-if="accountModel.type === 'Buyer'">
-                            <tr>
-                                <td></td>
-                                <td>Default</td>
-                            </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
-                                <td>
-                                    <div class="form-group">
-                                        <label>{{ payment_method.type }} Account</label>
-                                        <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- end of payment for buyer -->
+                            <!-- payment for buyer -->
+                            <table class="table" v-if="accountModel.type === 'Buyer'">
+                                <tr>
+                                    <td></td>
+                                    <td>Default</td>
+                                </tr>
+                                <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
+                                    <td>
+                                        <div class="form-group">
+                                            <label>{{ payment_method.type }} Account</label>
+                                            <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
+                                        </div>
+                                    </td>
+                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- end of payment for buyer -->
+                        </div>
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -990,6 +1026,7 @@
                                         <option value="Seller">Seller</option>
                                         <option value="Buyer">Buyer</option>
                                         <option value="Writer">Writer</option>
+                                        <option value="Affiliate">Affiliate</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1140,51 +1177,53 @@
 
                         </div>
 
+                        <div v-if="accountUpdate.type !== 'Affiliate'">
+                            <hr v-if="accountUpdate.is_sub_account === 0"/>
 
-                        <hr v-if="accountUpdate.is_sub_account === 0"/>
-                        <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">Payment Information</h4>
-                        <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
-                        <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
+                            <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">Payment Information</h4>
+                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
+                            <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
 
-                        <!-- payment for seller and writer -->
-                        <table class="table" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
-                            <tr>
-                                <td></td>
-                                <td>Default</td>
-                            </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
-                                <td>
-                                    <div class="form-group">
-                                        <label>{{ payment_method.type }} Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- end of payment for seller and writer -->
+                            <!-- payment for seller and writer -->
+                            <table class="table" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
+                                <tr>
+                                    <td></td>
+                                    <td>Default</td>
+                                </tr>
+                                <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
+                                    <td>
+                                        <div class="form-group">
+                                            <label>{{ payment_method.type }} Account</label>
+                                            <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
+                                        </div>
+                                    </td>
+                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- end of payment for seller and writer -->
 
-                        <!-- payment for buyer -->
-                        <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
-                            <tr>
-                                <td></td>
-                                <td>Default</td>
-                            </tr>
-                            <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
-                                <td>
-                                    <div class="form-group">
-                                        <label>{{ payment_method.type }} Account</label>
-                                        <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
-                                    </div>
-                                </td>
-                                <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                    <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- end of payment for buyer -->
+                            <!-- payment for buyer -->
+                            <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
+                                <tr>
+                                    <td></td>
+                                    <td>Default</td>
+                                </tr>
+                                <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
+                                    <td>
+                                        <div class="form-group">
+                                            <label>{{ payment_method.type }} Account</label>
+                                            <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
+                                        </div>
+                                    </td>
+                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- end of payment for buyer -->
+                        </div>
 
                         <hr/>
                         <h4 class="text-primary">Internal Information</h4>
@@ -1385,6 +1424,7 @@ export default {
                 status : this.$route.query.status || '',
                 paginate : this.$route.query.paginate || '15',
                 team_in_charge : this.$route.query.team_in_charge || '',
+                affiliate : this.$route.query.affiliate || '',
                 country : this.$route.query.country || '',
                 language_id : this.$route.query.language_id || '',
                 commission : this.$route.query.commission || '',
@@ -1496,6 +1536,7 @@ export default {
         this.getPaymentTypeList();
         this.checkAccessRole();
         this.getTeamInCharge();
+        this.getAffiliates();
         this.checkTeamSeller();
         this.getListCountries();
         this.getListLanguages();
@@ -1512,6 +1553,7 @@ export default {
             listAccount : state => state.storeAccount.listAccount,
             listPayment : state => state.storeAccount.listPayment,
             listIncharge : state => state.storeAccount.listIncharge,
+            listAffiliate : state => state.storeAccount.listAffiliate,
             user : state => state.storeAuth.currentUser,
             listCountryAll : state => state.storePublisher.listCountryAll,
             listLanguages : state => state.storePublisher.listLanguages,
@@ -1984,7 +2026,7 @@ export default {
         async submitAdd() {
             let id_payment_type = this.accountModel.id_payment_type;
 
-            if(!this.accountModel.add_method_payment_type[id_payment_type]) {
+            if(!this.accountModel.add_method_payment_type[id_payment_type] && this.accountModel.type !== 'Affiliate') {
                 this.validate_error_type = true;
                 return false;
             } else {
@@ -2062,7 +2104,9 @@ export default {
         async saveUpdate() {
             let id_payment_type = this.accountUpdate.id_payment_type;
 
-            if(this.accountUpdate.is_sub_account === 0 && !this.accountUpdate.update_method_payment_type[id_payment_type]) {
+            if(this.accountUpdate.is_sub_account === 0
+                && !this.accountUpdate.update_method_payment_type[id_payment_type]
+                && this.accountUpdate.type !== 'Affiliate') {
                 this.validate_error_type_update = true;
                 return false;
             }
@@ -2094,6 +2138,10 @@ export default {
 
         async getTeamInCharge() {
             await this.$store.dispatch('actionGetTeamInCharge');
+        },
+
+        async getAffiliates() {
+            await this.$store.dispatch('actionGetAffiliateList');
         },
 
         checkTeamSeller() {
@@ -2184,6 +2232,7 @@ export default {
                     search : this.filterModel.search,
                     paginate : this.filterModel.paginate,
                     team_in_charge : this.filterModel.team_in_charge,
+                    affiliate : this.filterModel.affiliate,
                     country : this.filterModel.country,
                     language_id : this.filterModel.language_id,
                     commission : this.filterModel.commission,
@@ -2238,6 +2287,7 @@ export default {
                 search : '',
                 paginate : '15',
                 team_in_charge : '',
+                affiliate : '',
                 company_type : '',
                 commission : '',
                 credit_auth : '',
@@ -2276,6 +2326,7 @@ export default {
                     type : this.filterModel.type,
                     paginate : this.filterModel.paginate,
                     team_in_charge : this.filterModel.team_in_charge,
+                    affiliate : this.filterModel.affiliate,
                     country : this.filterModel.country,
                     language_id : this.filterModel.language_id,
                     company_type : this.filterModel.company_type,

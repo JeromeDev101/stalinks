@@ -116,6 +116,11 @@
                                     ${{ totalNetIncome }}</h6>
                             </div>
 
+                            <div class="col">
+                                <h6>Affiliate Commission:
+                                    ${{ listIncomesAdmin.affiliate_commission_sum.toFixed(2) }}</h6>
+                            </div>
+
                         </div>
 
                         <span class="pagination-custom-footer-text">
@@ -124,42 +129,85 @@
                            }} entries.</b>
                     </span>
 
-                        <table id="tbl_incomes_admin"
-                               class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
-                                <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
-                                <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
-                                <th>Buyer Commision</th>
-                                <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
-                                <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
-                                <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
-                                <th v-show="tblOptIncomesAdmin.net_incomes">Net Incomes</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
-                                <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
-                                <td v-show="tblOptIncomesAdmin.selling_price">$ {{
-                                        incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price)
-                                                                              }}
-                                </td>
-                                <td>{{ incomes_admin.user.user_type == null ? 'N/A':incomes_admin.user.user_type.commission }}</td>
-                                <td v-show="tblOptIncomesAdmin.price">{{
-                                        incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
-                                                                      }}
-                                </td>
-                                <td v-show="tblOptIncomesAdmin.fee_charges">$0</td>
-                                <td v-show="tblOptIncomesAdmin.content_charges">$ {{ computeWriterPrice(incomes_admin, incomes_admin.billing_count) }}</td>
-                                <!-- static only -->
-                                <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="tbl_incomes_admin"
+                                   class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
+                                    <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
+                                    <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
+                                    <th>Buyer Commission</th>
+                                    <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
+                                    <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
+                                    <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
+                                    <th v-show="tblOptIncomesAdmin.net_incomes">Net Incomes</th>
+                                    <th v-show="tblOptIncomesAdmin.affiliate_commission">Affiliate Commission</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
+                                    <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
+                                    <td v-show="tblOptIncomesAdmin.selling_price">$ {{
+                                            incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price)
+                                        }}
+                                    </td>
+                                    <td>{{ incomes_admin.user.user_type == null ? 'N/A':incomes_admin.user.user_type.commission }}</td>
+                                    <td v-show="tblOptIncomesAdmin.price">{{
+                                            incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
+                                        }}
+                                    </td>
+                                    <td v-show="tblOptIncomesAdmin.fee_charges">$0</td>
+                                    <td v-show="tblOptIncomesAdmin.content_charges">$ {{ computeWriterPrice(incomes_admin, incomes_admin.billing_count) }}</td>
+                                    <!-- static only -->
+                                    <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
+                                    <td v-show="tblOptIncomesAdmin.affiliate_commission">
+                                        <span v-if="incomes_admin.user.user_type == null">
+                                            <small>
+                                                <span class="badge badge-secondary">No Affiliate</span>
+                                            </small>
+                                        </span>
+
+                                        <span v-else>
+                                            <span v-if="incomes_admin.user.user_type.affiliate_id == null">
+                                                <small>
+                                                    <span class="badge badge-secondary">No Affiliate</span>
+                                                </small>
+                                            </span>
+
+                                            <span v-else>
+                                                <span v-if="incomes_admin.user.user_type.affiliate.status !== 'inactive'
+                                                && incomes_admin.user.user_type.affiliate.status !== 'Inactive'">
+                                                    {{
+                                                        incomes_admin.affiliate_commission == ''
+                                                        || incomes_admin.affiliate_commission == null
+                                                            ? 0
+                                                            : '$ ' + Math.round(incomes_admin.affiliate_commission)
+                                                    }}
+                                                </span>
+
+                                                <small v-else>
+                                                    <span class="badge badge-danger">Inactive Affiliate</span>
+                                                </small>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <pagination
+                            :limit="8"
+                            :data="listIncomesAdmin"
+                            class="mt-2"
+
+                            @pagination-change-page="getListIncomesAdmin">
+
+                        </pagination>
 
                     </div>
                 </div>
@@ -215,6 +263,11 @@
                                               :checked="tblOptIncomesAdmin.live_date ? 'checked':''"
                                               v-model="tblOptIncomesAdmin.live_date">Date Completed</label>
                             </div>
+                            <div class="checkbox col-md-6">
+                                <label><input type="checkbox"
+                                              :checked="tblOptIncomesAdmin.affiliate_commission ? 'checked':''"
+                                              v-model="tblOptIncomesAdmin.affiliate_commission">Affiliate Commission</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -236,6 +289,7 @@ export default {
     data() {
         return {
             paginate : [
+                20,
                 50,
                 150,
                 250,
@@ -269,7 +323,7 @@ export default {
         }),
 
         totalNetIncome() {
-            let result = parseFloat(this.listIncomesAdmin.seller_price_sum) - parseFloat(this.listIncomesAdmin.buyer_price_sum) - parseFloat(this.listIncomesAdmin.billing_count_sum);
+            let result = parseFloat(parseFloat(this.listIncomesAdmin.buyer_price_sum - this.listIncomesAdmin.seller_price_sum)) - parseFloat(this.listIncomesAdmin.billing_count_sum);
 
             return result.toFixed(2);
         },
@@ -298,7 +352,7 @@ export default {
             } else {
                 var content = incomes.article.contentnohtml
                 var writer_price = parseFloat(incomes.writer_price);
-                
+
 
                 if (rate_type == 'ppw') {
                     price = writer_price * this.countWords(content)
@@ -306,7 +360,7 @@ export default {
                     price = writer_price
                 }
             }
-            
+
 
             return price;
         },
@@ -340,12 +394,16 @@ export default {
             return n.toFixed(0);
         },
 
-        async getListIncomesAdmin(params) {
+        async getListIncomesAdmin(page = 1) {
             $('#tbl_incomes_admin').DataTable().destroy();
+
+            this.filterModel.page = page;
 
             this.isSearchLoading = true;
             this.isSearchingLoading = true;
-            await this.$store.dispatch('actionGetListIncomesAdmin', params);
+            await this.$store.dispatch('actionGetListIncomesAdmin', {
+                params : this.filterModel,
+            });
 
             $('#tbl_incomes_admin').DataTable({
                 paging : false,
@@ -383,9 +441,7 @@ export default {
                 },
             }
 
-            this.getListIncomesAdmin({
-                params : this.filterModel,
-            });
+            this.getListIncomesAdmin();
 
             this.$router.replace({'query' : null});
         },

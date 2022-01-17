@@ -114,11 +114,11 @@
                             </div>
 
 
-                            <h4 class="text-primary my-3">Payment Information <span class="text-danger">*</span></h4>
-                            <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
-                            <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
+                            <div class="row" v-if="regModel.type !== 'Affiliate'">
 
-                            <div class="row">
+                                <h4 class="text-primary my-3">Payment Information</h4>
+                                <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
+                                <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
 
                                 <!-- payment for seller and writer -->
                                 <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
@@ -159,9 +159,11 @@
                                     </tr>
                                 </table>
                                 <!-- end of payment for buyer -->
+                            </div>
 
-                                <div class="col-md-12 mt-4">
-                                    <button class="btn btn-primary btn-lg btn-block btn-flat my-5" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <button class="btn btn-primary btn-lg btn-block btn-flat my-2" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
                                 </div>
                             </div>
                         </div>
