@@ -300,6 +300,17 @@
 
                                             <i class="fa fa-fw fa-user"></i>
                                         </button>
+
+                                        <button
+                                            type="button"
+                                            title="Send multiple validation email"
+                                            class="btn btn-default"
+                                            :disabled="isDisabledAction"
+
+                                            @click="sendMultipleValidationEmail()">
+
+                                            <i class="fa fa-exclamation-circle"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -403,7 +414,7 @@
                                                 </button>
 
                                                 <button
-                                                    type="submit"
+                                                    type="button"
                                                     title="Send Email"
                                                     data-toggle="modal"
                                                     class="btn btn-default"
@@ -411,6 +422,18 @@
                                                     @click="doSendEmail(account)">
 
                                                     <i class="far fa-envelope"></i>
+                                                </button>
+
+                                                <button
+                                                    :disabled="account.account_validation !== 'processing'
+                                                    || account.email_via === 'validation_email'"
+                                                    type="button"
+                                                    class="btn btn-default"
+                                                    title="Send Validation Email"
+
+                                                    @click="sendValidationEmail(account)">
+
+                                                    <i class="fa fa-exclamation-circle"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -480,7 +503,27 @@
                                         <td v-show="tblAccountsOpt.under_of_main_buyer">
                                             {{ account.is_sub_account == 0 ? '' : account.team_in_charge.username }}
                                         </td>
-                                        <td v-show="tblAccountsOpt.account_validation">{{ account.account_validation }}</td>
+                                        <td v-show="tblAccountsOpt.account_validation">
+                                            {{ account.account_validation }}
+
+                                            <span v-if="account.account_validation === 'processing' && account.email_via === 'validation_email'">
+                                                <span class="badge badge-warning">
+                                                    Validation Email Sent
+
+                                                    <span>
+                                                        {{
+                                                            account.reminded_days === 10
+                                                            ? '- 24h'
+                                                            : account.reminded_days === 20
+                                                                ? '- 48h'
+                                                                : account.reminded_days === 30
+                                                                    ? '- 72h'
+                                                                    : ''
+                                                        }}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </td>
                                         <td>{{ account.status }}</td>
                                     </tr>
                                 </tbody>
@@ -1601,6 +1644,136 @@ export default {
                     icon: 'success'
                 });
             });
+        },
+
+        sendValidationEmail(account) {
+            let accounts = [];
+
+            if (this.checkUserWorkMail()) {
+
+                if (account) {
+
+                    if (account.email_via !== 'validation_email') {
+
+                        if (account.account_validation === 'processing') {
+
+                            accounts.push({
+                                id: account.id,
+                                email: account.email
+                            })
+
+                            this.sendValidationEmailFunction(accounts)
+
+                        } else {
+
+                            swal.fire(
+                                'Invalid',
+                                'Account status should be processing',
+                                'error'
+                            )
+
+                        }
+
+                    } else {
+
+                        swal.fire(
+                            'Invalid',
+                            'A validation email was already sent for this account',
+                            'error'
+                        )
+
+                    }
+                }
+
+            } else {
+
+                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+
+            }
+        },
+
+        sendMultipleValidationEmail() {
+            let self = this;
+
+            if (self.checkUserWorkMail()) {
+
+                if (self.checkIds.length) {
+
+                    // check number of selected accounts
+                    if (self.checkIds.length <= 10) {
+
+                        // check if some accounts has already been sent a validation email
+                        let isNotAlreadySent = self.checkIds.every(account => account.email_via !== 'validation_email')
+
+                        if (isNotAlreadySent) {
+
+                            // check if selected accounts are all processing
+                            let processing = self.checkIds.every(account => account.account_validation === 'processing')
+
+                            if (processing) {
+
+                                let accounts = self.checkIds.map(function(account) {
+                                    return {
+                                        id: account.id,
+                                        email: account.email
+                                    }
+                                });
+
+                                self.sendValidationEmailFunction(accounts)
+                                self.checkIds = [];
+
+                            } else {
+
+                                swal.fire('Invalid', 'Selected accounts must be under processing', 'error');
+
+                            }
+
+                        } else {
+                            swal.fire('Invalid', 'Validation email was already sent on some of the selected accounts', 'error');
+                        }
+
+                    } else {
+
+                        swal.fire('Invalid', 'Maximum selected account is 10', 'error');
+
+                    }
+
+                } else {
+
+                    swal.fire('Invalid', 'Selection is empty', 'error');
+
+                }
+
+            } else {
+
+                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+
+            }
+        },
+
+        sendValidationEmailFunction(accounts) {
+            let loader = this.$loading.show();
+
+            axios.post('/api/mail/send-validation-email', {
+                accounts : accounts,
+            }).then((res) => {
+                loader.hide();
+
+                this.getAccountList();
+
+                swal.fire(
+                    'Success',
+                    'Validation email successfully sent!',
+                    'success'
+                )
+            }).catch((err) => {
+                loader.hide();
+                console.log(err)
+            })
+        },
+
+        checkUserWorkMail() {
+            return !!this.user.work_mail_orig;
         },
 
         modalCloser() {

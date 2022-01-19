@@ -134,6 +134,8 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             if ($account->email_via !== 'account_validated') {
                 event(new UserValidateEvent($input, $user));
                 $input['email_via'] = 'account_validated';
+                $input['validation_reminded_at'] = null;
+                $input['reminded_days'] = null;
             }
         } else if (isset($input['account_validation']) && $input['account_validation'] !== 'valid') {
             $input['email_via'] = null;

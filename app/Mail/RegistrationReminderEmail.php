@@ -13,17 +13,20 @@ class RegistrationReminderEmail extends Mailable
 
     public $token;
     public $notification;
+    public $days;
 
     /**
      * Create a new message instance.
      *
      * @param $token
-     * @param $name
+     * @param $notification
+     * @param $days
      */
-    public function __construct($token, $notification)
+    public function __construct($token, $notification, $days)
     {
         $this->token = $token;
         $this->notification = $notification;
+        $this->days = $days;
     }
 
     /**
@@ -33,6 +36,12 @@ class RegistrationReminderEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('verification_reminder')->subject('Registration Reminder');
+        if ($this->days === 1) {
+            return $this->view('verification_reminder')->subject('Registration Reminder');
+        } else if ($this->days === 2) {
+            return $this->view('verification_reminder_2')->subject('Registration Reminder');
+        } else {
+            return $this->view('verification_reminder_3')->subject('Registration Reminder');
+        }
     }
 }

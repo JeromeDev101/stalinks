@@ -16,7 +16,7 @@ class SendReminderEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $notification;
-
+    protected $days;
     protected $subAccount;
 
     /**
@@ -24,9 +24,10 @@ class SendReminderEmail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($notification, $subAccount = null)
+    public function __construct($notification, $days, $subAccount = null)
     {
         $this->notification = $notification;
+        $this->days = $days;
         $this->subAccount = $subAccount;
     }
 
@@ -40,7 +41,7 @@ class SendReminderEmail implements ShouldQueue
         if ($this->subAccount) {
             Mail::to($this->notification->email)->send(new SendReminderToLeadEmail($this->subAccount->username));
         } else {
-            Mail::to($this->notification->email)->send(new RegistrationReminderEmail($this->notification->verification_code, $this->notification));
+            Mail::to($this->notification->email)->send(new RegistrationReminderEmail($this->notification->verification_code, $this->notification, $this->days));
         }
     }
 }

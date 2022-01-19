@@ -51,6 +51,16 @@ class SendRegistrationReminder extends Command
             $this->updateNotifications($one_notifications->pluck('id')->toArray(), 1);
         }
 
+        // send email reminder for day 2
+
+        $two_notifications = $this->getNotifications(2);
+
+        $this->sendNotification($two_notifications, 2);
+
+        if ($two_notifications->count()) {
+            $this->updateNotifications($two_notifications->pluck('id')->toArray(), 2);
+        }
+
         // send email reminder for day 3
 
         $three_notifications = $this->getNotifications(3);
@@ -59,26 +69,6 @@ class SendRegistrationReminder extends Command
 
         if ($three_notifications->count()) {
             $this->updateNotifications($three_notifications->pluck('id')->toArray(), 3);
-        }
-
-        // send email reminder for day 5
-
-        $five_notifications = $this->getNotifications(5);
-
-        $this->sendNotification($five_notifications, 5);
-
-        if ($five_notifications->count()) {
-            $this->updateNotifications($five_notifications->pluck('id')->toArray(), 5);
-        }
-
-        // send email reminder for day 7
-
-        $seven_notifications = $this->getNotifications(7);
-
-        $this->sendNotification($seven_notifications, 7);
-
-        if ($seven_notifications->count()) {
-            $this->updateNotifications($seven_notifications->pluck('id')->toArray(), 7);
         }
     }
 
@@ -90,9 +80,8 @@ class SendRegistrationReminder extends Command
      */
     private function getNotifications ($days) {
         $end_days = [
-            1 => 3,
-            3 => 5,
-            5 => 7
+            1 => 2,
+            2 => 3,
         ];
 
         $notifications = Registration::whereNotNull('verification_code')->where(function($query) {
@@ -105,14 +94,20 @@ class SendRegistrationReminder extends Command
             $notifications = $notifications->whereNotNull('reminded_at');
         }
 
-        if ($days === 7) {
+        if ($days === 3) {
             $notifications = $notifications->where('created_at', '<=', Carbon::now()->subDays($days));
         } else {
             $notifications = $notifications->where('created_at', '<=', Carbon::now()->subDays($days))
                 ->where('created_at', '>=', Carbon::now()->subDays($end_days[$days]));
         }
 
-        $notifications = $notifications->where('reminded_days', '!=', $days)->get();
+        if ($days === 1) {
+            $notifications = $notifications->whereNull('reminded_days');
+        } else {
+            $notifications = $notifications->where('reminded_days', '!=', $days);
+        }
+
+        $notifications = $notifications->get();
 
         return $notifications;
     }
@@ -135,11 +130,11 @@ class SendRegistrationReminder extends Command
 
         foreach ($notifications as $notification) {
             try {
-                SendReminderEmail::dispatch($notification)->onQueue('emails');
+                SendReminderEmail::dispatch($notification, $days)->onQueue('emails');
 
                 if (isset($notification->team_in_charge)) {
                     $qc = User::find($notification->team_in_charge);
-                    SendReminderEmail::dispatch($qc, $notification)->onQueue('emails');
+                    SendReminderEmail::dispatch($qc, $days, $notification)->onQueue('emails');
                 }
 
             } catch (\Exception $e) {

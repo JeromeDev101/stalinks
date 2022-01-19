@@ -1151,4 +1151,59 @@ class MailgunController extends Controller
 
         return response('Success', 200);
     }
+
+    public function sendValidationEmail(Request $request)
+    {
+        // get recipients
+
+        $recipients = array_map(function($o) { return $o['email'];}, $request->accounts);
+
+        // get recipient ids
+
+        $recipient_ids = array_map(function($o) { return $o['id'];}, $request->accounts);
+
+        // get user, work mail and signature
+
+        $user = User::with('role')->find(Auth::id());
+
+        $work_mail = $user->work_mail;
+
+        $signature = $this->getEmailSignatureContent($work_mail);
+        $final_signature = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $signature);
+
+        $content_data = [
+            'user' => $user,
+            'signature' => $final_signature,
+        ];
+
+        $params = [
+            'from'                => $work_mail,
+            'to'                  => $recipients,
+            'subject'             => 'Stalinks Validation',
+            'html'                => view('validation_email', $content_data)->render(),
+            'o:tag'               => array('test1'),
+            'o:tracking'          => 'yes',
+            'o:tracking-opens'    => 'yes',
+            'o:tracking-clicks'   => 'yes',
+        ];
+
+        $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
+
+        // update registration table
+
+        $this->updateEmailViaForUsersWithValidationEmail($recipient_ids);
+
+        return response()->json([
+            'success' => true,
+            'message' => $sender
+        ], 200);
+    }
+
+    protected function updateEmailViaForUsersWithValidationEmail($recipient_ids) {
+        Registration::whereIn('id', $recipient_ids)->update([
+            'email_via' => 'validation_email',
+            'validation_reminded_at' => Carbon::now()
+        ]);
+    }
+
 }

@@ -295,6 +295,9 @@ Route::middleware('auth:api')->group(function () {
         // mailgun attachments
         Route::name('email_attachments')->get('/delete-old-attachments','MailgunController@deleteOldAttachments');
 
+        // Validation Email
+        Route::name('send-validation-email')->post('/send-validation-email', 'MailgunController@sendValidationEmail');
+
         // drafts
         Route::name('save-draft')->post('/save-draft','MailDraftController@store');
         Route::name('get-drafts')->post('/get-drafts','MailDraftController@index');

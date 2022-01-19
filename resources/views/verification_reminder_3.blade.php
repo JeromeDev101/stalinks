@@ -155,39 +155,13 @@
                 <tr>
                     <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                         <p style="margin: 0;">Hello {{ $notification->username }},</p> <br /> <br />
-                        <p style="margin: 0;">We noticed that you have been registered on our platform StaLinks last {{ Carbon\Carbon::parse($notification->created_at)->format('F j, Y') }}. We have sent you a verification email, please check your spam folder as the email might be there.</p> <br /> <br />
-                        <p style="margin: 0;">We need you to verify your email before we validate your account.</p>
-                        <p style="margin: 0;">Alternatively, you can click the button below to continue your registration process.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor="#ffffff" align="left">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                    <table border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00"><a href="{{ url('/verification/' . $token) }}" target="_blank" class="button-text" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Continue Registration</a></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr> <!-- COPY -->
-                <tr>
-                    <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                        <p style="margin: 0;">If that doesn't work, copy and paste the following link in your browser:</p>
-                    </td>
-                </tr> <!-- COPY -->
-                <tr>
-                    <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                        <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/verification/' . $token) }}</a></p>
+                        <p style="margin: 0;">We haven't heard anything from you regarding the verification of your account. Because of this, we would like to inform you that we will update your account status into 'Inactive'.</p> <br /> <br />
+                        <p style="margin: 0;">If you would like to continue the verification of your account and update your status back to 'Active', you can contact us through marketing@stalinks.com.</p>
                     </td>
                 </tr>
                 <tr>
                     <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                        <p style="margin: 0;">If there's any problem during the verification, please let us know.</p>
+                        <p style="margin: 0;">Thank you and have a great day!</p>
                     </td>
                 </tr>
                 <tr>

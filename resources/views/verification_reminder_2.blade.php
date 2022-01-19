@@ -155,8 +155,8 @@
                 <tr>
                     <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                         <p style="margin: 0;">Hello {{ $notification->username }},</p> <br /> <br />
-                        <p style="margin: 0;">We noticed that you have been registered on our platform StaLinks last {{ Carbon\Carbon::parse($notification->created_at)->format('F j, Y') }}. We have sent you a verification email, please check your spam folder as the email might be there.</p> <br /> <br />
-                        <p style="margin: 0;">We need you to verify your email before we validate your account.</p>
+                        <p style="margin: 0;">We haven’t heard anything from you since you registered. We hope everything is going well.</p> <br /> <br />
+                        <p style="margin: 0;">Please let us know if there's any issue or concern regarding the verification of your account, so we can assist you immediately.</p> <br /> <br />
                         <p style="margin: 0;">Alternatively, you can click the button below to continue your registration process.</p>
                     </td>
                 </tr>

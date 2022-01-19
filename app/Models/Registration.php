@@ -43,6 +43,7 @@ class Registration extends Model
         'btc_account',
         'skrill_account',
         'reminded_at',
+        'validation_reminded_at',
         'reminded_days',
         'writer_price',
         'rate_type',
