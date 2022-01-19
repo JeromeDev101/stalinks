@@ -426,7 +426,8 @@
 
                                                 <button
                                                     :disabled="account.account_validation !== 'processing'
-                                                    || account.email_via === 'validation_email'"
+                                                    || account.email_via === 'validation_email'
+                                                    || account.verification_code !== null"
                                                     type="button"
                                                     class="btn btn-default"
                                                     title="Send Validation Email"
@@ -1653,22 +1654,34 @@ export default {
 
                 if (account) {
 
-                    if (account.email_via !== 'validation_email') {
+                    if (account.verification_code === null) {
 
-                        if (account.account_validation === 'processing') {
+                        if (account.email_via !== 'validation_email') {
 
-                            accounts.push({
-                                id: account.id,
-                                email: account.email
-                            })
+                            if (account.account_validation === 'processing') {
 
-                            this.sendValidationEmailFunction(accounts)
+                                accounts.push({
+                                    id: account.id,
+                                    email: account.email
+                                })
+
+                                this.sendValidationEmailFunction(accounts)
+
+                            } else {
+
+                                swal.fire(
+                                    'Invalid',
+                                    'Account status should be processing',
+                                    'error'
+                                )
+
+                            }
 
                         } else {
 
                             swal.fire(
                                 'Invalid',
-                                'Account status should be processing',
+                                'A validation email was already sent for this account',
                                 'error'
                             )
 
@@ -1678,7 +1691,7 @@ export default {
 
                         swal.fire(
                             'Invalid',
-                            'A validation email was already sent for this account',
+                            'The account is not verified',
                             'error'
                         )
 
@@ -1702,34 +1715,43 @@ export default {
                     // check number of selected accounts
                     if (self.checkIds.length <= 10) {
 
-                        // check if some accounts has already been sent a validation email
-                        let isNotAlreadySent = self.checkIds.every(account => account.email_via !== 'validation_email')
+                        // check if some accounts are not yet verified
+                        let isAllVerified = self.checkIds.every(account => account.verification_code === null)
 
-                        if (isNotAlreadySent) {
+                        if (isAllVerified) {
 
-                            // check if selected accounts are all processing
-                            let processing = self.checkIds.every(account => account.account_validation === 'processing')
+                            // check if some accounts has already been sent a validation email
+                            let isNotAlreadySent = self.checkIds.every(account => account.email_via !== 'validation_email')
 
-                            if (processing) {
+                            if (isNotAlreadySent) {
 
-                                let accounts = self.checkIds.map(function(account) {
-                                    return {
-                                        id: account.id,
-                                        email: account.email
-                                    }
-                                });
+                                // check if selected accounts are all processing
+                                let processing = self.checkIds.every(account => account.account_validation === 'processing')
 
-                                self.sendValidationEmailFunction(accounts)
-                                self.checkIds = [];
+                                if (processing) {
+
+                                    let accounts = self.checkIds.map(function(account) {
+                                        return {
+                                            id: account.id,
+                                            email: account.email
+                                        }
+                                    });
+
+                                    self.sendValidationEmailFunction(accounts)
+                                    self.checkIds = [];
+
+                                } else {
+
+                                    swal.fire('Invalid', 'Selected accounts must be under processing', 'error');
+
+                                }
 
                             } else {
-
-                                swal.fire('Invalid', 'Selected accounts must be under processing', 'error');
-
+                                swal.fire('Invalid', 'Validation email was already sent on some of the selected accounts', 'error');
                             }
 
                         } else {
-                            swal.fire('Invalid', 'Validation email was already sent on some of the selected accounts', 'error');
+                            swal.fire('Invalid', 'Selected accounts must be verified', 'error');
                         }
 
                     } else {
