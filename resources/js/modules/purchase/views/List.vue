@@ -146,46 +146,49 @@
                            }} entries.</b>
                     </span>
 
-                        <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Backlink ID</th>
-                                <th v-show="user.isAdmin || user.isOurs === 0">User Seller</th>
-                                <th>User Buyer</th>
-                                <th>URL Publisher</th>
-                                <th>Prices</th>
-                                <th>Date Completed</th>
-                                <th>Status</th>
-                                <th>Status Payment</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(purchase, index) in listPurchase.data" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ purchase.id }}</td>
-                                <td v-show="user.isAdmin || user.isOurs === 0">
-                                    {{ purchase.publisher == null ? 'Record Deleted' : purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username }}
-                                </td>
-                                <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
-                                <td>
-                                    <!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
-                                    <span v-if="purchase.publisher == null">
+                        <div class="table-responsive">
+                            <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Backlink ID</th>
+                                    <th v-show="user.isAdmin || user.isOurs === 0">User Seller</th>
+                                    <th>User Buyer</th>
+                                    <th>URL Publisher</th>
+                                    <th>Prices</th>
+                                    <th>Date Completed</th>
+                                    <th>Status</th>
+                                    <th>Status Payment</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(purchase, index) in listPurchase.data" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ purchase.id }}</td>
+                                    <td v-show="user.isAdmin || user.isOurs === 0">
+                                        {{ purchase.publisher == null ? 'Record Deleted' : purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username }}
+                                    </td>
+                                    <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
+                                    <td>
+                                        <!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
+                                        <span v-if="purchase.publisher == null">
                                         Record Deleted
                                     </span>
-                                    <span v-else>
+                                        <span v-else>
                                         <a :href="'//' + replaceCharacters(purchase.publisher.url)" target="_blank">
                                             {{ replaceCharacters(purchase.publisher.url) }}
                                         </a>
                                     </span>
-                                </td>
-                                <td>$ {{ formatPrice(purchase.prices) }}</td>
-                                <td>{{ purchase.live_date }}</td>
-                                <td>{{ purchase.status }}</td>
-                                <td>{{ purchase.payment_status }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    </td>
+                                    <td>$ {{ formatPrice(purchase.prices) }}</td>
+                                    <td>{{ purchase.live_date }}</td>
+                                    <td>{{ purchase.status }}</td>
+                                    <td>{{ purchase.payment_status }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>
