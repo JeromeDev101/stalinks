@@ -380,7 +380,10 @@
                                         <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
                                         <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
                                         <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
-                                        <th>Status</th>
+                                        <th v-show="tblAccountsOpt.is_show_price_basis">Show Price Basis</th>
+                                        <th v-show="tblAccountsOpt.credit_authorization">Credit Auth</th>
+                                        <th v-show="tblAccountsOpt.commission">Commission</th>
+                                        <th v-show="tblAccountsOpt.status">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -525,7 +528,12 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td>{{ account.status }}</td>
+                                        <td v-show="tblAccountsOpt.is_show_price_basis">
+                                            {{ account.is_show_price_basis == 0 ? 'no':'yes' }}
+                                        </td>
+                                        <td v-show="tblAccountsOpt.credit_authorization">{{ account.credit_auth }}</td>
+                                        <td v-show="tblAccountsOpt.commission">{{ account.commission }}</td>
+                                        <td v-show="tblAccountsOpt.status">{{ account.status }}</td>
                                     </tr>
                                 </tbody>
                             </table>
