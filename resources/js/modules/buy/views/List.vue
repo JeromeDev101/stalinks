@@ -660,7 +660,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitBuy" class="btn btn-primary">Buy</button>
+                        <button type="button" @click="submitBuy" :disabled="btnBuy" class="btn btn-primary">Buy</button>
                     </div>
                 </div>
             </div>
@@ -1147,6 +1147,7 @@ export default {
 
             country_continent_filter_info : '',
             sort_options: [],
+            btnBuy: false,
         }
     },
 
@@ -1740,6 +1741,7 @@ export default {
 
             this.isSearching = false;
             this.toggleSearchLoading();
+            this.btnBuy = false;
             loader.hide();
         },
 
@@ -2030,6 +2032,7 @@ export default {
             }*/
 
             this.updateModel.credit_left = credit_left;
+            this.btnBuy = true;
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateBuy', this.updateModel);
@@ -2038,6 +2041,10 @@ export default {
             if (this.messageForms.action === 'updated') {
                 this.getBuyList();
                 this.$root.$refs.AppHeader.liveGetWallet()
+            }
+
+            if(this.messageForms.errors) {
+                this.btnBuy = false;
             }
         },
 

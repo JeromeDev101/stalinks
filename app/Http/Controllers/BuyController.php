@@ -354,7 +354,7 @@ class BuyController extends Controller
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
         $user = Auth::user();
 
-        if ($user->credit_auth != 'Yes' && $request->credit_left < $request->seller_price) {
+        if ($user->credit_auth != 'Yes' && $request->credit_left < $request->prices) {
             return response()->json([
                 'message' => 'Insufficient Credits',
                 'errors' => [
