@@ -19,7 +19,7 @@ class WalletSummaryController extends Controller
             DB::raw('SUM(CASE WHEN wallet_transactions.admin_confirmation = "Paid" THEN wallet_transactions.amount_usd ELSE NULL END) as deposit'),
         ];
 
-        $checkAdmin = Auth::user()->type != 10 ? true: false;
+        $checkAdmin = Auth::user()->type != 10 && Auth::user()->role_id != 8;
         $user_id = Auth::user()->id;
 
         $user_buyers = User::select($columns)
