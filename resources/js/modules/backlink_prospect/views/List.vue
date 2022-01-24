@@ -188,9 +188,9 @@
 
                                             <export-excel
                                                 class="btn btn-primary btn-flat"
-                                                :data=backinkProspectList.data
+                                                :data=exportData
                                                 worksheet="My Worksheet"
-                                                name="generate_list.xls">
+                                                name="backlink_prospect.xls">
                                                 <i class="fa fa-list"></i>
                                                 Export
 
@@ -433,6 +433,25 @@ export default {
         ...mapState({
             user : state => state.storeAuth.currentUser,
         }),
+
+        exportData() {
+            let obj = [];
+            let _prop = {};
+
+            for(let index in this.backinkProspectList.data) {
+                _prop = {
+                    "domain": this.backinkProspectList.data[index].referring_domain,
+                    "category": this.backinkProspectList.data[index].category,
+                    "status": this.backinkProspectList.data[index].status,
+                    "note": this.backinkProspectList.data[index].note
+                }
+
+                obj.push(_prop)
+            }
+
+
+            return obj;
+        },
 
         tableConfig() {
             return [
