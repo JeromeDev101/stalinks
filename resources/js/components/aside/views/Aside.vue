@@ -225,6 +225,21 @@
                     <li class="nav-item"
                         v-if="
                         user.isAdmin ||
+                            isQc
+                    ">
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/survey-dashboard' }"
+                            :class="{ active: $route.name == 'survey-dashboard' }"
+                        >
+                            <img src="../../../../images/article.png"/>
+                            <p>Survey Dashboard</p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item"
+                        v-if="
+                        user.isAdmin ||
                             (user.isOurs == 0 &&
                                 (isManager || isSeller || isPostingWriter))
                     ">

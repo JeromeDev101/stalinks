@@ -28,4 +28,13 @@ class SurveyController extends Controller
 
         return $survey;
     }
+
+    public function getList()
+    {
+        $survey = Survey::with(['user' => function ($query) {
+            $query->select('name');
+        }])->get();
+
+        return response()->json($survey);
+    }
 }

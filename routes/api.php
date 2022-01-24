@@ -252,6 +252,9 @@ Route::middleware('auth:api')->group(function () {
         Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
         Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
 
+        // Surveys
+        Route::name('get-survey-list')->get('/surveys', 'SurveyController@getList');
+
     });
 
     //Formula
