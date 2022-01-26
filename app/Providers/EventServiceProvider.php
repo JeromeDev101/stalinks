@@ -13,6 +13,7 @@ use App\Events\BuyEvent;
 use App\Events\NewArticleEvent;
 use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
+use App\Events\UserUnvalidatedEvent;
 use App\Events\UserValidateEvent;
 use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
@@ -29,6 +30,7 @@ use App\Listeners\BuyListener;
 use App\Listeners\NewArticleListener;
 use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
+use App\Listeners\UserUnvalidatedListener;
 use App\Listeners\UserValidateListener;
 use App\Listeners\WriterPaidListener;
 use App\Listeners\TeamInChargeUpdatedListener;
@@ -124,6 +126,10 @@ class EventServiceProvider extends ServiceProvider
 
         TeamInChargeUpdatedEvent::class => [
             TeamInChargeUpdatedListener::class
+        ],
+
+        UserUnvalidatedEvent::class => [
+            UserUnvalidatedListener::class
         ]
     ];
 

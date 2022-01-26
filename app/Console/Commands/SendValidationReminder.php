@@ -92,6 +92,7 @@ class SendValidationReminder extends Command
                 ->where('validation_reminded_at', '>=', Carbon::now()->subDays($end_days[$days]));
         }
 
+        // add 0 for validation reminders 10, 20, 30
         $unvalidated = $unvalidated->where(function ($query) use ($days) {
             $query->where('reminded_days', '!=', $days . '0')
                 ->orWhereNull('reminded_days');

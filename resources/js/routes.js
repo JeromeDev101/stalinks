@@ -78,6 +78,9 @@ import BuyerGuide3 from '@/modules/help/buyer_guide/views/Help_3.vue'
 // tools
 import Tools from '@/modules/tools/views/Tools.vue'
 
+// survey
+import Survey from '@/modules/survey/views/Survey.vue'
+
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
 
 const routes = [
@@ -115,6 +118,11 @@ const routes = [
         path : '/order-confirmation/:id',
         name : 'order-confirmation',
         component : OrderConfirmation,
+    },
+    {
+        path : '/survey/:set/:code',
+        name : 'survey',
+        component : Survey,
     },
     {
         path : '/cancel-order-confirmation/:id',
@@ -435,6 +443,11 @@ const routes = [
                 path : 'tools',
                 name : 'tools',
                 component : Tools,
+            },
+            {
+                path : '/survey/:set',
+                name : 'survey',
+                component : Survey,
             },
             {
                 path : '*',

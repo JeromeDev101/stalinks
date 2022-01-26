@@ -5,15 +5,26 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
 
+            <li class="nav-item w-100" v-if="survey.show && isBuyer && $route.name !== 'survey'">
+                <a
+                    data-toggle="modal"
+                    data-target="#modal-survey"
+                    href="#"
+                    role="button"
+                    class="nav-link btn btn-warning"
+                    style="color: #1f2d3d!important; font-size: 14px"
+                    title="Help us improve by answering our survey"
 
-            <li class="nav-item" v-if="survey.show && isBuyer">
-                <a class="nav-link btn btn-warning" data-toggle="modal"
-                   data-target="#modal-survey" href="#" role="button" style="color: #1f2d3d!important"><i
-                    class="fas fa-question-circle"></i> Help us improve by answering our survey.</a>
+                    @click="surveyModalOpener">
+
+                    <i class="fas fa-question-circle"></i>
+
+                    {{ currentWindowWidth > 1200 ? 'Help us improve by answering our survey.' : '' }}
+                </a>
             </li>
         </ul>
 
-        <ul class="navbar-nav" style="margin-left: 600px">
+        <ul class="navbar-nav ml-auto mr-auto">
             <li
                 v-if="isBuyer"
                 class="nav-item"
@@ -623,249 +634,107 @@
         <!-- End of modal All Unread Emails -->
 
         <!-- Modal Survey -->
-        <div class="modal fade"
-             id="modal-survey"
-             tabindex="-1" role="dialog"
-             aria-labelledby="modelTitleId"
-             aria-hidden="true" style="z-index: 9999"
-             ref="surveyModal"
-             data-backdrop="static">
+        <div
+            aria-hidden="true"
+            aria-labelledby="modelTitleId"
+            data-backdrop="static"
+            tabindex="-1"
+            role="dialog"
+            ref="surveyModal"
+            id="modal-survey"
+            class="modal fade"
+            style="z-index: 9999">
+
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Survey</h5>
+                        <h5 class="modal-title">Stalinks Survey</h5>
                     </div>
                     <div class="modal-body">
-<!--                        SURVEY SET A-->
-                        <div v-if="survey.answers.set === 'a'" class="row">
-                            <div class="col-12">
-                                <p>1. Do you find using our system efficient?
-                                </p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-a-yes" name="question-one-a" v-model="survey.answers.one" value="yes">
-                                        <label for="question-one-a-yes" class="custom-control-label">Yes</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-a-no" name="question-one-a" v-model="survey.answers.one" value="no">
-                                        <label for="question-one-a-no" class="custom-control-label">No</label>
-                                    </div>
-                                </div>
-                                <div v-if="survey.answers.one === 'no'" class="form-group">
-                                    <label>If no, please let us know how we can improve it…</label>
-                                    <textarea v-model="survey.answers.one_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
+                        <div class="row">
+                            <!-- SURVEY A -->
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <h3
+                                            :class="[!survey.isSetAAnswered ? 'text-primary' : 'text-success']"
+                                            class="text-center text-uppercase">
+                                            Survey A
+                                        </h3>
 
-                            <div class="col-12">
-                                <p>2. Does our system provide the URLs that you are looking for?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-two-a-yes" name="question-two-a" v-model="survey.answers.two" value="yes">
-                                        <label for="question-two-a-yes" class="custom-control-label">Yes</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-two-a-no" name="question-two-a" v-model="survey.answers.two" value="no">
-                                        <label for="question-two-a-no" class="custom-control-label">No</label>
-                                    </div>
-                                </div>
-                                <div v-if="survey.answers.two === 'no'" class="form-group">
-                                    <label>If no, please let us know what more to add…</label>
-                                    <textarea v-model="survey.answers.two_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
+                                        <div class="my-3 text-center">
+                                            <i
+                                                v-if="!survey.isSetAAnswered"
+                                                class="fas fa-poll-h fa-5x text-primary">
+                                            </i>
 
-                            <div class="col-12">
-                                <p>3. Do you find our HELP page easy to follow?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-three-a-yes" name="question-three-a" v-model="survey.answers.three" value="yes">
-                                        <label for="question-three-a-yes" class="custom-control-label">Yes</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-three-a-no" name="question-three-a" v-model="survey.answers.three" value="no">
-                                        <label for="question-three-a-no" class="custom-control-label">No</label>
-                                    </div>
-                                </div>
-                                <div v-if="survey.answers.three === 'no'" class="form-group">
-                                    <label>If no, please let us know how we can improve it...
-                                    </label>
-                                    <textarea v-model="survey.answers.three_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
+                                            <i
+                                                v-else
+                                                class="fas fa-check-circle fa-5x text-success">
+                                            </i>
+                                        </div>
 
-                            <div class="col-12">
-                                <p>4. Do you find our payment methods too complicated for you?
-                                </p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-a-yes" name="question-four-a" v-model="survey.answers.four" value="yes">
-                                        <label for="question-four-a-yes" class="custom-control-label">Yes</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-a-no" name="question-four-a" v-model="survey.answers.four" value="no">
-                                        <label for="question-four-a-no" class="custom-control-label">No</label>
-                                    </div>
-                                </div>
-                                <div v-if="survey.answers.four === 'yes'" class="form-group">
-                                    <label>If yes, please let us know other methods you preferred to make the transaction easier for you
-                                    </label>
-                                    <textarea v-model="survey.answers.four_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
+                                        <router-link v-if="!survey.isSetAAnswered" :to="{ path: `/survey/a` }" target="_blank">
+                                            <a 
+                                                class="btn btn-primary stretched-link mt-4"
+                                                @click="surveyModalCloser">
+                                                
+                                                Answer Now
+                                            </a>
+                                        </router-link>
 
-                            <div class="col-12">
-                                <p>5. Are you satisfied with the service that we provide right now?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-five-a-yes" name="question-five-a" v-model="survey.answers.five" value="yes">
-                                        <label for="question-five-a-yes" class="custom-control-label">Yes</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-five-a-no" name="question-five-a" v-model="survey.answers.five" value="no">
-                                        <label for="question-five-a-no" class="custom-control-label">No</label>
-                                    </div>
-                                </div>
-                                <div v-if="survey.answers.five === 'no'" class="form-group">
-                                    <label>If no, please let us know what can we improve</label>
-                                    <textarea v-model="survey.answers.five_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label>Aside from the issues you have already mentioned above, are there any other comments you would like to share?</label>
-                                    <textarea v-model="survey.answers.comment" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div v-else class="row">
-                            <div class="col-12">
-                                <p>1. In your opinion, what is the most important thing to have in desk management?
-                                </p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-b-a" name="question-one-b" v-model="survey.answers.one" value="Complete URLs info">
-                                        <label for="question-one-b-a" class="custom-control-label">Complete URLs info</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-b-b" name="question-one-b" v-model="survey.answers.one" value="Good user interface">
-                                        <label for="question-one-b-b" class="custom-control-label">Good user interface</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-b-c" name="question-one-b" v-model="survey.answers.one" value="Secured transaction">
-                                        <label for="question-one-b-c" class="custom-control-label">Secured transaction</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-b-d" name="question-one-b" v-model="survey.answers.one" value="Good price">
-                                        <label for="question-one-b-d" class="custom-control-label">Good price</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-one-b-e" name="question-one-b" v-model="survey.answers.one" value="other">
-                                        <label for="question-one-b-e" class="custom-control-label">Others. Please specify...</label>
-                                    </div>
-
-                                </div>
-                                <div v-if="survey.answers.one === 'other'" class="form-group">
-                                    <label>Other</label>
-                                    <textarea v-model="survey.answers.one_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p>2. From 1-10, how would you rate our tools?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-two-b-a" name="question-two-b" v-model="survey.answers.two" value="1-> easy to understand">
-                                        <label for="question-two-b-a" class="custom-control-label">1-> easy to understand</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-two-b-no" name="question-two-b" v-model="survey.answers.two" value="10-> difficult to understand">
-                                        <label for="question-two-b-no" class="custom-control-label">10-> difficult to understand</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Comment</label>
-                                    <textarea v-model="survey.answers.two_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p>3. From 1-10, how well do you understand Stalinks and what can we do to help you?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-three-b-a" name="question-three-b" v-model="survey.answers.three" value="1-> completely clueless">
-                                        <label for="question-three-b-a" class="custom-control-label">1-> completely clueless</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-three-b-b" name="question-three-b" v-model="survey.answers.three" value="10-> understand completely">
-                                        <label for="question-three-b-b" class="custom-control-label">10-> understand completely</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Comment</label>
-                                    <textarea v-model="survey.answers.three_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p>4. What would you like to see in Stalinks?
-                                </p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-b-a" name="question-four-b" v-model="survey.answers.four" value="More promotion">
-                                        <label for="question-four-b-a" class="custom-control-label">More promotion</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-b-b" name="question-four-b" v-model="survey.answers.four" value="Detailed guide on how to use the tools">
-                                        <label for="question-four-b-b" class="custom-control-label">Detailed guide on how to use the tools</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-b-c" name="question-four-b" v-model="survey.answers.four" value="Personalized help choosing the right URLs">
-                                        <label for="question-four-b-c" class="custom-control-label">Personalized help choosing the right URLs</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-four-b-d" name="question-four-b" v-model="survey.answers.four" value="other">
-                                        <label for="question-four-b-d" class="custom-control-label">Others. Please specify</label>
-                                    </div>
-
-                                </div>
-                                <div v-if="survey.answers.one === 'other'" class="form-group">
-                                    <label>Other</label>
-                                    <textarea v-model="survey.answers.four_other" class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p>5.  How would you rate our team interaction with you?</p>
-                                <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-five-b-yes" name="question-five-b" v-model="survey.answers.five" value="1-> Disappointed">
-                                        <label for="question-five-b-yes" class="custom-control-label">1-> Disappointed</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="question-five-b-no" name="question-five-b" v-model="survey.answers.five" value="10-> Very satisfied, would recommend">
-                                        <label for="question-five-b-no" class="custom-control-label">10-> Very satisfied, would recommend</label>
+                                        <a v-else>
+                                            <button class="btn btn-success mt-4" style="pointer-events: none !important">
+                                                Thank you for answering this survey!
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label>Aside from the issues you have already mentioned above, are there any other comments you would like to share?</label>
-                                    <textarea v-model="survey.answers.comment" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                            <!-- SURVEY B -->
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <h3
+                                            :class="[!survey.isSetBAnswered ? 'text-primary' : 'text-success']"
+                                            class="text-center text-uppercase">
+                                            Survey B
+                                        </h3>
+
+                                        <div class="my-3 text-center">
+                                            <i
+                                                v-if="!survey.isSetBAnswered"
+                                                class="fas fa-poll fa-5x text-primary">
+                                            </i>
+
+                                            <i
+                                                v-else
+                                                class="fas fa-check-circle fa-5x text-success">
+                                            </i>
+                                        </div>
+
+                                        <router-link v-if="!survey.isSetBAnswered" :to="{ path: `/survey/b` }" target="_blank">
+                                            <a 
+                                                class="btn btn-primary stretched-link mt-4" 
+                                                
+                                                @click="surveyModalCloser">
+                                                Answer Now
+                                            </a>
+                                        </router-link>
+
+                                        <a v-else>
+                                            <button class="btn btn-success mt-4" style="pointer-events: none !important">
+                                                Thank you for answering this survey!
+                                            </button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button"
-                                @click="submitSurvey"
-                                class="btn btn-primary">Submit
-                        </button>
                     </div>
                 </div>
             </div>
@@ -908,23 +777,14 @@ export default {
 
             allNotifications : [],
             allUnreadEmails : [],
+
             survey : {
                 show : false,
-                answers : {
-                    one : null,
-                    two : null,
-                    three : null,
-                    four: null,
-                    five : null,
-                    one_other: '',
-                    two_other: '',
-                    three_other: '',
-                    four_other: '',
-                    five_other: '',
-                    comment: null,
-                    set : 'a',
-                }
-            }
+                isSetAAnswered: false,
+                isSetBAnswered: false
+            },
+
+            currentWindowWidth: window.innerWidth
         };
     },
 
@@ -932,7 +792,13 @@ export default {
         this.$root.$refs.AppHeader = this;
         this.checkAccountType();
         this.getListPaymentType();
-        this.hasUserAnsweredSurvey();
+        this.hasUserAnsweredBothSurvey();
+
+        window.addEventListener("resize", this.resizeEventHandler);
+    },
+
+    destroyed() {
+        window.removeEventListener("resize", this.resizeEventHandler);
     },
 
     beforeMount() {
@@ -1006,6 +872,10 @@ export default {
             getUserUnreadEmails : "getUserUnreadEmails",
             getUserUnreadEmailList : "getUserUnreadEmailList",
         }),
+
+        resizeEventHandler(e) {
+            this.currentWindowWidth = window.innerWidth;
+        },
 
         viewUnreadEmails() {
             let self = this;
@@ -1253,48 +1123,38 @@ export default {
                 })
         },
 
-        submitSurvey() {
-            axios.post('/api/survey', this.survey.answers)
-                .then((response) => {
-                    $("#modal-survey").modal('hide');
-
-                    swal.fire(
-                        'Success',
-                        'Thank you for your time! This means a lot for us to understand your needs even better!',
-                        'success',
-                    )
-
-                    this.hasUserAnsweredSurvey();
-                })
-                .catch((err) => {
-                    swal.fire(
-                        'Error',
-                        'Please fill up all the fields.',
-                        'error',
-                    )
-                });
-        },
-
-        getLastSurveySet() {
-            axios.get('/api/survey/last-set')
-                .then((response) => {
-                    if (response.data.set === 'a') {
-                        this.survey.answers.set = 'b';
-                    } else {
-                        this.survey.answers.set = 'a';
-                    }
-                });
-        },
-
-        hasUserAnsweredSurvey() {
-            axios.get('/api/survey/check')
+        hasUserAnsweredBothSurvey() {
+            axios.get('/api/survey/check-both')
                 .then((response) => {
                     if (!response.data) {
                         this.survey.show = true;
-
-                        this.getLastSurveySet();
                     }
                 });
+        },
+
+        surveyModalOpener() {
+            this.hasUserAnsweredSurveySet('a');
+            this.hasUserAnsweredSurveySet('b');
+        },
+
+        surveyModalCloser() {
+            $("#modal-survey").modal('hide');
+            
+            console.log('wew')
+        },
+
+        hasUserAnsweredSurveySet (set) {
+            axios.post('/api/survey/check-survey-set', {
+                set: set,
+                code: null
+            })
+            .then((response) => {
+                if (set === 'a') {
+                    this.survey.isSetAAnswered = Object.keys(response.data).length !== 0;
+                } else {
+                    this.survey.isSetBAnswered = Object.keys(response.data).length !== 0;
+                }
+            });
         },
     },
 };

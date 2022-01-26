@@ -30,6 +30,11 @@ Route::name('get-payment-list-registration')->get('/payment-list-registration', 
 Route::name('order-confirmation-get-info')->get('/order-confirmation-get-info', 'FollowupSalesController@orderConfirmation');
 Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmation-get-info', 'FollowupSalesController@CancelOrderConfirmation');
 
+//survey
+Route::name('store-survey-code')->post('/survey-code', 'SurveyController@store');
+Route::name('check-survey-code')->post('/survey/check-survey-code', 'SurveyController@checkSurveyCode');
+Route::name('check-survey-code-set')->post('/survey/check-survey-code-set', 'SurveyController@hasUserAnsweredSurveySet');
+
 Route::middleware('auth:api')->group(function () {
 
     //Profile
@@ -38,7 +43,8 @@ Route::middleware('auth:api')->group(function () {
     //Surveys
     Route::name('store-survey')->post('survey', 'SurveyController@store');
     Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
-    Route::name('check-user-answered-survey')->get('/survey/check', 'SurveyController@hasUserAnsweredSurvey');
+    Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
+    Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyController@hasUserAnsweredSurveySet');
 
     //User
     Route::resource('users', 'UserController');
@@ -304,6 +310,9 @@ Route::middleware('auth:api')->group(function () {
 
         // Validation Email
         Route::name('send-validation-email')->post('/send-validation-email', 'MailgunController@sendValidationEmail');
+
+        // Deposit Email
+        Route::name('send-deposit-email')->post('/send-deposit-email', 'MailgunController@sendDepositEmail');
 
         // drafts
         Route::name('save-draft')->post('/save-draft','MailDraftController@store');

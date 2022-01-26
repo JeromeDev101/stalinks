@@ -70,11 +70,6 @@
 
         table {
             border-collapse: collapse !important;
-            table-layout: fixed;
-        }
-
-        th,td {
-            word-wrap: break-word;
         }
 
         body {
@@ -96,18 +91,10 @@
         }
 
         /* MOBILE STYLES */
-        @media all and (max-width: 480px) {
+        @media screen and (max-width:600px) {
             h1 {
-                font-size: 0.7em !important;
+                font-size: 32px !important;
                 line-height: 32px !important;
-            }
-
-            .main-td {
-                padding: 0 5% !important;
-            }
-
-            .main-text, .button-text {
-                font-size: .9em !important;
             }
         }
 
@@ -118,41 +105,17 @@
     </style>
 </head>
 
-<body style="background-image: url('{{ asset('/images/background-login2.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
-<!-- HIDDEN PREHEADER TEXT -->
-<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <!-- LOGO -->
-    @component('components.email_header')
-        Account Validated
-    @endcomponent
+<body>
+<div>
+    <p style="margin: 0;">Thank you for validating your account on StaLinks as a buyer! </p> <br /> <br />
+    <p style="margin: 0;">Do you need any help on adding credit to your account and purchasing orders? </p>
+    <p style="margin: 0;">Our team is ready to help you anytime. </p>
+    <p style="margin: 0;">We’re also available on Skype and Telegram for easy communication.</p> <br /> <br />
+    <p style="margin: 0;">Looking forward to hearing from you soon!</p> <br /> <br />
+    <p style="margin: 0;">Cheers,</p> <br />
 
-    <tr>
-        <td  align="center" class="main-td" style="padding: 0 15%">
-            @component('components.email_body')
-                @slot('main')
-                    <p style="margin: 0;">Hello {{ $name }},</p> <br />
-                    <p style="margin: 0;">Thank you for completing your data on StaLinks! We have already validated your account. You can start adding credit to your balance and purchasing orders!</p> <br />
-                    <p style="margin: 0;">If you need help on anything, feel free to contact us through this email marketing@stalinks.com and our team will contact you shortly.</p>
-                @endslot
-
-                @slot('button')
-                @endslot
-
-                @slot('link')
-                @endslot
-
-                @slot('closing')
-                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
-                @endslot
-            @endcomponent
-        </td>
-    </tr>
-    <tr>
-        @component('components.email_footer')
-        @endcomponent
-    </tr>
-</table>
+    {!! $signature !!}
+</div>
 </body>
 
 </html>

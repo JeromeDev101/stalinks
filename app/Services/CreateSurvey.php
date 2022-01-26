@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Registration;
 use App\Models\Survey;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CreateSurvey
@@ -20,19 +23,54 @@ class CreateSurvey
             'three' => 'required',
             'four' => 'required',
             'five' => 'required',
-            'user_id' => 'unique:survey'
+            'user_id' => 'required'
         ];
     }
 
     public function execute( array $data)
     {
-        $data['user_id'] = auth()->user()->id;
+
+        if (isset($data['code']) && $data['code']) {
+            // get user id
+            $registration = Registration::where('survey_code', $data['code'])->first();
+
+            if ($registration) {
+
+                $user = User::where('email', $registration->email)->first();
+
+                if ($user) {
+
+                    $data['user_id'] = $user->id;
+
+                } else {
+
+                    return response()->json([
+                        "message" => 'Invalid survey code. User not found.',
+                        "errors" => [
+                            "survey_code" => ['Invalid code. User not found.'],
+                        ],
+                    ],422);
+
+                }
+
+            } else {
+
+                return response()->json([
+                    "message" => 'Invalid survey code. User not found.',
+                    "errors" => [
+                        "survey_code" => ['Invalid code. User not found.'],
+                    ],
+                ],422);
+
+            }
+
+        } else {
+            $data['user_id'] = auth()->user()->id;
+        }
 
         $this->validate($data);
 
-        $survey = Survey::create($data);
-
-        return $survey;
+        return Survey::create($data);
     }
 
     /**

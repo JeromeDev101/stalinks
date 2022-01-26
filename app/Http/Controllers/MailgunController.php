@@ -1156,31 +1156,21 @@ class MailgunController extends Controller
     {
         // get recipients
 
-        $recipients = array_map(function($o) { return $o['email'];}, $request->accounts);
+        $recipients = $this->sortRecipientData($request->accounts, 'email');
 
         // get recipient ids
 
-        $recipient_ids = array_map(function($o) { return $o['id'];}, $request->accounts);
+        $recipient_ids = $this->sortRecipientData($request->accounts, 'id');
 
         // get user, work mail and signature
 
-        $user = User::with('role')->find(Auth::id());
-
-        $work_mail = $user->work_mail;
-
-        $signature = $this->getEmailSignatureContent($work_mail);
-        $final_signature = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $signature);
-
-        $content_data = [
-            'user' => $user,
-            'signature' => $final_signature,
-        ];
+        $data = $this->generateWorkMailAndSignature();
 
         $params = [
-            'from'                => $work_mail,
+            'from'                => $data['work_mail'],
             'to'                  => $recipients,
             'subject'             => 'Stalinks Validation',
-            'html'                => view('validation_email', $content_data)->render(),
+            'html'                => view('validation_email', $data['content_data'])->render(),
             'o:tag'               => array('test1'),
             'o:tracking'          => 'yes',
             'o:tracking-opens'    => 'yes',
@@ -1206,4 +1196,74 @@ class MailgunController extends Controller
         ]);
     }
 
+    public function sendDepositEmail (Request $request) {
+        // get recipients
+
+        $recipients = $this->sortRecipientData($request->accounts, 'email');
+
+        // get recipient ids
+
+        $recipient_ids = $this->sortRecipientData($request->accounts, 'id');
+
+        // get user, work mail and signature
+
+        $data = $this->generateWorkMailAndSignature();
+
+        $params = [
+            'from'                => $data['work_mail'],
+            'to'                  => $recipients,
+            'subject'             => 'Buyer Credit',
+            'html'                => view('buyer.deposit_email', $data['content_data'])->render(),
+            'o:tag'               => array('test1'),
+            'o:tracking'          => 'yes',
+            'o:tracking-opens'    => 'yes',
+            'o:tracking-clicks'   => 'yes',
+        ];
+
+        $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
+
+        // update registration table
+
+        $this->updateEmailViaForUsersWithDepositEmail($recipient_ids);
+
+        return response()->json([
+            'success' => true,
+            'message' => $sender
+        ], 200);
+    }
+
+    protected function updateEmailViaForUsersWithDepositEmail($recipient_ids) {
+
+        foreach ($recipient_ids as &$id) {
+            Registration::where('id', $id)->update([
+                'email_via_others' => 'deposit_email',
+                'deposit_reminded_at' => Carbon::now(),
+                'survey_code' => md5(uniqid(rand(), true))
+            ]);
+        }
+
+    }
+
+    protected function sortRecipientData ($accounts, $property) {
+        return array_map(function($o) use ($property) { return $o[$property];}, $accounts);
+    }
+
+    protected function generateWorkMailAndSignature() {
+        $user = User::with('role')->find(Auth::id());
+
+        $work_mail = $user->work_mail;
+
+        $signature = $this->getEmailSignatureContent($work_mail);
+        $final_signature = str_replace("/storage/uploads/", config('app.url') . "/storage/uploads/", $signature);
+
+        $content_data = [
+            'user' => $user,
+            'signature' => $final_signature,
+        ];
+
+        return [
+            'work_mail' => $work_mail,
+            'content_data' => $content_data
+        ];
+    }
 }

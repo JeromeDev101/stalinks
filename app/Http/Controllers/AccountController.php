@@ -156,6 +156,7 @@ class AccountController extends Controller
             ? null : ($request->is_sub_account == 1 ? 'Sub' : 'Not');
         $created_at = json_decode($request->created_at);
         $isTeamSeller = $this->checkTeamSeller();
+        $buyer_transaction = $request->buyer_transaction;
 
         $list = Registration::when( $status, function($query) use ($status){
             return $query->where( 'status', $status );
@@ -249,6 +250,19 @@ class AccountController extends Controller
                 });
             });
         })
+
+        ->when(isset($buyer_transaction), function($query) use ($buyer_transaction){
+            if ($buyer_transaction === 'with') {
+                $query->where('type', 'Buyer')
+                    ->whereNull('verification_code')
+                    ->has('user.wallet_transactions');
+            } else {
+                $query->where('type', 'Buyer')
+                    ->whereNull('verification_code')
+                    ->where('account_validation', 'valid')
+                    ->doesntHave('user.wallet_transactions');
+            }
+        })
         ->with([
             'team_in_charge:id,name,username,status',
             'team_in_charge' => function ($query) {
@@ -260,7 +274,8 @@ class AccountController extends Controller
         ->with(['user' => function($query) {
             $query->with(['userPaymentTypes' => function($sub) {
                 $sub->with('paymentType');
-            }]);
+            }])
+            ->withCount('wallet_transactions');
         }])
         ->with('affiliate:id,name,username')
         ->with('country:id,name')

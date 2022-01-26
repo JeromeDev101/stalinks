@@ -52,7 +52,10 @@ class Registration extends Model
         'can_validate_backlink',
         'is_exam_passed',
         'affiliate_id',
-        'affiliate_code'
+        'affiliate_code',
+        'deposit_reminded_at',
+        'survey_code',
+        'email_via_others'
     ];
 
     public function team_in_charge() {

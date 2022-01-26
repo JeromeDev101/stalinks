@@ -124,47 +124,28 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-        Email Verification
+        Buyer Credit Reminder
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello, <strong>{{ $name}}</strong>!</p> <br /> <br />
-                    <p style="margin: 0;">We’re excited to welcome you to StaLinks! </p> <br /> <br />
-                    <p style="margin: 0;">Before we get started, we need you to click verify button down below:</p> <br /> <br />
+                    <p style="margin: 0;">Hello {{ $no_transactions->name }},</p> <br />
+                    <p style="margin: 0;">We hope you’re doing great these days.</p> <br />
+                    <p style="margin: 0;">
+                        We haven't heard anything from you since the validation of your account.
+                        if you have any trouble using our system, please do not hesitate to contact us
+                        through our email: marketing@stalinks.com. You can also contact us through
+                        Skype: live:tiararachl. Our team will do our utmost to help.
+                    </p> <br/>
+                    <p style="margin: 0;">Looking forward to hearing from you soon!</p> <br/>
                 @endslot
 
                 @slot('button')
-                    <tr>
-                        <td bgcolor="#ffffff" align="left">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                        <table border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00"><a href="{{ url('/verification/' . $verification_code) }}" target="_blank" class="button-text" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Confirm Account</a></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('link')
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If that doesn't work, please copy this link and paste it in your browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/verification/' . $verification_code) }}</a></p>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('closing')

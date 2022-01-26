@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\UserUnvalidatedEvent;
 use App\Events\UserValidateEvent;
 use App\Models\User;
 use App\Models\Registration;
@@ -131,13 +132,19 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         // send email - account validated
 
         if (isset($input['account_validation']) && $input['account_validation'] === 'valid') {
-            if ($account->email_via !== 'account_validated') {
+            if ($account->email_via !== 'account_validated' && $account->type !== 'Affiliate') {
                 event(new UserValidateEvent($input, $user));
                 $input['email_via'] = 'account_validated';
                 $input['validation_reminded_at'] = null;
                 $input['reminded_days'] = null;
+
+                if ($account->email_via_others === 'account_invalidated') {
+                    $input['email_via_others'] = null;
+                }
             }
-        } else if (isset($input['account_validation']) && $input['account_validation'] !== 'valid') {
+        } else if (isset($input['account_validation'])
+            && $input['account_validation'] !== 'valid'
+            && $account->email_via === 'account_validated') {
             $input['email_via'] = null;
         }
 
@@ -148,6 +155,21 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         if (isset($input['team_in_charge']) && !empty($input['team_in_charge'])) {
             if ($account->team_in_charge !== $input['team_in_charge']) {
                 event(new TeamInChargeUpdatedEvent($input['team_in_charge'], $user));
+            }
+        }
+
+        // ---------------------------------------------------
+
+        // send email - account inactive
+
+        if (isset($input['status']) && $input['status'] === 'inactive') {
+            if ($account->email_via_others !== 'account_invalidated') {
+                event(new UserUnvalidatedEvent($input, $user));
+                $input['email_via_others'] = 'account_invalidated';
+                $input['validation_reminded_at'] = null;
+                $input['email_via'] = null;
+                $input['deposit_reminded_at'] = null;
+                $input['reminded_days'] = null;
             }
         }
 

@@ -239,8 +239,17 @@
                                             {{ option.type }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
 
-
+                            <div class="col-md-3" v-if="user.role_id == 8 || user.isAdmin">
+                                <div class="form-group">
+                                    <label>Buyer Transaction</label>
+                                    <select class="form-control" v-model="filterModel.buyer_transaction">
+                                        <option value="">All</option>
+                                        <option value="with">With</option>
+                                        <option value="none">Without</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -302,6 +311,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.role_id == 8 || user.isAdmin"
                                             type="button"
                                             title="Send multiple validation email"
                                             class="btn btn-default"
@@ -310,6 +320,18 @@
                                             @click="sendMultipleValidationEmail()">
 
                                             <i class="fa fa-exclamation-circle"></i>
+                                        </button>
+
+                                        <button
+                                            v-if="user.role_id == 8 || user.isAdmin"
+                                            type="button"
+                                            title="Send multiple deposit email"
+                                            class="btn btn-default"
+                                            :disabled="isDisabledAction"
+
+                                            @click="sendMultipleDepositEmail()">
+
+                                            <i class="fas fa-coins"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -428,6 +450,7 @@
                                                 </button>
 
                                                 <button
+                                                    v-if="user.role_id == 8 || user.isAdmin"
                                                     :disabled="account.account_validation !== 'processing'
                                                     || account.email_via === 'validation_email'
                                                     || account.verification_code !== null"
@@ -438,6 +461,22 @@
                                                     @click="sendValidationEmail(account)">
 
                                                     <i class="fa fa-exclamation-circle"></i>
+                                                </button>
+
+                                                <button
+                                                    v-if="user.role_id == 8 || user.isAdmin"
+                                                    :disabled="!account.user
+                                                    || account.type != 'Buyer'
+                                                    || account.email_via_others === 'deposit_email'
+                                                    || account.account_validation !== 'valid'
+                                                    || account.user.wallet_transactions_count !== 0"
+                                                    type="button"
+                                                    class="btn btn-default"
+                                                    title="Send Add Credit Offer Email"
+
+                                                    @click="sendDepositEmail(account)">
+
+                                                    <i class="fas fa-coins"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -499,7 +538,47 @@
                                                 {{ account.company_url }}
                                             </a>
                                         </td>
-                                        <td v-show="tblAccountsOpt.type">{{ account.type }}</td>
+                                        <td v-show="tblAccountsOpt.type">
+                                            {{ account.type }}
+
+                                            <!-- show with/without transaction -->
+
+                                            <div v-if="(user.role_id == 8 || user.isAdmin) && account.type == 'Buyer'">
+                                                <span v-if="account.user">
+                                                    <span
+                                                        v-if="account.user.wallet_transactions_count"
+                                                        class="badge badge-success">
+                                                        With Transaction
+                                                    </span>
+
+                                                    <span v-else class="badge badge-danger">
+                                                        No Transaction
+                                                    </span>
+                                                </span>
+                                            </div>
+
+                                            <div v-if="(user.role_id == 8 || user.isAdmin) && account.type == 'Buyer'">
+                                                <span v-if="account.email_via_others === 'deposit_email'">
+                                                    <span class="badge badge-warning">
+                                                        Deposit Email Sent
+
+                                                        <span>
+                                                            {{
+                                                                account.reminded_days === 11
+                                                                    ? '- 24h'
+                                                                    : account.reminded_days === 21
+                                                                    ? '- 48h'
+                                                                    : account.reminded_days === 31
+                                                                        ? '- 72h'
+                                                                        : account.reminded_days === 41
+                                                                            ? '- 96h'
+                                                                            : ''
+                                                            }}
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </td>
                                         <td v-show="tblAccountsOpt.sub_account">{{
                                                 account.is_sub_account == 0 ? 'No' : 'Yes'
                                             }}
@@ -1493,6 +1572,7 @@ export default {
                 account_verification :
                     this.$route.query.account_verification || '',
                 is_sub_account : this.$route.query.is_sub_account || '',
+                buyer_transaction : this.$route.query.buyer_transaction || '',
             },
 
             accountUpdate : {
@@ -1655,7 +1735,183 @@ export default {
             });
         },
 
-        sendValidationEmail(account) {
+        sendDepositEmail (account) {
+            let accounts = [];
+
+            if (this.checkUserWorkMail()) {
+
+                if (account) {
+
+                    if (account.user) {
+
+                        if (account.account_validation === 'valid') {
+
+                            if (account.email_via_others !== 'deposit_email') {
+
+                                if (account.type === 'Buyer') {
+
+                                    if (account.user.wallet_transactions_count === 0) {
+
+                                        accounts.push({
+                                            id: account.id,
+                                            email: account.email
+                                        })
+
+                                        this.sendDepositEmailFunction(accounts)
+
+                                    } else {
+
+                                        swal.fire(
+                                            'Invalid',
+                                            'Account should not have any wallet transaction',
+                                            'error'
+                                        )
+
+                                    }
+
+                                } else {
+
+                                    swal.fire(
+                                        'Invalid',
+                                        'Account type should be buyer',
+                                        'error'
+                                    )
+
+                                }
+
+                            } else {
+
+                                swal.fire(
+                                    'Invalid',
+                                    'A deposit email was already sent for this account',
+                                    'error'
+                                )
+
+                            }
+
+                        } else {
+
+                            swal.fire(
+                                'Invalid',
+                                'The account should be valid',
+                                'error'
+                            )
+
+                        }
+
+                    } else {
+
+                        swal.fire(
+                            'Invalid',
+                            'The account is not verified',
+                            'error'
+                        )
+
+                    }
+                }
+
+            } else {
+
+                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+
+            }
+        },
+
+        sendMultipleDepositEmail () {
+            let self = this;
+
+            if (self.checkUserWorkMail()) {
+
+                if (self.checkIds.length) {
+
+                    // check number of selected accounts
+                    if (self.checkIds.length <= 10) {
+
+                        // check if some accounts are not yet verified
+                        let isAllVerified = self.checkIds.every(account => account.user !== null)
+
+                        if (isAllVerified) {
+
+                            // check if some accounts are not yet validated
+                            let isAllValid = self.checkIds.every(account => account.account_validation === 'valid')
+
+                            if (isAllValid) {
+
+                                // check if some accounts has already been sent a validation email
+                                let isNotAlreadySent = self.checkIds.every(account => account.email_via_others !== 'deposit_email')
+
+                                if (isNotAlreadySent) {
+
+                                    // check if selected accounts are all buyers
+                                    let buyers = self.checkIds.every(account => account.type === 'Buyer')
+
+                                    if (buyers) {
+
+                                        // check if selected accounts are all without wallet transactions
+                                        let isAllWithoutTransactions = self.checkIds.every(account => account.user.wallet_transactions_count === 0)
+
+                                        if (isAllWithoutTransactions) {
+
+                                            let accounts = self.checkIds.map(function(account) {
+                                                return {
+                                                    id: account.id,
+                                                    email: account.email
+                                                }
+                                            });
+
+                                            self.sendDepositEmailFunction(accounts)
+                                            self.checkIds = [];
+
+                                        } else {
+
+                                            swal.fire('Invalid', 'Selected accounts must be buyers without wallet transaction', 'error');
+
+                                        }
+
+                                    } else {
+
+                                        swal.fire('Invalid', 'Selected accounts must be buyer', 'error');
+
+                                    }
+
+                                } else {
+
+                                    swal.fire('Invalid', 'Deposit email was already sent on some of the selected accounts', 'error');
+
+                                }
+
+                            } else {
+
+                                swal.fire('Invalid', 'Selected accounts must be valid', 'error');
+
+                            }
+
+                        } else {
+
+                            swal.fire('Invalid', 'Selected accounts must be verified', 'error');
+
+                        }
+
+                    } else {
+
+                        swal.fire('Invalid', 'Maximum selected account is 10', 'error');
+
+                    }
+
+                } else {
+
+                    swal.fire('Invalid', 'Selection is empty', 'error');
+
+                }
+
+            } else {
+
+                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+
+            }
+        },
+
+        sendValidationEmail (account) {
             let accounts = [];
 
             if (this.checkUserWorkMail()) {
@@ -1781,7 +2037,7 @@ export default {
             }
         },
 
-        sendValidationEmailFunction(accounts) {
+        sendValidationEmailFunction (accounts) {
             let loader = this.$loading.show();
 
             axios.post('/api/mail/send-validation-email', {
@@ -1794,6 +2050,29 @@ export default {
                 swal.fire(
                     'Success',
                     'Validation email successfully sent!',
+                    'success'
+                )
+            }).catch((err) => {
+                loader.hide();
+                console.log(err)
+            })
+        },
+
+        sendDepositEmailFunction (accounts) {
+            console.log(accounts)
+
+            let loader = this.$loading.show();
+
+            axios.post('/api/mail/send-deposit-email', {
+                accounts : accounts,
+            }).then((res) => {
+                loader.hide();
+
+                this.getAccountList();
+
+                swal.fire(
+                    'Success',
+                    'Deposit email successfully sent!',
                     'success'
                 )
             }).catch((err) => {
@@ -2449,6 +2728,7 @@ export default {
                     account_verification :
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
+                    buyer_transaction : this.filterModel.buyer_transaction,
                     page : page
                 }
             });
@@ -2506,6 +2786,7 @@ export default {
                 },
                 account_verification : '',
                 is_sub_account: '',
+                buyer_transaction: '',
             }
 
             this.getAccountList({
@@ -2543,6 +2824,7 @@ export default {
                     account_verification :
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
+                    buyer_transaction : this.filterModel.buyer_transaction,
                 }
             });
 
