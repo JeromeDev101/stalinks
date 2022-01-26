@@ -43,6 +43,7 @@ import GenerateList from '@/modules/generate_list/views/List.vue'
 import ValidateWriter from '@/modules/writers_validation/views/List.vue'
 import BacklinksProspect from '@/modules/backlink_prospect/views/List.vue'
 import Role from '@/modules/role/views/List.vue'
+import Module from '@/modules/module/views/List.vue'
 
 import OverAllIncomes from '@/modules/incomes/admin/views/List.vue'
 import ResetPassword from '@/modules/reset_password/views/List.vue'
@@ -141,7 +142,7 @@ const routes = [
                 component : Dashboard,
             },
             {
-                path : '/users',
+                path : '/management/teams',
                 name : 'List User',
                 component : ListUser,
             },
@@ -226,6 +227,11 @@ const routes = [
                 path : '/management/roles',
                 name : 'roles',
                 component : Role,
+            },
+            {
+                path : '/management/modules',
+                name : 'modules',
+                component : Module,
             },
             {
                 path : '/overall-incomes',
@@ -385,7 +391,7 @@ const routes = [
                 component : Hosting,
             },
             {
-                path : 'logs',
+                path : '/management/logs',
                 name : 'logs',
                 component : Log,
             },
@@ -430,7 +436,7 @@ const routes = [
             //     component: MailTemplate,
             // },
             {
-                path : 'mail-logs',
+                path : '/management/mail-logs',
                 name : 'mail-logs',
                 component : Maillog,
             },
@@ -440,7 +446,7 @@ const routes = [
                 component : GenerateList,
             },
             {
-                path : 'tools',
+                path : '/management/tools',
                 name : 'tools',
                 component : Tools,
             },

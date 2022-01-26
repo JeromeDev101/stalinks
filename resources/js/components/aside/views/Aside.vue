@@ -85,9 +85,17 @@
                         v-if="user.isAdmin" 
                         :class="{
                             'active' :
-                                $route.name == 'roles',
+                                $route.name == 'roles' || 
+                                $route.name == 'tools' || 
+                                $route.name == 'mail-logs' || 
+                                $route.name == 'List User' || 
+                                $route.name == 'modules',
                             'menu-open':
-                                $route.name == 'roles'
+                                $route.name == 'roles' || 
+                                $route.name == 'tools' || 
+                                $route.name == 'mail-logs' || 
+                                $route.name == 'List User' || 
+                                $route.name == 'modules' 
                         }"
                         >
                         <a href="#" class="nav-link">
@@ -110,16 +118,48 @@
                             </li>
                             <li class="nav-item"
                                 v-if="user.isAdmin">
-                                <router-link :to="{ path: '/system/finance' }" class="nav-link"
-                                             :class="{ active: $route.name == 'system-finance' }">
+                                <router-link :to="{ path: '/management/modules' }" class="nav-link"
+                                             :class="{ active: $route.name == 'modules' }">
                                     <i class="fas fa-bars nav-icon"></i>
                                     <p>Module</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/management/tools' }" class="nav-link"
+                                             :class="{ active: $route.name == 'tools' }">
+                                    <i class="fas fa-cog nav-icon"></i>
+                                    <p>Tools</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
+                                <router-link :to="{ path: '/management/mail-logs' }" class="nav-link"
+                                             :class="{ active: $route.name == 'mail-logs' }">
+                                    <i class="fas fa-envelope nav-icon"></i>
+                                    <p>Mail Logs</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/management/logs' }" class="nav-link"
+                                             :class="{ active: $route.name == 'logs' }">
+                                    <i class="fas fa-cogs nav-icon"></i>
+                                    <p>System Logs</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item"
+                                v-if="user.isAdmin">
+                                <router-link :to="{ path: '/management/teams' }" class="nav-link"
+                                             :class="{ active: $route.name == 'List User' }">
+                                    <i class="fas fa-users nav-icon"></i>
+                                    <p>Teams</p>
                                 </router-link>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="nav-item"
+                    <!-- <li class="nav-item"
                         v-if="user.isAdmin">
                         <router-link
                             class="nav-link"
@@ -129,7 +169,7 @@
                             <img src="../../../../images/admin-settings.png"/>
                             <p>Tools</p>
                         </router-link>
-                    </li>
+                    </li> -->
 
                     <li class="nav-item"
                         v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller))">
@@ -143,7 +183,7 @@
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
+                    <!-- <li class="nav-item"
                         v-if="user.isAdmin">
                         <router-link
                             class="nav-link"
@@ -153,9 +193,9 @@
                             <img src="../../../../images/team.png"/>
                             <p>Team</p>
                         </router-link>
-                    </li>
+                    </li> -->
 
-                    <li class="nav-item"
+                    <!-- <li class="nav-item"
                         v-if="user.isAdmin ||
                             (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
                         <router-link
@@ -166,9 +206,9 @@
                             <img src="../../../../images/mail.png"/>
                             <p>Mail Logs</p>
                         </router-link>
-                    </li>
+                    </li> -->
 
-                    <li class="nav-item"
+                    <!-- <li class="nav-item"
                         v-if="user.isAdmin">
                         <router-link
                             class="nav-link"
@@ -178,7 +218,7 @@
                             <img src="../../../../images/system-logs.png"/>
                             <p>System Logs</p>
                         </router-link>
-                    </li>
+                    </li> -->
 
                     <li class="nav-item"
                         v-if="
