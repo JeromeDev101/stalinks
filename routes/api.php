@@ -216,6 +216,10 @@ Route::middleware('auth:api')->group(function () {
 
     //Role
     Route::name('role-get')->get('/roles', 'RoleController@getRoles');
+    Route::name('get-roles')->get('/roles-list', 'RoleController@getListRoles');
+    Route::name('update-roles')->post('/roles-update', 'RoleController@update');
+    Route::name('delete-roles')->post('/roles-delete', 'RoleController@delete');
+    Route::name('add-roles')->post('/roles-add', 'RoleController@store');
     Route::name('get-countries')->get('/countries', 'CountryController@getCountries');
     Route::name('get-list-country')->get('/country-list', 'CountryController@getListCountry');
     Route::name('get-list-languages')->get('/languages-list', 'CountryController@getListLanguages');

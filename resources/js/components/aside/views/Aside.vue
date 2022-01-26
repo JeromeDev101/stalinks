@@ -82,7 +82,14 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="user.isAdmin">
+                        v-if="user.isAdmin" 
+                        :class="{
+                            'active' :
+                                $route.name == 'roles',
+                            'menu-open':
+                                $route.name == 'roles'
+                        }"
+                        >
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
                             <p>
@@ -93,9 +100,9 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item"
                                 v-if="user.isAdmin">
-                                <router-link :to="{ path: '/system/it' }"
+                                <router-link :to="{ path: '/management/roles' }"
                                              class="nav-link"
-                                             :class="{ active: $route.name == 'system-it' }">
+                                             :class="{ active: $route.name == 'roles' }">
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>Role</p>
                                     <span class="pull-right-container"></span>
