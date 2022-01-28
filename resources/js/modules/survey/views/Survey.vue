@@ -368,32 +368,19 @@
 
                             <!-- b2 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">2. From 1-10, how would you rate our tools?</p>
+                                <p class="font-weight-bold">2. From 1-6, how would you rate our tools?</p>
                                 <div class="form-group">
-                                    <div class="custom-control custom-radio">
+                                    <div v-for="answer in surveyBTwoThreeOptions('two')" class="custom-control custom-radio">
                                         <input
                                             v-model="survey.answers.two"
                                             type="radio"
-                                            id="question-two-b-a"
-                                            name="question-two-b"
+                                            :name="answer.name"
+                                            :id="answer.id"
                                             class="custom-control-input"
-                                            value="1-> easy to understand">
+                                            :value="answer.value">
 
-                                        <label for="question-two-b-a" class="custom-control-label font-weight-normal">
-                                            1-> easy to understand
-                                        </label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input
-                                            v-model="survey.answers.two"
-                                            type="radio"
-                                            name="question-two-b"
-                                            id="question-two-b-no"
-                                            class="custom-control-input"
-                                            value="10-> difficult to understand">
-
-                                        <label for="question-two-b-no" class="custom-control-label font-weight-normal">
-                                            10-> difficult to understand
+                                        <label :for="answer.id" class="custom-control-label font-weight-normal">
+                                            {{ answer.label }}
                                         </label>
                                     </div>
                                 </div>
@@ -418,30 +405,17 @@
                                     3. From 1-10, how well do you understand Stalinks and what can we do to help you?
                                 </p>
                                 <div class="form-group">
-                                    <div class="custom-control custom-radio">
+                                    <div v-for="answer in surveyBTwoThreeOptions('three')" class="custom-control custom-radio">
                                         <input
                                             v-model="survey.answers.three"
                                             type="radio"
-                                            name="question-three-b"
-                                            id="question-three-b-a"
+                                            :name="answer.name"
+                                            :id="answer.id"
                                             class="custom-control-input"
-                                            value="1-> completely clueless">
+                                            :value="answer.value">
 
-                                        <label for="question-three-b-a" class="custom-control-label font-weight-normal">
-                                            1-> completely clueless
-                                        </label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input
-                                            v-model="survey.answers.three"
-                                            type="radio"
-                                            id="question-three-b-b"
-                                            name="question-three-b"
-                                            class="custom-control-input"
-                                            value="10-> understand completely">
-
-                                        <label for="question-three-b-b" class="custom-control-label font-weight-normal">
-                                            10-> understand completely
+                                        <label :for="answer.id" class="custom-control-label font-weight-normal">
+                                            {{ answer.label }}
                                         </label>
                                     </div>
                                 </div>
@@ -660,7 +634,7 @@ export default {
                     set : 'a',
                     code: null
                 }
-            }
+            },
         }
     },
 
@@ -669,6 +643,47 @@ export default {
     },
 
     methods: {
+        surveyBTwoThreeOptions(number) {
+            return [
+                {
+                    id: 'question-' + number + '-b-a',
+                    name: 'question-' + number + '-b-a',
+                    value: '6-> Really Easy',
+                    label: '6-> Really Easy'
+                },
+                {
+                    id: 'question-' + number + '-b-b',
+                    name: 'question-' + number + '-b-b',
+                    value: '5-> Easy',
+                    label: '5-> Easy'
+                },
+                {
+                    id: 'question-' + number + '-b-c',
+                    name: 'question-' + number + '-b-c',
+                    value: '4-> Took a time to look but ok',
+                    label: '4-> Took a time to look but ok'
+                },
+                {
+                    id: 'question-' + number + '-b-d',
+                    name: 'question-' + number + '-b-d',
+                    value: '3-> After a time and reading - understood',
+                    label: '3-> After a time and reading - understood'
+                },
+                {
+                    id: 'question-' + number + '-b-e',
+                    name: 'question-' + number + '-b-e',
+                    value: '2-> Difficult',
+                    label: '2-> Difficult'
+                },
+                {
+                    id: 'question-' + number + '-b-f',
+                    name: 'question-' + number + '-b-f',
+                    value: '1-> Very Difficult',
+                    label: '1-> Very Difficult'
+                },
+            ]
+        },
+
         checkRouteParams () {
             this.survey.answers.set = this.$route.params.set;
 

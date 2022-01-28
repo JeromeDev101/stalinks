@@ -41,6 +41,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('add-affiliate-code')->post('/profile/add-affiliate-code', 'AccountController@saveAffiliateCode');
 
     //Surveys
+    Route::name('get-survey-list')->get('/surveys', 'SurveyController@getList');
     Route::name('store-survey')->post('survey', 'SurveyController@store');
     Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
     Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
@@ -261,10 +262,6 @@ Route::middleware('auth:api')->group(function () {
         Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
         Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
         Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
-
-        // Surveys
-        Route::name('get-survey-list')->get('/surveys', 'SurveyController@getList');
-
     });
 
     //Formula

@@ -58,11 +58,6 @@ export default {
     },
 
     graphData(data) {
-        // data = _.pickBy(data, fields);
-
-        // console.log(_.pickBy(_.toArray(data), function (value, key) {
-        //     return _.includes(fields, key);
-        // }));
         return [{
             name: 'Yes',
             data : this.dataWithoutNull(data, 'yes'),
@@ -82,11 +77,22 @@ export default {
         ];
 
         return _.map(_.find(data, ['set', 'a']), function (value, key) {
+
+            let yValue = 0;
+
+            if (_.includes(fields, key)) {
+                let temp = _.countBy(data, (ob)=> {
+                    return ob[key] ? ob[key] : null
+                })[answer];
+
+                yValue = temp ? temp : 0;
+            } else {
+                yValue = null;
+            }
+
             return {
                 x: _.includes(fields, key) ? key : null,
-                y : _.includes(fields, key) ? _.countBy(data, (ob)=> {
-                    return ob[key] ? ob[key] : null
-                })[answer] : null,
+                y : yValue,
             }
         })
     },
