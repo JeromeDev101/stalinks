@@ -39,6 +39,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Profile
     Route::name('add-affiliate-code')->post('/profile/add-affiliate-code', 'AccountController@saveAffiliateCode');
+    Route::name('affiliate-buyers')->get('/profile/affiliate-buyers', 'AccountController@getAffiliateBuyers');
 
     //Surveys
     Route::name('get-survey-list')->get('/surveys', 'SurveyController@getList');

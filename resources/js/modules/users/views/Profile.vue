@@ -210,7 +210,7 @@
         </div>
 
         <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id === 11">
-            <div class="col-sm-12">
+            <div class="col-12">
                 <div class="box box-primary">
                     <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
                         <h3 class="box-title" style="margin-bottom: 0 !important;">Affiliate Code</h3>
@@ -264,6 +264,55 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <div class="box box-primary">
+                    <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">Affiliate Buyers</h3>
+                    </div>
+                </div>
+
+                <div class="box-body no-padding">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table id="tbl_affiliate_buyers" class="table table-condensed table-hover table-bordered">
+                                <thead>
+                                    <tr class="label-primary">
+                                        <th >User ID#</th>
+                                        <th>Date Registered</th>
+                                        <th>Email</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Company Type</th>
+                                        <th>Account Validation</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(account, index) in affiliateBuyers.data" :key="index">
+                                        <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
+                                        <td>{{ account.created_at }}</td>
+                                        <td>{{ account.email }}</td>
+                                        <td>{{ account.username }}</td>
+                                        <td>{{ account.name }}</td>
+                                        <td>{{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}</td>
+                                        <td>{{ account.account_validation }}</td>
+                                        <td>{{ account.status }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <pagination
+                            :limit="8"
+                            :data="affiliateBuyers"
+
+                            @pagination-change-page="getAffiliateBuyers">
+
+                        </pagination>
                     </div>
                 </div>
             </div>
@@ -643,6 +692,12 @@ export default {
             countryList: [],
             country_id: '',
             paymentMethodList: [],
+
+            // affiliates
+
+            affiliateBuyers: {
+                data: []
+            },
         };
     },
 
@@ -692,6 +747,8 @@ export default {
         this.getListCountry();
 
         // this.$root.$refs.AppHeader.liveGetWallet()
+
+        this.getAffiliateBuyers();
     },
 
     mounted() {
@@ -819,6 +876,26 @@ export default {
                 .then((res) => {
                     this.ListSubAccounts = res.data;
                 })
+        },
+
+        getAffiliateBuyers(page = 1) {
+            let table = $("#tbl_affiliate_buyers");
+
+            table.DataTable().destroy();
+
+            axios.get('/api/profile/affiliate-buyers', {params: {
+                page: page
+            }})
+            .then((res) => {
+                this.affiliateBuyers = res.data;
+
+                this.$nextTick(() => {
+                    table.DataTable({
+                        paging: false,
+                        searching: false,
+                    });
+                });
+            })
         },
 
         bindPayment() {

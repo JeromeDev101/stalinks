@@ -995,4 +995,12 @@ class AccountController extends Controller
             'set' => $is_affiliate_code_set
         ]);
     }
+
+    public function getAffiliateBuyers()
+    {
+        return Registration::where('affiliate_id', auth()->user()->id)
+            ->where('status', 'active')
+            ->with('user:id,email')
+            ->paginate(10);
+    }
 }
