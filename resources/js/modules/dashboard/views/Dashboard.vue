@@ -11,7 +11,7 @@
                 </div><!-- /.container-fluid -->
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -132,7 +132,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -181,7 +181,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isBuyer">
+            <div class="row" v-if="!isBuyer && !isAffiliate">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -244,7 +244,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -323,7 +323,15 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="(buyer, index) in listData.backlink_buyer" :key="index">
-                                            <td>{{ upperCase(buyer.username) }}</td>
+                                            <td>
+                                                <span v-if="isAffiliate">
+                                                    {{ upperCase(buyer.name) }}
+                                                </span>
+
+                                                <span v-else>
+                                                    {{ upperCase(buyer.username) }}
+                                                </span>
+                                            </td>
                                             <td>{{ buyer.num_total }}</td>
                                             <td>{{ buyer.num_processing }}</td>
                                             <td>{{ buyer.writing }}</td>
@@ -373,7 +381,15 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
-                                            <td>{{ upperCase(buy.username) }}</td>
+                                            <td>
+                                                <span v-if="isAffiliate">
+                                                    {{ upperCase(buy.name) }}
+                                                </span>
+
+                                                <span v-else>
+                                                    {{ upperCase(buy.username) }}
+                                                </span>
+                                            </td>
                                             <td>{{ buy.num_new }}</td>
                                             <td>{{ buy.num_interested }}</td>
                                             <td>{{ buy.num_purchased }}</td>
@@ -413,7 +429,15 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="(purchase, index) in listData.purchase" :key="index">
-                                            <td>{{ upperCase(purchase.username) }}</td>
+                                            <td>
+                                                <span v-if="isAffiliate">
+                                                    {{ upperCase(purchase.name) }}
+                                                </span>
+
+                                                <span v-else>
+                                                    {{ upperCase(purchase.username) }}
+                                                </span>
+                                            </td>
                                             <td>{{ purchase.num_backlink }}</td>
                                             <td>{{ purchase.num_unpaid }}</td>
                                             <td>{{ purchase.num_paid }}</td>
@@ -577,6 +601,10 @@ export default {
         isBuyer() {
             return this.user.role_id === 5;
         },
+
+        isAffiliate() {
+            return this.user.role_id === 11;
+        }
     },
 
     async created() {

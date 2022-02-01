@@ -109,13 +109,14 @@ const actions = {
             if (response.status === 200) {
                 commit(CURRENT_USER, { currentUser: response.data });
 
-                console.log(response.data.role)
+                // redirect affiliates to incomes
+                // if (response.data.role.id === 11) {
+                //     window.location.href = '/overall-incomes';
+                // } else {
+                //     window.location.href = '/';
+                // }
 
-                if (response.data.role.id === 11) {
-                    window.location.href = '/overall-incomes';
-                } else {
-                    window.location.href = '/';
-                }
+                window.location.href = '/';
             }
 
 

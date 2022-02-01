@@ -155,3 +155,70 @@ if (!function_exists('get_buyer_id_with_affiliates')) {
     }
 
 }
+
+if (!function_exists('get_affiliate_buyers_user_ids')) {
+
+    /**
+     * get ids of buyers with affiliate
+     *
+     * @param $affiliate_id
+     * @return string|string[]|array
+     */
+    function get_affiliate_buyers_user_ids($affiliate_id)
+    {
+        static $affiliate_buyers_user_ids;
+
+        Cache::forget('affiliate_buyers_user_ids');
+
+        if(is_null($affiliate_buyers_user_ids))
+        {
+            $affiliate_buyers_user_ids = Cache::remember('affiliate_buyers_user_ids', 24*60, function() use ($affiliate_id) {
+
+                $affiliate_buyers_registration = \App\Models\Registration::where('affiliate_id', $affiliate_id)
+                    ->where('status', 'active')
+                    ->pluck('email')
+                    ->toArray();
+
+                return \App\Models\User::select('id')
+                    ->whereIn('email', $affiliate_buyers_registration)
+                    ->pluck('id')
+                    ->toArray();
+            });
+        }
+
+        return $affiliate_buyers_user_ids;
+    }
+
+}
+
+if (!function_exists('get_backlink_billing_fees')) {
+
+    /**
+     * get ids of buyers with affiliate
+     *
+     * @return string|string[]|array
+     */
+    function get_backlink_billing_fees()
+    {
+        static $backlink_billing_fees;
+
+        Cache::forget('backlink_billing_fees');
+
+        if(is_null($backlink_billing_fees))
+        {
+            $backlink_billing_fees = Cache::remember('backlink_billing_fees', 24*60, function() {
+
+                return \App\Models\Billing::groupBy('id_backlink')
+                    ->selectRaw('sum(fee) as fee, id_backlink')
+                    ->pluck('fee','id_backlink')
+                    ->filter(function ($value) {
+                        return $value > 0;
+                    })
+                    ->toArray();
+            });
+        }
+
+        return $backlink_billing_fees;
+    }
+
+}

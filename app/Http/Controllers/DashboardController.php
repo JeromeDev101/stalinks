@@ -127,6 +127,7 @@ class DashboardController extends Controller
 
         $columns = [
             'users.username',
+            'users.name',
             DB::raw('COUNT(publisher.url) as num_backlink'),
             DB::raw('SUM(CASE WHEN backlinks.payment_status = "Not Paid" THEN 1 ELSE 0 END) AS num_unpaid'),
             DB::raw('SUM(CASE WHEN backlinks.payment_status = "Paid" THEN 1 ELSE 0 END) AS num_paid'),
@@ -154,6 +155,12 @@ class DashboardController extends Controller
                     $query->where('registration.team_in_charge', $user->id)
                     ->orWhere('users.id', $user->id);
             });
+        }
+
+        // for affiliates, only users(buyers) under them
+        if ($user->isOurs == 1 && $user->role_id == 11) {
+            $affiliate_buyer_ids = get_affiliate_buyers_user_ids($user->id);
+            $list = $list->whereIn('backlinks.user_id', $affiliate_buyer_ids);
         }
 
         return $list->groupBy('backlinks.user_id', 'users.username')
@@ -223,6 +230,7 @@ class DashboardController extends Controller
 
         $columns = [
             'users.username',
+            'users.name',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content In Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
@@ -268,6 +276,12 @@ class DashboardController extends Controller
                 $query->where('registration.team_in_charge', $user_id->id)
                     ->orWhere('users.id', $user_id->id);
             });
+        }
+
+        // for affiliates, only users(buyers) under them
+        if ($user_id->isOurs == 1 && $user_id->role_id == 11) {
+            $affiliate_buyer_ids = get_affiliate_buyers_user_ids($user_id->id);
+            $list = $list->whereIn('backlinks.user_id', $affiliate_buyer_ids);
         }
 
         return $list->groupBy('backlinks.user_id', 'users.username')
@@ -342,6 +356,7 @@ class DashboardController extends Controller
         $columns = [
             'users.id as id_user',
             'users.username',
+            'users.name',
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Not interested" THEN 1 ELSE 0 END) AS num_not_interested'),
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Interested" THEN 1 ELSE 0 END) AS num_interested'),
             DB::raw('SUM(CASE WHEN buyer_purchased.status = "Purchased" THEN 1 ELSE 0 END) AS num_purchased'),
@@ -378,6 +393,12 @@ class DashboardController extends Controller
             // });
         }
 
+        // for affiliates, only users(buyers) under them
+        if (Auth::user()->isOurs == 1 && Auth::user()->role_id == 11) {
+            $affiliate_buyer_ids = get_affiliate_buyers_user_ids($user_id);
+            $buyer_purchased = $buyer_purchased->whereIn('buyer_purchased.user_id_buyer', $affiliate_buyer_ids);
+        }
+
         $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')
             ->orderBy('users.username', 'asc')
             ->get();
@@ -389,6 +410,7 @@ class DashboardController extends Controller
 
             array_push($list, [
                 'username' => $purchased['username'],
+                'name' => $purchased['name'],
                 'num_new' => $new,
                 'num_not_interested' => $purchased['num_not_interested'],
                 'num_interested' => $purchased['num_interested'],

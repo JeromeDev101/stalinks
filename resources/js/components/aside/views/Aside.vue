@@ -82,20 +82,20 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="user.isAdmin" 
+                        v-if="user.isAdmin"
                         :class="{
                             'active' :
-                                $route.name == 'roles' || 
-                                $route.name == 'tools' || 
-                                $route.name == 'mail-logs' || 
-                                $route.name == 'List User' || 
+                                $route.name == 'roles' ||
+                                $route.name == 'tools' ||
+                                $route.name == 'mail-logs' ||
+                                $route.name == 'List User' ||
                                 $route.name == 'modules',
                             'menu-open':
-                                $route.name == 'roles' || 
-                                $route.name == 'tools' || 
-                                $route.name == 'mail-logs' || 
-                                $route.name == 'List User' || 
-                                $route.name == 'modules' 
+                                $route.name == 'roles' ||
+                                $route.name == 'tools' ||
+                                $route.name == 'mail-logs' ||
+                                $route.name == 'List User' ||
+                                $route.name == 'modules'
                         }"
                         >
                         <a href="#" class="nav-link">
@@ -427,7 +427,7 @@
                         MAIN NAVIGATION
                     </li>
 
-                    <li class="nav-item" v-if="!isAffiliate">
+                    <li class="nav-item">
                         <router-link :to="{ path: '/' }" class="nav-link"
                                      :class="{ active: $route.name == 'Dashboard' }">
                             <img src="../../../../images/dashboard.png"/>
@@ -770,8 +770,6 @@ export default {
 
         checkAccountType() {
             let that = this.user;
-
-            console.log(that)
 
             // not employee
             if (that.user_type) {

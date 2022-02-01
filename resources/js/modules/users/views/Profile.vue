@@ -284,7 +284,6 @@
                                         <th >User ID#</th>
                                         <th>Date Registered</th>
                                         <th>Email</th>
-                                        <th>Username</th>
                                         <th>Name</th>
                                         <th>Company Type</th>
                                         <th>Account Validation</th>
@@ -296,7 +295,6 @@
                                         <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
                                         <td>{{ account.created_at }}</td>
                                         <td>{{ account.email }}</td>
-                                        <td>{{ account.username }}</td>
                                         <td>{{ account.name }}</td>
                                         <td>{{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}</td>
                                         <td>{{ account.account_validation }}</td>

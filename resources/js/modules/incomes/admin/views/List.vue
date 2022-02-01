@@ -91,12 +91,12 @@
                                 class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
 
                         <div class="d-flex justify-content-center">
-                            <div class="col">
+                            <div v-if="user.role_id !== 11"  class="col">
                                 <h6>Seller Price:
                                     ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
                             </div>
 
-                            <div class="col">
+                            <div v-if="user.role_id !== 11"  class="col">
                                 <h6>Buyer Price:
                                     ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
                             </div>
@@ -137,9 +137,9 @@
                                     <th>#</th>
                                     <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
                                     <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
-                                    <th v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
-                                    <th>Buyer Commission</th>
-                                    <th v-show="tblOptIncomesAdmin.price">Buyer Price</th>
+                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
+                                    <th v-if="user.role_id !== 11">Buyer Commission</th>
+                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.price">Buyer Price</th>
                                     <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
                                     <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
                                     <th v-show="tblOptIncomesAdmin.net_incomes">Net Incomes</th>
@@ -151,12 +151,14 @@
                                     <td>{{ index + 1 }}</td>
                                     <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
                                     <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
-                                    <td v-show="tblOptIncomesAdmin.selling_price">$ {{
+                                    <td v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">$
+                                        {{
                                             incomes_admin.price == null || incomes_admin.price == '' ? 0 : number_format(incomes_admin.price)
                                         }}
                                     </td>
-                                    <td>{{ incomes_admin.user.user_type == null ? 'N/A':incomes_admin.user.user_type.commission }}</td>
-                                    <td v-show="tblOptIncomesAdmin.price">{{
+                                    <td v-if="user.role_id !== 11">{{ incomes_admin.user.user_type == null ? 'N/A':incomes_admin.user.user_type.commission }}</td>
+                                    <td v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.price">
+                                        {{
                                             incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
                                         }}
                                     </td>
@@ -348,7 +350,7 @@ export default {
             var rate_type = (incomes.rate_type == null || incomes.rate_type == '') ? 'ppw' : (incomes.rate_type).toLowerCase();
 
             if(incomes.writer_price == null || incomes.article == null || incomes.article.contentnohtml == null) {
-                price = billing_count;
+                price = billing_count ? billing_count : 0;
             } else {
                 var content = incomes.article.contentnohtml
                 var writer_price = parseFloat(incomes.writer_price);
@@ -372,7 +374,10 @@ export default {
             return str.split(' ').length;
         },
         computeNetIncomes(incomes) {
-            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(incomes.billing_count);
+            let billing = incomes.billing_count ? incomes.billing_count : 0;
+
+            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(billing);
+
             return result > 0 ? result : 0;
         },
 
