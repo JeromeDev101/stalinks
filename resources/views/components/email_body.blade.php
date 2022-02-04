@@ -11,4 +11,6 @@
             {{ $closing }}
         </td>
     </tr>
+
+    {{ $slot }}
 </table>

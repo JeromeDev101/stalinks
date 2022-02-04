@@ -35,6 +35,11 @@ Route::name('store-survey-code')->post('/survey-code', 'SurveyController@store')
 Route::name('check-survey-code')->post('/survey/check-survey-code', 'SurveyController@checkSurveyCode');
 Route::name('check-survey-code-set')->post('/survey/check-survey-code-set', 'SurveyController@hasUserAnsweredSurveySet');
 
+//subscription
+Route::name('subscribe-user')->post('/subscription/subscribe-user', 'UserController@subscribeUser');
+Route::name('check-subscription-code')->post('/subscription/check-subscription-code', 'UserController@checkSubscriptionCode');
+Route::name('check-subscribed')->post('/subscription/check-subscribed', 'UserController@hasUserSubscribed');
+
 Route::middleware('auth:api')->group(function () {
 
     //Profile

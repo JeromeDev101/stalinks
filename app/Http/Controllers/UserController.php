@@ -373,4 +373,33 @@ class UserController extends Controller
             'count' => $draft_count
         ]);
     }
+
+    // subscription
+    public function subscribeUser(Request $request)
+    {
+        $user = User::where('subscription_code', $request->code)->first();
+
+        if ($user) {
+
+            if ($request->mode === 'yes') {
+                $user->is_subscribed = 1;
+            } else {
+                $user->is_subscribed = 0;
+            }
+
+            $user->save();
+        }
+    }
+
+    public function hasUserSubscribed(Request $request)
+    {
+        return User::where('subscription_code', $request->code)->where('is_subscribed', 1)->first();
+    }
+
+    public function checkSubscriptionCode(Request $request)
+    {
+        $code = User::where('subscription_code', $request->code)->first();
+
+        return response()->json($code);
+    }
 }

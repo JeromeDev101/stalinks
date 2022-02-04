@@ -182,6 +182,10 @@
                     <p style="margin: 0;">Thank you and have a nice day!</p> <br/>
                     <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                 @endslot
+
+                <!-- email body slot -->
+                @component('components.email_contacts')
+                @endcomponent
             @endcomponent
         </td>
     </tr>

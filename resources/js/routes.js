@@ -82,6 +82,9 @@ import Tools from '@/modules/tools/views/Tools.vue'
 // survey
 import Survey from '@/modules/survey/views/Survey.vue'
 
+// subscription
+import Subscription from '@/modules/subscription/views/Subscription.vue'
+
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
 
 const routes = [
@@ -119,6 +122,11 @@ const routes = [
         path : '/order-confirmation/:id',
         name : 'order-confirmation',
         component : OrderConfirmation,
+    },
+    {
+        path : '/subscribe/:sub/:code',
+        name : 'subscription',
+        component : Subscription,
     },
     {
         path : '/survey/:set/:code',

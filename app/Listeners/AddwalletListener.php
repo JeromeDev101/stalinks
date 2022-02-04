@@ -30,7 +30,7 @@ class AddwalletListener
      */
     public function handle(AddWalletEvent $event)
     {
-        $event->user->notify(new AddWalletCredit($event->amount));
+        $event->user->notify(new AddWalletCredit($event->user, $event->amount));
 
         // notify qc managers and admin
 

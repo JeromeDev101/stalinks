@@ -148,6 +148,10 @@
                 @slot('closing')
                     <p style="margin: 0;">Best Regards,<br>StaLinks Team</p>
                 @endslot
+
+                <!-- email body slot -->
+                @component('components.email_contacts')
+                @endcomponent
             @endcomponent
         </td>
     </tr>

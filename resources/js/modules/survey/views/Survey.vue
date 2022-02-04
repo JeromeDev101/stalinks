@@ -584,7 +584,7 @@
                 </div>
             </div>
 
-            <div v-else class="col-5">
+            <div v-else class="col-12 col-md-12 col-lg-8 col-xl-6">
                 <div class="card card-outline card-secondary align-items-center">
                     <div class="card-body mx-5 text-center">
                         <div class="my-3 text-center">

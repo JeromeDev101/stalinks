@@ -169,6 +169,10 @@
                         <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                     </td>
                 </tr>
+
+                <!-- email body slot -->
+                @component('components.email_contacts')
+                @endcomponent
             </table>
         </td>
     </tr>

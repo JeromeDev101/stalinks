@@ -11,15 +11,18 @@ class AddWalletCredit extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    protected $user;
     protected $amount;
 
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param $user
+     * @param $amount
      */
-    public function __construct($amount)
+    public function __construct($user, $amount)
     {
+        $this->user = $user;
         $this->amount = $amount;
     }
 
@@ -44,7 +47,7 @@ class AddWalletCredit extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('Wallet Credited')
-            ->markdown('buyer.add_wallet', ['amount' => $this->amount]);
+            ->markdown('buyer.add_wallet', ['amount' => $this->amount, 'user' => $this->user]);
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Models\TotalWallet;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Storage;
+use function GuzzleHttp\Psr7\uri_for;
 
 class WalletTransactionController extends Controller
 {
@@ -159,9 +160,27 @@ class WalletTransactionController extends Controller
             $invoice->generateCreditInvoice($payload);
         }
 
-        event(new AddWalletEvent($wallet->user, $wallet->amount_usd));
+        // add subscription code then send email
+        $this->addUserSubscriptionCode($wallet->user, $wallet->amount_usd);
 
         return response()->json(['success' => true], 200);
+    }
+
+    protected function addUserSubscriptionCode($user, $amount) {
+        if ($user->subscription_code === null) {
+            $sub = User::find($user->id);
+
+            if ($sub) {
+                $sub->subscription_code = md5(uniqid(rand(), true));
+                $sub->save();
+
+                if ($sub->save()) {
+                    event(new AddWalletEvent($sub, $amount));
+                }
+            }
+        } else {
+            event(new AddWalletEvent($user, $amount));
+        }
     }
 
     public function updateWallet(Request $request) {

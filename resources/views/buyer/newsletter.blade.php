@@ -122,19 +122,41 @@
 <!-- HIDDEN PREHEADER TEXT -->
 <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
     <!-- LOGO -->
     @component('components.email_header')
-        Account Validated
+        URL List Updated
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello {{ $name }},</p> <br />
-                    <p style="margin: 0;">We are happy to welcome you on StaLinks!.</p> <br />
-                    <p style="margin: 0;">We have validated your account to receive an order and you can start writing a content from our buyers!</p> <br />
-                    <p style="margin: 0;">If you have any problem, feel free to contact us. Thank you!</p> <br />
+                    <p style="margin: 0;">Hello {{ $buyer->name }}!</p> <br />
+                    <p style="margin: 0;">
+                        {{ $urls['count'] }} new URL(s) are added to our list.
+                    </p>
+
+                    <div style="margin-top: 15px; margin-bottom: 15px;">
+                        <ul>
+                            @foreach($urls['data'] as $url)
+                                <li>{{ $url }}</li>
+                            @endforeach
+
+                            @if ($urls['count'] > 5)
+                                <li>
+                                    <span style="font-style: italic"> ... </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+
+                    <p style="margin: 0;">
+                        <a target="_blank" href="{{ url('/login') }}">
+                            Login to STAlinks now
+                        </a>
+                        to check them out!
+                    </p>
                 @endslot
 
                 @slot('button')
@@ -144,11 +166,20 @@
                 @endslot
 
                 @slot('closing')
-                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
+                    <p style="margin: 0;">Best Regards,<br>StaLinks Team</p> <br/>
                 @endslot
 
                 <!-- email body slot -->
                 @component('components.email_contacts')
+                    <div style="width: 100%; text-align: center;">
+                        <span style="font-size: 10px">
+                            You are receiving STAlinks notification emails |
+
+                            <a style="color: #FFA73B" target="_blank" href="{{ url('/subscribe/cancel/' . $buyer->subscription_code) }}">
+                                Click here to unsubscribe
+                            </a>
+                        </span>
+                    </div>
                 @endcomponent
             @endcomponent
         </td>

@@ -109,6 +109,35 @@
             .main-text, .button-text {
                 font-size: .9em !important;
             }
+
+            .sub-image {
+                display: none;
+            }
+
+            .sub-text {
+                text-align: center !important;
+                width: 100%;
+            }
+
+            .sub-text .sub-main-header {
+                font-size: 1.2em !important;
+                text-align: center !important;
+            }
+
+            .sub-text .sub-sub-header {
+                font-size: 0.9em !important;
+                text-align: center !important;
+            }
+
+            .sub-div {
+                margin: 0 !important;
+                padding: 5% !important;
+            }
+
+            .sub-subtitle {
+                margin-bottom: 30px !important;
+                text-align: center !important;
+            }
         }
 
         /* ANDROID CENTER FIX */
@@ -119,8 +148,7 @@
 </head>
 
 <body style="background-image: url('{{ asset('/images/background-login2.jpg') }}'); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;">
-<!-- HIDDEN PREHEADER TEXT -->
-<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> We're thrilled to have you here! Get ready to dive into your new account. </div>
+
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
@@ -128,10 +156,14 @@
     @endcomponent
 
     <tr>
-        <td  align="center" class="main-td" style="padding: 0 15%">
+        <td align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Your wallet has been credited with the amount of ${{$amount}}</p> <br />
+                    <p style="margin: 0;">Hello {{ $user->name }},</p> <br />
+                    <p style="margin: 0;">
+                        Your wallet has been credited with the amount of ${{$amount}}.
+                        Thank you for trusting STAlinks!
+                    </p> <br />
                 @endslot
 
                 @slot('button')
@@ -143,9 +175,20 @@
                 @slot('closing')
                     <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                 @endslot
+
+                <!-- email body slot -->
+                @component('components.email_contacts')
+                @endcomponent
             @endcomponent
         </td>
     </tr>
+
+    @if ($user->subscription_code && $user->is_subscribed == 0)
+        @component('components.email_subscription')
+            {{ $user->subscription_code }}
+        @endcomponent
+    @endif
+
     <tr>
         @component('components.email_footer')
         @endcomponent
