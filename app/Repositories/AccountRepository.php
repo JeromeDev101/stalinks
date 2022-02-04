@@ -62,8 +62,10 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                 }
             }
 
-            $account->update($inputs);
-
+            if(isset($inputs['writer_price'])) {
+                $account->update($inputs);
+            }
+            
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {
