@@ -84,9 +84,9 @@ class UpdateAccountRequest extends FormRequest
             //     'required_if:type,==,Writer',
             //     'required_if:account_validation,==,valid'
             // ],
-            // 'rate_type' => [
-            //     'required_if:type,==,Writer'
-            // ],
+            'rate_type' => [
+                'required_if:type,==,Writer'
+            ],
             // 'paypal_account' => [
             //     'required_if:id_payment_type,==,1'
             // ],

@@ -83,9 +83,9 @@ export default {
         editorInit() {
             let content = this.value
 
-            if (content.includes('<!doctype html>')) {
-                content = content.replace('<!doctype html>','');
-            }
+            // if (content.includes('<!doctype html>')) {
+            //     content = content.replace('<!doctype html>','');
+            // }
 
             this.$refs.tinyVueEditor.editor.setContent(content);
         },

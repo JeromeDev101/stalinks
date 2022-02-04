@@ -82,9 +82,9 @@ class AccountRequest extends FormRequest
             // 'skrill_account' => [
             //     'required_if:id_payment_type,==,2'
             // ],
-            'writer_price' => [
-                'required_if:type,==,Writer'
-            ],
+            // 'writer_price' => [
+            //     'required_if:type,==,Writer'
+            // ],
             'rate_type' => [
                 'required_if:type,==,Writer'
             ],

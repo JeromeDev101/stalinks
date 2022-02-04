@@ -52,6 +52,18 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         $account = Registration::find($input['id']);
         if (!$account) {
             return response()->json($response);
+        } else {
+            // if writer
+            if($input['type'] == 'Writer') {
+                if($input['rate_type'] == 'ppw') {
+                    $inputs['writer_price'] = '0.02';
+                } else {
+                    $inputs['writer_price'] = '12';
+                }
+            }
+
+            $account->update($inputs);
+
         }
 
         if (isset($input['company_url']) && !empty($input['company_url'])) {

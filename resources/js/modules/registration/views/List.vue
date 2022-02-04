@@ -272,7 +272,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Accounts</h3>
+                        <h3 class="card-title">Registration Accounts</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -780,10 +780,13 @@
 
                         <hr v-show="addDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
+                        <div v-show="addDisplayWriterPrice" class="alert alert-info">
+                            <p><b>Reminder: </b> Pay Per Words (PPW) is only maximum of 600 words. If exceeded still the same price.</p>
+                        </div>
                         <hr v-show="addDisplayWriterPrice"/>
 
                         <div class="row" v-show="addDisplayWriterPrice">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Pricing type</label>
                                     <select class="form-control" v-model="accountModel.rate_type">
@@ -791,14 +794,6 @@
                                         <option value="ppa">Pay Per Article (PPA)</option>
                                     </select>
                                     <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Price (USD)<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" v-model="accountModel.writer_price" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -1284,10 +1279,13 @@
 
                         <hr v-show="updateDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                        <div v-show="updateDisplayWriterPrice" class="alert alert-info">
+                            <p><b>Reminder: </b> Pay Per Words (PPW) is only maximum of 600 words. If exceeded still the same price.</p>
+                        </div>
                         <hr v-show="updateDisplayWriterPrice"/>
 
                         <div class="row" v-show="updateDisplayWriterPrice">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Pricing type</label>
                                     <select class="form-control" v-model="accountUpdate.rate_type">
@@ -1295,14 +1293,6 @@
                                         <option value="ppa">Pay Per Article (PPA)</option>
                                     </select>
                                     <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6" >
-                                <div class="form-group">
-                                    <label>Price (USD)<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" v-model="accountUpdate.writer_price" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 

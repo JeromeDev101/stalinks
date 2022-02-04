@@ -60,6 +60,15 @@ class AccountController extends Controller
             $input['team_in_charge'] = Auth::user()->id;
         }
 
+        // if writer
+        if($input['type'] == 'Writer') {
+            if($input['rate_type'] == 'ppw') {
+                $input['writer_price'] = '0.02';
+            } else {
+                $input['writer_price'] = '12';
+            }
+        }
+
         $input['commission'] = 'yes'; // default
         $input['credit_auth'] = 'No';
         $input['password'] = Hash::make($input['password']);
@@ -313,7 +322,7 @@ class AccountController extends Controller
 
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
-                'writer_price' => 'required_if:type,==,Writer',
+                // 'writer_price' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
             ]);
 
@@ -401,8 +410,8 @@ class AccountController extends Controller
 
         $request->validate([
             'country_id' => 'required',
-            'writer_price' => 'required_if:type,==,Writer',
-            'rate_type' => 'required_if:type,==,Writer',
+            // 'writer_price' => 'required_if:type,==,Writer',
+            // 'rate_type' => 'required_if:type,==,Writer',
 //            'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
             // 'paypal_account' => 'required_if:id_payment_type,==,1',
@@ -510,6 +519,12 @@ class AccountController extends Controller
                     ],422);
                 }
             }
+        }
+
+        // if writer default rate_type and writer_price
+        if ($input['type'] === 'Writer') {
+            $input['rate_type'] = 'ppw';
+            $input['writer_price'] = '0.02';
         }
 
         $verification_code = md5(uniqid(rand(), true));

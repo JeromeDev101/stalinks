@@ -231,7 +231,11 @@
 
         <!-- Viewing for External Writers -->
         <div v-if="isExtWriter">
-            <div class="row">
+            <div class="alert alert-info" v-if="ExamUpdate.anchor_text == '' || ExamUpdate.link_to == '' ">
+                <p>Please wait for the admin to create your exam.</p>
+            </div>
+
+            <div class="row" v-if="ExamUpdate.anchor_text != '' && ExamUpdate.link_to != '' ">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -377,9 +381,23 @@ export default {
     methods : {
 
         submitUpdate() {
+    
+            if(this.viewModel.status != 'Setup') {
+                if(this.viewModel.meta_description == '' || this.data2 == '' || this.viewModel.title == '') {
+                    swal.fire(
+                        'Sorry!',
+                        'Exam is not yet started by the writer.',
+                        'error',
+                    )
+                    
+                    return false;
+                }
+            }
+            
+
             axios.post('/api/check-exam', this.viewModel)
                 .then((res) => {
-                    this.getListExtWriters();
+                    this.doSearch();
                     swal.fire(
                         'Success',
                         'Successfully Updated.',
@@ -476,7 +494,7 @@ export default {
             this.viewModel.status = writer.exam_status
             this.viewModel.link_to = writer.link_to
             this.viewModel.meta_description = writer.meta_description
-            this.data2 = writer.content
+            // this.data2 = writer.content
 
             $("#modalEditWriterValidateViewContent").modal('show')
         },
@@ -492,12 +510,14 @@ export default {
             }
 
             axios.post('/api/add-exam', this.addExam);
-            this.getListExtWriters();
+
             swal.fire(
                 'Success',
                 'Exam Successfully Created',
                 'success',
             )
+
+            this.doSearch();
 
             $("#modalEditWriterValidate").modal('hide');
             
