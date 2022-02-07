@@ -346,20 +346,21 @@ export default {
         },
 
         computeWriterPrice(incomes, billing_count) {
-            var price = 0;
-            var rate_type = (incomes.rate_type == null || incomes.rate_type == '') ? 'ppw' : (incomes.rate_type).toLowerCase();
+            let price = 0;
+            let rate_type = (incomes.rate_type == null || incomes.rate_type == '') ? 'ppw' : (incomes.rate_type).toLowerCase();
+            let fee = billing_count ? billing_count : 0;
 
             if(incomes.writer_price == null || incomes.article == null || incomes.article.contentnohtml == null) {
-                price = billing_count ? billing_count : 0;
+                price = fee;
             } else {
                 var num_words = parseInt(incomes.article.num_words);
                 var writer_price = parseFloat(incomes.writer_price);
 
 
                 if (rate_type == 'ppw') {
-                    price = writer_price * num_words;
+                    price = (writer_price * num_words) + fee;
                 } else {
-                    price = writer_price
+                    price = writer_price + fee
                 }
             }
 
@@ -367,10 +368,9 @@ export default {
         },
 
         computeNetIncomes(incomes) {
-            let billing = incomes.billing_count ? incomes.billing_count : 0;
             let writer_price = this.computeWriterPrice(incomes, incomes.billing_count);
 
-            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(billing) - parseInt(writer_price);
+            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(writer_price);
 
             return result;
         },
