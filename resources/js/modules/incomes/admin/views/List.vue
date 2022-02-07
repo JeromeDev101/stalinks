@@ -352,31 +352,25 @@ export default {
             if(incomes.writer_price == null || incomes.article == null || incomes.article.contentnohtml == null) {
                 price = billing_count ? billing_count : 0;
             } else {
-                var content = incomes.article.contentnohtml
+                var num_words = parseInt(incomes.article.num_words);
                 var writer_price = parseFloat(incomes.writer_price);
 
 
                 if (rate_type == 'ppw') {
-                    price = writer_price * this.countWords(content)
+                    price = writer_price * num_words;
                 } else {
                     price = writer_price
                 }
             }
 
-
             return price;
         },
 
-        countWords(str) {
-            str = str.replace(/(^\s*)|(\s*$)/gi, "");
-            str = str.replace(/[ ]{2,}/gi, " ");
-            str = str.replace(/\n /, "\n");
-            return str.split(' ').length;
-        },
         computeNetIncomes(incomes) {
             let billing = incomes.billing_count ? incomes.billing_count : 0;
+            let writer_price = this.computeWriterPrice(incomes, incomes.billing_count);
 
-            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(billing);
+            let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(billing) - parseInt(writer_price);
 
             return result > 0 ? result : 0;
         },

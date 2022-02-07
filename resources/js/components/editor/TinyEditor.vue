@@ -80,6 +80,11 @@ export default {
         changeData() {
         },
 
+        wordCount() {
+            let content = this.$refs.tinyVueEditor.editor.plugins.wordcount;
+            return content.getCount();
+        },
+
         editorInit() {
             let content = this.value
 

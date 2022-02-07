@@ -1046,6 +1046,7 @@
 
             async submitSave() {
                 this.isPopupLoading = true;
+                this.contentModel.num_words = this.$refs.composeEditorArticle.wordCount();
                 await this.$store.dispatch('actionSaveContent', {
                     data: this.data,
                     content: this.contentModel

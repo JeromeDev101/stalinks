@@ -330,6 +330,7 @@ class ArticlesController extends Controller
             'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
             'status_writer' => $request->content['status'],
             'id_writer' => $user_id,
+            'num_words' => $request->content['num_words'], 
             'meta_description' => $request->content['meta_description'],
             'meta_keyword' => $request->content['meta_keyword'],
             'note' => $request->content['note'],
