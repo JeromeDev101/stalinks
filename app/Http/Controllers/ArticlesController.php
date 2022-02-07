@@ -323,18 +323,33 @@ class ArticlesController extends Controller
             $backlink->update(['title' => $request->get('content')['title']]);
         }
 
-        $article->update([
-            'id_writer_price' => $price_id,
-            'date_start' => $request->data == null ? null:date('Y-m-d'),
-            'content' => $request->data,
-            'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
-            'status_writer' => $request->content['status'],
-            'id_writer' => $user_id,
-            'num_words' => $request->content['num_words'], 
-            'meta_description' => $request->content['meta_description'],
-            'meta_keyword' => $request->content['meta_keyword'],
-            'note' => $request->content['note'],
-        ]);
+        if(Auth::user()->role_id == 4) {
+            $article->update([
+                'id_writer_price' => $price_id,
+                'date_start' => $request->data == null ? null:date('Y-m-d'),
+                'content' => $request->data,
+                'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
+                'status_writer' => $request->content['status'],
+                'id_writer' => $user_id,
+                'num_words' => $request->content['num_words'], 
+                'meta_description' => $request->content['meta_description'],
+                'meta_keyword' => $request->content['meta_keyword'],
+                'note' => $request->content['note'],
+            ]);
+        } else {
+            $article->update([
+                'id_writer_price' => $price_id,
+                'date_start' => $request->data == null ? null:date('Y-m-d'),
+                'content' => $request->data,
+                'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
+                'status_writer' => $request->content['status'],
+                'num_words' => $request->content['num_words'], 
+                'meta_description' => $request->content['meta_description'],
+                'meta_keyword' => $request->content['meta_keyword'],
+                'note' => $request->content['note'],
+            ]);
+        }
+            
 
         return response()->json(['success'=>true], 200);
     }
