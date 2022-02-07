@@ -92,33 +92,27 @@
 
                         <div class="d-flex justify-content-center">
                             <div v-if="user.role_id !== 11"  class="col">
-                                <h6>Seller Price:
-                                    ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
+                                <h6>Seller Price: ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div v-if="user.role_id !== 11"  class="col">
-                                <h6>Buyer Price:
-                                    ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
+                                <h6>Buyer Price: ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Fee Charges:
-                                    $0.00</h6>
+                                <h6>Fee Charges: ${{ listIncomesAdmin.fee_charges_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Content Charges:
-                                    ${{ totalContentCharges }}</h6>
+                                <h6>Content Charges: ${{ listIncomesAdmin.content_charges_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Net Incomes:
-                                    ${{ totalNetIncome }}</h6>
+                                <h6>Net Incomes: ${{ listIncomesAdmin.net_incomes_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Affiliate Commission:
-                                    ${{ listIncomesAdmin.affiliate_commission_sum.toFixed(2) }}</h6>
+                                <h6>Affiliate Commission: ${{ listIncomesAdmin.affiliate_commission_sum.toFixed(2) }}</h6>
                             </div>
 
                         </div>
@@ -162,10 +156,18 @@
                                             incomes_admin.prices == '' || incomes_admin.prices == null ? 0 : '$ ' + number_format(incomes_admin.prices)
                                         }}
                                     </td>
-                                    <td v-show="tblOptIncomesAdmin.fee_charges">$0</td>
-                                    <td v-show="tblOptIncomesAdmin.content_charges">$ {{ computeWriterPrice(incomes_admin, incomes_admin.billing_count) }}</td>
+                                    <td v-show="tblOptIncomesAdmin.fee_charges">
+                                        $ {{ Math.round(incomes_admin.fee) }}
+                                    </td>
+                                    <td v-show="tblOptIncomesAdmin.content_charges">
+<!--                                        $ {{ computeWriterPrice(incomes_admin, incomes_admin.billing_count) }}-->
+                                        $ {{ Math.round(incomes_admin.content_charge) }}
+                                    </td>
                                     <!-- static only -->
-                                    <td v-show="tblOptIncomesAdmin.net_incomes">${{ computeNetIncomes(incomes_admin) }}</td>
+                                    <td v-show="tblOptIncomesAdmin.net_incomes">
+<!--                                        ${{ computeNetIncomes(incomes_admin) }}-->
+                                        $ {{ Math.round(incomes_admin.net_income) }}
+                                    </td>
                                     <td v-show="tblOptIncomesAdmin.affiliate_commission">
                                         <span v-if="incomes_admin.user.user_type == null">
                                             <small>
@@ -184,10 +186,10 @@
                                                 <span v-if="incomes_admin.user.user_type.affiliate.status !== 'inactive'
                                                 && incomes_admin.user.user_type.affiliate.status !== 'Inactive'">
                                                     {{
-                                                        incomes_admin.affiliate_commission == ''
-                                                        || incomes_admin.affiliate_commission == null
+                                                        incomes_admin.affiliate_com == ''
+                                                        || incomes_admin.affiliate_com == null
                                                             ? 0
-                                                            : '$ ' + Math.round(incomes_admin.affiliate_commission)
+                                                            : '$ ' + Math.round(incomes_admin.affiliate_com)
                                                     }}
                                                 </span>
 
@@ -324,11 +326,11 @@ export default {
             user : state => state.storeAuth.currentUser,
         }),
 
-        totalNetIncome() {
-            let result = parseFloat(parseFloat(this.listIncomesAdmin.buyer_price_sum - this.listIncomesAdmin.seller_price_sum)) - parseFloat(this.listIncomesAdmin.billing_count_sum);
-
-            return result.toFixed(2);
-        },
+        // totalNetIncome() {
+        //     let result = parseFloat(parseFloat(this.listIncomesAdmin.buyer_price_sum - this.listIncomesAdmin.seller_price_sum)) - parseFloat(this.listIncomesAdmin.billing_count_sum);
+        //
+        //     return result.toFixed(2);
+        // },
     },
 
     methods : {
@@ -354,8 +356,7 @@ export default {
                 price = fee;
             } else {
                 var num_words = parseInt(incomes.article.num_words);
-                var writer_price = parseFloat(incomes.writer_price);
-
+                var writer_price = incomes.writer_price ? parseFloat(incomes.writer_price) : 0;
 
                 if (rate_type == 'ppw') {
                     price = (writer_price * num_words) + fee;
@@ -413,7 +414,7 @@ export default {
             this.isSearchLoading = false;
             this.isSearchingLoading = false;
 
-            this.computeSummary();
+            // this.computeSummary();
         },
 
         doSearch() {

@@ -5,7 +5,16 @@ const MESSAGE_FORMS = 'INCOMES_ADMIN_MESSAGE_FORMS';
 const INCOMES_ADMIN_ERROR = 'INCOMES_ADMIN_ERROR';
 
 const state = {
-    listIncomesAdmin: {},
+    listIncomesAdmin: {
+        affiliate_commission_sum: 0,
+        billing_count_sum: 0,
+        buyer_price_sum: 0,
+        content_charges_sum: 0,
+        fee_charges_sum: 0,
+        seller_price_sum: 0,
+        net_incomes_sum: 0,
+        data: [],
+    },
     messageForms: { action: '', message: '', errors: {} },
     tblOptIncomesAdmin: {
         backlink_id: true,

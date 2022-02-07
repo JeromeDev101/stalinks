@@ -16,19 +16,21 @@ class IncomesAdminController extends Controller
         $filter = $request->all();
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate']:50;
 
-        $list = Backlink::select('backlinks.*', 'registration.rate_type', 'registration.writer_price')
-                ->where('backlinks.status', 'Live')
-                ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
-                ->leftJoin('users', 'article.id_writer', '=', 'users.id')
-                ->leftjoin('registration', 'users.email', '=' , 'registration.email')
-                ->with(['user' => function($sub) {
-                    $sub->with('UserType.affiliate:id,status');
-                }])
-                ->with('article')
-                ->with('publisher')
-                ->withCount(['billing' => function ($query) {
-                    return $query->select(DB::raw('SUM(fee) AS fee'));
-                }]);
+//        $list = Backlink::select('backlinks.*', 'registration.rate_type', 'registration.writer_price')
+//                ->where('backlinks.status', 'Live')
+//                ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+//                ->leftJoin('users', 'article.id_writer', '=', 'users.id')
+//                ->leftjoin('registration', 'users.email', '=' , 'registration.email')
+//                ->with(['user' => function($sub) {
+//                    $sub->with('UserType.affiliate:id,status');
+//                }])
+//                ->with('article')
+//                ->with('publisher')
+//                ->withCount(['billing' => function ($query) {
+//                    return $query->select(DB::raw('SUM(fee) AS fee'));
+//                }]);
+
+        $list = $this->writeIncomesQuery();
 
 
         if( isset($filter['backlink_id']) && $filter['backlink_id'] != ''){
@@ -59,7 +61,10 @@ class IncomesAdminController extends Controller
         $sellerPrice = $list->sum('price');
         $buyerPrice = $list->sum('prices');
         $billingCount = $temp->sum('billing_count');
-        $affiliateCommission = $temp->sum('affiliate_commission');
+        $affiliateCommission = $temp->sum('affiliate_com');
+        $netIncomes = $temp->sum('net_income');
+        $feeCharges = $temp->sum('fee');
+        $contentCharges = $temp->sum('content_charge');
 
         if($paginate === 'All'){
             $list = [
@@ -75,6 +80,9 @@ class IncomesAdminController extends Controller
             'buyer_price_sum' => $buyerPrice,
             'billing_count_sum' => $billingCount,
             'affiliate_commission_sum' => $affiliateCommission,
+            'net_incomes_sum' => $netIncomes,
+            'fee_charges_sum' => $feeCharges,
+            'content_charges_sum' => $contentCharges,
         ]);
 
         return response()->json($totals->merge($list));
@@ -96,5 +104,68 @@ class IncomesAdminController extends Controller
         }
 
         return $affiliate_buyer_ids;
+    }
+
+    protected function writeIncomesQuery ()
+    {
+        $percentage = settings('affiliate_percentage') ?: 0;
+        $users_with_affiliates = get_buyer_id_with_affiliates();
+
+        if ($users_with_affiliates) {
+            $affiliate_when = 'WHEN backlinks.user_id NOT IN (' . implode(',', $users_with_affiliates) . ') THEN 0';
+        } else {
+            $affiliate_when = '';
+        }
+
+        return Backlink::selectRaw("
+            backlinks.*,
+            article.id as article_id,
+            article.num_words,
+
+            @writer_price := CASE
+              WHEN registration.writer_price IS NULL OR registration.writer_price = '' THEN 0
+              ELSE registration.writer_price
+            END as writer_price,
+
+            @rate_type := CASE
+              WHEN registration.rate_type IS NULL OR registration.rate_type = '' THEN 'ppw'
+              ELSE LOWER(registration.rate_type)
+            END as 'rate_type',
+
+            @fee := CASE
+              WHEN (select SUM(fee) AS fee from `billing` where `backlinks`.`id` = `billing`.`id_backlink`)
+               IS NULL THEN 0
+              ELSE (select SUM(fee) AS fee from `billing` where `backlinks`.`id` = `billing`.`id_backlink`)
+            END as fee,
+
+            @content_charge := CASE
+              WHEN registration.writer_price IS NULL OR article.id IS NULL THEN 0
+              ELSE
+                CASE
+                    WHEN @rate_type = 'ppw' THEN (@writer_price * article.num_words)
+                    ELSE @writer_price
+                END
+            END as 'content_charge',
+
+            @net_income := backlinks.prices - backlinks.price - @content_charge - @fee as 'net_income',
+
+            CASE
+              WHEN backlinks.prices IS NULL OR backlinks.prices = '' THEN 0
+              ". $affiliate_when . "
+              ELSE (" . $percentage . "/100) * @net_income
+            END as 'affiliate_com'
+        ")
+        ->where('backlinks.status', 'Live')
+        ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+        ->leftJoin('users', 'article.id_writer', '=', 'users.id')
+        ->leftjoin('registration', 'users.email', '=' , 'registration.email')
+        ->with(['user' => function($sub) {
+            $sub->with('UserType.affiliate:id,status');
+        }])
+        ->with('article')
+        ->with('publisher')
+        ->withCount(['billing' => function ($query) {
+            return $query->select(DB::raw('SUM(fee) AS fee'));
+        }]);
     }
 }
