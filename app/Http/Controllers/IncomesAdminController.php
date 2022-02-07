@@ -112,9 +112,9 @@ class IncomesAdminController extends Controller
         $users_with_affiliates = get_buyer_id_with_affiliates();
 
         if ($users_with_affiliates) {
-            $affiliate_when = 'WHEN backlinks.user_id NOT IN (' . implode(',', $users_with_affiliates) . ') THEN 0';
+            $affiliate_when = 'WHEN backlinks.user_id NOT IN (' . implode(',', $users_with_affiliates) . ') THEN 0 ELSE (' . $percentage . '/100) * @net_income';
         } else {
-            $affiliate_when = '';
+            $affiliate_when = 'ELSE 0';
         }
 
         return Backlink::selectRaw("
@@ -152,7 +152,6 @@ class IncomesAdminController extends Controller
             CASE
               WHEN backlinks.prices IS NULL OR backlinks.prices = '' THEN 0
               ". $affiliate_when . "
-              ELSE (" . $percentage . "/100) * @net_income
             END as 'affiliate_com'
         ")
         ->where('backlinks.status', 'Live')
