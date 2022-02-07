@@ -372,7 +372,7 @@ export default {
 
             let result = parseInt(incomes.prices) - parseInt(incomes.price) - parseInt(billing) - parseInt(writer_price);
 
-            return result > 0 ? result : 0;
+            return result;
         },
 
         computeGross(selling_price, price) {
