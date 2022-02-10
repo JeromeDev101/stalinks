@@ -708,12 +708,12 @@ class AccountController extends Controller
             ->whereIn('role_id', $team_in_charge)
             ->orderBy('username', 'asc');
 
-        if (Auth::user()->role_id === 6) {
-            $team = $team->where(function ($sub) {
-                $sub->where('id', Auth::id())
-                    ->orWhere('status', 'inactive');
-            });
-        }
+        // if (Auth::user()->role_id === 6) {
+        //     $team = $team->where(function ($sub) {
+        //         $sub->where('id', Auth::id())
+        //             ->orWhere('status', 'inactive');
+        //     });
+        // }
 
         $team = $team->get();
 

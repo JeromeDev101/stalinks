@@ -303,7 +303,7 @@
                     <li class="nav-item"
                         v-if="isPostingWriterExt ||
                                 user.isAdmin || isQc || isQcSeller ||
-                                         isQcBilling"
+                                         isQcBilling || (user.isOurs == 0 && isSeller)"
                     >
                         <router-link
                             class="nav-link"
