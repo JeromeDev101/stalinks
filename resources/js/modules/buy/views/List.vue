@@ -554,7 +554,7 @@
                                         v-if="scope.row.price
                                  != '' && scope.row.price
                                   != null"
-                                        :disabled="isCreditAuth || scope.row.status_purchased == 'Purchased'"
+                                        :disabled="isCreditAuth"
                                         title="Buy"
                                         data-target="#modal-buy-update"
                                         @click="doUpdate(scope.row)"
@@ -1871,17 +1871,37 @@ export default {
         },
 
         doUpdate(buy) {
-            this.clearMessageform();
-            let that = JSON.parse(JSON.stringify(buy))
 
-            this.updateModel = that
-            this.updateModel.seller_price = that.price;
-            this.updateModel.price = this.computePrice(that.price, that.inc_article);
-            this.updateModel.prices = this.updateModel.price
+            if(buy.status_purchased == 'Purchased') {
+                swal.fire({
+                    title : "Purchased?",
+                    text : "Are you sure you to purchased these URL again?",
+                    icon : "question",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonText: 'Yes',
+                    cancelButtonColor: 'red',
+                    confirmButtonColor: 'green',
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        this.clearMessageform();
+                        let that = JSON.parse(JSON.stringify(buy))
 
-            $('#modal-buy-update').modal({
-                show : true
-            });
+                        this.updateModel = that
+                        this.updateModel.seller_price = that.price;
+                        this.updateModel.price = this.computePrice(that.price, that.inc_article);
+                        this.updateModel.prices = this.updateModel.price
+
+                        $('#modal-buy-update').modal({
+                            show : true
+                        });
+                    } 
+                });
+            }
+            
         },
 
         async doDislike(id) {
