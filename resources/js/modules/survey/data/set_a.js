@@ -76,12 +76,14 @@ export default {
             'five'
         ];
 
-        return _.map(_.find(data, ['set', 'a']), function (value, key) {
+        let findData = _.filter(data, { 'set': 'a', 'type': 'buyer' })
+
+        return _.map(_.find(findData, { 'set': 'a', 'type': 'buyer' }), function (value, key) {
 
             let yValue = 0;
 
             if (_.includes(fields, key)) {
-                let temp = _.countBy(data, (ob)=> {
+                let temp = _.countBy(findData, (ob)=> {
                     return ob[key] ? ob[key] : null
                 })[answer];
 

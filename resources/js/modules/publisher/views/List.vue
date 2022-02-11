@@ -2780,6 +2780,8 @@ export default {
 
                 // clear error messages
 
+                this.isEnableBtn = true;
+
                 this.failedUpload.total = 0;
                 this.failedUpload.message = [];
 
@@ -2800,8 +2802,6 @@ export default {
                 this.formData.append('account_valid', this.checkAccountValidity());
 
                 await this.$store.dispatch('actionUploadCsv', this.formData);
-
-                this.isEnableBtn = true;
 
                 if (this.messageForms.action === 'uploaded') {
                     this.getPublisherList();

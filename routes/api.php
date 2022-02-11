@@ -53,6 +53,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
     Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyController@hasUserAnsweredSurveySet');
 
+    //Seller Surveys
+    Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyController@hasSellerAnsweredSurvey');
+
     //User
     Route::resource('users', 'UserController');
     Route::name('current-user')->get('current-user', 'UserController@currentInforUser');

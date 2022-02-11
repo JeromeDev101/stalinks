@@ -7,6 +7,7 @@ use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
 use App\Jobs\GenerateCountryByLanguageJob;
 use App\Models\DomainZone;
+use App\Notifications\CsvUploaded;
 use App\Services\HttpClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\TransferStats;
@@ -71,6 +72,11 @@ class PublisherController extends Controller
         if($data['success'] === false){
             unset($data['success']);
             return response()->json($data, 422);
+        } else {
+            // send email to user upload successful
+            if (Auth::user()->email) {
+                auth()->user()->notify(new CsvUploaded(auth()->user()));
+            }
         }
 
         return response()->json(['success' => true, 'data' => $data['exist'] ], 200);

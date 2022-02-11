@@ -415,6 +415,13 @@ class BuyController extends Controller
         }
 
         if ($seller_account) {
+
+            if ($seller_account->registration->survey_code === null) {
+                $seller_account->registration->update([
+                    'survey_code' => md5(uniqid(rand(), true))
+                ]);
+            }
+
             event(new SellerConfirmationEvent($backlink, $seller_account));
         }
 

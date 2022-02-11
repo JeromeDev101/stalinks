@@ -81,6 +81,7 @@ import Tools from '@/modules/tools/views/Tools.vue'
 
 // survey
 import Survey from '@/modules/survey/views/Survey.vue'
+import SurveySeller from '@/modules/survey/views/SellerSurvey.vue'
 
 // subscription
 import Subscription from '@/modules/subscription/views/Subscription.vue'
@@ -132,6 +133,11 @@ const routes = [
         path : '/survey/:set/:code',
         name : 'survey',
         component : Survey,
+    },
+    {
+        path : '/seller/survey/:set/:code',
+        name : 'survey-seller',
+        component : SurveySeller,
     },
     {
         path : '/cancel-order-confirmation/:id',
@@ -462,6 +468,11 @@ const routes = [
                 path : '/survey/:set',
                 name : 'survey',
                 component : Survey,
+            },
+            {
+                path : '/seller/survey/:set',
+                name : 'survey-seller',
+                component : SurveySeller,
             },
             {
                 path : '*',

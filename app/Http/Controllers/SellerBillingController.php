@@ -162,7 +162,6 @@ class SellerBillingController extends Controller
 
             if ($seller) {
                 event(new SellerPaidEvent($seller, $totalBacklinkAmount, $backlink_ids, $filename));
-
             }
 
 //            $this->sellerPaidNotification($seller->id, $totalBacklinkAmount, $backlink_ids);

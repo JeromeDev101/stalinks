@@ -15,13 +15,16 @@ class Survey extends Model
         'three',
         'four',
         'five',
+        'six',
         'one_other',
         'two_other',
         'three_other',
         'four_other',
         'five_other',
+        'six_other',
         'set',
-        'comment'
+        'comment',
+        'type'
     ];
 
     public function user()

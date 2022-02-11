@@ -37,7 +37,7 @@ export default {
 
     graphData(data, number) {
         let tally = _.map(_.filter(data, function(o) {
-            return o.set === 'b' && o.type === 'buyer';
+            return o.set === 'a' && o.type === 'seller';
         }), number);
 
         let answers = this.graphLabels(number);
@@ -55,34 +55,29 @@ export default {
 
     graphLabels(number) {
 
-        if (number === 'one') {
+        if (number === 'one' || number === 'two' || number === 'four') {
             return [
-                'Complete URLs info',
-                'Good user interface',
-                'Secured transaction',
-                'Good price',
-                'other'
+                'yes',
+                'no',
             ];
-        } else if (number === 'two' || number === 'three') {
+        } else if (number === 'three') {
             return [
-                '6-> Really Easy',
-                '5-> Easy',
-                '4-> Took a time to look but ok',
-                '3-> After a time and reading - understood',
-                '2-> Difficult',
-                '1-> Very Difficult'
+                'No, I am okay with the current payment methods options',
+                'yes',
             ];
-        } else if (number === 'four') {
+        } else if (number === 'five') {
             return [
-                'More promotion',
-                'Detailed guide on how to use the tools',
-                'Personalized help choosing the right URLs',
-                'other'
+                'Extremely dissatisfied',
+                'Somewhat dissatisfied',
+                'Neither',
+                'Somewhat satisfied',
+                'Extremely satisfied'
             ];
         } else {
             return [
-                '1-> Disappointed',
-                '10-> Very satisfied, would recommend',
+                '1-4 I will not recommend to anyone',
+                '5-7 I will consider it',
+                '7-10 I will definitely recommend to my connections to use your services',
             ];
         }
     }

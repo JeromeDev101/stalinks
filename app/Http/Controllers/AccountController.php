@@ -522,6 +522,10 @@ class AccountController extends Controller
             }
         }
 
+        if ($input['type'] === 'Seller') {
+            $input['survey_code'] =  md5(uniqid(rand(), true));
+        }
+
         // if writer default rate_type and writer_price
         if ($input['type'] === 'Writer') {
             $input['rate_type'] = 'ppw';

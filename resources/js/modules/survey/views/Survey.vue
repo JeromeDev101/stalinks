@@ -632,7 +632,8 @@ export default {
                     five_other: '',
                     comment: null,
                     set : 'a',
-                    code: null
+                    code: null,
+                    type: 'buyer'
                 }
             },
         }
@@ -730,7 +731,8 @@ export default {
 
             axios.post(path, {
                 set: this.survey.answers.set,
-                code: this.survey.answers.code
+                code: this.survey.answers.code,
+                type: 'buyer'
             })
             .then((response) => {
                 if (this.survey.answers.set === 'a') {

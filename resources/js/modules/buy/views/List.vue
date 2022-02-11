@@ -2041,6 +2041,7 @@ export default {
         },
 
         async submitBuy(params) {
+            let loader = this.$loading.show();
             let credit_left = parseInt(this.listBuy.credit);
             $('#tbl_buy_backlink').DataTable().destroy();
 
@@ -2066,6 +2067,8 @@ export default {
             if(this.messageForms.errors) {
                 this.btnBuy = false;
             }
+
+            loader.hide();
         },
 
         async submitInterest(params) {

@@ -124,65 +124,31 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-    Order Paid
+        CSV Uploaded
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Greetings, {{ $name }}!</p> <br />
-                    <p style="margin: 0;">You have completed the order(s) on {{ $date }}.</p> <br />
-                    <p style="margin: 0;">If you received this email, you should have already received payment from us. Also attached in this email is the receipt for the transaction.</p> <br/>
-                    <p style="margin: 0;">Thank you for choosing StaLinks as media selling backlinks! We hope you are satisfied for using our platform.
-                    </p> <br/>
+                    <p style="margin: 0;">Hello {{ $user->name ? $user->name : $user->username }},</p> <br />
+                    <p style="margin: 0;">Thank you for choosing STAlinks!.</p> <br />
                     <p style="margin: 0;">
-                        We would love to hear your feedback, as it helps us to serve you better!
-                        If it won't take too much of your time, please share us your thoughts by clicking the button below:
-                    </p> <br/>
+                        Your CSV file has been successfully uploaded.
+                    </p>
                 @endslot
 
                 @slot('button')
-                    <tr>
-                        <td bgcolor="#ffffff" align="left">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                        <table border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00">
-                                                    <a href="{{ url('/seller/survey/a/' . $survey_code) }}"
-                                                       target="_blank" class="button-text"
-                                                       style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Answer Survey
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('link')
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If the button doesn't work, please copy this link instead and paste it in your browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/seller/survey/a/' . $survey_code) }}</a></p>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('closing')
                     <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                 @endslot
 
-                <!-- email body slot -->
+            <!-- email body slot -->
                 @component('components.email_contacts')
                 @endcomponent
             @endcomponent

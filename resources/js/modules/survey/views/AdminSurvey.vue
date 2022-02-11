@@ -11,7 +11,28 @@
         </div>
 
         <div class="row">
+            <!-- toggle surveys -->
+
             <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div v-for="(tog, index) in toggle" :key="index" class="custom-control custom-switch d-inline-block mx-2">
+                            <input
+                                v-model="toggle[index]['active']"
+                                :checked="tog.active"
+                                :id="'switch' + tog.id"
+                                type="checkbox"
+                                class="custom-control-input"
+
+                                @change="">
+
+                            <label class="custom-control-label" :for="'switch' + tog.id">{{ tog.label }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="toggle.buyer.active" class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Buyer Surveys</h4>
@@ -23,7 +44,7 @@
                             <div class="col-sm-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header d-flex align-items-center">
-                                        <h3 class="card-title text-primary mr-3">Survey Set A</h3>
+                                        <h3 class="card-title text-primary mr-3">Buyer Survey Set A</h3>
 
                                         <button
                                             data-toggle="modal"
@@ -58,7 +79,7 @@
                             <div class="col-sm-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title text-primary">Survey Set B</h3>
+                                        <h3 class="card-title text-primary">Buyer Survey Set B</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -177,6 +198,159 @@
                     </div>
                 </div>
             </div>
+
+            <div v-if="toggle.seller.active" class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Seller Surveys</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-outline card-secondary">
+                                    <div class="card-header">
+                                        <h3 class="card-title text-primary">Seller Survey Set A</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body" id="sellerSurveySetACollapse">
+                                        <div class="row">
+                                            <!-- seller set a 1 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Do you think our system is efficient for you to sell your
+                                                            guest posts?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetAOneData"
+                                                            :options="sellerSetAOneChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- seller set a 2 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Are you satisfied with our CS Team service?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetATwoData"
+                                                            :options="sellerSetATwoChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- seller set a 3 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Do you have any problems using our payment methods?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetAThreeData"
+                                                            :options="sellerSetAThreeChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- seller set a 4 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Do you find our platform helpful to you in
+                                                            getting orders easily?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetAFourData"
+                                                            :options="sellerSetAFourChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- seller set a 5 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Based on your most recent experience, please rate your
+                                                            satisfaction by using our service.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetAFiveData"
+                                                            :options="sellerSetAFiveChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- seller set a 6 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Please rate if you would recommend us and our services to
+                                                            your connections.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetASixData"
+                                                            :options="sellerSetASixChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal Survey -->
@@ -217,6 +391,7 @@
 <script>
 import set_a from "../data/set_a";
 import set_b from "../data/set_b";
+import seller_set_a from "../data/seller_set_a";
 
 export default {
     name : "AdminSurvey",
@@ -224,6 +399,19 @@ export default {
     data() {
         return {
             surveys: {},
+            toggle: {
+               buyer: {
+                   id: 'buyer',
+                   active: true,
+                   label: 'Buyer surveys'
+               },
+
+                seller: {
+                    id: 'seller',
+                    active: true,
+                    label: 'Seller surveys'
+                }
+            },
 
             setAChartOptions: {},
             setAData: [],
@@ -249,7 +437,27 @@ export default {
                 'Do you find our HELP page easy to follow?',
                 'Do you find our payment methods too complicated for you?',
                 'Are you satisfied with the service that we provide right now?'
-            ]
+            ],
+
+            // seller surveys
+
+            sellerSetAOneChartOptions: {},
+            sellerSetAOneData: [],
+
+            sellerSetATwoChartOptions: {},
+            sellerSetATwoData: [],
+
+            sellerSetAThreeChartOptions: {},
+            sellerSetAThreeData: [],
+
+            sellerSetAFourChartOptions: {},
+            sellerSetAFourData: [],
+
+            sellerSetAFiveChartOptions: {},
+            sellerSetAFiveData: [],
+
+            sellerSetASixChartOptions: {},
+            sellerSetASixData: [],
         }
     },
 
@@ -261,6 +469,15 @@ export default {
         this.setBThreeChartOptions = set_b.graphSetting('three');
         this.setBFourChartOptions = set_b.graphSetting('four');
         this.setBFiveChartOptions = set_b.graphSetting('five');
+
+        // seller surveys
+
+        this.sellerSetAOneChartOptions = seller_set_a.graphSetting('one')
+        this.sellerSetATwoChartOptions = seller_set_a.graphSetting('two')
+        this.sellerSetAThreeChartOptions = seller_set_a.graphSetting('three')
+        this.sellerSetAFourChartOptions = seller_set_a.graphSetting('four')
+        this.sellerSetAFiveChartOptions = seller_set_a.graphSetting('five')
+        this.sellerSetASixChartOptions = seller_set_a.graphSetting('six')
     },
 
     methods: {
@@ -274,6 +491,15 @@ export default {
                     this.setBThreeData = set_b.graphData(this.surveys, 'three');
                     this.setBFourData = set_b.graphData(this.surveys, 'four');
                     this.setBFiveData = set_b.graphData(this.surveys, 'five');
+
+                    // seller surveys
+
+                    this.sellerSetAOneData = seller_set_a.graphData(this.surveys, 'one');
+                    this.sellerSetATwoData = seller_set_a.graphData(this.surveys, 'two');
+                    this.sellerSetAThreeData = seller_set_a.graphData(this.surveys, 'three');
+                    this.sellerSetAFourData = seller_set_a.graphData(this.surveys, 'four');
+                    this.sellerSetAFiveData = seller_set_a.graphData(this.surveys, 'five');
+                    this.sellerSetASixData = seller_set_a.graphData(this.surveys, 'six');
                 })
         }
     },

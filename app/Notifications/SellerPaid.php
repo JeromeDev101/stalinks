@@ -49,6 +49,7 @@ class SellerPaid extends Notification
                 'total_amount' => $this->event->totalAmount,
                 'backlinks' => $this->event->backlinkIds,
                 'name' => $this->event->user->name,
+                'survey_code' => $this->event->user->registration->survey_code,
                 'date' => Carbon::now()->format('m-d-Y')
             ])
             ->attach(config('app.url') . '/images/billing/' . $this->event->receipt);

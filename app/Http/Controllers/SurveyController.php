@@ -24,8 +24,8 @@ class SurveyController extends Controller
 
     public function hasUserAnsweredBothSurveys()
     {
-        $set_a = Survey::where('user_id', auth()->user()->id)->where('set', 'a')->first();
-        $set_b = Survey::where('user_id', auth()->user()->id)->where('set', 'b')->first();
+        $set_a = Survey::where('user_id', auth()->user()->id)->where('set', 'a')->where('type', 'buyer')->first();
+        $set_b = Survey::where('user_id', auth()->user()->id)->where('set', 'b')->where('type', 'buyer')->first();
 
         return response()->json(($set_a && $set_b));
     }
@@ -38,7 +38,10 @@ class SurveyController extends Controller
             $user_id = auth()->user()->id;
         }
 
-        return Survey::where('user_id', $user_id)->where('set', $request->set)->first();
+        return Survey::where('user_id', $user_id)
+            ->where('set', $request->set)
+            ->where('type', $request->type)
+            ->first();
     }
 
     public function getList()
@@ -79,5 +82,18 @@ class SurveyController extends Controller
 
             return null;
         }
+    }
+
+    // Seller survey
+
+    public function hasSellerAnsweredSurvey(Request $request)
+    {
+        if (isset($request->code) && $request->code) {
+            $user_id = $this->getUserIdBySurveyCode($request->code);
+        } else {
+            $user_id = auth()->user()->id;
+        }
+
+        return Survey::where('user_id', $user_id)->where('type', 'seller')->first();
     }
 }
