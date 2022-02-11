@@ -71,6 +71,7 @@ class AccountController extends Controller
 
         $input['commission'] = 'yes'; // default
         $input['credit_auth'] = 'No';
+        $input['affiliate_id'] = isset($input['affiliate']) ? $input['affiliate']:null;
         $input['password'] = Hash::make($input['password']);
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
 
@@ -789,6 +790,7 @@ class AccountController extends Controller
         $input['type'] = 'Buyer';
         $input['team_in_charge'] = Auth::user()->id;
         $input['is_sub_account'] = 1;
+        $input['credit_auth'] = 'No';
 
         Registration::create($input);
 

@@ -893,6 +893,18 @@
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
+
+                            <div class="col-sm-6" v-if="accountModel.type == 'Buyer' && user.isAdmin">
+                                <div class="form-group">
+                                    <label>Affiliates</label>
+                                    <select class="form-control" v-model="accountModel.affiliate">
+                                        <option value="">None</option>
+                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name : option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-between">
@@ -1415,6 +1427,18 @@
                                         <option value="no">No</option>
                                     </select>
                                     <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="accountUpdate.type == 'Buyer' && user.isAdmin">
+                                <div class="form-group">
+                                    <label>Affiliates</label>
+                                    <select class="form-control" v-model="accountUpdate.affiliate">
+                                        <option value="">None</option>
+                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
+                                            {{ option.username == null ? option.name : option.username }}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -2662,6 +2686,7 @@ export default {
             this.accountUpdate.is_sub_account = that.is_sub_account;
             this.accountUpdate.status = that.status
             this.accountUpdate.credit_auth = that.credit_auth
+            this.accountUpdate.affiliate = that.affiliate_id;
             this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
             this.accountUpdate.account_validation = that.account_validation
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
