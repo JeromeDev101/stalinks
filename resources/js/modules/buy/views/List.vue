@@ -551,9 +551,7 @@
                                 slot="actionButtons">
                                 <div class="btn-group" ref="text">
                                     <button
-                                        v-if="scope.row.price
-                                 != '' && scope.row.price
-                                  != null"
+                                        v-if="scope.row.price != '' && scope.row.price != null"
                                         :disabled="isCreditAuth"
                                         title="Buy"
                                         data-target="#modal-buy-update"
@@ -1898,10 +1896,22 @@ export default {
                         $('#modal-buy-update').modal({
                             show : true
                         });
-                    } 
+                    }
+                });
+            } else {
+                this.clearMessageform();
+                let that = JSON.parse(JSON.stringify(buy))
+
+                this.updateModel = that
+                this.updateModel.seller_price = that.price;
+                this.updateModel.price = this.computePrice(that.price, that.inc_article);
+                this.updateModel.prices = this.updateModel.price
+
+                $('#modal-buy-update').modal({
+                    show : true
                 });
             }
-            
+
         },
 
         async doDislike(id) {
