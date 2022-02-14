@@ -227,6 +227,10 @@ class FollowupSalesController extends Controller
 
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
+
+                        // notify cs
+                        event(new SellerConfirmedPendingOrderEvent($backlink, 'approve'));
+
                         $result = true;
                         $backlink->update(['status' => 'Processing']);
                     }
@@ -252,6 +256,10 @@ class FollowupSalesController extends Controller
 
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
+
+                        // notify cs
+                        event(new SellerConfirmedPendingOrderEvent($backlink, 'cancel'));
+
                         $result = true;
                         $backlink->update([
                             'status' => 'Canceled',
