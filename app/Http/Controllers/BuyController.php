@@ -352,7 +352,8 @@ class BuyController extends Controller
     {
 
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
-        $user = Auth::user();
+
+        $user = User::where('id', auth()->user()->id)->first();
 
         if ($user->credit_auth != 'Yes' && $request->credit_left < $request->prices) {
             return response()->json([

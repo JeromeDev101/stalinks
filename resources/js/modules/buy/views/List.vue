@@ -2072,6 +2072,16 @@ export default {
             if (this.messageForms.action === 'updated') {
                 this.getBuyList();
                 this.$root.$refs.AppHeader.liveGetWallet()
+
+                $("#modal-buy-update").modal('hide');
+
+                loader.hide();
+
+                await swal.fire(
+                    'Success!',
+                    'Backlink successfully ordered.',
+                    'success'
+                )
             }
 
             if(this.messageForms.errors) {

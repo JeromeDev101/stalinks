@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,7 @@ class Buy extends Notification implements ShouldQueue
      * @param $backlink
      * @param $user
      */
-    public function __construct($backlink, $user = null)
+    public function __construct($backlink, User $user = null)
     {
         $this->backlink = $backlink;
         $this->user = $user;
@@ -45,11 +46,13 @@ class Buy extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $registration = $this->user->registration;
+
         $user = $this->user ? $this->user->name : 'User';
 
         return (new MailMessage)
             ->subject('Purchase Successful')
-            ->markdown('buyer.purchase_success', ['backlink'=>$this->backlink, 'user'=>$user]);
+            ->markdown('buyer.purchase_success', ['backlink'=>$this->backlink, 'user'=>$user, 'registration' => $registration]);
     }
 
     /**

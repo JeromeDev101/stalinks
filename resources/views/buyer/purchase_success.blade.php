@@ -133,14 +133,74 @@
             @component('components.email_body')
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $user }},</p> <br /> <br />
-                    <p style="margin: 0;">Thank you for choosing and trusting StaLinks! We will process your order accordingly with our best in-house content writer.</p> <br /> <br />
-                    <p style="margin: 0;">The content will be on live 5 working days after you purchased the order. Please do not hesitate to contact us if your have any further question.</p>
+                    <p style="margin: 0;">
+                        Thank you for choosing and trusting StaLinks! We will process your order accordingly
+                        with our best in-house content writer.
+                    </p> <br />
+                    <p style="margin: 0;">
+                        The content will be on live 5 working days after you purchased the order.
+                        Please do not hesitate to contact us if your have any further question.
+                    </p> <br />
+                    <p style="margin: 0;">
+                        We would love to hear your feedback, as it helps us to serve you better! If it won't take too
+                        much of your time, please share us your thoughts by answering our surveys below:
+                    </p> <br/>
                 @endslot
 
                 @slot('button')
+                    <tr>
+                        <td bgcolor="#ffffff" align="left">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
+                                        <table border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td align="center" style="border-radius: 3px;">
+                                                    <a href="{{ url('/survey/a/' . $registration->survey_code) }}"
+                                                       target="_blank" class="button-text"
+                                                       style="background-color: #FF9B00; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey A
+                                                    </a>
+
+                                                    <br/>
+
+                                                    <a href="{{ url('/survey/b/' . $registration->survey_code) }}"
+                                                       target="_blank" class="button-text"
+                                                       style="background-color: #FF9B00; margin-top: 10px !important; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey B
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                 @endslot
 
                 @slot('link')
+                    <tr>
+                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                            <p style="margin: 0;">If the buttons doesn't work, please copy the links below instead and paste it in your browser:</p>
+                        </td>
+                    </tr> <!-- COPY -->
+                    <tr>
+                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+                            <p style="margin: 0;">
+                                Survey A:
+                                <a href="#" target="_blank" style="color: #FF9B00;">
+                                    {{ url('/survey/a/' . $registration->survey_code) }}
+                                </a>
+                            </p>
+
+                            <p style="margin: 0; margin-top: 10px !important;">
+                                Survey B:
+                                <a href="#" target="_blank" style="color: #FF9B00;">
+                                    {{ url('/survey/b/' . $registration->survey_code) }}
+                                </a>
+                            </p>
+                            <br/>
+                        </td>
+                    </tr>
                 @endslot
 
                 @slot('closing')
