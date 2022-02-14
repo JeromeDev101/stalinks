@@ -134,13 +134,13 @@
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $buyer->name }}!</p> <br />
                     <p style="margin: 0;">
-                        {{ $urls['count'] }} new URL(s) are added to our list.
+                        We have added {{ $urls['count'] }} new URL(s) for you.
                     </p>
 
                     <div style="margin-top: 15px; margin-bottom: 15px;">
                         <ul>
-                            @foreach($urls['data'] as $url)
-                                <li>{{ $url }}</li>
+                            @foreach($urls['data'] as $url => $topic)
+                                <li>{{ $url }} ({{ $topic }})</li>
                             @endforeach
 
                             @if ($urls['count'] > 5)
@@ -152,8 +152,9 @@
                     </div>
 
                     <p style="margin: 0;">
+                        For more details, you can
                         <a target="_blank" href="{{ url('/login') }}">
-                            Login to STAlinks now
+                            login to your account
                         </a>
                         to check them out!
                     </p>

@@ -6,6 +6,7 @@ use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
 use App\Events\SellerConfirmationEvent;
+use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Notifications\BacklinkLiveSeller;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
@@ -278,6 +279,10 @@ class FollowupSalesController extends Controller
 
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
+
+                        // notify cs
+                        event(new SellerConfirmedPendingOrderEvent($backlink, $request->process));
+
                         if ($request->process === 'approve') {
                             $backlink->update(['status' => 'Processing']);
                         } else {

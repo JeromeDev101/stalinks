@@ -86,7 +86,7 @@ class SendNewsletterToBuyers implements ShouldQueue
             ->orderBy('publisher.id', 'DESC');
 
         return [
-            'data' => $urls->take(5)->pluck('url')->toArray(),
+            'data' => $urls->take(5)->pluck('topic', 'url')->toArray(),
             'count' => $urls->count()
         ];
     }

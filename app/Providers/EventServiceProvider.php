@@ -11,6 +11,7 @@ use App\Events\BacklinkStatusChangedEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\BuyEvent;
 use App\Events\NewArticleEvent;
+use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Events\UserUnvalidatedEvent;
@@ -28,6 +29,7 @@ use App\Listeners\BacklinkStatusChangedListener;
 use App\Listeners\BuyerDebittedListener;
 use App\Listeners\BuyListener;
 use App\Listeners\NewArticleListener;
+use App\Listeners\SellerConfirmedPendingOrderListener;
 use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
 use App\Listeners\UserUnvalidatedListener;
@@ -130,6 +132,10 @@ class EventServiceProvider extends ServiceProvider
 
         UserUnvalidatedEvent::class => [
             UserUnvalidatedListener::class
+        ],
+
+        SellerConfirmedPendingOrderEvent::class => [
+            SellerConfirmedPendingOrderListener::class
         ]
     ];
 
