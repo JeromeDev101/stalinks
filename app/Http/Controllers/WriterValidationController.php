@@ -53,14 +53,14 @@ class WriterValidationController extends Controller
     }
 
     public function update(Request $request) {
-        $input = $request->except('created_at', 'updated_at', 'deleted_at', 'status', 'num_words');
+        $input = $request->except('created_at', 'updated_at', 'deleted_at', 'status');
         $input['status'] = 'For Checking';
         $exam = WriterExam::find($request->id);
         $exam->update($input);
     }
 
     public function checkExam(Request $request) {
-        $input = $request->only('status');
+        $input = $request->only('status', 'title');
 
         // update exam status
         $exam = WriterExam::find($request->id);

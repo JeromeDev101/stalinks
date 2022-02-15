@@ -79,6 +79,7 @@
                                     <th>#</th>
                                     <th>Action</th>
                                     <th>Writer</th>
+                                    <th>Title</th>
                                     <th>Anchor Text</th>
                                     <th>Link To</th>
                                     <th>Status</th>
@@ -104,6 +105,7 @@
                                             
                                         </td>
                                         <td>{{ writer.username }}</td>
+                                        <td>{{ writer.title }}</td>
                                         <td>{{ writer.anchor_text }}</td>
                                         <td>
                                             <a :href="'//'+writer.link_to" target="_blank">{{ writer.link_to }}</a>
@@ -119,7 +121,7 @@
             
             <!-- Modal Create Exam Edit -->
             <div class="modal fade" id="modalEditWriterValidate" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Create Exam</h5>
@@ -138,6 +140,12 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="">Title</label>
+                                        <input type="text" class="form-control" v-model="addExam.title">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label for="">Anchor Text</label>
                                         <input type="text" class="form-control" v-model="addExam.anchor_text">
                                     </div>
@@ -146,6 +154,12 @@
                                     <div class="form-group">
                                         <label for="">Link To</label>
                                         <input type="text" class="form-control" v-model="addExam.link_to">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="">Meta Description</label>
+                                        <textarea class="form-control" cols="30" rows="5" v-model="addExam.meta_description"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -263,15 +277,15 @@
                                         1. Write an article with atleast <b>600 words</b>.<br/>
                                         2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
                                         3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and <b>hyperlink</b> it to the assigned website.<br/>
-                                        4. Create a creative title.<br/>
-                                        5. Write a meta description with <b>110 - 160</b> characters.<br/>
+                                        <!-- 4. Create a creative title.<br/>
+                                        5. Write a meta description with <b>110 - 160</b> characters.<br/> -->
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Title</label>
-                                        <input type="text" class="form-control" v-model="ExamUpdate.title">
+                                        <input type="text" class="form-control" v-model="ExamUpdate.title" :disabled="true">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -289,7 +303,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Meta Description</label>
-                                        <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdate.meta_description"></textarea>
+                                        <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdate.meta_description" :disabled="true"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -338,6 +352,8 @@ export default {
                 writer_id: '',
                 anchor_text: '',
                 link_to: '',
+                title: '',
+                meta_description: '',
             },
             filterModel: {
                 status: '',
@@ -459,10 +475,21 @@ export default {
         submitWriterExam() {
             this.ExamUpdate.content = this.data;
 
-            if(this.ExamUpdate.content == "" || this.ExamUpdate.title == "" || this.ExamUpdate.meta_description == "") {
+            if(this.ExamUpdate.content == "" || this.ExamUpdate.content == null) {
                 swal.fire(
-                    'Error',
-                    'Please provide the Title, Meta Description and Content.',
+                    'Note',
+                    'Please write Content to finish the Exam',
+                    'error',
+                )
+                return false;
+            }
+
+            this.ExamUpdate.num_words = this.$refs.composeEditExam2.wordCount();
+
+            if(this.ExamUpdate.num_words < 600) {
+                swal.fire(
+                    'Note',
+                    'Below 600 words are not',
                     'error',
                 )
                 return false;
@@ -494,13 +521,13 @@ export default {
             this.viewModel.status = writer.exam_status
             this.viewModel.link_to = writer.link_to
             this.viewModel.meta_description = writer.meta_description
-            // this.data2 = writer.content
+            this.data2 = writer.content
 
             $("#modalEditWriterValidateViewContent").modal('show')
         },
 
         submitExam() {
-            if(this.addExam.anchor_text == "" || this.addExam.link_to == "") {
+            if(this.addExam.anchor_text == "" || this.addExam.link_to == "" || this.addExam.title == "" || this.addExam.meta_description == "") {
                 swal.fire(
                     'Error',
                     'Please Fill up all fields.',
