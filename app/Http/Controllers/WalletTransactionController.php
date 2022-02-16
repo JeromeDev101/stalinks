@@ -27,7 +27,7 @@ class WalletTransactionController extends Controller
                         ->with('payment_type:id,type')
                         ->orderBy('id', 'desc');
 
-        if( !$user->isAdmin() && $user->role->id != 7 ){
+        if( !$user->isAdmin() && $user->role->id != 7 && $user->role->id !== 8){
             $list->where('user_id', $user->id);
         }
 

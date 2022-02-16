@@ -45,7 +45,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4" v-if="user.isAdmin || user.user_type.is_sub_account != 1">
+                            <div class="col-md-4" v-if="user.isAdmin || user.role_id === 8 || user.user_type.is_sub_account != 1">
                                 <div class="form-group">
                                     <label for="">Buyer</label>
                                     <select class="form-control" name="" v-model="filterModel.buyer">

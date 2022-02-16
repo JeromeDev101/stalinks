@@ -104,12 +104,15 @@
 
         methods: {
             getWalletSummary() {
+                let loader = this.$loading.show();
+
                 axios.get('/api/wallet-summary',{
                     params: {
                         buyer: this.filterModel.buyer
                     }
                 }).then((res) => {
                     this.summaryData = res.data
+                    loader.hide();
                 })
             },
 

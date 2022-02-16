@@ -39,7 +39,7 @@ class PurchaseController extends Controller
             ->where('status', 'Live')
             ->orderBy('id', 'desc');
 
-        if( !$user->isAdmin() && $user->role->id != 7 ){
+        if( !$user->isAdmin() && $user->role->id != 7 && $user->role->id !== 8){
             $user_ids[] = $user->id;
         }
 
