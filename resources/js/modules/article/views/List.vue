@@ -48,9 +48,12 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Language</label>
-                                    <select name="" class="form-control" v-model="filterModel.language_id">
-                                        <option value="">All</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                    <select class="form-control" name="" v-model="filterModel.language_id">
+                                        <option value="">Select Language</option>
+                                        <option value="none">None</option>
+                                        <option v-for="option in listLanguages.data"
+                                                :value="option.id"
+                                                :key="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -150,7 +153,7 @@
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.id_backlink }}</td>
                                 <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
-                                <td>{{ article.country ? article.country.name : 'N/A' }}</td>
+                                <td>{{ article.language ? article.language.name : 'N/A' }}</td>
                                 <td>{{ article.date_start }}</td>
                                 <td>{{ article.date_complete }}</td>
                                 <td>{{ article.isOurs == 1 ? computeWriterPrice(article) : '----' }}</td>
@@ -314,6 +317,7 @@ export default {
         this.getListArticles();
         this.getListCountries();
         this.getListWriter();
+        this.getListLanguages();
     },
 
     computed : {
@@ -322,10 +326,15 @@ export default {
             listCountries : state => state.storeArticles.listCountries,
             listWriter : state => state.storeArticles.listWriter,
             user : state => state.storeAuth.currentUser,
+            listLanguages : state => state.storePublisher.listLanguages,
         })
     },
 
     methods : {
+        async getListLanguages() {
+            await this.$store.dispatch('actionGetListLanguages');
+        },
+
         computeWriterPrice(article) {
             var rate_type = (article.rate_type == null || article.rate_type == '') ? 'ppw' : (article.rate_type).toLowerCase();
             var content = article.contentnohtml

@@ -86,6 +86,22 @@
                                         <span v-show="errorMessage.hasOwnProperty('country_id')" class="text-danger">Please provide Country</span>
                                     </div>
                                 </div>
+
+                                <div class="col-md-12" v-if="regModel.type == 'Writer'">
+                                    <div class="form-group">
+                                        <label for="">Language <span class="text-danger">*</span></label>
+                                        <v-select
+                                            multiple 
+                                            v-model="regModel.language_id" 
+                                            label="name"
+                                            :options="listLanguages.data" 
+                                            :reduce="name => name.id"
+                                            :searchable="true" 
+                                            placeholder="Select Language"/>
+                                        <span v-show="errorMessage.hasOwnProperty('language_id')" class="text-danger">Please provide Langauge</span>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">
@@ -181,6 +197,7 @@
                 isPopupLoading: false,
                 formVerified: false,
                 formSetPassword: true,
+                listLanguages: [],
                 regModel: {
                     type: '',
                     username: '',
@@ -214,6 +231,7 @@
         created() {
             this.getListCountry();
             this.getListPaymentMethod();
+            this.getListLanguage();
         },
 
         computed: {
@@ -231,8 +249,16 @@
         },
 
         methods: {
+            getListLanguage() {
+                axios.get('/api/registration-languages-list')
+                    .then((res) => {
+                        console.log(res)
+                        this.listLanguages = res.data
+                    })
+            },
+
             getListPaymentMethod() {
-            axios.get('/api/payment-list-registration')
+                axios.get('/api/payment-list-registration')
                     .then((res) => {
                         this.paymentMethodList = res.data.data
                     })

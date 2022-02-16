@@ -752,13 +752,17 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Language</label>
-                                    <select class="form-control" v-model="accountModel.language_id">
-                                        <option value="">None</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
+                                    <label>Language</label> <small><i class="text-danger">(Required if Writer)</i></small>
+                                    <v-select
+                                        multiple 
+                                        v-model="accountModel.language_id" 
+                                        label="name"
+                                        :options="listLanguages.data" 
+                                        :reduce="name => name.id"
+                                        :searchable="true" 
+                                        placeholder="Select Language"/>
+
+                                        <span class="text-danger" v-if="isErrorLang">Required to select Langauge</span>
                                 </div>
                             </div>
 
@@ -1263,13 +1267,15 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Language</label>
-                                    <select class="form-control" v-model="accountUpdate.language_id">
-                                        <option value=null>None</option>
-                                        <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
+                                    <label>Language</label> <small><i class="text-danger">(Required if Writer)</i></small>
+                                    <v-select
+                                        multiple 
+                                        v-model="accountUpdate.language_id" 
+                                        label="name"
+                                        :options="listLanguages.data" 
+                                        :reduce="name => name.id"
+                                        :searchable="true" 
+                                        placeholder="Select Language"/>
                                 </div>
                             </div>
 
@@ -1635,6 +1641,7 @@ export default {
             btnTermsAndConditions : false,
             isDisableSubmit : true,
             allowSending : false,
+            isErrorLang: false,
 
             // for email sending
             mailInfo : {
@@ -2529,6 +2536,19 @@ export default {
                 this.validate_error_type = false;
             }
 
+            // validate if writer type need to select language
+            if(this.accountModel.language_id == "" && this.accountModel.type == "Writer") {
+
+                swal.fire(
+                    'Invalid',
+                    'Please fill up the missing fields!',
+                    'error'
+                );
+
+                this.isErrorLang = true;
+                return false; 
+            }
+
             this.isPopupLoading = true;
             await this.$store.dispatch('actionAddAccount', this.accountModel);
             this.isPopupLoading = false;
@@ -2548,6 +2568,7 @@ export default {
                 this.isDisableSubmit = true;
                 this.btnTermsAndConditions = false;
                 this.validate_error_type = false;
+                this.isErrorLang = false;
 
                 // empty model
                 this.accountModel = {
@@ -2677,7 +2698,7 @@ export default {
             this.accountUpdate.company_type = that.is_freelance == '0' ? 'Company' : 'Freelancer';
             this.accountUpdate.company_name = that.is_freelance == '0' ? that.company_name : '';
             this.accountUpdate.country_id = that.country_id
-            this.accountUpdate.language_id = that.language_id
+            this.accountUpdate.language_id = that.language_id == "" ? "":JSON.parse(that.language_id)
             this.accountUpdate.address = that.address
             this.accountUpdate.info = that.info
             this.accountUpdate.id_payment_type = that.id_payment_type

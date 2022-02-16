@@ -54,9 +54,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Language</label>
-                                    <select name="" class="form-control" v-model="filterModel.language_id">
-                                        <option value="">All</option>
-                                        <option v-for="option in listCountries.data" v-bind:value="option.id">
+                                    <select class="form-control" name="" v-model="filterModel.language_id">
+                                        <option value="">Select Language</option>
+                                        <option value="none">None</option>
+                                        <option v-for="option in listLanguages.data"
+                                                :value="option.id"
+                                                :key="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
@@ -221,9 +224,9 @@
                             <template
                                 slot-scope="scope"
                                 slot="languageData">
-                                {{ scope.row.country == null ?
+                                {{ scope.row.language == null ?
                                 'N/A':
-                                scope.row.country.name }}
+                                scope.row.language.name }}
                             </template>
 
                             <template
@@ -684,6 +687,7 @@
             this.getListCountries();
             this.checkTeam();
             this.getListWriter();
+            this.getListLanguages();
         },
 
         computed: {
@@ -694,6 +698,7 @@
                 messageForms: state => state.storeArticles.messageForms,
                 listCountries: state => state.storeArticles.listCountries,
                 user: state => state.storeAuth.currentUser,
+                listLanguages : state => state.storePublisher.listLanguages,
             }),
 
             isProcessing() {
@@ -798,6 +803,10 @@
         },
 
         methods: {
+
+            async getListLanguages() {
+                await this.$store.dispatch('actionGetListLanguages');
+            },
 
             displayTotal() {
                 let _status = this.listArticles.summary

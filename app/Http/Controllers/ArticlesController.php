@@ -51,7 +51,7 @@ class ArticlesController extends Controller
         $list = Article::select($columns)
                         ->leftjoin('users', 'article.id_writer', '=', 'users.id')
                         ->leftjoin('registration', 'users.email', '=' , 'registration.email')
-                        ->with('country:id,name')
+                        ->with('language:id,name')
                         ->with('price')
                         ->with(['backlink' => function($q){
                             $q->with(['publisher' => function($sub){
@@ -120,7 +120,7 @@ class ArticlesController extends Controller
                         ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
                         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
                         ->with('price')
-                        ->with('country:id,name')
+                        ->with('language:id,name')
                         ->with(['backlink' => function($q){
                             $q->with(['publisher' => function($sub){
                                 $sub->with('user:id,name')->with('country:id,name');

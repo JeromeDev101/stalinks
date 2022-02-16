@@ -29,6 +29,7 @@ Route::name('get-payment-list-registration')->get('/payment-list-registration', 
 Route::name('get-payment-list-registration')->get('/payment-list-registration', 'AccountController@getPaymentList');
 Route::name('order-confirmation-get-info')->get('/order-confirmation-get-info', 'FollowupSalesController@orderConfirmation');
 Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmation-get-info', 'FollowupSalesController@CancelOrderConfirmation');
+Route::name('registration-languages')->get('/registration-languages-list', 'CountryController@getListLanguages');
 
 //survey
 Route::name('store-survey-code')->post('/survey-code', 'SurveyController@store');

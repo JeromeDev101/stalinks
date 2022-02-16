@@ -67,6 +67,8 @@ class AccountController extends Controller
             } else {
                 $input['writer_price'] = '12';
             }
+
+            $input['language_id'] = json_encode($input['language_id']);
         }
 
         $input['commission'] = 'yes'; // default
@@ -311,8 +313,11 @@ class AccountController extends Controller
     public function edit(UpdateAccountRequest $request)
     {
         $inputs = $request->all();
+        
+        if(isset($request->language_id)) {
+            $inputs['language_id'] = json_encode($request->language_id);
+        }
 
-        // dd($inputs);
         if($inputs['status'] == 'inactive') {
             $inputs['account_validation'] = 'invalid';
         } else {
@@ -411,7 +416,7 @@ class AccountController extends Controller
 
         $request->validate([
             'country_id' => 'required',
-            // 'writer_price' => 'required_if:type,==,Writer',
+            'language_id' => 'required_if:type,==,Writer',
             // 'rate_type' => 'required_if:type,==,Writer',
 //            'id_payment_type' => 'required',
             'company_name' => 'required_if:company_type,==,Company',
@@ -423,10 +428,16 @@ class AccountController extends Controller
         $input['verification_code'] = null;
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
 
+
+
         $registration = Registration::where('email', $request->email)->first();
 
         if ($input['type'] === 'Affiliate') {
             $input['account_validation'] = 'valid';
+        }
+
+        if ($input['type'] === 'Writer') {
+            $input['language_id'] = json_encode($input['language_id']);
         }
 
         $registration->update($input);
