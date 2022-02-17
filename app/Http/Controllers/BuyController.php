@@ -384,10 +384,7 @@ class BuyController extends Controller
                 'status' => 'Pending'
             ]);
         } else {
-            $backlink = Backlink::updateOrCreate([
-                'publisher_id' => $publisher->id,
-                'user_id' => $user->id
-            ], [
+            $backlink = Backlink::create([
                 'prices' => $request->prices,
                 'price' => $request->seller_price,
                 'url_advertiser' => $url_advertiser,
