@@ -114,6 +114,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');
     Route::name('update-uninterested')->post('buy-uninterested', 'BuyController@UpdateUninterested');
+    Route::name('update-uninterested-multiple')->post('buy-uninterested-multiple', 'BuyController@UpdateMultipleUninterested');
 
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
@@ -218,6 +219,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('backlinks', 'BackLinkController');
     Route::name('buyers-bought')->get('buyers-bought', 'BackLinkController@getBuyerBought');
     Route::name('delete-backlinks')->post('delete-backlinks', 'BackLinkController@deleteBacklinks');
+    Route::name('delete-backlinks-multiple')->post('delete-backlinks-multiple', 'BackLinkController@deleteMultipleBacklinks');
     Route::name('backlinks-summary-status')->get('backlinks-summary-status', 'BackLinkController@statusSummary');
 
     //Intdomain

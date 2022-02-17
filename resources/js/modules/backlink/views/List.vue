@@ -144,11 +144,8 @@
 
         <div class="row">
             <div class="col-sm-12">
-
                 <div class="card card-outline card-secondary">
-
                     <div class="card-header py-2">
-
                         <table width="100%" style="font-size: 0.85rem">
                             <tr>
                                 <td>
@@ -172,9 +169,32 @@
                     </div>
 
                     <div class="card-body">
+                        
 
                         <div class="row">
                             <div class="col-md-12">
+                                <div class="input-group" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
+                                    <button class="btn btn-default mr-2"
+                                            @click="selectAll">{{
+                                            allSelected
+                                                ?
+                                                "Deselect"
+                                                : "Select"
+                                                               }} All
+                                    </button>
+
+                                    <div class="dropdown mr-2">
+                                        <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Selected Action
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item " @click="buyValidated" >Buy (To be Validated)</a>
+                                            <a class="dropdown-item " @click="UnInterestedValidated" >Un-Interested (To be Validated)</a>
+                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">Delete</a>
+                                        </div>
+                                    </div>
+
+                                </div>
 
                                 <div class="input-group input-group-sm float-right" style="width: 100px">
                                     <select class="form-control float-right"
@@ -223,6 +243,7 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
+                                    <th v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"></th>
                                     <th v-show="tblFollowupBacklinksOpt.id_backlink">ID Bck</th>
                                     <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
                                     <th v-show="tblFollowupBacklinksOpt.buyer">User Buyer</th>
@@ -245,6 +266,15 @@
                                 <tbody v-show="!searchLoading">
                                     <tr v-for="(backLink, index) in listBackLink.data">
                                         <td class="center-content">{{ index + 1 }}</td>
+                                        <td class="text-center" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
+                                            <input type="checkbox"
+                                            class="custom-checkbox"
+                                            @change="checkSelected"
+                                            :id="backLink.id"
+                                            :value="backLink.id" 
+                                            :disabled="backLink.status !== 'To Be Validated' && !user.isAdmin"
+                                            v-model="checkIds">
+                                        </td>
                                         <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
                                         <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
                                      0 && !user.isAdmin) ||
@@ -613,6 +643,9 @@
                 listSubAccounts: [],
                 updateFormula: {},
                 statusSummary: [],
+                checkIds: [],
+                allSelected: false,
+                isDisabled: true,
             }
         },
         async created() {
@@ -665,6 +698,167 @@
         },
 
         methods: {
+
+            checkSelected() {
+                this.isDisabled = true;
+                if( this.checkIds.length > 0 ){
+                    this.isDisabled = false;
+                }
+            },
+
+            UnInterestedValidated() {
+                let ctr = 0;
+                for(var index in this.checkIds) {
+                    if(this.listBackLink.data[index].status !== 'To Be Validated') {
+                        ctr++;
+                    }
+                }
+
+                // check if selected is none
+                if(this.checkIds.length === 0) {
+                    swal.fire(
+                        'Invalid!',
+                        'Please select first',
+                        'warning'
+                    )
+                    return false;
+                }
+
+                // check if status is not 'To Be Validated'
+                if(ctr > 0) {
+                    swal.fire(
+                        'Invalid!',
+                        'Please select only with status of "To Be Validated".',
+                        'warning'
+                    )
+                    return false;
+                }
+
+                axios.post('/api/buy-uninterested-multiple', {
+                    ids: this.checkIds
+                }).then((response) => {
+                    swal.fire(
+                        'Success!',
+                        'Successfully removed interest on backlink.',
+                        'success'
+                    )
+
+                    this.getBackLinkList();
+
+                    this.checkIds = [];
+                }).catch((error) => {
+                    swal.fire(
+                        'Error!',
+                        'There was an error with your request.',
+                        'error'
+                    )
+                });
+            },
+
+            buyValidated() {
+                let ctr = 0;
+                for(var index in this.checkIds) {
+                    if(this.listBackLink.data[index].status !== 'To Be Validated') {
+                        ctr++;
+                    }
+                }
+
+                // check if selected is none
+                if(this.checkIds.length === 0) {
+                    swal.fire(
+                        'Invalid!',
+                        'Please select first',
+                        'warning'
+                    )
+                    return false;
+                }
+
+                // check if status is not 'To Be Validated'
+                if(ctr > 0) {
+                    swal.fire(
+                        'Invalid!',
+                        'Please select only with status of "To Be Validated".',
+                        'warning'
+                    )
+                    return false;
+                }
+
+                // loop buy
+                for(var index in this.checkIds) {
+                    this.buyMultiple(this.listBackLink.data[index])
+                }
+
+    
+                swal.fire(
+                    'Bought Successfully!',
+                    'Backlink bought successfully.',
+                    'success'
+                );
+
+                this.getBackLinkList();
+                this.checkIds = [];
+            },
+
+            async buyMultiple(data) {
+                
+                data.credit_left = parseInt(this.listBuy.credit);
+
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdateBuy', data);
+                this.isPopupLoading = false;
+
+            },
+
+            doMultipleDelete() {
+
+                swal.fire({
+                    title: "Are you sure ?",
+                    html: "Delete Backlinks? <br><br> <i class='text-danger'>Note: Articles is also included to delete, Do you want to continue?</i> <br>",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.post('/api/delete-backlinks-multiple', {
+                            ids:this.checkIds
+                        })
+                        .then(response => response)
+                        .catch(error => error);
+
+                        this.getBackLinkList();
+
+                        swal.fire(
+                            'Deleted!',
+                            'Backlinks is already deleted.',
+                            'success'
+                        )
+                    }
+                });
+            },
+
+            selectAll() {
+                this.checkIds = [];
+                if (!this.allSelected) {
+                    for (var index in this.listBackLink.data) {
+                        if(this.listBackLink.data[index].status === 'To Be Validated' && !this.user.isAdmin) {
+                            this.checkIds.push(this.listBackLink.data[index].id);
+                        } 
+
+                        if(this.user.isAdmin) {
+                            this.checkIds.push(this.listBackLink.data[index].id);
+                        }
+                    }
+                    this.isDisabled = false;
+                    this.allSelected = true;
+                } else {
+                    this.allSelected = false;
+                    this.isDisabled = true;
+                }
+            },
+
             async getFormula() {
                 await this.$store.dispatch('actionGetFormula');
                 this.updateFormula = this.formula.data[0];
@@ -980,6 +1174,7 @@
             },
 
             async buy() {
+
                 this.modelBaclink.credit_left = parseInt(this.listBuy.credit);
 
                 this.isPopupLoading = true;

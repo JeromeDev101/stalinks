@@ -227,6 +227,24 @@ class BackLinkController extends Controller
         return response()->json(['success' => true, 'data' => $backlink], 200);
     }
 
+    public function deleteMultipleBacklinks(Request $request) {
+        $ids = $request->ids;
+
+        $backlinks = Backlink::whereIn('id', $ids);
+
+        $articles = Article::whereIn('id_backlink', $ids);
+
+        if( isset($articles) ){
+            $articles->delete();
+        }
+
+        $backlinks->update([
+            'deleted_at' => date('Y-m-d')
+        ]);
+
+        return response()->json(['success' => true, 'data' => $backlinks], 200);
+    }
+
     public function getStatus()
     {
         $status = $this->backlinkRepository->getStatus();

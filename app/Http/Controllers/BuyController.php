@@ -517,6 +517,20 @@ class BuyController extends Controller
         return 'OK';
     }
 
+    public function UpdateMultipleUninterested(Request $request) {
+        $ids = $request->ids;
+        $backlinks = Backlink::whereIn('id', $ids);
+        $buyerPurchasedIds = BuyerPurchased::whereIn('user_id_buyer', $backlinks->pluck('user_id'))
+                ->whereIn('publisher_id', $backlinks->pluck('publisher_id'))
+                ->get()->pluck('id');
+
+
+        $backlinks->delete();
+        BuyerPurchased::destroy($buyerPurchasedIds);
+
+        return 'OK';
+    }
+
     public function checkCreditAuth()
     {
         $data = Auth::user()->credit_auth;
