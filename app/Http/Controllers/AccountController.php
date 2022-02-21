@@ -994,8 +994,8 @@ class AccountController extends Controller
 
         // notify in charge
 
-        if (isset($request->emp_id) && !empty($request->emp_id)) {
-            event(new TeamInChargeUpdatedEvent($request->emp_id, null, $request->ids));
+        if (isset($request->emp_id) && !empty($request->emp_id) && !empty($request->user_ids)) {
+            event(new TeamInChargeUpdatedEvent($request->emp_id, null, $request->user_ids));
         }
 
         return response()->json(['success' => true],200);

@@ -2483,12 +2483,18 @@ export default {
 
         submitUpdateMultipleInCharge() {
             let ids = [];
+            let user_ids = [];
             for (let index in this.checkIds) {
                 ids.push(this.checkIds[index].id)
+                if(this.checkIds[index].user) {
+                    user_ids.push(this.checkIds[index].user.id)
+                }
+                    
             }
 
             axios.post('/api/update-multiple-in-charge', {
                 ids : ids,
+                user_ids : user_ids,
                 emp_id : this.updateMultipleInCharge
             }).then((res) => {
                 if (res.data.success === true) {

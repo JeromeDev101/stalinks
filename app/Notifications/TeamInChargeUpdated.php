@@ -64,7 +64,7 @@ class TeamInChargeUpdated extends Notification
     {
         if ($this->multiple != null) {
             return [
-                'message' => 'You are now assigned as the in charge for user(s) with registration id(s): ' . implode(",", $this->multiple)
+                'message' => 'You are now assigned as the in charge for user(s) with User id(s): ' . implode(",", $this->multiple)
             ];
         } else {
             return [
