@@ -423,16 +423,16 @@ class BuyController extends Controller
             event(new SellerConfirmationEvent($backlink, $seller_account));
         }
 
-        if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
-            Article::create([
-                'id_backlink' => $backlink->id,
-                'id_language' => $backlink->publisher->language_id,
-            ]);
-            $users = User::where('status', 'active')->where('role_id', 4)->get();
-            foreach ($users as $user) {
-//                event(new NotificationEvent("New Article to be write today!", $user->id));
-            }
-        }
+        // if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
+        //     Article::create([
+        //         'id_backlink' => $backlink->id,
+        //         'id_language' => $backlink->publisher->language_id,
+        //     ]);
+        //     $users = User::where('status', 'active')->where('role_id', 4)->get();
+        //     foreach ($users as $user) {
+        //        event(new NotificationEvent("New Article to be write today!", $user->id));
+        //     }
+        // }
 
         return response()->json(['success' => true], 200);
     }

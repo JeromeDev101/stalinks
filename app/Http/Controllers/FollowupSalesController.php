@@ -19,6 +19,8 @@ use App\Events\BacklinkLiveEvent;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Article;
+use App\Events\NotificationEvent;
 
 class FollowupSalesController extends Controller
 {
@@ -228,6 +230,18 @@ class FollowupSalesController extends Controller
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
 
+                        // Create article 
+                        if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
+                            Article::create([
+                                'id_backlink' => $backlink->id,
+                                'id_language' => $backlink->publisher->language_id,
+                            ]);
+                            $users = User::where('status', 'active')->where('role_id', 4)->get();
+                            foreach ($users as $user) {
+                                event(new NotificationEvent("New Article to be write today!", $user->id));
+                            }
+                        }
+
                         // notify cs
                         event(new SellerConfirmedPendingOrderEvent($backlink, 'approve'));
 
@@ -292,6 +306,19 @@ class FollowupSalesController extends Controller
                         event(new SellerConfirmedPendingOrderEvent($backlink, $request->process));
 
                         if ($request->process === 'approve') {
+
+                            // Create article 
+                            if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
+                                Article::create([
+                                    'id_backlink' => $backlink->id,
+                                    'id_language' => $backlink->publisher->language_id,
+                                ]);
+                                $users = User::where('status', 'active')->where('role_id', 4)->get();
+                                foreach ($users as $user) {
+                                    event(new NotificationEvent("New Article to be write today!", $user->id));
+                                }
+                            }
+
                             $backlink->update(['status' => 'Processing']);
                         } else {
                             $backlink->update([
@@ -305,4 +332,5 @@ class FollowupSalesController extends Controller
             }
         }
     }
+    
 }
