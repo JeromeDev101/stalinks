@@ -351,6 +351,137 @@
                     </div>
                 </div>
             </div>
+
+            <div v-if="toggle.writer.active" class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Writer Surveys</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-outline card-secondary">
+                                    <div class="card-header">
+                                        <h3 class="card-title text-primary">Writer Survey Set A</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body" id="writerSurveySetACollapse">
+                                        <div class="row">
+                                            <!-- writer set a 1 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Do you think our system is efficient to use?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetAOneData"
+                                                            :options="writerSetAOneChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- writer set a 2 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Are you satisfied with the services that we already provide?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetATwoData"
+                                                            :options="writerSetATwoChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- writer set a 3 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Do you find any difficulties in writing article contents?
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetAThreeData"
+                                                            :options="writerSetAThreeChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- writer set a 4 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Based on your most recent experience, please rate your
+                                                            satisfaction by using our services.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetAFourData"
+                                                            :options="writerSetAFourChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- writer set a 5 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <p class="mb-0 font-weight-bold">
+                                                            Please rate if you would recommend us and our services
+                                                            to your connections.k
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetAFiveData"
+                                                            :options="writerSetAFiveChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal Survey -->
@@ -392,6 +523,7 @@
 import set_a from "../data/set_a";
 import set_b from "../data/set_b";
 import seller_set_a from "../data/seller_set_a";
+import writer_set_a from "../data/writer_set_a";
 
 export default {
     name : "AdminSurvey",
@@ -410,6 +542,12 @@ export default {
                     id: 'seller',
                     active: true,
                     label: 'Seller surveys'
+                },
+
+                writer: {
+                    id: 'writer',
+                    active: true,
+                    label: 'Writer surveys'
                 }
             },
 
@@ -458,6 +596,26 @@ export default {
 
             sellerSetASixChartOptions: {},
             sellerSetASixData: [],
+
+            // writer surveys
+
+            writerSetAOneChartOptions: {},
+            writerSetAOneData: [],
+
+            writerSetATwoChartOptions: {},
+            writerSetATwoData: [],
+
+            writerSetAThreeChartOptions: {},
+            writerSetAThreeData: [],
+
+            writerSetAFourChartOptions: {},
+            writerSetAFourData: [],
+
+            writerSetAFiveChartOptions: {},
+            writerSetAFiveData: [],
+
+            writerSetASixChartOptions: {},
+            writerSetASixData: [],
         }
     },
 
@@ -478,6 +636,14 @@ export default {
         this.sellerSetAFourChartOptions = seller_set_a.graphSetting('four')
         this.sellerSetAFiveChartOptions = seller_set_a.graphSetting('five')
         this.sellerSetASixChartOptions = seller_set_a.graphSetting('six')
+
+        // writer surveys
+
+        this.writerSetAOneChartOptions = writer_set_a.graphSetting('one')
+        this.writerSetATwoChartOptions = writer_set_a.graphSetting('two')
+        this.writerSetAThreeChartOptions = writer_set_a.graphSetting('three')
+        this.writerSetAFourChartOptions = writer_set_a.graphSetting('four')
+        this.writerSetAFiveChartOptions = writer_set_a.graphSetting('five')
     },
 
     methods: {
@@ -500,6 +666,14 @@ export default {
                     this.sellerSetAFourData = seller_set_a.graphData(this.surveys, 'four');
                     this.sellerSetAFiveData = seller_set_a.graphData(this.surveys, 'five');
                     this.sellerSetASixData = seller_set_a.graphData(this.surveys, 'six');
+
+                    // writer surveys
+
+                    this.writerSetAOneData = writer_set_a.graphData(this.surveys, 'one');
+                    this.writerSetATwoData = writer_set_a.graphData(this.surveys, 'two');
+                    this.writerSetAThreeData = writer_set_a.graphData(this.surveys, 'three');
+                    this.writerSetAFourData = writer_set_a.graphData(this.surveys, 'four');
+                    this.writerSetAFiveData = writer_set_a.graphData(this.surveys, 'five');
                 })
         }
     },

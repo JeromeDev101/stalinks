@@ -221,9 +221,10 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Account: <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">{{
-                                                info.account
-                                                                                                                     }}</b>
+                                            Account:
+                                            <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">
+                                                {{ info.account }}
+                                            </b>
                                         </td>
                                     </tr>
                                 </table>
@@ -302,6 +303,7 @@
 
 <script>
 import {mapState} from 'vuex';
+import _ from "lodash";
 
 export default {
     data() {
@@ -331,6 +333,7 @@ export default {
                 payment_type_id : '',
                 account : '',
                 amount : '',
+                payment_types: null
             },
             isDisabledPay : true,
             proof_doc : '',
@@ -388,6 +391,7 @@ export default {
                 let total_amount = [];
 
                 this.info.writer = data.username;
+                this.info.payment_types = data.user_payment_types;
                 this.info.payment_type = data.payment_type == null ? 'Not yet setup' : data.payment_type.type;
                 this.info.payment_type_id = data.payment_type == null ? null : data.payment_type.id;
 
@@ -406,6 +410,16 @@ export default {
                             break;
                         default:
                             account = "Not yet setup";
+                    }
+                }
+
+                if (this.info.payment_types) {
+                    this.isDisabledPay = false;
+
+                    let paymentType = _.find(this.info.payment_types, {'payment_id' : data.id_payment_type} );
+
+                    if (paymentType) {
+                        account = paymentType.account;
                     }
                 }
 

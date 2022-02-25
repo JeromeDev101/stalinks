@@ -301,7 +301,7 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="isPostingWriterExt ||
+                        v-if="isPostingWriterExt || isPostingWriter ||
                                 user.isAdmin || isQc || isQcSeller ||
                                          isQcBilling || (user.isOurs == 0 && isSeller)"
                     >

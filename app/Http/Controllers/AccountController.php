@@ -28,6 +28,7 @@ use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
@@ -313,7 +314,7 @@ class AccountController extends Controller
     public function edit(UpdateAccountRequest $request)
     {
         $inputs = $request->all();
-        
+
         if(isset($request->language_id)) {
             $inputs['language_id'] = json_encode($request->language_id);
         }
@@ -322,13 +323,15 @@ class AccountController extends Controller
             $inputs['account_validation'] = 'invalid';
         } else {
             $request->validate([
-                'company_name' => ['required_if:company_type,==,Company']
+//                'company_name' => ['required_if:company_type,==,Company'],
+                'company_name' => [Rule::requiredIf($inputs['company_type'] == 'Company' && $inputs['isVerified'])],
             ]);
         }
 
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
                 // 'writer_price' => 'required_if:type,==,Writer',
+                'language_id' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
             ]);
 
@@ -541,6 +544,7 @@ class AccountController extends Controller
         if ($input['type'] === 'Writer') {
             $input['rate_type'] = 'ppw';
             $input['writer_price'] = '0.02';
+            $input['survey_code'] =  md5(uniqid(rand(), true));
         }
 
         $verification_code = md5(uniqid(rand(), true));

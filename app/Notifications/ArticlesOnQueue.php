@@ -2,26 +2,27 @@
 
 namespace App\Notifications;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class WriterPaid extends Notification
+class ArticlesOnQueue extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $event;
+    protected $user, $articles;
 
     /**
      * Create a new notification instance.
      *
-     * @param $event
+     * @param $user
+     * @param $articles
      */
-    public function __construct($event)
+    public function __construct($user, $articles)
     {
-        $this->event = $event;
+        $this->user = $user;
+        $this->articles = $articles;
     }
 
     /**
@@ -44,15 +45,8 @@ class WriterPaid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Article Paid')
-            ->markdown('writer.writer_paid', [
-                'name' => $this->event->user->name,
-                'price' => $this->event->price,
-                'date' => Carbon::now()->format('m-d-Y'),
-                'survey_code' => $this->event->user->registration->survey_code,
-                'articles' => implode(', ', $this->event->articleIds)
-            ])
-            ->attach(config('app.url') . $this->event->receipt);
+            ->subject('Articles on Queue')
+            ->markdown('writer.queue_articles', ['articles'=>$this->articles, 'user'=>$this->user]);
     }
 
     /**
@@ -64,7 +58,7 @@ class WriterPaid extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Your account has been credited of $' . $this->event->price . ' for the different order with Article IDs ['. implode(', ', $this->event->articleIds) .']'
+            'message' => 'There are ' . count($this->articles) . ' articles on queue that you can accept and write.'
         ];
     }
 }

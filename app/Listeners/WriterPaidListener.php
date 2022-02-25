@@ -22,11 +22,11 @@ class WriterPaidListener
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param WriterPaidEvent $event
      * @return void
      */
     public function handle(WriterPaidEvent $event)
     {
-        $event->user->notify(new WriterPaid($event->price, $event->articleIds, $event->receipt));
+        $event->user->notify(new WriterPaid($event));
     }
 }

@@ -16,6 +16,7 @@ use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Events\UserUnvalidatedEvent;
 use App\Events\UserValidateEvent;
+use App\Events\WriterExamProcessedEvent;
 use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
 use App\Events\TeamInChargeUpdatedEvent;
@@ -34,6 +35,7 @@ use App\Listeners\SellerPaidListener;
 use App\Listeners\SellerReceivesOrderListener;
 use App\Listeners\UserUnvalidatedListener;
 use App\Listeners\UserValidateListener;
+use App\Listeners\WriterExamProcessedListener;
 use App\Listeners\WriterPaidListener;
 use App\Listeners\TeamInChargeUpdatedListener;
 use App\Models\Backlink;
@@ -136,7 +138,11 @@ class EventServiceProvider extends ServiceProvider
 
         SellerConfirmedPendingOrderEvent::class => [
             SellerConfirmedPendingOrderListener::class
-        ]
+        ],
+
+        WriterExamProcessedEvent::class => [
+            WriterExamProcessedListener::class
+        ],
     ];
 
     /**

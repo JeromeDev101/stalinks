@@ -14,8 +14,8 @@
 
             <!-- alert for external writers that doesn't yet passed the exam -->
             <div class="col-md-12" v-if="user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed != 1">
-                <div class="alert alert-info">
-                    <p><b>Sorry!</b> you can't still write an article unless you passed the exam. Please complete the Exam. Go to <b>Writer's Validation</b> menu</p>
+                <div class="alert alert-warning">
+                    <p class="mb-0"><b>Sorry!</b> you can't still write an article unless you passed the exam. Please complete the Exam. Go to <b>Writer's Validation</b> menu</p>
                 </div>
             </div>
 
@@ -140,30 +140,57 @@
                     </div>
 
                     <div class="card-body">
-                        <table class="mb-3 bg-info">
-                            <tr>
-                                <td class="p-3">
-                                    Queue
-                                    <b>{{' ('+ statusSummary.num_processing +')' }}</b>
-                                </td>
-                                <td class="p-3">
-                                    In Writing
-                                    <b>{{' ('+ statusSummary.writing +')' }}</b>
-                                </td>
-                                <td class="p-3">
-                                    Done
-                                    <b>{{' ('+ statusSummary.num_done +')' }}</b>
-                                </td>
-                                <td class="p-3">
-                                    Canceled
-                                    <b>{{' ('+ statusSummary.num_canceled +')' }}</b>
-                                </td>
-                                <td class="p-3">
-                                    Issue
-                                    <b>{{' ('+ statusSummary.num_issue +')' }}</b>
-                                </td>
-                            </tr>
-                        </table>
+<!--                        <table class="mb-3 bg-info">-->
+<!--                            <tr>-->
+<!--                                <td class="p-3">-->
+<!--                                    Queue-->
+<!--                                    <b>{{' ('+ statusSummary.total_queue +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    In Writing-->
+<!--                                    <b>{{' ('+ statusSummary.total_in_writing +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Done-->
+<!--                                    <b>{{' ('+ statusSummary.total_done +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Canceled-->
+<!--                                    <b>{{' ('+ statusSummary.total_cancelled +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Issue-->
+<!--                                    <b>{{' ('+ statusSummary.total_issue +')' }}</b>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+
+                        <div class="row bg-info mb-4 text-center rounded">
+                            <div class="col p-3">
+                                Queue
+                                <b>({{ statusSummary.total_queue ? statusSummary.total_queue : '0' }})</b>
+                            </div>
+
+                            <div class="col p-3">
+                                In Writing
+                                <b>({{ statusSummary.total_in_writing ? statusSummary.total_in_writing : '0' }})</b>
+                            </div>
+
+                            <div class="col p-3">
+                                Done
+                                <b>({{ statusSummary.total_done ? statusSummary.total_done : '0' }})</b>
+                            </div>
+
+                            <div class="col p-3">
+                                Canceled
+                                <b>({{ statusSummary.total_cancelled ? statusSummary.total_cancelled : '0' }})</b>
+                            </div>
+
+                            <div class="col p-3">
+                                Issue
+                                <b>({{ statusSummary.total_issue ? statusSummary.total_issue : '0' }})</b>
+                            </div>
+                        </div>
 
                         <div v-if="isProcessing && (user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed == 1)" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
                             <strong>Reminder: </strong> Your account is currently on process. Please contact the
@@ -206,8 +233,21 @@
                             <template
                                 slot-scope="scope"
                                 slot="actionButton">
-                                <div class="btn-group" >
+                                <div class="btn-group">
                                     <button
+                                        v-if="user.role_id === 4"
+                                        :disabled="!isStatusOnQueue(scope.row) || isProcessing"
+                                        :id="'accept-article-' + scope.row.id"
+                                        class="btn btn-default"
+                                        title="Accept Article"
+
+                                        @click="acceptArticle(scope.row)">
+
+                                        <i class="fas fa-vote-yea"></i>
+                                    </button>
+
+                                    <button
+                                        v-if="user.isOurs === 0 || (user.isOurs === 1 && !isStatusOnQueue(scope.row))"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
@@ -270,6 +310,20 @@
                                 : scope.row.status_writer == null
                                     ? 'Queue'
                                     : scope.row.status_writer }}
+
+                                <span
+                                    v-if="scope.row.id_writer !== null
+                                    && scope.row.status_writer === 'In Writing'
+                                    && scope.row.reminded_via !== null
+                                    && scope.row.reminded_via !== '24'
+                                    && scope.row.content === null"
+                                    class="badge badge-warning">
+                                    Reminder Sent
+
+                                    <span>
+                                       - {{ scope.row.reminded_via }}h
+                                    </span>
+                                </span>
                             </template>
 
                         </vue-virtual-table>
@@ -290,6 +344,20 @@
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
                             {{ messageForms.message }}
                         </span>
+
+                        <button
+                            v-if="contentModel.backlink_status !== 'Canceled'
+                            && (contentModel.status === 'In Writing' || contentModel.status === 'Issue')
+                            && contentModel.status !== null
+                            && contentModel.writer !== null
+                            && (user.isOurs === 1 && user.role_id === 4) || (user.isOurs === 0 && (user.role_id === 8 || user.role_id === 4)) || user.isAdmin"
+                            class="btn btn-danger"
+
+                            @click="cancelWritingArticle(contentModel)">
+
+                            <i class="fas fa-times-circle"></i>
+                            Cancel Writing
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -343,7 +411,14 @@
                                 </div>
                             </div> -->
 
-                            <div class="col-sm-12" v-if="user.isOurs == '0' || user.role_id == 4">
+                            <div class="col-sm-6" v-if="user.isOurs != '1'">
+                                <div class="form-group">
+                                    <label>Writer</label>
+                                    <input type="text" v-model="contentModel.writer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
                                 <div class="form-group">
                                     <label for="">Status Writer</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
@@ -605,6 +680,8 @@
                     link: '',
                     seller: '',
                     buyer: '',
+                    writer: '',
+                    id_writer: '',
                     meta_description: '',
                     note: '',
                     meta_keyword: '',
@@ -671,11 +748,11 @@
                 ],
                 isSearching: false,
                 statusSummary: {
-                    num_canceled: 0,
-                    num_done: 0,
-                    num_issue: 0,
-                    num_processing: 0,
-                    writing: 0
+                    total_queue: 0,
+                    total_in_writing: 0,
+                    total_done: 0,
+                    total_cancelled: 0,
+                    total_issue: 0
                 }
             }
         },
@@ -804,6 +881,111 @@
 
         methods: {
 
+            acceptArticle (data) {
+
+                if (!this.isStatusOnQueue(data) || this.isProcessing) {
+                    let error = !this.isStatusOnQueue(data)
+                        ? 'Article must be on queue.'
+                        : this.isProcessing
+                            ? "You must pass the writer's validation exam first before accepting an article"
+                            : 'Invalid attempt.'
+
+                    swal.fire(
+                        'Invalid',
+                        error,
+                        'error'
+                    )
+                } else {
+                    swal.fire({
+                        title : "Accept this article?",
+                        text : "Upon accepting an article, please note that the maximum working time to finish the content is 3 days",
+                        icon : "question",
+                        showCancelButton : true,
+                        confirmButtonText : 'Yes',
+                        cancelButtonText : 'No'
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.submitAcceptArticle(data);
+                        }
+                    });
+                }
+            },
+
+            submitAcceptArticle (data) {
+                let loader = this.$loading.show();
+
+                axios.post('/api/accept-decline-article', {
+                    writer_id: this.user.id,
+                    article_id: data.id,
+                    mode: 'accept'
+                }).then((response) => {
+                    swal.fire(
+                        'Success!',
+                        'Article successfully accepted',
+                        'success'
+                    )
+
+                    this.getListArticles();
+
+                    loader.hide();
+                }).catch((error) => {
+                    swal.fire(
+                        'Error!',
+                        'There was an error with the article accept request.',
+                        'error'
+                    )
+
+                    loader.hide();
+                });
+            },
+
+            cancelWritingArticle (data) {
+                swal.fire({
+                    title : "Cancel writing this article?",
+                    text : "Upon cancelling, the article will be back on queue.",
+                    icon : "question",
+                    showCancelButton : true,
+                    confirmButtonText : 'Yes',
+                    cancelButtonText : 'No'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        this.submitCancelArticle(data);
+                    }
+                });
+            },
+
+            submitCancelArticle (data) {
+                let loader = this.$loading.show();
+
+                axios.post('/api/accept-decline-article', {
+                    writer_id: data.id_writer,
+                    article_id: data.id,
+                    mode: 'cancel'
+                }).then((response) => {
+                    swal.fire(
+                        'Success!',
+                        'Article successfully cancelled',
+                        'success'
+                    )
+
+                    $("#modal-content-edit").modal('hide')
+
+                    this.getListArticles();
+
+                    loader.hide();
+                }).catch((error) => {
+                    swal.fire(
+                        'Error!',
+                        'There was an error with the article writing cancel request.',
+                        'error'
+                    )
+
+                    loader.hide();
+                });
+            },
+
             async getListLanguages() {
                 await this.$store.dispatch('actionGetListLanguages');
             },
@@ -818,6 +1000,10 @@
                     this.statusSummary.num_issue += parseInt(_status[index].num_issue);
                     this.statusSummary.num_canceled += parseInt(_status[index].num_canceled);
                 }
+            },
+
+            displaySummaryTotal () {
+                this.statusSummary = this.listArticles.summary;
             },
 
             modalCloser() {
@@ -856,11 +1042,6 @@
                 this.data = '';
             },
 
-            async getListWriter(params) {
-                await this.$store.dispatch('actionGetListWriter', params);
-            },
-
-
             async getListArticles(page = 1){
                 let loader = this.$loading.show();
                 this.searchLoading = true;
@@ -881,8 +1062,9 @@
                 this.searchLoading = false;
                 this.isSearching = false;
 
-                this.displayTotal();
+                // this.displayTotal();
                 this.viewArticle();
+                this.displaySummaryTotal();
                 loader.hide();
             },
 
@@ -976,6 +1158,8 @@
                 this.contentModel.url_publisher = backlink == null ? '':backlink.publisher.url;
                 this.contentModel.seller = backlink == null ? '':backlink.publisher.user.name;
                 this.contentModel.buyer = backlink == null ? '':backlink.user.name;
+                this.contentModel.writer = article.writer !== null ? article.writer : null;
+                this.contentModel.id_writer = article.id_writer;
                 this.contentModel.backlink_status = article.backlink_status;
                 this.contentModel.meta_description = article.meta_description;
                 this.contentModel.meta_keyword = article.meta_keyword;
@@ -1107,6 +1291,12 @@
                 this.viewModel = {
                     backlink: '',
                 }
+            },
+
+            isStatusOnQueue (data) {
+                return (data.backlink_status === 'Issue' || data.backlink_status === 'Canceled')
+                    ? false
+                    : data.status_writer === null;
             },
 
             clearEditorImages () {

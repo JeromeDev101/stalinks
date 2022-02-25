@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WriterExamProcessedEvent;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Registration;
@@ -47,7 +48,7 @@ class WriterValidationController extends Controller
                         })
                         ->orderBy('users.username')
                         ->get();
-        
+
 
         return response()->json(['data' => $users],200);
     }
@@ -57,27 +58,66 @@ class WriterValidationController extends Controller
         $input['status'] = 'For Checking';
         $exam = WriterExam::find($request->id);
         $exam->update($input);
+
+        event(new WriterExamProcessedEvent($exam, 'checking'));
     }
 
     public function checkExam(Request $request) {
-        $input = $request->only('status', 'title');
+        $input = $request->only('status');
 
         // update exam status
         $exam = WriterExam::find($request->id);
+
+        if ($input['status'] != $exam->status) {
+            if ($input['status'] === 'Approved' || $input['status'] === 'Disapproved') {
+                event(new WriterExamProcessedEvent($exam, strtolower($input['status'])));
+            }
+        }
+
         $exam->update($input);
 
         // update registration
         $user = User::find($request->writer_id);
         if($user) {
             $registration = Registration::where('email', $user->email)->first();
-            $registration->update(['is_exam_passed' => $input['status'] == 'Approved' ? 1:0 ]);
+
+            if ($input['status'] === 'Disapproved') {
+                // deactivate account
+                $user->update(['status' => 'inactive']);
+                $registration->update(['is_exam_passed' => 0, 'account_validation' => 'invalid', 'status' => 'inactive']);
+            } else {
+                if ($input['status'] === 'Approved') {
+
+                    $user->update(['status' => 'active']);
+
+                    if ($registration->survey_code === null) {
+                        $registration->update([
+                            'is_exam_passed' => 1,
+                            'account_validation' => 'valid',
+                            'status' => 'active',
+                            'survey_code' => md5(uniqid(rand(), true))
+                        ]);
+                    } else {
+                        $registration->update([
+                            'is_exam_passed' => 1,
+                            'account_validation' => 'valid',
+                            'status' => 'active',
+                        ]);
+                    }
+                }
+
+                $registration->update(['is_exam_passed' => $input['status'] == 'Approved' ? 1:0 ]);
+            }
+
         }
     }
 
     public function store(Request $request) {
         $input = $request->except('writer_name');
         $input['status'] = 'Setup';
-        WriterExam::create($input);
+        $exam = WriterExam::create($input);
+
+        event(new WriterExamProcessedEvent($exam, 'setup'));
 
         return response()->json(['success' => true],200);
     }

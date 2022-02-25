@@ -57,6 +57,9 @@ Route::middleware('auth:api')->group(function () {
     //Seller Surveys
     Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyController@hasSellerAnsweredSurvey');
 
+    //Writer Surveys
+    Route::name('check-writer-answered-survey')->post('/survey/writer/check', 'SurveyController@hasWriterAnsweredSurvey');
+
     //User
     Route::resource('users', 'UserController');
     Route::name('current-user')->get('current-user', 'UserController@currentInforUser');
@@ -77,6 +80,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-article-content')->post('articles-content', 'ArticlesController@updateContent');
     Route::name('get-article-list-admin')->get('article-list-admin', 'ArticlesController@getArticleListAdmin');
     Route::name('delete-article')->post('delete-article', 'ArticlesController@deleteArticle');
+    Route::name('accept-decline-article')->post('accept-decline-article', 'ArticlesController@acceptDeclineArticle');
 
     //Billing
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');

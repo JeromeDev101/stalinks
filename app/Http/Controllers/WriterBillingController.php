@@ -157,7 +157,7 @@ class WriterBillingController extends Controller
         }
 
         if( isset($check[0]) ){
-            $writer_info = User::where('id', $check[0])->with(['paymentType', 'registration'])->get();
+            $writer_info = User::where('id', $check[0])->with(['paymentType', 'registration', 'userPaymentTypes'])->get();
 
             $result = [
                 'data' => $writer_info,

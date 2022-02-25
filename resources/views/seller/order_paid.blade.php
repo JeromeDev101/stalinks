@@ -138,7 +138,7 @@
                     </p> <br/>
                     <p style="margin: 0;">
                         We would love to hear your feedback, as it helps us to serve you better!
-                        If it won't take too much of your time, please share us your thoughts by clicking the button below:
+                        If it won't take too much of your time, please share your thoughts by clicking the button below:
                     </p> <br/>
                 @endslot
 

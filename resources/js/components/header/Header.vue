@@ -40,6 +40,24 @@
                     {{ currentWindowWidth > 1200 ? 'Help us improve by answering our survey.' : '' }}
                 </a>
             </li>
+
+            <li class="nav-item w-100" v-if="writerSurvey.show && isExtWriter && $route.name !== 'survey-writer'">
+                <a
+                    data-toggle="modal"
+                    data-target="#modal-survey-writer"
+                    href="#"
+                    role="button"
+                    class="nav-link btn btn-warning"
+                    style="color: #1f2d3d!important; font-size: 14px"
+                    title="Help us improve by answering our survey"
+
+                    @click="surveyModalOpener('writer')">
+
+                    <i class="fas fa-question-circle"></i>
+
+                    {{ currentWindowWidth > 1200 ? 'Help us improve by answering our survey.' : '' }}
+                </a>
+            </li>
         </ul>
 
         <ul class="navbar-nav ml-auto mr-auto">
@@ -826,6 +844,74 @@
             </div>
         </div>
         <!-- End of Seller Modal Survey -->
+
+        <!-- Writer Modal Survey -->
+        <div
+            aria-hidden="true"
+            aria-labelledby="modelTitleId"
+            data-backdrop="static"
+            tabindex="-1"
+            role="dialog"
+            ref="surveyModalWriter"
+            id="modal-survey-writer"
+            class="modal fade"
+            style="z-index: 9999">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Stalinks Survey</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- SURVEY A -->
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <h3
+                                            :class="[!writerSurvey.isSetAAnswered ? 'text-primary' : 'text-success']"
+                                            class="text-center text-uppercase">
+                                            Survey A
+                                        </h3>
+
+                                        <div class="my-3 text-center">
+                                            <i
+                                                v-if="!writerSurvey.isSetAAnswered"
+                                                class="fas fa-poll-h fa-5x text-primary">
+                                            </i>
+
+                                            <i
+                                                v-else
+                                                class="fas fa-check-circle fa-5x text-success">
+                                            </i>
+                                        </div>
+
+                                        <router-link v-if="!writerSurvey.isSetAAnswered" :to="{ path: `/writer/survey/a` }" target="_blank">
+                                            <a
+                                                class="btn btn-primary stretched-link mt-4"
+                                                @click="surveyModalCloser('writer')">
+
+                                                Answer Now
+                                            </a>
+                                        </router-link>
+
+                                        <a v-else>
+                                            <button class="btn btn-success mt-4" style="pointer-events: none !important">
+                                                Thank you for answering this survey!
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Writer Modal Survey -->
     </nav>
 </template>
 
@@ -841,6 +927,7 @@ export default {
         return {
             isBuyer : false,
             isExtSeller : false,
+            isExtWriter: false,
             userInfo : {},
             error : null,
             money : {
@@ -872,6 +959,11 @@ export default {
             },
 
             sellerSurvey : {
+                show: false,
+                isSetAAnswered: false
+            },
+
+            writerSurvey : {
                 show: false,
                 isSetAAnswered: false
             },
@@ -1180,6 +1272,13 @@ export default {
 
                 this.hasUserAnsweredSellerSurvey()
             }
+
+            // check if ext writer
+            if (that.role_id === 4 && that.isOurs === 1) {
+                this.isExtWriter = true;
+
+                this.hasUserAnsweredWriterSurvey()
+            }
         },
 
         notificationsSeen() {
@@ -1241,6 +1340,15 @@ export default {
             });
         },
 
+        hasUserAnsweredWriterSurvey() {
+            axios.post('/api/survey/writer/check', {
+                code: null,
+            })
+            .then((response) => {
+                this.writerSurvey.show = Object.keys(response.data).length === 0;
+            });
+        },
+
         surveyModalOpener(type) {
             if (type === 'buyer') {
                 this.hasUserAnsweredSurveySet('a', type);
@@ -1251,11 +1359,12 @@ export default {
         },
 
         surveyModalCloser(type) {
-
             if (type === 'buyer') {
                 $("#modal-survey").modal('hide');
-            } else {
+            } else if (type === 'seller') {
                 $("#modal-survey-seller").modal('hide');
+            } else {
+                $("#modal-survey-writer").modal('hide');
             }
         },
 
@@ -1273,8 +1382,10 @@ export default {
                     } else {
                         this.survey.isSetBAnswered = Object.keys(response.data).length !== 0;
                     }
-                } else {
+                } else if (type === 'seller') {
                     this.sellerSurvey.isSetAAnswered = Object.keys(response.data).length !== 0;
+                } else {
+                    this.writerSurvey.isSetAAnswered = Object.keys(response.data).length !== 0;
                 }
 
             });

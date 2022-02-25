@@ -156,11 +156,6 @@
                     <p style="margin: 0;">"No" - Article will not be available for lifetime.</p>
                     <p style="margin: 0;">"Yes" - Article will be available for lifetime.</p> <br />
 
-
-                    <br />
-                    <p style="margin: 0;">You can also login to your account to see the details about your order and to confirm the details on the system itself.</p> <br />
-                    <p style="margin: 0;">Thank you for your cooperation, looking forward to working together with you.</p> <br />
-
                 @endslot
 
                 @slot('button')
@@ -188,6 +183,17 @@
                 @endslot
 
                 @slot('closing')
+                    <br />
+                    <p style="margin: 0;">
+                        You can also
+                        <a target="_blank" href="{{ url('/login') }}">
+                            login to your account
+                        </a>
+                        to see the details about your order and to confirm the details on the system itself.
+                    </p> <br />
+                    <p style="margin: 0;">If there's any issue on the order, please contact our CS team that is in charge with you.</p> <br />
+                    <p style="margin: 0;">Please remember that all orders from Stalinks should permanently stay on the site.</p> <br />
+                    <p style="margin: 0;">Thank you for your cooperation and have a nice day!</p> <br />
                     <p style="margin: 0;">Best Regards,<br>StaLinks Team</p>
                 @endslot
 

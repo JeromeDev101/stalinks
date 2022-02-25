@@ -132,9 +132,16 @@
             @component('components.email_body')
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $name }},</p> <br />
-                    <p style="margin: 0;">We are happy to welcome you on StaLinks!.</p> <br />
-                    <p style="margin: 0;">We have validated your account to receive an order and you can start writing a content from our buyers!</p> <br />
-                    <p style="margin: 0;">If you have any problem, feel free to contact us. Thank you!</p> <br />
+                    <p style="margin: 0;">Thank you for registering with Stalinks.</p> <br />
+                    <p style="margin: 0;">
+                        We have validated your account. Our team will notify you shortly for an examination.
+                        The instructions for the exam will be included on the notification email. You need to finish
+                        and pass this writing skills test before you can create articles and content for our clients.
+                    </p> <br />
+                    <p style="margin: 0;">
+                        Please note that the maximum working time for the exam is 3 days.
+                    </p> <br />
+                    <p style="margin: 0;">If you have any questions, please do not hesitate to contact us. Thank you!</p> <br />
                 @endslot
 
                 @slot('button')

@@ -7,23 +7,23 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
+class WriterValidated extends Notification
 {
     use Queueable;
 
-    protected $backlink;
-    protected $confirmation;
+    protected $user;
+    protected $input;
 
     /**
      * Create a new notification instance.
      *
-     * @param $backlink
-     * @param $confirmation
+     * @param $input
+     * @param $user
      */
-    public function __construct($backlink, $confirmation)
+    public function __construct($input, $user)
     {
-        $this->backlink = $backlink;
-        $this->confirmation = $confirmation;
+        $this->input = $input;
+        $this->user = $user;
     }
 
     /**
@@ -41,7 +41,7 @@ class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -59,11 +59,8 @@ class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        $seller = $this->backlink->publisher->user ? $this->backlink->publisher->user->username : 'A seller';
-        $confirmation_text = $this->confirmation === 'approve' ? 'confirmed' : 'cancelled';
-
         return [
-            'message' => $seller . ' has ' . $confirmation_text . ' a pending order: backlink ID# ' . $this->backlink->id
+            'message' => "A writer account (User #ID: " . $this->user->id . " , Username: " . $this->user->username . ") has been validated. Please create a writer exam on the Writer's Validation page now."
         ];
     }
 }

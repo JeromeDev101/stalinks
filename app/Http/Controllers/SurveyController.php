@@ -96,4 +96,17 @@ class SurveyController extends Controller
 
         return Survey::where('user_id', $user_id)->where('type', 'seller')->first();
     }
+
+    // Writer survey
+
+    public function hasWriterAnsweredSurvey(Request $request)
+    {
+        if (isset($request->code) && $request->code) {
+            $user_id = $this->getUserIdBySurveyCode($request->code);
+        } else {
+            $user_id = auth()->user()->id;
+        }
+
+        return Survey::where('user_id', $user_id)->where('type', 'writer')->first();
+    }
 }

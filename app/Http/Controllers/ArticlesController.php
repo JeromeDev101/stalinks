@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ArticleDoneEvent;
 use App\Events\NewArticleEvent;
 use App\Repositories\Contracts\NotificationInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Backlink;
 use App\Models\User;
@@ -134,7 +135,7 @@ class ArticlesController extends Controller
                                         ->whereNull('status_writer')
                                         ->where('backlinks.status', '!=', 'Canceled');
                                 })->orWhere('id_writer', $user->id);
-                            });
+                            })->whereIn('article.id_language', json_decode($user->registration->language_id));
                         })
                         ->where('backlinks.status' ,'!=', 'Pending')
                         // ->where('backlinks.status' ,'!=', 'Issue')
@@ -172,6 +173,10 @@ class ArticlesController extends Controller
                 $list->whereHas('backlink', function($query) use ($filter) {
                     return $query->where('status', $filter['status']);
                 })->whereNull('article.status_writer');
+
+                if ($filter['status'] === 'Issue') {
+                    $list->orWhere('article.status_writer', 'Issue');
+                }
             }else{
                 $list->where('article.status_writer', $filter['status']);
             }
@@ -199,7 +204,8 @@ class ArticlesController extends Controller
             $list = $list->paginate($paginate);
         }
 
-        $statusSummary = $this->backlinkSeller();
+//        $statusSummary = $this->backlinkSeller();
+        $statusSummary = $this->getArticleStatusSummaryTotals();
 
         return response()->json(['data' => $list, 'summary'=> $statusSummary],200);
 
@@ -230,6 +236,34 @@ class ArticlesController extends Controller
         return $list->groupBy('publisher.user_id', 'users.username')
                     ->orderBy('users.username', 'asc')
                     ->get();
+    }
+
+    private function getArticleStatusSummaryTotals () {
+        $user = Auth::user();
+        $isExtWriter = Auth::user()->role_id == 4 && Auth::user()->isOurs == 1;
+
+        $columns = [
+            DB::raw('SUM(CASE WHEN article.status_writer is null and backlinks.status not in ("Issue", "Canceled") THEN 1 ELSE 0 END) AS total_queue'),
+            DB::raw('SUM(CASE WHEN article.status_writer = "In Writing" THEN 1 ELSE 0 END) AS total_in_writing'),
+            DB::raw('SUM(CASE WHEN article.status_writer = "Done" THEN 1 ELSE 0 END) AS total_done'),
+            DB::raw('SUM(CASE WHEN exists (select * from backlinks where article.id_backlink = backlinks.id and status = "Canceled" and backlinks.deleted_at is null) AND article.status_writer is null THEN 1 ELSE 0 END) AS total_cancelled'),
+            DB::raw('SUM(CASE WHEN exists (select * from backlinks where article.id_backlink = backlinks.id and status = "Issue" and backlinks.deleted_at is null) AND article.status_writer is null OR article.status_writer = "Issue" THEN 1 ELSE 0 END) AS total_issue'),
+        ];
+
+        return Article::select($columns)
+            ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
+            ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
+            ->leftJoin('users', 'article.id_writer', '=', 'users.id')
+            ->where('backlinks.status' ,'!=', 'Pending')
+            ->when($isExtWriter, function($query) use ($user) {
+                return $query->where(function($sub) use ($user) {
+                    $sub->where(function ($sub2) {
+                        $sub2->whereNull('id_writer')
+                            ->whereNull('status_writer')
+                            ->where('backlinks.status', '!=', 'Canceled');
+                    })->orWhere('id_writer', $user->id);
+                })->whereIn('article.id_language', json_decode($user->registration->language_id));
+            })->first();
     }
 
     private function getBacklinksForSeller() {
@@ -323,33 +357,18 @@ class ArticlesController extends Controller
             $backlink->update(['title' => $request->get('content')['title']]);
         }
 
-        if(Auth::user()->role_id == 4) {
-            $article->update([
-                'id_writer_price' => $price_id,
-                'date_start' => $request->data == null ? null:date('Y-m-d'),
-                'content' => $request->data,
-                'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
-                'status_writer' => $request->content['status'],
-                'id_writer' => $user_id,
-                'num_words' => $request->content['num_words'], 
-                'meta_description' => $request->content['meta_description'],
-                'meta_keyword' => $request->content['meta_keyword'],
-                'note' => $request->content['note'],
-            ]);
-        } else {
-            $article->update([
-                'id_writer_price' => $price_id,
-                'date_start' => $request->data == null ? null:date('Y-m-d'),
-                'content' => $request->data,
-                'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
-                'status_writer' => $request->content['status'],
-                'num_words' => $request->content['num_words'], 
-                'meta_description' => $request->content['meta_description'],
-                'meta_keyword' => $request->content['meta_keyword'],
-                'note' => $request->content['note'],
-            ]);
-        }
-            
+        $article->update([
+            'id_writer_price' => $price_id,
+//            'date_start' => $request->data == null ? null:date('Y-m-d'), // removed for accept article button
+            'content' => $request->data,
+            'date_complete' => $request->content['status'] == 'Done' ? date('Y-m-d'):null,
+            'status_writer' => $request->content['status'],
+//            'id_writer' => $user_id, // removed for accept article button
+            'num_words' => $request->content['num_words'],
+            'meta_description' => $request->content['meta_description'],
+            'meta_keyword' => $request->content['meta_keyword'],
+            'note' => $request->content['note'],
+        ]);
 
         return response()->json(['success'=>true], 200);
     }
@@ -359,5 +378,33 @@ class ArticlesController extends Controller
         $article->delete();
 
         return response()->json(['success' => true], 200);
+    }
+
+    public function acceptDeclineArticle(Request $request)
+    {
+        $article = Article::find($request->article_id);
+
+        if ($request->mode === 'accept') {
+            $article->update([
+                'id_writer' => $request->writer_id,
+                'status_writer' => 'In Writing',
+                'date_start' => Carbon::now()
+            ]);
+
+            // add survey code for writer if null
+            if ($article->user->registration->survey_code === null) {
+                $article->user->registration->update([
+                    'survey_code' => md5(uniqid(rand(), true))
+                ]);
+            }
+        } else {
+            $article->update([
+                'id_writer' => null,
+                'status_writer' => null,
+                'date_start' => null
+            ]);
+        }
+
+        return response()->json(['success'=>true], 200);
     }
 }

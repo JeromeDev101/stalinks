@@ -754,12 +754,12 @@
                                 <div class="form-group">
                                     <label>Language</label> <small><i class="text-danger">(Required if Writer)</i></small>
                                     <v-select
-                                        multiple 
-                                        v-model="accountModel.language_id" 
+                                        multiple
+                                        v-model="accountModel.language_id"
                                         label="name"
-                                        :options="listLanguages.data" 
+                                        :options="listLanguages.data"
                                         :reduce="name => name.id"
-                                        :searchable="true" 
+                                        :searchable="true"
                                         placeholder="Select Language"/>
 
                                         <span class="text-danger" v-if="isErrorLang">Required to select Langauge</span>
@@ -1267,15 +1267,17 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Language</label> <small><i class="text-danger">(Required if Writer)</i></small>
+                                    <label>Language</label> <small><i class="text-danger">* Required if writer</i></small>
                                     <v-select
-                                        multiple 
-                                        v-model="accountUpdate.language_id" 
+                                        multiple
+                                        v-model="accountUpdate.language_id"
                                         label="name"
-                                        :options="listLanguages.data" 
+                                        :options="listLanguages.data"
                                         :reduce="name => name.id"
-                                        :searchable="true" 
+                                        :searchable="true"
                                         placeholder="Select Language"/>
+
+                                    <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
 
@@ -2552,7 +2554,7 @@ export default {
                 );
 
                 this.isErrorLang = true;
-                return false; 
+                return false;
             }
 
             this.isPopupLoading = true;
@@ -2617,22 +2619,36 @@ export default {
                 confirmButtonText : 'Yes',
                 cancelButtonText : 'No'
             })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        self.saveUpdate()
-                    }
-                });
+            .then((result) => {
+                if (result.isConfirmed) {
+                    self.saveUpdate()
+                }
+            });
         },
 
         async saveUpdate() {
+            let loader = this.$loading.show();
+
             let id_payment_type = this.accountUpdate.id_payment_type;
 
             if(this.accountUpdate.is_sub_account === 0
                 && !this.accountUpdate.update_method_payment_type[id_payment_type]
-                && this.accountUpdate.type !== 'Affiliate') {
+                && this.accountUpdate.type !== 'Affiliate'
+                && this.isVerified) {
+
                 this.validate_error_type_update = true;
+                loader.hide();
+
+                swal.fire(
+                    'Error',
+                    'There are some errors while updating the account!',
+                    'error'
+                );
+
                 return false;
             }
+
+            this.accountUpdate.isVerified = this.isVerified;
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateAccount', this.accountUpdate);
@@ -2650,12 +2666,16 @@ export default {
                 $(element).modal('hide');
 
                 this.getAccountList();
+
+                loader.hide();
             } else {
                 swal.fire(
                     'Error',
                     'There are some errors while updating the account!',
                     'error'
                 );
+
+                loader.hide();
             }
         },
 

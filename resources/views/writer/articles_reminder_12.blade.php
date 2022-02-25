@@ -124,74 +124,67 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-    Article Paid
+        Articles In Writing Reminder
     @endcomponent
 
     <tr>
         <td  align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Greetings, {{ $name }}!</p> <br />
-                    <p style="margin: 0;">You have completed the order(s) on {{ $date }}, with Article IDs [{{ $articles }}]</p> <br />
+                    <p style="margin: 0;">Hello {{ $user->name }},</p> <br />
+                    <p style="margin: 0;">We hope you're doing well.</p> <br />
                     <p style="margin: 0;">
-                        If you received this email, you should have already received payment from us. Also attached in
-                        this email is the receipt for the transaction.
-                    </p> <br/>
+                        We just want to remind you that you have {{ count($articles) }} 'In Writing' articles that are
+                        still without content for the last 12 hours.
+                    </p>
+
+                    <div style="margin-top: 15px; margin-bottom: 15px;">
+                        <ul>
+                            @foreach (collect($articles)->take(5) as $article)
+                                <li>Article ID# {{ $article['id'] }}, Backlink ID# {{ $article['id_backlink'] }} ({{ $article['topic'] }})</li>
+                            @endforeach
+
+                            @if (count($articles) > 5)
+                                <li>
+                                    <span style="font-style: italic"> ... </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+
                     <p style="margin: 0;">
-                        Thank you for choosing StaLinks! We hope you are satisfied in using our platform.
+                        Please note that we only give a maximum of 3 days working time for the article content before
+                        the client order goes live.
                     </p> <br/>
+
                     <p style="margin: 0;">
-                        We would like to know your experience using our desk management system.
-                        If it won't take too much of your time, please share your thoughts by answering our survey
-                        and giving us feedback. It will help us to improve our system and service better.
+                        You can
+                        <a target="_blank" href="{{ url('/login') }}">
+                            Login to your account now
+                        </a>
+                        to see the details.
                     </p> <br/>
+
                     <p style="margin: 0;">
-                        If you're already logged in to Stalinks. The survey button will appear on the top left of the
-                        navigation bar. You can also click the button down below:
+                        If you have any problems or question that you would like to ask, please do not hesitate to contact
+                        us through this email: marketing@stalinks.com or this Skype ID: live:tiararachl. We would be glad
+                        to help you!
                     </p> <br/>
+
+                    <p style="margin: 0;">Thank you and have a nice day!</p>
                 @endslot
 
                 @slot('button')
-                    <tr>
-                        <td bgcolor="#ffffff" align="left">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                        <table border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FF9B00">
-                                                    <a href="{{ url('/writer/survey/a/' . $survey_code) }}"
-                                                       target="_blank" class="button-text"
-                                                       style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Answer Survey
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('link')
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If the button doesn't work, please copy this link instead and paste it in your browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" class="main-text" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FF9B00;">{{ url('/writer/survey/a/' . $survey_code) }}</a></p>
-                        </td>
-                    </tr>
                 @endslot
 
                 @slot('closing')
                     <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
                 @endslot
 
-                <!-- email body slot -->
+            <!-- email body slot -->
                 @component('components.email_contacts')
                 @endcomponent
             @endcomponent

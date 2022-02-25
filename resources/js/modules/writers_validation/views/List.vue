@@ -72,37 +72,40 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-body">
-                            <table id="tbl_wallet_transaction"
-                                class="table table-hover table-bordered table-striped rlink-table">
-                                <thead>
-                                <tr class="label-primary">
-                                    <th>#</th>
-                                    <th>Action</th>
-                                    <th>Writer</th>
-                                    <th>Title</th>
-                                    <th>Anchor Text</th>
-                                    <th>Link To</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                            <div class="table-responsive">
+                                <table
+                                    id="tbl_writer_validation"
+                                    class="table table-hover table-bordered table-striped rlink-table"
+                                    style="font-size: 0.75rem">
+                                    <thead>
+                                    <tr class="label-primary">
+                                        <th>#</th>
+                                        <th>Action</th>
+                                        <th>Writer</th>
+                                        <th>Title</th>
+                                        <th>Anchor Text</th>
+                                        <th>Link To</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     <tr v-for="(writer, index) in ListExtWriters.data" :key="index">
                                         <td>{{ index + 1 }}</td>
                                         <td>
-                                            
+
                                             <button title="Create Exam"
-                                                v-if="!writer.anchor_text"
-                                                @click="doCreateExam(writer.id, writer.username)"
-                                                class="btn btn-success">
+                                                    v-if="!writer.anchor_text"
+                                                    @click="doCreateExam(writer.id, writer.username)"
+                                                    class="btn btn-success">
                                                 Create Exam
                                             </button>
 
                                             <button title="View Content"
-                                                v-else
-                                                @click="doUpdate(writer)"
-                                                class="btn btn-default"><i class="fa fa-fw fa-eye"></i>
+                                                    v-else
+                                                    @click="doUpdate(writer)"
+                                                    class="btn btn-default"><i class="fa fa-fw fa-eye"></i>
                                             </button>
-                                            
+
                                         </td>
                                         <td>{{ writer.username }}</td>
                                         <td>{{ writer.title }}</td>
@@ -112,13 +115,14 @@
                                         </td>
                                         <td>{{ writer.exam_status == "" || writer.exam_status == null ? "Not Yet Setup":writer.exam_status}}</td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Modal Create Exam Edit -->
             <div class="modal fade" id="modalEditWriterValidate" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -198,7 +202,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Title</label>
-                                        <input type="text" class="form-control" v-model="viewModel.title">
+                                        <input type="text" class="form-control" v-model="viewModel.title" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -216,7 +220,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Meta Description</label>
-                                        <textarea class="form-control" cols="30" rows="5" v-model="viewModel.meta_description"></textarea>
+                                        <textarea class="form-control" cols="30" rows="5" v-model="viewModel.meta_description" disabled></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -246,7 +250,10 @@
         <!-- Viewing for External Writers -->
         <div v-if="isExtWriter">
             <div class="alert alert-info" v-if="ExamUpdate.anchor_text == '' || ExamUpdate.link_to == '' ">
-                <p>Please wait for the admin to create your exam.</p>
+                <p class="mb-0">
+                    <i class="fas fa-info-circle"></i>
+                    Please wait for the writer's exam to be created. We will notify you about this shortly. Thank you!
+                </p>
             </div>
 
             <div class="row" v-if="ExamUpdate.anchor_text != '' && ExamUpdate.link_to != '' ">
@@ -259,21 +266,26 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12" v-if="ExamUpdate.status == 'For Checking'">
-                                    <div class="alert alert-success">
-                                        <p>Your exam is now currently on checking. Please wait for the result. Thanks</p>
+                                <div class="col-md-12" v-if="ExamUpdate.status === 'For Checking'">
+                                    <div class="alert alert-warning">
+                                        <p class="mb-0">
+                                            <i class="fas fa-info-circle"></i>
+                                            Your exam is now currently on checking. We will notify you shortly for the result. Thank you for your cooperation!
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div class="col-md-12" v-if="ExamUpdate.status == 'Approved'">
+                                <div class="col-md-12" v-if="ExamUpdate.status === 'Approved'">
                                     <div class="alert alert-success">
-                                        <p><b>Congratulations!</b> you passed in the exam. Please re-login to update your account. Thanks</p>
+                                        <p class="mb-0"> <i class="fas fa-info-circle"></i>
+                                            <b>Congratulations!</b> you have passed the writer examination. You can now go to the articles page and start writing articles for our clients. Please re-login to update your account. Thanks you for your cooperation!
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="alert alert-info">
-                                        <p><b>Instruction</b></p>
+                                        <p><i class="fas fa-book"></i> <b>Instruction</b></p>
                                         1. Write an article with atleast <b>600 words</b>.<br/>
                                         2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
                                         3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and <b>hyperlink</b> it to the assigned website.<br/>
@@ -382,9 +394,12 @@ export default {
         }
     },
 
-    async created() {
-        this.getListExtWriters();
+    created() {
         this.checkUser();
+    },
+
+    mounted() {
+        this.getListExtWriters();
     },
 
     computed : {
@@ -397,7 +412,7 @@ export default {
     methods : {
 
         submitUpdate() {
-    
+
             if(this.viewModel.status != 'Setup') {
                 if(this.viewModel.meta_description == '' || this.data2 == '' || this.viewModel.title == '') {
                     swal.fire(
@@ -405,11 +420,11 @@ export default {
                         'Exam is not yet started by the writer.',
                         'error',
                     )
-                    
+
                     return false;
                 }
             }
-            
+
 
             axios.post('/api/check-exam', this.viewModel)
                 .then((res) => {
@@ -420,7 +435,7 @@ export default {
                         'success',
                     )
 
-                    $("#modalEditWriterValidateViewContent").modal('show')
+                    $("#modalEditWriterValidateViewContent").modal('hide')
                 })
         },
 
@@ -501,15 +516,35 @@ export default {
                 'Successfully Submitted.',
                 'success',
             )
-            
+
             this.ExamUpdate.status = 'For Checking';
         },
 
         getListExtWriters(filters) {
+            let table = $('#tbl_writer_validation');
+
+            table.DataTable().destroy();
+
             axios.get('/api/ext-writers', filters)
-                .then((res) => {
-                    this.ListExtWriters = res.data
-                })
+            .then((res) => {
+                this.ListExtWriters = res.data
+
+                this.$nextTick(() => {
+                    table.DataTable({
+                        paging : false,
+                        searching : false,
+                        columnDefs : [
+                            {orderable : true, targets : 0},
+                            {orderable : true, targets : 1},
+                            {orderable : true, targets : 2},
+                            {orderable : true, targets : 3},
+                            {orderable : true, targets : 4},
+                            {orderable : true, targets : 5},
+                            {orderable : true, targets : 6},
+                        ],
+                    });
+                });
+            })
         },
 
         doUpdate(writer) {
@@ -536,18 +571,27 @@ export default {
                 return false;
             }
 
-            axios.post('/api/add-exam', this.addExam);
+            let loader = this.$loading.show();
 
-            swal.fire(
-                'Success',
-                'Exam Successfully Created',
-                'success',
-            )
+            axios.post('/api/add-exam', this.addExam)
+                .then((res) => {
+                    loader.hide();
 
-            this.doSearch();
+                    this.getListExtWriters({
+                        params: this.filterModel
+                    });
 
-            $("#modalEditWriterValidate").modal('hide');
-            
+                    swal.fire(
+                        'Success',
+                        'Exam Successfully Created',
+                        'success',
+                    )
+
+                    $("#modalEditWriterValidate").modal('hide');
+                }).catch((err) => {
+                    loader.hide();
+                    console.log(err)
+                })
         },
 
         doCreateExam(writer_id, writer_username) {
