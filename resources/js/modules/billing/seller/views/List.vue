@@ -204,11 +204,31 @@
                                             title="View Proof of Billing"
                                             data-target="#modal-view-docs"
                                             data-toggle="modal"
-                                            class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
-                                        <button v-else
-                                                title="Download Proof"
-                                                @click="downloadProof(wallet.id)"
-                                                class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
+                                            class="btn btn-default">
+
+                                            <i class="fa fa-fw fa-eye"></i>
+                                        </button>
+
+                                        <button
+                                            v-else
+                                            title="Download Proof"
+                                            @click="downloadProof(wallet.id)"
+                                            class="btn btn-default">
+
+                                            <i class="fa fa-fw fa-download"></i>
+                                        </button>
+
+                                        <button
+                                            data-target="#modal-re-upload-doc"
+                                            data-toggle="modal"
+                                            class="btn btn-default px-3 ml-2"
+                                            title="Re-upload Proof of Billing"
+                                            :disabled="seller.proof_doc_path == null"
+
+                                            @click="doShowReupload(seller.proof_doc_path, seller.billing_id)">
+
+                                            <i class="fas fa-file-upload"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -333,12 +353,95 @@
             </div>
         </div>
         <!-- End of Modal Payment -->
+
+        <!-- Modal Re upload Doc -->
+        <div
+            class="modal fade"
+            id="modal-re-upload-doc"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modelTitleId"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Re-upload Document</h5>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Uploaded Document</strong>
+                            </div>
+
+                            <div class="cad-body">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <img class="img-fluid"
+                                             :src="proof_doc_re_upload"
+                                             alt="Proof of Billing">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>New Document</strong>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            enctype="multipart/form-data"
+                                            ref="proof_reupload"
+                                            name="file">
+
+                                        <small class="text-muted">
+                                            Note: It must be image type. ( jpg, jpeg, gif and png )
+                                        </small> <br/>
+
+                                        <span
+                                            v-if="messageForms.errors.file"
+                                            v-for="err in messageForms.errors.file"
+                                            class="text-danger">
+                                            {{ err }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="isDisabledReupload"
+
+                            @click="doReupload">
+
+                            Re-Upload
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Re upload Doc -->
     </div>
 </template>
 
 <script>
 import {mapState, mapActions} from 'vuex';
 import _ from 'lodash';
+import axios from "axios";
 
 export default {
     data() {
@@ -349,6 +452,7 @@ export default {
                 payment_type : ''
             },
             proof_doc : '',
+            proof_doc_re_upload : '',
             isPopupLoading : false,
             filterModel : {
                 search : this.$route.query.search || '',
@@ -374,8 +478,15 @@ export default {
                 payment_types: null
             },
             isDisabledPay : true,
+            isDisabledReupload: false,
             isSearching : false,
-            step : 0
+            step : 0,
+
+            // reupload
+
+            reUploadModel: {
+                billing_id: null,
+            }
         }
     },
 
@@ -545,6 +656,11 @@ export default {
             this.proof_doc = src;
         },
 
+        doShowReupload(src, billing_id) {
+            this.proof_doc_re_upload = src;
+            this.reUploadModel.billing_id = billing_id
+        },
+
         async getListSeller(params) {
             await this.$store.dispatch('actionGetListSeller', params);
         },
@@ -666,6 +782,64 @@ export default {
             this.isDisabledPay = false;
 
             this.$root.$refs.AppHeader.liveGetWallet()
+        },
+
+        doReupload () {
+            swal.fire({
+                title : "Re-upload new document",
+                html : "Are you sure that you want to update the uploaded document? An automatic email will be sent to the seller.",
+                icon : "warning",
+                showCancelButton : true,
+                confirmButtonText : 'Yes, update it!',
+                cancelButtonText : 'No, keep it'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    this.submitReupload()
+                }
+            });
+        },
+
+        async submitReupload () {
+
+            let loader = this.$loading.show();
+
+            $('#tbl_seller_billing').DataTable().destroy();
+
+            this.isDisabledReupload = true;
+
+            this.formData = new FormData();
+            this.formData.append('billing_id', this.reUploadModel.billing_id);
+            this.formData.append('file', this.$refs.proof_reupload.files[0]);
+
+            await this.$store.dispatch('actionReupload', this.formData)
+
+            if (this.messageForms.action === 'success') {
+                $("#modal-re-upload-doc").modal('hide')
+
+                await this.getSellerBilling();
+
+                this.$refs.proof_reupload.value = '';
+                this.reUploadModel.billing_id = null;
+                this.isDisabledReupload = false;
+
+                loader.hide();
+
+                await swal.fire(
+                    'Success',
+                    'Document re-uploaded successfully!',
+                    'success'
+                )
+            } else {
+                loader.hide();
+                this.isDisabledReupload = false;
+
+                await swal.fire(
+                    'Error',
+                    'There were some errors while uploading the document',
+                    'error'
+                )
+            }
         },
 
         async getPaymentTypeList(params) {

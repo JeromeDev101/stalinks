@@ -8,6 +8,7 @@ use App\Events\BacklinkLiveEvent;
 use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
+use App\Events\BillingReuploadDocEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\BuyEvent;
 use App\Events\NewArticleEvent;
@@ -20,6 +21,7 @@ use App\Events\WriterExamProcessedEvent;
 use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
 use App\Events\TeamInChargeUpdatedEvent;
+use App\Listeners\BillingReuploadDocListener;
 use App\Listeners\SellerConfirmationListener;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
@@ -142,6 +144,10 @@ class EventServiceProvider extends ServiceProvider
 
         WriterExamProcessedEvent::class => [
             WriterExamProcessedListener::class
+        ],
+
+        BillingReuploadDocEvent::class => [
+            BillingReuploadDocListener::class
         ],
     ];
 

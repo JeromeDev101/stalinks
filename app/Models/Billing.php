@@ -11,4 +11,12 @@ class Billing extends Model
 
     protected $table = 'billing';
     protected $guarded = [];
+
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'id_user');
+    }
+
+    public function backlink() {
+        return $this->belongsTo('App\Models\Backlink', 'id_backlink');
+    }
 }

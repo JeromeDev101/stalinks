@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BillingReuploadDocEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\SellerPaidEvent;
 use App\Http\Requests\SellerPayRequest;
@@ -28,6 +29,7 @@ class SellerBillingController extends Controller
 
         $columns = [
             'backlinks.*',
+            'billing.id as billing_id',
             'billing.date_billing',
             'billing.proof_doc_path',
             'billing.admin_confirmation',
@@ -225,5 +227,28 @@ class SellerBillingController extends Controller
             ]);
 
         return response()->json($response);
+    }
+
+    public function sellerBillingReuploadDoc(Request $request) {
+        $request->validate([
+            'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // reupload new document
+        $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
+        move_file_to_storage($request->file, 'images/billing', $filename);
+
+        $billing = Billing::find($request->billing_id);
+
+        if ($billing) {
+            $billing->update([
+                'proof_doc_path' => '/images/billing/' . $filename,
+            ]);
+
+            // send email to seller
+            event(new BillingReuploadDocEvent($billing, $filename));
+        }
+
+        return response()->json(['success' => true, 'data' => $billing], 200);
     }
 }

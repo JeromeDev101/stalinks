@@ -14,6 +14,11 @@ export default class SellerBillingService {
             .catch(error => error);
     }
 
+    static reUploadBillingDoc(params){
+        return axios.post('api/seller-billing-reupload-doc', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 
     static getPaymentType(params){
         return axios.get('api/payment-list', params)
