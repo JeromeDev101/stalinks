@@ -150,14 +150,27 @@
                             Thank you for your cooperation. Have a nice day!
                         </p> <br />
                     @else
-                        <p style="margin: 0;">
-                            After much consideration upon the evaluation of your exam. We regret to inform you that you
-                            did not pass the writer's examination provided by our team.
-                        </p> <br />
+                        @if ($exam->attempt === 1)
+                            <p style="margin: 0;">
+                                We regret to inform you that you did not pass your first attempt in the writer's
+                                examination. But no worries! you will get a chance to do a second attempt exam after
+                                <strong>three weeks starting today.</strong>
+                            </p> <br />
 
-                        <p style="margin: 0;">
-                            We will now deactivate your writer's account. We wish you good luck on your future endeavors. Thank you!
-                        </p> <br />
+                            <p style="margin: 0;">
+                                We will notify you shortly after your second attempt exam is created. We wish you good
+                                luck!
+                            </p> <br />
+                        @else
+                            <p style="margin: 0;">
+                                After much consideration upon the evaluation of your exam. We regret to inform you that you
+                                did not pass the writer's examination provided by our team.
+                            </p> <br />
+
+                            <p style="margin: 0;">
+                                We will now deactivate your writer's account. We wish you good luck on your future endeavors. Thank you!
+                            </p> <br />
+                        @endif
                     @endif
 
                 @endslot

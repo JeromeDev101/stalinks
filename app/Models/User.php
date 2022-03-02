@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\HostingProvider;
 use App\Models\DomainProvider;
 use App\Repositories\Traits\Loggable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -45,11 +46,19 @@ class User extends Authenticatable
         ];
 
     protected $appends = [
-        'work_mail_orig'
+        'work_mail_orig',
+        'exam_duration'
     ];
 
     public function getWorkMailOrigAttribute() {
         return $this->work_mail;
+    }
+
+    public function getExamDurationAttribute()
+    {
+        $second_attempt_at = Carbon::parse($this->exam_second_attempt_at);
+
+        return Carbon::now()->diffInDays($second_attempt_at, false);
     }
 
     public function isOurs()
@@ -194,6 +203,11 @@ class User extends Authenticatable
     public function autoReplies()
     {
         return $this->hasMany('App\Models\MailAutoReply', 'user_id');
+    }
+
+    public function writerExam()
+    {
+        return $this->hasMany('App\Models\WriterExam', 'writer_id')->orderBy('writer_exam.id', 'asc');
     }
 
     /**

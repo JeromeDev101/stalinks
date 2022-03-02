@@ -25,14 +25,14 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Anchor Text</label>
+                                        <label>Anchor Text</label>
                                         <input type="text" class="form-control" v-model="filterModel.anchor_text">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Writer</label>
+                                        <label>Writer</label>
                                         <select name="" class="form-control" v-model="filterModel.writer_id">
                                             <option value="">All</option>
                                             <option v-for="option in ListExtWriters.data" v-bind:value="option.id">
@@ -44,7 +44,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Status</label>
+                                        <label>Status</label>
                                         <select name="" class="form-control" v-model="filterModel.status">
                                             <option value="">All</option>
                                             <option v-for="option in statusFilter" v-bind:value="option" :key="option">
@@ -72,52 +72,184 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-6">
+
+                                </div>
+
+                                <div class="col-6">
+                                    <select
+                                        v-model="filterModel.paginate"
+                                        class="form-control float-right"
+                                        style="min-width: 100px; width: 100px"
+
+                                        @change="getListExtWriters">
+
+                                        <option v-for="option in paginateOptions" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="table-responsive">
                                 <table
                                     id="tbl_writer_validation"
-                                    class="table table-hover table-bordered table-striped rlink-table"
-                                    style="font-size: 0.75rem">
+                                    class="table"
+                                    style="font-size: 0.75rem; border-collapse: collapse">
                                     <thead>
-                                    <tr class="label-primary">
-                                        <th>#</th>
-                                        <th>Action</th>
-                                        <th>Writer</th>
-                                        <th>Title</th>
-                                        <th>Anchor Text</th>
-                                        <th>Link To</th>
-                                        <th>Status</th>
-                                    </tr>
+                                        <tr class="label-primary">
+                                            <th>Writer</th>
+                                            <th>Attempt / Status</th>
+                                            <th>Action</th>
+                                            <th>Title</th>
+                                            <th>Anchor Text</th>
+                                            <th>Link To</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(writer, index) in ListExtWriters.data" :key="index">
-                                        <td>{{ index + 1 }}</td>
-                                        <td>
+                                        <template v-for="writer in ListExtWriters.data">
+                                            <!-- if no exam -->
+                                            <template v-if="writer.writer_exam.length === 0">
+                                                <tr>
+                                                    <td class="align-middle font-weight-bold">
+                                                        {{ writer.username }}
+                                                    </td>
 
-                                            <button title="Create Exam"
-                                                    v-if="!writer.anchor_text"
-                                                    @click="doCreateExam(writer.id, writer.username)"
-                                                    class="btn btn-success">
-                                                Create Exam
-                                            </button>
+                                                    <td class="align-middle">
+                                                        <span class="badge badge-secondary p-3 text-uppercase">
+                                                            1 - Not Yet Setup
+                                                        </span>
+                                                    </td>
 
-                                            <button title="View Content"
-                                                    v-else
-                                                    @click="doUpdate(writer)"
-                                                    class="btn btn-default"><i class="fa fa-fw fa-eye"></i>
-                                            </button>
+                                                    <td class="align-middle">
+                                                        <button
+                                                            title="Create Exam"
+                                                            class="btn btn-success"
 
-                                        </td>
-                                        <td>{{ writer.username }}</td>
-                                        <td>{{ writer.title }}</td>
-                                        <td>{{ writer.anchor_text }}</td>
-                                        <td>
-                                            <a :href="'//'+writer.link_to" target="_blank">{{ writer.link_to }}</a>
-                                        </td>
-                                        <td>{{ writer.exam_status == "" || writer.exam_status == null ? "Not Yet Setup":writer.exam_status}}</td>
-                                    </tr>
+                                                            @click="doCreateExam(writer.id, writer.username, 1, writer.exam_duration)">
+
+                                                            <i class="fas fa-plus-square"></i>
+                                                        </button>
+                                                    </td>
+
+                                                    <td class="align-middle" colspan="3">
+                                                        Exam details empty - please setup an exam for the writer
+                                                    </td>
+
+                                                    <td style="display: none !important;"></td>
+                                                    <td style="display: none !important;"></td>
+                                                </tr>
+                                            </template>
+
+                                            <!-- if writer exam is 1 > -->
+                                            <template v-else>
+                                                <tr v-for="(exam, index) in writer.writer_exam">
+                                                    <td
+                                                        class="align-middle font-weight-bold"
+                                                        :rowspan="checkExamsHaveDisapproved(writer.writer_exam) ? 2 : writer.writer_exam.length"
+                                                        :style="index > 0 ? 'display: none !important' : ''">
+
+                                                        {{ writer.username }}
+                                                    </td>
+
+                                                    <td
+                                                        class="align-middle"
+                                                        :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+
+                                                    <span class="badge p-3 text-uppercase" :class="examStatusBadge(exam.status)">
+                                                        {{ exam.attempt }} - {{ exam.status }}
+                                                    </span>
+                                                    </td>
+
+                                                    <td :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+                                                        <button
+                                                            title="View Exam Details"
+                                                            class="btn btn-primary"
+
+                                                            @click="doUpdate(exam)">
+
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                    </td>
+
+                                                    <td
+                                                        class="align-middle"
+                                                        :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+                                                        {{ exam.title }}
+                                                    </td>
+
+                                                    <td
+                                                        class="align-middle"
+                                                        :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+                                                        {{ exam.anchor_text }}
+                                                    </td>
+
+                                                    <td
+                                                        class="align-middle"
+                                                        :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+                                                        {{ exam.link_to }}
+                                                    </td>
+                                                </tr>
+
+                                                <tr v-if="checkExamsHaveDisapproved(writer.writer_exam)">
+                                                    <td
+                                                        rowspan="2"
+                                                        class="align-middle font-weight-bold"
+                                                        style="display: none !important;">
+
+                                                        {{ writer.username }}
+                                                    </td>
+
+                                                    <td class="align-middle" style="border: none !important;">
+                                                        <span
+                                                            v-if="writer.exam_duration > 0"
+                                                            class="badge badge-secondary p-3 text-uppercase">
+                                                            {{ writer.exam_duration }} day(s) until second attempt exam
+                                                        </span>
+
+                                                        <span v-else class="badge badge-warning p-3 text-uppercase">
+                                                            Create 2nd attempt exam now
+                                                        </span>
+                                                    </td>
+
+                                                    <td class="align-middle" style="border: none !important;">
+                                                        <button
+                                                            :disabled="writer.exam_duration !== 0"
+                                                            title="Create Exam"
+                                                            class="btn btn-success"
+
+                                                            @click="doCreateExam(writer.id, writer.username, 2, writer.exam_duration)">
+
+                                                            <i class="fas fa-plus-square"></i>
+                                                        </button>
+                                                    </td>
+
+                                                    <td
+                                                        colspan="3"
+                                                        class="align-middle"
+                                                        style="border: none !important;"
+                                                        :class="writer.exam_duration !== 0 ? 'text-secondary' : ''">
+
+                                                        Exam details empty - please setup an exam for the writer
+                                                    </td>
+
+                                                    <td style="display: none !important; border: none !important;"></td>
+                                                    <td style="display: none !important; border: none !important;"></td>
+                                                </tr>
+                                            </template>
+                                        </template>
                                     </tbody>
                                 </table>
                             </div>
+
+                            <pagination
+                                :data="ListExtWriters"
+                                :limit="8"
+
+                                @pagination-change-page="getListExtWriters">
+
+                            </pagination>
                         </div>
                     </div>
                 </div>
@@ -128,7 +260,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Create Exam</h5>
+                            <h5 class="modal-title">Create {{ addExam.attempt === 1 ? '1st' : '2nd' }} Attempt Exam</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -137,32 +269,32 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Writer</label>
+                                        <label>Writer</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="addExam.writer_name">
                                         <input type="hidden" class="form-control" v-model="addExam.writer_id">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Title</label>
+                                        <label>Title</label>
                                         <input type="text" class="form-control" v-model="addExam.title">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Anchor Text</label>
+                                        <label>Anchor Text</label>
                                         <input type="text" class="form-control" v-model="addExam.anchor_text">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Link To</label>
+                                        <label>Link To</label>
                                         <input type="text" class="form-control" v-model="addExam.link_to">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Meta Description</label>
+                                        <label>Meta Description</label>
                                         <textarea class="form-control" cols="30" rows="5" v-model="addExam.meta_description"></textarea>
                                     </div>
                                 </div>
@@ -182,7 +314,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">View Content</h5>
+                            <h5 class="modal-title">Writer Examination Details</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -191,8 +323,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Status</label>
-                                        <select name="" class="form-control" v-model="viewModel.status">
+                                        <label>Status</label>
+                                        <select name="" class="form-control" v-model="viewModel.status" disabled>
                                             <option v-for="option in status" v-bind:value="option" :key="option">
                                                 {{ option }}
                                             </option>
@@ -201,31 +333,31 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Title</label>
+                                        <label>Title</label>
                                         <input type="text" class="form-control" v-model="viewModel.title" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Anchor Text</label>
+                                        <label>Anchor Text</label>
                                         <input type="text" class="form-control" v-model="viewModel.anchor_text" :disabled="true">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Link To</label>
+                                        <label>Link To</label>
                                         <input type="text" class="form-control" v-model="viewModel.link_to" :disabled="true">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Meta Description</label>
+                                        <label>Meta Description</label>
                                         <textarea class="form-control" cols="30" rows="5" v-model="viewModel.meta_description" disabled></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Content</label>
+                                        <label>Content</label>
                                         <tiny-editor
                                             v-model="data2"
                                             ref="composeEditExam"
@@ -237,8 +369,27 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <button
+                                v-if="viewModel.status === 'For Checking'"
+                                type="button"
+                                class="btn btn-success"
+
+                                @click="submitUpdate('approve')">
+
+                                <i class="fas fa-user-check"></i> Approve
+                            </button>
+
+                            <button
+                                v-if="viewModel.status === 'For Checking'"
+                                type="button"
+                                class="btn btn-danger"
+
+                                @click="submitUpdate('disapprove')">
+
+                                <i class="fas fa-user-times"></i> Disapprove
+                            </button>
+
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" @click="submitUpdate">Update</button>
                         </div>
                     </div>
                 </div>
@@ -249,89 +400,229 @@
 
         <!-- Viewing for External Writers -->
         <div v-if="isExtWriter">
-            <div class="alert alert-info" v-if="ExamUpdate.anchor_text == '' || ExamUpdate.link_to == '' ">
-                <p class="mb-0">
-                    <i class="fas fa-info-circle"></i>
-                    Please wait for the writer's exam to be created. We will notify you about this shortly. Thank you!
-                </p>
+
+            <div v-if="ExamUpdateFirst || ExamUpdateSecond" class="row">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <p><i class="fas fa-book"></i> <b>Instructions:</b></p>
+                        1. Write an article with at least <b>600 words</b>.<br/>
+                        2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
+                        3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and
+                        <b>hyperlink</b> it to the assigned website.<br/>
+
+                        <br/>
+                        You will be given <b>2 attempts</b> for the writer's exam. If you have failed on the first attempt.
+                        no worries! we will give you a second attempt to take the exam after <b>3 weeks.</b>
+                    </div>
+                </div>
             </div>
 
-            <div class="row" v-if="ExamUpdate.anchor_text != '' && ExamUpdate.link_to != '' ">
-                <div class="col-sm-12">
-                    <div class="card card-outline card-secondary">
-                        <div class="card-header">
-                            <h3 class="card-title text-primary">Examination</h3>
-                            <div class="card-tools">
+            <div v-else>
+                <div class="alert alert-info">
+                    <p class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Please wait for the writer's exam to be created. We will notify you about this shortly. Thank you!
+                    </p>
+                </div>
+            </div>
+
+            <!-- first attempt exam -->
+            <div v-if="ExamUpdateFirst">
+                <div class="row" v-if="ExamUpdateFirst.anchor_text !== '' && ExamUpdateFirst.link_to !== '' ">
+                    <div class="col-sm-12">
+                        <div class="card card-outline card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title text-primary">Examination - 1st Attempt</h3>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div v-if="ExamUpdateFirst.status === 'Disapproved'" class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-danger">
+                                            <p class="mb-0">
+                                                <i class="fas fa-info-circle"></i>
+                                                First attempt examination result: Failed <br/> <br/>
+
+                                                Remaining day(s) until second attempt: {{
+                                                    user.exam_duration > 0 ? user.exam_duration : 0
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div v-else class="row">
+                                    <div class="col-md-12" v-if="ExamUpdateFirst.status === 'For Checking'">
+                                        <div class="alert alert-warning">
+                                            <p class="mb-0">
+                                                <i class="fas fa-info-circle"></i>
+                                                Your exam is now currently on checking. We will notify you shortly for
+                                                the result. Thank you for your cooperation!
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12" v-if="ExamUpdateFirst.status === 'Approved'">
+                                        <div class="alert alert-success">
+                                            <p class="mb-0"> <i class="fas fa-info-circle"></i>
+                                                <b>Congratulations!</b> you have passed the writer examination.
+                                                You can now go to the articles page and start writing articles for
+                                                our clients. Please re-login to update your account.
+                                                Thanks you for your cooperation!
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <input type="text" class="form-control" v-model="ExamUpdateFirst.title" :disabled="true">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Anchor Text</label>
+                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateFirst.anchor_text">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Link To</label>
+                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateFirst.link_to">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Meta Description</label>
+                                            <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdateFirst.meta_description" :disabled="true"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Content</label>
+                                            <tiny-editor
+                                                v-model="data"
+                                                ref="composeEditExam2"
+                                                editor-id="composeEditExam2">
+
+                                            </tiny-editor>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 my-3" v-if="ExamUpdateFirst.status !== 'For Checking' && ExamUpdateFirst.status !== 'Approved'">
+                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(1)">Submit Exam</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12" v-if="ExamUpdate.status === 'For Checking'">
-                                    <div class="alert alert-warning">
-                                        <p class="mb-0">
-                                            <i class="fas fa-info-circle"></i>
-                                            Your exam is now currently on checking. We will notify you shortly for the result. Thank you for your cooperation!
-                                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- second attempt exam -->
+            <div v-if="ExamUpdateFirst && ExamUpdateFirst.status === 'Disapproved'">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-outline card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title text-primary">Examination - 2nd Attempt</h3>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div v-if="!ExamUpdateSecond" class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <p class="mb-0">
+                                                <i class="fas fa-info-circle"></i>
+                                                Please wait for the 2nd attempt exam to be created.
+                                                We will notify you about this shortly. Thank you!
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-12" v-if="ExamUpdate.status === 'Approved'">
-                                    <div class="alert alert-success">
-                                        <p class="mb-0"> <i class="fas fa-info-circle"></i>
-                                            <b>Congratulations!</b> you have passed the writer examination. You can now go to the articles page and start writing articles for our clients. Please re-login to update your account. Thanks you for your cooperation!
-                                        </p>
+                                <div v-else-if="ExamUpdateSecond.status === 'Disapproved'" class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-danger">
+                                            <p class="mb-0">
+                                                <i class="fas fa-info-circle"></i>
+                                                After careful evaluation of your second attempt exam. We regret to inform
+                                                you that you did not pass the writer's examination provided by our team.
+
+                                                <br/> <br/>
+
+                                                We will now deactivate your writer's account. We wish you good luck
+                                                on your future endeavors. Thank you!
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-12">
-                                    <div class="alert alert-info">
-                                        <p><i class="fas fa-book"></i> <b>Instruction</b></p>
-                                        1. Write an article with atleast <b>600 words</b>.<br/>
-                                        2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
-                                        3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and <b>hyperlink</b> it to the assigned website.<br/>
-                                        <!-- 4. Create a creative title.<br/>
-                                        5. Write a meta description with <b>110 - 160</b> characters.<br/> -->
+                                <div v-else class="row">
+                                    <div class="col-md-12" v-if="ExamUpdateSecond.status === 'For Checking'">
+                                        <div class="alert alert-warning">
+                                            <p class="mb-0">
+                                                <i class="fas fa-info-circle"></i>
+                                                Your exam is now currently on checking. We will notify you shortly for
+                                                the result. Thank you for your cooperation!
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Title</label>
-                                        <input type="text" class="form-control" v-model="ExamUpdate.title" :disabled="true">
+                                    <div class="col-md-12" v-if="ExamUpdateSecond.status === 'Approved'">
+                                        <div class="alert alert-success">
+                                            <p class="mb-0"> <i class="fas fa-info-circle"></i>
+                                                <b>Congratulations!</b> you have passed the writer examination.
+                                                You can now go to the articles page and start writing articles for
+                                                our clients. Please re-login to update your account.
+                                                Thanks you for your cooperation!
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Anchor Text</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="ExamUpdate.anchor_text">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Link To</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="ExamUpdate.link_to">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Meta Description</label>
-                                        <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdate.meta_description" :disabled="true"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Content</label>
-                                        <tiny-editor
-                                            v-model="data"
-                                            ref="composeEditExam2"
-                                            editor-id="composeEditExam2">
 
-                                        </tiny-editor>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <input type="text" class="form-control" v-model="ExamUpdateSecond.title" :disabled="true">
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Anchor Text</label>
+                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateSecond.anchor_text">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Link To</label>
+                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateSecond.link_to">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Meta Description</label>
+                                            <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdateSecond.meta_description" :disabled="true"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Content</label>
+                                            <tiny-editor
+                                                v-model="dataSecond"
+                                                ref="composeEditExam2Two"
+                                                editor-id="composeEditExam2Two">
 
-                                <div class="col-md-12 my-3" v-if="ExamUpdate.status != 'For Checking' && ExamUpdate.status != 'Approved'">
-                                    <button class="btn btn-primary btn-lg" @click="submitWriterExam">Submit Exam</button>
+                                            </tiny-editor>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 my-3" v-if="ExamUpdateSecond.status !== 'For Checking' && ExamUpdateSecond.status !== 'Approved'">
+                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(2)">Submit Exam</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -357,8 +648,11 @@ export default {
             statusFilter: ['Not Yet Setup', 'Setup', 'For Checking', 'Approved', 'Disapproved'],
             status: ['Setup', 'For Checking', 'Approved', 'Disapproved'],
             data: '',
+            dataSecond: '',
             data2: '',
-            ListExtWriters: [],
+            ListExtWriters: {
+                data: [],
+            },
             addExam: {
                 writer_name: '',
                 writer_id: '',
@@ -366,13 +660,17 @@ export default {
                 link_to: '',
                 title: '',
                 meta_description: '',
+                attempt: '',
+                duration: '',
             },
             filterModel: {
                 status: '',
                 anchor_text: '',
                 writer_id: '',
+                paginate: 15,
             },
-            ExamUpdate: {
+
+            ExamUpdateFirst: {
                 link_to: '',
                 anchor_text: '',
                 meta_description: '',
@@ -380,6 +678,16 @@ export default {
                 content: '',
                 status: '',
             },
+
+            ExamUpdateSecond: {
+                link_to: '',
+                anchor_text: '',
+                meta_description: '',
+                title: '',
+                content: '',
+                status: '',
+            },
+
             isExtWriter: false,
             searchLoading: false,
             viewModel: {
@@ -390,7 +698,18 @@ export default {
                 status: '',
                 link_to: '',
                 writer_id: '',
-            }
+                attempt: '',
+            },
+
+            paginateOptions : [
+                15,
+                25,
+                50,
+                100,
+                200,
+                250,
+                'All'
+            ],
         }
     },
 
@@ -411,32 +730,41 @@ export default {
 
     methods : {
 
-        submitUpdate() {
+        submitUpdate(mod) {
+            swal.fire({
+                title : "Writer Exam Evaluation",
+                text : "Mark exam as " + mod + "?",
+                icon : mod === 'approve' ? 'success' : 'error',
+                showCancelButton : true,
+                confirmButtonText : 'Yes',
+                cancelButtonText : 'No'
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
 
-            if(this.viewModel.status != 'Setup') {
-                if(this.viewModel.meta_description == '' || this.data2 == '' || this.viewModel.title == '') {
-                    swal.fire(
-                        'Sorry!',
-                        'Exam is not yet started by the writer.',
-                        'error',
-                    )
+                    let loader = this.$loading.show();
 
-                    return false;
+                    this.viewModel.status = mod === 'approve' ? 'Approved' : 'Disapproved';
+
+                    axios.post('/api/check-exam', this.viewModel)
+                        .then((res) => {
+
+                            loader.hide();
+
+                            swal.fire(
+                                'Success',
+                                'Successfully Updated.',
+                                'success',
+                            )
+
+                            $("#modalEditWriterValidateViewContent").modal('hide')
+
+                            this.$nextTick(() => {
+                                this.doSearch();
+                            });
+                        })
                 }
-            }
-
-
-            axios.post('/api/check-exam', this.viewModel)
-                .then((res) => {
-                    this.doSearch();
-                    swal.fire(
-                        'Success',
-                        'Successfully Updated.',
-                        'success',
-                    )
-
-                    $("#modalEditWriterValidateViewContent").modal('hide')
-                })
+            });
         },
 
         clearSearch() {
@@ -444,11 +772,10 @@ export default {
                 status: '',
                 anchor_text: '',
                 writer_id: '',
+                paginate: 15,
             }
 
-            this.getListExtWriters({
-                params: this.filterModel
-            });
+            this.getListExtWriters();
 
             this.$router.replace({'query': null});
         },
@@ -458,39 +785,60 @@ export default {
                 query: this.filterModel,
             });
 
-            this.getListExtWriters({
-                params: {
-                    status: this.filterModel.status,
-                    writer_id: this.filterModel.writer_id,
-                    anchor_text: this.filterModel.anchor_text
-                }
-            });
+            this.getListExtWriters();
         },
 
         checkUser() {
             // check if external writer
             if(this.user.role_id == 4 && this.user.isOurs == 1) {
                 this.isExtWriter = true
-                this.getExamDetails();
+                this.getExamDetails(1);
+                this.getExamDetails(2);
             }
         },
 
-        getExamDetails() {
-            axios.get('/api/get-exam', {
+        getExamDetails(attempt) {
+            axios.get('/api/get-exam-details', {
                 params: {
-                    id: this.user.id
+                    id: this.user.id,
+                    attempt: attempt
                 }
             }).then((res) => {
-                var result = res.data.data
-                this.ExamUpdate = result;
-                this.data = result.content
+                let result = res.data.data
+
+                if (attempt === 1) {
+                    this.ExamUpdateFirst = result;
+                    if (result) {
+                        this.data = result.content === null ? '' : result.content
+                    }
+                } else {
+                    this.ExamUpdateSecond = result;
+                    if (result) {
+                        this.dataSecond = result.content === null ? '' : result.content
+                    }
+                }
+
             })
         },
 
-        submitWriterExam() {
-            this.ExamUpdate.content = this.data;
+        submitWriterExam(attempt) {
 
-            if(this.ExamUpdate.content == "" || this.ExamUpdate.content == null) {
+            let data = {};
+
+            if (attempt === 1) {
+                this.ExamUpdateFirst.content = this.data;
+                this.ExamUpdateFirst.num_words = this.$refs.composeEditExam2.wordCount();
+
+                data = this.ExamUpdateFirst;
+            } else {
+                this.ExamUpdateSecond.content = this.dataSecond;
+                this.ExamUpdateSecond.num_words = this.$refs.composeEditExam2Two.wordCount();
+
+                data = this.ExamUpdateSecond;
+            }
+
+
+            if(data.content === "" || data.content == null) {
                 swal.fire(
                     'Note',
                     'Please write Content to finish the Exam',
@@ -499,9 +847,7 @@ export default {
                 return false;
             }
 
-            this.ExamUpdate.num_words = this.$refs.composeEditExam2.wordCount();
-
-            if(this.ExamUpdate.num_words < 600) {
+            if(data.num_words < 600) {
                 swal.fire(
                     'Note',
                     'Below 600 words are not',
@@ -510,53 +856,71 @@ export default {
                 return false;
             }
 
-            axios.post('/api/update-exam', this.ExamUpdate);
-            swal.fire(
-                'Success',
-                'Successfully Submitted.',
-                'success',
-            )
+            let loader = this.$loading.show();
 
-            this.ExamUpdate.status = 'For Checking';
+            axios.post('/api/update-exam', data)
+                .then((res) => {
+                    loader.hide();
+
+                    swal.fire(
+                        'Success',
+                        'Successfully Submitted.',
+                        'success',
+                    )
+
+                    if (attempt === 1) {
+                        this.ExamUpdateFirst.status = 'For Checking';
+                    } else {
+                        this.ExamUpdateSecond.status = 'For Checking';
+                    }
+
+                }).catch((err) => {
+                    loader.hide();
+                    console.log(err)
+                })
         },
 
-        getListExtWriters(filters) {
-            let table = $('#tbl_writer_validation');
+        getListExtWriters(page = 1) {
+            this.filterModel.page = page;
 
-            table.DataTable().destroy();
-
-            axios.get('/api/ext-writers', filters)
+            axios.get('/api/ext-writers', {
+                params: this.filterModel
+            })
             .then((res) => {
                 this.ListExtWriters = res.data
 
-                this.$nextTick(() => {
-                    table.DataTable({
-                        paging : false,
-                        searching : false,
-                        columnDefs : [
-                            {orderable : true, targets : 0},
-                            {orderable : true, targets : 1},
-                            {orderable : true, targets : 2},
-                            {orderable : true, targets : 3},
-                            {orderable : true, targets : 4},
-                            {orderable : true, targets : 5},
-                            {orderable : true, targets : 6},
-                        ],
-                    });
-                });
+                // let table = $('#tbl_writer_validation');
+                //
+                // table.DataTable().destroy();
+                //
+                // this.$nextTick(() => {
+                //     table.DataTable({
+                //         paging : false,
+                //         searching : false,
+                //         order: [],
+                //         columnDefs : [
+                //             {orderable : true, targets : 0},
+                //             {orderable : true, targets : 1},
+                //             {orderable : true, targets : 2},
+                //             {orderable : true, targets : 3},
+                //             {orderable : true, targets : 4},
+                //             {orderable : true, targets : 5},
+                //         ],
+                //     });
+                // });
             })
         },
 
-        doUpdate(writer) {
-            console.log(writer)
-            this.viewModel.writer_id = writer.exam_writer_id
-            this.viewModel.id = writer.exam_id
-            this.viewModel.title = writer.title
-            this.viewModel.anchor_text = writer.anchor_text
-            this.viewModel.status = writer.exam_status
-            this.viewModel.link_to = writer.link_to
-            this.viewModel.meta_description = writer.meta_description
-            this.data2 = writer.content
+        doUpdate(exam) {
+            this.viewModel.writer_id = exam.writer_id;
+            this.viewModel.id = exam.id;
+            this.viewModel.title = exam.title;
+            this.viewModel.anchor_text = exam.anchor_text;
+            this.viewModel.status = exam.status;
+            this.viewModel.link_to = exam.link_to;
+            this.viewModel.meta_description = exam.meta_description;
+            this.viewModel.attempt = exam.attempt;
+            this.data2 = exam.content === null ? '' : exam.content;
 
             $("#modalEditWriterValidateViewContent").modal('show')
         },
@@ -568,7 +932,22 @@ export default {
                     'Please Fill up all fields.',
                     'error',
                 )
+
                 return false;
+            }
+
+            // if 2nd attempt, duration must be <= 0
+            if (this.addExam.attempt === 2) {
+                if (this.addExam.duration > 0) {
+                    swal.fire(
+                        'Error',
+                        'Writer is not yet eligible to take 2nd attempt exam. Try again after ' + this.addExam.duration
+                        + ' day(s)',
+                        'error',
+                    )
+
+                    return false;
+                }
             }
 
             let loader = this.$loading.show();
@@ -577,9 +956,7 @@ export default {
                 .then((res) => {
                     loader.hide();
 
-                    this.getListExtWriters({
-                        params: this.filterModel
-                    });
+                    this.getListExtWriters();
 
                     swal.fire(
                         'Success',
@@ -594,15 +971,48 @@ export default {
                 })
         },
 
-        doCreateExam(writer_id, writer_username) {
-            this.addExam.writer_name = writer_username
-            this.addExam.writer_id = writer_id
-            this.addExam.anchor_text = ''
-            this.addExam.link_to = ''
+        doCreateExam(writer_id, writer_username, attempt, duration) {
+            this.addExam.writer_name = writer_username;
+            this.addExam.writer_id = writer_id;
+            this.addExam.title = '';
+            this.addExam.anchor_text = '';
+            this.addExam.link_to = '';
+            this.addExam.meta_description = '';
+            this.addExam.attempt = attempt;
+            this.addExam.duration = duration;
 
             $("#modalEditWriterValidate").modal('show')
         },
-    },
 
+        examStatusBadge (status) {
+            let badge = '';
+
+            if (status === 'Setup') {
+                badge = 'badge-primary'
+            } else if (status === 'For Checking') {
+                badge = 'badge-info'
+            } else if (status === 'Approved') {
+                badge = 'badge-success'
+            } else {
+                badge = 'badge-danger'
+            }
+
+            return badge;
+        },
+
+        checkExamsHaveDisapproved (exams) {
+            return exams.some(item => item.status === 'Disapproved') && exams.length === 1;
+        }
+    },
 }
 </script>
+
+<style scoped>
+
+.table td {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 4px solid #dee2e6;
+}
+
+</style>

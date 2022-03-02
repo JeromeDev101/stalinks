@@ -139,7 +139,9 @@
                         and pass this writing skills test before you can create articles and content for our clients.
                     </p> <br />
                     <p style="margin: 0;">
-                        Please note that the maximum working time for the exam is 3 days.
+                        Please note that the maximum working time for the exam is 3 days. You will be given two attempts
+                        to pass the exam. If you have failed to met the criteria for both attempts, your writer account
+                        will be automatically deactivated.
                     </p> <br />
                     <p style="margin: 0;">If you have any questions, please do not hesitate to contact us. Thank you!</p> <br />
                 @endslot

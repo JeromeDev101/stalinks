@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('deposit:remind')->daily();
         $schedule->command('buyer-newsletter:send')->daily();
         $schedule->command('article-queue:remind')->daily();
+        $schedule->command('exam-duration:notify')->daily();
         $schedule->command('article:remind')->hourly();
         $schedule->command('backup:run')->daily();
         $schedule->command('backup:clean')->daily();

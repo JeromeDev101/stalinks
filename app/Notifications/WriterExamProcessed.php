@@ -48,14 +48,16 @@ class WriterExamProcessed extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $attempt = $this->writerExam->attempt === 1 ? '- 1st Attempt' : '- 2nd Attempt';
+
         // notify writer that an exam is created
         if ($this->mode === 'setup') {
             return (new MailMessage)
-                ->subject("Writer's Examination Created")
+                ->subject("Writer's Examination Created " . $attempt)
                 ->markdown('writer.writer_exam_created', ['exam'=>$this->writerExam]);
         } else if ($this->mode === 'approved' || $this->mode === 'disapproved') {
             return (new MailMessage)
-                ->subject("Writer's Examination Result")
+                ->subject("Writer's Examination Result " . $attempt)
                 ->markdown('writer.writer_exam_result', ['exam'=>$this->writerExam, 'mode' => $this->mode]);
         }
     }
@@ -72,18 +74,28 @@ class WriterExamProcessed extends Notification implements ShouldQueue
 
         // notify writer that an exam is created
         if ($this->mode === 'setup') {
-            $message = "Our team has created a writer's examination for you.
+            $attempt = $this->writerExam->attempt === 1 ? '(1st attempt)' : '(2nd attempt)';
+
+            $message = "Our team has created a writer's examination" . $attempt . " for you.
                         Navigate to the 'Writer's Validation' page now to see the instructions.";
         } else if ($this->mode === 'checking') {
-            $message = "Writer " . $this->writerExam->writer->name . " has submitted his exam (Title: "
-                        . $this->writerExam->title . ", Anchor Text: " . $this->writerExam->anchor_text . "). Please evaluate it on the
-                        'Writer's Validation' page now.";
+            $attempt = $this->writerExam->attempt === 1 ? '- 1st attempt' : '- 2nd attempt';
+
+            $message = "Writer " . $this->writerExam->writer->name . " has submitted his exam " . $attempt . " (Title: "
+                        . $this->writerExam->title . ", Anchor Text: " . $this->writerExam->anchor_text . ").
+                        Please evaluate it on the 'Writer's Validation' page now.";
         } else if ($this->mode === 'approved') {
             $message = "Congratulations! You have passed the writer's examination.
                         You can navigate to the 'Article' page and start accepting and writing articles for our clients.";
         } else if ($this->mode === 'disapproved') {
-            $message = "We regret to inform you that you did not pass the writer's examination provided by our team.
-                        We will now deactivate your writer's account. We wish you good luck on your future endeavors. Thank you!";
+            if ($this->writerExam->attempt === 1) {
+                $message = "We regret to inform you that you did not pass your first attempt for the writer's examination.
+                But no worries, you will get a chance to do a second attempt exam after 3 weeks! We wish you good luck!";
+            } else {
+                $message = "We regret to inform you that you did not pass the writer's examination (2nd attempt)
+                provided by our team. We will now deactivate your writer's account. We wish you good luck on your
+                future endeavors. Thank you!";
+            }
         }
 
         return [

@@ -124,7 +124,11 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-        Writer's Examination Created
+        @if ($exam->attempt === 1)
+            Writer's Examination Created - 1st Attempt
+        @else
+            Writer's Examination Created - 2nd Attempt
+        @endif
     @endcomponent
 
     <tr>
@@ -132,11 +136,27 @@
             @component('components.email_body')
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $exam->writer->name }},</p> <br />
-                    <p style="margin: 0;">We are glad to welcome you to the team as our in-house writer!</p> <br />
-                    <p style="margin: 0;">
-                        Before you get started on writing an article for our clients, we want you to do a writer's exam.
-                        This will help us to know and evaluate your writing skills.
-                    </p> <br/>
+
+                    @if ($exam->attempt === 1)
+                        <p style="margin: 0;">We are glad to welcome you to the team as our in-house writer!</p> <br />
+                        <p style="margin: 0;">
+                            Before you get started on writing an article for our clients, we want you to do a writer's exam.
+                            This will help us to know and evaluate your writing skills.
+                        </p> <br/>
+
+                        <p style="margin: 0;">
+                            Please note that you will be given <strong>two attempts</strong> to showcase your writing
+                            skills and pass our exam. If you have failed in this first attempt, you will be given the
+                            second attempt exam after <strong>three weeks</strong>.
+                        </p> <br/>
+
+                    @else
+                        <p style="margin: 0;">
+                            We are glad to inform you that your second attempt for the writer's examination
+                            is now created.
+                        </p> <br />
+                    @endif
+
                     <p style="margin: 0;">
                         Here are the instructions for the exam:
                     </p> <br/>
@@ -156,7 +176,7 @@
 
                     <p style="margin: 0;">
                         You will be notified about the result of your exam shortly after you've finished and submitted it.
-                        Thank you for your cooperation!
+                        We wish you good luck. Thank you for your cooperation!
                     </p>
                 @endslot
 
