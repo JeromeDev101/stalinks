@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
     Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
     Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyController@hasUserAnsweredSurveySet');
+    Route::name('survey-question-full-details')->get('/survey/survey-question-full-details', 'SurveyController@getSurveyQuestionFullDetails');
 
     //Seller Surveys
     Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyController@hasSellerAnsweredSurvey');

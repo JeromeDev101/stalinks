@@ -92,10 +92,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Question 1: In your opinion, what is the most important
-                                                            thing to have in desk management?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetBQuestions[0].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'one',
+                                                                     buyerSetBQuestions[0].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -113,9 +127,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Question 2: From 1-6, how would you rate our tools?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 2: {{ buyerSetBQuestions[1].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'two',
+                                                                     buyerSetBQuestions[1].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -133,10 +162,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Question 3: From 1-10, how well do you understand Stalinks
-                                                            and what can we do to help you?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 3: {{ buyerSetBQuestions[2].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'three',
+                                                                     buyerSetBQuestions[2].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -154,9 +197,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Question 4: What would you like to see in Stalinks?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 4: {{ buyerSetBQuestions[3].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'four',
+                                                                     buyerSetBQuestions[3].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -174,9 +232,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Question 5: How would you rate our team interaction with you?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 4: {{ buyerSetBQuestions[4].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'five',
+                                                                     buyerSetBQuestions[4].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -224,10 +297,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Do you think our system is efficient for you to sell your
-                                                            guest posts?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 1: {{ sellerSetAQuestions[0].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'one',
+                                                                     sellerSetAQuestions[0].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -245,9 +332,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Are you satisfied with our CS Team service?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 2: {{ sellerSetAQuestions[1].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'two',
+                                                                     sellerSetAQuestions[1].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -265,9 +367,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Do you have any problems using our payment methods?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 3: {{ sellerSetAQuestions[2].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'three',
+                                                                     sellerSetAQuestions[2].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -285,10 +402,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Do you find our platform helpful to you in
-                                                            getting orders easily?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 4: {{ sellerSetAQuestions[3].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'four',
+                                                                     sellerSetAQuestions[3].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -306,10 +437,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Based on your most recent experience, please rate your
-                                                            satisfaction by using our service.
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 5: {{ sellerSetAQuestions[4].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'five',
+                                                                     sellerSetAQuestions[4].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -327,10 +472,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Please rate if you would recommend us and our services to
-                                                            your connections.
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 6: {{ sellerSetAQuestions[5].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'six',
+                                                                     sellerSetAQuestions[5].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -377,9 +536,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Do you think our system is efficient to use?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 1: {{ writerSetAQuestions[0].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'one',
+                                                                     writerSetAQuestions[0].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -397,9 +571,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Are you satisfied with the services that we already provide?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 2: {{ writerSetAQuestions[1].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'two',
+                                                                     writerSetAQuestions[1].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -417,9 +606,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Do you find any difficulties in writing article contents?
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 3: {{ writerSetAQuestions[2].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'three',
+                                                                     writerSetAQuestions[2].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -437,10 +641,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Based on your most recent experience, please rate your
-                                                            satisfaction by using our services.
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 4: {{ writerSetAQuestions[3].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'four',
+                                                                     writerSetAQuestions[3].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -458,10 +676,24 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <p class="mb-0 font-weight-bold">
-                                                            Please rate if you would recommend us and our services
-                                                            to your connections.k
-                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                Question 5: {{ writerSetAQuestions[4].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'five',
+                                                                     writerSetAQuestions[4].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
 
                                                     <div class="card-body">
@@ -484,7 +716,7 @@
             </div>
         </div>
 
-        <!-- Modal Survey -->
+        <!-- Modal Buyer Survey A Questions -->
         <div
             aria-hidden="true"
             aria-labelledby="modelTitleId"
@@ -501,15 +733,174 @@
                     <div class="modal-header">
                         <h5 class="modal-title text-primary">Buyer Survey A Questions</h5>
                     </div>
-                    <div class="modal-body">
-                        <div v-for="(question, index) in buyerSetAQuestions">
-                            <p class="mb-2 font-weight-bold">
-                                {{ index + 1 + '. ' + question }}
-                            </p>
 
-                            <hr/>
+                    <div class="modal-body">
+                        <div
+                            v-for="(question, index) in buyerSetAQuestions"
+                            class="row mb-2 pb-2"
+                            :class="index !== 4 ? 'border-bottom' : ''">
+
+                            <div class="col-10 align-self-center">
+                                <p class="mb-0 font-weight-bold">
+                                    {{ index + 1 + '. ' + question.question }}
+                                </p>
+                            </div>
+
+                            <div class="col-2">
+                                <button
+                                    class="btn btn-primary"
+                                    :title="'View Question #' + (index + 1) + ' Details'"
+
+                                    @click="viewSurveyQuestionFullDetails('a', 'buyer', question.number, question.question)">
+
+                                    <i class="fas fa-list-alt"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Buyer Survey A Questions -->
+        <div
+            aria-hidden="true"
+            aria-labelledby="modelTitleId"
+            data-backdrop="static"
+            tabindex="-1"
+            role="dialog"
+            class="modal fade"
+            ref="surveyDetailsModal"
+            id="modal-survey-questions-details"
+            style="z-index: 9999">
+
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">{{ surveyQuestionFullDetails.modalTitle }}</h5>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row px-3">
+                            <div class="card col-12">
+                                <div class="card-body">
+                                    <strong>Question:</strong> {{ surveyQuestionFullDetails.question }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row px-3 mb-2">
+                            <div class="col-6 px-0 align-self-center">
+                                <b>
+                                    Showing {{ surveyQuestionFullDetailsData.data.from }} to
+                                    {{ surveyQuestionFullDetailsData.data.to }} of {{ surveyQuestionFullDetailsData.data.total }}
+                                    entries.
+                                </b>
+                            </div>
+
+                            <div class="col-6 px-0">
+                                <select
+                                    v-model="surveyQuestionFullDetails.pagination"
+                                    class="form-control float-right ml-2"
+                                    style="min-width: 100px; width: 100px"
+
+                                    @change="getSurveyFullDetails">
+
+                                    <option v-for="option in surveyQuestionPaginateOptions" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+
+                                <export-excel
+                                    worksheet="My Worksheet"
+                                    :name="surveyQuestionFullDetails.type
+                                    + '_survey_answers_set_'
+                                    + surveyQuestionFullDetails.set
+                                    + '_'
+                                    + surveyQuestionFullDetails.number"
+                                    class="btn btn-primary float-right"
+                                    :data=sortDataForExport(surveyQuestionFullDetailsData.data.data,surveyQuestionFullDetails.number)>
+
+                                    <i class="fa fa-list"></i>
+                                    Export
+
+                                </export-excel>
+                            </div>
+                        </div>
+
+                        <div class="row px-3">
+                            <div class="table-responsive mb-2">
+                                <table
+                                    id="tbl_survey_question_details"
+                                    class="table table-hover table-bordered table-striped rlink-table">
+                                    <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Answer</th>
+                                        <th>Additional</th>
+                                        <th>Overall Comment</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
+                                        <td>
+                                            <span v-if="survey.user">
+                                                {{ survey.user.username }}
+                                            </span>
+
+                                            <span v-else class="badge badge-danger">
+                                                N/A
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            {{ survey[surveyQuestionFullDetails.number] }}
+                                        </td>
+
+                                        <td>
+                                            <span v-if="survey[surveyQuestionFullDetails.number + '_other']">
+                                                {{ survey[surveyQuestionFullDetails.number + '_other'] }}
+                                            </span>
+
+                                            <span v-else class="badge badge-danger">
+                                                N/A
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span v-if="survey.comment">
+                                                {{ survey.comment }}
+                                            </span>
+
+                                            <span v-else class="badge badge-danger">
+                                                N/A
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            {{ survey.created_at }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <pagination
+                                :data="surveyQuestionFullDetailsData.data"
+                                :limit="8"
+
+                                @pagination-change-page="getSurveyFullDetails">
+
+                            </pagination>
+                        </div>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
@@ -524,10 +915,12 @@ import set_a from "../data/set_a";
 import set_b from "../data/set_b";
 import seller_set_a from "../data/seller_set_a";
 import writer_set_a from "../data/writer_set_a";
+import {stringManipulation} from "../../../mixins/stringManipulation";
+import axios from "axios";
 
 export default {
     name : "AdminSurvey",
-
+    mixins: [stringManipulation],
     data() {
         return {
             surveys: {},
@@ -551,6 +944,30 @@ export default {
                 }
             },
 
+            surveyQuestionFullDetailsData: {
+                data: {}
+            },
+
+            surveyQuestionFullDetails: {
+                page: 1,
+                set: null,
+                type: null,
+                number: null,
+                question: null,
+                pagination: 15,
+                modalTitle: 'Survey Question Details',
+            },
+
+            surveyQuestionPaginateOptions : [
+                15,
+                25,
+                50,
+                100,
+                200,
+                250,
+                'All'
+            ],
+
             setAChartOptions: {},
             setAData: [],
 
@@ -569,12 +986,102 @@ export default {
             setBFiveChartOptions: {},
             setBFiveData: [],
 
+            // survey questions
+
             buyerSetAQuestions: [
-                'Do you find using our system efficient?',
-                'Does our system provide the URLs that you are looking for?',
-                'Do you find our HELP page easy to follow?',
-                'Do you find our payment methods too complicated for you?',
-                'Are you satisfied with the service that we provide right now?'
+                {
+                    number: 'one',
+                    question: 'Do you find using our system efficient?'
+                },
+                {
+                    number: 'two',
+                    question: 'Does our system provide the URLs that you are looking for?'
+                },
+                {
+                    number: 'three',
+                    question: 'Do you find our HELP page easy to follow?'
+                },
+                {
+                    number: 'four',
+                    question: 'Do you find our payment methods too complicated for you?'
+                },
+                {
+                    number: 'five',
+                    question: 'Are you satisfied with the service that we provide right now?'
+                },
+            ],
+
+            buyerSetBQuestions: [
+                {
+                    number: 'one',
+                    question: 'In your opinion, what is the most important thing to have in desk management?'
+                },
+                {
+                    number: 'two',
+                    question: 'From 1-6, how would you rate our tools?'
+                },
+                {
+                    number: 'three',
+                    question: 'From 1-10, how well do you understand Stalinks and what can we do to help you?'
+                },
+                {
+                    number: 'four',
+                    question: 'What would you like to see in Stalinks?'
+                },
+                {
+                    number: 'five',
+                    question: 'How would you rate our team interaction with you?'
+                },
+            ],
+
+            sellerSetAQuestions: [
+                {
+                    number: 'one',
+                    question: 'Do you think our system is efficient for you to sell your guest posts?'
+                },
+                {
+                    number: 'two',
+                    question: 'Are you satisfied with our CS Team service?'
+                },
+                {
+                    number: 'three',
+                    question: 'Do you have any problems using our payment methods?'
+                },
+                {
+                    number: 'four',
+                    question: 'Do you find our platform helpful to you in getting orders easily?'
+                },
+                {
+                    number: 'five',
+                    question: 'Based on your most recent experience, please rate your satisfaction by using our service.'
+                },
+                {
+                    number: 'six',
+                    question: ' Please rate if you would recommend us and our services to your connections.'
+                },
+            ],
+
+            writerSetAQuestions: [
+                {
+                    number: 'one',
+                    question: 'Do you think our system is efficient to use?'
+                },
+                {
+                    number: 'two',
+                    question: 'Are you satisfied with the services that we already provide?'
+                },
+                {
+                    number: 'three',
+                    question: 'Do you find any difficulties in writing article contents?'
+                },
+                {
+                    number: 'four',
+                    question: 'Based on your most recent experience, please rate your satisfaction by using our services.'
+                },
+                {
+                    number: 'five',
+                    question: 'Please rate if you would recommend us and our services to your connections.'
+                },
             ],
 
             // seller surveys
@@ -647,7 +1154,7 @@ export default {
     },
 
     methods: {
-        async getSurveyList() {
+        async getSurveyList () {
             await axios.get('/api/surveys')
                 .then((response) => {
                     this.surveys = response.data;
@@ -675,6 +1182,63 @@ export default {
                     this.writerSetAFourData = writer_set_a.graphData(this.surveys, 'four');
                     this.writerSetAFiveData = writer_set_a.graphData(this.surveys, 'five');
                 })
+        },
+
+        viewSurveyQuestionFullDetails (set, type, number, question) {
+            this.surveyQuestionFullDetails.set = set;
+            this.surveyQuestionFullDetails.type = type;
+            this.surveyQuestionFullDetails.number = number;
+            this.surveyQuestionFullDetails.question = question;
+            this.surveyQuestionFullDetails.modalTitle = this.capitalizeFirstLetter(type)
+            + ' Survey ' + this.capitalizeFirstLetter(set) + ' Question ' + this.capitalizeFirstLetter(number)
+            + ' Details'
+
+            this.getSurveyFullDetails()
+        },
+
+        getSurveyFullDetails (page = 1) {
+            let loader = this.$loading.show();
+            this.surveyQuestionFullDetails.page = page;
+
+            axios.get('/api/survey/survey-question-full-details', {
+                params: this.surveyQuestionFullDetails
+            })
+            .then((res) => {
+                loader.hide();
+
+                this.surveyQuestionFullDetailsData.data = res.data
+
+                let table = $('#tbl_survey_question_details');
+
+                table.DataTable().destroy();
+
+                this.$nextTick(() => {
+                    table.DataTable({
+                        paging : false,
+                        searching : false,
+                        order: [],
+                        columnDefs : {orderable : true, targets : '_all'},
+                    });
+                });
+
+                // open survey modal
+                let element = this.$refs.surveyDetailsModal
+                $(element).modal('show')
+            })
+        },
+
+        sortDataForExport (data, number) {
+            if (data) {
+                return data.map(function(item) {
+                    return {
+                        user: item.user ? item.user.username : 'N/A',
+                        answer: item[number],
+                        additional: item[number + '_other'],
+                        'overall comment': item.comment,
+                        date: item.created_at
+                    };
+                });
+            }
         }
     },
 }

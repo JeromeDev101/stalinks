@@ -109,4 +109,21 @@ class SurveyController extends Controller
 
         return Survey::where('user_id', $user_id)->where('type', 'writer')->first();
     }
+
+    public function getSurveyQuestionFullDetails(Request $request)
+    {
+        $surveys = Survey::where('type', $request->type)
+            ->where('set', $request->set)
+            ->with('user')
+            ->orderBy('created_at', 'DESC');
+
+        if($request->pagination === 'All'){
+            return response()->json([
+                'data' => $surveys->get(),
+                'total' => $surveys->count(),
+            ],200);
+        } else {
+            return $surveys->paginate($request->pagination);
+        }
+    }
 }
