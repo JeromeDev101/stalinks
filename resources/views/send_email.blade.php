@@ -77,7 +77,6 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
-            background-color: black;
         }
 
         /* iOS BLUE LINKS */
