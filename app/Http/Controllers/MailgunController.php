@@ -179,6 +179,7 @@ class MailgunController extends Controller
             'from'                => $work_mail,
             'to'                  => array($str),
             'subject'             => $request->title,
+            'cc'                 => $request->cc ?: null,
             'html'                => view('send_email', $data)->render(),
             'recipient-variables' => json_encode($object),
             'attachment'          => $final_attachments,
