@@ -58,7 +58,7 @@ class SellerConfirmation extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Your URL with order ID of ' . $this->backlink->id . ' is on Pending status. Please check your email to validate the order.'
+            'message' => "Your URL with order ID of " . $this->backlink->id . " is on Pending status. Please check your email or go to 'Follow up Sale' page to validate the order."
         ];
     }
 }

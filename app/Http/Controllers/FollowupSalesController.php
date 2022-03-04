@@ -230,7 +230,7 @@ class FollowupSalesController extends Controller
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
 
-                        // Create article 
+                        // Create article
                         if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
                             Article::create([
                                 'id_backlink' => $backlink->id,
@@ -242,7 +242,7 @@ class FollowupSalesController extends Controller
                             }
                         }
 
-                        // notify cs
+                        // notify cs, team and buyer
                         event(new SellerConfirmedPendingOrderEvent($backlink, 'approve'));
 
                         $result = true;
@@ -271,7 +271,7 @@ class FollowupSalesController extends Controller
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
 
-                        // notify cs
+                        // notify cs, team and buyer
                         event(new SellerConfirmedPendingOrderEvent($backlink, 'cancel'));
 
                         $result = true;
@@ -302,12 +302,12 @@ class FollowupSalesController extends Controller
                 if ($backlink) {
                     if ($backlink->status === 'Pending') {
 
-                        // notify cs
+                        // notify cs, team and buyer
                         event(new SellerConfirmedPendingOrderEvent($backlink, $request->process));
 
                         if ($request->process === 'approve') {
 
-                            // Create article 
+                            // Create article
                             if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
                                 Article::create([
                                     'id_backlink' => $backlink->id,
@@ -332,5 +332,5 @@ class FollowupSalesController extends Controller
             }
         }
     }
-    
+
 }

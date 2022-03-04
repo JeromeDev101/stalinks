@@ -7,12 +7,11 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
+class SellerConfirmedPendingOrderBuyer extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $backlink;
-    protected $confirmation;
+    protected $backlink, $confirmation;
 
     /**
      * Create a new notification instance.
@@ -34,21 +33,27 @@ class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail', 'database'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
+        $seller = $this->backlink->publisher->user ? 'Seller ' . $this->backlink->publisher->user->username : 'The seller';
+
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Pending Order Confirmation')
+            ->markdown('buyer.pending_order_confirmed', [
+                'seller' => $seller,
+                'name' => $notifiable->name,
+                'backlink' => $this->backlink,
+                'confirmation' => $this->confirmation
+            ]);
     }
 
     /**
@@ -59,11 +64,18 @@ class SellerConfirmedPendingOrder extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        $seller = $this->backlink->publisher->user ? $this->backlink->publisher->user->username : 'A seller';
+        $message = '';
+        $seller = $this->backlink->publisher->user ? 'Seller ' . $this->backlink->publisher->user->username : 'The seller';
         $confirmation_text = $this->confirmation === 'approve' ? 'confirmed' : 'cancelled';
 
+        if ($this->confirmation === 'approve') {
+            $message = ". The order is now on 'Processing' status.";
+        } else {
+            $message = ". No worries! a total of $" . $this->backlink->prices . " were automatically credited back to your account.";
+        }
+
         return [
-            'message' => $seller . " has " . $confirmation_text . " a pending order: backlink ID# ". $this->backlink->id
+            'message' => $seller . " has " . $confirmation_text . " your pending order: backlink ID# " . $this->backlink->id . $message
         ];
     }
 }

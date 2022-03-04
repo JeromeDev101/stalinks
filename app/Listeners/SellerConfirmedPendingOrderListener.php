@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Models\User;
 use App\Notifications\SellerConfirmedPendingOrder;
+use App\Notifications\SellerConfirmedPendingOrderBuyer;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
@@ -37,6 +38,11 @@ class SellerConfirmedPendingOrderListener
             $cs = User::where('role_id', 6)->where('status', 'active')->where('isOurs', 0)->get();
 
             Notification::send($cs, new SellerConfirmedPendingOrder($event->backlink, $event->confirmation));
+        }
+
+        // notify buyer
+        if ($event->backlink->user) {
+            $event->backlink->user->notify(new SellerConfirmedPendingOrderBuyer($event->backlink, $event->confirmation));
         }
     }
 }
