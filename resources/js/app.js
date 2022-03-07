@@ -24,6 +24,7 @@ import excel from 'vue-excel-export'
 import VueI18n from 'vue-i18n';
 import langs from '../lang/Modules/main';
 import {Constants} from "./mixins/constants";
+import Datepicker from 'vuejs-datepicker';
 
 require('./bootstrap');
 
@@ -42,6 +43,7 @@ Vue.component('v-select', Select2)
 Vue.component('tinymce', tinymce)
 Vue.component('compact-picker', Compact)
 Vue.component('date-range-picker', DateRangePicker);
+Vue.component('date-picker', Datepicker);
 Vue.component('vue-tags-input', VueTagsInput);
 Vue.component('apexchart', VueApexCharts)
 

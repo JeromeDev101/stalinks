@@ -1,80 +1,125 @@
 <template>
-    <div class="row">
-        <div class="col-sm-12">
+    <div>
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0"></h1>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
 
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Filter</h3>
-                </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Filter</h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
 
-                <div class="box-body m-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Buyer</label>
+                                    <select name="" class="form-control" v-model="filterModel.buyer">
+                                        <option value="">All</option>
+                                        <option v-for="option in summaryData" v-bind:value="option.id">
+                                            {{ option.username }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Buyer</label>
-                                <select name="" class="form-control" v-model="filterModel.buyer">
-                                    <option value="">All</option>
-                                    <option v-for="option in summaryData" v-bind:value="option.id">
-                                        {{ option.username }}
-                                    </option>
-                                </select>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Month</label>
+                                    <select class="form-control" v-model="filterModel.month">
+                                        <option value="">All</option>
+                                        <option v-for="month in months" v-bind:value="month.value">
+                                            {{ month.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <date-picker
+                                        v-model="dateTemp"
+                                        format="yyyy"
+                                        minimum-view="year"
+                                        maximum-view="year"
+                                        placeholder="All"
+                                        clear-button-icon="fas fa-times"
+                                        :typeable=true
+                                        :clear-button=true
+                                        :full-month-name=true
+                                        :bootstrap-styling=true
+
+                                        @input="formatDate">
+
+                                    </date-picker>
+                                </div>
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-2">
-                            <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                            <button class="btn btn-default" @click="getWalletSummary()">Search </button>
+                        <div class="row mb-3">
+                            <div class="col-md-2">
+                                <button class="btn btn-default" @click="clearSearch()">Clear</button>
+                                <button class="btn btn-default" @click="getWalletSummary()">Search </button>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
-            <div class="box">
-
-                <div class="box-header">
-                    <h3 class="box-title">Wallet Summarize</h3>
-                </div>
-
-                <div class="box-body no-padding relative">
-                    <table id="tbl_wallet_transaction" class="table table-hover table-bordered table-striped rlink-table">
-                        <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Buyer</th>
-                                <th>Deposit</th>
-                                <th>Orders</th>
-                                <th>Orders Cancelled</th>
-                                <th>Valid Orders</th>
-                                <th>Credit Left</th>
-                                <th>Purchase</th>
-                                <th>Wallet</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(summary, index) in summaryData" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ summary.username == null ? summary.name : summary.username }}</td>
-                                <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
-                                <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.order_cancel).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.valid_orders).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
-                                <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-
         </div>
 
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">Wallet Summary</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tbl_wallet_transaction" class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Buyer</th>
+                                    <th>Deposit</th>
+                                    <th>Orders</th>
+                                    <th>Orders Cancelled</th>
+                                    <th>Valid Orders</th>
+                                    <th>Credit Left</th>
+                                    <th>Purchase</th>
+                                    <th>Wallet</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(summary, index) in summaryData" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ summary.username == null ? summary.name : summary.username }}</td>
+                                    <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
+                                    <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.order_cancel).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.valid_orders).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -86,8 +131,61 @@
         data() {
             return {
                 summaryData: [],
+                months: [
+                    {
+                        value: 1,
+                        label: 'January'
+                    },
+                    {
+                        value: 2,
+                        label: 'February'
+                    },
+                    {
+                        value: 3,
+                        label: 'March'
+                    },
+                    {
+                        value: 4,
+                        label: 'April'
+                    },
+                    {
+                        value: 5,
+                        label: 'May'
+                    },
+                    {
+                        value: 6,
+                        label: 'June'
+                    },
+                    {
+                        value: 7,
+                        label: 'July'
+                    },
+                    {
+                        value: 8,
+                        label: 'August'
+                    },
+                    {
+                        value: 9,
+                        label: 'September'
+                    },
+                    {
+                        value: 10,
+                        label: 'October'
+                    },
+                    {
+                        value: 11,
+                        label: 'November'
+                    },
+                    {
+                        value: 12,
+                        label: 'December'
+                    },
+                ],
+                dateTemp: '',
                 filterModel: {
                     buyer: this.$route.query.buyer || '',
+                    month: this.$route.query.month || '',
+                    year: this.$route.query.year || '',
                 },
             }
         },
@@ -104,12 +202,15 @@
 
         methods: {
             getWalletSummary() {
+                if (this.filterModel.month) {
+                    this.dateTemp = new Date();
+                    this.formatDate()
+                }
+
                 let loader = this.$loading.show();
 
                 axios.get('/api/wallet-summary',{
-                    params: {
-                        buyer: this.filterModel.buyer
-                    }
+                    params: this.filterModel
                 }).then((res) => {
                     this.summaryData = res.data
                     loader.hide();
@@ -119,10 +220,18 @@
             clearSearch() {
                 this.filterModel = {
                     buyer: '',
+                    year: '',
+                    month: ''
                 }
+
+                this.dateTemp = '';
 
                 this.$router.replace({'query': null});
                 this.getWalletSummary();
+            },
+
+            formatDate() {
+                this.filterModel.year = new Date(this.dateTemp).getFullYear();
             }
         },
 

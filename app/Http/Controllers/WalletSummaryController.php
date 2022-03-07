@@ -32,6 +32,12 @@ class WalletSummaryController extends Controller
                     ->when(isset($request->buyer), function($query) use ($request) {
                         return $query->where('users.id', $request->buyer);
                     })
+                    ->when(isset($request->year), function($query) use ($request) {
+                        return $query->whereYear('wallet_transactions.date', '=', $request->year);
+                    })
+                    ->when(isset($request->month), function($query) use ($request) {
+                        return $query->whereMonth('wallet_transactions.date', '=', $request->month);
+                    })
                     ->when($checkAdmin, function($query) use ($user_id) {
                         return $query->where('users.id', $user_id);
                     })
@@ -40,12 +46,12 @@ class WalletSummaryController extends Controller
                     ->get();
 
         foreach($user_buyers as $key => $user_buyer) {
-            $user_buyers[$key]['orders'] = $this->getTotalPurchase($user_buyer->id, 'orders');
-            $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live');
-            $user_buyers[$key]['order_cancel'] = $this->getTotalPurchase($user_buyer->id, 'order_cancel');
-            $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live');
-            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders');
-            $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders');
+            $user_buyers[$key]['orders'] = $this->getTotalPurchase($user_buyer->id, 'orders', $request->year, $request->month);
+            $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
+            $user_buyers[$key]['order_cancel'] = $this->getTotalPurchase($user_buyer->id, 'order_cancel', $request->year, $request->month);
+            $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
+            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
+            $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
 
         }
 
@@ -85,7 +91,7 @@ class WalletSummaryController extends Controller
     //     return isset($total_paid[0]['total_paid']) ? floatval($total_paid[0]['total_paid']) : 0;
     // }
 
-    private function getTotalPurchase($user_id, $type) {
+    private function getTotalPurchase($user_id, $type, $year = null, $month = null) {
 
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
@@ -120,6 +126,12 @@ class WalletSummaryController extends Controller
                 } else {
                     return $query->whereIn('user_id', $UserId);
                 }
+            })
+            ->when(isset($year), function($query) use ($year) {
+                return $query->whereYear('backlinks.date_process', '=', $year);
+            })
+            ->when(isset($month), function($query) use ($month) {
+                return $query->whereMonth('backlinks.date_process', '=', $month);
             })
             ->get();
 
