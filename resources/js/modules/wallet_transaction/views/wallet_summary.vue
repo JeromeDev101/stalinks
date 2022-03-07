@@ -202,7 +202,7 @@
 
         methods: {
             getWalletSummary() {
-                if (this.filterModel.month) {
+                if (this.filterModel.month && !this.filterModel.year) {
                     this.dateTemp = new Date();
                     this.formatDate()
                 }
