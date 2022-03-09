@@ -46,15 +46,15 @@
                                     <div class="card-header d-flex align-items-center">
                                         <h3 class="card-title text-primary mr-3">Buyer Survey Set A</h3>
 
-                                        <button
-                                            data-toggle="modal"
-                                            data-target="#modal-survey-a-questions"
-                                            type="button"
-                                            class="btn btn-primary btn-sm">
+<!--                                        <button-->
+<!--                                            data-toggle="modal"-->
+<!--                                            data-target="#modal-survey-a-questions"-->
+<!--                                            type="button"-->
+<!--                                            class="btn btn-primary btn-sm">-->
 
-                                            <i class="far fa-question-circle"></i>
-                                            View Questions
-                                        </button>
+<!--                                            <i class="far fa-question-circle"></i>-->
+<!--                                            View Questions-->
+<!--                                        </button>-->
 
                                         <div class="card-tools ml-auto">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -63,13 +63,190 @@
                                         </div>
                                     </div>
                                     <div class="card-body" id="collapseExample">
-                                        <apexchart
-                                            :series="setAData"
-                                            :options="setAChartOptions"
-                                            type="bar"
-                                            height="350">
+<!--                                        <apexchart-->
+<!--                                            :series="setAData"-->
+<!--                                            :options="setAChartOptions"-->
+<!--                                            type="bar"-->
+<!--                                            height="350">-->
 
-                                        </apexchart>
+<!--                                        </apexchart>-->
+
+                                        <div class="row">
+                                            <!-- set a 1 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetAQuestions[0].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'buyer',
+                                                                    'one',
+                                                                     buyerSetAQuestions[0].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setAOneData"
+                                                            :options="setAOneChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- set a 2 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetAQuestions[1].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'buyer',
+                                                                    'two',
+                                                                     buyerSetAQuestions[1].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setATwoData"
+                                                            :options="setATwoChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- set a 3 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetAQuestions[2].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'buyer',
+                                                                    'three',
+                                                                     buyerSetAQuestions[2].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setAThreeData"
+                                                            :options="setAThreeChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- set a 4 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetAQuestions[3].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'buyer',
+                                                                    'four',
+                                                                     buyerSetAQuestions[3].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setAFourData"
+                                                            :options="setAFourChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- set a 5 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetAQuestions[4].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'buyer',
+                                                                    'five',
+                                                                     buyerSetAQuestions[4].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setAFiveData"
+                                                            :options="setAFiveChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -912,6 +1089,7 @@
 
 <script>
 import set_a from "../data/set_a";
+import set_a_2 from "../data/set_a_2";
 import set_b from "../data/set_b";
 import seller_set_a from "../data/seller_set_a";
 import writer_set_a from "../data/writer_set_a";
@@ -971,6 +1149,25 @@ export default {
             setAChartOptions: {},
             setAData: [],
 
+            // buyer surveys - set a
+
+            setAOneChartOptions: {},
+            setAOneData: [],
+
+            setATwoChartOptions: {},
+            setATwoData: [],
+
+            setAThreeChartOptions: {},
+            setAThreeData: [],
+
+            setAFourChartOptions: {},
+            setAFourData: [],
+
+            setAFiveChartOptions: {},
+            setAFiveData: [],
+
+            // buyer surveys - set b
+
             setBOneChartOptions: {},
             setBOneData: [],
 
@@ -985,6 +1182,46 @@ export default {
 
             setBFiveChartOptions: {},
             setBFiveData: [],
+
+            // seller surveys
+
+            sellerSetAOneChartOptions: {},
+            sellerSetAOneData: [],
+
+            sellerSetATwoChartOptions: {},
+            sellerSetATwoData: [],
+
+            sellerSetAThreeChartOptions: {},
+            sellerSetAThreeData: [],
+
+            sellerSetAFourChartOptions: {},
+            sellerSetAFourData: [],
+
+            sellerSetAFiveChartOptions: {},
+            sellerSetAFiveData: [],
+
+            sellerSetASixChartOptions: {},
+            sellerSetASixData: [],
+
+            // writer surveys
+
+            writerSetAOneChartOptions: {},
+            writerSetAOneData: [],
+
+            writerSetATwoChartOptions: {},
+            writerSetATwoData: [],
+
+            writerSetAThreeChartOptions: {},
+            writerSetAThreeData: [],
+
+            writerSetAFourChartOptions: {},
+            writerSetAFourData: [],
+
+            writerSetAFiveChartOptions: {},
+            writerSetAFiveData: [],
+
+            writerSetASixChartOptions: {},
+            writerSetASixData: [],
 
             // survey questions
 
@@ -1083,52 +1320,21 @@ export default {
                     question: 'Please rate if you would recommend us and our services to your connections.'
                 },
             ],
-
-            // seller surveys
-
-            sellerSetAOneChartOptions: {},
-            sellerSetAOneData: [],
-
-            sellerSetATwoChartOptions: {},
-            sellerSetATwoData: [],
-
-            sellerSetAThreeChartOptions: {},
-            sellerSetAThreeData: [],
-
-            sellerSetAFourChartOptions: {},
-            sellerSetAFourData: [],
-
-            sellerSetAFiveChartOptions: {},
-            sellerSetAFiveData: [],
-
-            sellerSetASixChartOptions: {},
-            sellerSetASixData: [],
-
-            // writer surveys
-
-            writerSetAOneChartOptions: {},
-            writerSetAOneData: [],
-
-            writerSetATwoChartOptions: {},
-            writerSetATwoData: [],
-
-            writerSetAThreeChartOptions: {},
-            writerSetAThreeData: [],
-
-            writerSetAFourChartOptions: {},
-            writerSetAFourData: [],
-
-            writerSetAFiveChartOptions: {},
-            writerSetAFiveData: [],
-
-            writerSetASixChartOptions: {},
-            writerSetASixData: [],
         }
     },
 
     mounted() {
         this.getSurveyList();
         this.setAChartOptions = set_a.graphSetting();
+
+        // buyer surveys
+
+        this.setAOneChartOptions = set_a_2.graphSetting('one');
+        this.setATwoChartOptions = set_a_2.graphSetting('two');
+        this.setAThreeChartOptions = set_a_2.graphSetting('three');
+        this.setAFourChartOptions = set_a_2.graphSetting('four');
+        this.setAFiveChartOptions = set_a_2.graphSetting('five');
+
         this.setBOneChartOptions = set_b.graphSetting('one');
         this.setBTwoChartOptions = set_b.graphSetting('two');
         this.setBThreeChartOptions = set_b.graphSetting('three');
@@ -1159,6 +1365,14 @@ export default {
                 .then((response) => {
                     this.surveys = response.data;
                     this.setAData = set_a.graphData(this.surveys);
+
+                    // buyer surveys
+                    this.setAOneData = set_a_2.graphData(this.surveys, 'one');
+                    this.setATwoData = set_a_2.graphData(this.surveys, 'two');
+                    this.setAThreeData = set_a_2.graphData(this.surveys, 'three');
+                    this.setAFourData = set_a_2.graphData(this.surveys, 'four');
+                    this.setAFiveData = set_a_2.graphData(this.surveys, 'five');
+
                     this.setBOneData = set_b.graphData(this.surveys, 'one');
                     this.setBTwoData = set_b.graphData(this.surveys, 'two');
                     this.setBThreeData = set_b.graphData(this.surveys, 'three');
