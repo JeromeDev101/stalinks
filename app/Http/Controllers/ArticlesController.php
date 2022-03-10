@@ -392,11 +392,14 @@ class ArticlesController extends Controller
             ]);
 
             // add survey code for writer if null
-            if ($article->user->registration->survey_code === null) {
-                $article->user->registration->update([
-                    'survey_code' => md5(uniqid(rand(), true))
-                ]);
+            if ($article->user->isOurs === 1) {
+                if ($article->user->registration->survey_code === null) {
+                    $article->user->registration->update([
+                        'survey_code' => md5(uniqid(rand(), true))
+                    ]);
+                }
             }
+
         } else {
             $article->update([
                 'id_writer' => null,

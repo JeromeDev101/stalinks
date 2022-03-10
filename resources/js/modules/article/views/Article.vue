@@ -247,7 +247,7 @@
                                     </button>
 
                                     <button
-                                        v-if="user.isOurs === 0 || (user.isOurs === 1 && !isStatusOnQueue(scope.row))"
+                                        v-if="(user.isOurs === 0 || user.isOurs === 1) && !isStatusOnQueue(scope.row)"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
