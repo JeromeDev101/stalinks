@@ -98,7 +98,8 @@ class AuthController extends Controller
             'isOurs',
             'work_mail_orig',
             'payment_type',
-            'user_payment_types'
+            'user_payment_types',
+            'exam_duration'
         );
 
 
