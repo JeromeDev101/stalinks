@@ -81,7 +81,7 @@
                                     </ol>
                                 </td>
                                 <td>{{ ext.alexa_rank }}</td>
-                                <td><span :class="['label', 'label-' + listStatusText[ext.status].label]">{{ listStatusText[ext.status].text }}</span></td>
+                                <td><span :class="['badge', 'badge-' + listStatusText[ext.status].label]">{{ listStatusText[ext.status].text }}</span></td>
                             </tr>
                             </tbody>
                         </table>
