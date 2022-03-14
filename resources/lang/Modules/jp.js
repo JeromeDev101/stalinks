@@ -10,6 +10,21 @@ import writer_1 from "./Help/jp/writer_1";
 import writer_2 from "./Help/jp/writer_2";
 import writer_3 from "./Help/jp/writer_3";
 
+// login
+import login from './Login/jp/main';
+
+// forgot
+import forgot from './Forgot/jp/main';
+
+// registration
+import registration from './Registration/jp/main';
+
+// verification
+import verification from './Verification/jp/main';
+
+// terms
+import terms from './Terms/jp/main';
+
 export default {
     message : {
         help,
@@ -22,6 +37,21 @@ export default {
         seller_4,
         writer_1,
         writer_2,
-        writer_3
+        writer_3,
+
+        // login
+        login,
+
+        // forgot
+        forgot,
+
+        // registration
+        registration,
+
+        // verification
+        verification,
+
+        // terms
+        terms,
     }
 }

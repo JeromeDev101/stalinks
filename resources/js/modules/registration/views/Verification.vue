@@ -1,5 +1,43 @@
 <template>
     <div class="homepage-login">
+
+        <!-- language -->
+        <div class="row p-2">
+            <div class="col-12 d-flex justify-content-end">
+                <div>
+                    <button
+                        type="button"
+                        class="btn btn-default btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+
+                        <i
+                            class="flag-icon mr-2"
+                            :class="pageLanguage === 'en' ? 'flag-icon-us' : 'flag-icon-' + pageLanguage">
+                        </i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-0">
+                        <a href="#" class="dropdown-item"
+                           :class="{'active' : pageLanguage === 'en'}"
+                           @click="pageLanguage = 'en'">
+                            <i class="flag-icon flag-icon-us mr-2"></i> English
+                        </a>
+                        <a href="#" class="dropdown-item"
+                           :class="{'active' : pageLanguage === 'jp'}"
+                           @click="pageLanguage = 'jp'">
+                            <i class="flag-icon flag-icon-jp mr-2"></i> Japan
+                        </a>
+                        <a href="#" class="dropdown-item"
+                           :class="{'active' : pageLanguage === 'th'}"
+                           @click="pageLanguage = 'th'">
+                            <i class="flag-icon flag-icon-th mr-2"></i> Thailand
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-md-5">
                 <div class="card mt-5 pb-3">
@@ -7,51 +45,51 @@
 
                         <!-- Set password Form -->
                         <div v-if="formSetPassword">
-                            <h3>Complete Registration</h3>
+                            <h3>{{ $t('message.verification.title') }}</h3>
                             <hr class="mb-5"/>
 
-                            <h4 class="text-primary">Account Information</h4>
+                            <h4 class="text-primary">{{ $t('message.verification.sub1') }}</h4>
                             <hr/>
                             <div class="row">
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Account Type <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l1') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" :disabled="true" v-model="regModel.type">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Username <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l2') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" :disabled="true" v-model="regModel.username">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Name <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l3') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" :disabled="true" v-model="regModel.name">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Email <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l4') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" :disabled="true" v-model="regModel.email">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Phone</label>
+                                        <label>{{ $t('message.verification.l5') }}</label>
                                         <input type="text" class="form-control" v-model="regModel.phone">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
-                                        <label for="">Company Type <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l6') }} <span class="text-danger">*</span></label>
                                         <select class="form-control" v-model="regModel.company_type" @change="checkCompanyType()">
                                             <option value="Company">Company</option>
                                             <option value="Freelancer">Freelancer</option>
@@ -61,44 +99,50 @@
 
                                 <div class="col-md-12" v-show="isCompany">
                                     <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('company_name')}">
-                                        <label for="">Company Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" placeholder="Enter your Company Name" v-model="regModel.company_name">
-                                        <span v-show="errorMessage.hasOwnProperty('company_name')" class="text-danger">Please provide Company Name</span>
+                                        <label>{{ $t('message.verification.l7') }} <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" :placeholder="$t('message.verification.ph7')" v-model="regModel.company_name">
+                                        <span v-show="errorMessage.hasOwnProperty('company_name')" class="text-danger">
+                                            {{ $t('message.verification.e7') }}
+                                        </span>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">Skype</label>
-                                        <input type="text" class="form-control" placeholder="Enter your Skype" v-model="regModel.skype">
+                                        <label>{{ $t('message.verification.l8') }}</label>
+                                        <input type="text" class="form-control" :placeholder="$t('message.verification.ph8')" v-model="regModel.skype">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-12 col-lg-6 col-xl-6">
                                     <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('country_id')}">
-                                        <label for="">Country <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l9') }} <span class="text-danger">*</span></label>
                                         <select name="" class="form-control" v-model="regModel.country_id">
-                                            <option value="">Select Country</option>
+                                            <option value="">{{ $t('message.verification.ph9') }}</option>
                                                 <option v-for="option in countryList" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
-                                        <span v-show="errorMessage.hasOwnProperty('country_id')" class="text-danger">Please provide Country</span>
+                                        <span v-show="errorMessage.hasOwnProperty('country_id')" class="text-danger">
+                                            {{ $t('message.verification.e9') }}
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12" v-if="regModel.type == 'Writer'">
                                     <div class="form-group">
-                                        <label for="">Language <span class="text-danger">*</span></label>
+                                        <label>{{ $t('message.verification.l10') }} <span class="text-danger">*</span></label>
                                         <v-select
-                                            multiple 
-                                            v-model="regModel.language_id" 
+                                            multiple
+                                            v-model="regModel.language_id"
                                             label="name"
-                                            :options="listLanguages.data" 
+                                            :options="listLanguages.data"
                                             :reduce="name => name.id"
-                                            :searchable="true" 
-                                            placeholder="Select Language"/>
-                                        <span v-show="errorMessage.hasOwnProperty('language_id')" class="text-danger">Please provide Langauge</span>
+                                            :searchable="true"
+                                            :placeholder="$t('message.verification.ph10')"/>
+                                        <span v-show="errorMessage.hasOwnProperty('language_id')" class="text-danger">
+                                            {{ $t('message.verification.e10') }}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -106,20 +150,24 @@
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">
 
-                                <h4 class="text-primary my-3">Payment Information</h4>
-                                <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">Please provide atleast one Payment Information</span>
-                                <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
+                                <h4 class="text-primary my-3">{{ $t('message.verification.sub2') }}</h4>
+                                <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">
+                                    {{ $t('message.verification.e11') }}
+                                </span>
+                                <span v-if="validate_error_type" class="text-danger">
+                                    {{ $t('message.verification.e12') }}
+                                </span>
 
                                 <!-- payment for seller and writer -->
                                 <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
                                     <tr>
                                         <td></td>
-                                        <td>Default</td>
+                                        <td>{{ $t('message.verification.sub3') }}</td>
                                     </tr>
                                     <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
                                             <div class="form-group">
-                                                <label>{{ payment_method.type }} Account</label>
+                                                <label>{{ payment_method.type }} {{ $t('message.verification.account') }}</label>
                                                 <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
                                             </div>
                                         </td>
@@ -134,12 +182,12 @@
                                 <table class="table" v-if="regModel.type === 'Buyer'">
                                     <tr>
                                         <td></td>
-                                        <td>Default</td>
+                                        <td>{{ $t('message.verification.sub3') }}</td>
                                     </tr>
                                     <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
                                         <td>
                                             <div class="form-group">
-                                                <label>{{ payment_method.type }} Account</label>
+                                                <label>{{ payment_method.type }} {{ $t('message.verification.account') }}</label>
                                                 <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
                                             </div>
                                         </td>
@@ -153,7 +201,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 mt-2">
-                                    <button class="btn btn-primary btn-lg btn-block btn-flat my-2" @click="submitRegister">Register <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
+                                    <button class="btn btn-primary btn-lg btn-block btn-flat my-2" @click="submitRegister">{{ $t('message.verification.b') }} <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
                                 </div>
                             </div>
                         </div>
@@ -163,9 +211,9 @@
                             <center class="my-3">
                                 <i class="far fa-check-circle fa-10x text-success"></i>
                             </center>
-                            <h3 class="text-center my-5">Successfully Registered!</h3>
+                            <h3 class="text-center my-5">{{ $t('message.verification.sub4') }}</h3>
 
-                            <button class="btn btn-default btn-lg btn-block" @click="redirectToLogin">Go to Login</button>
+                            <button class="btn btn-default btn-lg btn-block" @click="redirectToLogin">{{ $t('message.verification.sub5') }}</button>
                         </div>
 
                     </div>
@@ -221,6 +269,8 @@
                 isCompany: true,
                 paymentMethodList: [],
                 validate_error_type: false,
+
+                pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
             }
         },
 
@@ -245,6 +295,12 @@
 
             paymentMethodListReceivePayment: function() {
                 return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
+            },
+        },
+
+        watch : {
+            pageLanguage(newvalue, oldValue) {
+                this.$i18n.locale = newvalue;
             },
         },
 

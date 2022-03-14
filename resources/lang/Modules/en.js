@@ -10,6 +10,21 @@ import writer_1 from "./Help/en/writer_1";
 import writer_2 from "./Help/en/writer_2";
 import writer_3 from "./Help/en/writer_3";
 
+// login
+import login from './Login/en/main';
+
+// forgot
+import forgot from './Forgot/en/main';
+
+// registration
+import registration from './Registration/en/main';
+
+// verification
+import verification from './Verification/en/main';
+
+// terms
+import terms from './Terms/en/main';
+
 export default {
     message : {
         help,
@@ -22,6 +37,21 @@ export default {
         seller_4,
         writer_1,
         writer_2,
-        writer_3
+        writer_3,
+
+        // login
+        login,
+
+        // forgot
+        forgot,
+
+        // registration
+        registration,
+
+        // verification
+        verification,
+
+        // terms
+        terms,
     }
 }
