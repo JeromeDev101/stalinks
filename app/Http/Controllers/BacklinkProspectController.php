@@ -102,8 +102,8 @@ class BacklinkProspectController extends Controller
 
                 if( trim($referring_domain, " ") != '' ){
 
-                    // if($status == 'New' && $status != '') {
-                    if($status != '') {
+                    if($status == 'New' && $status != '') {
+                    // if($status != '') {
                         BacklinkProspect::create([
                             'referring_domain' => $referring_domain,
                             'ur' => $ur,
