@@ -91,6 +91,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="fillter.process_date"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="fillter.process_date"
                                             :linkedCalendars="true"
@@ -109,6 +110,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="fillter.date_completed"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="fillter.date_completed"
                                             :linkedCalendars="true"
@@ -169,7 +171,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
 
                         <div class="row">
                             <div class="col-md-12">
@@ -271,7 +273,7 @@
                                             class="custom-checkbox"
                                             @change="checkSelected"
                                             :id="backLink.id"
-                                            :value="backLink.id" 
+                                            :value="backLink.id"
                                             :disabled="backLink.status !== 'To Be Validated' && !user.isAdmin"
                                             v-model="checkIds">
                                         </td>
@@ -594,10 +596,11 @@
     import _ from 'lodash'
     import axios from 'axios';
     import {buyerAccess} from "../../../mixins/buyerAccess";
+    import {dateRange} from "../../../mixins/dateRange";
 
     export default {
         name: 'BackLinkList',
-        mixins: [buyerAccess],
+        mixins: [buyerAccess, dateRange],
         data() {
             return {
                 paginate: [50,150,250,350,500,'All'],
@@ -788,7 +791,7 @@
                     this.buyMultiple(this.listBackLink.data[index])
                 }
 
-    
+
                 swal.fire(
                     'Bought Successfully!',
                     'Backlink bought successfully.',
@@ -800,7 +803,7 @@
             },
 
             async buyMultiple(data) {
-                
+
                 data.credit_left = parseInt(this.listBuy.credit);
 
                 this.isPopupLoading = true;
@@ -845,7 +848,7 @@
                     for (var index in this.listBackLink.data) {
                         if(this.listBackLink.data[index].status === 'To Be Validated' && !this.user.isAdmin) {
                             this.checkIds.push(this.listBackLink.data[index].id);
-                        } 
+                        }
 
                         if(this.user.isAdmin) {
                             this.checkIds.push(this.listBackLink.data[index].id);

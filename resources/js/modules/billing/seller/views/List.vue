@@ -65,6 +65,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="filterModel.date_completed"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.date_completed"
                                             :linkedCalendars="true"
@@ -83,6 +84,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="filterModel.date_of_payment"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.date_of_payment"
                                             :linkedCalendars="true"
@@ -442,8 +444,10 @@
 import {mapState, mapActions} from 'vuex';
 import _ from 'lodash';
 import axios from "axios";
+import {dateRange} from "../../../../mixins/dateRange";
 
 export default {
+    mixins: [dateRange],
     data() {
         return {
             checkIds : [],

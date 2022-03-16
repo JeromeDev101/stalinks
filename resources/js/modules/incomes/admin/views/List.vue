@@ -39,6 +39,7 @@
 
                                     <date-range-picker
                                         v-model="filterModel.date_completed"
+                                        :ranges="generateDefaultDateRange()"
                                         ref="picker"
                                         opens="right"
                                         style="width: 100%"
@@ -288,8 +289,10 @@
 <script>
 import {mapState} from 'vuex';
 import _ from 'lodash';
+import {dateRange} from "../../../../mixins/dateRange";
 
 export default {
+    mixins: [dateRange],
     data() {
         return {
             paginate : [

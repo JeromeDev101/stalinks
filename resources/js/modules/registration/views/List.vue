@@ -193,6 +193,7 @@
                                     <div class="input-group">
                                         <date-range-picker
                                             v-model="filterModel.created_at"
+                                            :ranges="generateDefaultDateRange()"
                                             :linkedCalendars="true"
                                             :dateRange="filterModel.created_at"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
@@ -1528,9 +1529,11 @@ import axios from 'axios';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 import {createTags} from "@johmun/vue-tags-input";
 import TinyEditor from "../../../components/editor/TinyEditor";
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
     components : {TermsAndConditions, TinyEditor},
+    mixins: [dateRange],
     data() {
         return {
             paginate : [
@@ -2491,7 +2494,7 @@ export default {
                 if(this.checkIds[index].user) {
                     user_ids.push(this.checkIds[index].user.id)
                 }
-                    
+
             }
 
             axios.post('/api/update-multiple-in-charge', {

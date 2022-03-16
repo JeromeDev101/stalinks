@@ -53,6 +53,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="filterModel.date_completed"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.date_completed"
                                             :linkedCalendars="true"
@@ -71,6 +72,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="filterModel.date_created"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.date_created"
                                             :linkedCalendars="true"
@@ -304,8 +306,10 @@
 <script>
 import {mapState} from 'vuex';
 import _ from "lodash";
+import {dateRange} from "../../../../mixins/dateRange";
 
 export default {
+    mixins: [dateRange],
     data() {
         return {
             isDisabled : true,

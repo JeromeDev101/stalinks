@@ -189,6 +189,10 @@ export default {
                     new Date(today.getFullYear(), 0, 1),
                     new Date(today.getFullYear(), 11, 31)
                 ],
+                'Last year': [
+                    new Date(today.getFullYear() - 1, 0, 1),
+                    new Date(today.getFullYear() - 1, 11, 31)
+                ],
             }
         }
     },

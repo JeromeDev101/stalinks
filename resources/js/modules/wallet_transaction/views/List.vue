@@ -60,6 +60,7 @@
                                         <date-range-picker
                                             ref="picker"
                                             v-model="filterModel.date"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.date"
                                             :linkedCalendars="true"
@@ -394,8 +395,10 @@
 <script>
 import {mapState} from 'vuex';
 import axios from 'axios';
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
+    mixins: [dateRange],
     data() {
         return {
             updateModel : {

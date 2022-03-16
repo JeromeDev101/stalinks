@@ -141,6 +141,7 @@
                                             ref="picker"
                                             opens="left"
                                             v-model="filterModel.alexa_date_upload"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.alexa_date_upload"
                                             :linkedCalendars="true"
@@ -1754,6 +1755,7 @@ import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
 import _ from 'underscore';
 import TinyEditor from "../../../components/editor/TinyEditor";
 import Sort from '@/components/sort/Sort';
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
     components : {
@@ -1763,7 +1765,7 @@ export default {
         Sort
     },
     name : 'ExtList',
-    mixins : [csvTemplateMixin],
+    mixins : [csvTemplateMixin, dateRange],
     data() {
         return {
             csvExport : {
@@ -2801,7 +2803,7 @@ export default {
                 //     }
                 // }
 
-                
+
                 this.getExtList({
                     params : this.filterModel
                 });

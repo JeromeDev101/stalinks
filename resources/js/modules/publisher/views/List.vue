@@ -250,6 +250,7 @@
                                             style="width: 100%"
                                             :linkedCalendars="true"
                                             :dateRange="filterModel.uploaded"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
                                     </div>
                                 </div>
@@ -266,6 +267,7 @@
                                             style="width: 100%"
                                             :linkedCalendars="true"
                                             :dateRange="filterModel.date"
+                                            :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
                                     </div>
                                 </div>
@@ -1408,6 +1410,7 @@ import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
 import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
 import Sort from '@/components/sort/Sort';
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
         components: {
@@ -1415,7 +1418,7 @@ export default {
             Sort,
         },
         name: '',
-        mixins: [csvTemplateMixin],
+        mixins: [csvTemplateMixin, dateRange],
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
