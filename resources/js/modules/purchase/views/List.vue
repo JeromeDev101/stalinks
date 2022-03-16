@@ -79,6 +79,7 @@
                                     <div class="input-group">
                                         <date-range-picker
                                             v-model="filterModel.date_completed"
+                                            :ranges="generateDefaultDateRange()"
                                             :linkedCalendars="true"
                                             :dateRange="filterModel.date_completed"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
@@ -105,46 +106,54 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
+
                     <div class="card-header">
                         <h3 class="card-title text-primary">Purchase</h3>
+
+                        <span
+                            v-if="user.role_id === 5"
+                            class="ml-5 text-primary card-title"
+                            style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
+
+                            Wallet: <b>${{ (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet : 0 }}</b>
+                        </span>
+
+                        <span
+                            v-if="user.role_id === 5"
+                            class="ml-5 text-primary card-title"
+                            style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
+
+                            Deposit: <b>${{ (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit : 0 }}</b>
+                        </span>
+
                         <div class="card-tools">
                         </div>
                     </div>
+
                     <div class="card-body">
-                        <span class="ml-5 text-primary"
-                              v-show="user.role_id == 5">Wallet: <b>${{
-                                (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet : 0
-                                                                    }}</b></span>
-                        <span class="ml-5 text-primary"
-                              v-show="user.role_id == 5">Deposit: <b>${{
-                                (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit : 0
-                                                                     }}</b></span>
+                        <div class="row mb-2">
+                            <div class="col-6 d-flex align-items-end">
+                                <span class="font-weight-bold" v-if="listPurchase.total > 10">
+                                    Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{ listPurchase.total }} entries
+                                </span>
 
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+                                <span class="mb-0 ml-5 font-weight-bold">Amount: $ {{ totalAmount }}</span>
+                            </div>
 
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <div class="input-group input-group-sm float-right" style="width: 100px">
-                                        <select name=""
-                                                class="form-control float-right"
-                                                @change="getPurchaseList"
-                                                v-model="filterModel.paginate"
-                                                style="height: 37px;">
-                                            <option v-for="option in paginate" v-bind:value="option">
-                                                {{ option }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                            <div class="col-6">
+                                <select
+                                    v-model="filterModel.paginate"
+                                    class="form-control float-right"
+                                    style="height: 37px; min-width: 100px; width: 100px"
 
-                        <span v-if="listPurchase.total > 10" class="pagination-custom-footer-text">
-                        <b>Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{
-                                listPurchase.total
-                           }} entries.</b>
-                    </span>
+                                    @change="getPurchaseList">
+
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="table-responsive">
                             <table id="tbl-purchase" class="table table-hover table-bordered table-striped rlink-table">
@@ -166,19 +175,36 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ purchase.id }}</td>
                                     <td v-show="user.isAdmin || user.isOurs === 0">
-                                        {{ purchase.publisher == null ? 'Record Deleted' : purchase.publisher.user.username == null ? purchase.publisher.user.name : purchase.publisher.user.username }}
+                                        {{
+                                            purchase.publisher == null
+                                                ? 'Record Deleted'
+                                                : purchase.publisher.user == null
+                                                    ? 'N/A'
+                                                    : purchase.publisher.user.username
+                                                        ? purchase.publisher.user.username
+                                                        : purchase.publisher.user.name
+                                        }}
                                     </td>
-                                    <td>{{ purchase.user.username == null ? purchase.user.name : purchase.user.username }}</td>
+                                    <td>
+                                        {{
+                                            purchase.user == null
+                                                ? 'N/A'
+                                                : purchase.user.username
+                                                    ? purchase.user.username
+                                                    : purchase.user.name
+                                        }}
+                                    </td>
                                     <td>
                                         <!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
                                         <span v-if="purchase.publisher == null">
-                                        Record Deleted
-                                    </span>
+                                            Record Deleted
+                                        </span>
+
                                         <span v-else>
-                                        <a :href="'//' + replaceCharacters(purchase.publisher.url)" target="_blank">
-                                            {{ replaceCharacters(purchase.publisher.url) }}
-                                        </a>
-                                    </span>
+                                            <a :href="'//' + replaceCharacters(purchase.publisher.url)" target="_blank">
+                                                {{ replaceCharacters(purchase.publisher.url) }}
+                                            </a>
+                                        </span>
                                     </td>
                                     <td>$ {{ formatPrice(purchase.prices) }}</td>
                                     <td>{{ purchase.live_date }}</td>
@@ -250,8 +276,10 @@
 
 <script>
     import { mapState } from 'vuex';
+    import {dateRange} from "../../../mixins/dateRange";
 
     export default {
+        mixins: [dateRange],
         data() {
             return {
                 paginate: [50,150,250,350,500, 'All'],
