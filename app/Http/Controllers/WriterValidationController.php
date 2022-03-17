@@ -37,6 +37,24 @@ class WriterValidationController extends Controller
                         ->when(isset($filters['writer_id']), function($query) use ($filters) {
                             return $query->where('users.id', $filters['writer_id']);
                         })
+                        ->when(isset($filters['topic']), function($query) use ($filters) {
+                            if (is_array($filters['topic'])) {
+
+                                $query = $query->whereHas('writerExam', function($q) use ($filters) {
+                                    $q->where(function($query) use ($filters){
+                                        foreach ($filters['topic'] as $topic) {
+                                            $query->orWhere('writer_exam.topic', 'like', '%' . $topic . '%');
+                                        }
+                                    });
+                                });
+
+                                return $query;
+                            } else {
+                                return $query->whereHas('writerExam', function($q) use ($filters) {
+                                    $q->where('writer_exam.topic', 'like', '%' . $filters['topic'] . '%');
+                                });
+                            }
+                        })
                         ->when(isset($filters['anchor_text']), function($query) use ($filters) {
                             return $query->whereHas('writerExam', function($q) use ($filters) {
                                 $q->where('writer_exam.anchor_text', 'like', '%'. $filters['anchor_text'].'%');
@@ -60,7 +78,7 @@ class WriterValidationController extends Controller
     }
 
     public function update(Request $request) {
-        $input = $request->except('created_at', 'updated_at', 'deleted_at', 'status');
+        $input = $request->except('created_at', 'updated_at', 'deleted_at', 'status', 'topic');
         $input['status'] = 'For Checking';
         $exam = WriterExam::find($request->id);
         $exam->update($input);
@@ -123,8 +141,9 @@ class WriterValidationController extends Controller
     }
 
     public function store(Request $request) {
-        $input = $request->except('writer_name', 'duration');
+        $input = $request->except('writer_name', 'duration', 'topic');
         $input['status'] = 'Setup';
+        $input['topic'] = is_array($request->topic) ? implode(",", $request->topic) : $request->topic;
         $exam = WriterExam::create($input);
 
         event(new WriterExamProcessedEvent($exam, 'setup'));

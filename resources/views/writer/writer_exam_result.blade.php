@@ -136,7 +136,8 @@
                     @if ($mode === 'approved')
                         <p style="margin: 0;">
                             Congratulations! Our team has evaluated your examination and have determined that
-                            you have <strong>passed</strong> the exam.
+                            you have <strong>passed</strong> the exam. If you are currently logged in, please re-login
+                            to update your account.
                         </p> <br />
 
                         <p style="margin: 0;">

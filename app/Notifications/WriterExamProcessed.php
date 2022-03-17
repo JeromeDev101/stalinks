@@ -85,7 +85,7 @@ class WriterExamProcessed extends Notification implements ShouldQueue
                         . $this->writerExam->title . ", Anchor Text: " . $this->writerExam->anchor_text . ").
                         Please evaluate it on the 'Writer's Validation' page now.";
         } else if ($this->mode === 'approved') {
-            $message = "Congratulations! You have passed the writer's examination.
+            $message = "Congratulations! You have passed the writer's examination. Please re-login to update your account.
                         You can navigate to the 'Article' page and start accepting and writing articles for our clients.";
         } else if ($this->mode === 'disapproved') {
             if ($this->writerExam->attempt === 1) {

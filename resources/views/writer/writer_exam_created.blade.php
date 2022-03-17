@@ -164,7 +164,9 @@
                         1. Write an article with at least <strong>600 words</strong>. <br/>
                         2. Identify the keywords you have used in the article by using a <strong>bold</strong> character. <br/>
                         3. Use the <strong>anchor text</strong> as <strong>natural</strong>
-                        as possible within your article and <strong>hyperlink</strong> it to the assigned website.
+                        as possible within your article and <strong>hyperlink</strong> it to the assigned website. <br/>
+                        4. Create a creative title based on the topic(s) provided.<br/>
+                        5.	Write a meta description with 110-160 characters (The spaces are counted as character).
                     </p> <br/>
 
                     <p style="margin: 0;">

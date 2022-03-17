@@ -54,6 +54,19 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Topic</label>
+                                        <v-select
+                                            class="style-chooser"
+                                            v-model="filterModel.topic"
+                                            multiple
+                                            placeholder="All"
+                                            :options="topicList"
+                                            :searchable="false"/>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="row mb-3">
@@ -102,6 +115,7 @@
                                             <th>Writer</th>
                                             <th>Attempt / Status</th>
                                             <th>Action</th>
+                                            <th>Topic</th>
                                             <th>Title</th>
                                             <th>Anchor Text</th>
                                             <th>Link To</th>
@@ -133,7 +147,7 @@
                                                         </button>
                                                     </td>
 
-                                                    <td class="align-middle" colspan="3">
+                                                    <td class="align-middle" colspan="4">
                                                         Exam details empty - please setup an exam for the writer
                                                     </td>
 
@@ -157,9 +171,9 @@
                                                         class="align-middle"
                                                         :style="exam.attempt === 2 ? 'border: none !important;' : ''">
 
-                                                    <span class="badge p-3 text-uppercase" :class="examStatusBadge(exam.status)">
-                                                        {{ exam.attempt }} - {{ exam.status }}
-                                                    </span>
+                                                        <span class="badge p-3 text-uppercase" :class="examStatusBadge(exam.status)">
+                                                            {{ exam.attempt }} - {{ exam.status }}
+                                                        </span>
                                                     </td>
 
                                                     <td :style="exam.attempt === 2 ? 'border: none !important;' : ''">
@@ -176,7 +190,29 @@
                                                     <td
                                                         class="align-middle"
                                                         :style="exam.attempt === 2 ? 'border: none !important;' : ''">
-                                                        {{ exam.title }}
+
+                                                        <template v-if="!exam.topic">
+                                                            <span class="badge badge-secondary">
+                                                                N/A
+                                                            </span>
+                                                        </template>
+
+                                                        <template v-else>
+                                                            <span v-for="topic in sortTopics(exam.topic)">
+                                                                <span class="badge badge-primary mr-1">
+                                                                    {{ topic }}
+                                                                </span>
+                                                            </span>
+                                                        </template>
+                                                    </td>
+
+                                                    <td
+                                                        class="align-middle"
+                                                        :style="exam.attempt === 2 ? 'border: none !important;' : ''">
+
+                                                        <span :class="!exam.title ? 'badge badge-secondary' : ''">
+                                                            {{ exam.title ? exam.title : 'N/A' }}
+                                                        </span>
                                                     </td>
 
                                                     <td
@@ -215,7 +251,7 @@
 
                                                     <td class="align-middle" style="border: none !important;">
                                                         <button
-                                                            :disabled="writer.exam_duration !== 0"
+                                                            :disabled="writer.exam_duration > 0"
                                                             title="Create Exam"
                                                             class="btn btn-success"
 
@@ -226,7 +262,7 @@
                                                     </td>
 
                                                     <td
-                                                        colspan="3"
+                                                        colspan="4"
                                                         class="align-middle"
                                                         style="border: none !important;"
                                                         :class="writer.exam_duration !== 0 ? 'text-secondary' : ''">
@@ -274,10 +310,21 @@
                                         <input type="hidden" class="form-control" v-model="addExam.writer_id">
                                     </div>
                                 </div>
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Title</label>-->
+<!--                                        <input type="text" class="form-control" v-model="addExam.title">-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Title</label>
-                                        <input type="text" class="form-control" v-model="addExam.title">
+                                        <label>Topic</label>
+                                        <v-select
+                                            v-model="addExam.topic"
+                                            multiple
+                                            placeholder="Select Topic"
+                                            :options="topicList"
+                                            :searchable="false"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -292,12 +339,12 @@
                                         <input type="text" class="form-control" v-model="addExam.link_to">
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Meta Description</label>
-                                        <textarea class="form-control" cols="30" rows="5" v-model="addExam.meta_description"></textarea>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Meta Description</label>-->
+<!--                                        <textarea class="form-control" cols="30" rows="5" v-model="addExam.meta_description"></textarea>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -329,6 +376,18 @@
                                                 {{ option }}
                                             </option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Topic</label>
+                                        <v-select
+                                            v-model="viewModel.topic"
+                                            multiple
+                                            :options="topicList"
+                                            :searchable="false"
+                                            :disabled=true
+                                            placeholder="Select Topic"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -409,6 +468,8 @@
                         2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
                         3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and
                         <b>hyperlink</b> it to the assigned website.<br/>
+                        4.	Create a creative title based on the topic(s) provided.<br/>
+                        5.	Write a meta description with 110-160 characters (The spaces are counted as character).<br/>
 
                         <br/>
                         You will be given <b>2 attempts</b> for the writer's exam. If you have failed on the first attempt.
@@ -478,25 +539,54 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Title</label>
-                                            <input type="text" class="form-control" v-model="ExamUpdateFirst.title" :disabled="true">
+                                            <input
+                                                v-model="ExamUpdateFirst.title"
+                                                type="text"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Topic</label>
+                                            <v-select
+                                                v-model="ExamUpdateFirst.topic"
+                                                multiple
+                                                :options="topicList"
+                                                :searchable="false"
+                                                :disabled=true
+                                                placeholder="Select Topic"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Anchor Text</label>
-                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateFirst.anchor_text">
+                                            <input
+                                                v-model="ExamUpdateFirst.anchor_text"
+                                                type="text"
+                                                class="form-control"
+                                                :disabled="true">
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Link To</label>
-                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateFirst.link_to">
+                                            <input
+                                                v-model="ExamUpdateFirst.link_to"
+                                                type="text"
+                                                class="form-control"
+                                                :disabled="true">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Meta Description</label>
-                                            <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdateFirst.meta_description" :disabled="true"></textarea>
+                                            <textarea
+                                                v-model="ExamUpdateFirst.meta_description"
+                                                cols="30"
+                                                rows="5"
+                                                class="form-control">
+
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -587,25 +677,54 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Title</label>
-                                            <input type="text" class="form-control" v-model="ExamUpdateSecond.title" :disabled="true">
+                                            <input
+                                                v-model="ExamUpdateSecond.title"
+                                                type="text"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Topic</label>
+                                            <v-select
+                                                v-model="ExamUpdateSecond.topic"
+                                                multiple
+                                                :options="topicList"
+                                                :searchable="false"
+                                                :disabled=true
+                                                placeholder="Select Topic"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Anchor Text</label>
-                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateSecond.anchor_text">
+                                            <input
+                                                v-model="ExamUpdateSecond.anchor_text"
+                                                type="text"
+                                                class="form-control"
+                                                :disabled="true">
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Link To</label>
-                                            <input type="text" class="form-control" :disabled="true" v-model="ExamUpdateSecond.link_to">
+                                            <input
+                                                v-model="ExamUpdateSecond.link_to"
+                                                type="text"
+                                                class="form-control"
+                                                :disabled="true">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Meta Description</label>
-                                            <textarea class="form-control" cols="30" rows="5" v-model="ExamUpdateSecond.meta_description" :disabled="true"></textarea>
+                                            <textarea
+                                                v-model="ExamUpdateSecond.meta_description"
+                                                class="form-control"
+                                                cols="30"
+                                                rows="5">
+
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -654,6 +773,7 @@ export default {
                 data: [],
             },
             addExam: {
+                topic: '',
                 writer_name: '',
                 writer_id: '',
                 anchor_text: '',
@@ -664,6 +784,7 @@ export default {
                 duration: '',
             },
             filterModel: {
+                topic: '',
                 status: '',
                 anchor_text: '',
                 writer_id: '',
@@ -671,6 +792,7 @@ export default {
             },
 
             ExamUpdateFirst: {
+                topic: '',
                 link_to: '',
                 anchor_text: '',
                 meta_description: '',
@@ -680,6 +802,7 @@ export default {
             },
 
             ExamUpdateSecond: {
+                topic: '',
                 link_to: '',
                 anchor_text: '',
                 meta_description: '',
@@ -693,6 +816,7 @@ export default {
             viewModel: {
                 id: '',
                 title: '',
+                topic: '',
                 anchor_text: '',
                 meta_description: '',
                 status: '',
@@ -709,6 +833,33 @@ export default {
                 200,
                 250,
                 'All'
+            ],
+
+            topicList: [
+                'Adult',
+                'Art',
+                'Beauty',
+                'Charity',
+                'Cooking',
+                'Crypto',
+                'Education',
+                'Fashion',
+                'Finance',
+                'Games',
+                'Health',
+                'History',
+                'Job',
+                'Marketing',
+                'Movies & Music',
+                'News',
+                'Pet',
+                'Photograph',
+                'Real Estate',
+                'Religion',
+                'Shopping',
+                'Sports',
+                'Tech',
+                'Travel',
             ],
         }
     },
@@ -769,6 +920,7 @@ export default {
 
         clearSearch() {
             this.filterModel = {
+                topic: '',
                 status: '',
                 anchor_text: '',
                 writer_id: '',
@@ -808,11 +960,17 @@ export default {
 
                 if (attempt === 1) {
                     this.ExamUpdateFirst = result;
+
+                    this.ExamUpdateFirst.topic = this.getTopics(result);
+
                     if (result) {
                         this.data = result.content === null ? '' : result.content
                     }
                 } else {
                     this.ExamUpdateSecond = result;
+
+                    this.ExamUpdateSecond.topic = this.getTopics(result);
+
                     if (result) {
                         this.dataSecond = result.content === null ? '' : result.content
                     }
@@ -837,6 +995,23 @@ export default {
                 data = this.ExamUpdateSecond;
             }
 
+            if(data.title === "" || data.title == null) {
+                swal.fire(
+                    'Note',
+                    'Please provide a title',
+                    'error',
+                )
+                return false;
+            }
+
+            if(data.meta_description === "" || data.meta_description == null) {
+                swal.fire(
+                    'Note',
+                    'Please provide a meta description',
+                    'error',
+                )
+                return false;
+            }
 
             if(data.content === "" || data.content == null) {
                 swal.fire(
@@ -912,6 +1087,18 @@ export default {
         },
 
         doUpdate(exam) {
+
+            let topic = '';
+
+            if(exam.topic != null && exam.topic != '') {
+                let _topic = exam.topic;
+                if (_topic.indexOf(',') > -1) {
+                    topic = _topic.split(',')
+                } else {
+                    topic = _topic;
+                }
+            }
+
             this.viewModel.writer_id = exam.writer_id;
             this.viewModel.id = exam.id;
             this.viewModel.title = exam.title;
@@ -920,13 +1107,14 @@ export default {
             this.viewModel.link_to = exam.link_to;
             this.viewModel.meta_description = exam.meta_description;
             this.viewModel.attempt = exam.attempt;
+            this.viewModel.topic = topic;
             this.data2 = exam.content === null ? '' : exam.content;
 
             $("#modalEditWriterValidateViewContent").modal('show')
         },
 
         submitExam() {
-            if(this.addExam.anchor_text == "" || this.addExam.link_to == "" || this.addExam.title == "" || this.addExam.meta_description == "") {
+            if(this.addExam.anchor_text == "" || this.addExam.link_to == "" || this.addExam.topic == "") {
                 swal.fire(
                     'Error',
                     'Please Fill up all fields.',
@@ -972,6 +1160,7 @@ export default {
         },
 
         doCreateExam(writer_id, writer_username, attempt, duration) {
+            this.addExam.topic = '';
             this.addExam.writer_name = writer_username;
             this.addExam.writer_id = writer_id;
             this.addExam.title = '';
@@ -1002,17 +1191,41 @@ export default {
 
         checkExamsHaveDisapproved (exams) {
             return exams.some(item => item.status === 'Disapproved') && exams.length === 1;
-        }
+        },
+
+        sortTopics (topics) {
+            return topics.split(',');
+        },
+
+        getTopics (result) {
+            let topic;
+
+            if(result.topic != null && result.topic != '') {
+                let _topic = result.topic;
+                if (_topic.indexOf(',') > -1) {
+                    topic = _topic.split(',')
+                } else {
+                    topic = _topic;
+                }
+            }
+
+            return topic;
+        },
     },
 }
 </script>
 
 <style scoped>
+    .table td {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 4px solid #dee2e6;
+    }
+</style>
 
-.table td {
-    padding: .75rem;
-    vertical-align: top;
-    border-top: 4px solid #dee2e6;
-}
-
+<style>
+    .style-chooser input {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+    }
 </style>
