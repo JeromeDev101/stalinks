@@ -404,7 +404,7 @@ class MailgunController extends Controller
                         'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
                     )
                     ->orderBy('id', 'desc')
-                    ->paginate();
+                    ->paginate(10);
 
                     $inbox->getCollection()->transform(function ($item) use ($request) {
                         $item['thread'] = $this->getThreads($item, $request);
@@ -432,7 +432,7 @@ class MailgunController extends Controller
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
                         ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
                         ->orderBy('id', 'desc')
-                        ->paginate();
+                        ->paginate(10);
 
                     $inbox->getCollection()->transform(function ($item) use ($request) {
                         $item['thread'] = $this->getThreads($item, $request);
@@ -484,7 +484,7 @@ class MailgunController extends Controller
                         ')
                     )
                     ->orderBy('id', 'desc')
-                    ->paginate();
+                    ->paginate(10);
 
                     $inbox->getCollection()->transform(function ($item) use ($request) {
                         $item['thread'] = $this->getThreads($item, $request);
@@ -500,7 +500,7 @@ class MailgunController extends Controller
             }
         }
 
-        $inbox = ($request->param != 'Trash') ? $inbox : $inbox->paginate();
+        $inbox = ($request->param != 'Trash') ? $inbox : $inbox->paginate(10);
 
         // getting count of unread emails in inbox
 
