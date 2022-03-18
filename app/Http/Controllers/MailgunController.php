@@ -320,11 +320,7 @@ class MailgunController extends Controller
         return response()->json(new ShowMessage($message));
     }
 
-    public function recipient_filter(Request $request)
-    {
-        $cnt = 0;
-
-        //return response()->json(['inbox'=> Auth::user()->role_id]);
+    public function recipient_filter (Request $request) {
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|max:100',
@@ -396,66 +392,41 @@ class MailgunController extends Controller
                 case 'Inbox':
 
                     if ($request->email == 'all') {
-//                        $inbox = $inbox->where('replies.is_sent', 0)->whereNull('replies.deleted_at');
                         $inbox = $inbox->where('replies.is_sent', 0)
-                            ->whereNull('replies.deleted_at')
-                            ->with('thread');
+                            ->whereNull('replies.deleted_at');
                     } else {
-//                        $inbox = $inbox->where('replies.received', 'like', '%'.$request->email.'%')
-//                            ->where('replies.is_sent', 0)
-//                            ->whereNull('replies.deleted_at');
-
                         $inbox = $inbox->where('replies.is_sent', 0)
                             ->whereNull('replies.deleted_at')
-                            ->where('replies.received', 'like', '%' . $request->email . '%')
-                            ->with([
-                                'thread' => function ($query) use ($request) {
-                                    $query->where(function ($sub) use ($request) {
-                                        $sub->orWhere('sender', 'like', '%' . $request->email . '%')
-                                            ->orWhere('received', 'like', '%' . $request->email . '%');
-                                    });
-                                }
-                            ]);
+                            ->where('replies.received', 'like', '%' . $request->email . '%');
                     }
 
                     $inbox = $inbox->groupBy(DB::raw(
                         'CONCAT("Re: ", REPLACE(subject, "Re: ", "")), sender, received')
                     )
-                        ->orderBy('id', 'desc')
-                        ->paginate();
+                    ->orderBy('id', 'desc')
+                    ->paginate();
 
-                    // get emails with "Re: " subjects
-                    $subjects = $this->getSubjects($inbox);
+                    $inbox->getCollection()->transform(function ($item) use ($request) {
+                        $item['thread'] = $this->getThreads($item, $request);
 
-                    // add emails with and without 'Re: ' to the thread
-                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
-
-                    // sort items for the correct thread and date
-                    $inbox = $this->sortEmailThreads($inbox);
+                        return $item;
+                    });
 
                     break;
+
                 case 'Sent':
                     if ($request->email == 'all') {
                         $inbox = $inbox->where('replies.is_sent', 1)->where(function ($sub) {
                             $sub->whereNull('deleted_at')
                                 ->orWhere('deleted_at', 1);
-                        })
-                            ->with('thread');
+                        });
                     } else {
                         $inbox = $inbox->where('replies.sender', $request->email)
                             ->where('replies.is_sent', 1)
                             ->where(function ($sub) {
                                 $sub->whereNull('deleted_at')
                                     ->orWhere('deleted_at', 1);
-                            })
-                            ->with([
-                                'thread' => function ($query) use ($request) {
-                                    $query->where(function ($sub) use ($request) {
-                                        $sub->orWhere('sender', 'like', '%' . $request->email . '%')
-                                            ->orWhere('received', 'like', '%' . $request->email . '%');
-                                    });
-                                }
-                            ]);
+                            });
                     }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
@@ -463,16 +434,14 @@ class MailgunController extends Controller
                         ->orderBy('id', 'desc')
                         ->paginate();
 
-                    // get emails with "Re: " subjects
-                    $subjects = $this->getSubjects($inbox);
+                    $inbox->getCollection()->transform(function ($item) use ($request) {
+                        $item['thread'] = $this->getThreads($item, $request);
 
-                    // add emails with and without 'Re: ' to the thread
-                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
-
-                    // sort items for the correct thread and date
-                    $inbox = $this->sortEmailThreads($inbox);
+                        return $item;
+                    });
 
                     break;
+
                 case 'Trash':
                     if ($request->email == 'all') {
                         $inbox = $inbox->whereNotNull('replies.deleted_at')->where('replies.deleted_at', '!=', 1);
@@ -487,6 +456,7 @@ class MailgunController extends Controller
                     }
 
                     break;
+
                 case 'Starred':
 
                     if ($request->email == 'all') {
@@ -494,8 +464,7 @@ class MailgunController extends Controller
                             ->where(function ($sub) {
                                 $sub->whereNull('deleted_at')
                                     ->orWhere('deleted_at', 1);
-                            })
-                            ->with('thread');;
+                            });
                     } else {
                         $inbox = $inbox
                             ->where('replies.is_starred', 1)
@@ -506,15 +475,7 @@ class MailgunController extends Controller
                             ->where(function ($sub) {
                                 $sub->whereNull('deleted_at')
                                     ->orWhere('deleted_at', 1);
-                            })
-                            ->with([
-                                'thread' => function ($query) use ($request) {
-                                    $query->where(function ($sub) use ($request) {
-                                        $sub->orWhere('sender', 'like', '%' . $request->email . '%')
-                                            ->orWhere('received', 'like', '%' . $request->email . '%');
-                                    });
-                                }
-                            ]);
+                            });
                     }
 
                     $inbox = $inbox->groupBy(DB::raw('
@@ -522,20 +483,19 @@ class MailgunController extends Controller
                             CONCAT("Re: ", REPLACE(subject, "Re: ", ""))
                         ')
                     )
-                        ->orderBy('id', 'desc')
-                        ->paginate();
+                    ->orderBy('id', 'desc')
+                    ->paginate();
 
-                    // get emails with "Re: " subjects
-                    $subjects = $this->getSubjects($inbox);
+                    $inbox->getCollection()->transform(function ($item) use ($request) {
+                        $item['thread'] = $this->getThreads($item, $request);
 
-                    // add emails with and without 'Re: ' to the thread
-                    $inbox = $this->addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox);
-
-                    // sort items for the correct thread and date
-                    $inbox = $this->sortEmailThreads($inbox);
+                        return $item;
+                    });
 
                     break;
+
                 default:
+
                     $inbox = $inbox;
             }
         }
@@ -559,147 +519,6 @@ class MailgunController extends Controller
             'count' => $cnt,
             'inbox' => $inbox
         ]);
-    }
-
-    private function sortEmailThreads($inbox)
-    {
-
-        $inbox->transform(function ($item) {
-
-            $threads = $item->thread->filter(function ($value) use ($item) {
-                $received_array = $this->removeSpacesAndExplode($value->received);
-                $item_received  = $this->removeSpacesAndExplode($item->received);
-                $min_item_received  = $this->removeSpacesAndExplode($item->min_received);
-
-                // get from_mail
-
-                $item_from_mail     = $this->getFromMail($item->from_mail);
-                $min_item_from_mail     = $this->getFromMail($item->min_from_mail);
-                $received_from_mail = $this->getFromMail($value->from_mail);
-
-                if ($item->is_sent === 1) {
-                    return (
-                        ($value->received === $item->received && $value->sender === $item->sender)
-                        || ($value->received === $item->received && $received_from_mail === $item->sender)
-                        || ($value->sender === $item->received && $value->received === $item->sender)
-                        || ($received_from_mail === $item->received && $value->received === $item->sender)
-                        || (in_array($value->sender, $item_received) && $value->received === $item->sender)
-                        || (in_array($received_from_mail, $item_received) && $value->received === $item->sender)
-                        || (in_array($value->received, $item_received) && $value->sender === $item->sender)
-                        || (in_array($value->received, $item_received) && $received_from_mail === $item->sender)
-
-
-                        || ($value->received === $item->min_received && $value->sender === $item->sender)
-                        || ($value->received === $item->received && $value->sender === $item->min_sender)
-
-                        || ($value->received === $item->min_received && $received_from_mail === $item->sender)
-                        || ($value->received === $item->received && $received_from_mail === $item->min_sender)
-
-                        || ($value->sender === $item->min_received && $value->received === $item->sender)
-                        || ($value->sender === $item->received && $value->received === $item->min_sender)
-
-                        || ($received_from_mail === $item->min_received && $value->received === $item->sender)
-                        || ($received_from_mail === $item->received && $value->received === $item->min_sender)
-
-                        || (in_array($value->sender, $min_item_received) && $value->received === $item->sender)
-                        || (in_array($value->sender, $item_received) && $value->received === $item->min_sender)
-
-                        || (in_array($received_from_mail, $min_item_received) && $value->received === $item->sender)
-                        || (in_array($received_from_mail, $item_received) && $value->received === $item->min_sender)
-
-                        || (in_array($value->received, $min_item_received) && $value->sender === $item->sender)
-                        || (in_array($value->received, $item_received) && $value->sender === $item->min_sender)
-
-                        || (in_array($value->received, $min_item_received) && $received_from_mail === $item->sender)
-                        || (in_array($value->received, $item_received) && $received_from_mail === $item->min_sender)
-                    );
-                } else {
-                    return (
-                        ($value->received === $item->received && $value->sender === $item->sender)
-                        || ($value->received === $item->received && $value->sender === $item_from_mail)
-                        || ($value->received === $item->sender && $value->sender === $item->received)
-                        || ($value->received === $item_from_mail && $value->sender === $item->received)
-                        || (in_array($item->sender, $received_array) && $value->sender === $item->received)
-                        || (in_array($item_from_mail, $received_array) && $value->sender === $item->received)
-                        || (in_array($item->received, $received_array) && $value->sender === $item->sender)
-                        || (in_array($item->received, $received_array) && $value->sender === $item_from_mail)
-
-                        || ($value->received === $item->min_received && $value->sender === $item->sender)
-                        || ($value->received === $item->received && $value->sender === $item->min_sender)
-
-                        || ($value->received === $item->min_received && $value->sender === $item_from_mail)
-                        || ($value->received === $item->received && $value->sender === $min_item_from_mail)
-
-                        || ($value->received === $item->min_sender && $value->sender === $item->received)
-                        || ($value->received === $item->sender && $value->sender === $item->min_received)
-
-                        || ($value->received === $min_item_from_mail && $value->sender === $item->received)
-                        || ($value->received === $item_from_mail && $value->sender === $item->min_received)
-
-                        || (in_array($item->min_sender, $received_array) && $value->sender === $item->received)
-                        || (in_array($item->sender, $received_array) && $value->sender === $item->min_received)
-
-                        || (in_array($min_item_from_mail, $received_array) && $value->sender === $item->received)
-                        || (in_array($item_from_mail, $received_array) && $value->sender === $item->min_received)
-
-                        || (in_array($item->min_received, $received_array) && $value->sender === $item->sender)
-                        || (in_array($item->received, $received_array) && $value->sender === $item->min_sender)
-
-                        || (in_array($item->min_received, $received_array) && $value->sender === $item_from_mail)
-                        || (in_array($item->received, $received_array) && $value->sender === $min_item_from_mail)
-                    );
-                }
-            })->sortByDesc('id')->values();
-
-            unset($item['thread']);
-            $item['thread'] = $threads;
-
-            return $item;
-        });
-
-        return $inbox;
-    }
-
-    private function addEmailsWithAndWithoutReInThreads($subjects, $request, $inbox)
-    {
-        $add_inbox = Reply::whereIn('subject', $subjects);
-
-        if ($request->email !== 'all') {
-            $add_inbox = $add_inbox->where(function ($sub) use ($request) {
-                $sub->orWhere('sender', 'like', '%' . $request->email . '%')
-                    ->orWhere('received', 'like', '%' . $request->email . '%');
-            });
-        }
-
-        $add_inbox = $add_inbox->get()->groupBy('subject');
-
-        $add_inbox->each(function ($add, $key) use ($inbox) {
-            $inbox->transform(function ($inb) use ($key, $add) {
-                if ($inb->con_sub == $key || $inb->re_sub == $key) {
-                    $new_thread = $add->merge($inb->thread);
-                }
-
-                if (isset($new_thread)) {
-                    unset($inb['thread']);
-                    $inb['thread'] = $new_thread;
-                }
-
-                return $inb;
-            });
-        });
-
-        return $inbox;
-    }
-
-    private function getSubjects($inbox)
-    {
-        $subjects = $inbox->getCollection()->pluck('subject')->unique();
-
-        return $subjects->transform(function ($sub) {
-            return strpos($sub, 'Re:') !== false
-                ? str_replace('Re: ', "", $sub)
-                : 'Re: ' . $sub;
-        });
     }
 
     private function removeSpacesAndExplode($str)
@@ -1266,5 +1085,212 @@ class MailgunController extends Controller
             'work_mail' => $work_mail,
             'content_data' => $content_data
         ];
+    }
+
+    public function getThreads ($item, $request) {
+
+        // get received
+        $item_received = $this->removeSpacesAndExplode($item->received);
+        $item_min_received = $this->removeSpacesAndExplode($item->min_received);
+
+        // get from mail
+        $item_from_mail = $this->getFromMail($item->from_mail);
+        $min_item_from_mail = $this->getFromMail($item->min_from_mail);
+
+        return Reply::where(function ($sub) use ($item) {
+                $sub->orWhere('subject', $item->subject)
+                    ->orWhere('subject', $this->getAlternateSubject($item->subject));
+            })
+            ->where(function ($sub) use (
+                $item,
+                $request,
+                $item_from_mail,
+                $min_item_from_mail,
+                $item_received, $item_min_received
+            ) {
+                $sub->where(function ($inner) use ($item, $request) {
+                    $inner->orWhere('received', $item->received)
+                        ->where('sender', $item->sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('received', $item->sender)
+                        ->where('sender', $item->received);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('received', $item->min_received)
+                        ->where('sender', $item->min_sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('received', $item->min_sender)
+                        ->where('sender', $item->min_received);
+                })
+
+                // item from mail
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('received', $item->sender)
+                        ->where('sender', $item_from_mail);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('received', $item_from_mail)
+                        ->where('sender', $item->sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('received', $item->received)
+                        ->where('sender', $item_from_mail);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('received', $item_from_mail)
+                        ->where('sender', $item->received);
+                })
+
+                // min item from mail
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('received', $item->sender)
+                        ->where('sender', $min_item_from_mail);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('received', $min_item_from_mail)
+                        ->where('sender', $item->sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('received', $item->received)
+                        ->where('sender', $min_item_from_mail);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('received', $min_item_from_mail)
+                        ->where('sender', $item->received);
+                })
+
+                // item received
+
+                ->orWhere(function ($inner) use ($item, $request, $item_received) {
+                    $inner->orWhereIn('received', $item_received)
+                        ->where('sender', $item->received);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_received) {
+                    $inner->orWhere('received', $item->received)
+                        ->whereIn('sender', $item_received);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_received) {
+                    $inner->orWhereIn('received', $item_received)
+                        ->where('sender', $item->sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_received) {
+                    $inner->orWhere('received', $item->sender)
+                        ->whereIn('sender', $item_received);
+                })
+
+                // min item received
+
+                ->orWhere(function ($inner) use ($item, $request, $item_min_received) {
+                    $inner->orWhereIn('received', $item_min_received)
+                        ->where('sender', $item->received);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_min_received) {
+                    $inner->orWhere('received', $item->received)
+                        ->whereIn('sender', $item_min_received);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_min_received) {
+                    $inner->orWhereIn('received', $item_min_received)
+                        ->where('sender', $item->sender);
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_min_received) {
+                    $inner->orWhere('received', $item->sender)
+                        ->whereIn('sender', $item_min_received);
+                })
+
+                // find in set
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('sender', $item->sender)
+                        ->whereRaw("FIND_IN_SET('" . "$item->received" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('sender', $item->received)
+                        ->whereRaw("FIND_IN_SET('" . "$item->sender" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('sender', $item->min_sender)
+                        ->whereRaw("FIND_IN_SET('" . "$item->min_received" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request) {
+                    $inner->orWhere('sender', $item->min_received)
+                        ->whereRaw("FIND_IN_SET('" . "$item->min_sender" . "',REPLACE(received, ' ', ''))");
+                })
+
+                // find in set - item from mail
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('sender', $item->sender)
+                        ->whereRaw("FIND_IN_SET('" . "$item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('sender', $item->received)
+                        ->whereRaw("FIND_IN_SET('" . "$item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('sender', $item->min_sender)
+                        ->whereRaw("FIND_IN_SET('" . "$item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $item_from_mail) {
+                    $inner->orWhere('sender', $item->min_received)
+                        ->whereRaw("FIND_IN_SET('" . "$item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                // find in set - min item from mail
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('sender', $item->sender)
+                        ->whereRaw("FIND_IN_SET('" . "$min_item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('sender', $item->received)
+                        ->whereRaw("FIND_IN_SET('" . "$min_item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('sender', $item->min_sender)
+                        ->whereRaw("FIND_IN_SET('" . "$min_item_from_mail" . "',REPLACE(received, ' ', ''))");
+                })
+
+                ->orWhere(function ($inner) use ($item, $request, $min_item_from_mail) {
+                    $inner->orWhere('sender', $item->min_received)
+                        ->whereRaw("FIND_IN_SET('" . "$min_item_from_mail" . "',REPLACE(received, ' ', ''))");
+                });
+
+            })
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->toArray();
+    }
+
+    public function getAlternateSubject ($subject) {
+        return strpos($subject, 'Re:') !== false
+            ? str_replace('Re: ', "", $subject)
+            : 'Re: ' . $subject;
     }
 }
