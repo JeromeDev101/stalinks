@@ -92,6 +92,10 @@ const mutations = {
         state.userUnreadEmails.count = state.userUnreadEmails.count - count;
     },
 
+    incrementUserUnreadEmailCount(state, count) {
+        state.userUnreadEmails.count = state.userUnreadEmails.count + count;
+    },
+
     [IS_AFFILIATE_CODE_SET] (state, payload) {
         state.isAffiliateCodeSet = payload;
     },
@@ -199,8 +203,12 @@ const actions = {
         }
     },
 
-    updateUnreadEmailsCount({commit}, count) {
-        commit('decrementUserUnreadEmailCount', count);
+    updateUnreadEmailsCount({commit}, data) {
+        if (data.mode === 'decrement') {
+            commit('decrementUserUnreadEmailCount', data.count);
+        } else {
+            commit('incrementUserUnreadEmailCount', data.count);
+        }
     },
 
     async getAffiliateCodeSet({commit}) {

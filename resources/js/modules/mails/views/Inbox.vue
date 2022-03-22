@@ -66,6 +66,18 @@
                                 </button>
 
                                 <button
+                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    :disabled="btnEnable"
+                                    type="button"
+                                    title="Mark as unread"
+                                    class="btn btn-default"
+
+                                    @click="markAsUnReadSelectedEmails()">
+
+                                    <i class="far fa-envelope"></i>
+                                </button>
+
+                                <button
                                     type="button"
                                     title="Starred"
                                     class="btn btn-default"
@@ -2130,10 +2142,13 @@ export default {
         markAsReadSelectedEmails () {
             let loader = this.$loading.show();
 
-            let idsObject = this.getIsNotViewedEmailIds();
+            let idsObject = this.getIsNotViewedEmailIds('read');
 
             if (idsObject.ids.length) {
-                axios.post('/api/mail/is-viewed-thread', {ids : idsObject.ids})
+                axios.post('/api/mail/is-viewed-thread', {
+                    ids : idsObject.ids,
+                    mode: 'read'
+                })
                 .then((response) => {
 
                     let readCount = [... new Set(idsObject.threads)].length;
@@ -2143,10 +2158,13 @@ export default {
 
                     // update value of unread emails in navbar
                     if (this.user.work_mail === this.user.work_mail_orig) {
-                        this.updateUnreadEmailsCount(readCount);
+                        this.updateUnreadEmailsCount({
+                            count: readCount,
+                            mode: 'decrement'
+                        });
                     }
 
-                    this.markRecordDataAsRead(idsObject.threads);
+                    this.markRecordDataAsRead(idsObject.threads, 'decrement');
 
                     this.checkIds = [];
                     this.btnEnable = true;
@@ -2181,14 +2199,75 @@ export default {
             }
         },
 
-        getIsNotViewedEmailIds () {
+        markAsUnReadSelectedEmails () {
+            let loader = this.$loading.show();
+
+            let idsObject = this.getIsNotViewedEmailIds('unread');
+
+            if (idsObject.ids.length) {
+                axios.post('/api/mail/is-viewed-thread', {
+                    ids : idsObject.ids,
+                    mode: 'unread'
+                })
+                .then((response) => {
+
+                    let unreadCount = [... new Set(idsObject.threads)].length;
+
+                    // update unread messages in inbox count on parent component
+                    this.updateInboxUnreadCountInParent(this.inboxCount - 1, this.user.work_mail, 'unread', unreadCount);
+
+                    // update value of unread emails in navbar
+                    if (this.user.work_mail === this.user.work_mail_orig) {
+                        this.updateUnreadEmailsCount({
+                            count: unreadCount,
+                            mode: 'increment'
+                        });
+                    }
+
+                    this.markRecordDataAsRead(idsObject.threads, 'increment');
+
+                    this.checkIds = [];
+                    this.btnEnable = true;
+
+                    swal.fire(
+                        'Mark as Unread',
+                        'Successfully marked selected emails as unread',
+                        'success'
+                    )
+
+                    loader.hide();
+                })
+                .catch((err) => {
+                    console.log(err)
+
+                    swal.fire(
+                        'Error',
+                        'Something went wrong while marking the selected emails as unread',
+                        'error'
+                    )
+
+                    loader.hide();
+                })
+            } else {
+                swal.fire(
+                    'Selected Emails are already unread',
+                    '',
+                    'warning'
+                )
+
+                loader.hide();
+            }
+        },
+
+        getIsNotViewedEmailIds (mod) {
             let ids = [];
             let thread_ids = [];
+            let compare = mod === 'read' ? 0 : 1;
 
             this.checkIds.forEach(function (email) {
                 if (email.thread) {
                     email.thread.forEach(function (item) {
-                        if (item.is_viewed === 0) {
+                        if (item.is_viewed === compare) {
                             ids.push(item.id)
                             thread_ids.push(email.id)
                         }
@@ -2202,13 +2281,14 @@ export default {
             }
         },
 
-        markRecordDataAsRead (ids) {
+        markRecordDataAsRead (ids, mode) {
             let self = this;
+            let viewed = mode === 'decrement' ? 1 : 0;
 
             self.records.data.forEach(function(record, index) {
                 if (ids.includes(record.id)) {
                     self.records.data[index].thread.map(item => {
-                        item.is_viewed = 1;
+                        item.is_viewed = viewed;
                     })
                 }
             })
@@ -2383,7 +2463,10 @@ export default {
 
                 // update value of unread emails in navbar
                 if (this.user.work_mail === this.user.work_mail_orig) {
-                    this.updateUnreadEmailsCount(1);
+                    this.updateUnreadEmailsCount({
+                        count: 1,
+                        mode: 'decrement'
+                    });
                 }
             }
         },

@@ -455,6 +455,8 @@ export default {
                     this.displayInboxCnt = this.displayInboxCnt - 1;
                 } else if (mode === 'mark' && thread !== null) {
                     this.displayInboxCnt = this.displayInboxCnt - thread;
+                } else if (mode === 'unread' && thread !== null) {
+                    this.displayInboxCnt = this.displayInboxCnt + thread;
                 }
 
                 if (index >= 0) {
@@ -462,6 +464,8 @@ export default {
                         this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - 1;
                     } else if (mode === 'mark' && thread !== null) {
                         this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count - thread;
+                    } else if (mode === 'unread' && thread !== null) {
+                        this.listUserEmail[index].unread_count = this.listUserEmail[index].unread_count + thread;
                     }
                 }
             }

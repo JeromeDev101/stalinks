@@ -727,7 +727,9 @@ class MailgunController extends Controller
 
     public function setViewMessageThread(Request $request)
     {
-        Reply::whereIn('id', $request->ids)->update(['is_viewed' => 1]);
+        $mark = $request->mode === 'read' ? 1 : 0;
+
+        Reply::whereIn('id', $request->ids)->update(['is_viewed' => $mark]);
 
         return response()->json(['success' => true], 200);
     }
