@@ -25,6 +25,12 @@ import verification from './Verification/jp/main';
 // terms
 import terms from './Terms/jp/main';
 
+// header
+import header from './Header/jp/main';
+
+// sidebar
+import sidebar from './Sidebar/jp/main';
+
 export default {
     message : {
         help,
@@ -53,5 +59,11 @@ export default {
 
         // terms
         terms,
+
+        // header
+        header,
+
+        // sidebar
+        sidebar,
     }
 }

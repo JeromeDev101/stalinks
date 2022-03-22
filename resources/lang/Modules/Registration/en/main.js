@@ -20,5 +20,11 @@ export default {
     login1: 'Already have an account?',
     login2: 'Login now',
     b: 'Submit',
-    alert: 'Please for validation check your email Inbox or Spam or Promotion to click on the link to complete the process.'
+    alert: 'Please for validation check your email Inbox or Spam or Promotion to click on the link to complete the process.',
+
+    // account types
+    seller: 'Seller',
+    buyer: 'Buyer',
+    writer: 'Writer',
+    affiliate: 'Affiliate',
 }

@@ -17,7 +17,7 @@
                          with font-awesome or any other icon font library -->
                     <li class="nav-header"
                         v-if="user.isAdmin || (user.isOurs === 0 && (isManager || isSeller || isBuyer || isQc))">
-                        ADMIN
+                        {{ $t('message.sidebar.admin') }}
                     </li>
 
 <!--                    <li class="nav-item"
@@ -48,7 +48,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
                             <p>
-                                Admin Settings
+                                {{ $t('message.sidebar.admin_settings') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -59,7 +59,7 @@
                                              class="nav-link"
                                              :class="{ active: $route.name == 'system-it' }">
                                     <i class="fas fa-desktop nav-icon"></i>
-                                    <p>IT</p>
+                                    <p>{{ $t('message.sidebar.it') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -67,7 +67,7 @@
                                 <router-link :to="{ path: '/system/finance' }" class="nav-link"
                                              :class="{ active: $route.name == 'system-finance' }">
                                     <i class="fas fa-hand-holding-usd nav-icon"></i>
-                                    <p>Finance</p>
+                                    <p>{{ $t('message.sidebar.finance') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -75,7 +75,7 @@
                                 <router-link :to="{ path: '/system/dev' }" class="nav-link"
                                              :class="{ active: $route.name == 'system-dev' }">
                                     <i class="fas fa-code nav-icon"></i>
-                                    <p>Devs</p>
+                                    <p>{{ $t('message.sidebar.devs') }}</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -101,7 +101,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
                             <p>
-                                Management
+                                {{ $t('message.sidebar.management') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -112,7 +112,7 @@
                                              class="nav-link"
                                              :class="{ active: $route.name == 'roles' }">
                                     <i class="fas fa-user nav-icon"></i>
-                                    <p>Role</p>
+                                    <p>{{ $t('message.sidebar.role') }}</p>
                                     <span class="pull-right-container"></span>
                                 </router-link>
                             </li>
@@ -121,7 +121,7 @@
                                 <router-link :to="{ path: '/management/modules' }" class="nav-link"
                                              :class="{ active: $route.name == 'modules' }">
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <p>Module</p>
+                                    <p>{{ $t('message.sidebar.mod') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -129,7 +129,7 @@
                                 <router-link :to="{ path: '/management/tools' }" class="nav-link"
                                              :class="{ active: $route.name == 'tools' }">
                                     <i class="fas fa-cog nav-icon"></i>
-                                    <p>Tools</p>
+                                    <p>{{ $t('message.sidebar.tools') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -137,7 +137,7 @@
                                 <router-link :to="{ path: '/management/mail-logs' }" class="nav-link"
                                              :class="{ active: $route.name == 'mail-logs' }">
                                     <i class="fas fa-envelope nav-icon"></i>
-                                    <p>Mail Logs</p>
+                                    <p>{{ $t('message.sidebar.mail_logs') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -145,7 +145,7 @@
                                 <router-link :to="{ path: '/management/logs' }" class="nav-link"
                                              :class="{ active: $route.name == 'logs' }">
                                     <i class="fas fa-cogs nav-icon"></i>
-                                    <p>System Logs</p>
+                                    <p>{{ $t('message.sidebar.system_logs') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -153,7 +153,7 @@
                                 <router-link :to="{ path: '/management/teams' }" class="nav-link"
                                              :class="{ active: $route.name == 'List User' }">
                                     <i class="fas fa-users nav-icon"></i>
-                                    <p>Teams</p>
+                                    <p>{{ $t('message.sidebar.teams') }}</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -179,7 +179,7 @@
                             :class="{ active: $route.name == 'dashboard' }"
                         >
                             <img src="../../../../images/dashboard.png"/>
-                            <p>Dashboard</p>
+                            <p>{{ $t('message.sidebar.dashboard_admin') }}</p>
                         </router-link>
                     </li>
 
@@ -231,7 +231,7 @@
                             :class="{ active: $route.name == 'AlexaDomain' }"
                         >
                             <img src="../../../../images/alexa.png"/>
-                            <p>Get Alexa</p>
+                            <p>{{ $t('message.sidebar.get_alexa') }}</p>
                         </router-link>
                     </li>
 
@@ -246,7 +246,7 @@
                             :class="{ active: $route.name == 'generate-list' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Generate List</p>
+                            <p>{{ $t('message.sidebar.generate_list') }}</p>
                         </router-link>
                     </li>
 
@@ -265,7 +265,7 @@
                             :class="{ active: $route.name == 'Registration' }"
                         >
                             <img src="../../../../images/registration.png"/>
-                            <p>Registration Accounts</p>
+                            <p>{{ $t('message.sidebar.registration_accounts') }}</p>
                         </router-link>
                     </li>
 
@@ -280,7 +280,7 @@
                             :class="{ active: $route.name == 'survey-dashboard' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Survey Dashboard</p>
+                            <p>{{ $t('message.sidebar.survey_dashboard') }}</p>
                         </router-link>
                     </li>
 
@@ -296,7 +296,7 @@
                             :class="{ active: $route.name == 'articles-list' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Article</p>
+                            <p>{{ $t('message.sidebar.article_admin') }}</p>
                         </router-link>
                     </li>
 
@@ -311,7 +311,7 @@
                             :class="{ active: $route.name == 'validate-writer' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Writer's Validation</p>
+                            <p>{{ $t('message.sidebar.writer_validation') }}</p>
                         </router-link>
                     </li>
 
@@ -326,7 +326,7 @@
                             :class="{ active: $route.name == 'backlink-prospect' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Backlinks Prospect</p>
+                            <p>{{ $t('message.sidebar.backlinks_prospect') }}</p>
                         </router-link>
                     </li>
 
@@ -338,7 +338,7 @@
                             :class="{ active: $route.name == 'overall-incomes' }"
                         >
                             <img src="../../../../images/incomes.png"/>
-                            <p>Incomes</p>
+                            <p>{{ $t('message.sidebar.incomes_admin') }}</p>
                         </router-link>
                     </li>
 
@@ -367,7 +367,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/billing.png"/>
                             <p>
-                                Billing
+                                {{ $t('message.sidebar.billing') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -379,7 +379,7 @@
                                              class="nav-link"
                                              :class="{ active: $route.name == 'seller-billing' }">
                                     <i class="far fa-user nav-icon"></i>
-                                    <p>Seller Billing</p>
+                                    <p>{{ $t('message.sidebar.seller_billing') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -389,7 +389,7 @@
                                 <router-link :to="{ path: '/writer-billing' }" class="nav-link"
                                              :class="{ active: $route.name == 'writer-billing' }">
                                     <i class="far fa-newspaper nav-icon"></i>
-                                    <p>Writer Billing</p>
+                                    <p>{{ $t('message.sidebar.writer_billing') }}</p>
                                 </router-link>
                             </li>
                             <li class="nav-item"
@@ -401,7 +401,7 @@
                                     active: $route.name == 'wallet-transaction'
                                 }">
                                     <i class="far fa-money-bill-alt nav-icon"></i>
-                                    <p>Wallet Transaction</p>
+                                    <p>{{ $t('message.sidebar.wallet_trans') }}</p>
                                 </router-link>
                             </li>
 
@@ -417,21 +417,21 @@
                                     active: $route.name == 'wallet-summary'
                                 }">
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <p>Wallet Summary</p>
+                                    <p>{{ $t('message.sidebar.wallet_summary') }}</p>
                                 </router-link>
                             </li>
                         </ul>
                     </li>
 
                     <li class="nav-header">
-                        MAIN NAVIGATION
+                        {{ $t('message.sidebar.main_navigation') }}
                     </li>
 
                     <li class="nav-item">
                         <router-link :to="{ path: '/' }" class="nav-link"
                                      :class="{ active: $route.name == 'Dashboard' }">
                             <img src="../../../../images/dashboard.png"/>
-                            <p>Dashboard</p>
+                            <p>{{ $t('message.sidebar.dashboard') }}</p>
                         </router-link>
                     </li>
 
@@ -462,7 +462,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/search-domains.png"/>
                             <p>
-                                Search Domains
+                                {{ $t('message.sidebar.search_domains') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -471,7 +471,7 @@
                                 <router-link :to="{ path: '/url-prospect' }" class="nav-link"
                                              :class="{ active: $route.name == 'ExtDomain' }">
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <p>URL Prospect</p>
+                                    <p>{{ $t('message.sidebar.url_prospect') }}</p>
                                 </router-link>
                             </li>
 
@@ -488,7 +488,7 @@
                                 }"
                                 >
                                     <i class="fas fa-envelope-open nav-icon"></i>
-                                    <p>Mails</p>
+                                    <p>{{ $t('message.sidebar.mails') }}</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -501,7 +501,7 @@
                             :class="{ active: $route.name == 'articles' }"
                         >
                             <img src="../../../../images/article.png"/>
-                            <p>Article</p>
+                            <p>{{ $t('message.sidebar.articles') }}</p>
                         </router-link>
                     </li>
 
@@ -527,7 +527,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/seller.png"/>
                             <p>
-                                Seller
+                                {{ $t('message.sidebar.seller') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -540,7 +540,7 @@
                                     :class="{ active: $route.name == 'publisher' }"
                                 >
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <p>List Publisher</p>
+                                    <p>{{ $t('message.sidebar.list_publisher') }}</p>
                                 </router-link>
                             </li>
 
@@ -551,7 +551,7 @@
                                     :class="{ active: $route.name == 'followup-sales' }"
                                 >
                                     <i class="fa fa-fw fa-share nav-icon"></i>
-                                    <p>Follow up Sale</p>
+                                    <p>{{ $t('message.sidebar.follow_up_sale') }}</p>
                                 </router-link>
                             </li>
 
@@ -562,7 +562,7 @@
                                     :class="{ active: $route.name == 'incomes' }"
                                 >
                                     <i class="fas fa-dollar-sign nav-icon"></i>
-                                    <p>Incomes</p>
+                                    <p>{{ $t('message.sidebar.incomes') }}</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -588,7 +588,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/buyer.png"/>
                             <p>
-                                Buyer
+                                {{ $t('message.sidebar.buyer') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -600,7 +600,7 @@
                                     :class="{ active: $route.name == 'list-backlinks' }"
                                 >
                                     <i class="fas fa-bars nav-icon"></i>
-                                    <p>List Backlinks to Buy</p>
+                                    <p>{{ $t('message.sidebar.list_backlinks') }}</p>
                                 </router-link>
                             </li>
 
@@ -611,7 +611,7 @@
                                     :class="{ active: $route.name == 'BackLink' }"
                                 >
                                     <i class="fa fa-fw fa-share nav-icon"></i>
-                                    <p>Follow up Backlinks</p>
+                                    <p>{{ $t('message.sidebar.follow_up_backlinks') }}</p>
                                 </router-link>
                             </li>
 
@@ -622,7 +622,7 @@
                                     :class="{ active: $route.name == 'purchase' }"
                                 >
                                     <i class="fab fa-btc nav-icon"></i>
-                                    <p>Purchase</p>
+                                    <p>{{ $t('message.sidebar.purchase') }}</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -642,7 +642,7 @@
                     }"
                         >
                             <i class="fa fa-question-circle nav-icon"></i>
-                            <p>Help</p>
+                            <p>{{ $t('message.sidebar.help') }}</p>
                         </router-link>
                     </li>
                 </ul>
@@ -662,7 +662,7 @@
                             <router-link :to="{ path: '/' }" class="nav-link"
                                         :class="{ active: $route.name == 'Dashboard' }">
                                 <img src="../../../../images/dashboard.png"/>
-                                <p> Dashboard</p>
+                                <p> {{ $t('message.sidebar.dashboard') }}</p>
                             </router-link>
                         </li>
 
@@ -680,7 +680,7 @@
                         }"
                             >
                                 <i class="fa fa-question-circle nav-icon"></i>
-                                <p>Help</p>
+                                <p>{{ $t('message.sidebar.help') }}</p>
                             </router-link>
                         </li>
                 </ul>

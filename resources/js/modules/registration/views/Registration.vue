@@ -56,8 +56,21 @@
                                     <label>{{ $t('message.registration.l1') }} <span class="text-danger">*</span></label>
                                     <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
                                         <option value="">{{ $t('message.registration.ph1') }}</option>
-                                        <option v-for="type in accountType" v-bind:value="type">
-                                            {{ type }}
+
+                                        <option value="Seller">
+                                            {{ $t('message.registration.seller') }}
+                                        </option>
+
+                                        <option value="Buyer">
+                                            {{ $t('message.registration.buyer') }}
+                                        </option>
+
+                                        <option value="Writer">
+                                            {{ $t('message.registration.writer') }}
+                                        </option>
+
+                                        <option value="Affiliate">
+                                            {{ $t('message.registration.affiliate') }}
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>

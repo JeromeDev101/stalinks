@@ -25,6 +25,12 @@ import verification from './Verification/th/main';
 // terms
 import terms from './Terms/th/main';
 
+// header
+import header from './Header/th/main';
+
+// sidebar
+import sidebar from './Sidebar/th/main';
+
 export default {
     message : {
         help,
@@ -54,5 +60,11 @@ export default {
 
         // terms
         terms,
+
+        // header
+        header,
+
+        // sidebar
+        sidebar,
     }
 }
