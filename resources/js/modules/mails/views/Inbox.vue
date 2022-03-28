@@ -2456,7 +2456,10 @@ export default {
 
             // is_viewed function
             if (viewed_emails.length !== 0) {
-                axios.post('/api/mail/is-viewed-thread', {ids : viewed_emails})
+                axios.post('/api/mail/is-viewed-thread', {
+                    ids : viewed_emails,
+                    mode: 'read'
+                })
 
                 // update unread messages in inbox count on parent component
                 this.updateInboxUnreadCountInParent(this.inboxCount - 1, this.user.work_mail, 'decrement');
