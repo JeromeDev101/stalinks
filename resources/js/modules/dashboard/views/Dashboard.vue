@@ -5,7 +5,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
+                            <h1 class="m-0">{{ $t('message.dashboard.dashboard') }}</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -15,7 +15,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Total External Domain</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.ted_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -28,35 +28,52 @@
                                             <thead>
                                             <tr
                                                 class="white text-center">
-                                                <th>Team In-charged <span class="text-primary">({{
-                                                        ext_domain.total
-                                                                                            }})</span></th>
-                                                <th>Total <span class="text-primary">({{ ext_domain.num_total }})</span>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_in_charge') }}
+                                                    <span class="text-primary">({{ ext_domain.total }})</span>
                                                 </th>
-                                                <th>New <span class="text-primary">({{ ext_domain.num_new }})</span></th>
-                                                <th>GotContacts <span class="text-primary">({{
-                                                        ext_domain.num_got_contact
-                                                                                        }})</span></th>
-                                                <th>Contacted <span class="text-primary">({{
-                                                        ext_domain.num_contacted
-                                                                                        }})</span></th>
-                                                <th>Contacted Via Form <span class="text-primary">({{
-                                                        ext_domain.num_contacted_via_form
-                                                                                                }})</span></th>
-                                                <th>InTouched <span class="text-primary">({{
-                                                        ext_domain.num_in_touched
-                                                                                        }})</span></th>
-                                                <th>Qualified <span class="text-primary">({{
-                                                        ext_domain.num_qualified
-                                                                                        }})</span></th>
-                                                <th>NoAnswer <span class="text-primary">({{
-                                                        ext_domain.num_no_answer
-                                                                                        }})</span></th>
-                                                <th>Refused <span class="text-primary">({{ ext_domain.num_refused }})</span>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_total') }}
+                                                    <span class="text-primary">({{ ext_domain.num_total }})</span>
                                                 </th>
-                                                <th>Unqualified <span class="text-primary">({{
-                                                        ext_domain.num_unqualified
-                                                                                        }})</span></th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_new') }}
+                                                    <span class="text-primary">({{ ext_domain.num_new }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_got_contacts') }}
+                                                    <span class="text-primary">({{ ext_domain.num_got_contact }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_contacted') }}
+                                                    <span class="text-primary">({{ ext_domain.num_contacted }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_contacted_form') }}
+                                                    <span class="text-primary">
+                                                        ({{ext_domain.num_contacted_via_form }})
+                                                    </span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_intouch') }}
+                                                    <span class="text-primary">({{ ext_domain.num_in_touched }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_qualified') }}
+                                                    <span class="text-primary">({{ ext_domain.num_qualified }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_no_answer') }}
+                                                    <span class="text-primary">({{ ext_domain.num_no_answer }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_refused') }}
+                                                    <span class="text-primary">({{ ext_domain.num_refused }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.ted_unqualified') }}
+                                                    <span class="text-primary">({{ ext_domain.num_unqualified }})</span>
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -64,10 +81,8 @@
                                                 v-for="(ext_domain, index) in listData.ext_domain"
                                                 :key="index"
                                                 class="text-right">
-                                                <td
-                                                    class="text-center">{{
-                                                        upperCase(ext_domain.username)
-                                                                        }}
+                                                <td class="text-center">
+                                                    {{ upperCase(ext_domain.username) }}
                                                 </td>
                                                 <td>{{ ext_domain.num_total }}</td>
                                                 <td>{{ ext_domain.num_new }}</td>
@@ -94,7 +109,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Team & Seller</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.ts_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -114,8 +129,8 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr class="white">
-                                            <th>In-charge</th>
-                                            <th>Total Seller</th>
+                                            <th>{{ $t('message.dashboard.ts_in_charge') }}</th>
+                                            <th>{{ $t('message.dashboard.ts_total_seller') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -136,7 +151,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Seller List</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.sl_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -146,24 +161,36 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr class="white">
-                                            <th>In-charge</th>
-                                            <th>Seller <span class="text-primary">({{ total_seller.total }})</span></th>
-                                            <th>No. Sites <span class="text-primary">({{ total_seller.num_sites }})</span>
+                                            <th>{{ $t('message.dashboard.sl_in_charge') }}</th>
+                                            <th>
+                                                {{ $t('message.dashboard.sl_seller') }}
+                                                <span class="text-primary">({{ total_seller.total }})</span>
                                             </th>
-                                            <th>No. Valid <span class="text-primary">({{ total_seller.num_valid }})</span>
+                                            <th>
+                                                {{ $t('message.dashboard.sl_sites') }}
+                                                <span class="text-primary">({{ total_seller.num_sites }})
+                                                </span>
                                             </th>
-                                            <th>No. Unchecked <span class="text-primary">({{
-                                                    total_seller.num_unchecked
-                                                                                        }})</span></th>
-                                            <th>No. Invalid <span class="text-primary">({{
-                                                    total_seller.num_invalid
-                                                                                    }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.sl_valid') }}
+                                                <span class="text-primary">({{ total_seller.num_valid }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.sl_unchecked') }}
+                                                <span class="text-primary">({{ total_seller.num_unchecked }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.sl_invalid') }}
+                                                <span class="text-primary">({{ total_seller.num_invalid }})</span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr v-for="(seller, index) in listData.total_seller" :key="index">
-                                            <td>{{
-                                                    seller.in_charge == null ? upperCase(seller.username) : upperCase(seller.in_charge)
+                                            <td>
+                                                {{
+                                                    seller.in_charge == null
+                                                        ? upperCase(seller.username)
+                                                        : upperCase(seller.in_charge)
                                                 }}
                                             </td>
                                             <td>{{ upperCase(seller.username) }}</td>
@@ -185,8 +212,12 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary" v-if="!isExtWriter">Total Backlink (Seller)</h3>
-                            <h3 class="card-title text-primary" v-if="isExtWriter">Article Summary</h3>
+                            <h3 class="card-title text-primary" v-if="!isExtWriter">
+                                {{ $t('message.dashboard.tbs_title') }}
+                            </h3>
+                            <h3 class="card-title text-primary" v-if="isExtWriter">
+                                {{ $t('message.dashboard.tbs_article_sum') }}
+                            </h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -196,30 +227,48 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th v-if="!isExtWriter">Seller <span class="text-primary">({{ backlink_seller.total }})</span></th>
-                                            <th v-if="!isExtWriter">Total <span class="text-primary">({{ backlink_seller.num_total }})</span>
+                                            <th v-if="!isExtWriter">
+                                                {{ $t('message.dashboard.tbs_seller') }}
+                                                <span class="text-primary">({{ backlink_seller.total }})</span>
                                             </th>
-                                            <th>Processing <span class="text-primary">({{
-                                                    backlink_seller.num_processing
-                                                                                    }})</span></th>
-                                            <th>Content Writing <span class="text-primary">({{
-                                                    backlink_seller.writing
-                                                                                        }})</span></th>
-                                            <th>Content Done <span class="text-primary">({{
-                                                    backlink_seller.num_done
-                                                                                        }})</span></th>
-                                            <th>Content Sent <span class="text-primary">({{
-                                                    backlink_seller.num_sent
-                                                                                        }})</span></th>
-                                            <th>Issue <span class="text-primary">({{ backlink_seller.num_issue }})</span>
+                                            <th v-if="!isExtWriter">
+                                                {{ $t('message.dashboard.tbs_total') }}
+                                                <span class="text-primary">({{ backlink_seller.num_total }})</span>
                                             </th>
-                                            <th>Live in Process <span class="text-primary">({{
-                                                    backlink_seller.num_live_in_process
-                                                                                        }})</span></th>
-                                            <th>Live <span class="text-primary">({{ backlink_seller.num_live }})</span></th>
-                                            <th>Canceled <span class="text-primary">({{
-                                                    backlink_seller.num_canceled
-                                                                                    }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_processing') }}
+                                                <span class="text-primary">({{ backlink_seller.num_processing }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_writing') }}
+                                                <span class="text-primary">({{ backlink_seller.writing }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_done') }}
+                                                <span class="text-primary">({{ backlink_seller.num_done }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_sent') }}
+                                                <span class="text-primary">({{ backlink_seller.num_sent }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_issue') }}
+                                                <span class="text-primary">({{ backlink_seller.num_issue }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_lip') }}
+                                                <span class="text-primary">
+                                                    ({{ backlink_seller.num_live_in_process }})
+                                                </span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_live') }}
+                                                <span class="text-primary">({{ backlink_seller.num_live }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_cancelled') }}
+                                                <span class="text-primary">({{ backlink_seller.num_canceled }})</span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -248,7 +297,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Incomes</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.inc_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -258,11 +307,22 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th>Seller <span class="text-primary">({{ incomes.total }})</span></th>
-                                            <th>No. Backlinks <span class="text-primary">({{ incomes.num_backlink }})</span>
+                                            <th>
+                                                {{ $t('message.dashboard.inc_seller') }}
+                                                <span class="text-primary">({{ incomes.total }})</span>
                                             </th>
-                                            <th>Unpaid <span class="text-primary">({{ incomes.num_unpaid }})</span></th>
-                                            <th>Paid <span class="text-primary">({{ incomes.num_paid }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.inc_backlinks') }}
+                                                <span class="text-primary">({{ incomes.num_backlink }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.inc_unpaid') }}
+                                                <span class="text-primary">({{ incomes.num_unpaid }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.inc_paid') }}
+                                                <span class="text-primary">({{ incomes.num_paid }})</span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -285,7 +345,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Total Backlink (Buyer)</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.tbb_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -295,30 +355,46 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th>Buyer <span class="text-primary">({{ backlink_buyer.total }})</span></th>
-                                            <th>Total <span class="text-primary">({{ backlink_buyer.num_total }})</span>
+                                            <th>
+                                                $t('message.dashboard.tbb_buyer') }}
+                                                <span class="text-primary">({{ backlink_buyer.total }})</span>
                                             </th>
-                                            <th>Processing <span class="text-primary">({{
-                                                    backlink_buyer.num_processing
-                                                                                    }})</span></th>
-                                            <th>Content Writing <span class="text-primary">({{
-                                                    backlink_buyer.writing
-                                                                                        }})</span></th>
-                                            <th>Content Done <span class="text-primary">({{
-                                                    backlink_buyer.num_done
-                                                                                        }})</span></th>
-                                            <th>Content Sent <span class="text-primary">({{
-                                                    backlink_buyer.num_sent
-                                                                                        }})</span></th>
-                                            <th>Issue <span class="text-primary">({{ backlink_buyer.num_issue }})</span>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_total') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_total }})</span>
                                             </th>
-                                            <th>Live in Process<span class="text-primary">({{
-                                                    backlink_buyer.num_live_in_process
-                                                                                        }})</span></th>
-                                            <th>Live <span class="text-primary">({{ backlink_buyer.num_live }})</span></th>
-                                            <th>Canceled <span class="text-primary">({{
-                                                    backlink_buyer.num_canceled
-                                                                                    }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_processing') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_processing }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_writing') }}
+                                                <span class="text-primary">({{ backlink_buyer.writing }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_done') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_done }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_content_sent') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_sent }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_issue') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_issue }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_lip') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_live_in_process }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_live') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_live }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.tbs_cancelled') }}
+                                                <span class="text-primary">({{ backlink_buyer.num_canceled }})</span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -355,7 +431,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">List Backlinks to Buy</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.lb_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -365,18 +441,22 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th>Buyer <span v-if="user.isAdmin"
-                                                            class="text-primary">({{ backlink_to_buy.total }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.lb_buyer') }}
+                                                <span v-if="user.isAdmin" class="text-primary">
+                                                    ({{ backlink_to_buy.total }})
+                                                </span>
+                                            </th>
                                             <!--                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>-->
-                                            <th>New</th>
+                                            <th>{{ $t('message.dashboard.lb_new') }}</th>
                                             <!--                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>-->
-                                            <th>Interested</th>
+                                            <th>{{ $t('message.dashboard.lb_interested') }}</th>
                                             <!--                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>-->
-                                            <th>Purchased</th>
+                                            <th>{{ $t('message.dashboard.lb_purchased') }}</th>
                                             <!--                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>-->
-                                            <th>Not Interested</th>
+                                            <th>{{ $t('message.dashboard.lb_not_interested') }}</th>
                                             <!--                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>-->
-                                            <th>Total</th>
+                                            <th>{{ $t('message.dashboard.lb_total') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -409,7 +489,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Purchase</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.p_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -419,12 +499,22 @@
                                     <table class="table table-hover tbl-custom">
                                         <thead>
                                         <tr>
-                                            <th>Buyer <span class="text-primary">({{ purchase.total }})</span></th>
-                                            <th>No. Backlinks <span class="text-primary">({{
-                                                    purchase.num_backlink
-                                                                                        }})</span></th>
-                                            <th>Unpaid <span class="text-primary">({{ purchase.num_unpaid }})</span></th>
-                                            <th>Paid <span class="text-primary">({{ purchase.num_paid }})</span></th>
+                                            <th>
+                                                {{ $t('message.dashboard.p_buyer') }}
+                                                <span class="text-primary">({{ purchase.total }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.p_backlinks') }}
+                                                <span class="text-primary">({{ purchase.num_backlink }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.p_unpaid') }}
+                                                <span class="text-primary">({{ purchase.num_unpaid }})</span>
+                                            </th>
+                                            <th>
+                                                {{ $t('message.dashboard.p_paid') }}
+                                                <span class="text-primary">({{ purchase.num_paid }})</span>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -464,8 +554,7 @@
             </div>
 
             <div class="alert alert-info alert-dismissible fade show m-3" role="alert">
-                <strong>Reminder: </strong> Your account is currently on process. Please contact the
-                                            administrator to process you account status.
+                {{ $t('message.dashboard.tp_reminder') }}
             </div>
         </div>
 

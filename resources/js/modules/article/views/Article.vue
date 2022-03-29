@@ -15,14 +15,17 @@
             <!-- alert for external writers that doesn't yet passed the exam -->
             <div class="col-md-12" v-if="user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed != 1">
                 <div class="alert alert-warning">
-                    <p class="mb-0"><b>Sorry!</b> you can't still write an article unless you passed the exam. Please complete the Exam. Go to <b>Writer's Validation</b> menu</p>
+                    <p class="mb-0">
+                        <b>{{ $t('message.article.alert_title_1') }}</b>
+                        {{ $t('message.article.alert_title_2') }}
+                    </p>
                 </div>
             </div>
 
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.article.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -30,7 +33,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.article.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -39,24 +42,36 @@
 
                             <div class="col-md-12 col-lg-3">
                                 <div class="form-group">
-                                    <label for="">Search ID article</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_article" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.article.filter_id') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.search_article"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.article.filter_type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search ID backlink</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_backlink" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.article.filter_id_bl') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.search_backlink"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.article.filter_type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Language</label>
+                                    <label>{{ $t('message.article.filter_lang') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.language_id">
-                                        <option value="">Select Language</option>
-                                        <option value="none">None</option>
+                                        <option value="">{{ $t('message.article.filter_sel_lang') }}</option>
+                                        <option value="none">{{ $t('message.article.filter_none') }}</option>
                                         <option v-for="option in listLanguages.data"
                                                 :value="option.id"
                                                 :key="option.id">
@@ -68,9 +83,9 @@
 
                             <div class="col-md-3" v-if="user.isOurs === 0">
                                 <div class="form-group">
-                                    <label>Writer</label>
+                                    <label>{{ $t('message.article.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.writer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.article.all') }}</option>
                                         <option v-for="option in listWriter.data" v-bind:value="option.id">
                                             {{ option.username }}
                                         </option>
@@ -80,37 +95,42 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>{{ $t('message.article.filter_status') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.status">
-                                        <option value="">All</option>
-                                        <option value="Queue">Queue</option>
-                                        <option value="In Writing">In Writing</option>
-                                        <option value="Done">Done</option>
-                                        <option value="Canceled">Canceled</option>
-                                        <option value="Issue">Issue</option>
+                                        <option value="">{{ $t('message.article.all') }}</option>
+                                        <option value="Queue">{{ $t('message.article.filter_queue') }}</option>
+                                        <option value="In Writing">{{ $t('message.article.filter_in_wr') }}</option>
+                                        <option value="Done">{{ $t('message.article.filter_done') }}</option>
+                                        <option value="Canceled">{{ $t('message.article.filter_cancel') }}</option>
+                                        <option value="Issue">{{ $t('message.article.filter_issue') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Topic</label>
+                                    <label>{{ $t('message.article.filter_topic') }}</label>
                                     <!-- <select name="" class="form-control" v-model="filterModel.topic">
                                         <option value="">All</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="filterModel.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                    <v-select
+                                        multiple
+                                        v-model="filterModel.topic"
+                                        :options="topic"
+                                        :searchable="false"
+                                        :placeholder="$t('message.article.all')"/>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <label>{{ $t('message.article.filter_ac_cb') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.casino_sites">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.article.all') }}</option>
+                                        <option value="yes">{{ $t('message.article.yes') }}</option>
+                                        <option value="no">{{ $t('message.article.no') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -121,8 +141,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.article.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.article.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -134,7 +159,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Articles</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.article.ar_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -167,34 +192,38 @@
 
                         <div class="row bg-info mb-4 text-center rounded">
                             <div class="col p-3">
-                                Queue
+                                {{ $t('message.article.filter_queue') }}
                                 <b>({{ statusSummary.total_queue ? statusSummary.total_queue : '0' }})</b>
                             </div>
 
                             <div class="col p-3">
-                                In Writing
+                                {{ $t('message.article.filter_in_wr') }}
                                 <b>({{ statusSummary.total_in_writing ? statusSummary.total_in_writing : '0' }})</b>
                             </div>
 
                             <div class="col p-3">
-                                Done
+                                {{ $t('message.article.filter_done') }}
                                 <b>({{ statusSummary.total_done ? statusSummary.total_done : '0' }})</b>
                             </div>
 
                             <div class="col p-3">
-                                Canceled
+                                {{ $t('message.article.filter_cancel') }}
                                 <b>({{ statusSummary.total_cancelled ? statusSummary.total_cancelled : '0' }})</b>
                             </div>
 
                             <div class="col p-3">
-                                Issue
+                                {{ $t('message.article.filter_issue') }}
                                 <b>({{ statusSummary.total_issue ? statusSummary.total_issue : '0' }})</b>
                             </div>
                         </div>
 
-                        <div v-if="isProcessing && (user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed == 1)" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                            <strong>Reminder: </strong> Your account is currently on process. Please contact the
-                                                        administrator to process you account status.
+                        <div
+                            v-if="isProcessing && (user.isOurs == 1 && user.role.id == 4 && user.user_type.is_exam_passed == 1)"
+                            class="alert alert-info alert-dismissible fade show mt-3"
+                            role="alert">
+
+                            <strong>{{ $t('message.article.ar_reminder_1') }}</strong>
+                            {{ $t('message.article.ar_reminder_2') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -215,7 +244,7 @@
                         <button v-if="isTeam"
                                 data-toggle="modal"
                                 @click="clearModels(); clearEditorImages()" data-target="#modal-add-article" class="btn btn-success float-right"><i
-                            class="fa fa-plus"></i> Create Article
+                            class="fa fa-plus"></i> {{ $t('message.article.ar_create') }}
                         </button>
 
                         <span class="pagination-custom-footer-text">
@@ -239,7 +268,7 @@
                                         :disabled="!isStatusOnQueue(scope.row) || isProcessing"
                                         :id="'accept-article-' + scope.row.id"
                                         class="btn btn-default"
-                                        title="Accept Article"
+                                        :title="$t('message.article.ar_accept_article')"
 
                                         @click="acceptArticle(scope.row)">
 
@@ -318,7 +347,7 @@
                                     && scope.row.reminded_via !== '24'
                                     && scope.row.content === null"
                                     class="badge badge-warning">
-                                    Reminder Sent
+                                    {{ $t('message.article.ar_reminder_sent') }}
 
                                     <span>
                                        - {{ scope.row.reminded_via }}h
@@ -338,7 +367,10 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Content | Article ID: <b class="text-primary">{{ contentModel.id }}</b></h5>
+                        <h5 class="modal-title">
+                            {{ $t('message.article.ec_title') }} | {{ $t('message.article.ec_article_id') }}
+                            <b class="text-primary">{{ contentModel.id }}</b>
+                        </h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -356,7 +388,7 @@
                             @click="cancelWritingArticle(contentModel)">
 
                             <i class="fas fa-times-circle"></i>
-                            Cancel Writing
+                            {{ $t('message.article.ec_cancel_wr') }}
                         </button>
                     </div>
                     <div class="modal-body">
@@ -364,65 +396,113 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Title</label>
-                                    <input type="text" v-model="contentModel.title" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_in_title') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.title"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Anchor Text</label>
-                                    <input type="text" v-model="contentModel.anchor_text" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_at') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.anchor_text"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">URL Publisher</label>
-                                    <input type="text" v-model="contentModel.url_publisher" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_url_pub') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.url_publisher"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Link To</label>
-                                    <input type="text" v-model="contentModel.link" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_link') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.link"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
-                                    <input type="text" v-model="contentModel.seller" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_seller') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.seller"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
-                                    <input type="text" v-model="contentModel.buyer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_buyer') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.buyer"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <!-- <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">
-                                    <label for="">Writer Price</label>
+                                    <label>Writer Price</label>
                                     <input type="number" v-model="contentModel.price" class="form-control" name="" aria-describedby="helpId" placeholder="0.00">
                                 </div>
                             </div> -->
 
                             <div class="col-sm-6" v-if="user.isOurs != '1'">
                                 <div class="form-group">
-                                    <label>Writer</label>
-                                    <input type="text" v-model="contentModel.writer" :disabled="true" class="form-control" name="" aria-describedby="helpId" placeholder="">
+                                    <label>{{ $t('message.article.ec_writer') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="contentModel.writer"
+                                        :disabled="true"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
                                 <div class="form-group">
-                                    <label for="">Status Writer</label>
+                                    <label>{{ $t('message.article.ec_status_writer') }}</label>
                                     <select name="" class="form-control" v-model="contentModel.status">
-                                        <option value="">Select Status</option>
+                                        <option value="">{{ $t('message.article.ec_select_status') }}</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
                                             {{ option }}
                                         </option>
@@ -434,25 +514,25 @@
                                 <div class="card border border-danger">
                                     <div class="card-header">
                                         <i class="fa fa-exclamation-circle text-danger"></i>
-                                        <span class="font-weight-bold">Issue Details</span>
+                                        <span class="font-weight-bold">{{ $t('message.article.ec_issue_det') }}</span>
                                         <br>
-                                        <small class="text-primary">Note: If articles are already revised, set the writer status to 'Done'</small>
+                                        <small class="text-primary">{{ $t('message.article.ec_note') }}</small>
                                     </div>
                                     <div class="card-body">
                                         <div class="col-12 mb-2">
-                                            <label>Reason:</label>
+                                            <label>{{ $t('message.article.ec_reason') }}</label>
                                             <input v-model="issueModel.reason" type="text" class="form-control" disabled>
                                         </div>
 
                                         <div class="col-12 mb-2">
-                                            <label>Details:</label>
+                                            <label>{{ $t('message.article.ec_details') }}</label>
                                             <textarea v-model="issueModel.details" class="form-control" cols="10" disabled>
 
                                             </textarea>
                                         </div>
 
                                         <div class="col-12">
-                                            <label>File preview:</label>
+                                            <label>{{ $t('message.article.ec_file_prev') }}</label>
                                             <button
                                                 :disabled="issueModel.file === '' || issueModel.file === null"
                                                 data-toggle="modal"
@@ -468,21 +548,21 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="">Note</label>
+                                    <label>{{ $t('message.article.ec_note_2') }}</label>
                                     <textarea class="form-control" cols="30" rows="3" v-model="contentModel.note"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="">Meta Keywords</label>
+                                    <label>{{ $t('message.article.ec_mk') }}</label>
                                     <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_keyword"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="">Meta Description</label>
+                                    <label>{{ $t('message.article.ec_md') }}</label>
                                     <textarea class="form-control" cols="30" rows="3" v-model="contentModel.meta_description"></textarea>
                                 </div>
                             </div>
@@ -502,8 +582,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>
-                        <button @click="clearQuery" type="button" class="btn btn-default">Close</button>
+<!--                        <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>-->
+                        <button @click="clearQuery" type="button" class="btn btn-default">
+                            {{ $t('message.article.close') }}
+                        </button>
                         <button
                             v-show="contentModel.backlink_status != 'Canceled'"
                             type="button"
@@ -511,7 +593,7 @@
 
                             @click="submitSave">
 
-                            Save
+                            {{ $t('message.article.save') }}
                         </button>
                     </div>
                 </div>
@@ -524,7 +606,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Create Article</h5>
+                        <h5 class="modal-title">{{ $t('message.article.ca_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -535,11 +617,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.backlink}">
-                                    <label for="">Select Backlink</label>
+                                    <label>{{ $t('message.article.ca_sel_bl') }}</label>
                                     <select name="" class="form-control" v-on:change="displayInfo" v-model="viewModel.backlink">
-                                        <option value="">Select Backlinks</option>
+                                        <option value="">{{ $t('message.article.ca_sel_bl_2') }}</option>
                                         <option v-for="option in listBacklinks.data" v-bind:value="option">
-                                            ID: {{ option.id }} URL: {{ option.publisher.url }}
+                                            {{ $t('message.article.ca_id') }} {{ option.id }} {{ $t('message.article.ca_URL') }} {{ option.publisher.url }}
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.backlink" v-for="err in messageForms.errors.backlink" class="text-danger">{{ err }}</span>
@@ -548,38 +630,38 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Title</label>
+                                    <label>{{ $t('message.article.ec_in_title') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.title" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Anchor Text</label>
+                                    <label>{{ $t('message.article.ec_at') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.anchor_text" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Link To</label>
+                                    <label>{{ $t('message.article.ec_link') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.link" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>{{ $t('message.article.ca_status') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.status" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.writer}">
-                                    <label for="">Writer</label>
+                                    <label>{{ $t('message.article.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="addModel.writer">
                                         <option v-for="option in listWriter.data" v-bind:value="option.id">
-                                            ID: {{ option.id }} Name: {{ option.name }}
+                                            {{ $t('message.article.ca_id') }} {{ option.id }} {{ $t('message.article.ca_name') }} {{ option.name }}
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.writer" v-for="err in messageForms.errors.writer" class="text-danger">{{ err }}</span>
@@ -589,8 +671,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="addArticle">Add Article</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.article.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="addArticle">
+                            {{ $t('message.article.ca_add_ar') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -609,7 +695,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">File</h5>
+                        <h5 class="modal-title">{{ $t('message.article.ca_file') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -621,7 +707,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.article.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -797,6 +885,7 @@
             },
 
             tableConfig() {
+                let self = this;
                 return [
                     {
                         prop : '_index',
@@ -806,71 +895,70 @@
                     },
                     {
                         prop : 'id',
-                        name : 'ID Article',
+                        name : self.$t('message.article.ar_id'),
                         sortable: true,
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : 'id_backlink',
-                        name : 'ID Backlinks',
+                        name : this.$t('message.article.ar_id_bl'),
                         sortable: true,
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Language',
+                        name : this.$t('message.article.filter_lang'),
                         actionName : 'languageData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : 'writer',
-                        name : 'Writer',
+                        name : this.$t('message.article.filter_writer'),
                         sortable: true,
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Topic',
+                        name : this.$t('message.article.filter_topic'),
                         actionName : 'topicData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name :
-                            'Accept Casino & Betting Sites',
+                        name : this.$t('message.article.filter_ac_cb'),
                         actionName : 'casinoSiteData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Date Start',
+                        name : this.$t('message.article.ar_date_start'),
                         actionName : 'dateStartData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Date Complete',
+                        name : this.$t('message.article.ar_date_complete'),
                         actionName : 'dateCompleteData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Status',
+                        name : this.$t('message.article.filter_status'),
                         actionName : 'statusData',
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Action',
+                        name : this.$t('message.article.ar_action'),
                         actionName : 'actionButton',
                         width: 100,
                         isHidden: false
@@ -882,27 +970,28 @@
         methods: {
 
             acceptArticle (data) {
+                let self = this;
 
                 if (!this.isStatusOnQueue(data) || this.isProcessing) {
                     let error = !this.isStatusOnQueue(data)
-                        ? 'Article must be on queue.'
+                        ? self.$t('message.article.alert_article_queue')
                         : this.isProcessing
-                            ? "You must pass the writer's validation exam first before accepting an article"
-                            : 'Invalid attempt.'
+                            ? self.$t('message.article.alert_val_exam')
+                            : self.$t('message.article.alert_invalid_att')
 
                     swal.fire(
-                        'Invalid',
+                        self.$t('message.article.alert_invalid'),
                         error,
                         'error'
                     )
                 } else {
                     swal.fire({
-                        title : "Accept this article?",
-                        text : "Upon accepting an article, please note that the maximum working time to finish the content is 3 days",
+                        title : self.$t('message.article.alert_accept'),
+                        text : self.$t('message.article.alert_accept_note'),
                         icon : "question",
                         showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        confirmButtonText : self.$t('message.article.yes'),
+                        cancelButtonText : self.$t('message.article.no')
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -913,6 +1002,7 @@
             },
 
             submitAcceptArticle (data) {
+                let self = this;
                 let loader = this.$loading.show();
 
                 axios.post('/api/accept-decline-article', {
@@ -921,8 +1011,8 @@
                     mode: 'accept'
                 }).then((response) => {
                     swal.fire(
-                        'Success!',
-                        'Article successfully accepted',
+                        self.$t('message.article.alert_success'),
+                        self.$t('message.article.alert_accepted'),
                         'success'
                     )
 
@@ -931,8 +1021,8 @@
                     loader.hide();
                 }).catch((error) => {
                     swal.fire(
-                        'Error!',
-                        'There was an error with the article accept request.',
+                        self.$t('message.article.alert_err'),
+                        self.$t('message.article.alert_err_accept'),
                         'error'
                     )
 
@@ -941,13 +1031,15 @@
             },
 
             cancelWritingArticle (data) {
+                let self = this;
+
                 swal.fire({
-                    title : "Cancel writing this article?",
-                    text : "Upon cancelling, the article will be back on queue.",
+                    title : self.$t('message.article.alert_cancel'),
+                    text : self.$t('message.article.alert_cancel_note'),
                     icon : "question",
                     showCancelButton : true,
-                    confirmButtonText : 'Yes',
-                    cancelButtonText : 'No'
+                    confirmButtonText : self.$t('message.article.yes'),
+                    cancelButtonText : self.$t('message.article.no')
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
@@ -957,6 +1049,7 @@
             },
 
             submitCancelArticle (data) {
+                let self = this;
                 let loader = this.$loading.show();
 
                 axios.post('/api/accept-decline-article', {
@@ -965,8 +1058,8 @@
                     mode: 'cancel'
                 }).then((response) => {
                     swal.fire(
-                        'Success!',
-                        'Article successfully cancelled',
+                        self.$t('message.article.alert_success'),
+                        self.$t('message.article.alert_cancelled'),
                         'success'
                     )
 
@@ -977,8 +1070,8 @@
                     loader.hide();
                 }).catch((error) => {
                     swal.fire(
-                        'Error!',
-                        'There was an error with the article writing cancel request.',
+                        self.$t('message.article.alert_err'),
+                        self.$t('message.article.alert_err_cancel'),
                         'error'
                     )
 
@@ -1007,15 +1100,16 @@
             },
 
             modalCloser() {
+                let self = this;
 
                 if (this.compareData() && !this.isSaved) {
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Changes will not be saved.",
+                        title : self.$t('message.article.alert_confirm'),
+                        text : self.$t('message.article.alert_changes'),
                         icon : "warning",
                         showCancelButton : true,
-                        confirmButtonText : 'Yes',
-                        cancelButtonText : 'No'
+                        confirmButtonText : self.$t('message.article.yes'),
+                        cancelButtonText : self.$t('message.article.no')
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -1238,6 +1332,7 @@
             },
 
             async submitSave() {
+                let self = this;
                 this.isPopupLoading = true;
                 this.contentModel.num_words = this.$refs.composeEditorArticle.wordCount();
                 await this.$store.dispatch('actionSaveContent', {
@@ -1253,8 +1348,8 @@
                 this.getListArticles();
 
                 await swal.fire(
-                    'Updated!',
-                    'Article is updated.',
+                    self.$t('message.article.alert_updated'),
+                    self.$t('message.article.alert_article_updated'),
                     'success'
                 )
             },

@@ -4,21 +4,30 @@
             <div class="col-sm-12" v-show="cardInbox">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $route.name }}</h3>
+                        <h3 class="card-title text-primary">{{ displayRouteName }}</h3>
                         <div class="card-tools">
                             <div class="input-group">
-                                <input type="text"
-                                       class="form-control input-sm"
-                                       placeholder="Search Mail"
-                                       v-model="search_mail">
+                                <input
+                                    type="text"
+                                    class="form-control input-sm"
+                                    :placeholder="$t('message.inbox.i_search_mail')"
+                                    v-model="search_mail">
+
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" title="Search" @click="getInbox">
+                                    <button
+                                        type="button"
+                                        class="btn btn-default"
+                                        :title="$t('message.inbox.i_search')"
+
+                                        @click="getInbox">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    <button type="button"
-                                            class="btn btn-default"
-                                            title="Clear"
-                                            @click="clearSearchMail">
+                                    <button
+                                        type="button"
+                                        class="btn btn-default"
+                                        :title="$t('message.inbox.clear')"
+
+                                        @click="clearSearchMail">
                                         <i class="fa fa-times-circle"></i>
                                     </button>
                                 </span>
@@ -34,7 +43,7 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button
                                     type="button"
-                                    title="Refresh"
+                                    :title="$t('message.inbox.i_refresh')"
                                     class="btn btn-default"
 
                                     @click="refeshInbox">
@@ -45,7 +54,7 @@
                                 <button
                                     v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
                                     type="button"
-                                    title="Toggle show unread emails"
+                                    :title="$t('message.inbox.i_show_unread')"
                                     class="btn btn-default"
 
                                     @click="toggleShowUnreadMessages()">
@@ -57,7 +66,7 @@
                                     v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
                                     :disabled="btnEnable"
                                     type="button"
-                                    title="Mark as read"
+                                    :title="$t('message.inbox.i_read')"
                                     class="btn btn-default"
 
                                     @click="markAsReadSelectedEmails()">
@@ -69,7 +78,7 @@
                                     v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
                                     :disabled="btnEnable"
                                     type="button"
-                                    title="Mark as unread"
+                                    :title="$t('message.inbox.i_unread')"
                                     class="btn btn-default"
 
                                     @click="markAsUnReadSelectedEmails()">
@@ -79,7 +88,7 @@
 
                                 <button
                                     type="button"
-                                    title="Starred"
+                                    :title="$t('message.inbox.i_star')"
                                     class="btn btn-default"
                                     :disabled="btnEnable || $route.name === 'Trash'"
 
@@ -90,7 +99,7 @@
 
                                 <button
                                     type="button"
-                                    title="Label"
+                                    :title="$t('message.inbox.i_label')"
                                     class="btn btn-default"
                                     data-toggle="modal"
                                     data-target="#modal-label-selection"
@@ -101,7 +110,7 @@
 
                                 <button
                                     type="button"
-                                    title="Trash"
+                                    :title="$t('message.inbox.i_trash')"
                                     class="btn btn-default"
                                     :disabled="btnEnable || $route.name === 'Trash'"
 
@@ -112,7 +121,7 @@
 
                                 <button
                                     type="button"
-                                    title="Retrieve Email"
+                                    :title="$t('message.inbox.i_retrieve')"
                                     class="btn btn-default"
                                     v-if="$route.name === 'Trash'"
 
@@ -150,13 +159,13 @@
                         </div>
 
                         <div class="p-5 text-center text-muted" v-show="loadingMessage">
-                            <i class="fa fa-refresh fa-spin mr-3"></i> loading messages
+                            <i class="fa fa-refresh fa-spin mr-3"></i> {{ $t('message.inbox.i_loading') }}
                         </div>
                         <div class="table-responsive">
                             <table class="table table-condensed table-hover" style="table-layout: auto; width: 100%">
                                 <tbody>
                                 <tr v-show="paginate.total == 0">
-                                    <td class="text-muted text-center">No {{ $route.name }} record</td>
+                                    <td class="text-muted text-center">{{ $t('message.inbox.i_no_emails') }}</td>
                                 </tr>
 
                                 <tr
@@ -270,7 +279,7 @@
             <div class="col-sm-12" v-show="cardReadMessage">
                 <div class="card">
                     <div v-show="selectedMessage" class="text-center text-muted p-5 h-50">
-                        No items Selected
+                        {{ $t('message.inbox.i_no_items') }}
                     </div>
 
                     <div v-show="MessageDisplay" class="box-header with-border">
@@ -279,7 +288,7 @@
                                     title="Back"
                                     class="btn btn-default btn-sm mr-3"
                                     @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
-                            Read Mail
+                            {{ $t('message.inbox.i_read_mail') }}
                         </h3>
 
                         <!-- <div class="box-tools pull-right">
@@ -292,10 +301,14 @@
                     <div v-show="MessageDisplay" class="box-body no-padding">
                         <div class="mailbox-read-info">
                             <h3>{{ viewContent.subject }}</h3>
-                            <h5 v-show="viewContent.is_sent == 0">From: {{ viewContent.from }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
-                            <h5 v-show="viewContent.is_sent == 1">To: {{ checkEmail(viewContent.received) }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span></h5>
+                            <h5 v-show="viewContent.is_sent == 0">
+                                {{ $t('message.inbox.i_from') }} {{ viewContent.from }}
+                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span>
+                            </h5>
+                            <h5 v-show="viewContent.is_sent == 1">
+                                {{ $t('message.inbox.i_to') }} {{ checkEmail(viewContent.received) }}
+                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span>
+                            </h5>
                         </div>
 
                         <div class="mailbox-read-message">
@@ -336,7 +349,7 @@
                                         </a>
 
                                         <a v-else class="mailbox-attachment-name text-danger">
-                                            Deleted
+                                            {{ $t('message.inbox.i_deleted') }}
                                         </a>
 
                                         <span class="mailbox-attachment-size">{{ bytesToSize(attach.size) }}</span>
@@ -416,14 +429,14 @@
 
                                     @click="doReply($route.name)">
                                 <i class="fa fa-reply"></i>
-                                {{ viewContent.is_sent === 1 ? 'Follow up' : 'Reply' }}
+                                {{ viewContent.is_sent === 1 ? $t('message.inbox.i_follow') : $t('message.inbox.i_reply') }}
                             </button>
                         </div>
                         <button type="button"
                                 class="btn btn-default"
                                 v-show="viewContent.deleted_at == null"
                                 @click="deleteMessage(viewContent.id, viewContent.index, false)">
-                            <i class="fa fa-trash-o"></i> Delete
+                            <i class="fa fa-trash-o"></i> {{ $t('message.inbox.delete') }}
                         </button>
                     </div>
                 </div>
@@ -443,7 +456,7 @@
                                 <i class="fa fa-chevron-left"></i>
                             </button>
 
-                            Read Mail
+                            {{ $t('message.inbox.i_read_mail') }}
                         </h3>
                     </div>
 
@@ -469,7 +482,7 @@
                                     <!-- toggle quoted messages -->
                                     <span
                                         class="mr-2"
-                                        title="Toggle quoted messages"
+                                        :title="$t('message.inbox.i_toggle_quoted')"
                                         style="cursor:pointer; font-size: 13px !important;">
 
                                         <i
@@ -495,7 +508,7 @@
                                     <span
                                         v-if="$route.name === 'Inbox' || $route.name === 'Sent'"
                                         class="mr-2"
-                                        title="Forward message"
+                                        :title="$t('message.inbox.i_forward')"
                                         style="cursor: pointer"
 
                                         @click="doForward($route.name, email)">
@@ -551,7 +564,7 @@
                                             </a>
 
                                             <a v-else class="mailbox-attachment-name text-danger">
-                                                Deleted
+                                                {{ $t('message.inbox.i_deleted') }}
                                             </a>
 
                                             <span class="mailbox-attachment-size">
@@ -645,7 +658,7 @@
                                 @click="doReply($route.name)">
 
                                 <i class="fa fa-reply"></i>
-                                {{ viewContentThread.inbox.is_sent === 1 ? 'Follow up' : 'Reply' }}
+                                {{ viewContentThread.inbox.is_sent === 1 ? $t('message.inbox.i_follow') : $t('message.inbox.i_reply') }}
                             </button>
                         </div>
 
@@ -656,7 +669,7 @@
                             @click="deleteMessageThread(viewContentThread.threads, 'single')">
 
                             <i class="fa fa-trash-o"></i>
-                            Delete
+                            {{ $t('message.inbox.delete') }}
                         </button>
                     </div>
                 </div>
@@ -668,13 +681,13 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Label</h4>
+                        <h4 class="modal-title">{{ $t('message.inbox.l_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Label Name</label>
+                                    <label>{{ $t('message.inbox.l_name') }}</label>
                                     <select class="form-control" v-model="updateModel.label_id">
                                         <option value=""></option>
                                         <option v-for="(label, index) in $parent._data.listLabel"
@@ -689,8 +702,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitLabelThread">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.inbox.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitLabelThread">
+                            {{ $t('message.inbox.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -701,7 +718,7 @@
         <div class="bln-container">
 
             <!-- Compose Email Balloon -->
-            <Balloon ref="emailBalloon" :title="'Compose Message'">
+            <Balloon ref="emailBalloon" :title="$t('message.inbox.cm_title')">
 
                 <!-- custom header buttons -->
                 <template v-slot:header-buttons>
@@ -720,22 +737,18 @@
                             aria-expanded="true"
                             aria-controls="noteCollapse">
 
-                            <i class="fa fa-exclamation-circle"></i> Note
+                            <i class="fa fa-exclamation-circle"></i> {{ $t('message.inbox.cm_note') }}
                         </div>
 
                         <div id="noteCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#noteAccordion">
                             <div class="card-body p-2 text-sm text-secondary">
                                 <ul>
+                                    <li>{{ $t('message.inbox.cm_note_info') }}</li>
                                     <li>
-                                        You can send an email to multiple recipients
-                                        <strong>'contact01|contact02|contact03' or 'contact01,contact02,contact03'</strong>
+                                        {{ $t('message.inbox.cm_bulk') }},
+                                        <strong>{{ $t('message.inbox.cm_bulk_info') }}</strong>
                                     </li>
-                                    <li>For bulk sending, <strong>only 10 recipients are allowed per email</strong></li>
-                                    <li>
-                                        You can edit the tags by clicking it and pressing
-                                        <strong>enter key</strong>
-                                        afterwards
-                                    </li>
+                                    <li>{{ $t('message.inbox.cm_tags') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -755,7 +768,7 @@
                                             class="form-check-input"
 
                                             @click="toggleBcc('Send')">
-                                        With Bcc
+                                        {{ $t('message.inbox.cm_bcc') }}
                                     </label>
                                 </div>
                             </div>
@@ -769,7 +782,7 @@
                                             class="form-check-input"
 
                                             @click="toggleTemplate('Send')">
-                                        With Template
+                                        {{ $t('message.inbox.cm_temp') }}
                                     </label>
                                 </div>
                             </div>
@@ -788,7 +801,7 @@
 
                                         @change="getTemplateList('Send')">
 
-                                        <option value="">Select Language</option>
+                                        <option value="">{{ $t('message.inbox.cm_select_lang') }}</option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -805,7 +818,7 @@
 
                                             @change="getTemplate('send')">
 
-                                            <option v-bind:value="{}">Select Template</option>
+                                            <option v-bind:value="{}">{{ $t('message.inbox.cm_select_temp') }}</option>
                                             <option v-for="option in listMailTemplateCompose.data" v-bind:value="option.id">
                                                 {{ option.mail_name }}
                                             </option>
@@ -825,12 +838,12 @@
                                 style="cursor: pointer"
 
                                 @click="emailContent.email = []">
-                                Remove all emails
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
                             </small>
 
                             <vue-tags-input
                                 v-model="tag"
-                                placeholder="Recipients"
+                                :placeholder="$t('message.inbox.cm_rec')"
                                 :max-tags="10"
                                 :allow-edit-tags="true"
                                 :separators="separators"
@@ -847,7 +860,7 @@
                             </span>
 
                             <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
-                                The email field must contain valid emails.
+                                {{ $t('message.inbox.cm_valid') }}
                             </span>
 
                         </div>
@@ -858,7 +871,7 @@
                             <input
                                 v-model="emailContent.cc"
                                 type="text"
-                                placeholder="Bcc"
+                                :placeholder="$t('message.inbox.cm_bcc_title')"
                                 class="form-control form-control-sm"
                                 required="required">
                         </div>
@@ -872,7 +885,7 @@
                                 v-model="emailContent.title"
                                 type="text"
                                 required="required"
-                                placeholder="Subject"
+                                :placeholder="$t('message.inbox.cm_subject')"
                                 class="form-control form-control-sm">
 
                             <span
@@ -913,12 +926,12 @@
                                     :disabled="sendBtn"
 
                                     @click="sendEmail('compose')">
-                                    <i class="fa fa-paper-plane"></i> Send
+                                    <i class="fa fa-paper-plane"></i> {{ $t('message.inbox.send') }}
                                 </button>
 
                                 <button
                                     type="button"
-                                    title="Attach files"
+                                    :title="$t('message.inbox.cm_attachments')"
                                     class="btn btn-primary btn-sm float-right"
 
                                     @click="$refs.file_send.click()">
@@ -926,8 +939,8 @@
                                     <i class="fa fa-paperclip"></i>
                                     {{
                                         attached_files.compose === 0
-                                            ? 'Attach files'
-                                            : attached_files.compose + ' file(s) attached'
+                                            ? $t('message.inbox.cm_attachments')
+                                            : attached_files.compose + $t('message.inbox.cm_files')
                                     }}
                                 </button>
                             </div>
@@ -971,7 +984,7 @@
                                             class="form-check-input"
 
                                             @click="toggleBcc('Reply')">
-                                        With Bcc
+                                        {{ $t('message.inbox.cm_bcc') }}
                                     </label>
                                 </div>
                                 <hr>
@@ -985,7 +998,7 @@
                                             class="form-check-input"
 
                                             @click="toggleTemplate('Reply')">
-                                        With Template
+                                        {{ $t('message.inbox.cm_temp') }}
                                     </label>
                                 </div>
                                 <hr>
@@ -1004,7 +1017,7 @@
 
                                         @change="getTemplateList('Reply')">
 
-                                        <option value="">Select Language</option>
+                                        <option value="">{{ $t('message.inbox.cm_select_lang') }}</option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -1021,7 +1034,7 @@
 
                                             @change="getTemplate('reply')">
 
-                                            <option v-bind:value="{}">Select Template</option>
+                                            <option v-bind:value="{}">{{ $t('message.inbox.cm_select_temp') }}</option>
                                             <option v-for="option in listMailTemplateReply.data"
                                                     v-bind:value="option.id">
                                                 {{ option.mail_name }}
@@ -1062,7 +1075,7 @@
                             <input
                                 v-model="replyContent.cc"
                                 type="text"
-                                placeholder="Bcc"
+                                :placeholder="$t('message.inbox.cm_bcc_title')"
                                 class="form-control form-control-sm"
                                 required="required">
                         </div>
@@ -1099,12 +1112,12 @@
                                     :disabled="sendBtn"
 
                                     @click="sendEmail('reply')">
-                                    <i class="fa fa-reply"></i> Reply
+                                    <i class="fa fa-reply"></i> {{ $t('message.inbox.reply') }}
                                 </button>
 
                                 <button
                                     type="button"
-                                    title="Attach files"
+                                    :title="$t('message.inbox.cm_attachments')"
                                     class="btn btn-primary btn-sm float-right"
 
                                     @click="$refs.file_reply.click()">
@@ -1112,8 +1125,8 @@
                                     <i class="fa fa-paperclip"></i>
                                     {{
                                         attached_files.reply === 0
-                                            ? 'Attach files'
-                                            : attached_files.reply + ' file(s) attached'
+                                            ? $t('message.inbox.cm_attachments')
+                                            : attached_files.reply + $t('message.inbox.cm_files')
                                     }}
                                 </button>
                             </div>
@@ -1157,7 +1170,7 @@
                                             class="form-check-input"
 
                                             @click="toggleBcc('Forward')">
-                                        With Bcc
+                                        {{ $t('message.inbox.cm_bcc') }}
                                     </label>
                                 </div>
                                 <hr>
@@ -1173,12 +1186,12 @@
                                 style="cursor: pointer"
 
                                 @click="forwardContent.email = []">
-                                Remove all emails
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
                             </small>
 
                             <vue-tags-input
                                 v-model="tag"
-                                placeholder="Recipients"
+                                :placeholder="$t('message.inbox.cm_rec')"
                                 :max-tags="10"
                                 :allow-edit-tags="true"
                                 :separators="separators"
@@ -1195,7 +1208,7 @@
                         </span>
 
                             <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
-                            The email field must contain valid emails.
+                            {{ $t('message.inbox.cm_valid') }}
                         </span>
 
                         </div>
@@ -1206,7 +1219,7 @@
                             <input
                                 v-model="forwardContent.cc"
                                 type="text"
-                                placeholder="Bcc"
+                                :placeholder="$t('message.inbox.cm_bcc_title')"
                                 class="form-control form-control-sm"
                                 required="required">
                         </div>
@@ -1263,12 +1276,12 @@
                                     :disabled="sendBtn"
 
                                     @click="sendEmail('forward')">
-                                    <i class="fa fa-share"></i> Forward
+                                    <i class="fa fa-share"></i> {{ $t('message.inbox.forward') }}
                                 </button>
 
                                 <button
                                     type="button"
-                                    title="Attach files"
+                                    :title="$t('message.inbox.cm_attachments')"
                                     class="btn btn-primary btn-sm float-right"
 
                                     @click="$refs.file_forward.click()">
@@ -1276,8 +1289,8 @@
                                     <i class="fa fa-paperclip"></i>
                                     {{
                                         attached_files.forward === 0
-                                            ? 'Attach files'
-                                            : attached_files.forward + ' file(s) attached'
+                                            ? $t('message.inbox.cm_attachments')
+                                            : attached_files.forward + $t('message.inbox.cm_files')
                                     }}
                                 </button>
                             </div>
@@ -1421,7 +1434,7 @@ export default {
                 total: 0
             },
 
-            toggleShowUnreadEmails: false
+            toggleShowUnreadEmails: false,
         }
     },
 
@@ -1442,7 +1455,18 @@ export default {
             listMailTemplate : state => state.storeExtDomain.listMailTemplate,
             messageForms : state => state.storeMailgun.messageForms,
             listLanguages : state => state.storePublisher.listLanguages,
-        })
+        }),
+
+        displayRouteName () {
+            let routeNames = {
+                Inbox: this.$t('message.inbox.i_title'),
+                Sent: this.$t('message.inbox.i_sent'),
+                Starred: this.$t('message.inbox.i_star'),
+                Trash: this.$t('message.inbox.i_trash'),
+            }
+
+            return routeNames[this.$route.name];
+        }
     },
 
     watch : {
@@ -1464,6 +1488,8 @@ export default {
         }),
 
         modalCloser(mode) {
+            let self = this;
+
             if (mode === 'Send') {
 
                 if (this.emailContent.content
@@ -1472,14 +1498,14 @@ export default {
                     || this.emailContent.cc) {
 
                     swal.fire({
-                        title : "Save as Draft?",
-                        text : "Save email contents as draft?",
+                        title : self.$t('message.inbox.alert_save_draft'),
+                        text : self.$t('message.inbox.alert_save_draft_note'),
                         icon : "question",
                         showCloseButton: true,
                         showCancelButton: true,
                         showConfirmButton: true,
-                        cancelButtonText: 'No',
-                        confirmButtonText: 'Yes',
+                        cancelButtonText: self.$t('message.inbox.no'),
+                        confirmButtonText: self.$t('message.inbox.yes'),
                         cancelButtonColor: 'red',
                         confirmButtonColor: 'green',
                     })
@@ -1519,14 +1545,14 @@ export default {
                     || this.forwardContent.cc) {
 
                     swal.fire({
-                        title : "Save as Draft?",
-                        text : "Save email contents as draft?",
+                        title : self.$t('message.inbox.alert_save_draft'),
+                        text : self.$t('message.inbox.alert_save_draft_note'),
                         icon : "question",
                         showCloseButton: true,
                         showCancelButton: true,
                         showConfirmButton: true,
-                        cancelButtonText: 'No',
-                        confirmButtonText: 'Yes',
+                        cancelButtonText: self.$t('message.inbox.no'),
+                        confirmButtonText: self.$t('message.inbox.yes'),
                         cancelButtonColor: 'red',
                         confirmButtonColor: 'green',
                     })
@@ -1557,14 +1583,14 @@ export default {
                     || this.replyContent.cc) {
 
                     swal.fire({
-                        title : "Save as Draft?",
-                        text : "Save email contents as draft?",
+                        title : self.$t('message.inbox.alert_save_draft'),
+                        text : self.$t('message.inbox.alert_save_draft_note'),
                         icon : "question",
                         showCloseButton: true,
                         showCancelButton: true,
                         showConfirmButton: true,
-                        cancelButtonText: 'No',
-                        confirmButtonText: 'Yes',
+                        cancelButtonText: self.$t('message.inbox.no'),
+                        confirmButtonText: self.$t('message.inbox.yes'),
                         cancelButtonColor: 'red',
                         confirmButtonColor: 'green',
                     })
@@ -1861,17 +1887,18 @@ export default {
         },
 
         deleteMessage(id, index, is_all) {
+            let self = this;
 
             if (this.$route.name !== 'Trash') {
                 this.deleteMessageThread(null, 'all')
             } else {
                 swal.fire({
-                    title : "Are you sure ?",
-                    html : "Delete these message?",
+                    title : self.$t('message.inbox.alert_confirm'),
+                    html : self.$t('message.inbox.alert_delete_messages'),
                     icon : "warning",
                     showCancelButton : true,
-                    confirmButtonText : 'Yes, delete it!',
-                    cancelButtonText : 'No, keep it'
+                    confirmButtonText : self.$t('message.inbox.deletes'),
+                    cancelButtonText : self.$t('message.inbox.keep')
                 })
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -1917,8 +1944,8 @@ export default {
                             this.clearViewing()
 
                             swal.fire(
-                                'Deleted!',
-                                'Messages is move to Trash.',
+                                self.$t('message.inbox.alert_deleted'),
+                                self.$t('message.inbox.alert_trash'),
                                 'success'
                             )
                         }
@@ -1930,37 +1957,37 @@ export default {
             let self = this
 
             swal.fire({
-                title : mod === 'single' ? "Delete thread" : "Delete selected threads",
-                html : mod === 'single' ? "Delete all emails in this thread?" : "Delete all emails in selected threads?",
+                title : mod === 'single' ? self.$t('message.inbox.alert_delete_thread') : self.$t('message.inbox.alert_delete_selected'),
+                html : mod === 'single' ? self.$t('message.inbox.alert_all_thread') : self.$t('message.inbox.alert_all_selected_thread'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, delete them!',
-                cancelButtonText : 'No, keep them.'
+                confirmButtonText : self.$t('message.inbox.deletes'),
+                cancelButtonText : self.$t('message.inbox.keep')
             })
-                .then((result) => {
-                    if (result.isConfirmed) {
+            .then((result) => {
+                if (result.isConfirmed) {
 
-                        let ids = self.getThreadIds(thread, mod)
+                    let ids = self.getThreadIds(thread, mod)
 
-                        axios.post('/api/mail/delete-message-thread', {ids : ids})
-                            .then((res) => {
-                                self.clearViewing()
-                                self.getInbox()
-                                self.checkIds = [];
-                                self.checkSelected()
+                    axios.post('/api/mail/delete-message-thread', {ids : ids})
+                        .then((res) => {
+                            self.clearViewing()
+                            self.getInbox()
+                            self.checkIds = [];
+                            self.checkSelected()
 
-                                if (mod !== 'single') {
-                                    self.allSelected = !self.allSelected
-                                }
+                            if (mod !== 'single') {
+                                self.allSelected = !self.allSelected
+                            }
 
-                                swal.fire(
-                                    'Deleted!',
-                                    'Deleted emails moved to trash.',
-                                    'success'
-                                )
-                            })
-                    }
-                })
+                            swal.fire(
+                                self.$t('message.inbox.alert_deleted'),
+                                self.$t('message.inbox.alert_deleted_moved'),
+                                'success'
+                            )
+                        })
+                }
+            })
         },
 
         getThreadIds(thread, mod) {
@@ -2012,6 +2039,8 @@ export default {
                     // }
 
                     this.getInbox()
+
+                    this.checkIds = [];
 
                     $("#modal-label-selection").modal('hide')
 
@@ -2140,6 +2169,7 @@ export default {
         },
 
         markAsReadSelectedEmails () {
+            let self = this;
             let loader = this.$loading.show();
 
             let idsObject = this.getIsNotViewedEmailIds('read');
@@ -2170,8 +2200,8 @@ export default {
                     this.btnEnable = true;
 
                     swal.fire(
-                        'Mark as Read',
-                        'Successfully marked selected emails as read',
+                        self.$t('message.inbox.alert_mark_as_read'),
+                        self.$t('message.inbox.alert_mark_as_read_note'),
                         'success'
                     )
 
@@ -2181,8 +2211,8 @@ export default {
                     console.log(err)
 
                     swal.fire(
-                        'Error',
-                        'Something went wrong while marking the selected emails as read',
+                        self.$t('message.inbox.error'),
+                        self.$t('message.inbox.alert_err_mark_as_read'),
                         'error'
                     )
 
@@ -2190,7 +2220,7 @@ export default {
                 })
             } else {
                 swal.fire(
-                    'Selected Emails are already read',
+                    self.$t('message.inbox.alert_already_read'),
                     '',
                     'warning'
                 )
@@ -2200,6 +2230,7 @@ export default {
         },
 
         markAsUnReadSelectedEmails () {
+            let self = this;
             let loader = this.$loading.show();
 
             let idsObject = this.getIsNotViewedEmailIds('unread');
@@ -2230,8 +2261,8 @@ export default {
                     this.btnEnable = true;
 
                     swal.fire(
-                        'Mark as Unread',
-                        'Successfully marked selected emails as unread',
+                        self.$t('message.inbox.alert_mark_as_unread'),
+                        self.$t('message.inbox.alert_mark_as_unread_note'),
                         'success'
                     )
 
@@ -2241,8 +2272,8 @@ export default {
                     console.log(err)
 
                     swal.fire(
-                        'Error',
-                        'Something went wrong while marking the selected emails as unread',
+                        self.$t('message.inbox.error'),
+                        self.$t('message.inbox.alert_err_mark_as_unread'),
                         'error'
                     )
 
@@ -2250,7 +2281,7 @@ export default {
                 })
             } else {
                 swal.fire(
-                    'Selected Emails are already unread',
+                    self.$t('message.inbox.alert_already_unread'),
                     '',
                     'warning'
                 )
@@ -2607,6 +2638,8 @@ export default {
         },
 
         async sendEmail(type) {
+            let self = this;
+
             let cc = '';
             let appendEmail = '';
             let appendTitle = '';
@@ -2677,8 +2710,8 @@ export default {
             if (this.messageForms.action == 'success') {
 
                 swal.fire(
-                    'Send',
-                    'Successfully Send Email',
+                    self.$t('message.inbox.send'),
+                    self.$t('message.inbox.alert_success_sent'),
                     'success'
                 )
 
@@ -2720,8 +2753,8 @@ export default {
                 this.clearMessageform()
             } else {
                 await swal.fire(
-                    'Error',
-                    'There are some errors while sending the email',
+                    self.$t('message.inbox.error'),
+                    self.$t('message.inbox.alert_err_sent'),
                     'error'
                 )
             }
@@ -2800,12 +2833,19 @@ export default {
         },
 
         retrieveDeletedMessage() {
+            let self = this;
+
+            let idArray = [];
+            for (let chk in this.checkIds) {
+                idArray.push(this.checkIds[chk].id);
+            }
+
             axios.post('/api/mail/retrieve-deleted-email', {
-                ids : this.checkIds
+                ids : idArray
             }).then((response) => {
                 swal.fire(
-                    'Send',
-                    'Successfully Retrieved Email',
+                    self.$t('message.inbox.success'),
+                    self.$t('message.inbox.alert_retrieved'),
                     'success'
                 )
 
@@ -2825,20 +2865,21 @@ export default {
         },
 
         statusLabel(code) {
+            let self = this;
             let label = '';
 
             if (code === 0) {
-                label = 'Sent'
+                label = self.$t('message.inbox.sent')
             } else if(code === 250){
-                label = 'Delivered'
+                label = self.$t('message.inbox.delivered')
             } else if(code === 500){
-                label = 'Rejected'
+                label = self.$t('message.inbox.rejected')
             } else if(code === 552){
-                label = 'Failed'
+                label = self.$t('message.inbox.failed')
             } else if(code === 260){
-                label = 'Opened'
+                label = self.$t('message.inbox.opened')
             } else {
-                label = 'Reported'
+                label = self.$t('message.inbox.reported')
             }
 
             return label;
@@ -2876,7 +2917,7 @@ export default {
         saveMessageAsDraft(data) {
             axios.post('/api/mail/save-draft', data).then((response) => {
                 swal.fire({
-                    title: 'Message saved as draft!',
+                    title: self.$t('message.inbox.alert_saved_draft'),
                     icon: 'success'
                 });
             });

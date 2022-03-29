@@ -3,10 +3,10 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header d-flex">
-                    <h3 class="box-title align-self-center">Mail Signature</h3>
+                    <h3 class="box-title align-self-center">{{ $t('message.signature.ms_title') }}</h3>
 
                     <button
-                        title="Add email signature"
+                        :title="$t('message.signature.ms_add')"
                         class="btn btn-success ml-auto"
 
                         @click="modalOpener('Add')">
@@ -36,10 +36,10 @@
                     <table class="table table-hover table-bordered table-striped">
                         <tbody>
                             <tr class="label-primary">
-                                <th>#ID</th>
-                                <th>Name</th>
-                                <th>Login Mail</th>
-                                <th>Actions</th>
+                                <th>#{{ $t('message.signature.ms_id') }}</th>
+                                <th>{{ $t('message.signature.ms_name') }}</th>
+                                <th>{{ $t('message.signature.ms_login') }}</th>
+                                <th>{{ $t('message.signature.ms_action') }}</th>
                             </tr>
 
                             <tr>
@@ -50,7 +50,7 @@
                                         <input
                                             v-model="filterModel.name"
                                             type="text"
-                                            placeholder="Search Name"
+                                            :placeholder="$t('message.signature.ms_search_name')"
                                             class="form-control pull-right">
                                     </div>
                                 </td>
@@ -58,7 +58,7 @@
                                 <td>
                                     <div class="form-group">
                                         <select v-model="filterModel.work_mail" class="form-control pull-right">
-                                            <option value="">Search Login Mail</option>
+                                            <option value="">{{ $t('message.signature.ms_search_login') }}</option>
                                             <option v-for="option in listUsers" :value="option.work_mail">
                                                 {{ option.work_mail }}
                                             </option>
@@ -69,7 +69,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button
-                                            title="Search"
+                                            :title="$t('message.signature.search')"
                                             class="btn btn-default"
 
                                             @click="getSignatureList">
@@ -78,7 +78,7 @@
                                         </button>
 
                                         <button
-                                            title="Clear"
+                                            :title="$t('message.signature.clear')"
                                             class="btn btn-default ml-2"
 
                                             @click="clearFilter">
@@ -138,7 +138,10 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ modalMode === 'Add' ? 'Add' : 'Update' }} Email Signature</h4>
+                        <h4 class="modal-title">
+                            {{ modalMode === 'Add' ? $t('message.signature.add') : $t('message.signature.update') }}
+                            {{ $t('message.signature.ams_title') }}
+                        </h4>
 
 <!--                        <div class="modal-load overlay float-right">-->
 <!--                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>-->
@@ -156,13 +159,13 @@
 
                         <div class="alert alert-info">
                             <i class="fa fa-exclamation-circle"></i>
-                            Setting table border to <strong>none</strong> will still show grey borders for guidelines.
+                            {{ $t('message.signature.ams_note') }}
                         </div>
 
                         <form class="row" action="" @submit.prevent="">
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.name}" class="form-group">
-                                    <label style="color: #333">Signature Name</label>
+                                    <label style="color: #333">{{ $t('message.signature.ams_name') }}</label>
 
                                     <input
                                         v-model="modelName"
@@ -182,7 +185,7 @@
 
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.work_mail}" class="form-group">
-                                    <label style="color: #333">Login Mail</label>
+                                    <label style="color: #333">{{ $t('message.signature.ams_login') }}</label>
 
                                     <select class="form-control" v-model="modelWorkMail">
                                         <option v-for="option in listUsers" v-bind:value="option.work_mail">
@@ -201,7 +204,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label style="color: #333">Signature Content</label>
+                                <label style="color: #333">{{ $t('message.signature.ams_content') }}</label>
 
                                 <br>
                                 <span
@@ -227,9 +230,15 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">Close</button>
-                        <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
-                        <button v-else type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">
+                            {{ $t('message.signature.close') }}
+                        </button>
+                        <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.signature.save') }}
+                        </button>
+                        <button v-else type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.signature.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -472,8 +481,8 @@ export default {
                 this.addImages = [];
 
                 await swal.fire(
-                    'Added!',
-                    'Email signature added.',
+                    self.$t('message.signature.alert_added'),
+                    self.$t('message.signature.alert_added_note'),
                     'success'
                 )
             }
@@ -504,13 +513,15 @@ export default {
         },
 
         async deleteSignature(id, content) {
+            let self = this;
+
             swal.fire({
-                title: "Delete Email Signature",
-                text: "Do you want to delete this email signature?",
+                title: self.$t('message.signature.alert_delete'),
+                text: self.$t('message.signature.alert_confirm_delete'),
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, keep it'
+                confirmButtonText: self.$t('message.signature.deletes'),
+                cancelButtonText: self.$t('message.signature.keep')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -522,8 +533,8 @@ export default {
                         this.getSignatureList()
 
                         swal.fire(
-                            'Deleted!',
-                            'Email signature deleted.',
+                            self.$t('message.signature.alert_deleted'),
+                            self.$t('message.signature.alert_deleted_note'),
                             'success'
                         )
                     })
@@ -532,6 +543,7 @@ export default {
         },
 
         async submitUpdate() {
+            let self = this;
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateEmailSignature', this.updateSignatureModel);
             this.isPopupLoading = false;
@@ -549,8 +561,8 @@ export default {
                 this.updateSignatureTemp.work_mail = this.updateSignatureModel.work_mail
 
                 await swal.fire(
-                    'Updated!',
-                    'Email signature updated.',
+                    self.$t('message.signature.alert_updated'),
+                    self.$t('message.signature.alert_updated_note'),
                     'success'
                 )
             }
@@ -561,16 +573,18 @@ export default {
         },
 
         modalCloser(mode) {
+            let self = this;
+
             if (mode === 'Add') {
 
                 if (this.signatureModel.content || this.signatureModel.name) {
                     swal.fire({
-                        title: "Are you sure?",
-                        text: "Changes will not be saved",
+                        title: self.$t('message.signature.alert_confirm'),
+                        text: self.$t('message.signature.alert_confirm_note'),
                         icon: "warning",
                         showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
+                        confirmButtonText: self.$t('message.signature.yes'),
+                        cancelButtonText: self.$t('message.signature.no')
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
@@ -592,12 +606,12 @@ export default {
 
                 if (this.compareUpdateData()) {
                     swal.fire({
-                        title: "Are you sure?",
-                        text: "Changes will not be saved",
+                        title: self.$t('message.signature.alert_confirm'),
+                        text: self.$t('message.signature.alert_confirm_note'),
                         icon: "warning",
                         showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
+                        confirmButtonText: self.$t('message.signature.yes'),
+                        cancelButtonText: self.$t('message.signature.no')
                     })
                     .then((result) => {
                         if (result.isConfirmed) {

@@ -18,12 +18,12 @@
 
                     @click="checkWorkMail">
 
-                    Compose
+                    {{ $t('message.mail.compose') }}
                 </button>
 
                 <div v-if="user.isAdmin">
                     <div class="form-group">
-                        <label>Login As:</label>
+                        <label>{{ $t('message.mail.login') }}</label>
 
                         <v-select
                             v-model="user.work_mail"
@@ -52,7 +52,7 @@
 
                 <div v-if="!user.isAdmin && user.access.length !== 0">
                     <div class="form-group">
-                        <label>Login As:</label>
+                        <label>{{ $t('message.mail.login') }}</label>
 
                         <v-select
                             v-model="user.work_mail"
@@ -81,7 +81,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Folders</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.mail.f_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Inbox'}">
                                 <router-link :to="{path:'/mails/inbox', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }" >
                                     <i class="fa fa-fw fa-inbox"></i>
-                                    Inbox
+                                    {{ $t('message.mail.f_inbox') }}
 
                                     <span class="badge badge-primary float-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
                                 </router-link>
@@ -98,25 +98,25 @@
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
                                 <router-link :to="{path:'/mails/sent', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-share"></i>
-                                    Sent
+                                    {{ $t('message.mail.f_sent') }}
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Starred'}">
                                 <router-link :to="{path:'/mails/starred', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-star"></i>
-                                    Starred
+                                    {{ $t('message.mail.f_star') }}
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
                                 <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-trash"></i>
-                                    Trash
+                                    {{ $t('message.mail.f_trash') }}
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'Drafts'}">
                                 <router-link :to="{path:'/mails/drafts', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-file-alt"></i>
-                                    Drafts
+                                    {{ $t('message.mail.f_draft') }}
 
                                     <span class="badge badge-primary float-right" v-if="userDrafts.count !== 0">
                                         {{userDrafts.count}}
@@ -126,19 +126,19 @@
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
                                 <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-envelope"></i>
-                                    Mail Template
+                                    {{ $t('message.mail.f_template') }}
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-signature'}">
                                 <router-link :to="{path:'/mails/signature', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-id-card"></i>
-                                    Signatures
+                                    {{ $t('message.mail.f_sig') }}
                                 </router-link>
                             </li>
                             <li :class="{ 'list-group-item':true, 'active': $route.name == 'auto-reply'}">
                                 <router-link :to="{path:'/mails/auto', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-reply"></i>
-                                    Auto Replies
+                                    {{ $t('message.mail.f_auto') }}
                                 </router-link>
                             </li>
                         </ul>
@@ -147,7 +147,7 @@
 
                 <div class="card" v-show="$route.name != 'mail-template'">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Default Labels</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.mail.l_default') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -173,7 +173,7 @@
 
                 <div class="card" v-show="$route.name != 'mail-template'">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">User Labels</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.mail.l_user') }}</h3>
                         <div class="card-tools">
                             <i
                                 class="fa fa-plus"
@@ -213,20 +213,20 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Label</h4>
+                        <h4 class="modal-title">{{ $t('message.mail.al_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="row">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageError.name != ''}" class="form-group">
-                                    <label for="">Label Name</label>
+                                    <label>{{ $t('message.mail.al_name') }}</label>
                                     <input type="text" class="form-control" v-model="labelModel.name">
                                     <span v-show="messageError.name != ''" class="text-danger">{{ messageError.name }}</span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageError.color != ''}" class="form-group">
-                                    <label for="">Color</label>
+                                    <label>{{ $t('message.mail.al_color') }}</label>
                                     <input type="text" class="form-control" v-model="labelModel.color" readonly>
                                     <span v-show="messageError.color != ''" class="text-danger">{{ messageError.color }}</span>
                                     <compact-picker v-model="colors" @input="updateValue" />
@@ -236,8 +236,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="saveLabel">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.mail.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="saveLabel">
+                            {{ $t('message.mail.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -368,14 +372,16 @@ export default {
         },
 
         checkWorkMail() {
+            let self = this;
+
             if (this.user.work_mail) {
 
                 this.$refs.mailView.$refs.emailBalloon.open();
 
             } else {
                 swal.fire(
-                    'Error',
-                    'Please setup first your Work mail',
+                    self.$t('message.mail.err_title'),
+                    self.$t('message.mail.err_work_mail'),
                     'error'
                 )
             }

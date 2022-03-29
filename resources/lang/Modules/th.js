@@ -31,6 +31,26 @@ import header from './Header/th/main';
 // sidebar
 import sidebar from './Sidebar/th/main';
 
+// dashboard
+import dashboard from './Dashboard/th/main';
+
+// footer
+import footer from './Footer/th/main';
+
+// url prospect
+import url_prospect from './UrlProspect/th/main';
+
+// article
+import article from './Article/th/main';
+
+// mails
+import mail from './Mails/th/mail';
+import inbox from './Mails/th/inbox';
+import template from './Mails/th/template';
+import signature from './Mails/th/signature';
+import draft from './Mails/th/drafts';
+import auto from './Mails/th/auto';
+
 export default {
     message : {
         help,
@@ -66,5 +86,25 @@ export default {
 
         // sidebar
         sidebar,
+
+        // dashboard
+        dashboard,
+
+        // footer
+        footer,
+
+        // url prospect
+        url_prospect,
+
+        // article
+        article,
+
+        // mails
+        mail,
+        inbox,
+        template,
+        signature,
+        draft,
+        auto,
     }
 }

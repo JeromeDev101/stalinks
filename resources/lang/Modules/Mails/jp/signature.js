@@ -1,0 +1,40 @@
+export default {
+    ms_title: 'メール署名',
+    ms_add: 'メール署名の挿入',
+    ms_id: 'ID',
+    ms_name: '名前',
+    ms_login: 'ログインメール',
+    ms_action: 'アクション',
+    ms_search_name: '名前を検索',
+    ms_search_login: 'ログインメールの検索',
+
+    // add
+    ams_title: 'メール署名',
+    ams_note: 'テーブルの枠線を「なし」に設定しても、ガイドラインの枠線はグレーに表示されます。',
+    ams_name: '署名',
+    ams_login: 'ログインメール',
+    ams_content: 'メール署名',
+
+    // alerts
+    alert_added: '追加します!',
+    alert_added_note: 'メール署名の挿入する.',
+    alert_delete: 'メール署名の削除',
+    alert_confirm_delete: 'メール署名を削除しますか?',
+    alert_deleted: '削除しました!',
+    alert_deleted_note: 'メール署名は削除されました.',
+    alert_updated: '更新します!',
+    alert_updated_note: 'メール署名を更新しました.',
+    alert_confirm: 'よろしいですか?',
+    alert_confirm_note: '変更は保存されません',
+
+    add: '追加',
+    update: 'アップデート',
+    clear: 'クリア',
+    search: '検索',
+    close: '閉じる',
+    save: '保存',
+    deletes: 'はい。削除します',
+    keep: 'いいえ、削除しません',
+    yes: 'はい',
+    no: 'いいえ',
+}

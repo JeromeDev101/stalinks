@@ -5,24 +5,29 @@
 
                 <div class="card-header">
 
-                    <h3 class="card-title text-primary">{{ $route.name }}</h3>
+                    <h3 class="card-title text-primary">{{ $t('message.draft.d_title') }}</h3>
 
                     <div class="card-tools">
                         <div class="input-group">
                             <input
                                 v-model="filterModel.search"
                                 type="text"
-                                placeholder="Search Drafts"
+                                :placeholder="$t('message.draft.d_search')"
                                 class="form-control input-sm">
 
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" title="Search" @click="getDrafts()">
+                                <button
+                                    type="button"
+                                    class="btn btn-default"
+                                    :title="$t('message.draft.search')"
+
+                                    @click="getDrafts()">
                                     <i class="fa fa-search"></i>
                                 </button>
 
                                 <button
                                     type="button"
-                                    title="Clear"
+                                    :title="$t('message.draft.clear')"
                                     class="btn btn-default"
 
                                     @click="clearSearch()">
@@ -83,7 +88,7 @@
                         <table class="table table-condensed table-hover" style="table-layout: auto; width: 100%">
                             <tbody>
                                 <tr v-if="drafts.total === 0">
-                                    <td class="text-muted text-center">No {{ $route.name }} record</td>
+                                    <td class="text-muted text-center">{{ $t('message.draft.d_no_drafts') }}</td>
                                 </tr>
 
                                 <tr
@@ -113,14 +118,14 @@
                                             class="draft-recipient"
                                             :class="!draft.received ? 'text-muted font-italic' : ''">
 
-                                            {{ draft.received ? draft.received : '(no recipient)' }}
+                                            {{ draft.received ? draft.received : $t('message.draft.d_no_recipient') }}
                                         </div>
                                     </td>
 
                                     <!-- draft subject -->
                                     <td>
                                         <div :class="!draft.subject ? 'text-muted font-italic' : ''">
-                                            {{ draft.subject ? draft.subject : '(no subject)' }}
+                                            {{ draft.subject ? draft.subject : $t('message.draft.d_no_subject') }}
                                         </div>
                                     </td>
 
@@ -144,7 +149,7 @@
         <div class="bln-container">
 
             <!-- Send Draft Balloon -->
-            <Balloon ref="draftBalloon" :title="'Send Draft'">
+            <Balloon ref="draftBalloon" :title="$t('message.draft.sd_title')">
 
                 <!-- custom header buttons -->
                 <template v-slot:header-buttons>
@@ -163,12 +168,12 @@
                                 style="cursor: pointer"
 
                                 @click="draftContent.email = []">
-                                Remove all emails
+                                {{ $t('message.draft.sd_remove_all_emails') }}
                             </small>
 
                             <vue-tags-input
                                 v-model="tag"
-                                placeholder="Recipients"
+                                :placeholder="$t('message.inbox.cm_rec')"
                                 :max-tags="10"
                                 :allow-edit-tags="true"
                                 :separators="separators"
@@ -185,7 +190,7 @@
                             </span>
 
                             <span v-if="checkEmailValidationError(messageForms.errors)" class="text-danger">
-                                The email field must contain valid emails.
+                                {{ $t('message.draft.sd_err_valid_emails') }}
                             </span>
 
                         </div>
@@ -196,7 +201,7 @@
                             <input
                                 v-model="draftContent.cc"
                                 type="text"
-                                placeholder="Bcc"
+                                :placeholder="$t('message.inbox.cm_bcc_title')"
                                 class="form-control form-control-sm"
                                 required="required">
                         </div>
@@ -210,7 +215,7 @@
                                 v-model="draftContent.title"
                                 type="text"
                                 required="required"
-                                placeholder="Subject"
+                                :placeholder="$t('message.inbox.cm_subject')"
                                 class="form-control form-control-sm">
 
                             <span
@@ -256,13 +261,13 @@
                                     @click="sendDraft()">
 
                                     <i class="fa fa-paper-plane"></i>
-                                    Send
+                                    {{ $t('message.draft.send') }}
                                 </button>
 
                                 <!-- attachment button -->
                                 <button
                                     type="button"
-                                    title="Attach files"
+                                    :title="$t('message.inbox.cm_attachments')"
                                     class="btn btn-primary btn-sm float-right"
 
                                     @click="$refs.file_draft.click()">
@@ -270,8 +275,8 @@
                                     <i class="fa fa-paperclip"></i>
                                     {{
                                         attached_files.draft === 0
-                                            ? 'Attach files'
-                                            : attached_files.draft + ' file(s) attached'
+                                            ? $t('message.inbox.cm_attachments')
+                                            : attached_files.draft + $t('message.inbox.cm_files')
                                     }}
                                 </button>
 
@@ -394,6 +399,7 @@ export default {
         },
 
         async sendDraft () {
+            let self = this;
             let cc = '';
             let appendEmail = '';
             let appendTitle = '';
@@ -431,8 +437,8 @@ export default {
             if (this.messageForms.action === 'success') {
 
                 await swal.fire(
-                    'Sent',
-                    'Successfully Sent Draft',
+                    self.$t('message.draft.sent'),
+                    self.$t('message.draft.sd_success_sent'),
                     'success'
                 )
 
@@ -458,8 +464,8 @@ export default {
                 this.clearMessageform()
             } else {
                 await swal.fire(
-                    'Error',
-                    'There are some errors while sending the draft',
+                    self.$t('message.draft.error'),
+                    self.$t('message.draft.sd_err_send'),
                     'error'
                 )
             }
@@ -478,15 +484,16 @@ export default {
         },
 
         deleteSelectedDrafts () {
+            let self = this;
             let idArray = this.selectedIds.map(a => a.id);
 
             swal.fire({
-                title : "Delete draft",
-                html : "Are you sure that you want to delete the selected draft(s)?",
+                title : self.$t('message.draft.dd_title'),
+                html : self.$t('message.draft.dd_confirm'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, delete it!',
-                cancelButtonText : 'No, keep it'
+                confirmButtonText : self.$t('message.draft.deletes'),
+                cancelButtonText : self.$t('message.draft.keep')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -495,8 +502,8 @@ export default {
                         ids: idArray
                     }).then((res) => {
                         swal.fire(
-                            'Deleted!',
-                            'Selected drafts were successfully deleted.',
+                            self.$t('message.draft.deleted'),
+                            self.$t('message.draft.dd_deleted'),
                             'success'
                         )
 
@@ -505,8 +512,8 @@ export default {
                         console.log(err)
 
                         swal.fire(
-                            'Error!',
-                            'Something went wrong while deleting the draft(s).',
+                            self.$t('message.draft.error'),
+                            self.$t('message.draft.dd_err_delete'),
                             'error'
                         )
                     })

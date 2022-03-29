@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.url_prospect.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.url_prospect.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,28 +30,28 @@
                         <div class="row">
                             <div v-if="tableShow.domain" class="col-md-3">
                                 <div class="from-group">
-                                    <label style="color: #333">Email
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_email') }}
                                     </label>
                                     <input type="text"
                                            v-model="filterModel.email"
                                            class="form-control pull-right"
-                                           placeholder="Search Email">
+                                           :placeholder="$t('message.url_prospect.filter_search_email')">
                                 </div>
                             </div>
 
                             <div v-if="tableShow.country" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Email Required</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_email_req') }}</label>
                                     <select v-model="filterModel.required_email_temp" class="form-control pull-right">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
+                                        <option value="0">{{ $t('message.url_prospect.no') }}</option>
+                                        <option value="1">{{ $t('message.url_prospect.yes') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div v-if="tableShow.country" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_country') }}</label>
                                     <!-- <select v-model="filterModel.country_id_temp" class="form-control pull-right">
                                        <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
                                            {{ option.name }}
@@ -61,7 +61,7 @@
                                         v-model="filterModel.country_id_temp"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.url_prospect.all')"
                                         :options="listCountryAll.data"
                                         :reduce="name => name.name"
                                         :searchable="true"/>
@@ -70,22 +70,22 @@
 
                             <div v-if="tableShow.domain" class="col-md-3">
                                 <div class="from-group">
-                                    <label style="color: #333">Search URL</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_url') }}</label>
                                     <input type="text"
                                            v-model="filterModel.domain_temp"
                                            class="form-control pull-right"
-                                           placeholder="Search URL">
+                                           :placeholder="$t('message.url_prospect.filter_url')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Domain Zone</label>
+                                    <label>{{ $t('message.url_prospect.filter_dz') }}</label>
                                     <v-select
                                         v-model="filterModel.domain_zone"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.url_prospect.all')"
                                         :options="listDomainZones.data"
                                         :searchable="true"
                                         :reduce="domain => domain.name"/>
@@ -94,7 +94,7 @@
 
                             <div v-if="tableShow.status" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Status</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_status') }}</label>
                                     <v-select
                                         multiple
                                         v-model="filterModel.status_temp"
@@ -102,7 +102,7 @@
                                         :reduce="status => status.id"
                                         label="text"
                                         :searchable="false"
-                                        placeholder="All"/>
+                                        :placeholder="$t('message.url_prospect.all')"/>
                                     <!--                        <select v-model="filterModel.status_temp" class="form-control">-->
                                     <!--                            <option value="-1" selected>All-->
                                     <!--                            </option>-->
@@ -115,7 +115,7 @@
 
                             <div class="col-md-3" v-if="user.isAdmin || tableShow.employee">
                                 <div class="form-group">
-                                    <label style="color: #333">Employee</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_emp') }}</label>
                                     <!-- <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.employee_id" style="height: 37px;">
                                        <option value="0">Select Employee</option>
                                        <option v-for="user in listUser.data" :value="user.id">{{ user.username }}</option>
@@ -127,14 +127,14 @@
                                         :reduce="username => username.username"
                                         label="username"
                                         :searchable="false"
-                                        placeholder="All"/>
+                                        :placeholder="$t('message.url_prospect.all')"/>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label
-                                        style="color: #333">Date Upload
+                                        style="color: #333">{{ $t('message.url_prospect.filter_date_up') }}
                                     </label>
                                     <div class="input-group">
                                         <date-range-picker
@@ -153,18 +153,18 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label
-                                        style="color: #333"
-                                    >Alexa Rank <i
-                                        class="fa fa-question-circle" title="From and To must not be empty"></i></label>
+                                    <label style="color: #333">
+                                        {{ $t('message.url_prospect.filter_alexa') }}
+                                        <i class="fa fa-question-circle" title="From and To must not be empty"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="From"
+                                               :placeholder="$t('message.url_prospect.fr')"
                                                v-model="filterModel.alexa_rank_from">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="To"
+                                               :placeholder="$t('message.url_prospect.to')"
                                                v-model="filterModel.alexa_rank_to">
                                     </div>
                                 </div>
@@ -172,13 +172,15 @@
 
                             <div v-if="tableShow.status" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Action</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_action') }}</label>
                                     <br>
                                     <div class="btn-group">
-                                        <button class="btn btn-default" @click="clearSearch">Clear</button>
+                                        <button class="btn btn-default" @click="clearSearch">
+                                            {{ $t('message.url_prospect.filter_clear') }}
+                                        </button>
                                         <button @click="doSearchList"
                                                 type="submit"
-                                                title="Filter"
+                                                :title="$t('message.url_prospect.filter_title')"
                                                 class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
                                     </div>
                                 </div>
@@ -193,7 +195,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">URL Prospect List</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.url_prospect.url_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -209,7 +211,7 @@
                                            name="file">
                                     <div class="input-group-btn">
                                         <button
-                                            title="Upload CSV File"
+                                            :title="$t('message.url_prospect.url_upload')"
                                             class="btn btn-primary btn-flat"
                                             :disabled="isEnableBtn"
 
@@ -218,7 +220,7 @@
                                         </button>
 
                                         <button
-                                            title="Download CSV Template"
+                                            :title="$t('message.url_prospect.url_download')"
                                             class="btn btn-primary btn-flat"
 
                                             @click="downloadTemplate">
@@ -278,9 +280,9 @@
 
                         <div class="row my-0">
                             <div class="col-sm-12">
-                                <small class="text-secondary">Reminder: The columns for the CSV file are Domain, Status,
-                                                              Country and Email. The columns should be separated using
-                                                              comma(,).</small>
+                                <small class="text-secondary">
+                                    {{ $t('message.url_prospect.url_reminder') }}
+                                </small>
                             </div>
                         </div>
 
@@ -292,13 +294,17 @@
                                             class="btn btn-default"
                                             @click="selectAll">
 
-                                            {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                            {{
+                                                !allSelected
+                                                    ? $t('message.url_prospect.ac_select_all')
+                                                    : $t('message.url_prospect.ac_deselect_all')
+                                            }}
                                         </button>
 
                                         <button
                                             data-toggle="modal"
                                             type="submit"
-                                            title="Send Email"
+                                            :title="$t('message.url_prospect.ac_send_email')"
                                             class="btn btn-default"
 
                                             @click="doSendEmail(null, $event)">
@@ -308,7 +314,7 @@
 
                                         <button
                                             type="submit"
-                                            title="Get Ahrefs"
+                                            :title="$t('message.url_prospect.ac_get_ahrefs')"
                                             class="btn btn-default"
 
                                             @click="getAhrefs()">
@@ -318,7 +324,7 @@
 
                                         <button
                                             type="submit"
-                                            title="Status"
+                                            :title="$t('message.url_prospect.tb_status')"
                                             class="btn btn-default"
 
                                             @click="doMultipleStatus">
@@ -328,7 +334,7 @@
 
                                         <button
                                             type="submit"
-                                            title="Employee"
+                                            :title="$t('message.url_prospect.ac_emp')"
                                             class="btn btn-default"
 
                                             @click="doMultipleEmployee">
@@ -338,7 +344,7 @@
 
                                         <button
                                             type="submit"
-                                            title="Delete"
+                                            :title="$t('message.url_prospect.ac_delete')"
                                             class="btn btn-default"
 
                                             @click="deleteAll">
@@ -350,7 +356,9 @@
                                             @click="doCrawlExtList"
                                             :disabled="isCrawling"
                                             type="submit"
-                                            title="Crawl" class="btn btn-default"><i class="fa fa-fw fa-globe"></i>
+                                            :title="$t('message.url_prospect.ac_crawl')"
+                                            class="btn btn-default">
+                                            <i class="fa fa-fw fa-globe"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -371,10 +379,16 @@
                         </div>
 
                     <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
-               <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
-                   <b v-if="!isResultCrawled">Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.</b>
-                   <b v-else>Showing {{ listExt.data.length }} crawled items. Click search or clear filter to refresh the list.</b>
-               </span>
+
+                       <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
+                           <b v-if="!isResultCrawled">
+                               Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.
+                           </b>
+                           <b v-else>
+                               Showing {{ listExt.data.length }} crawled items.
+                               Click search or clear filter to refresh the list.
+                           </b>
+                       </span>
 
                             <vue-virtual-table
                                 v-if="!tableLoading"
@@ -389,26 +403,40 @@
                                     slot="actionButtons">
                                     <div class="btn-group"
                                          v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null) || (scope.row.users == null ? false:scope.row.users.status == 'inactive' ? true:false)">
-                                        <button data-action="a1"
-                                                :data-index="scope.index"
-                                                @click="doEditExt(scope.row)"
-                                                data-toggle="modal"
-                                                data-target="#modal-update"
-                                                class="btn btn-default"
-                                                title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                                        <button
+                                            data-action="a1"
+                                            :data-index="scope.index"
+                                            data-toggle="modal"
+                                            data-target="#modal-update"
+                                            class="btn btn-default"
+                                            :title="$t('message.url_prospect.ac_edit')"
+
+                                            @click="doEditExt(scope.row)">
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </button>
                                         <!-- <button data-action="a2"
                                                 :data-index="scope.index"
                                                 v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button> -->
-                                        <button data-action="a4"
-                                                :data-index="scope.index"
-                                                @click="doSendEmail(scope.row,
-                                  $event)" data-toggle="modal" type="submit" title="Send Email" class="btn btn-default">
-                                            <i class="fas fa-envelope"></i></button>
+                                        <button
+                                            data-action="a4"
+                                            :data-index="scope.index"
+                                            data-toggle="modal"
+                                            type="submit"
+                                            :title="$t('message.url_prospect.ac_send_email')"
+                                            class="btn btn-default"
+
+                                            @click="doSendEmail(scope.row,$event)" >
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
                                         <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
-                                        <button type="submit"
-                                                title="Get Ahrefs"
-                                                @click="getAhrefsById(scope.row.id, scope.row.status)"
-                                                class="btn btn-default"><i class="fas fa-chart-area"></i></button>
+                                        <button
+                                            type="submit"
+                                            :title="$t('message.url_prospect.ac_get_ahrefs')"
+                                            class="btn btn-default"
+
+                                            @click="getAhrefsById(scope.row.id, scope.row.status)">
+                                            <i class="fas fa-chart-area"></i>
+                                        </button>
                                     </div>
                                 </template>
 
@@ -504,15 +532,16 @@
                                     </div>
                                 </template>
 
-                                <template
-                                    slot-scope="scope"
-                                    slot="statusData">
-                        <span :class="['badge', 'badge-'
-                        + (listStatusText[scope.row.status] ?
-                        listStatusText[scope.row.status].label :
-                        'warning')]">{{
-                                listStatusText[scope.row.status] ? listStatusText[scope.row.status].text : 'undefined'
-                                     }}</span>
+                                <template slot-scope="scope" slot="statusData">
+                                    <span :class="['badge', 'badge-' + (listStatusText[scope.row.status]
+                                     ? listStatusText[scope.row.status].label
+                                     : 'warning')]">
+                                        {{
+                                            listStatusText[scope.row.status]
+                                                ? listStatusText[scope.row.status].text
+                                                : 'undefined'
+                                        }}
+                                    </span>
                                 </template>
 
 <!--                                <template-->
@@ -555,20 +584,20 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add URL Prospect</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.add_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.domain}"
                                      class="form-group">
-                                    <label style="color: #333">Domain</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_domain') }}</label>
                                     <input type="text"
                                            v-model="extModel.domain"
                                            class="form-control"
                                            value=""
                                            required
-                                           placeholder="Enter domain">
+                                           :placeholder="$t('message.url_prospect.add_enter_domain')">
                                     <span v-if="messageForms.errors.domain"
                                           v-for="err in messageForms.errors.domain"
                                           class="text-danger">{{ err }}</span>
@@ -576,43 +605,43 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Status</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_status') }}</label>
                                     <select class="form-control" v-model="extModel.status">
-                                        <option value="50">Contacted</option>
-                                        <option value="120">Contacted Via Form</option>
-                                        <option value="60">Refused</option>
-                                        <option value="70">InTouched</option>
-                                        <option value="90">Unqualified</option>
-                                        <option value="100">Qualified</option>
+                                        <option value="50">{{ $t('message.url_prospect.add_contacted') }}</option>
+                                        <option value="120">{{ $t('message.url_prospect.add_contacted_form') }}</option>
+                                        <option value="60">{{ $t('message.url_prospect.add_refused') }}</option>
+                                        <option value="70">{{ $t('message.url_prospect.add_intouch') }}</option>
+                                        <option value="90">{{ $t('message.url_prospect.add_unqualified') }}</option>
+                                        <option value="100">{{ $t('message.url_prospect.add_qualified') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}"
                                      class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_country') }}</label>
                                     <div>
                                         <select v-model="extModel.country_id" class="form-control pull-right">
-                                            <option value="0">-- Select country --</option>
+                                            <option value="0">-- {{ $t('message.url_prospect.add_select_country') }} --</option>
                                             <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
                                     </div>
-                                    <span v-if="messageForms.errors.country_id"
-                                          v-for="err in messageForms.errors.country_id"
-                                          class="text-danger">{{ err }}</span>
+                                    <span
+                                        v-if="messageForms.errors.country_id"
+                                        v-for="err in messageForms.errors.country_id"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div
-                                    :class="{
-                                'has-error': messageForms.errors.email
-                                || checkEmailValidationError(messageForms.errors).length !== 0
-                            }"
+                                    :class="{'has-error': messageForms.errors.email || checkEmailValidationError(messageForms.errors).length !== 0}"
                                     class="form-group">
 
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_email') }}</label>
                                     <!--                           <textarea-->
                                     <!--                               v-model="extModel.email"-->
                                     <!--                               type="text"-->
@@ -628,12 +657,12 @@
                                         :allow-edit-tags="true"
                                         :separators="separators"
                                         :class="{
-                                    'vue-tag-error': messageForms.errors.email
-                                    || checkEmailValidationError(messageForms.errors).length !== 0
-                                }"
+                                            'vue-tag-error': messageForms.errors.email
+                                            || checkEmailValidationError(messageForms.errors).length !== 0
+                                        }"
                                         class="mt-0"
                                         ref="emailTag"
-                                        placeholder="Enter Email"
+                                        :placeholder="$t('message.url_prospect.add_enter_email')"
 
                                         @tags-changed="newTags => extModel.email = newTags"
                                     />
@@ -644,7 +673,7 @@
                                         style="cursor: pointer"
 
                                         @click="extModel.email = []">
-                                        Remove all emails
+                                        {{ $t('message.url_prospect.add_remove_emails') }}
                                     </p>
 
                                     <span v-if="messageForms.errors.email"
@@ -667,12 +696,14 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.facebook}"
                                      class="form-group">
-                                    <label style="color: #333">Facebook</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_facebook') }}</label>
                                     <textarea type="text"
                                               v-model="extModel.facebook"
                                               class="form-control"
                                               value=""
-                                              placeholder="Enter Facebook"></textarea>
+                                              :placeholder="$t('message.url_prospect.add_enter_facebook')">
+
+                                    </textarea>
                                     <span v-if="messageForms.errors.facebook"
                                           v-for="err in messageForms.errors.facebook"
                                           class="text-danger">{{ err }}</span>
@@ -681,12 +712,14 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}"
                                      class="form-group">
-                                    <label style="color: #333">Phone</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_phone') }}</label>
                                     <textarea type="text"
                                               v-model="extModel.phone"
                                               class="form-control"
                                               value=""
-                                              placeholder="Enter Phone"></textarea>
+                                              :placeholder="$t('message.url_prospect.add_enter_phone')">
+
+                                    </textarea>
                                     <span v-if="messageForms.errors.phone"
                                           v-for="err in messageForms.errors.phone"
                                           class="text-danger">{{ err }}</span>
@@ -757,22 +790,26 @@
                                </div> -->
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Skype</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_skype') }}</label>
                                     <textarea type="text"
                                               v-model="extModel.skype"
                                               class="form-control"
                                               value=""
-                                              placeholder="Enter Skype"></textarea>
+                                              :placeholder="$t('message.url_prospect.add_enter_skype')">
+
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Info</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_info') }}</label>
                                     <textarea type="text"
                                               v-model="extModel.info"
                                               class="form-control"
                                               value=""
-                                              placeholder="Enter Info"></textarea>
+                                              :placeholder="$t('message.url_prospect.add_enter_info')">
+
+                                    </textarea>
                                 </div>
                             </div>
                             <!-- <div class="col-md-6">
@@ -795,8 +832,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.url_prospect.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -807,10 +848,11 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ listBackLink.total }} Back Links: <a target="_blank"
-                                                                                        :href="'http://' + extBackLink.domain">{{
-                                extBackLink.domain
-                                                                                                                               }}</a>
+                        <h4 class="modal-title">
+                            {{ listBackLink.total }} {{ $t('message.url_prospect.b_title') }}
+                            <a target="_blank" :href="'http://' + extBackLink.domain">
+                                {{ extBackLink.domain }}
+                            </a>
                         </h4>
                     </div>
                     <div class="modal-body relative">
@@ -818,14 +860,14 @@
                             <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>External Domain</th>
-                                <th>Internal Domain</th>
-                                <th>Link</th>
-                                <th>Price</th>
-                                <th>Anchor Text</th>
-                                <th>Live Date</th>
-                                <th>Status</th>
-                                <th>User</th>
+                                <th>{{ $t('message.url_prospect.b_ext_dom') }}</th>
+                                <th>{{ $t('message.url_prospect.b_int_dom') }}</th>
+                                <th>{{ $t('message.url_prospect.b_link') }}</th>
+                                <th>{{ $t('message.url_prospect.b_price') }}</th>
+                                <th>{{ $t('message.url_prospect.b_anchor_text') }}</th>
+                                <th>{{ $t('message.url_prospect.b_live_date') }}</th>
+                                <th>{{ $t('message.url_prospect.b_status') }}</th>
+                                <th>{{ $t('message.url_prospect.b_user') }}</th>
                             </tr>
                             <tr v-for="(backLink, index) in listBackLink.data" :key="index">
                                 <td class="center-content">{{ index + 1 }}</td>
@@ -843,7 +885,9 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
                         <download-csv
                             :data="listBackLink.data"
                             :fileds="csvExport.data_filled"
@@ -854,74 +898,82 @@
             </div>
         </div>
         <!-- End Modal Backlink -->
+
         <!-- Modal Update -->
         <div class="modal fade" id="modal-update" style="display: none;">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Update URL Prospect:
-                            <a :href="'http://' + extUpdate.domain">{{ extUpdate.domain }}</a></h4>
+                        <h4 class="modal-title">
+                            {{ $t('message.url_prospect.up_title') }}
+                            <a :href="'http://' + extUpdate.domain">{{ extUpdate.domain }}</a>
+                        </h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
                             <div class="col-md-12">
                                 <ul>
-                                    <li>Note: contact enter with format: "contact 01|contact 02|contact 03"</li>
-                                    <li>Example: abc@gmail.com|xyz@yahoo.com</li>
+                                    <li>{{ $t('message.url_prospect.up_info') }}</li>
+                                    <li>{{ $t('message.url_prospect.up_info_2') }}</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
-                                <div :class="{'form-group':
-                          true, 'has-error':
-                          messageForms.errors.user_id}"
-                                     class="form-group">
-                                    <label style="color: #333">
-                                        In-Charge</label>
+                                <div
+                                    :class="{'form-group': true, 'has-error': messageForms.errors.user_id}"
+                                    class="form-group">
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_in_charge') }}</label>
                                     <select type="text"
                                             v-model="extUpdate.user_id"
                                             class="form-control"
                                             value=""
                                             required="required">
-                                        <option v-for="(option,
-                                   key) in
-                                   listSellerTeam.data"
-                                                v-bind:value="option.id"
-                                                v-if="option.username != 'N/A' && option.status == 'active'"
-                                                :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+
+                                        <option
+                                            v-for="(option, key) in listSellerTeam.data"
+                                            v-bind:value="option.id"
+                                            v-if="option.username != 'N/A' && option.status == 'active'"
+                                            :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
                                             {{ option.username }}
                                         </option>
                                     </select>
+
                                     <span
                                         v-if="messageForms.errors.user_id"
                                         v-for="err in messageForms.errors.user_id"
-                                        class="text-danger">{{ err }}</span>
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.domain}"
                                      class="form-group">
-                                    <label style="color: #333">Domain</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_domain') }}</label>
                                     <input type="text"
                                            v-model="extUpdate.domain"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter domain">
+                                           :placeholder="$t('message.url_prospect.add_enter_domain')">
+
                                     <span v-if="messageForms.errors.domain"
                                           v-for="err in messageForms.errors.domain"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.status}"
                                      class="form-group">
-                                    <label style="color: #333">Status</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_status') }}</label>
                                     <select type="text"
                                             v-model="extUpdate.status"
                                             @change="showAddURL()"
                                             class="form-control"
                                             value=""
                                             required="required">
+
                                         <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)"
                                                 v-bind:value="option.id"
                                                 :selected="(key === extUpdate.status ? 'selected' : '')">
@@ -930,13 +982,15 @@
                                     </select>
                                     <span v-if="messageForms.errors.status"
                                           v-for="err in messageForms.errors.status"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}"
                                      class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_country') }}</label>
                                     <div>
                                         <select v-model="extUpdate.country_id" class="form-control pull-right">
                                             <option v-for="option in listCountryAll.data" v-bind:value="option.id">
@@ -946,32 +1000,37 @@
                                     </div>
                                     <span v-if="messageForms.errors.country_id"
                                           v-for="err in messageForms.errors.country_id"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.facebook}"
                                      class="form-group">
-                                    <label style="color: #333">Facebook</label>
-                                    <textarea type="text"
-                                              v-model="extUpdate.facebook"
-                                              class="form-control"
-                                              value=""
-                                              placeholder="Enter Facebook"></textarea>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_facebook') }}</label>
+                                    <textarea
+                                        type="text"
+                                        v-model="extUpdate.facebook"
+                                        class="form-control"
+                                        value=""
+                                        :placeholder="$t('message.url_prospect.add_enter_facebook')">
+
+                                    </textarea>
+
                                     <span v-if="messageForms.errors.facebook"
                                           v-for="err in messageForms.errors.facebook"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div
-                                    :class="{
-                                'has-error': messageForms.errors.email
-                                || checkEmailValidationError(messageForms.errors).length !== 0
-                            }"
+                                    :class="{ 'has-error': messageForms.errors.email || checkEmailValidationError(messageForms.errors).length !== 0 }"
                                     class="form-group">
 
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_email') }}</label>
                                     <!--                           <textarea type="text" v-model="extUpdate.email" class="form-control" value=""  placeholder="Enter Email"></textarea>-->
 
                                     <vue-tags-input
@@ -981,12 +1040,12 @@
                                         :allow-edit-tags="true"
                                         :separators="separators"
                                         :class="{
-                                    'vue-tag-error': messageForms.errors.email
-                                    || checkEmailValidationError(messageForms.errors).length !== 0
-                                }"
+                                            'vue-tag-error': messageForms.errors.email
+                                            || checkEmailValidationError(messageForms.errors).length !== 0
+                                        }"
                                         class="mt-0"
                                         ref="emailTagUpdate"
-                                        placeholder="Enter Email"
+                                        :placeholder="$t('message.url_prospect.add_enter_email')"
 
                                         @tags-changed="newTags => extUpdate.email = newTags"
                                     />
@@ -997,12 +1056,14 @@
                                         style="cursor: pointer"
 
                                         @click="extUpdate.email = []">
-                                        Remove all emails
+                                        {{ $t('message.url_prospect.add_remove_emails') }}
                                     </p>
 
                                     <span v-if="messageForms.errors.email"
                                           v-for="err in messageForms.errors.email"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
 
                                     <div
                                         v-if="checkEmailValidationError(messageForms.errors).length !== 0"
@@ -1020,15 +1081,21 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}"
                                      class="form-group">
-                                    <label style="color: #333">Phone</label>
-                                    <textarea type="text"
-                                              v-model="extUpdate.phone"
-                                              class="form-control"
-                                              value=""
-                                              placeholder="Enter Phone"></textarea>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_phone') }}</label>
+                                    <textarea
+                                        type="text"
+                                        v-model="extUpdate.phone"
+                                        class="form-control"
+                                        value=""
+                                        placeholder="Enter Phone">
+
+                                    </textarea>
+
                                     <span v-if="messageForms.errors.phone"
                                           v-for="err in messageForms.errors.phone"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <!-- <div class="col-md-6">
@@ -1088,22 +1155,28 @@
                                </div> -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Skype</label>
-                                    <textarea type="text"
-                                              v-model="extUpdate.skype"
-                                              class="form-control"
-                                              value=""
-                                              placeholder="Enter Skype"></textarea>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_skype') }}</label>
+                                    <textarea
+                                        type="text"
+                                        v-model="extUpdate.skype"
+                                        class="form-control"
+                                        value=""
+                                        :placeholder="$t('message.url_prospect.add_enter_skype')">
+
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Info</label>
-                                    <textarea type="text"
-                                              v-model="extUpdate.info"
-                                              class="form-control"
-                                              value=""
-                                              placeholder="Enter Info"></textarea>
+                                    <label style="color: #333">{{ $t('message.url_prospect.add_info') }}</label>
+                                    <textarea
+                                        type="text"
+                                        v-model="extUpdate.info"
+                                        class="form-control"
+                                        value=""
+                                        :placeholder="$t('message.url_prospect.add_enter_info')">
+
+                                    </textarea>
                                 </div>
                             </div>
                             <!-- <div class="col-md-6">
@@ -1125,18 +1198,22 @@
                         </form>
                         <div class="row mt-3" v-show="formAddUrl">
                             <div class="col-md-12">
-                                <h4>Publisher List</h4>
+                                <h4>{{ $t('message.url_prospect.up_publisher_list') }}</h4>
                                 <hr>
                             </div>
+
                             <div class="col-md-12" v-if="isDomainExistListPublisher">
                                 <div class="alert alert-info">
-                                    <b>Information! </b> These Domain is already Exist on List Publisher.
+                                    <b>{{ $t('message.url_prospect.up_information') }} </b>
+                                    {{ $t('message.url_prospect.up_information_2') }}
                                 </div>
                             </div>
+
                             <div class="col-md-12" v-if="!isDomainExistListPublisher">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}"
-                                     class="form-group">
-                                    <label style="color: #333">Seller</label>
+                                <div
+                                    :class="{'form-group': true, 'has-error': messageForms.errors['pub.seller']}"
+                                    class="form-group">
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_seller') }}</label>
                                     <!--                           <select name="" class="form-control" v-model="publisherAdd.seller" :disabled="isEditable">-->
                                     <!--                              <option value="">Select Seller</option>-->
                                     <!--                              <option v-for="option in listSeller.data" v-bind:value="option.id">-->
@@ -1153,120 +1230,155 @@
 
                                     <span v-if="messageForms.errors['pub.seller']"
                                           v-for="err in messageForms.errors['pub.seller']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.inc_article']}"
                                      class="form-group">
-                                    <label style="color: #333">Inc Article</label>
-                                    <select name=""
-                                            id=""
-                                            class="form-control"
-                                            v-model="publisherAdd.inc_article"
-                                            :disabled="isEditable">
-                                        <option value="">Select Include Article</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_inc_article') }}</label>
+                                    <select
+                                        name=""
+                                        id=""
+                                        class="form-control"
+                                        v-model="publisherAdd.inc_article"
+                                        :disabled="isEditable">
+                                        <option value="">{{ $t('message.url_prospect.up_select_inc_article') }}</option>
+                                        <option value="yes">{{ $t('message.url_prospect.yes') }}</option>
+                                        <option value="no">{{ $t('message.url_prospect.no') }}</option>
                                     </select>
+
                                     <span v-if="messageForms.errors['pub.inc_article']"
                                           v-for="err in messageForms.errors['pub.inc_article']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.url']}"
                                      class="form-group">
-                                    <label style="color: #333">URL</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_url') }}</label>
                                     <input type="text" class="form-control" v-model="publisherAdd.url" :disabled="true">
+
                                     <span v-if="messageForms.errors['pub.url']"
                                           v-for="err in messageForms.errors['pub.url']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.language_id']}"
                                      class="form-group">
-                                    <label style="color: #333">Language</label>
-                                    <select name=""
-                                            class="form-control"
-                                            v-model="publisherAdd.language_id"
-                                            :disabled="isEditable">
-                                        <option value="">Select Language</option>
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_language') }}</label>
+                                    <select
+                                        name=""
+                                        class="form-control"
+                                        v-model="publisherAdd.language_id"
+                                        :disabled="isEditable">
+
+                                        <option value="">{{ $t('message.url_prospect.up_select_language') }}</option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
+
                                     <span v-if="messageForms.errors['pub.language_id']"
                                           v-for="err in messageForms.errors['pub.language_id']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.price']}"
                                      class="form-group">
-                                    <label style="color: #333">Price</label>
-                                    <input type="number"
-                                           class="form-control"
-                                           v-model="publisherAdd.price"
-                                           :disabled="isEditable">
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_price') }}</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        v-model="publisherAdd.price"
+                                        :disabled="isEditable">
+
                                     <span v-if="messageForms.errors['pub.price']"
                                           v-for="err in messageForms.errors['pub.price']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.casino_sites']}"
-                                     class="form-group">
-                                    <label style="color: #333">Accept Casino & Betting Sites</label>
-                                    <select name=""
-                                            class="form-control"
-                                            v-model="publisherAdd.casino_sites"
-                                            :disabled="isEditable">
-                                        <option value="">Select Casino & Bettings Sites</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                <div
+                                    :class="{'form-group': true, 'has-error': messageForms.errors['pub.casino_sites']}"
+                                    class="form-group">
+
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_cb') }}</label>
+
+                                    <select
+                                        name=""
+                                        class="form-control"
+                                        v-model="publisherAdd.casino_sites"
+                                        :disabled="isEditable">
+
+                                        <option value="">{{ $t('message.url_prospect.up_select_cb') }}</option>
+                                        <option value="yes">{{ $t('message.url_prospect.yes') }}</option>
+                                        <option value="no">{{ $t('message.url_prospect.no') }}</option>
                                     </select>
+
                                     <span v-if="messageForms.errors['pub.casino_sites']"
                                           v-for="err in messageForms.errors['pub.casino_sites']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors['pub.topic']}"
                                      class="form-group">
-                                    <label style="color: #333">Topic</label>
-                                    <select name=""
-                                            class="form-control"
-                                            v-model="publisherAdd.topic"
-                                            :disabled="isEditable">
-                                        <option value="">Select Topic</option>
+                                    <label style="color: #333">{{ $t('message.url_prospect.up_topic') }}</label>
+                                    <select
+                                        name=""
+                                        class="form-control"
+                                        v-model="publisherAdd.topic"
+                                        :disabled="isEditable">
+                                        <option value="">{{ $t('message.url_prospect.up_select_topic') }}</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select>
+
                                     <span v-if="messageForms.errors['pub.topic']"
                                           v-for="err in messageForms.errors['pub.topic']"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="overlay" v-if="isPopupLoading"></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.url_prospect.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- End Modal Update -->
+
         <!-- Modal Setting -->
         <div class="modal fade" id="modal-setting" style="display: none;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
@@ -1278,38 +1390,38 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(3, tableShow.employee)"
-                                              :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">Employee</label>
+                                              :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">{{ $t('message.url_prospect.filter_emp') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(5, tableShow.country)"
-                                              :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">Country</label>
+                                              :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">{{ $t('message.url_prospect.filter_country') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(6, tableShow.domain)"
-                                              :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">Domain</label>
+                                              :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">{{ $t('message.url_prospect.add_domain') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(7, tableShow.email)"
-                                              :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">Email</label>
+                                              :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">{{ $t('message.url_prospect.add_email') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(8, tableShow.facebook)"
-                                              :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">Facebook</label>
+                                              :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">{{ $t('message.url_prospect.add_facebook') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(10, tableShow.rank)"
                                               :checked="tableShow.rank ? 'checked':''"
-                                              v-model="tableShow.rank">Rank</label>
+                                              v-model="tableShow.rank">{{ $t('message.url_prospect.sd_rank') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(11, tableShow.status)"
-                                              :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">Status</label>
+                                              :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">{{ $t('message.url_prospect.tb_status') }}</label>
                             </div>
 <!--                            <div class="checkbox col-md-4">-->
 <!--                                <label><input type="checkbox"-->
@@ -1321,57 +1433,62 @@
                                 <label><input type="checkbox"
                                               @change="toggleColumn(13, tableShow.ahrefs_rank)"
                                               :checked="tableShow.ahrefs_rank ? 'checked':''"
-                                              v-model="tableShow.ahrefs_rank">Ahrefs Rank</label>
+                                              v-model="tableShow.ahrefs_rank">{{ $t('message.url_prospect.tb_ahrefs') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(14, tableShow.no_backlinks)"
                                               :checked="tableShow.no_backlinks ? 'checked':''"
-                                              v-model="tableShow.no_backlinks">No Backlinks</label>
+                                              v-model="tableShow.no_backlinks">{{ $t('message.url_prospect.tb_backlinks') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(15, tableShow.url_rating)"
                                               :checked="tableShow.url_rating ? 'checked':''"
-                                              v-model="tableShow.url_rating">UR</label>
+                                              v-model="tableShow.url_rating">{{ $t('message.url_prospect.tb_ur') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(16, tableShow.domain_rating)"
                                               :checked="tableShow.domain_rating ? 'checked':''"
-                                              v-model="tableShow.domain_rating">DR</label>
+                                              v-model="tableShow.domain_rating">{{ $t('message.url_prospect.tb_dr') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(17, tableShow.ref_domains)"
                                               :checked="tableShow.ref_domains ? 'checked':''"
-                                              v-model="tableShow.ref_domains">Ref Domains</label>
+                                              v-model="tableShow.ref_domains">{{ $t('message.url_prospect.tb_ref_domains') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(18, tableShow.organic_keywords)"
                                               :checked="tableShow.organic_keywords ? 'checked':''"
-                                              v-model="tableShow.organic_keywords">Organic Keywords</label>
+                                              v-model="tableShow.organic_keywords">{{ $t('message.url_prospect.tb_org_keywords') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(19, tableShow.organic_traffic)"
                                               :checked="tableShow.organic_traffic ? 'checked':''"
-                                              v-model="tableShow.organic_traffic">Organic Traffic</label>
+                                              v-model="tableShow.organic_traffic">{{ $t('message.url_prospect.tb_org_traffic') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(9, tableShow.phone)"
-                                              :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">Phone</label>
+                                              :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">{{ $t('message.url_prospect.add_phone') }}</label>
                             </div>
                         </div>
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button"
-                                @click="submitUpdate"
-                                data-dismiss="modal" class="btn btn-primary">Save
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
+                        <button
+                            type="button"
+                            @click="submitUpdate"
+                            data-dismiss="modal"
+                            class="btn btn-primary">
+                            {{ $t('message.url_prospect.save') }}
                         </button>
                     </div>
                 </div>
@@ -1383,14 +1500,14 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add BackLink Domain</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.ab_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}"
                                      class="form-group">
-                                    <label style="color: #333">Ext Domain</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.ab_ext_domain') }}</label>
                                     <input type="text"
                                            :disabled="true"
                                            v-model="modelBaclink.ext_name"
@@ -1405,10 +1522,10 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.country_id}"
                                      class="form-group">
-                                    <label style="color: #333">Country</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.tb_country') }}</label>
                                     <div>
                                         <select @change="fillterIntByCountry($event)" class="form-control pull-right">
-                                            <option value="0">-- Select Country --</option>
+                                            <option value="0">-- {{ $t('message.url_prospect.add_select_country') }} --</option>
                                             <option v-for="option in listCountriesInt.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -1419,35 +1536,42 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.int_domain_id}"
                                      class="form-group">
-                                    <label style="color: #333">Internal Domain</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.b_int_dom') }}</label>
                                     <div>
                                         <select :disabled="loadIntDomain"
                                                 v-model="modelBaclink.int_domain_id"
                                                 class="form-control pull-right">
-                                            <option v-bind:value="0">-- Select Internal Domain --</option>
+                                            <option v-bind:value="0">-- {{ $t('message.url_prospect.ab_select_internal_domain') }} --</option>
                                             <option v-for="option in listInt" v-bind:value="option.id">
                                                 {{ option.domain }}
                                             </option>
                                         </select>
                                     </div>
+
                                     <span v-if="messageBacklinkForms.errors.int_domain_id"
                                           v-for="err in messageBacklinkForms.errors.int_domain_id"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}"
                                      class="form-group">
                                     <div>
-                                        <label style="color: #333">Price</label>
-                                        <input type="number"
-                                               v-model="modelBaclink.price"
-                                               class="form-control"
-                                               value=""
-                                               required="required">
+                                        <label style="color: #333">{{ $t('message.url_prospect.b_price') }}</label>
+                                        <input
+                                            type="number"
+                                            v-model="modelBaclink.price"
+                                            class="form-control"
+                                            value=""
+                                            required="required">
+
                                         <span v-if="messageBacklinkForms.errors.price"
                                               v-for="err in messageBacklinkForms.errors.price"
-                                              class="text-danger">{{ err }}</span>
+                                              class="text-danger">
+                                            {{ err }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -1455,12 +1579,17 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="closeModalBacklink">Close
+                        <button type="button" class="btn btn-default pull-left" @click="closeModalBacklink">
+                            {{ $t('message.url_prospect.close') }}
                         </button>
-                        <button type="button"
-                                :disabled="checkSelectIntDomain"
-                                @click="submitAddBacklink"
-                                class="btn btn-primary">Save
+
+                        <button
+                            type="button"
+                            :disabled="checkSelectIntDomain"
+                            @click="submitAddBacklink"
+                            class="btn btn-primary">
+
+                            {{ $t('message.url_prospect.save') }}
                         </button>
                     </div>
                 </div>
@@ -1474,14 +1603,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <!-- <h4 class="modal-title">Send email to {{ mailInfo.receiver_text }}</h4> -->
-                        <h4 class="modal-title">Send email</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.se_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label style="color: #333">Language</label>
+                                        <label style="color: #333">{{ $t('message.url_prospect.se_language') }}</label>
                                         <div>
                                             <select @change="doChangeEmailCountry"
                                                     v-model="mailInfo.country.id"
@@ -1494,13 +1623,17 @@
                                     </div>
                                     <div class="col-md-9">
                                         <div class="form-group">
-                                            <label style="color: #333">Select template {{
-                                                    mailInfo.country.name
-                                                                       }}</label>
+                                            <label style="color: #333">
+                                                {{ $t('message.url_prospect.se_select_template') }}
+                                                {{ mailInfo.country.name }}
+                                            </label>
+
                                             <div>
-                                                <select @change="doChangeEmailTemplate"
-                                                        v-model="mailInfo.tpl"
-                                                        class="form-control pull-right">
+                                                <select
+                                                    @change="doChangeEmailTemplate"
+                                                    v-model="mailInfo.tpl"
+                                                    class="form-control pull-right">
+
                                                     <option v-for="option in listMailTemplate.data"
                                                             v-bind:value="option.id">
                                                         {{ option.mail_name }}
@@ -1522,7 +1655,7 @@
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}"
                                      class="form-group">
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_email') }}</label>
 
                                     <vue-tags-input
                                         v-model="email_to"
@@ -1536,44 +1669,59 @@
                                         @tags-changed="newTags => urlEmails = newTags"
                                     />
 
-                                    <span v-if="messageFormsMail.errors.email"
-                                          v-for="err in messageFormsMail.errors.email"
-                                          class="text-danger">{{ err }}</span>
+                                    <span
+                                        v-if="messageFormsMail.errors.email"
+                                        v-for="err in messageFormsMail.errors.email"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}"
                                      class="form-group">
-                                    <label style="color: #333">Title</label>
-                                    <input type="text"
-                                           v-model="modelMail.title"
-                                           class="form-control"
-                                           value=""
-                                           required="required">
-                                    <span v-if="messageFormsMail.errors.title"
-                                          v-for="err in messageFormsMail.errors.title"
-                                          class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.url_prospect.se_inp_title') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="modelMail.title"
+                                        class="form-control"
+                                        value=""
+                                        required="required">
+
+                                    <span
+                                        v-if="messageFormsMail.errors.title"
+                                        v-for="err in messageFormsMail.errors.title"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}"
                                      class="form-group">
-                                    <label style="color: #333">Content</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.se_content') }}</label>
                                     <!--                           <textarea rows="10" type="text" v-model="modelMail.content" class="form-control" value="" required="required"></textarea>-->
-                                    <tiny-editor editor-id="urlEmailEditor"
-                                                 v-model="modelMail.content"
-                                                 ref="urlEmailEditor"></tiny-editor>
-                                    <span v-if="messageFormsMail.errors.content"
-                                          v-for="err in messageFormsMail.errors.content"
-                                          class="text-danger">{{ err }}</span>
+                                    <tiny-editor
+                                        editor-id="urlEmailEditor"
+                                        v-model="modelMail.content"
+                                        ref="urlEmailEditor">
+
+                                    </tiny-editor>
+
+                                    <span
+                                        v-if="messageFormsMail.errors.content"
+                                        v-for="err in messageFormsMail.errors.content"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Attachment</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.se_attachment') }}</label>
                                     <input
                                         multiple
                                         type="file"
@@ -1586,7 +1734,9 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser()">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser()">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
 
                         <button
                             type="button"
@@ -1595,7 +1745,7 @@
 
                             @click="submitSendMail">
 
-                            Send
+                            {{ $t('message.url_prospect.send') }}
                         </button>
                     </div>
                 </div>
@@ -1613,7 +1763,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Change Employee</h5>
+                        <h5 class="modal-title">{{ $t('message.url_prospect.ce_title') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -1623,15 +1773,18 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for=""></label>
-                                    <select type="text"
-                                            v-model="updateMultiEmployee"
-                                            class="form-control"
-                                            value=""
-                                            required="required">
-                                        <option v-for="(option,key) in listSellerTeam.data"
-                                                v-bind:value="option.id"
-                                                v-if="option.username != 'N/A' && option.status == 'active'"
-                                                :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
+                                    <select
+                                        type="text"
+                                        v-model="updateMultiEmployee"
+                                        class="form-control"
+                                        value=""
+                                        required="required">
+
+                                        <option
+                                            v-for="(option,key) in listSellerTeam.data"
+                                            v-bind:value="option.id"
+                                            v-if="option.username != 'N/A' && option.status == 'active'"
+                                            :selected="(option.id === extUpdate.user_id ? 'selected' : '')">
                                             {{ option.username }}
                                         </option>
                                     </select>
@@ -1640,8 +1793,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleEmployee()">Update
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleEmployee()">
+                            {{ $t('message.url_prospect.update') }}
                         </button>
                     </div>
                 </div>
@@ -1654,52 +1810,67 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Change Multiple Status</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.cms_title') }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}">
-                                    <label style="color: #333">Status</label>
-                                    <select type="text"
-                                            class="form-control"
-                                            v-on:change="checkQualified"
-                                            v-model="updateStatus.status"
-                                            required="required">
-                                        <option value="">Select Status</option>
-                                        <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)"
-                                                v-bind:value="option.id">
+                                    <label style="color: #333">{{ $t('message.url_prospect.cms_status') }}</label>
+                                    <select
+                                        type="text"
+                                        class="form-control"
+                                        v-on:change="checkQualified"
+                                        v-model="updateStatus.status"
+                                        required="required">
+
+                                        <option value="">{{ $t('message.url_prospect.cms_select_status') }}</option>
+                                        <option
+                                            v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)"
+                                            v-bind:value="option.id">
                                             {{ option.text }}
                                         </option>
                                     </select>
-                                    <span v-if="messageBacklinkForms.errors.status"
-                                          v-for="err in messageBacklinkForms.errors.status"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageBacklinkForms.errors.status"
+                                        v-for="err in messageBacklinkForms.errors.status"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-12" v-if="isQualified">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.seller}">
-                                    <label style="color: #333">Seller</label>
-                                    <select type="text"
-                                            v-model="updateStatus.seller"
-                                            class="form-control"
-                                            required="required">
-                                        <option value="">Select Seller</option>
+                                    <label style="color: #333">{{ $t('message.url_prospect.cms_seller') }}</label>
+                                    <select
+                                        type="text"
+                                        v-model="updateStatus.seller"
+                                        class="form-control"
+                                        required="required">
+
+                                        <option value="">{{ $t('message.url_prospect.cms_select_seller') }}</option>
                                         <option v-for="option in listExtSeller" v-bind:value="option.id">
                                             {{ option.username }}
                                         </option>
                                     </select>
-                                    <span v-if="messageBacklinkForms.errors.seller"
-                                          v-for="err in messageBacklinkForms.errors.seller"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageBacklinkForms.errors.seller"
+                                        v-for="err in messageBacklinkForms.errors.seller"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
                         <button type="button" class="btn btn-primary" @click="doUpdateMultipleStatus(false, '')">
-                            Update
+                            {{ $t('message.url_prospect.save') }}
                         </button>
                     </div>
                 </div>
@@ -1711,21 +1882,27 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Failed to Upload</h4>
+                        <h4 class="modal-title">{{ $t('message.url_prospect.fu_title') }}</h4>
                     </div>
+
                     <div class="modal-body">
                         <table class="table table-condensed">
                             <tr>
-                                <th colspan="2">Total failed ({{ existingDomain.total }})</th>
+                                <th colspan="2">
+                                    {{ $t('message.url_prospect.fu_total') }}
+                                    ({{ existingDomain.total }})
+                                </th>
                             </tr>
                             <tr v-for="(ext, index) in existingDomain.data" :key="index">
                                 <td>{{ ext }}</td>
-                                <td class="text-danger">Not Uploaded</td>
+                                <td class="text-danger">{{ $t('message.url_prospect.fu_not_uploaded') }}</td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.url_prospect.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2039,7 +2216,7 @@ export default {
             return [
                 {
                     prop : '_action',
-                    name : 'Action',
+                    name : this.$t('message.url_prospect.tb_action'),
                     actionName : 'actionButtons',
                     width : 200,
                     isHidden : false
@@ -2053,56 +2230,56 @@ export default {
                 },
                 {
                     prop : 'id',
-                    name : '#',
+                    name : this.$t('message.url_prospect.tb_id'),
                     sortable : true,
                     width : 75,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Employee',
+                    name : this.$t('message.url_prospect.tb_emp'),
                     actionName : 'employeeData',
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'created_at',
-                    name : 'Date Upload',
+                    name : this.$t('message.url_prospect.tb_date_up'),
                     sortable : true,
                     width : 150,
                     isHidden : false
                 },
                 {
                     prop : 'country.name',
-                    name : 'Country',
+                    name : this.$t('message.url_prospect.tb_country'),
                     sortable : true,
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'URL',
+                    name : this.$t('message.url_prospect.up_url'),
                     actionName : 'domainData',
                     width : 150,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Email',
+                    name : this.$t('message.url_prospect.tb_email'),
                     actionName : 'emailsData',
                     width : 200,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Facebook',
+                    name : this.$t('message.url_prospect.tb_facebook'),
                     actionName : 'facebookData',
                     width : 200,
                     isHidden : true
                 },
                 {
                     prop : '_action',
-                    name : 'Phone',
+                    name : this.$t('message.url_prospect.tb_phone'),
                     actionName : 'phoneData',
                     sortable : true,
                     width : 100,
@@ -2110,14 +2287,14 @@ export default {
                 },
                 {
                     prop : 'alexa_rank',
-                    name : 'Alexa Rank',
+                    name : this.$t('message.url_prospect.tb_alexa'),
                     sortable : true,
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Status',
+                    name : this.$t('message.url_prospect.tb_status'),
                     actionName : 'statusData',
                     width : 100,
                     isHidden : false
@@ -2131,49 +2308,49 @@ export default {
                 // },
                 {
                     prop : 'ahrefs_rank',
-                    name : 'Ahrefs Rank',
+                    name : this.$t('message.url_prospect.tb_ahrefs'),
                     sortable : true,
                     width : 100,
                     isHidden : true
                 },
                 {
                     prop : 'no_backlinks',
-                    name : 'No Backlinks',
+                    name : this.$t('message.url_prospect.tb_backlinks'),
                     sortable : true,
                     width : 105,
                     isHidden : true
                 },
                 {
                     prop : 'url_rating',
-                    name : 'UR',
+                    name : this.$t('message.url_prospect.tb_ur'),
                     sortable : true,
                     width : 100,
                     isHidden : true
                 },
                 {
                     prop : 'domain_rating',
-                    name : 'DR',
+                    name : this.$t('message.url_prospect.tb_dr'),
                     sortable : true,
                     width : 100,
                     isHidden : true
                 },
                 {
                     prop : 'ref_domains',
-                    name : 'Ref Domains',
+                    name : this.$t('message.url_prospect.tb_ref_domains'),
                     sortable : true,
                     width : 105,
                     isHidden : true
                 },
                 {
                     prop : '_action',
-                    name : 'Organic Keywords',
+                    name : this.$t('message.url_prospect.tb_org_keywords'),
                     actionName : 'organicKwData',
                     width : 110,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Organic Traffic',
+                    name : this.$t('message.url_prospect.tb_org_traffic'),
                     actionName : 'organicTrafficData',
                     width : 110,
                     isHidden : false
@@ -2190,103 +2367,103 @@ export default {
         sortOptions() {
             return [
                 {
-                    name: 'ID',
+                    name: this.$t('message.url_prospect.tb_id'),
                     sort: '',
                     column: 'id',
                     hidden: !this.tableShow.id
                 },
                 {
-                    name: 'Employee',
+                    name: this.$t('message.url_prospect.tb_emp'),
                     sort: '',
                     column: 'A.username',
                     hidden: !this.tableShow.employee
                 },
                 {
-                    name: 'Date Upload',
+                    name: this.$t('message.url_prospect.tb_date_up'),
                     sort: '',
                     column: 'created_at',
                     hidden: false
                 },
                 {
-                    name: 'Country',
+                    name: this.$t('message.url_prospect.tb_country'),
                     sort: '',
                     column: 'countries.name',
                     hidden: !this.tableShow.country
                 },
                 {
-                    name: 'URL',
+                    name: this.$t('message.url_prospect.up_url'),
                     sort: '',
                     column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(domain,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
                     hidden: !this.tableShow.domain
                 },
                 {
-                    name: 'Email',
+                    name: this.$t('message.url_prospect.tb_email'),
                     sort: '',
                     column: 'email',
                     hidden: !this.tableShow.email
                 },
                 {
-                    name: 'Facebook',
+                    name: this.$t('message.url_prospect.tb_facebook'),
                     sort: '',
                     column: 'facebook',
                     hidden: !this.tableShow.facebook
                 },
                 {
-                    name: 'Phone',
+                    name: this.$t('message.url_prospect.tb_phone'),
                     sort: '',
                     column: 'phone',
                     hidden: !this.tableShow.phone
                 },
                 {
-                    name: 'Alexa Rank',
+                    name: this.$t('message.url_prospect.tb_alexa'),
                     sort: '',
                     column: 'cast(alexa_rank as unsigned)',
                     hidden: !this.tableShow.rank
                 },
                 {
-                    name: 'Status',
+                    name: this.$t('message.url_prospect.tb_status'),
                     sort: '',
                     column: 'status',
                     hidden: !this.tableShow.status
                 },
                 {
-                    name: 'Ahrefs Rank',
+                    name: this.$t('message.url_prospect.tb_ahrefs'),
                     sort: '',
                     column: 'cast(ahrefs_rank as unsigned)',
                     hidden: !this.tableShow.ahrefs_rank
                 },
                 {
-                    name: 'No. of Backlinks',
+                    name: this.$t('message.url_prospect.tb_backlinks'),
                     sort: '',
                     column: 'cast(no_backlinks as unsigned)',
                     hidden: !this.tableShow.no_backlinks
                 },
                 {
-                    name: 'UR',
+                    name: this.$t('message.url_prospect.tb_ur'),
                     sort: '',
                     column: 'cast(url_rating as unsigned)',
                     hidden: !this.tableShow.url_rating
                 },
                 {
-                    name: 'DR',
+                    name: this.$t('message.url_prospect.tb_dr'),
                     sort: '',
                     column: 'cast(domain_rating as unsigned)',
                     hidden: !this.tableShow.domain_rating
                 },
                 {
-                    name: 'Ref Domains',
+                    name: this.$t('message.url_prospect.tb_ref_domains'),
                     sort: '',
                     column: 'cast(ref_domains as unsigned)',
                     hidden: !this.tableShow.ref_domains
                 },
                 {
-                    name: 'Org Keywords',
+                    name: this.$t('message.url_prospect.tb_org_keywords'),
                     sort: '',
                     column: 'cast(organic_keywords as unsigned)',
                     hidden: !this.tableShow.organic_keywords
                 },
                 {
-                    name: 'Org Traffic',
+                    name: this.$t('message.url_prospect.tb_org_traffic'),
                     sort: '',
                     column: 'cast(organic_traffic as unsigned)',
                     hidden: !this.tableShow.organic_traffic
@@ -2321,11 +2498,13 @@ export default {
     },
     methods : {
         modalCloser() {
+            let self = this;
+
             if (this.modelMail.title || this.modelMail.content) {
 
                 swal.fire({
-                    title : "Are you sure?",
-                    text : "Email contents will be removed",
+                    title : self.$t('message.url_prospect.swal_sure'),
+                    text : self.$t('message.url_prospect.swal_email_remove'),
                     icon : "warning",
                     showCancelButton : true,
                     confirmButtonText : 'Yes',
@@ -2469,21 +2648,25 @@ export default {
         },
 
         doMultipleStatus() {
+            let self = this;
+
             if (this.checkIds.length > 0) {
                 let element = this.$refs.modalMultipleStatus
                 $(element).modal('show')
             } else {
                 swal.fire(
-                    'No item',
-                    'No selected item',
+                    self.$t('message.url_prospect.swal_no_item'),
+                    self.$t('message.url_prospect.swal_no_item_selected'),
                     'error'
                 )
             }
         },
 
         async deleteAll() {
+            let self = this;
+
             if (this.checkIds.length > 0) {
-                if (confirm("Are you sure you want to delete selected records?")) {
+                if (confirm(self.$t('message.url_prospect.swal_delete_records'))) {
                     await this.$store.dispatch('actionDeleteExtDomain', {
                         params : {
                             id : this.checkIds,
@@ -2495,15 +2678,15 @@ export default {
                     });
                     this.checkIds = []
                     swal.fire(
-                        'Saved!',
-                        'Successfully Updated.',
+                        self.$t('message.url_prospect.swal_saved'),
+                        self.$t('message.url_prospect.swal_successfully_updated'),
                         'success'
                     )
                 }
             } else {
                 swal.fire(
-                    'No item',
-                    'No selected item',
+                    self.$t('message.url_prospect.swal_no_item'),
+                    self.$t('message.url_prospect.swal_no_item_selected'),
                     'error'
                 )
             }
@@ -2511,6 +2694,7 @@ export default {
         },
 
         async submitUpload() {
+            let self = this;
             let loader = this.$loading.show();
             this.isEnableBtn = true;
 
@@ -2550,8 +2734,8 @@ export default {
                 }
 
                 swal.fire(
-                    'Uploaded!',
-                    'Successfully Uploaded.',
+                    self.$t('message.url_prospect.swal_uploaded'),
+                    self.$t('message.url_prospect.swal_successfully_uploaded'),
                     'success'
                 )
             }
@@ -2716,6 +2900,7 @@ export default {
         },
 
         async doCrawlExtList() {
+            let self = this;
             let loader = this.$loading.show();
             this.isCrawling = true;
             let arrayIds = [];
@@ -2726,8 +2911,8 @@ export default {
             }
             if (arrayIds.length == 0) {
                 swal.fire(
-                    'No item',
-                    'No selected item',
+                    self.$t('message.url_prospect.swal_no_item'),
+                    self.$t('message.url_prospect.swal_no_item_selected'),
                     'error'
                 )
 
@@ -2738,8 +2923,8 @@ export default {
 
             if (arrayIds.length > 50) {
                 swal.fire(
-                    'Error',
-                    'You can only crawl 50 URLs at a time',
+                    self.$t('message.url_prospect.swal_err'),
+                    self.$t('message.url_prospect.swal_err_crawl'),
                     'error'
                 );
 
@@ -2755,8 +2940,8 @@ export default {
 
             if (this.messageForms.action === 'crawled') {
                 swal.fire(
-                    'Success',
-                    'Crawled ' + this.listExt.data.length + ' items successfully!',
+                    self.$t('message.url_prospect.swal_success'),
+                    self.$t('message.url_prospect.swal_crawled') + this.listExt.data.length + self.$t('message.url_prospect.swal_items'),
                     'success'
                 )
 
@@ -2786,6 +2971,7 @@ export default {
             return parseFloat(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         },
         async submitUpdate() {
+            let self = this;
             let loader = this.$loading.show();
             this.toggleTableLoading();
             this.isPopupLoading = true;
@@ -2815,8 +3001,8 @@ export default {
             loader.hide();
 
             swal.fire(
-                'success',
-                'Updated Successfully!',
+                self.$t('message.url_prospect.swal_success'),
+                self.$t('message.url_prospect.swal_successfully_updated'),
                 'success'
             );
         },
@@ -2971,6 +3157,7 @@ export default {
             $(element).modal('hide')
         },
         async getAhrefs() {
+            let self = this;
             // var listInvalid = this.checkIds.some(ext => ext.status != 30);
             // if (listInvalid === true) {
             //     alert('List invalid: status diff with GotContacts');
@@ -3003,19 +3190,20 @@ export default {
                 });
 
                 swal.fire(
-                    'Success',
-                    'Url Prospect Updated',
+                    self.$t('message.url_prospect.swal_success'),
+                    self.$t('message.url_prospect.swal_url_updated'),
                     'success'
                 )
             } else {
                 swal.fire(
-                    'Error',
-                    'Get Ahref Failed',
+                    self.$t('message.url_prospect.swal_err'),
+                    self.$t('message.url_prospect.swal_err_ahref'),
                     'error'
                 )
             }
         },
         async getAhrefsById(extId, extStatus) {
+            let self = this;
             // if (extStatus != 30) {
             //     alert('List invalid: status diff with GotContacts');
             //     return;
@@ -3046,14 +3234,14 @@ export default {
                 });
 
                 swal.fire(
-                    'Success',
-                    'Url Prospect Updated',
+                    self.$t('message.url_prospect.swal_success'),
+                    self.$t('message.url_prospect.swal_url_updated'),
                     'success'
                 )
             } else {
                 swal.fire(
-                    'Error',
-                    'Get Ahref Failed',
+                    self.$t('message.url_prospect.swal_err'),
+                    self.$t('message.url_prospect.swal_err_ahref'),
                     'error'
                 )
             }
@@ -3065,6 +3253,7 @@ export default {
         },
 
         doSendEmail(ext, event) {
+            let self = this;
             this.$store.dispatch('clearMessageForm');
             this.urlEmails = [];
 
@@ -3086,10 +3275,17 @@ export default {
                     }
 
                     if (this.checkIds.length == 0) {
-                        swal.fire('No Selected', 'Selection is empty.', 'error');
+                        swal.fire(
+                            self.$t('message.url_prospect.swal_no_item'),
+                            self.$t('message.url_prospect.swal_no_item_selected'),
+                            'error');
 
                     } else if (selectedEmails.flat().length > 10) {
-                        swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        swal.fire(
+                            self.$t('message.url_prospect.swal_err_invalid'),
+                            self.$t('message.url_prospect.swal_err_10'),
+                            'error'
+                        )
                     } else {
                         let err = this.checkIds.some(function (items) {
                             return items.email == "" | items.email == null;
@@ -3097,8 +3293,8 @@ export default {
 
                         if (err) {
                             swal.fire(
-                                'Invalid Selection',
-                                'Some of the selected items have no email address',
+                                self.$t('message.url_prospect.swal_err_invalid'),
+                                self.$t('message.url_prospect.swal_err_selection_email'),
                                 'error'
                             );
                         } else {
@@ -3129,7 +3325,11 @@ export default {
                     // } else
 
                     if (ext.email == "" || ext.email == null || ext.email.length == 0) {
-                        swal.fire('No email', 'Please check if record has email.', 'error')
+                        swal.fire(
+                            self.$t('message.url_prospect.swal_err_no_email'),
+                            self.$t('message.url_prospect.swal_err_check_email'),
+                            'error'
+                        )
                     } else {
                         this.openModalEmailElem();
                         // this.email_to = ext.email;
@@ -3149,8 +3349,8 @@ export default {
 
             } else {
                 swal.fire(
-                    'Error',
-                    'Please setup your work mail first.',
+                    self.$t('message.url_prospect.swal_err'),
+                    self.$t('message.url_prospect.swal_err_work_mail'),
                     'error'
                 )
             }
@@ -3164,19 +3364,22 @@ export default {
         },
 
         doMultipleEmployee() {
+            let self = this;
+
             if (this.checkIds.length > 0) {
                 let element = this.$refs.modalMultipleEmployee
                 $(element).modal('show')
             } else {
                 swal.fire(
-                    'No item',
-                    'No selected item',
+                    self.$t('message.url_prospect.swal_no_item'),
+                    self.$t('message.url_prospect.swal_no_item_selected'),
                     'error'
                 )
             }
         },
 
         submitUpdateMultipleEmployee() {
+            let self = this;
             let ids = [];
             for (let index in this.checkIds) {
                 ids.push(this.checkIds[index].id)
@@ -3192,8 +3395,8 @@ export default {
                     $(element).modal('hide')
 
                     swal.fire(
-                        'Success',
-                        'Updated Successfully',
+                        self.$t('message.url_prospect.swal_success'),
+                        self.$t('message.url_prospect.swal_successfully_updated'),
                         'success'
                     )
 
@@ -3209,6 +3412,7 @@ export default {
         },
 
         async submitSendMail() {
+            let self = this;
             this.allowSending = false;
             this.isPopupLoading = true;
 
@@ -3276,8 +3480,8 @@ export default {
                 await this.$store.dispatch('clearMessageForm');
             } else {
                 swal.fire(
-                    'Error',
-                    'There are some errors while sending the email',
+                    self.$t('message.url_prospect.swal_err'),
+                    self.$t('message.url_prospect.swal_err_send'),
                     'error'
                 )
                 this.allowSending = true;
@@ -3285,6 +3489,7 @@ export default {
         },
 
         async doUpdateMultipleStatus(is_sending, id) {
+            let self = this;
             await this.$store.dispatch('actionUpdateMultipleStatus', {
                 id : is_sending ? id : this.checkIds,
                 seller : this.updateStatus.seller,
@@ -3311,9 +3516,12 @@ export default {
                 this.checkIds = []
                 this.updateStatus.seller = '';
                 this.updateStatus.status = '';
-                let message = is_sending ? 'Email send' : 'Successfully Updated'
+                let message = is_sending
+                    ? self.$t('message.url_prospect.swal_email_sent')
+                    : self.$t('message.url_prospect.swal_successfully_updated')
+
                 swal.fire(
-                    'Done',
+                    self.$t('message.url_prospect.swal_done'),
                     message,
                     'success'
                 )

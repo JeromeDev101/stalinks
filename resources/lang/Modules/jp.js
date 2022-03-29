@@ -31,6 +31,26 @@ import header from './Header/jp/main';
 // sidebar
 import sidebar from './Sidebar/jp/main';
 
+// dashboard
+import dashboard from './Dashboard/jp/main';
+
+// footer
+import footer from './Footer/jp/main';
+
+// url prospect
+import url_prospect from './UrlProspect/jp/main';
+
+// article
+import article from './Article/jp/main';
+
+// mails
+import mail from './Mails/jp/mail';
+import inbox from './Mails/jp/inbox';
+import template from './Mails/jp/template';
+import signature from './Mails/jp/signature';
+import draft from './Mails/jp/drafts';
+import auto from './Mails/jp/auto';
+
 export default {
     message : {
         help,
@@ -65,5 +85,25 @@ export default {
 
         // sidebar
         sidebar,
+
+        // dashboard
+        dashboard,
+
+        // footer
+        footer,
+
+        // url prospect
+        url_prospect,
+
+        // article
+        article,
+
+        // mails
+        mail,
+        inbox,
+        template,
+        signature,
+        draft,
+        auto,
     }
 }

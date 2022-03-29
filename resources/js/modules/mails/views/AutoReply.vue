@@ -5,24 +5,29 @@
 
                 <div class="card-header">
 
-                    <h3 class="card-title text-primary">Auto Replies</h3>
+                    <h3 class="card-title text-primary">{{ $t('message.auto.ar_title') }}</h3>
 
                     <div class="card-tools">
                         <div class="input-group">
                             <input
                                 v-model="filterModel.search"
                                 type="text"
-                                placeholder="Search Auto Replies"
+                                :placeholder="$t('message.auto.ar_search')"
                                 class="form-control input-sm">
 
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" title="Search" @click="getAutoReplies()">
+                                <button
+                                    type="button"
+                                    class="btn btn-default"
+                                    :title="$t('message.auto.search')"
+
+                                    @click="getAutoReplies()">
                                     <i class="fa fa-search"></i>
                                 </button>
 
                                 <button
                                     type="button"
-                                    title="Clear"
+                                    :title="$t('message.auto.clear')"
                                     class="btn btn-default"
 
                                     @click="clearSearch()">
@@ -31,7 +36,7 @@
 
                                 <button
                                     type="button"
-                                    title="Add Auto Reply"
+                                    :title="$t('message.auto.ar_add')"
                                     class="btn btn-success"
 
                                     @click="modalOpener('Add')">
@@ -54,13 +59,19 @@
                                 <input type="checkbox" @click="selectAllIds" v-model="isAllSelected">
                             </button>
 
-                            <button type="button" title="Refresh" class="btn btn-default" @click="getAutoReplies()">
+                            <button
+                                type="button"
+                                :title="$t('message.auto.ar_refresh')"
+                                class="btn btn-default"
+
+                                @click="getAutoReplies()">
+
                                 <i class="fas fa-sync"></i>
                             </button>
 
                             <button
                                 type="button"
-                                title="Trash"
+                                :title="$t('message.auto.ar_trash')"
                                 class="btn btn-default"
                                 :disabled="selectedIds.length === 0"
 
@@ -71,7 +82,7 @@
 
                             <button
                                 type="button"
-                                title="Toggle show active auto reply"
+                                :title="$t('message.auto.ar_toggle')"
                                 class="btn btn-default"
 
                                 @click="toggleActiveAutoReply()">
@@ -104,7 +115,7 @@
                         <table class="table table-condensed table-hover" style="table-layout: fixed; width: 100%">
                             <tbody>
                                 <tr v-if="listAutoReply.total === 0">
-                                    <td class="text-muted text-center">No auto reply record</td>
+                                    <td class="text-muted text-center">{{ $t('message.auto.ar_no_record') }}</td>
                                 </tr>
 
                                 <tr v-else v-for="(auto, index) in listAutoReply.data" :key="index">
@@ -172,14 +183,17 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ modalMode === 'Add' ? 'Add' : 'Update' }} Auto Reply</h4>
+                        <h4 class="modal-title">
+                            {{ modalMode === 'Add' ? $t('message.auto.aa_title') : $t('message.auto.aa_update') }}
+                            {{ $t('message.auto.aa_auto') }}
+                        </h4>
                     </div>
 
                     <div class="modal-body">
                         <form class="row" @submit.prevent="">
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageFormsAutoReply.errors.subject}" class="form-group">
-                                    <label style="color: #333">Auto Reply Subject</label>
+                                    <label style="color: #333">{{ $t('message.auto.aa_subject') }}</label>
 
                                     <input
                                         v-model="modelSubject"
@@ -199,7 +213,7 @@
 
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageFormsAutoReply.errors.body}" class="form-group">
-                                    <label style="color: #333">Auto Reply Body</label>
+                                    <label style="color: #333">{{ $t('message.auto.aa_body') }}</label>
 
                                     <tiny-editor
                                         v-model="modelBody"
@@ -221,9 +235,15 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">Close</button>
-                        <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
-                        <button v-else type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser(modalMode)">
+                            {{ $t('message.auto.close') }}
+                        </button>
+                        <button v-if="modalMode === 'Add'" type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.auto.save') }}
+                        </button>
+                        <button v-else type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.auto.aa_update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -337,6 +357,7 @@ export default {
         },
 
         async submitAdd () {
+            let self = this;
             let loader = this.$loading.show();
             await this.$store.dispatch('actionAddAutoReply', this.autoReplyContent);
 
@@ -353,15 +374,15 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Added!',
-                    'Auto reply successfully added.',
+                    self.$t('message.auto.alert_added'),
+                    self.$t('message.auto.alert_added_note'),
                     'success'
                 )
             } else {
                 loader.hide();
 
                 await swal.fire(
-                    'Error!',
+                    self.$t('message.auto.alert_err'),
                     this.messageFormsAutoReply.message,
                     'error'
                 )
@@ -369,6 +390,7 @@ export default {
         },
 
         async submitUpdate () {
+            let self = this;
             let loader = this.$loading.show();
             await this.$store.dispatch('actionUpdateAutoReply', this.updateAutoReplyContent);
 
@@ -385,15 +407,15 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Updated!',
-                    'Auto reply successfully updated.',
+                    self.$t('message.auto.alert_updated'),
+                    self.$t('message.auto.alert_updated_note'),
                     'success'
                 )
             } else {
                 loader.hide();
 
                 await swal.fire(
-                    'Error!',
+                    self.$t('message.auto.alert_err'),
                     this.messageFormsAutoReply.message,
                     'error'
                 )
@@ -401,15 +423,16 @@ export default {
         },
 
         deleteSelectedAutoReplies () {
+            let self = this;
             let idArray = this.selectedIds.map(a => a.id);
 
             swal.fire({
-                title : "Delete auto reply",
-                html : "Are you sure that you want to delete the selected auto reply/replies?",
+                title : self.$t('message.auto.alert_delete'),
+                html : self.$t('message.auto.alert_delete_confirm'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, delete it!',
-                cancelButtonText : 'No, keep it'
+                confirmButtonText : self.$t('message.auto.deletes'),
+                cancelButtonText : self.$t('message.auto.keep')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -422,8 +445,8 @@ export default {
                         this.selectedIds = [];
 
                         swal.fire(
-                            'Deleted!',
-                            'Selected auto reply/replies were successfully deleted.',
+                            self.$t('message.auto.alert_deleted'),
+                            self.$t('message.auto.alert_delete_successful'),
                             'success'
                         )
 
@@ -432,8 +455,8 @@ export default {
                         console.log(err)
 
                         swal.fire(
-                            'Error!',
-                            'Something went wrong while deleting the auto reply/replies.',
+                            self.$t('message.auto.alert_err'),
+                            self.$t('message.auto.alert_err_delete'),
                             'error'
                         )
                     })
@@ -442,6 +465,7 @@ export default {
         },
 
         toggleAutoReply (e, data) {
+            let self = this;
             let checked = e.target.checked;
 
             axios.post('/api/mail/toggle-auto-reply', {
@@ -452,8 +476,8 @@ export default {
                 let status = checked ? 'on.' : 'off.';
 
                 swal.fire(
-                    'Success!',
-                    'Successfully turned auto reply to ' + status,
+                    self.$t('message.auto.alert_success'),
+                    self.$t('message.auto.alert_turned') + status,
                     'success'
                 )
 
@@ -463,8 +487,8 @@ export default {
                 console.log(err)
 
                 swal.fire(
-                    'Error!',
-                    'Something went wrong while toggling auto reply.',
+                    self.$t('message.auto.alert_err'),
+                    self.$t('message.auto.alert_err_toggle'),
                     'error'
                 )
 
@@ -494,17 +518,18 @@ export default {
         },
 
         modalCloser (mode) {
+            let self = this;
             if (mode === 'Add') {
 
                 if (this.autoReplyContent.subject || this.autoReplyContent.body) {
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Changes will not be saved",
+                        title : self.$t('message.auto.alert_confirm'),
+                        text : self.$t('message.auto.alert_confirm_note'),
                         icon : "question",
                         showCancelButton: true,
                         showConfirmButton: true,
-                        cancelButtonText: 'No',
-                        confirmButtonText: 'Yes',
+                        cancelButtonText: self.$t('message.auto.no'),
+                        confirmButtonText: self.$t('message.auto.yes'),
                         cancelButtonColor: 'red',
                         confirmButtonColor: 'green',
                     })
@@ -530,13 +555,13 @@ export default {
                 ) {
 
                     swal.fire({
-                        title : "Are you sure?",
-                        text : "Changes will not be saved",
+                        title : self.$t('message.auto.alert_confirm'),
+                        text : self.$t('message.auto.alert_confirm_note'),
                         icon : "question",
                         showCancelButton: true,
                         showConfirmButton: true,
-                        cancelButtonText: 'No',
-                        confirmButtonText: 'Yes',
+                        cancelButtonText: self.$t('message.auto.no'),
+                        confirmButtonText: self.$t('message.auto.yes'),
                         cancelButtonColor: 'red',
                         confirmButtonColor: 'green',
                     })

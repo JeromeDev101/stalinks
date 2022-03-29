@@ -40,7 +40,7 @@ export default {
 
     // search domains
     search_domains: 'ドメイン検索',
-    url_prospect: 'URL見通し',
+    url_prospect: 'URLプロスペクト',
     mails: 'メール',
 
     articles: '記事',

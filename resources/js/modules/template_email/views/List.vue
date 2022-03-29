@@ -4,7 +4,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Mail Template</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.template.ml_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -20,10 +20,10 @@
                             <tbody>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Template Name</th>
-                                <th>Title</th>
-                                <th>Language</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.template.ml_name') }}</th>
+                                <th>{{ $t('message.template.ml_ip_title') }}</th>
+                                <th>{{ $t('message.template.ml_lang') }}</th>
+                                <th>{{ $t('message.template.ml_action') }}</th>
                             </tr>
                             <tr>
                                 <td style="max-width: 30px;">
@@ -31,13 +31,21 @@
 
                                 <td>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.mail_name_temp"  class="form-control pull-right" placeholder="Search Email Name">
+                                        <input
+                                            type="text"
+                                            v-model="filterModel.mail_name_temp"
+                                            class="form-control pull-right"
+                                            :placeholder="$t('message.template.filter_search_email_name')">
                                     </div>
                                 </td>
 
                                 <td>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" v-model="filterModel.title_temp"  class="form-control pull-right" placeholder="Search Title">
+                                        <input
+                                            type="text"
+                                            v-model="filterModel.title_temp"
+                                            class="form-control pull-right"
+                                            :placeholder="$t('message.template.filter_search_title')">
                                     </div>
                                 </td>
 
@@ -59,7 +67,13 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <button @click="doSearchList" type="submit" title="Filter" class="btn btn-default"><i class="fa fa-fw fa-search"></i></button>
+                                        <button
+                                            @click="doSearchList"
+                                            type="submit"
+                                            :title="$t('message.template.filter_title')"
+                                            class="btn btn-default">
+                                            <i class="fa fa-fw fa-search"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -71,8 +85,25 @@
                                 <td>
                                     <div class="btn-group">
                                         <button @click="Export2Word(item, item.title)" class="btn btn-default">Export as Doc</button>
-                                        <button @click="doEdit(item)" data-toggle="modal" data-target="#modal-update" type="submit" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                        <button @click="doDelete(item)" data-toggle="modal" title="Delete" class="btn btn-default"><i class="fa fa-fw fa-times"></i></button>
+                                        <button
+                                            @click="doEdit(item)"
+                                            data-toggle="modal"
+                                            data-target="#modal-update"
+                                            type="submit"
+                                            :title="$t('message.template.action_edit')"
+                                            class="btn btn-default">
+
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </button>
+
+                                        <button
+                                            @click="doDelete(item)"
+                                            data-toggle="modal"
+                                            :title="$t('message.template.action_delete')"
+                                            class="btn btn-default">
+
+                                            <i class="fa fa-fw fa-times"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -95,47 +126,92 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Language</h4>
+                        <h4 class="modal-title">{{ $t('message.template.al_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
 
                             <div class="col-md-4">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label style="color: #333">Language</label>
+                                    <label style="color: #333">{{ $t('message.template.al_lang') }}</label>
                                     <div>
                                         <select v-model="emailModel.country_id" class="form-control pull-right">
-                                            <option value="0">-- Select language --</option>
+                                            <option value="0">-- {{ $t('message.template.al_select_lang') }} --</option>
                                             <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
                                     </div>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.country_id"
+                                        v-for="err in messageForms.errors.country_id"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
-                                    <label style="color: #333">Email Name</label>
-                                    <input type="text" v-model="emailModel.mail_name" class="form-control" value="" required="required" placeholder="Enter Email Name">
-                                    <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_email') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="emailModel.mail_name"
+                                        class="form-control"
+                                        value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_email')">
+
+                                    <span
+                                        v-if="messageForms.errors.mail_name"
+                                        v-for="err in messageForms.errors.mail_name"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
-                                    <label style="color: #333">Title</label>
-                                    <input type="text" v-model="emailModel.title" class="form-control" value="" required="required" placeholder="Enter Title">
-                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_ip_title') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="emailModel.title"
+                                        class="form-control"
+                                        value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_title')">
+
+                                    <span
+                                        v-if="messageForms.errors.title"
+                                        v-for="err in messageForms.errors.title"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
-                                    <label style="color: #333">Content</label>
-                                    <textarea rows="10" type="text" v-model="emailModel.content" class="form-control" value="" required="required" placeholder="Enter Content"></textarea>
-                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_content') }}</label>
+                                    <textarea
+                                        rows="10"
+                                        type="text"
+                                        v-model="emailModel.content"
+                                        class="form-control"
+                                        value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_content')">
+
+                                    </textarea>
+
+                                    <span
+                                        v-if="messageForms.errors.content"
+                                        v-for="err in messageForms.errors.content"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -143,8 +219,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.template.close') }}
+                        </button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.template.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -158,47 +238,91 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Update Template</h4>
+                        <h4 class="modal-title">{{ $t('message.template.ut_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label style="color: #333">Language</label>
+                                    <label style="color: #333">{{ $t('message.template.al_lang') }}</label>
                                     <div>
                                         <select v-model="emailUpdate.country_id" class="form-control pull-right">
-                                            <option value="0">-- Select Language --</option>
+                                            <option value="0">-- {{ $t('message.template.al_select_lang') }} --</option>
                                             <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
                                         </select>
                                     </div>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.country_id"
+                                        v-for="err in messageForms.errors.country_id"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
-                                    <label style="color: #333">Email Name</label>
-                                    <input type="text" v-model="emailUpdate.mail_name" class="form-control" value="" required="required" placeholder="Enter Email Name">
-                                    <span v-if="messageForms.errors.mail_name" v-for="err in messageForms.errors.mail_name" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_email') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="emailUpdate.mail_name"
+                                        class="form-control"
+                                        value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_email')">
+
+                                    <span
+                                        v-if="messageForms.errors.mail_name"
+                                        v-for="err in messageForms.errors.mail_name"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
-                                    <label style="color: #333">Title</label>
-                                    <input type="text" v-model="emailUpdate.title" class="form-control" value="" required="required" placeholder="Enter Title">
-                                    <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_ip_title') }}</label>
+                                    <input
+                                        type="text"
+                                        v-model="emailUpdate.title"
+                                        class="form-control" value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_title')">
+
+                                    <span
+                                        v-if="messageForms.errors.title"
+                                        v-for="err in messageForms.errors.title"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.content}" class="form-group">
-                                    <label style="color: #333">Content</label>
-                                    <textarea rows="10" type="text" v-model="emailUpdate.content" class="form-control" value="" required="required" placeholder="Enter Content"></textarea>
-                                    <span v-if="messageForms.errors.content" v-for="err in messageForms.errors.content" class="text-danger">{{ err }}</span>
+                                    <label style="color: #333">{{ $t('message.template.al_content') }}</label>
+                                    <textarea
+                                        rows="10"
+                                        type="text"
+                                        v-model="emailUpdate.content"
+                                        class="form-control"
+                                        value=""
+                                        required="required"
+                                        :placeholder="$t('message.template.al_enter_content')">
+
+                                    </textarea>
+
+                                    <span
+                                        v-if="messageForms.errors.content"
+                                        v-for="err in messageForms.errors.content"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -206,8 +330,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.template.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.template.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -340,31 +468,31 @@
                 let blob = new Blob(['\ufeff', html], {
                     type: 'application/msword'
                 });
-                
+
                 // Specify link url
                 let url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-                
+
                 // Specify file name
                 filename = filename?filename+'.doc':'document.doc';
-                
+
                 // Create download link element
                 let downloadLink = document.createElement("a");
 
                 document.body.appendChild(downloadLink);
-                
+
                 if(navigator.msSaveOrOpenBlob ){
                     navigator.msSaveOrOpenBlob(blob, filename);
                 }else{
                     // Create a link to the file
                     downloadLink.href = url;
-                    
+
                     // Setting the file name
                     downloadLink.download = filename;
-                    
+
                     //triggering the function
                     downloadLink.click();
                 }
-                
+
                 document.body.removeChild(downloadLink);
             },
 
@@ -398,7 +526,9 @@
             },
 
             async doDelete(item) {
-                if (!confirm('Do you want to delete template "' + item.title + '" ? ')) return;
+                let self = this;
+
+                if (!confirm(self.$t('message.template.dl_info') + item.title + '" ? ')) return;
                 this.isLoadingTable = true;
                 await this.$store.dispatch('actionDeleteEmailTemplate', {  params: { id: item.id } });
 
