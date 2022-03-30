@@ -290,6 +290,7 @@ class UserController extends Controller
     {
         $list = PaymentType::all();
 
+        $list[5]->account = Config::where('code', 'payoneer')->first()->value;
         $list[4]->address = Config::where('code', 'usdt_address')->first()->value;
         $list[3]->address = Config::where('code', 'eth_address')->first()->value;
         $list[2]->address = Config::where('code', 'btc_address')->first()->value;

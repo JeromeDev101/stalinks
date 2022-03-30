@@ -506,6 +506,12 @@
                                 </p>
                             </div>
 
+                            <div v-if="updateModel.payment_type === 9" class="col-md-12">
+                                <p class="text-center">
+                                    Payoneer Account: {{ listPayment.data[5].account }}
+                                </p>
+                            </div>
+
                             <div
                                 v-if="updateModel.payment_type != 1"
                                 class="col-md-12">
