@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.incomes.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.incomes.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -31,30 +31,30 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
+                                    <label for="">{{ $t('message.incomes.filter_id_backlink') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.backlink_id"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.incomes.filter_type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Status Payment</label>
+                                    <label for="">{{ $t('message.incomes.filter_status_payment') }}</label>
                                     <select name="" id="" class="form-control" v-model="filterModel.payment_status">
-                                        <option value="">All</option>
-                                        <option value="Paid">Paid</option>
-                                        <option value="Not paid">Not paid</option>
+                                        <option value="">{{ $t('message.incomes.all') }}</option>
+                                        <option value="Paid">{{ $t('message.incomes.filter_paid') }}</option>
+                                        <option value="Not paid">{{ $t('message.incomes.filter_not_paid') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-2" v-if="user.isAdmin">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label for="">{{ $t('message.incomes.seller') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.seller">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.incomes.all') }}</option>
                                         <option v-for="seller in listIncomes.sellers" v-bind:value="seller.user_id">
                                             {{ seller.username }}
                                         </option>
@@ -64,9 +64,9 @@
 
                             <div class="col-md-2" v-if="user.isAdmin">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label for="">{{ $t('message.incomes.buyer') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.buyer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.incomes.all') }}</option>
                                         <option v-for="buyer in listIncomes.buyers" v-bind:value="buyer.user_id_buyer">
                                             {{ buyer.username }}
                                         </option>
@@ -76,7 +76,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Date Completed</label>
+                                    <label for="">{{ $t('message.incomes.filter_date_completed') }}</label>
                                     <input type="date" class="form-control" v-model="filterModel.date">
                                 </div>
                             </div>
@@ -86,10 +86,12 @@
                         <div class="row mb-3">
                             <div class="col-md-2">
                                 <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">
-                                    Clear
+                                    {{ $t('message.incomes.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search
-                                    <i v-if="isSearching" class="fa fa-refresh fa-spin"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">
+                                    {{ $t('message.incomes.search') }}
+                                    <i v-if="isSearching" class="fa fa-refresh fa-spin"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -101,12 +103,12 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Incomes</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.incomes.i_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+                        <h5 class="d-inline pull-right">{{ $t('message.incomes.i_amount') }} $ {{ totalAmount }}</h5>
 
                         <table width="100%">
                             <tr>
@@ -134,16 +136,16 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>ID</th>
-                                <th>In-charge</th>
-                                <th v-if="isSeller">Seller</th>
-                                <th v-if="user.isOurs == 0">Buyer</th>
-                                <th>URL Publisher</th>
-                                <th>Price</th>
-                                <th>Date Completed</th>
-                                <th>Status</th>
-                                <th>Status Payment</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.incomes.i_id') }}</th>
+                                <th>{{ $t('message.incomes.i_in_charge') }}</th>
+                                <th v-if="isSeller">{{ $t('message.incomes.seller') }}</th>
+                                <th v-if="user.isOurs == 0">{{ $t('message.incomes.buyer') }}</th>
+                                <th>{{ $t('message.incomes.i_url_pub') }}</th>
+                                <th>{{ $t('message.incomes.i_price') }}</th>
+                                <th>{{ $t('message.incomes.filter_date_completed') }}</th>
+                                <th>{{ $t('message.incomes.i_status') }}</th>
+                                <th>{{ $t('message.incomes.filter_status_payment') }}</th>
+                                <th>{{ $t('message.incomes.i_action') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -152,13 +154,19 @@
                                 <td>{{ incomes.id }}</td>
                                 <td>{{ incomes.in_charge == null ? 'N/A' : incomes.in_charge }}</td>
                                 <td v-if="isSeller">
-                                    {{ incomes.publisher == null ? 'Record Deleted' : incomes.publisher.user.name }}
+                                    {{
+                                        incomes.publisher == null
+                                            ? 'Record Deleted'
+                                            : incomes.publisher.user
+                                                ? incomes.publisher.user.name
+                                                : 'Record Deleted'
+                                    }}
                                 </td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user == null ? '' : incomes.user.name }}</td>
                                 <td>
                                     <!--                                    {{ incomes.publisher == null ? 'Record Deleted':replaceCharacters(incomes.publisher.url) }}-->
                                     <span v-if="incomes.publisher == null">
-                                        Record Deleted
+                                        {{ $t('message.incomes.i_record_deleted') }}
                                     </span>
                                     <span v-else>
                                         <a :href="'//' + replaceCharacters(incomes.publisher.url)" target="_blank">
@@ -178,7 +186,7 @@
                                         <button data-toggle="modal"
                                                 @click="doUpdate(incomes)"
                                                 data-target="#modal-update-incomes"
-                                                title="Edit"
+                                                :title="$t('message.incomes.edit')"
                                                 class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                 </td>
@@ -200,7 +208,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Incomes Information</h5>
+                        <h5 class="modal-title">{{ $t('message.incomes.ii_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -212,7 +220,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">User Seller</label>
+                                    <label style="color: #333">{{ $t('message.incomes.ii_seller') }}</label>
                                     <input type="text"
                                            v-model="updateModel.seller"
                                            :disabled="true"
@@ -221,7 +229,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">User Buyer</label>
+                                    <label style="color: #333">{{ $t('message.incomes.ii_buyer') }}</label>
                                     <input type="text"
                                            v-model="updateModel.buyer"
                                            :disabled="true"
@@ -230,7 +238,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Price</label>
+                                    <label style="color: #333">{{ $t('message.incomes.i_price') }}</label>
                                     <input type="text"
                                            v-model="updateModel.price"
                                            :disabled="true"
@@ -239,7 +247,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Payment Status</label>
+                                    <label style="color: #333">{{ $t('message.incomes.ii_payment_status') }}</label>
                                     <input type="text"
                                            v-model="updateModel.payment_status"
                                            :disabled="true"
@@ -248,7 +256,7 @@
                             </div>
                             <div class="col-sm-12" v-show="updateModel.proof_doc_path != null">
                                 <div class="form-group">
-                                    <label style="color: #333">Proof of Documents</label>
+                                    <label style="color: #333">{{ $t('message.incomes.ii_proof') }}</label>
                                     <img :src="updateModel.proof_doc_path" class="img-fluid" alt="Proof of Document">
                                 </div>
                             </div>
@@ -264,7 +272,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.incomes.close') }}
+                        </button>
                         <!-- <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button> -->
                     </div>
                 </div>

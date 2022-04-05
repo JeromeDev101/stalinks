@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.publisher.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.publisher.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -32,21 +32,21 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Search URL</label>
+                                        <label>{{ $t('message.publisher.filter_search_url') }}</label>
                                         <input
                                             v-model="filterModel.search"
                                             type="text"
                                             class="form-control"
-                                            placeholder="Type here"
+                                            :placeholder="$t('message.publisher.type')"
                                             aria-describedby="helpId">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Language</label>
+                                        <label>{{ $t('message.publisher.filter_lang') }}</label>
                                         <select class="form-control" v-model="filterModel.language_id">
-                                            <option value="">All</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
                                             <option value="na">N/A</option>
                                             <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                                 {{ option.name }}
@@ -57,12 +57,12 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Continent</label>
+                                        <label>{{ $t('message.publisher.filter_continent') }}</label>
                                         <v-select
                                             v-model="filterModel.continent_id"
                                             multiple
                                             label="name"
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :options="listContinent.data"
                                             :searchable="true"
                                             :reduce="continent => continent.id"/>
@@ -71,12 +71,12 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Country</label>
+                                        <label>{{ $t('message.publisher.filter_country') }}</label>
                                         <v-select
                                             v-model="filterModel.country_id"
                                             multiple
                                             label="name"
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :searchable="true"
                                             :options="filterCountrySelect"
                                             :reduce="country => country.id"/>
@@ -98,12 +98,12 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Domain Zone</label>
+                                        <label>{{ $t('message.publisher.filter_dz') }}</label>
                                         <v-select
                                             v-model="filterModel.domain_zone"
                                             multiple
                                             label="name"
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :options="listDomainZones.data"
                                             :searchable="true"
                                             :reduce="domain => domain.name"/>
@@ -112,18 +112,18 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Is Https?</label>
+                                        <label>{{ $t('message.publisher.filter_https') }}</label>
                                         <select class="form-control" v-model="filterModel.is_https">
-                                            <option value="">All</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                            <option value="no">{{ $t('message.publisher.no') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Topic</label>
+                                        <label>{{ $t('message.publisher.filter_topic') }}</label>
                                         <!-- <select class="form-control" v-model="filterModel.topic">
                                             <option value="">All</option>
                                             <option v-for="option in topic" v-bind:value="option">
@@ -133,7 +133,7 @@
                                         <v-select
                                             v-model="filterModel.topic"
                                             multiple
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :options="topicFilter"
                                             :searchable="false"/>
                                     </div>
@@ -141,11 +141,11 @@
 
                                 <div class="col-md-3" v-if="!isQc">
                                     <div class="form-group">
-                                        <label for="">Keyword Anchor</label>
+                                        <label>{{ $t('message.publisher.filter_ka') }}</label>
                                         <select class="form-control" v-model="filterModel.kw_anchor">
-                                            <option value="">All</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                            <option value="no">{{ $t('message.publisher.no') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -154,33 +154,33 @@
                             <div class="row">
                                 <div class="col-md-3" v-if="!isQc">
                                     <div class="form-group">
-                                        <label>Include Article</label>
+                                        <label>{{ $t('message.publisher.filter_inc_art') }}</label>
                                         <select class="form-control" v-model="filterModel.inc_article">
-                                            <option value="">All</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="Yes">{{ $t('message.publisher.yes') }}</option>
+                                            <option value="No">{{ $t('message.publisher.no') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-3" v-if="!isQc || user.role_id === 8">
                                     <div class="form-group">
-                                        <label>Accept Casino & Betting Sites</label>
+                                        <label>{{ $t('message.publisher.filter_cb') }}</label>
                                         <select class="form-control" v-model="filterModel.casino_sites">
-                                            <option value="">All</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                            <option value="no">{{ $t('message.publisher.no') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Price Basis</label>
+                                        <label>{{ $t('message.publisher.filter_price_basis') }}</label>
                                         <v-select
                                             v-model="filterModel.price_basis"
                                             multiple
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :searchable="false"
                                             :options="['Good', 'Average', 'High']"/>
                                     </div>
@@ -193,9 +193,9 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>In charge</label>
+                                        <label>{{ $t('message.publisher.filter_in_charge') }}</label>
                                         <select class="form-control" v-model="filterModel.in_charge">
-                                            <option value="">All</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
                                             <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                                 {{ option.username == null ? option.name:option.username}}
                                             </option>
@@ -205,12 +205,12 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Seller</label>
+                                        <label>{{ $t('message.publisher.filter_seller') }}</label>
                                         <v-select
                                             v-model="filterModel.seller"
                                             multiple
                                             label="username"
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :searchable="true"
                                             :options="listSeller.data"
                                             :reduce="seller => seller.id"/>
@@ -226,12 +226,12 @@
 
                                 <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 10 || user.role_id === 6">
                                     <div class="form-group">
-                                        <label>Account Validation</label>
+                                        <label>{{ $t('message.publisher.filter_account_validation') }}</label>
                                         <select class="form-control" v-model="filterModel.account_validation">
-                                            <option value="">All</option>
-                                            <option value="valid">Valid</option>
-                                            <option value="invalid">Invalid</option>
-                                            <option value="processing">Processing</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="valid">{{ $t('message.publisher.valid') }}</option>
+                                            <option value="invalid">{{ $t('message.publisher.invalid') }}</option>
+                                            <option value="processing">{{ $t('message.publisher.filter_processing') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Uploaded</label>
+                                        <label>{{ $t('message.publisher.filter_uploaded') }}</label>
                                         <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
 
                                         <date-range-picker
@@ -257,7 +257,7 @@
 
                                 <div class="col-md-3" v-if="!isQc">
                                     <div class="form-group">
-                                        <label>Updated</label>
+                                        <label>{{ $t('message.publisher.filter_updated') }}</label>
                                         <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
 
                                         <date-range-picker
@@ -274,11 +274,11 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Got Ahref</label>
+                                        <label>{{ $t('message.publisher.filter_got_ahref') }}</label>
                                         <select class="form-control" v-model="filterModel.got_ahref">
-                                            <option value="">All</option>
-                                            <option value="With">With</option>
-                                            <option value="Without">Without</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="With">{{ $t('message.publisher.with') }}</option>
+                                            <option value="Without">{{ $t('message.publisher.without') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -288,23 +288,23 @@
                                 <div class="col-md-3"
                                      v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 6 && user.isOurs === 0) || user.role_id === 10">
                                     <div class="form-group">
-                                        <label>QC Validation</label>
+                                        <label>{{ $t('message.publisher.filter_qc_valid') }}</label>
                                         <select name="" class="form-control" v-model="filterModel.qc_validation">
-                                            <option value="">All</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
                                             <option value="na">N/A</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
+                                            <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                            <option value="no">{{ $t('message.publisher.no') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Valid</label>
+                                        <label>{{ $t('message.publisher.valid') }}</label>
                                         <v-select
                                             v-model="filterModel.valid"
                                             multiple
-                                            placeholder="All"
+                                            :placeholder="$t('message.publisher.all')"
                                             :searchable="false"
                                             :options="['valid','invalid','unchecked']"/>
                                     </div>
@@ -312,11 +312,11 @@
 
                                 <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 10">
                                     <div class="form-group">
-                                        <label>Show Duplicates</label>
+                                        <label>{{ $t('message.publisher.filter_show_dups') }}</label>
                                         <select class="form-control" v-model="filterModel.show_duplicates">
-                                            <option value="">All</option>
-                                            <option value="no">No</option>
-                                            <option value="yes">Yes</option>
+                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <option value="no">{{ $t('message.publisher.no') }}</option>
+                                            <option value="yes">{{ $t('message.publisher.yes') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -325,8 +325,14 @@
 
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.publisher.clear') }}
+                                </button>
+
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.publisher.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -338,7 +344,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Publisher URL List</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.publisher.pu_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -355,7 +361,7 @@
                                            name="file">
 
                                         <button
-                                            title="Upload CSV File"
+                                            :title="$t('message.publisher.pu_upload')"
                                             class="btn btn-primary btn-flat"
                                             :disabled="isEnableBtn || checkAccountValidity()"
 
@@ -364,7 +370,7 @@
                                         </button>
 
                                         <button
-                                            title="Download CSV Template"
+                                            :title="$t('message.publisher.pu_download')"
                                             class="btn btn-primary btn-flat"
 
                                             @click="downloadTemplate">
@@ -390,11 +396,11 @@
                                         @click="generateBestPrices">
 
                                         <span v-if="isGenerating">
-                                            <i class="fa fa-spin fa-cog"></i> Generating...
+                                            <i class="fa fa-spin fa-cog"></i> {{ $t('message.publisher.pu_generate') }}
                                         </span>
 
                                         <span v-else>
-                                            Generate Best Price
+                                            {{ $t('message.publisher.pu_generate_best') }}
                                         </span>
                                     </button>
 
@@ -405,7 +411,7 @@
 
                                         @click="clearMessageform; checkSeller(); checkAccountValidity(); clearCountryContinentInfo()">
 
-                                        <i class="fa fa-plus"></i> Add URL
+                                        <i class="fa fa-plus"></i> {{ $t('message.publisher.pu_add') }}
                                     </button>
 
                                     <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default mr-2">
@@ -432,30 +438,32 @@
                                     class="alert alert-error">
 
                                     <p class="mb-0">
-                                        <strong>Unable to add URL because of the following:</strong>
+                                        <strong>{{ $t('message.publisher.pu_unable_to_add') }}</strong>
                                     </p>
 
                                     <ul class="font-italic">
-                                        <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is
+                                        <li v-if="isAccountPaymentNotComplete">
+                                            {{ $t('message.publisher.pu_account_info') }}
+                                        </li>
+                                        <li v-if="isAccountInvalid">
+                                            {{ $t('message.publisher.pu_account_status') }}
                                             <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
                                         </li>
                                     </ul>
 
                                     <div class="mb-0">
                                     <span>
-                                        Logout and re-login to complete the process.
+                                        {{ $t('message.publisher.pu_relog') }}
                                         <span v-if="this.isAccountPaymentNotComplete">
-                                            Please
+                                            {{ $t('message.publisher.pu_please') }}
                                             <router-link :to="{ path: `/profile/${user.id}` }">
-                                                Click here
+                                                {{ $t('message.publisher.pu_click') }}
                                             </router-link>
-                                            to complete your payment information in profile settings.
+                                            {{ $t('message.publisher.pu_complete') }}
                                         </span>
 
                                         <span v-if="this.isAccountInvalid">
-                                            Contact an administrator or person in charge to request
-                                            for account validation.
+                                            {{ $t('message.publisher.pu_contact') }}
                                         </span>
                                     </span>
                                     </div>
@@ -464,27 +472,12 @@
 
                             <div class="col-sm-12">
                                 <small v-show="user.isOurs == 0" class="text-secondary">
-                                    Reminder: The uploaded data is for Seller -List Publisher.
-                                    The columns for the CSV file are URL, Price, Inc Article, Seller ID,
-                                    Accept C&B, Language, Topic,
-                                    Country and KW Anchor. The
-                                    columns should be separated using comma (,).
-                                    Price are in USD. Inc Article and Accept Casino & Betting Sites value is Yes/No.
-                                    Keyword Anchor yes if accept KW no if only |URL|.
-                                    Select the main language of the site for the language.
+                                    {{ $t('message.publisher.pu_reminder') }}
+                                    {{ $t('message.publisher.pu_columns') }}
                                 </small>
 
                                 <small v-show="user.isOurs == 1" class="text-secondary">
-                                    Reminder: The uploaded data is for Seller -List Publisher.
-                                    The columns for the CSV
-                                    file are URL, Price, Inc
-                                    Article, Accept C&B, KW
-                                    Anchor, Language, Topic
-                                    and Country. The columns
-                                    should be separated using comma (,).
-                                    If you only have URL and Price is fine too. Price are in USD.
-                                    Inc Article value is Yes/No. Keyword Anchor yes if accept KW no if only |URL|.
-                                    Select the main language of the site for the language.
+                                    {{ $t('message.publisher.pu_reminder_uploaded') }}
                                 </small>
                             </div>
                         </div>
@@ -493,29 +486,69 @@
                             <div class="col-md-8 my-3">
 
                                 <div class="input-group">
-                                    <button class="btn btn-default mr-2"
-                                            @click="selectAll">{{
-                                            allSelected
-                                                ?
-                                                "Deselect"
-                                                : "Select"
-                                                               }} All
+                                    <button
+                                        class="btn btn-default mr-2"
+                                        @click="selectAll">
+                                        {{ allSelected ? $t('message.publisher.ab_deselect') : $t('message.publisher.ab_select') }}
+                                        {{ $t('message.publisher.all') }}
                                     </button>
 
                                     <div class="dropdown mr-2">
-                                        <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Selected Action
+                                        <button
+                                            class="btn btn-default dropdown-toggle"
+                                            :disabled="isDisabled"
+                                            type="button"
+                                            id="dropdownMenuButton"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+
+                                            {{ $t('message.publisher.ab_selected_action') }}
                                         </button>
+
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" @click="doMultipleEdit" data-toggle="modal" data-target="#modal-multiple-edit" href="#">Edit</a>
-                                            <a class="dropdown-item" @click="doMultipleDelete" href="#">Delete</a>
-                                            <a class="dropdown-item " @click="getAhrefs()" v-if="user.isAdmin || user.isOurs == 0">Get Ahref</a>
+                                            <a
+                                                class="dropdown-item"
+                                                @click="doMultipleEdit"
+                                                data-toggle="modal"
+                                                data-target="#modal-multiple-edit"
+                                                href="#">
+                                                {{ $t('message.publisher.ab_edit') }}
+                                            </a>
+
+                                            <a class="dropdown-item" @click="doMultipleDelete" href="#">
+                                                {{ $t('message.publisher.ab_delete') }}
+                                            </a>
+
+                                            <a
+                                                class="dropdown-item "
+                                                @click="getAhrefs()"
+                                                v-if="user.isAdmin || user.isOurs == 0">
+                                                {{ $t('message.publisher.ab_get_ahref') }}
+                                            </a>
                                             <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
-                                            <a class="dropdown-item " @click="qcValidationUpdate('yes')" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10 ">QC Validation Yes</a>
-                                            <a class="dropdown-item " @click="qcValidationUpdate('no')" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">QC Validation No</a>
-                                            <a class="dropdown-item " @click="generateCountry" v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">Generate Country</a>
+                                            <a
+                                                class="dropdown-item "
+                                                @click="qcValidationUpdate('yes')"
+                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10 ">
+                                                {{ $t('message.publisher.ab_qc_yes') }}
+                                            </a>
+
+                                            <a
+                                                class="dropdown-item "
+                                                @click="qcValidationUpdate('no')"
+                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">
+                                                {{ $t('message.publisher.ab_qc_no') }}
+                                            </a>
+
+                                            <a
+                                                class="dropdown-item "
+                                                @click="generateCountry"
+                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">
+                                                {{ $t('message.publisher.ab_generate_country') }}
+                                            </a>
                                         </div>
                                     </div>
 
@@ -526,10 +559,14 @@
                                         worksheet="My Worksheet"
                                         class="btn btn-default">
 
-                                        Download List
+                                        {{ $t('message.publisher.ab_download_list') }}
                                     </export-excel>
 
-                                    <i class="fa fa-question-circle text-primary" title="Download List is the List of Country, Langauge and Topic were you can use in uploading of your CSV."></i>
+                                    <i
+                                        class="fa fa-question-circle text-primary"
+                                        :title="$t('message.publisher.ab_download_note')">
+
+                                    </i>
 
                                 </div>
                             </div>
@@ -626,7 +663,7 @@
                                 || user.role_id === 10
                                 || user.role_id === 6)"
                                     class="badge badge-danger">
-                                Invalid
+                                {{ $t('message.publisher.invalid') }}
                             </span>
                             </template>
 
@@ -688,7 +725,13 @@
                                 <div class="btn-group">
                                     <button
                                         data-toggle="modal"
-                                        @click="doUpdate(scope.row)" data-target="#modal-update-publisher" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        @click="doUpdate(scope.row)"
+                                        data-target="#modal-update-publisher"
+                                        title="Edit"
+                                        class="btn btn-default">
+
+                                        <i class="fa fa-fw fa-edit"></i>
+                                    </button>
                                 </div>
                             </template>
                         </vue-virtual-table>
@@ -704,7 +747,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Information</h5>
+                        <h5 class="modal-title">{{ $t('message.publisher.ui_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -715,19 +758,19 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Company Name</label>
+                                    <label>{{ $t('message.publisher.ui_company_name') }}</label>
                                     <input type="text" v-model="updateModel.company_name" class="form-control" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Username</label>
+                                    <label>{{ $t('message.publisher.ui_username') }}</label>
                                     <input type="text" v-model="updateModel.username" class="form-control" placeholder="" disabled>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div :class="{'has-error': messageForms.errors.url}" class="form-group">
-                                    <label for="">URL</label>
+                                    <label>{{ $t('message.publisher.ui_url') }}</label>
                                     <input type="text" v-model="updateModel.url" class="form-control" placeholder="" :disabled="user.isOurs != 0">
                                     <span v-if="messageForms.errors.url" v-for="err in messageForms.errors.url" class="text-danger">{{ err }}</span>
                                 </div>
@@ -735,9 +778,9 @@
 
                             <div class="col-md-6">
                                 <div :class="{'has-error': messageForms.errors.language_id}" class="form-group">
-                                    <label for="">Language</label>
+                                    <label>{{ $t('message.publisher.filter_lang') }}</label>
                                     <select class="form-control" v-model="updateModel.language_id">
-                                        <option value="">Select Language</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_language') }}</option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -748,10 +791,10 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Country</label>
+                                    <label>{{ $t('message.publisher.filter_country') }}</label>
 
                                     <select class="form-control" v-model="updateModel.country_id"  @change="selectCountry('update')">
-                                        <option value="">Select Country</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_country') }}</option>
                                         <option v-for="option in updateCountrySelect" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -766,9 +809,9 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Continent</label>
+                                    <label>{{ $t('message.publisher.filter_continent') }}</label>
                                     <select class="form-control" v-model="updateModel.continent_id">
-                                        <option value="">Select Continent</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_continent') }}</option>
                                         <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -778,7 +821,7 @@
 
                             <div class="col-md-6">
                                 <div :class="{'has-error': messageForms.errors.price}" class="form-group">
-                                    <label for="">Price</label>
+                                    <label>{{ $t('message.publisher.t_price') }}</label>
                                     <input type="number" v-model="updateModel.price" class="form-control" placeholder="">
                                     <span v-if="messageForms.errors.price" v-for="err in messageForms.errors.price" class="text-danger">{{ err }}</span>
                                 </div>
@@ -786,22 +829,22 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Include Article</label>
+                                    <label>{{ $t('message.publisher.ui_inc_article') }}</label>
                                     <select class="form-control" v-model="updateModel.inc_article">
                                         <option value=""></option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
-                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <label>{{ $t('message.publisher.filter_cb') }}</label>
                                     <select class="form-control" v-model="updateModel.casino_sites">
-                                        <option value="">Select Casino & Bettings Sites</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_cb') }}</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.casino_sites" v-for="err in messageForms.errors.casino_sites" class="text-danger">{{ err }}</span>
                                 </div>
@@ -809,25 +852,36 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
-                                    <label for="">Topic</label>
+                                    <label>{{ $t('message.publisher.filter_topic') }}</label>
                                     <!-- <select class="form-control" v-model="updateModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="updateModel.topic" :options="topic" :searchable="false" placeholder="Select Topic"/>
-                                    <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
+                                    <v-select
+                                        multiple
+                                        v-model="updateModel.topic"
+                                        :options="topic"
+                                        :searchable="false"
+                                        :placeholder="$t('message.publisher.ui_select_topic')"/>
+
+                                    <span
+                                        v-if="messageForms.errors.topic"
+                                        v-for="err in messageForms.errors.topic"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'has-error': messageForms.errors.kw_anchor}" class="form-group">
-                                    <label for="">Keyword Anchor</label>
+                                    <label>{{ $t('message.publisher.ui_keyword_anchor') }}</label>
                                     <select class="form-control" v-model="updateModel.kw_anchor">
-                                        <option value="">Select Option</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_option') }}</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.kw_anchor" v-for="err in messageForms.errors.kw_anchor" class="text-danger">{{ err }}</span>
                                 </div>
@@ -835,18 +889,18 @@
 
                             <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8 || user.role_id === 10">
                                 <div class="form-group">
-                                    <label for="">QC Validation</label>
+                                    <label>{{ $t('message.publisher.filter_qc_valid') }}</label>
                                     <select class="form-control" v-model="updateModel.qc_validation">
                                         <option value="">N/A</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <!-- <div class="col-md-6" >
                                 <div class="form-group">
-                                    <label for="">Team in Charge</label>
+                                    <label>Team in Charge</label>
                                     <select class="form-control" v-model="updateModel.team_in_charge">
                                         <option value=""></option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
@@ -860,8 +914,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.publisher.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -873,7 +932,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add URL</h5>
+                        <h5 class="modal-title">{{ $t('message.publisher.au_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -888,30 +947,32 @@
                                     class="alert alert-error">
 
                                     <p class="mb-0">
-                                        <strong>Unable to add URL because of the following:</strong>
+                                        <strong>{{ $t('message.publisher.pu_unable_to_add') }}</strong>
                                     </p>
 
                                     <ul class="font-italic">
-                                        <li v-if="isAccountPaymentNotComplete">Account <strong>payment information</strong> not complete.</li>
-                                        <li v-if="isAccountInvalid">Account status is
+                                        <li v-if="isAccountPaymentNotComplete">
+                                            {{ $t('message.publisher.pu_account_info') }}
+                                        </li>
+                                        <li v-if="isAccountInvalid">
+                                            {{ $t('message.publisher.pu_account_status') }}
                                             <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
                                         </li>
                                     </ul>
 
                                     <div class="mb-0">
                                         <span>
-                                            Logout and re-login to complete the process.
+                                            {{ $t('message.publisher.pu_relog') }}
                                             <span v-if="this.isAccountPaymentNotComplete">
-                                                Please
+                                                {{ $t('message.publisher.pu_please') }}
                                                 <router-link :to="{ path: `/profile/${user.id}` }">
-                                                    Click here
+                                                    {{ $t('message.publisher.pu_click') }}
                                                 </router-link>
-                                                to complete your payment information in profile settings.
+                                                {{ $t('message.publisher.pu_complete') }}
                                             </span>
 
                                             <span v-if="this.isAccountInvalid">
-                                                Contact an administrator or person in charge to request
-                                                for account validation.
+                                                {{ $t('message.publisher.pu_contact') }}
                                             </span>
                                         </span>
                                     </div>
@@ -920,9 +981,9 @@
 
                             <div class="col-md-6" v-show="user.isOurs == 0">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.seller}" class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.publisher.filter_seller') }}</label>
                                     <select class="form-control" v-model="addModel.seller" :disabled="user.role_id == 6 && user.isOurs == 1">
-                                        <option value="">Select Seller</option>
+                                        <option value="">{{ $t('message.publisher.au_select_seller') }}</option>
                                         <option v-for="option in computedListSeller" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
@@ -930,20 +991,22 @@
                                     <span v-if="messageForms.errors.seller" v-for="err in messageForms.errors.seller" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.inc_article}" class="form-group">
-                                    <label for="">Include Article</label>
+                                    <label>{{ $t('message.publisher.filter_inc_art') }}</label>
                                     <select class="form-control" v-model="addModel.inc_article">
-                                        <option value="">Select Include Article</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="">{{ $t('message.publisher.au_select_inc_art') }}</option>
+                                        <option value="Yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="No">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.inc_article" v-for="err in messageForms.errors.inc_article" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.url}" class="form-group">
-                                    <label for="">URL</label>
+                                    <label>{{ $t('message.publisher.t_url') }}</label>
                                     <input type="text" v-model="addModel.url" class="form-control" placeholder="" >
                                     <span v-if="messageForms.errors.url" v-for="err in messageForms.errors.url" class="text-danger">{{ err }}</span>
                                 </div>
@@ -951,9 +1014,9 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.language_id}" class="form-group">
-                                    <label for="">Language</label>
+                                    <label>{{ $t('message.publisher.filter_lang') }}</label>
                                     <select class="form-control" v-model="addModel.language_id">
-                                        <option value="">Select Language</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_language') }}</option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -964,10 +1027,10 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
-                                    <label for="">Country</label>
+                                    <label>{{ $t('message.publisher.filter_country') }}</label>
 
                                     <select class="form-control" v-model="addModel.country_id" @change="selectCountry('add')">
-                                        <option value="">Select Country</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_country') }}</option>
                                         <option v-for="option in addCountrySelect" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -983,9 +1046,9 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.continent_id}" class="form-group">
-                                    <label for="">Continent</label>
+                                    <label>{{ $t('message.publisher.filter_continent') }}</label>
                                     <select class="form-control" v-model="addModel.continent_id">
-                                        <option value="">Select Continent</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_continent') }}</option>
                                         <option v-for="option in listContinent.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -996,7 +1059,7 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.price}" class="form-group">
-                                    <label for="">Price</label>
+                                    <label>{{ $t('message.publisher.t_price') }}</label>
                                     <input type="number" v-model="addModel.price" class="form-control" placeholder="">
                                     <span v-if="messageForms.errors.price" v-for="err in messageForms.errors.price" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1004,11 +1067,11 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.casino_sites}" class="form-group">
-                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <label>{{ $t('message.publisher.filter_cb') }}</label>
                                     <select class="form-control" v-model="addModel.casino_sites">
-                                        <option value="">Select Casino & Bettings Sites</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.publisher.ui_select_cb') }}</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.casino_sites" v-for="err in messageForms.errors.casino_sites" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1016,11 +1079,11 @@
 
                             <div class="col-md-6" v-if="user.role_id === 6 && user.isOurs === 1">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.kw_anchor}" class="form-group">
-                                    <label for="">KW Anchor</label>
+                                    <label>{{ $t('message.publisher.t_kw_anchor') }}</label>
                                     <select class="form-control" v-model="addModel.kw_anchor">
-                                        <option value="">Select KW Anchor</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.publisher.au_select_kw_anchor') }}</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.kw_anchor" v-for="err in messageForms.errors.kw_anchor" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1028,14 +1091,19 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.topic}" class="form-group">
-                                    <label for="">Topic</label>
+                                    <label>{{ $t('message.publisher.filter_topic') }}</label>
                                     <!-- <select class="form-control" v-model="addModel.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="addModel.topic" :options="topic" :searchable="false" placeholder="Select Topic"/>
+                                    <v-select
+                                        multiple
+                                        v-model="addModel.topic"
+                                        :options="topic"
+                                        :searchable="false"
+                                        :placeholder="$t('message.publisher.ui_select_topic')"/>
                                     <span v-if="messageForms.errors.topic" v-for="err in messageForms.errors.topic" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
@@ -1043,8 +1111,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.publisher.add') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1056,7 +1128,7 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.publisher.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
@@ -1064,115 +1136,115 @@
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(2,
-                                tblPublisherOpt.created)"  :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">Uploaded</label>
+                                tblPublisherOpt.created)"  :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">{{ $t('message.publisher.filter_uploaded') }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(3,
                                 tblPublisherOpt.uploaded)"
-                                    :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">Updated</label>
+                                    :checked="tblPublisherOpt.uploaded ? 'checked':''" v-model="tblPublisherOpt.uploaded">{{ $t('message.publisher.filter_updated') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(4,
                                 tblPublisherOpt.language)"
-                                    :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">Language</label>
+                                    :checked="tblPublisherOpt.language ? 'checked':''" v-model="tblPublisherOpt.language">{{ $t('message.publisher.filter_lang') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(5,
                                 tblPublisherOpt.country)"
-                                    :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">Country</label>
+                                    :checked="tblPublisherOpt.country ? 'checked':''" v-model="tblPublisherOpt.country">{{ $t('message.publisher.filter_country') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(6,
                                 tblPublisherOpt.continent)"
-                                    :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">Continent</label>
+                                    :checked="tblPublisherOpt.continent ? 'checked':''" v-model="tblPublisherOpt.continent">{{ $t('message.publisher.filter_continent') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(7,
                                 tblPublisherOpt.topic)"
-                                    :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">Topic</label>
+                                    :checked="tblPublisherOpt.topic ? 'checked':''" v-model="tblPublisherOpt.topic">{{ $t('message.publisher.filter_topic') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"@click="toggleColumn(8,
                                 tblPublisherOpt.casino_sites)"
-                                    :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites">Casino & Betting Sites</label>
+                                    :checked="tblPublisherOpt.casino_sites ? 'checked':''" v-model="tblPublisherOpt.casino_sites">{{ $t('message.publisher.t_cb') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(9,
                                 tblPublisherOpt.in_charge)"
-                                    :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">In-charge</label>
+                                    :checked="tblPublisherOpt.in_charge ? 'checked':''" v-model="tblPublisherOpt.in_charge">{{ $t('message.publisher.t_in_charge') }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(10,
                                 tblPublisherOpt.seller)"
-                                    :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">Seller</label>
+                                    :checked="tblPublisherOpt.seller ? 'checked':''" v-model="tblPublisherOpt.seller">{{ $t('message.publisher.filter_seller') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(11,
                                 tblPublisherOpt.valid)"
-                                    :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid">Valid</label>
+                                    :checked="tblPublisherOpt.valid ? 'checked':''" v-model="tblPublisherOpt.valid">{{ $t('message.publisher.valid') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(12,
-                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.qc_validation ? 'checked':''" v-model="tblPublisherOpt.qc_validation">QC Validation</label>
+                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.qc_validation ? 'checked':''" v-model="tblPublisherOpt.qc_validation">{{ $t('message.publisher.filter_qc_valid') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(13,
                                 tblPublisherOpt.url)"
-                                    :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">URL</label>
+                                    :checked="tblPublisherOpt.url ? 'checked':''" v-model="tblPublisherOpt.url">{{ $t('message.publisher.ui_url') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(15,
                                 tblPublisherOpt.price)"
-                                    :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">Price</label>
+                                    :checked="tblPublisherOpt.price ? 'checked':''" v-model="tblPublisherOpt.price">{{ $t('message.publisher.t_price') }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(16,
                                 tblPublisherOpt.prices)"
-                                    :checked="tblPublisherOpt.prices ? 'checked':''" v-model="tblPublisherOpt.prices">Prices</label>
+                                    :checked="tblPublisherOpt.prices ? 'checked':''" v-model="tblPublisherOpt.prices">{{ $t('message.publisher.t_prices') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(17,
-                                tblPublisherOpt.price_basis)"  :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">Price Basis</label>
+                                tblPublisherOpt.price_basis)"  :checked="tblPublisherOpt.price_basis ? 'checked':''" v-model="tblPublisherOpt.price_basis">{{ $t('message.publisher.filter_price_basis') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(18,
-                                tblPublisherOpt.inc_article)"  :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">Inc Article</label>
+                                tblPublisherOpt.inc_article)"  :checked="tblPublisherOpt.inc_article ? 'checked':''" v-model="tblPublisherOpt.inc_article">{{ $t('message.publisher.t_inc_article') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(19,
                                 tblPublisherOpt.kw_anchor)"
-                                    :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">Kw Anchor</label>
+                                    :checked="tblPublisherOpt.kw_anchor ? 'checked':''" v-model="tblPublisherOpt.kw_anchor">{{ $t('message.publisher.t_kw_anchor') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
@@ -1193,39 +1265,42 @@
                                     type="checkbox"
                                     @click="toggleColumn(22,
                                 tblPublisherOpt.backlinks)"
-                                    :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">Backlinks</label>
+                                    :checked="tblPublisherOpt.backlinks ? 'checked':''" v-model="tblPublisherOpt.backlinks">{{ $t('message.publisher.tb_backlinks') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(23,
                                 tblPublisherOpt.ref_domain)"
-                                    :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">Ref Domains</label>
+                                    :checked="tblPublisherOpt.ref_domain ? 'checked':''" v-model="tblPublisherOpt.ref_domain">{{ $t('message.publisher.t_ref_dom') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(24,
-                                tblPublisherOpt.org_keywords)" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">Organic Keywords</label>
+                                tblPublisherOpt.org_keywords)" :checked="tblPublisherOpt.org_keywords ? 'checked':''" v-model="tblPublisherOpt.org_keywords">{{ $t('message.publisher.t_org_keywords') }}</label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(25,
-                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">Organic Traffic</label>
+                                tblPublisherOpt.org_traffic)" :checked="tblPublisherOpt.org_traffic ? 'checked':''" v-model="tblPublisherOpt.org_traffic">{{ $t('message.publisher.t_org_traffic') }}</label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isOurs == 0">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(26,
-                                tblPublisherOpt.code_price)" :checked="tblPublisherOpt.code_price ? 'checked':''" v-model="tblPublisherOpt.code_price">Code Price</label>
+                                tblPublisherOpt.code_price)" :checked="tblPublisherOpt.code_price ? 'checked':''" v-model="tblPublisherOpt.code_price">{{ $t('message.publisher.t_code_price') }}</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button"
-                                class="btn btn-primary" @click="saveColumnSetting" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="saveColumnSetting" data-dismiss="modal">
+                            {{ $t('message.publisher.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1238,23 +1313,25 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Failed to Upload</h4>
+                        <h4 class="modal-title">{{ $t('message.publisher.fu_title') }}</h4>
                         <div>
                         </div>
                     </div>
                     <div class="modal-body">
                         <table class="table table-condensed">
                             <tr>
-                                <th colspan="2">Total Failed to Upload ({{failedUpload.total}})</th>
+                                <th colspan="2">{{ $t('message.publisher.fu_total_failed') }} ({{failedUpload.total}})</th>
                             </tr>
                             <tr v-for="(ext, index) in failedUpload.message" :key="index">
                                 <td>{{ ext }}</td>
-                                <td class="text-danger">Not Uploaded</td>
+                                <td class="text-danger">{{ $t('message.publisher.fu_not_uploaded') }}</td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1267,7 +1344,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Multiple Edit (Selected: {{checkIds.length}} items)</h4>
+                        <h4 class="modal-title">{{ $t('message.publisher.me_title') }} (Selected: {{checkIds.length}} items)</h4>
                         <div class="modal-load overlay float-right">
                         </div>
                     </div>
@@ -1275,7 +1352,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Language</label>
+                                    <label>{{ $t('message.publisher.filter_lang') }}</label>
                                     <select class="form-control" v-model="updateMultiple.language">
                                         <option value=""></option>
                                         <option v-for="option in listLanguages.data" v-bind:value="option.id">
@@ -1286,7 +1363,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>{{ $t('message.publisher.filter_country') }}</label>
 
                                     <select class="form-control" v-model="updateMultiple.country" @change="selectCountry('multi')">
                                         <option value=""></option>
@@ -1303,7 +1380,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Continent</label>
+                                    <label>{{ $t('message.publisher.filter_continent') }}</label>
                                     <select class="form-control" v-model="updateMultiple.continent_id">
                                         <option value=""></option>
                                         <option v-for="option in listContinent.data" v-bind:value="option.id">
@@ -1314,67 +1391,76 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Price</label>
+                                    <label>{{ $t('message.publisher.t_price') }}</label>
                                     <input type="number" class="form-control" placeholder="" v-model="updateMultiple.price">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Accept Casino & Betting Sites</label>
+                                    <label>{{ $t('message.publisher.filter_cb') }}</label>
                                     <select class="form-control" v-model="updateMultiple.casino_sites">
                                         <option value=""></option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Keyword Anchor</label>
+                                    <label>{{ $t('message.publisher.filter_ka') }}</label>
                                     <select class="form-control" v-model="updateMultiple.kw_anchor">
                                         <option value=""></option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Topic</label>
+                                    <label>{{ $t('message.publisher.filter_topic') }}</label>
                                     <!-- <select class="form-control" v-model="updateMultiple.topic">
                                         <option value="">Select Topic</option>
                                         <option v-for="option in topic" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple v-model="updateMultiple.topic" :options="topic" :searchable="false" placeholder="All"/>
+                                    <v-select
+                                        multiple
+                                        v-model="updateMultiple.topic"
+                                        :options="topic"
+                                        :searchable="false"
+                                        :placeholder="$t('message.publisher.all')"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Include Article</label>
+                                    <label>{{ $t('message.publisher.filter_inc_art') }}</label>
                                     <select class="form-control" v-model="updateMultiple.inc_article">
                                         <option value=""></option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6" v-show="user.isAdmin || user.role_id == 8 || user.role_id === 10">
                                 <div class="form-group">
-                                    <label>QC Validation</label>
+                                    <label>{{ $t('message.publisher.filter_qc_valid') }}</label>
                                     <select class="form-control" v-model="updateMultiple.qc_validation">
                                         <option value=""></option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitMultipleEdit" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                        <button type="button" @click="submitMultipleEdit" class="btn btn-primary" data-dismiss="modal">
+                            {{ $t('message.publisher.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1632,6 +1718,8 @@ export default {
         },
 
         mounted() {
+            let self = this;
+
             pusher.logToConsole = true;
 
             const channel = pusher.subscribe('private-user.' +
@@ -1655,9 +1743,8 @@ export default {
 
                 swal.fire({
                     icon: 'success',
-                    title: "Success",
-                    text:
-                        'Best Price generation has been completed..',
+                    title: self.$t('message.publisher.alert_success'),
+                    text: self.$t('message.publisher.alert_completed_best_price'),
                     confirmButtonText: "Ok",
                 });
             });
@@ -1695,7 +1782,7 @@ export default {
                     // display message
                     this.country_continent_filter_info = is_gone
                         ? ''
-                        : 'Some selected countries that were not within the selected continent(s) are removed.';
+                        : this.$t('message.publisher.alert_some_countries');
 
                     this.filterModel.country_id = is_gone
                         ? this.filterModel.country_id
@@ -1715,7 +1802,7 @@ export default {
 
                     this.country_continent_info = is_gone
                         ? ''
-                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+                        : this.listCountryAll.data[index].name + this.$t('message.publisher.alert_not_within_continent');
 
                     this.addModel.country_id = is_gone
                         ? this.addModel.country_id
@@ -1735,7 +1822,7 @@ export default {
 
                     this.country_continent_info = is_gone
                         ? ''
-                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+                        : this.listCountryAll.data[index].name + this.$t('message.publisher.alert_not_within_continent');
 
                     this.updateModel.country_id = is_gone
                         ? this.updateModel.country_id
@@ -1755,7 +1842,7 @@ export default {
 
                     this.country_continent_info = is_gone
                         ? ''
-                        : this.listCountryAll.data[index].name + ' is not within the selected continent, country field was cleared.';
+                        : this.listCountryAll.data[index].name + this.$t('message.publisher.alert_not_within_continent');
 
                     this.updateMultiple.country = is_gone
                         ? this.updateMultiple.country
@@ -1831,84 +1918,84 @@ export default {
             sortOptions() {
                 return [
                     {
-                        name: 'Uploaded',
+                        name: this.$t('message.publisher.filter_uploaded'),
                         sort: '',
                         column: 'created_at',
                         hidden: !this.tblPublisherOpt.created
                     },
                     {
-                        name: 'Updated',
+                        name: this.$t('message.publisher.filter_updated'),
                         sort: '',
                         column: 'updated_at',
                         hidden: !this.user.isAdmin || this.user.isOurs !== 0 || !this.tblPublisherOpt.uploaded
                     },
                     {
-                        name: 'Language',
+                        name: this.$t('message.publisher.filter_lang'),
                         sort: '',
                         column: 'languages.name',
                         hidden: !this.tblPublisherOpt.language
                     },
                     {
-                        name: 'Country',
+                        name: this.$t('message.publisher.filter_country'),
                         sort: '',
                         column: 'countries.name',
                         hidden: !this.tblPublisherOpt.country
                     },
                     {
-                        name: 'Continent',
+                        name: this.$t('message.publisher.filter_continent'),
                         sort: '',
                         column: 'continent_name',
                         hidden: !this.tblPublisherOpt.continent
                     },
                     {
-                        name: 'Seller',
+                        name: this.$t('message.publisher.filter_seller'),
                         sort: '',
                         column: 'A.username',
                         hidden: this.user.isOurs !== 0 || !this.tblPublisherOpt.seller
                     },
                     {
-                        name: 'Valid',
+                        name: this.$t('message.publisher.valid'),
                         sort: '',
                         column: 'valid',
                         hidden: !this.tblPublisherOpt.valid,
                     },
                     {
-                        name: 'QC Valid',
+                        name: this.$t('message.publisher.t_qc_valid'),
                         sort: '',
                         column: 'qc_validation',
                         hidden: !this.tblPublisherOpt.qc_validation
                     },
                     {
-                        name: 'URL',
+                        name: this.$t('message.publisher.t_url'),
                         sort: '',
                         column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
                         hidden: !this.tblPublisherOpt.url
                     },
                     {
-                        name: 'HTTPS',
+                        name: this.$t('message.publisher.t_https'),
                         sort: '',
                         column: 'is_https'
                     },
                     {
-                        name: 'Price',
+                        name: this.$t('message.publisher.t_price'),
                         sort: '',
                         column: 'cast(price as unsigned)',
                         hidden: !this.tblPublisherOpt.price
                     },
                     {
-                        name: 'Price Basis',
+                        name: this.$t('message.publisher.filter_price_basis'),
                         sort: '',
                         column: 'price_basis',
                         hidden: !this.tblPublisherOpt.price_basis
                     },
                     {
-                        name: 'Include Article',
+                        name: this.$t('message.publisher.filter_inc_art'),
                         sort: '',
                         column: 'inc_article',
                         hidden: !this.tblPublisherOpt.inc_article
                     },
                     {
-                        name: 'KW Anchor',
+                        name: this.$t('message.publisher.t_kw_anchor'),
                         sort: '',
                         column: 'kw_anchor',
                         hidden: !this.tblPublisherOpt.kw_anchor
@@ -1926,43 +2013,43 @@ export default {
                         hidden: !this.tblPublisherOpt.dr
                     },
                     {
-                        name: 'Backlinks',
+                        name: this.$t('message.publisher.tb_backlinks'),
                         sort: '',
                         column: 'cast(backlinks as unsigned)',
                         hidden: !this.tblPublisherOpt.backlinks
                     },
                     {
-                        name: 'Ref Domain',
+                        name: this.$t('message.publisher.t_ref_dom'),
                         sort: '',
                         column: 'cast(ref_domain as unsigned)',
                         hidden: !this.tblPublisherOpt.ref_domain
                     },
                     {
-                        name: 'Org Keywords',
+                        name: this.$t('message.publisher.t_org_keywords'),
                         sort: '',
                         column: 'cast(org_keywords as unsigned)',
                         hidden: !this.tblPublisherOpt.org_keywords
                     },
                     {
-                        name: 'Org Traffic',
+                        name: this.$t('message.publisher.t_org_traffic'),
                         sort: '',
                         column: 'cast(org_traffic as unsigned)',
                         hidden: !this.tblPublisherOpt.org_traffic
                     },
                     {
-                        name: 'Topic',
+                        name: this.$t('message.publisher.filter_topic'),
                         sort: '',
                         column: 'topic',
                         hidden: !this.tblPublisherOpt.topic
                     },
                     {
-                        name: 'In-charge',
+                        name: this.$t('message.publisher.t_in_charge'),
                         sort: '',
                         column: 'B.username',
                         hidden: !this.tblPublisherOpt.in_charge
                     },
                     {
-                        name: 'C&B Sites',
+                        name: this.$t('message.publisher.t_cb'),
                         sort: '',
                         column: 'casino_sites',
                         hidden: !this.tblPublisherOpt.casino_sites
@@ -1987,7 +2074,7 @@ export default {
                     },
                     {
                         prop : 'created_at',
-                        name : 'Uploaded',
+                        name : this.$t('message.publisher.filter_uploaded'),
                         // actionName : 'createdData',
                         width: 100,
                         // sortable: true,
@@ -1996,7 +2083,7 @@ export default {
                     },
                     {
                         prop : 'updated_at',
-                        name : 'Updated',
+                        name : this.$t('message.publisher.filter_updated'),
                         // actionName : 'updatedData',
                         width: 100,
                         // sortable: true,
@@ -2005,7 +2092,7 @@ export default {
                     },
                     {
                         prop : 'language_name',
-                        name : 'Language',
+                        name : this.$t('message.publisher.filter_lang'),
                         // sortable: true,
                         width: 100,
                         isHidden:
@@ -2013,14 +2100,14 @@ export default {
                     },
                     {
                         prop : 'country_name',
-                        name : 'Country',
+                        name : this.$t('message.publisher.filter_country'),
                         // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.country
                     },
                     {
                         prop : '_action',
-                        name : 'Continent',
+                        name : this.$t('message.publisher.filter_continent'),
                         // sortable: true,
                         actionName : 'continentData',
                         width: 100,
@@ -2028,7 +2115,7 @@ export default {
                     },
                     {
                         prop : 'topic',
-                        name : 'Topic',
+                        name : this.$t('message.publisher.filter_topic'),
                         // actionName : 'topicData',
                         // sortable: true,
                         width: 100,
@@ -2036,7 +2123,7 @@ export default {
                     },
                     {
                         prop : 'casino_sites',
-                        name : 'Casino & Betting Sites',
+                        name : this.$t('message.publisher.t_cb'),
                         // sortable: true,
                         width: 100,
                         isHidden:
@@ -2044,14 +2131,14 @@ export default {
                     },
                     {
                         prop : '_action',
-                        name : 'In-charge',
+                        name : this.$t('message.publisher.t_in_charge'),
                         actionName : 'inChargeData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.in_charge
                     },
                     {
                         prop : '_action',
-                        name : 'Seller',
+                        name : this.$t('message.publisher.filter_seller'),
                         actionName : 'usernameData',
                         // sortable: true,
                         width: 100,
@@ -2059,21 +2146,21 @@ export default {
                     },
                     {
                         prop : 'valid',
-                        name : 'Valid',
+                        name : this.$t('message.publisher.valid'),
                         // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.valid,
                     },
                     {
                         prop : 'qc_validation',
-                        name : 'QC Valid',
+                        name : this.$t('message.publisher.t_qc_valid'),
                         // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.qc_validation
                     },
                     {
                         prop : '_action',
-                        name : 'URL',
+                        name : this.$t('message.publisher.t_url'),
                         actionName : 'urlData',
                         width: 150,
                         // sortable: true,
@@ -2081,14 +2168,14 @@ export default {
                     },
                     {
                         prop : 'is_https',
-                        name : 'Https',
+                        name : this.$t('message.publisher.t_https'),
                         // sortable: true,
                         width: 100,
                         isHidden: false
                     },
                     {
                         prop : '_action',
-                        name : 'Price',
+                        name : this.$t('message.publisher.t_price'),
                         actionName : 'priceData',
                         width: 100,
                         // sortable: true,
@@ -2097,14 +2184,14 @@ export default {
                     },
                     {
                         prop : '_action',
-                        name : 'Prices',
+                        name : this.$t('message.publisher.t_prices'),
                         actionName : 'pricesData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.prices
                     },
                     {
                         prop : '_action',
-                        name : 'Price Basis',
+                        name : this.$t('message.publisher.filter_price_basis'),
                         actionName : 'priceBasisData',
                         width: 100,
                         isHidden:
@@ -2112,7 +2199,7 @@ export default {
                     },
                     {
                         prop : 'inc_article',
-                        name : 'Inc Article',
+                        name : this.$t('message.publisher.t_inc_article'),
                         // sortable: true,
                         width: 100,
                         isHidden:
@@ -2120,7 +2207,7 @@ export default {
                     },
                     {
                         prop : 'kw_anchor',
-                        name : 'KW Anchor',
+                        name : this.$t('message.publisher.t_kw_anchor'),
                         // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.kw_anchor
@@ -2141,14 +2228,14 @@ export default {
                     },
                     {
                         prop : 'backlinks',
-                        name : 'Backlinks',
+                        name : this.$t('message.publisher.tb_backlinks'),
                         // sortable: true,
                         width: 100,
                         isHidden: !this.tblPublisherOpt.backlinks
                     },
                     {
                         prop : 'ref_domain',
-                        name : 'Ref Domain',
+                        name : this.$t('message.publisher.t_ref_dom'),
                         // sortable: true,
                         width: 100,
                         isHidden:
@@ -2156,28 +2243,28 @@ export default {
                     },
                     {
                         prop : '_action',
-                        name : 'Org Keywords',
+                        name : this.$t('message.publisher.t_org_keywords'),
                         actionName : 'orgKeywordData',
                         width: 120,
                         isHidden: !this.tblPublisherOpt.org_keywords
                     },
                     {
                         prop : '_action',
-                        name : 'Org Traffic',
+                        name : this.$t('message.publisher.t_org_traffic'),
                         actionName : 'orgTrafficData',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.org_traffic
                     },
                     {
                         prop : 'code_price',
-                        name : 'Code Price',
+                        name : this.$t('message.publisher.t_code_price'),
                         prefix: '$ ',
                         width: 100,
                         isHidden: !this.tblPublisherOpt.code_price || this.user.isOurs != 0
                     },
                     {
                         prop : '_action',
-                        name : 'Action',
+                        name : this.$t('message.publisher.t_action'),
                         actionName : 'actionButtons',
                         width : '150',
                         isHidden: false
@@ -2193,22 +2280,21 @@ export default {
             },
 
             generateCountry() {
+                let self = this;
                 axios.post('/api/publisher/generate-country', {
                     ids : this.checkIds
                 }).then((response) => {
                     swal.fire({
                         icon: 'success',
-                        title: "Success",
-                        text:
-                            'The system is now generating countries, please wait...',
+                        title: self.$t('message.publisher.alert_success'),
+                        text: self.$t('message.publisher.alert_generating_countries'),
                         confirmButtonText: "Ok",
                     });
                 }).catch((err) => {
                     swal.fire({
                         icon: 'error',
-                        title: "Error",
-                        text:
-                            'An error was encountered...',
+                        title: self.$t('message.publisher.alert_error'),
+                        text: self.$t('message.publisher.alert_error_encountered'),
                     });
                 })
             },
@@ -2255,6 +2341,7 @@ export default {
             },
 
             selectCountry(mod) {
+                let self = this;
                 let model_id = mod === 'add'
                     ? this.addModel.country_id
                     : mod === 'update'
@@ -2274,20 +2361,20 @@ export default {
                     }
 
                     this.country_continent_info = continent_id === ''
-                        ? 'Country continent is not set. Continent input will not be filled automatically'
+                        ? self.$t('message.publisher.alert_continent_not_set')
                         : '';
                 }
             },
 
             async generateBestPrices() {
+                let self = this;
                 await
                     this.$store.dispatch('generateBestPrices');
 
                 swal.fire({
                     icon: 'success',
-                    title: "Success",
-                    text:
-                        'The system is now generating best prices, please wait...',
+                    title: self.$t('message.publisher.alert_success'),
+                    text: self.$t('message.publisher.alert_generating_best_price'),
                     confirmButtonText: "Ok",
                 });
             },
@@ -2556,6 +2643,7 @@ export default {
             },
 
             async validData(valid) {
+                let self = this;
                 await this.$store.dispatch('actionValidData', {
                     valid: valid,
                     ids: this.checkIds,
@@ -2567,7 +2655,10 @@ export default {
 
                         let html = '';
                         for (var index in this.messageForms.errors) {
-                            var txt = this.messageForms.errors[index].message == 'existing' ? '<b style="color:red;">Invalid</b> URL has already existing Valid URL ':'<b style="color:green;">Successfully validated</b> '
+                            var txt = this.messageForms.errors[index].message == 'existing' ? '<b style="color:red;">' +
+                                'Invalid</b> URL has already existing Valid URL ':'<b style="color:green;">' +
+                                'Successfully validated' +
+                                '</b> '
 
                             html += txt +'<b>' + this.messageForms.errors[index].url + '</b> <br/>';
                         }
@@ -2576,7 +2667,7 @@ export default {
                             icon: '',
                             title: " ",
                             html: html,
-                            confirmButtonText: "Ok",
+                            confirmButtonText: self.$t('message.publisher.ok'),
                         });
 
                         this.getPublisherList();
@@ -2588,6 +2679,7 @@ export default {
             },
 
             async qcValidationUpdate(value){
+                let self = this;
                 await this.$store.dispatch('actionQcValidationUpdate', {
                     qc_validation: value,
                     ids: this.checkIds,
@@ -2596,18 +2688,18 @@ export default {
                 if( this.messageForms.action === 'saved' ){
                     await swal.fire({
                         icon: 'success',
-                        title: 'Success',
-                        text: 'QC Validation successfully updated',
-                        confirmButtonText: "Ok",
+                        title: self.$t('message.publisher.alert_success'),
+                        text: self.$t('message.publisher.alert_qc_valid_updated'),
+                        confirmButtonText: self.$t('message.publisher.ok'),
                     });
 
                     await this.getPublisherList();
                 } else {
                     await swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'There was an error upon updating the QC Validation',
-                        confirmButtonText: "Ok",
+                        title: self.$t('message.publisher.alert_error'),
+                        text: self.$t('message.publisher.alert_qc_valid_error'),
+                        confirmButtonText: self.$t('message.publisher.ok'),
                     });
                 }
 
@@ -2697,6 +2789,7 @@ export default {
             },
 
             submitMultipleEdit() {
+                let self = this;
                 axios.post('/api/update-multiple-publisher',{
                     ids: this.checkIds,
                     language: this.updateMultiple.language,
@@ -2716,8 +2809,8 @@ export default {
                     this.isDisabled = true;
 
                     swal.fire(
-                        'Saved!',
-                        'Successfully Updated.',
+                        self.$t('message.publisher.alert_saved'),
+                        self.$t('message.publisher.alert_success_update'),
                         'success'
                     )
 
@@ -2725,10 +2818,11 @@ export default {
             },
 
             async doMultipleDelete(){
+                let self = this;
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.clearMessageform()
-                if( confirm("Are you sure you want to delete selected records?") ){
+                if( confirm(self.$t('message.publisher.alert_confirm_delete')) ){
                     await this.$store.dispatch('actionDeletePublisher', {
                         params: {
                             id: this.checkIds,
@@ -2742,6 +2836,7 @@ export default {
             },
 
             async submitAdd() {
+                let self = this;
                 this.addModel.account_valid = this.checkAccountValidity();
 
                 await this.$store.dispatch('actionAddUrl', this.addModel);
@@ -2751,8 +2846,8 @@ export default {
                     this.getPublisherList();
 
                     swal.fire(
-                        'Saved!',
-                        'URL has been saved.',
+                        self.$t('message.publisher.alert_saved'),
+                        self.$t('message.publisher.alert_saved_url'),
                         'success'
                         )
 
@@ -2771,14 +2866,15 @@ export default {
                     }
                 } else {
                     swal.fire(
-                        'Failed!',
-                        'URL has not been saved.',
+                        self.$t('message.publisher.alert_failed'),
+                        self.$t('message.publisher.alert_failed_url'),
                         'error'
                     )
                 }
             },
 
             async submitUpload() {
+                let self = this;
                 $('#tbl-publisher').DataTable().destroy();
 
                 // clear error messages
@@ -2789,8 +2885,8 @@ export default {
                 this.failedUpload.message = [];
 
                 swal.fire({
-                    title: "Uploading CSV...",
-                    text: "Please wait",
+                    title: self.$t('message.publisher.alert_uploading_csv'),
+                    text: self.$t('message.publisher.alert_please_wait'),
                     timerProgressBar: true,
                     showConfirmButton: false,
                     allowOutsideClick: false,
@@ -2813,8 +2909,8 @@ export default {
                     this.showLang = false;
 
                     swal.fire(
-                        'Uploaded!',
-                        'Successfully Uploaded.',
+                        self.$t('message.publisher.alert_uploaded'),
+                        self.$t('message.publisher.alert_upload_success'),
                         'success'
                         )
 
@@ -2831,8 +2927,8 @@ export default {
                     }
                 } else {
                     swal.fire(
-                        'Failed!',
-                        'Upload Failed.',
+                        self.$t('message.publisher.alert_failed'),
+                        self.$t('message.publisher.alert_upload_fail'),
                         'error'
                     )
 
@@ -2898,6 +2994,7 @@ export default {
             },
 
             async submitUpdate(params) {
+                let self = this;
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.isPopupLoading = true;
@@ -2909,12 +3006,12 @@ export default {
                     // for qc seller
                     if (this.user.role_id === 10) {
                         swal.fire({
-                            title: "Publisher has been updated.",
-                            text: "Do you want to remove the data from the list?",
+                            title: self.$t('message.publisher.alert_publisher_updated'),
+                            text: self.$t('message.publisher.alert_remove_date'),
                             icon: "info",
                             showCancelButton: true,
-                            confirmButtonText: 'Yes',
-                            cancelButtonText: 'No'
+                            confirmButtonText: self.$t('message.publisher.yes'),
+                            cancelButtonText: self.$t('message.publisher.no')
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
@@ -2933,8 +3030,8 @@ export default {
                         this.getPublisherList();
 
                         swal.fire(
-                            'Updated!',
-                            'Publisher has been updated.',
+                            self.$t('message.publisher.alert_updated'),
+                            self.$t('message.publisher.alert_publisher_updated'),
                             'success'
                         )
                     }
@@ -2969,11 +3066,12 @@ export default {
             },
 
             async getAhrefs() {
+                let self = this;
                 $('#tbl-publisher').DataTable().destroy();
 
                 swal.fire({
-                    title: "Getting Ahrefs...",
-                    text: "Please wait",
+                    title: self.$t('message.publisher.alert_getting_ahrefs'),
+                    text: self.$t('message.publisher.alert_please_wait'),
                     timerProgressBar: true,
                     showConfirmButton: false,
                     allowOutsideClick: false,
@@ -2988,8 +3086,8 @@ export default {
                 this.isLoadingTable = false;
 
                 swal.fire(
-                        'Updated!',
-                        'Ahrefs has been updated.',
+                    self.$t('message.publisher.alert_updated'),
+                    self.$t('message.publisher.alert_ahrefs_updated'),
                         'success'
                         )
 
@@ -3049,10 +3147,11 @@ export default {
             },
 
             async doDelete(id){
+                let self = this;
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.clearMessageform()
-                if( confirm("Do you want to delete these record?") ){
+                if( confirm(self.$t('message.publisher.alert_delete_records')) ){
                     await this.$store.dispatch('actionDeletePublisher', {
                         params: {
                             id: id,

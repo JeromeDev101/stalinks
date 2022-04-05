@@ -1,0 +1,20 @@
+export default {
+    h1 : 'STEP 2: UPLOAD YOUR LIST OF URLS WITH PRICE AND OTHER CRITERIA',
+    p1 : 'Now is time to upload your URLs',
+    p2 : 'In the menu look for LIST Publisher: Add more url There are two ways to upload URLs to the publisher list. You can do it manually or by uploading the CSV files. At the left corner of the screen, go to the “Seller” menu and “List Publisher List” tab. On the menu bar, click on Seller → List Publisher',
+    p3 : 'If you choose to do it manually: On the right side, click on the add URL button',
+    p4 : 'A pop-up window will show and fill out the information',
+    ol1 : 'Seller',
+    ol2 : 'Include article: yes / no',
+    ol3 : 'URL',
+    ol4 : 'Language',
+    ol5 : 'Country',
+    ol6 : 'Price in ( USD )',
+    ol7 : 'Accept Casino / Betting sites : yes / no',
+    ol8 : 'Topic',
+    p5 : 'Click Add',
+    p6 : 'If you choose to upload the CSV File: you must prepare a CSV Excel file first containing the details of the URL’s (URL, Price, Inc Article, Accept C&B, KW Anchor and Language). We have made a template for you',
+    p7 : 'When your CSV is ready Click “Choose File” then click the upload icon.',
+    p8 : 'You always can edit or delete urls info We are the on to generate ahref score for you You can also check the price of URL the indicator is based on the color of the start Red…price to high Orange … average price Green … Price is good you will have more chance to get orders soon Just wait for some buyer to order you some backlinks Thanks for using Stalinks',
+
+}

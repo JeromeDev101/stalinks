@@ -88,7 +88,11 @@
                 <a class="nav-link" data-toggle="dropdown" href="#">
                     <i
                         class="flag-icon"
-                        :class="pageLanguage === 'en' ? 'flag-icon-us' : 'flag-icon-' + pageLanguage">
+                        :class="pageLanguage === 'en'
+                        ? 'flag-icon-us'
+                            : pageLanguage === 'ind'
+                            ? 'flag-icon-in'
+                                : 'flag-icon-' + pageLanguage">
                     </i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right p-0">
@@ -109,7 +113,7 @@
 
                         @click="pageLanguage = 'jp'">
                         <i class="flag-icon flag-icon-jp mr-2"></i>
-                        Japan
+                        Japanese
                     </a>
                     <a
                         href="#"
@@ -119,7 +123,37 @@
                         @click="pageLanguage = 'th'">
 
                         <i class="flag-icon flag-icon-th mr-2"></i>
-                        Thailand
+                        Thai
+                    </a>
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        :class="{'active' : pageLanguage === 'vn'}"
+
+                        @click="pageLanguage = 'vn'">
+
+                        <i class="flag-icon flag-icon-vn mr-2"></i>
+                        Vietnamese
+                    </a>
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        :class="{'active' : pageLanguage === 'ind'}"
+
+                        @click="pageLanguage = 'ind'">
+
+                        <i class="flag-icon flag-icon-in mr-2"></i>
+                        Hindi
+                    </a>
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        :class="{'active' : pageLanguage === 'id'}"
+
+                        @click="pageLanguage = 'id'">
+
+                        <i class="flag-icon flag-icon-id mr-2"></i>
+                        Indonesian
                     </a>
                 </div>
             </li>

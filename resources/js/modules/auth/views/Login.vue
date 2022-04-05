@@ -12,25 +12,73 @@
                         aria-expanded="false">
 
                         <i
-                            class="flag-icon mr-2"
-                            :class="pageLanguage === 'en' ? 'flag-icon-us' : 'flag-icon-' + pageLanguage">
+                            class="flag-icon"
+                            :class="pageLanguage === 'en'
+                                ? 'flag-icon-us'
+                                    : pageLanguage === 'ind'
+                                    ? 'flag-icon-in'
+                                        : 'flag-icon-' + pageLanguage">
                         </i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right p-0">
-                        <a href="#" class="dropdown-item"
-                           :class="{'active' : pageLanguage === 'en'}"
-                           @click="pageLanguage = 'en'">
-                            <i class="flag-icon flag-icon-us mr-2"></i> English
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'en'}"
+
+                            @click="pageLanguage = 'en'">
+
+                            <i class="flag-icon flag-icon-us mr-2"></i>
+                            English
                         </a>
-                        <a href="#" class="dropdown-item"
-                           :class="{'active' : pageLanguage === 'jp'}"
-                           @click="pageLanguage = 'jp'">
-                            <i class="flag-icon flag-icon-jp mr-2"></i> Japan
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'jp'}"
+
+                            @click="pageLanguage = 'jp'">
+                            <i class="flag-icon flag-icon-jp mr-2"></i>
+                            Japanese
                         </a>
-                        <a href="#" class="dropdown-item"
-                           :class="{'active' : pageLanguage === 'th'}"
-                           @click="pageLanguage = 'th'">
-                            <i class="flag-icon flag-icon-th mr-2"></i> Thailand
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'th'}"
+
+                            @click="pageLanguage = 'th'">
+
+                            <i class="flag-icon flag-icon-th mr-2"></i>
+                            Thai
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'vn'}"
+
+                            @click="pageLanguage = 'vn'">
+
+                            <i class="flag-icon flag-icon-vn mr-2"></i>
+                            Vietnamese
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'ind'}"
+
+                            @click="pageLanguage = 'ind'">
+
+                            <i class="flag-icon flag-icon-in mr-2"></i>
+                            Hindi
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'id'}"
+
+                            @click="pageLanguage = 'id'">
+
+                            <i class="flag-icon flag-icon-id mr-2"></i>
+                            Indonesian
                         </a>
                     </div>
                 </div>

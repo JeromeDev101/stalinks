@@ -51,6 +51,15 @@ import signature from './Mails/en/signature';
 import draft from './Mails/en/drafts';
 import auto from './Mails/en/auto';
 
+// list publisher
+import publisher from './Publisher/en/main';
+
+// follow up sales
+import follow from './FollowUpSales/en/main';
+
+// incomes
+import incomes from './Incomes/en/main';
+
 export default {
     message : {
         help,
@@ -105,5 +114,14 @@ export default {
         signature,
         draft,
         auto,
+
+        // list publisher
+        publisher,
+
+        // follow up sales
+        follow,
+
+        // incomes
+        incomes,
     }
 }

@@ -51,6 +51,15 @@ import signature from './Mails/jp/signature';
 import draft from './Mails/jp/drafts';
 import auto from './Mails/jp/auto';
 
+// list publisher
+import publisher from './Publisher/jp/main';
+
+// follow up sales
+import follow from './FollowUpSales/jp/main';
+
+// incomes
+import incomes from './Incomes/jp/main';
+
 export default {
     message : {
         help,
@@ -105,5 +114,14 @@ export default {
         signature,
         draft,
         auto,
+
+        // list publisher
+        publisher,
+
+        // follow up sales
+        follow,
+
+        // incomes
+        incomes,
     }
 }

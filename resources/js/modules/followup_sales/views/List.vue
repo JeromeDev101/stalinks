@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.follow.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.follow.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,23 +30,39 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.follow.filter_search_url') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.search"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.follow.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input type="text" class="form-control" v-model="filterModel.backlink_id" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.follow.filter_search_backlink') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.backlink_id"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.follow.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Status</label>
-                                    <v-select multiple
-                                              v-model="filterModel.status" :options="statusBacklinkQc" :searchable="false" placeholder="All"/>
+                                    <label>{{ $t('message.follow.filter_status') }}</label>
+                                    <v-select
+                                        multiple
+                                        v-model="filterModel.status"
+                                        :options="statusBacklinkQc"
+                                        :searchable="false"
+                                        :placeholder="$t('message.follow.all')"/>
                                     <!--                                <select name="" class="form-control" v-model="filterModel.status">-->
                                     <!--                                    <option value="">All</option>-->
                                     <!--                                    <option v-for="status in statusBacklinkQc" v-bind:value="status">{{ status }}</option>-->
@@ -56,9 +72,9 @@
 
                             <div class="col-md-2" v-if="user.isOurs != 1">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.follow.filter_seller') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.seller">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow.all') }}</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
@@ -68,9 +84,9 @@
 
                             <div class="col-md-2" v-if="user.isOurs != 1">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label>{{ $t('message.follow.filter_buyer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.buyer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow.all') }}</option>
                                         <option v-for="option in listBuyer.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username }}
                                         </option>
@@ -80,9 +96,9 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Country</label>
+                                    <label>{{ $t('message.follow.filter_country') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.country_id">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow.all') }}</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -92,20 +108,20 @@
 
                             <div class="col-md-2" v-if="user.isOurs !== 1 || user.role_id !== 4">
                                 <div class="form-group">
-                                    <label for="">Article</label>
+                                    <label>{{ $t('message.follow.filter_article') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.article">
-                                        <option value="">All</option>
-                                        <option value="With">With</option>
-                                        <option value="Without">Without</option>
+                                        <option value="">{{ $t('message.follow.all') }}</option>
+                                        <option value="With">{{ $t('message.follow.with') }}</option>
+                                        <option value="Without">{{ $t('message.follow.without') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">In charge</label>
+                                    <label>{{ $t('message.follow.filter_in_charge') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.in_charge">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow.all') }}</option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name:option.username}}
                                         </option>
@@ -115,7 +131,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Process Date
+                                    <label>{{ $t('message.follow.filter_process_date') }}
                                     </label>
                                     <div class="input-group">
                                         <date-range-picker
@@ -134,7 +150,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Date Completed
+                                    <label>{{ $t('message.follow.filter_date_completed') }}
                                     </label>
                                     <div class="input-group">
                                         <date-range-picker
@@ -155,8 +171,14 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.follow.clear') }}
+                                </button>
+
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.follow.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -168,12 +190,12 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Follow up Sales</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.follow.fus_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+                        <h5 class="d-inline pull-right">{{ $t('message.follow.fus_amount') }} $ {{ totalAmount }}</h5>
 
                         <table width="100%">
                             <tr>
@@ -200,108 +222,114 @@
                             <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
                         </span>
 
-                        <table id="tbl-followupsales"
-                               class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>Action</th>
-                                <th>#</th>
-                                <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">Url Pub</th>
-                                <th v-show="tblOptions.blink_id">Blink</th>
-                                <th v-show="tblOptions.arc_id">Artc</th>
-                                <th v-show="tblOptions.country">Country</th>
-                                <th v-show="tblOptions.in_charge">In-charge</th>
-                                <th v-show="tblOptions.seller" v-if="user.isOurs != 1">Seller</th>
-                                <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">Buyer</th>
-                                <th v-show="tblOptions.url">URL Publisher</th>
-                                <th v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">Price</th>
-                                <th v-show="tblOptions.link_from">Link From</th>
-                                <th v-show="tblOptions.link_to">Link To</th>
-                                <th v-show="tblOptions.anchor_text">Anchor Text</th>
-                                <th v-show="tblOptions.date_process">Date for Proccess</th>
-                                <th v-show="tblOptions.date_complete">Date Completed</th>
-                                <th v-show="tblOptions.status">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(sales, index) in listSales.data" :key="index">
-                                <td>
-                                    <div class="btn-group">
-                                        <button
-                                            data-toggle="modal"
-                                            data-target="#modal-update-sales"
-                                            title="Edit"
-                                            class="btn btn-default mr-2"
+                        <div class="table-responsive">
+                            <table id="tbl-followupsales"
+                                   class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>{{ $t('message.follow.fus_action') }}</th>
+                                    <th>#</th>
+                                    <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                                        {{ $t('message.follow.fus_url_pub_id') }}
+                                    </th>
+                                    <th v-show="tblOptions.blink_id">{{ $t('message.follow.fus_blink') }}</th>
+                                    <th v-show="tblOptions.arc_id">{{ $t('message.follow.fus_artc') }}</th>
+                                    <th v-show="tblOptions.country">{{ $t('message.follow.filter_country') }}</th>
+                                    <th v-show="tblOptions.in_charge">{{ $t('message.follow.filter_in_charge') }}</th>
+                                    <th v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ $t('message.follow.filter_seller') }}</th>
+                                    <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ $t('message.follow.filter_buyer') }}</th>
+                                    <th v-show="tblOptions.url">{{ $t('message.follow.fus_url_pub') }}</th>
+                                    <th v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                                        {{ $t('message.follow.fus_price') }}
+                                    </th>
+                                    <th v-show="tblOptions.link_from">{{ $t('message.follow.fus_link_from') }}</th>
+                                    <th v-show="tblOptions.link_to">{{ $t('message.follow.fus_link_to') }}</th>
+                                    <th v-show="tblOptions.anchor_text">{{ $t('message.follow.fus_at') }}</th>
+                                    <th v-show="tblOptions.date_process">{{ $t('message.follow.fus_date_process') }}</th>
+                                    <th v-show="tblOptions.date_complete">{{ $t('message.follow.filter_date_completed') }}</th>
+                                    <th v-show="tblOptions.status">{{ $t('message.follow.filter_status') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(sales, index) in listSales.data" :key="index">
+                                    <td>
+                                        <div class="btn-group">
+                                            <button
+                                                data-toggle="modal"
+                                                data-target="#modal-update-sales"
+                                                :title="$t('message.follow.edit')"
+                                                class="btn btn-default mr-2"
 
-                                            @click="doUpdate(sales)">
+                                                @click="doUpdate(sales)">
 
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
 
-                                        <button
-                                            v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1)"
-                                            :disabled="sales.status !== 'Pending'"
-                                            data-toggle="modal"
-                                            data-target="#modal-approve-pending"
-                                            class="btn btn-default"
-                                            title="Confirm Pending Order"
+                                            <button
+                                                v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1)"
+                                                :disabled="sales.status !== 'Pending'"
+                                                data-toggle="modal"
+                                                data-target="#modal-approve-pending"
+                                                class="btn btn-default"
+                                                :title="$t('message.follow.fus_confirm_pending')"
 
-                                            @click="confirmPendingSellerOrder(sales)">
+                                                @click="confirmPendingSellerOrder(sales)">
 
-                                            <i class="fas fa-check-circle"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>{{ index + 1}}</td>
-                                <td
-                                    v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
-                                <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
-                                <td v-show="tblOptions.arc_id">
-                                    {{ sales.article_id == null ? 'N/A':'' }}
-                                    <span
-                                        v-if="sales.article_id != null" title="Go to Article"
-                                        style="cursor: pointer; color: #1c85ff"
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>{{ index + 1}}</td>
+                                    <td
+                                        v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
+                                    <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
+                                    <td v-show="tblOptions.arc_id">
+                                        {{ sales.article_id == null ? 'N/A':'' }}
+                                        <span
+                                            v-if="sales.article_id != null" title="Go to Article"
+                                            style="cursor: pointer; color: #1c85ff"
 
-                                        @click="redirectToArticle(sales.article_id)">
+                                            @click="redirectToArticle(sales.article_id)">
                                         {{ sales.article_id }}
                                     </span>
-                                </td>
-                                <td
-                                    v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
-                                <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
-                                <td
-                                    v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
-                                <td
-                                    v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
-                                <td v-show="tblOptions.url">
-                                    <!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
-                                    <span v-if="sales.publisher == null">
+                                    </td>
+                                    <td
+                                        v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
+                                    <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
+                                    <td
+                                        v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ sales.publisher == null ? 'N/A' : (sales.publisher.user == null ? 'N/A' : (sales.publisher.user.username == null ? sales.publisher.user.name : sales.publisher.user.username)) }}</td>
+                                    <td
+                                        v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ sales.user == null ? 'N/A' : (sales.user.username == null ? sales.user.name : sales.user.username) }}</td>
+                                    <td v-show="tblOptions.url">
+                                        <!--                                    {{ sales.publisher == null ? 'N/A' : replaceCharacters(sales.publisher.url) }}-->
+                                        <span v-if="sales.publisher == null">
                                             N/A
                                         </span>
-                                    <span v-else>
+                                        <span v-else>
                                             <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
                                                 {{ replaceCharacters(sales.publisher.url) }}
                                             </a>
                                         </span>
-                                </td>
-                                <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
-                                <td v-show="tblOptions.link_from">
-                                    <div class="dont-break-out">
-                                        {{ sales.link_from }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.link_to">
-                                    <div class="dont-break-out">
-                                        {{ sales.link }}
-                                    </div>
-                                </td>
-                                <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
-                                <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
-                                <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
-                                <td v-show="tblOptions.status">{{ sales.status }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    </td>
+                                    <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
+                                    <td v-show="tblOptions.link_from">
+                                        <div class="dont-break-out">
+                                            {{ sales.link_from }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.link_to">
+                                        <div class="dont-break-out">
+                                            {{ sales.link }}
+                                        </div>
+                                    </td>
+                                    <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
+                                    <td v-show="tblOptions.date_process">{{ sales.date_process }}</td>
+                                    <td v-show="tblOptions.date_complete">{{ sales.live_date }}</td>
+                                    <td v-show="tblOptions.status">{{ sales.status }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -312,7 +340,10 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Sales Information | ID Backlink: <b class="text-primary">{{ updateModel.id }}</b> </h5>
+                        <h5 class="modal-title">
+                            {{ $t('message.follow.si_title') }}
+                            <b class="text-primary">{{ updateModel.id }}</b>
+                        </h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -324,7 +355,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Processed</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_date_process') }}</label>
                                         <input type="date" class="form-control" :disabled="true" v-model="updateModel.date_process">
                                     </div>
                                 </div>
@@ -332,21 +363,21 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Buyers name</label>
+                                    <label style="color: #333">{{ $t('message.follow.si_buyer_name') }}</label>
                                     <input type="text" :disabled="true" v-model="updateModel.user.name" class="form-control" required="required" >
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">URL Publisher</label>
+                                    <label style="color: #333">{{ $t('message.follow.fus_url_pub') }}</label>
                                     <input type="text" v-model="updateModel.url_publisher" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">URL Advertiser</label>
+                                    <label style="color: #333">{{ $t('message.follow.si_url_ad') }}</label>
                                     <input type="text" :disabled="true" v-model="updateModel.url_advertiser" class="form-control" required="required" >
                                 </div>
                             </div>
@@ -354,7 +385,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Price</label>
+                                        <label style="color: #333">{{ $t('message.follow.fus_price') }}</label>
                                         <input type="number" class="form-control" v-model="updateModel.price" :disabled="true" value="" required="required" >
                                     </div>
                                 </div>
@@ -363,7 +394,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Anchor text</label>
+                                        <label style="color: #333">{{ $t('message.follow.fus_at') }}</label>
                                         <input type="text" class="form-control" :disabled="!user.isAdmin && user.role_id !== 8" v-model="updateModel.anchor_text" required="required" >
                                     </div>
                                 </div>
@@ -372,7 +403,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Title</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_ip_title') }}</label>
                                         <input type="text" class="form-control" v-model="updateModel.title" required="required" :disabled="isLive">
                                         <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                     </div>
@@ -382,7 +413,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Link To</label>
+                                        <label style="color: #333">{{ $t('message.follow.fus_link_to') }}</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
                                     </div>
                                 </div>
@@ -391,7 +422,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.link_from}" class="form-group">
                                     <div>
-                                        <label style="color: #333">Link From</label>
+                                        <label style="color: #333">{{ $t('message.follow.fus_link_from') }}</label>
                                         <input type="text" class="form-control" v-model="updateModel.link_from" required="required" :disabled="isLive">
                                         <span v-if="messageForms.errors.link_from" v-for="err in messageForms.errors.link_from" class="text-danger">{{ err }}</span>
                                     </div>
@@ -400,9 +431,9 @@
 
                             <div class="col-sm-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
-                                    <label for="">Status Writer</label>
+                                    <label>{{ $t('message.follow.si_status_writer') }}</label>
                                     <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || user.role_id == 6" >
-                                        <option value="">Select Status</option>
+                                        <option value="">{{ $t('message.follow.si_select_status') }}</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
                                             {{ option }}
                                         </option>
@@ -413,7 +444,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Status Sales</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_status_sales') }}</label>
                                         <select
                                             v-model="updateModel.status"
                                             style="height: 37px;"
@@ -445,7 +476,7 @@
                             <div class="col-md-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Article ID</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_art_id') }}</label>
                                         <input type="text" class="form-control" v-model="updateModel.article_id" :disabled="true">
                                     </div>
                                 </div>
@@ -454,7 +485,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Date Completed</label>
+                                        <label style="color: #333">{{ $t('message.follow.filter_date_completed') }}</label>
                                         <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive || user.role_id === 6">
                                     </div>
                                 </div>
@@ -463,7 +494,7 @@
                             <div class="col-md-6" v-show="showReason">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Reason</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_reason') }}</label>
                                         <select  class="form-control pull-right" v-model="updateModel.reason" style="height: 37px;" @change="checkReason()">
                                             <option v-for="reason in listReason" v-bind:value="reason">{{ reason }}</option>
                                         </select>
@@ -474,7 +505,7 @@
                             <div class="col-md-12" v-show="showReason">
                                 <div class="form-group">
                                     <div>
-                                        <label style="color: #333">Notes (Issue/Cancelled)</label>
+                                        <label style="color: #333">{{ $t('message.follow.si_note_issue') }}</label>
                                         <textarea class="form-control" v-model="updateModel.reason_detailed"></textarea>
                                     </div>
                                 </div>
@@ -482,7 +513,7 @@
 
                             <div class="col-md-12" v-show="showReason">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
-                                    <label>Issue/Cancel File</label>
+                                    <label>{{ $t('message.follow.si_issue') }}</label>
 
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" :value="updateModel.reason_file" disabled>
@@ -491,7 +522,7 @@
                                             <button
                                                 :disabled="updateModel.reason_file === '' || updateModel.reason_file == null"
                                                 class="btn btn-primary"
-                                                title="View Issue/Cancel File"
+                                                :title="$t('message.follow.si_view_issue')"
                                                 data-toggle="modal"
                                                 data-target="#modal-view-issue-cancel-file"
 
@@ -512,15 +543,20 @@
                                     </div>
 
                                     <input type="file" class="form-control" enctype="multipart/form-data" ref="issue_file" name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png )</small><br/>
+                                    <small class="text-muted">{{ $t('message.follow.si_note') }}</small><br/>
                                     <span v-if="messageForms.errors.file" v-for="err in messageForms.errors.file" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.follow.close') }}
+                        </button>
+
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.follow.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -532,60 +568,65 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.follow.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-if="user.isOurs !== 1 || user.role_id !== 4" v-model="tblOptions.pub_id">URL Publisher ID</label>
+                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-if="user.isOurs !== 1 || user.role_id !== 4" v-model="tblOptions.pub_id">{{ $t('message.follow.sd_url_id') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.blink_id ? 'checked':''" v-model="tblOptions.blink_id">Backlink ID</label>
+                                <label><input type="checkbox" :checked="tblOptions.blink_id ? 'checked':''" v-model="tblOptions.blink_id">{{ $t('message.follow.sd_backlink_id') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.arc_id ? 'checked':''" v-model="tblOptions.arc_id">Article ID</label>
+                                <label><input type="checkbox" :checked="tblOptions.arc_id ? 'checked':''" v-model="tblOptions.arc_id">{{ $t('message.follow.si_art_id') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.country ? 'checked':''" v-model="tblOptions.country">Country</label>
+                                <label><input type="checkbox" :checked="tblOptions.country ? 'checked':''" v-model="tblOptions.country">{{ $t('message.follow.filter_country') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.in_charge ? 'checked':''" v-model="tblOptions.in_charge">In-charge</label>
+                                <label><input type="checkbox" :checked="tblOptions.in_charge ? 'checked':''" v-model="tblOptions.in_charge">{{ $t('message.follow.filter_in_charge') }}</label>
                             </div>
                             <div class="checkbox col-md-4" v-if="user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblOptions.seller ? 'checked':''" v-model="tblOptions.seller">Seller</label>
+                                <label><input type="checkbox" :checked="tblOptions.seller ? 'checked':''" v-model="tblOptions.seller">{{ $t('message.follow.filter_seller') }}</label>
                             </div>
                             <div class="checkbox col-md-4" v-if="user.isOurs != 1">
-                                <label><input type="checkbox" :checked="tblOptions.buyer ? 'checked':''" v-model="tblOptions.buyer">Buyer</label>
+                                <label><input type="checkbox" :checked="tblOptions.buyer ? 'checked':''" v-model="tblOptions.buyer">{{ $t('message.follow.filter_buyer') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">URL Publisher</label>
+                                <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">{{ $t('message.follow.fus_url_pub') }}</label>
                             </div>
                             <div class="checkbox col-md-4" v-if="user.isOurs !== 1 || user.role_id !== 4">
-                                <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">Price</label>
+                                <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">{{ $t('message.follow.fus_price') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.link_from ? 'checked':''" v-model="tblOptions.link_from">Link From</label>
+                                <label><input type="checkbox" :checked="tblOptions.link_from ? 'checked':''" v-model="tblOptions.link_from">{{ $t('message.follow.fus_link_from') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.link_to ? 'checked':''" v-model="tblOptions.link_to">Link To</label>
+                                <label><input type="checkbox" :checked="tblOptions.link_to ? 'checked':''" v-model="tblOptions.link_to">{{ $t('message.follow.fus_link_to') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.anchor_text ? 'checked':''" v-model="tblOptions.anchor_text">Anchor Text</label>
+                                <label><input type="checkbox" :checked="tblOptions.anchor_text ? 'checked':''" v-model="tblOptions.anchor_text">{{ $t('message.follow.fus_at') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.date_process ? 'checked':''" v-model="tblOptions.date_process">Date process</label>
+                                <label><input type="checkbox" :checked="tblOptions.date_process ? 'checked':''" v-model="tblOptions.date_process">{{ $t('message.follow.si_date_process') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.date_complete ? 'checked':''" v-model="tblOptions.date_complete">Date Completed</label>
+                                <label><input type="checkbox" :checked="tblOptions.date_complete ? 'checked':''" v-model="tblOptions.date_complete">{{ $t('message.follow.filter_date_completed') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.status ? 'checked':''" v-model="tblOptions.status">Status</label>
+                                <label><input type="checkbox" :checked="tblOptions.status ? 'checked':''" v-model="tblOptions.status">{{ $t('message.follow.filter_status') }}</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.follow.close') }}
+                        </button>
+
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.follow.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -597,7 +638,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Issue/Cancel File</h5>
+                        <h5 class="modal-title">{{ $t('message.follow.si_issue') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -609,7 +650,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('message.follow.close') }}</button>
                     </div>
                 </div>
             </div>
@@ -621,23 +662,21 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Seller Confirmation</h4>
+                        <h4 class="modal-title">{{ $t('message.follow.sc_title') }}</h4>
                     </div>
 
                     <div class="modal-body">
                         <div class="alert alert-info" role="alert">
                             <i class="fas fa-info-circle"></i>
                             <span>
-                                Please confirm/clarify that the details you input, listed below are correct.
-                                Please provide an answer for all <strong>CORRECT/INCORRECT</strong>
-                                buttons for the <strong>CONFIRM/CANCEL</strong> order buttons to appear.
+                                {{ $t('message.follow.sc_note') }}
                             </span>
                         </div>
 
                         <!-- details -->
                         <div v-if="sellerConfirmationData.hasOwnProperty('id')" class="card">
                             <div class="card-header">
-                                <strong>Details</strong>
+                                <strong>{{ $t('message.follow.sc_details') }}</strong>
                             </div>
                             <div class="card-body">
 
@@ -645,27 +684,31 @@
                                     <thead>
                                         <tr>
                                             <td style="width: 75%"></td>
-                                            <td class="text-center font-weight-bold">Correct</td>
-                                            <td class="text-center font-weight-bold">Incorrect</td>
+                                            <td class="text-center font-weight-bold">
+                                                {{ $t('message.follow.sc_correct') }}
+                                            </td>
+                                            <td class="text-center font-weight-bold">
+                                                {{ $t('message.follow.sc_incorrect') }}
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td>
                                             <p class="mb-1">
-                                                Backlinks ID:
+                                                {{ $t('message.follow.sc_blink_id') }}
                                                 <strong>
                                                     {{ sellerConfirmationData.id }}
                                                 </strong>
                                             </p>
                                             <p class="mb-1">
-                                                URL:
+                                                {{ $t('message.follow.sc_url') }}
                                                 <strong>
                                                     {{ replaceCharacters(sellerConfirmationData.publisher.url) }}
                                                 </strong>
                                             </p>
                                             <p class="mb-1">
-                                                Price:
+                                                {{ $t('message.follow.sc_price') }}
                                                 <strong>
                                                     {{ sellerConfirmationData.price == null ? '' : '$' + sellerConfirmationData.price }}
                                                 </strong>
@@ -708,22 +751,22 @@
                         <!-- need to clarify -->
                         <div v-if="sellerConfirmationData.hasOwnProperty('id')" class="card">
                             <div class="card-header">
-                                <strong>Need to Clarify</strong>
+                                <strong>{{ $t('message.follow.sc_need_clarify') }}</strong>
                             </div>
                             <div class="card-body">
                                 <table style="table-layout: fixed; width: 100%">
                                     <thead>
                                         <tr>
                                             <td style="width: 75%"></td>
-                                            <td class="text-center font-weight-bold">Correct</td>
-                                            <td class="text-center font-weight-bold">Incorrect</td>
+                                            <td class="text-center font-weight-bold">{{ $t('message.follow.sc_correct') }}</td>
+                                            <td class="text-center font-weight-bold">{{ $t('message.follow.sc_incorrect') }}</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr style="border-bottom: 1px solid lightgray;">
                                             <td style="padding: 15px 0 15px 0">
                                                 <p class="mb-1">
-                                                    Include Article:
+                                                    {{ $t('message.follow.sc_inc_article') }}
                                                     <strong>
                                                         {{ sellerConfirmationData.publisher.inc_article }}
                                                     </strong>
@@ -731,12 +774,12 @@
 
                                                 <div class="mb-1">
                                                     <p class="mb-1">
-                                                        <span class="badge badge-danger">No</span>
-                                                        means we will provide the article for you.
+                                                        <span class="badge badge-danger">{{ $t('message.follow.no') }}</span>
+                                                        {{ $t('message.follow.sc_inc_no') }}
                                                     </p>
                                                     <p class="mb-1">
-                                                        <span class="badge badge-success">Yes</span>
-                                                        means we're not providing article for you.
+                                                        <span class="badge badge-success">{{ $t('message.follow.yes') }}</span>
+                                                        {{ $t('message.follow.sc_inc_yes') }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -773,20 +816,20 @@
                                         <tr style="border-bottom: 1px solid lightgray;">
                                             <td style="padding: 15px 0 15px 0">
                                                 <p class="mb-1">
-                                                    Do Follow:
+                                                    {{ $t('message.follow.sc_do_follow') }}
                                                     <strong>
-                                                        yes
+                                                        {{ $t('message.follow.yes') }}
                                                     </strong>
                                                 </p>
 
                                                 <div class="mb-1">
                                                     <p class="mb-1">
-                                                        <span class="badge badge-danger">No</span>
-                                                        Accept No-Follow link.
+                                                        <span class="badge badge-danger">{{ $t('message.follow.no') }}</span>
+                                                        {{ $t('message.follow.sc_accept_no_follow') }}
                                                     </p>
                                                     <p class="mb-1">
-                                                        <span class="badge badge-success">Yes</span>
-                                                        Accept Do-Follow link.
+                                                        <span class="badge badge-success">{{ $t('message.follow.yes') }}</span>
+                                                        {{ $t('message.follow.sc_accept_do_follow') }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -823,20 +866,20 @@
                                         <tr>
                                             <td style="padding: 15px 0 15px 0">
                                                 <p class="mb-1">
-                                                    Permanent Article:
+                                                    {{ $t('message.follow.sc_permanent_article') }}
                                                     <strong>
-                                                        yes
+                                                        {{ $t('message.follow.yes') }}
                                                     </strong>
                                                 </p>
 
                                                 <div class="mb-1">
                                                     <p class="mb-1">
-                                                        <span class="badge badge-danger">No</span>
-                                                        Article will not be available for lifetime.
+                                                        <span class="badge badge-danger">{{ $t('message.follow.no') }}</span>
+                                                        {{ $t('message.follow.sc_no_perm_article') }}
                                                     </p>
                                                     <p class="mb-1">
-                                                        <span class="badge badge-success">Yes</span>
-                                                        Article will be available for lifetime.
+                                                        <span class="badge badge-success">{{ $t('message.follow.yes') }}</span>
+                                                        {{ $t('message.follow.sc_yes_perm_article') }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -884,7 +927,7 @@
                             @click="processPendingSellerOrder(sellerConfirmationData.id, 'approve')">
 
                             <i class="fa fa-check"></i>
-                            Confirm
+                            {{ $t('message.follow.confirm') }}
                         </button>
 
                         <button
@@ -895,7 +938,7 @@
                             @click="processPendingSellerOrder(sellerConfirmationData.id, 'cancel')">
 
                             <i class="fa fa-times"></i>
-                            Cancel
+                            {{ $t('message.follow.cancel') }}
                         </button>
 
                         <button
@@ -904,7 +947,7 @@
                             class="btn btn-default pull-left"
 
                             @click="resetConfirmationValues()">
-                            Close
+                            {{ $t('message.follow.close') }}
                         </button>
                     </div>
                 </div>
@@ -1402,6 +1445,7 @@
             },
 
             async submitUpdate(params) {
+                let self = this;
 
                 // make form data for file
                 let form_data = new FormData();
@@ -1430,8 +1474,8 @@
                     this.$refs.issue_file.value = '';
 
                     swal.fire(
-                        'Success',
-                        'Updated Successfully',
+                        self.$t('message.follow.alert_success'),
+                        self.$t('message.follow.alert_updated_successfully'),
                         'success'
                     )
 
@@ -1458,6 +1502,7 @@
             },
 
             processPendingSellerOrder(id, process) {
+                let self = this;
                 let loader = this.$loading.show();
 
                 axios.post('/api/process-pending-order', {
@@ -1472,14 +1517,14 @@
 
                     if (process === 'approve') {
                         swal.fire(
-                            'Success!',
-                            'Pending order successfully confirmed.',
+                            self.$t('message.follow.alert_success'),
+                            self.$t('message.follow.alert_pending_order_confirmed'),
                             'success'
                         )
                     } else {
                         swal.fire(
-                            'Cancelled!',
-                            'Pending order successfully cancelled.',
+                            self.$t('message.follow.alert_cancelled'),
+                            self.$t('message.follow.alert_pending_order_cancelled'),
                             'error'
                         )
                     }
@@ -1491,8 +1536,8 @@
                     console.log(err)
 
                     swal.fire(
-                        'Error!',
-                        'Something went wrong while processing the pending order.',
+                        self.$t('message.follow.alert_error'),
+                        self.$t('message.follow.alert_pending_order_error'),
                         'error'
                     )
 
