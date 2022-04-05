@@ -82,7 +82,7 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="user.isAdmin"
+                        v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))"
                         :class="{
                             'active' :
                                 $route.name == 'roles' ||
