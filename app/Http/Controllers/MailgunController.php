@@ -828,10 +828,26 @@ class MailgunController extends Controller
     {
         $mail_logs = DB::table('replies')
             ->where('replies.is_sent', 1)
-            ->select('replies.from_mail as from', 'replies.sender as user_mail', 'replies.received as to', 'replies.status_code as status', 'replies.created_at as date');
+            ->select(
+                'replies.id',
+                'replies.from_mail as from',
+                'replies.sender as user_mail',
+                'replies.received as to',
+                'replies.status_code as status',
+                'replies.created_at as date',
+                'replies.body',
+                'replies.body_html',
+                'replies.stripped_html',
+                'replies.subject',
+                'replies.attachment'
+            );
 
         if (isset($request->status) && $request->status != '') {
             $mail_logs = $mail_logs->where('replies.status_code', $request->status);
+        }
+
+        if (isset($request->subject) && $request->subject != '') {
+            $mail_logs = $mail_logs->where('replies.subject', 'like', '%' . $request->subject . '%');
         }
 
         if (isset($request->user_email) && $request->user_email != '') {

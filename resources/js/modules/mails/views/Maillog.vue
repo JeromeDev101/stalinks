@@ -213,6 +213,13 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label>Subject</label>
+                                    <input type="text" class="form-control" v-model="filterModel.subject">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label>Status</label>
                                     <select class="form-control" v-model="filterModel.status">
                                         <option value="">All</option>
@@ -254,7 +261,9 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
+                                <th>Action</th>
                                 <th>User Email</th>
+                                <th>Subject</th>
                                 <th>From</th>
                                 <th>To</th>
                                 <th>Bcc</th>
@@ -264,8 +273,18 @@
                             </thead>
                             <tbody>
                             <tr v-for="(log, index) in Listlogs.data" :key="index">
-                                <td>{{ index + 1 }}</td>
+                                <td>{{ log.id }}</td>
+                                <td>
+                                    <button
+                                        class="btn btn-default"
+                                        title="Check Email Content"
+
+                                        @click="viewMailLogContent(log)">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </td>
                                 <td>{{ log.user_mail }}</td>
+                                <td>{{ log.subject }}</td>
                                 <td>{{ log.from }}</td>
                                 <td v-html="checkEmailTo(log.to)"></td>
                                 <td></td>
@@ -287,15 +306,116 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Email Content Start -->
+        <div class="modal fade" id="modal-email-content" ref="modalEmailContent" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Email Content
+                        </h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <span class="badge" :class="statusClass(emailContent.status)">
+                                    {{ statusLabel(emailContent.status) }}
+                                </span>
+                                <label class="font-weight-bold">{{ emailContent.subject }}</label>
+                            </div>
+                        </div>
+
+                        <div v-if="viewAttachmentChecker(emailContent)" class="row">
+
+                            <template v-if="!Array.isArray(emailContent.attachment)">
+                                <div v-if="!Array.isArray(emailContent.attachment)" class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body" style="white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis">
+                                            <a
+                                                target="_blank"
+                                                class="mailbox-attachment-name"
+                                                :download="emailContent.attachment.display_name"
+                                                :href="emailContent.attachment.url">
+
+                                                <i class="fa fa-paperclip"></i>
+                                                {{ emailContent.attachment.display_name }}
+                                            </a>
+
+                                            <span class="mailbox-attachment-size">
+                                                {{ bytesToSize(emailContent.attachment.size) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template v-if="Array.isArray(emailContent.attachment)">
+                                <div v-for="att in emailContent.attachment" class="col-4">
+                                    <div class="card">
+                                        <div class="card-body" style="white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis">
+                                            <a
+                                                target="_blank"
+                                                class="mailbox-attachment-name"
+                                                :title="att.display_name"
+                                                :download="att.display_name"
+                                                :href="att.url">
+
+                                                <i class="fa fa-paperclip"></i>
+                                                {{ att.display_name }}
+                                            </a>
+
+                                            <span class="mailbox-attachment-size">
+                                                {{ bytesToSize(att.size) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <iframe
+                                            v-if="emailContent.content"
+                                            width="100%"
+                                            ref="iframeMailLog"
+                                            frameborder="0">
+
+                                        </iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-default"
+                            data-dismiss="modal"
+
+                            @click="modalCloser()">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Email Content End -->
     </div>
 
 </template>
 
 <script>
-    import { mapState } from 'vuex';
-    import axios from 'axios';
+import {mapState} from 'vuex';
+import axios from 'axios';
 
-    export default {
+export default {
 
         data() {
             return {
@@ -319,11 +439,23 @@
                     paginate: this.$route.query.paginate || 50,
                     user_email: this.$route.query.user_email || '',
                     status: this.$route.query.status || '',
+                    subject: this.$route.query.subject || '',
                     recipient: '',
                 },
                 listUserEmail: [],
 
                 listPageOptions: [5, 10, 25, 50, 100],
+
+                emailContent: {
+                    status: '',
+                    subject: '',
+                    content: '',
+                    attachment : {
+                        url : '',
+                        size : '',
+                        name : '',
+                    },
+                }
             };
         },
 
@@ -342,6 +474,8 @@
             this.getListUserEmails();
             this.getMaillogs();
             this.getMailLogsTotals()
+
+            $(this.$refs.modalEmailContent).on("shown.bs.modal", this.calculateIframeHeight)
         },
 
         methods: {
@@ -366,6 +500,83 @@
                     .then((res) => {
                         this.listUserEmail = res.data;
                     })
+            },
+
+            viewMailLogContent (log) {
+                let element = this.$refs.modalEmailContent
+                $(element).modal('show')
+
+                this.emailContent.subject = log.subject;
+                this.emailContent.status = log.status
+
+                // email content
+                let body = JSON.parse(log.body);
+                let body_html = JSON.parse(log.body_html);
+                let stripped_html = JSON.parse(log.stripped_html);
+
+                let content = body_html
+                    ? body_html['body-html']
+                    : stripped_html
+                        ? stripped_html['stripped-html']
+                        : body['body-plain']
+
+                content = '<pre style="white-space: pre-line;"> <base target="_blank">' + content + '</pre>'
+
+                this.emailContent.content = content;
+
+                // email attachments
+                if (log.attachment !== '' && log.attachment !== '[]') {
+                    this.emailContent.attachment = JSON.parse(log.attachment);
+                }
+            },
+
+            iFrameLoader (iframeBody) {
+                const iFrameEl = this.$refs.iframeMailLog
+                const doc = iFrameEl.contentWindow.document
+
+                doc.open()
+                doc.write(iframeBody)
+                doc.close()
+
+                iFrameEl.onload = () => {
+                    iFrameEl.style.height = "0"
+                    iFrameEl.style.height = (doc.body.scrollHeight + 25) + 'px';
+                }
+            },
+
+            calculateIframeHeight () {
+                // load iframe
+                this.iFrameLoader(this.emailContent.content)
+            },
+
+            modalCloser () {
+                this.emailContent = {
+                    status: '',
+                    subject: '',
+                    content: '',
+                    attachment : {
+                        url : '',
+                        size : '',
+                        name : '',
+                    },
+                }
+            },
+
+            viewAttachmentChecker (email) {
+                return email.attachment !== null && (email.attachment.url !== '' && email.attachment.url !== '[]');
+            },
+
+            bytesToSize(bytes) {
+                let sizes = [
+                    'Bytes',
+                    'KB',
+                    'MB',
+                    'GB',
+                    'TB'
+                ];
+                if (bytes == 0) return '0 Byte';
+                let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
             },
 
             statusClass(status) {
@@ -405,6 +616,7 @@
                 this.filterModel = {
                     page: 1,
                     status: '',
+                    subject: '',
                     paginate: 50,
                     user_email: '',
                     recipient: '',
