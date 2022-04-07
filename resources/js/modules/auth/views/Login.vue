@@ -152,6 +152,7 @@
                                     <button type="button" @click="registrationPage" class="btn btn-link pt-0 pl-0">{{ $t('message.login.b1') }}</button>
                                 </h6>
 
+                                <span v-if="error && objectNotEmpty(error.email)" class="text-danger mb-4">{{ error.email[0] }}</span>
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -159,10 +160,10 @@
                                         </span>
                                     </div>
                                     <input :class="{ 'form-control': true, 'is-invalid': error && objectNotEmpty(error.email)}" :placeholder="$t('message.login.l1')" v-model="credentials.email" autofocus="autofocus" type="email" id="user-email" autocomplete="off">
-                                    <span v-if="error && objectNotEmpty(error.email)" class="text-danger">{{ error.email[0] }}</span>
                                 </div>
-                                
 
+                                <span v-if="error && objectNotEmpty(error.password)"  class="text-danger">{{ error.password[0] }}</span>
+                                <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
                                 <div class="input-group mb-5">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -170,10 +171,7 @@
                                         </span>
                                     </div>
                                     <input v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" :placeholder="$t('message.login.l2')" v-model="credentials.password" type="password" id="user-password" class="form-control">
-                                    <span v-if="error && objectNotEmpty(error.password)"  class="text-danger">{{ error.password[0] }}</span>
-                                    <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
                                 </div>
-
 
                                 <div class="form-group mb-4">
                                     <button type="submit" class="btn btn-primary btn-lg btn-block"><span><b>{{ $t('message.login.b2') }}</b></span></button>

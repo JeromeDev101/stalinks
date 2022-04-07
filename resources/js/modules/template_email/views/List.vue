@@ -9,6 +9,14 @@
                         </div>
                     </div>
                     <div class="card-body">
+
+                        <div class="form-check" v-if="user.role_id == 1 || user.role_id == 3 || user.role_id == 8">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" v-model="filterModel.is_general_template" @click="doSearchList"> 
+                                General template
+                            </label>
+                        </div>
+
                         <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
                         <div class="input-group input-group-sm float-right" style="width: 65px">
                             <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
@@ -131,7 +139,7 @@
                     <div class="modal-body relative">
                         <form class="row" action="">
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
                                     <label style="color: #333">{{ $t('message.template.al_lang') }}</label>
                                     <div>
@@ -152,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.mail_name}" class="form-group">
                                     <label style="color: #333">{{ $t('message.template.al_email') }}</label>
                                     <input
@@ -172,7 +180,19 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <!-- only admin, dev and QC manager -->
+                            <div class="col-md-12" v-if="user.role_id == 1 || user.role_id == 3 || user.role_id == 8">
+                                <hr>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" v-model="emailModel.is_general_template"> 
+                                            General template
+                                        </label>
+                                    </div>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">{{ $t('message.template.al_ip_title') }}</label>
                                     <input
@@ -357,7 +377,8 @@
                     id: 0,
                     title: '',
                     content: '',
-                    country_id: 0
+                    country_id: 0,
+                    is_general_template: false
                 },
 
                 emailUpdate: {
@@ -369,6 +390,7 @@
 
                 filterModel: {
                     title: this.$route.query.title || '',
+                    is_general_template: this.$route.query.is_general_template || false,
                     mail_name: this.$route.query.mail_name || '',
                     mail_name_temp: this.$route.query.mail_name_temp || '',
                     content: this.$route.query.content || '',
@@ -442,6 +464,7 @@
                 that.filterModel.content = that.filterModel.content_temp;
                 that.filterModel.country_id = that.filterModel.country_id_temp;
                 that.filterModel.mail_name = that.filterModel.mail_name_temp;
+                that.filterModel.is_general_template = that.filterModel.is_general_template ? 0:1;
 
                 this.$router.push({
                     query: that.filterModel,
@@ -542,6 +565,7 @@
             async submitAdd() {
                 let that = this;
                 this.isPopupLoading = true;
+
                 await this.$store.dispatch('actionAddTemplate', that.emailModel);
                 this.isPopupLoading = false;
 

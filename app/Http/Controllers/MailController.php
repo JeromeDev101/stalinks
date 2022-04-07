@@ -45,6 +45,11 @@ class MailController extends Controller
             'where' => []
         ];
 
+
+        if (isset($input['is_general_template'])) {
+            $is_general_template = $input['is_general_template'];
+        }
+
         if (isset($input['page'])) {
             $page = $input['page'];
         }
@@ -73,13 +78,14 @@ class MailController extends Controller
             $filters['where'][] = ['country_id', '=', $input['country_id']];
         }
 
-        $data = $this->mailRepository->getTemplateList($page, $perPage, $filters, $isFullPage);
+        $data = $this->mailRepository->getTemplateList($page, $perPage, $filters, $isFullPage, $is_general_template);
 
         return response()->json($this->addPaginationRaw($data));
     }
 
     public function store(Request $request) {
         $input = $request->only(['title', 'content', 'mail_name', 'country_id']);
+        $input['is_general_template'] = $request->is_general_template ? 1:0;
 
         Validator::make($input, [
             'title' => 'required|unique:mail_contents|max:255',
