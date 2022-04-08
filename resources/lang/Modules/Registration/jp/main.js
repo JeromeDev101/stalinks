@@ -22,6 +22,31 @@ export default {
     b: '送信する',
     alert: '検証のために、メールの受信トレイ、スパム、またはプロモーションを確認して、リンクをクリックしてプロセスを完了してください。',
 
+    //banner 1
+    banner_1: '南アジア初のバックリンクデスク',
+    banner1_text1: 'StaLinksは、収益性の高いゲストポストのバックリンクを提供し、',
+    banner1_text2: 'Googleランキングを上げるためのデジタルマーケットプレイスです。',
+
+    //banner 2
+    banner_2: 'より効率的にバイヤーを探すのはお任せください。ボリュームバイヤーを獲得して利益率アップ。',
+    banner2_text1: 'ご登録',
+    banner2_text2: 'URLのCSVをアップロード',
+    banner2_text3: '売上管理',
+    banner2_text4: '利益率アップ',
+
+    //banner 3
+    banner_3: 'バックリンクを獲得しアンカーテキストが含まれるゲストポストを購入することでランキングを上げることができます。',
+    banner3_text1: 'ご登録',
+    banner3_text2: 'ご注文',
+    banner3_text3: 'ご注文を簡単管理',
+
+    //banner 4
+    banner_4: 'ゲスト・ポスト・ライターになってどこでも副収入を獲得!',
+    banner4_text1: 'ご登録',
+    banner4_text2: 'ライティング開始',
+    banner4_text3: '収入の管理',
+    banner4_text4: '報酬のお受け取り',
+
     // account types
     seller: 'セーラー',
     buyer: 'バイヤー',

@@ -86,141 +86,241 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card mt-5 pb-3">
-                    <div class="card-body mx-5">
-                        <h4>{{ $t('message.registration.title') }}</h4>
-                        <hr class="mb-4"/>
+        <div class="container">
+        <div class="row">
+        
+            <div class="col-md-8 d-none d-lg-block d-xl-block align-middle">
+                <div class="pr-5" v-if="RegisterModel.type == '' || RegisterModel.type == 'Affiliate'">
+                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_1') }}</h1>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner1_text1') }}
+                    </p>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner1_text2') }}
+                    </p>
+                </div>
 
-                        <div class="alert alert-success" v-if="isVerifiedEmail">
-                            {{ $t('message.registration.alert') }}
+                <div class="pr-5" v-if="RegisterModel.type == 'Seller'">
+                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_2') }}</h1>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner2_text1') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner2_text2') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner2_text3') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner2_text4') }}
+                    </p>
+                    <br>
+                </div>
+
+                <div class="pr-5" v-if="RegisterModel.type == 'Buyer'">
+                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_3') }}</h1>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner3_text1') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner3_text2') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner3_text3') }}
+                    </p>
+                    <br>
+                </div>
+
+                <div class="pr-5" v-if="RegisterModel.type == 'Writer'">
+                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_4') }}</h1>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner4_text1') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner4_text2') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner4_text3') }}
+                    </p>
+                    <br>
+                    <p class="text-white lead custom-text">
+                        {{ $t('message.registration.banner4_text4') }}
+                    </p>
+                    <br>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card pb-3 px-2 custom-card">
+                            <div class="card-body">
+                                <h4>{{ $t('message.registration.title') }}</h4>
+                                <hr class="mb-4"/>
+
+                                <div class="alert alert-success" v-if="isVerifiedEmail">
+                                    {{ $t('message.registration.alert') }}
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
+                                            <label>{{ $t('message.registration.l1') }} <span class="text-danger">*</span></label>
+                                            <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
+                                                <option value="">{{ $t('message.registration.ph1') }}</option>
+
+                                                <option value="Seller">
+                                                    {{ $t('message.registration.seller') }}
+                                                </option>
+
+                                                <option value="Buyer">
+                                                    {{ $t('message.registration.buyer') }}
+                                                </option>
+
+                                                <option value="Writer">
+                                                    {{ $t('message.registration.writer') }}
+                                                </option>
+
+                                                <option value="Affiliate">
+                                                    {{ $t('message.registration.affiliate') }}
+                                                </option>
+                                            </select>
+                                            <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.email}">
+                                            <label>{{ $t('message.registration.l3') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" v-model="RegisterModel.email" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph3')">
+                                            <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.password}">
+                                            <label>{{ $t('message.registration.l5') }} <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" v-model="RegisterModel.password" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph5')">
+                                            <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}">
+                                            <label>{{ $t('message.registration.l6') }} <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" v-model="RegisterModel.c_password" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph6')">
+                                            <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.username}">
+                                            <label>{{ $t('message.registration.l2') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" v-model="RegisterModel.username" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph2')">
+                                            <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
+                                            <label>{{ $t('message.registration.l4') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph4')">
+                                            <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12" v-if="RegisterModel.type === 'Buyer'">
+                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.affiliate_code}">
+                                            <label class="mb-0">{{ $t('message.registration.l7') }}</label>
+                                            <br>
+                                            <small class="font-italic text-secondary">
+                                                <i class="fa fa-info-circle"></i>
+                                                {{ $t('message.registration.info1') }}
+                                            </small>
+                                            <input
+                                                v-model="RegisterModel.affiliate_code"
+                                                type="text"
+                                                class="form-control mt-2"
+                                                :placeholder="$t('message.registration.ph7')">
+
+                                            <span
+                                                v-if="messageForms.errors.affiliate_code"
+                                                v-for="err in messageForms.errors.affiliate_code"
+                                                class="text-danger">
+                                                {{ err }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 mt-4">
+                                        <p>
+                                            <input type="checkbox" v-model="BtnAccept" @change="isEnableSubmit =  isEnableSubmit ? false:true">
+                                            {{ $t('message.registration.term1') }}
+                                            <a href="#" data-toggle="modal" data-target="#modalTermsAndCondition">
+                                                {{ $t('message.registration.term2') }}
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <span>{{ $t('message.registration.login1') }} </span>
+                                        <router-link :to="{ path: '/login' }">
+                                            {{ $t('message.registration.login2') }}
+                                        </router-link>
+                                    </div>
+
+                                    <div class="col-md-12 mt-4">
+                                        <button @click="submitForm" :disabled="isEnableSubmit" type="submit" class="btn btn-primary btn-lg btn-block">{{ $t('message.registration.b') }} <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
                         </div>
-
-                        <div class="row">
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
-                                    <label>{{ $t('message.registration.l1') }} <span class="text-danger">*</span></label>
-                                    <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
-                                        <option value="">{{ $t('message.registration.ph1') }}</option>
-
-                                        <option value="Seller">
-                                            {{ $t('message.registration.seller') }}
-                                        </option>
-
-                                        <option value="Buyer">
-                                            {{ $t('message.registration.buyer') }}
-                                        </option>
-
-                                        <option value="Writer">
-                                            {{ $t('message.registration.writer') }}
-                                        </option>
-
-                                        <option value="Affiliate">
-                                            {{ $t('message.registration.affiliate') }}
-                                        </option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.username}">
-                                    <label>{{ $t('message.registration.l2') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.username" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph2')">
-                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email}">
-                                    <label>{{ $t('message.registration.l3') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.email" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph3')">
-                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.name}">
-                                    <label>{{ $t('message.registration.l4') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="RegisterModel.name" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph4')">
-                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.password}">
-                                    <label>{{ $t('message.registration.l5') }} <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" v-model="RegisterModel.password" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph5')">
-                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}">
-                                    <label>{{ $t('message.registration.l6') }} <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" v-model="RegisterModel.c_password" name="" aria-describedby="helpId" :placeholder="$t('message.registration.ph6')">
-                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-12" v-if="RegisterModel.type === 'Buyer'">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.affiliate_code}">
-                                    <label class="mb-0">{{ $t('message.registration.l7') }}</label>
-                                    <br>
-                                    <small class="font-italic text-secondary">
-                                        <i class="fa fa-info-circle"></i>
-                                        {{ $t('message.registration.info1') }}
-                                    </small>
-                                    <input
-                                        v-model="RegisterModel.affiliate_code"
-                                        type="text"
-                                        class="form-control mt-2"
-                                        :placeholder="$t('message.registration.ph7')">
-
-                                    <span
-                                        v-if="messageForms.errors.affiliate_code"
-                                        v-for="err in messageForms.errors.affiliate_code"
-                                        class="text-danger">
-                                        {{ err }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12 mt-4">
-                                <p>
-                                    <input type="checkbox" v-model="BtnAccept" @change="isEnableSubmit =  isEnableSubmit ? false:true">
-                                    {{ $t('message.registration.term1') }}
-                                    <a href="#" data-toggle="modal" data-target="#modalTermsAndCondition">
-                                        {{ $t('message.registration.term2') }}
-                                    </a>
-                                </p>
-                            </div>
-
-                            <div class="col-md-12">
-                                <span>{{ $t('message.registration.login1') }} </span>
-                                <router-link :to="{ path: '/login' }">
-                                    {{ $t('message.registration.login2') }}
-                                </router-link>
-                            </div>
-
-                            <div class="col-md-12 mt-4">
-                                <button @click="submitForm" :disabled="isEnableSubmit" type="submit" class="btn btn-primary btn-flat pull-right">{{ $t('message.registration.b') }} <i class="fa fa-refresh fa-spin" v-if="isPopupLoading" ></i></button>
-                            </div>
-
-                        </div>
-
                     </div>
 
                 </div>
             </div>
-
         </div>
+        </div>
+
+                
 
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
+
+
+<style scoped>
+    .custom-card {
+        box-shadow: -3px 41px 40px -13px rgba(0,0,0,0.53);
+        -webkit-box-shadow: -3px 41px 40px -13px rgba(0,0,0,0.53);
+        -moz-box-shadow: -3px 41px 40px -13px rgba(0,0,0,0.53);
+    }
+
+    .text-white { text-shadow: -3px 3px 4px rgba(0,0,0,0.71); }
+
+    .text-yellow {
+        color: FEA02F;
+    }
+
+    .custom-text { font-size: 2.5em; }
+
+    h1 { text-shadow: -3px 3px 4px rgba(0,0,0,0.71); }
+</style>
 
 <script>
     import { mapState } from 'vuex';
@@ -251,13 +351,12 @@
                 isEnableSubmit: true,
                 // countryList: [],
                 BtnAccept: false,
-
                 pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
             }
         },
 
         created() {
-            //
+            this.RegisterModel.type = this.$route.query.type ? this.$route.query.type:''
         },
 
         computed: {

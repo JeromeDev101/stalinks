@@ -8,7 +8,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body px-5">
                     <!-- h1 -->
                     <div class="terms-header">
                         <h5>{{ $t('message.terms.h1') }}</h5>
