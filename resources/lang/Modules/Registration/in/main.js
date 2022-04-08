@@ -23,29 +23,29 @@ export default {
     alert: 'Please for validation check your email Inbox or Spam or Promotion to click on the link to complete the process.',
 
     //banner 1
-    banner_1: 'Situs jual beli backlink pertama di asia tenggara',
-    banner1_text1: 'Stalinks adalah situs jual beli yang menyediakan backlink posting tamu yang menguntungkan untuk meningkatkan peringkat google Anda.',
-    banner1_text2: 'Kami menghubungkan pembeli dan penjual terverifikasi di seluruh dunia dengan harga dan keamanan yang kompetitif.',
+    banner_1: 'दक्षिण एशिया के लिए पहला बैकलिंक डेस्क!',
+    banner1_text1: 'Stalinks एक डिजिटल मार्केटप्लेस है जो आपकी गूगल रैंकिंग को बढ़ाने के लिए लाभदायक  गेस्ट पोस्ट बैकलिंक्स प्रदान करता है।.',
+    banner1_text2: 'हम दुनिया भर में सत्यापित खरीदारों और विक्रेताओं को प्रतिस्पर्धी मूल्य और सुरक्षा से जोड़ते हैं।.',
 
     //banner 2
-    banner_2: 'Efisien, biarkan kami mendapatkan pembeli untuk Anda. Hasilkan lebih banyak uang dengan jumlah pembeli kami.',
-    banner2_text1: 'Daftar',
-    banner2_text2: 'Uanggah CSV URLS anda',
-    banner2_text3: 'Tindak lanjuti penjualan anda',
-    banner2_text4: 'Mulai Menghasilkan',
+    banner_2: 'कुशल बनें, आइए हम आपके लिए खरीदार लाते हैं। हमारे खरीदारों की संख्या के साथ अधिक पैसा कमाएं।',
+    banner2_text1: 'रजिस्टर करें',
+    banner2_text2: 'अपने URLS का CSV अपलोड करें',
+    banner2_text3: 'अपनी बिक्री के साथ जाँच करें',
+    banner2_text4: 'कमाई शुरू करें',
 
     //banner 3
-    banner_3: 'Mulai Tingkatkan peringkat Anda dengan membeli posting tamu di mana Anda akan memasukkan jangkar Anda untuk mendapatkan tautan balik Anda.',
-    banner3_text1: 'Daftar',
-    banner3_text2: 'Membuat pesanan',
-    banner3_text3: 'Tindak lanjuti pesanan anda',
+    banner_3: 'गेस्ट पोस्ट खरीदकर अपनी रैंकिंग बढ़ाना शुरू करें जहां आप अपने बैकलिंक्स प्राप्त करने के लिए अपना एंकर डालेंगे।',
+    banner3_text1: 'पंजीकरण',
+    banner3_text2: 'एक आदेश करें',
+    banner3_text3: 'अपने आदेशों का पालन करें',
 
     //banner 4
-    banner_4: 'Bagaimana menjadi penulis posting tamu dan mulai menghasilkan uang!',
-    banner4_text1: 'Daftar',
-    banner4_text2: 'Mulai Menulis',
-    banner4_text3: 'Tindak Lanjuti Penghasilan Anda',
-    banner4_text4: 'Mulai Menghasilkan',
+    banner_4: 'गेस्ट पोस्ट राइटर कैसे बनें और पैसा कमाना शुरू करें!',
+    banner4_text1: 'रजिस्टर करें',
+    banner4_text2: 'लिखना शुरू करें',
+    banner4_text3: 'अपनी आय की जांच करें',
+    banner4_text4: 'कमाई शुरू करें',
 
     // account types
     seller: 'Seller',
