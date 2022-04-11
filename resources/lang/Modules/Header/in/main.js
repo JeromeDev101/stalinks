@@ -1,39 +1,39 @@
 export default {
     // survey
-    survey: 'Help us improve by answering our survey.',
-    stalinks_survey: 'Stalinks Survey',
-    survey_a: 'Survey A',
-    survey_b: 'Survey B',
-    survey_answer: 'Answer Now',
-    survey_thanks: 'Thank you for answering this survey!',
+    survey: 'हमारे सर्वेक्षण का उत्तर देकर हमें बेहतर बनाने में सहायता करें।',
+    stalinks_survey: 'स्टालिन्स सर्वेक्षण',
+    survey_a: 'सर्वेक्षण ए',
+    survey_b: 'सर्वेक्षण बी',
+    survey_answer: 'अभी उत्तर दीजिए',
+    survey_thanks: 'इस सर्वेक्षण का उत्तर देने के लिए धन्यवाद!',
 
     // buyer credits
-    credit: 'Credit',
-    add_credit: 'Add Credit',
+    credit: 'श्रेय',
+    add_credit: 'क्रेडिट जोड़ने',
 
     // notifications
-    new_notifications: 'New Notifications',
-    view_all_notifications: 'View All Notifications',
-    all_notifications: 'All Notifications',
+    new_notifications: 'नई सूचनाएं',
+    view_all_notifications: 'सभी सूचनाएं देखें',
+    all_notifications: 'सभी अधिसूचनाएं',
 
     // emails
-    unread_emails: 'Unread Emails',
-    view_all_emails: 'View All Unread Emails',
-    all_emails: 'All Unread Emails',
+    unread_emails: 'अपठित ईमेल',
+    view_all_emails: 'सभी अपठित ईमेल देखें',
+    all_emails: 'सभी अपठित ईमेल',
 
     // profile
-    profile: 'Profile',
-    sign_out: 'Sign out',
+    profile: 'प्रोफ़ाइल',
+    sign_out: 'साइन आउट',
 
     // wallet
-    add_wallet: 'Add Wallet Transaction',
-    amount: 'Amount USD',
-    payment_via: 'Payment Via',
-    proof: 'Proof of Documents',
-    proof_note: 'Note: It must be image type. ( jpg, jpeg, gif and png)',
-    paypal: 'Your Paypal Region',
-    total: 'Total Amount',
-    next: 'Next',
+    add_wallet: 'वॉलेट लेनदेन जोड़ें',
+    amount: 'राशि (अमेरिकन डॉलर',
+    payment_via: 'के माध्यम से भुगतान',
+    proof: 'दस्तावेजों का सबूत',
+    proof_note: 'नोट: यह छवि प्रकार होना चाहिए। (जेपीजी, जेपीईजी, जीआईएफ और पीएनजी)',
+    paypal: 'आपका पेपैल क्षेत्र',
+    total: 'कुल राशि:',
+    next: 'अगला',
 
-    close: 'Close'
+    close: 'बंद करना'
 }

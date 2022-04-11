@@ -1,36 +1,36 @@
 export default {
-    ml_title: 'Mail Template',
-    ml_name: 'Template Name',
-    ml_ip_title: 'Title',
-    ml_lang: 'Language',
-    ml_action: 'Action',
+    ml_title: 'मेल टेम्पलेट',
+    ml_name: 'टेम्पलेट नाम',
+    ml_ip_title: 'शीर्षक',
+    ml_lang: 'भाषा',
+    ml_action: 'कार्य',
 
     // filter
-    filter_title: 'Filter',
-    filter_search_email_name: 'Search Email Name',
-    filter_search_title: 'Search Title',
+    filter_title: 'फ़िल्टर',
+    filter_search_email_name: 'ईमेल नाम खोजें',
+    filter_search_title: 'शीर्षक खोजें',
 
     // action
-    action_edit: 'Edit',
-    action_delete: 'Delete',
+    action_edit: 'संपादित करें',
+    action_delete: 'हटाएं',
 
     // add language
-    al_title: 'Add Language',
-    al_lang: 'Language',
-    al_select_lang: 'Select language',
-    al_email: 'Template Name',
-    al_enter_email: 'Enter Template Name',
-    al_ip_title: 'Title',
-    al_enter_title: 'Enter Title',
-    al_content: 'Content',
-    al_enter_content: 'Enter Content',
+    al_title: 'भाषा जोड़ें',
+    al_lang: 'भाषा',
+    al_select_lang: 'भाषा का चयन करें',
+    al_email: 'टेम्पलेट नाम',
+    al_enter_email: 'टेम्पलेट का नाम दर्ज करें',
+    al_ip_title: 'शीर्षक',
+    al_enter_title: 'शीर्षक दर्ज करें',
+    al_content: 'विषय',
+    al_enter_content: 'सामग्री दर्ज करें',
 
     // update template
-    ut_title: 'Update Template',
+    ut_title: 'टेम्पलेट अपडेट करें',
 
     // delete template
-    dl_info: 'Do you want to delete template ',
+    dl_info: 'क्या आप टेम्प्लेट हटाना चाहते हैं ',
 
-    save: 'Save',
-    close: 'Close',
+    save: 'सहेजें',
+    close: 'बंद करना',
 }

@@ -1,6 +1,6 @@
 export default {
-    title : 'Forgot your Password?',
-    info : "Enter your email address and we'll send you a link to reset your password.",
-    lb: 'Email Address',
-    b1: 'Reset Password',
+    title : 'क्या आप पासवर्ड भूल गए ?',
+    info : "अपना ईमेल पता दर्ज करें और हम आपको अपना पासवर्ड रीसेट करने के लिए एक लिंक भेजेंगे",
+    lb: 'ईमेल पता',
+    b1: 'पासवर्ड रीसेट',
 }

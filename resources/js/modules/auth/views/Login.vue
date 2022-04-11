@@ -148,7 +148,7 @@
                         <div class="mt-3">
                             <form @submit.prevent="submitLogin(credentials)">
                                 <h6 class="text-center mb-3">
-                                    {{ $t('message.login.l3') }} 
+                                    {{ $t('message.login.l3') }}
                                     <button type="button" @click="registrationPage" class="btn btn-link pt-0 pl-0">{{ $t('message.login.b1') }}</button>
                                 </h6>
 
@@ -161,6 +161,7 @@
                                     </div>
                                     <input :class="{ 'form-control': true, 'is-invalid': error && objectNotEmpty(error.email)}" :placeholder="$t('message.login.l1')" v-model="credentials.email" autofocus="autofocus" type="email" id="user-email" autocomplete="off">
                                 </div>
+
 
                                 <span v-if="error && objectNotEmpty(error.password)"  class="text-danger">{{ error.password[0] }}</span>
                                 <span v-if="error.message"  class="text-danger">{{ error.message }}</span>
@@ -200,9 +201,9 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
 
-                
+
             </div>
         </div>
     </div>

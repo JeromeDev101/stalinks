@@ -1,5 +1,5 @@
 export default {
-    footer_1: 'Copyright © 2020',
-    footer_2: 'StaLinks System',
-    footer_3: 'All rights reserved.'
+    footer_1: 'Bản quyền © 2020',
+    footer_2: 'Hệ thống StaLinks',
+    footer_3: 'Đã đăng ký Bản quyền.'
 }

@@ -1,6 +1,6 @@
 export default {
-    title : 'Forgot your Password?',
-    info : "Enter your email address and we'll send you a link to reset your password.",
-    lb: 'Email Address',
-    b1: 'Reset Password',
+    title : 'Quên Mật Khẩu?',
+    info : "Nhập địa chỉ email của bạn, chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu của bạn.",
+    lb: 'Địa Chỉ Email',
+    b1: 'Đặt Lại Mật Khẩu',
 }

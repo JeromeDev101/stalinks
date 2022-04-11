@@ -1,39 +1,39 @@
 export default {
     // survey
-    survey: 'Help us improve by answering our survey.',
-    stalinks_survey: 'Stalinks Survey',
-    survey_a: 'Survey A',
-    survey_b: 'Survey B',
-    survey_answer: 'Answer Now',
-    survey_thanks: 'Thank you for answering this survey!',
+    survey: 'Giúp chúng tôi cải thiện bằng cách trả lời khảo sát của chúng tôi.',
+    stalinks_survey: 'Khảo sát của Stalinks',
+    survey_a: 'Khảo sát A',
+    survey_b: 'Khảo sát B',
+    survey_answer: 'Trả lời ngay',
+    survey_thanks: 'Cảm ơn bạn đã trả lời cuộc khảo sát này!',
 
     // buyer credits
-    credit: 'Credit',
-    add_credit: 'Add Credit',
+    credit: 'Tín Dụng',
+    add_credit: 'Thêm Tín Dụng',
 
     // notifications
-    new_notifications: 'New Notifications',
-    view_all_notifications: 'View All Notifications',
-    all_notifications: 'All Notifications',
+    new_notifications: 'Thông báo mới',
+    view_all_notifications: 'Xem tất cả thông báo',
+    all_notifications: 'Tất cả thông báo',
 
     // emails
-    unread_emails: 'Unread Emails',
-    view_all_emails: 'View All Unread Emails',
-    all_emails: 'All Unread Emails',
+    unread_emails: 'Email chưa đọc',
+    view_all_emails: 'Xem tất cả các email chưa đọc',
+    all_emails: 'Tất cả các email chưa đọc',
 
     // profile
-    profile: 'Profile',
-    sign_out: 'Sign out',
+    profile: 'Hồ sơ',
+    sign_out: 'Đăng xuất',
 
     // wallet
-    add_wallet: 'Add Wallet Transaction',
-    amount: 'Amount USD',
-    payment_via: 'Payment Via',
-    proof: 'Proof of Documents',
-    proof_note: 'Note: It must be image type. ( jpg, jpeg, gif and png)',
-    paypal: 'Your Paypal Region',
-    total: 'Total Amount',
-    next: 'Next',
+    add_wallet: 'Thêm giao dịch trên Ví',
+    amount: 'Số tiền USD',
+    payment_via: 'Thanh toán qua',
+    proof: 'Tài liệu chứng minh thanh toán',
+    proof_note: 'Lưu ý: Nó phải là các file hình ảnh. (jpg, jpeg, gif và png)',
+    paypal: 'Khu vực Paypal của bạn',
+    total: 'Tổng số tiền:',
+    next: 'Tiếp theo',
 
-    close: 'Close'
+    close: 'Đóng'
 }

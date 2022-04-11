@@ -2,60 +2,60 @@ export default {
     admin: 'ADMIN',
 
     // admin settings
-    admin_settings: 'Admin Settings',
+    admin_settings: 'Setel Admin',
     it: 'IT',
-    finance: 'Finance',
+    finance: 'Akunting',
     devs: 'Devs',
 
     // management
-    management: 'Management',
-    role: 'Role',
-    mod: 'Module',
-    tools: 'Tools',
-    mail_logs: 'Mail Logs',
-    system_logs: 'System Logs',
-    teams: 'Teams',
+    management: 'Manajemen',
+    role: 'Peran',
+    mod: 'Modul',
+    tools: 'Peralatan',
+    mail_logs: 'Log Surel',
+    system_logs: 'Log Sistem',
+    teams: 'Tim',
 
-    dashboard_admin: 'Dashboard',
-    get_alexa: 'Get Alexa',
-    generate_list: 'Generate List',
-    registration_accounts: 'Registration Accounts',
-    survey_dashboard: 'Survey Dashboard',
-    article_admin: 'Article',
-    writer_validation: "Writer's Validation",
-    backlinks_prospect: 'Backlinks Prospect',
-    incomes_admin: 'Incomes',
+    dashboard_admin: 'Dasbor',
+    get_alexa: 'Dapatkan Alexa',
+    generate_list: 'Buat Daftar',
+    registration_accounts: 'Akun Pendaftaran',
+    survey_dashboard: 'Dasbor Survei',
+    article_admin: 'Artikel',
+    writer_validation: "Validasi Penulis",
+    backlinks_prospect: 'Prospek Backlinks',
+    incomes_admin: 'Pendapatan',
 
     // billing
-    billing: 'Billing',
-    seller_billing: 'Seller Billing',
-    writer_billing: 'Writer Billing',
-    wallet_trans: 'Wallet Transaction',
-    wallet_summary: 'Wallet Summary',
+    billing: 'Penagihan',
+    seller_billing: 'Tagihan Penjual',
+    writer_billing: 'Tagihan Penulis',
+    wallet_trans: 'Dompet transaksi',
+    wallet_summary: 'ringkasan dompet',
 
     // main navigation
-    main_navigation: 'MAIN NAVIGATION',
+    main_navigation: 'NAVIGASI UTAMA',
 
-    dashboard: 'Dashboard',
+    dashboard: 'Dasbor',
 
     // search domains
-    search_domains: 'Search Domains',
-    url_prospect: 'URL Prospect',
-    mails: 'Mails',
+    search_domains: 'Cari Domain',
+    url_prospect: 'Prospek URL',
+    mails: 'Surel',
 
-    articles: 'Article',
+    articles: 'Artikel',
 
     // seller
-    seller: 'Seller',
-    list_publisher: 'List Publisher',
-    follow_up_sale: 'Follow up Sale',
-    incomes: 'Incomes',
+    seller: 'Penjual',
+    list_publisher: 'Daftar Penerbit',
+    follow_up_sale: 'Tindak Lanjut penjualan',
+    incomes: 'Pendapatan',
 
     // buyer
-    buyer: 'Buyer',
-    list_backlinks: 'List Backlinks to Buy',
-    follow_up_backlinks: 'Follow up Backlinks',
-    purchase: 'Purchase',
+    buyer: 'Pembeli',
+    list_backlinks: 'Daftar backlinks untuk dibeli',
+    follow_up_backlinks: 'Menindaklanjuti backlinks',
+    purchase: 'Pumbayaran',
 
-    help: 'Help'
+    help: 'Bantuan'
 }

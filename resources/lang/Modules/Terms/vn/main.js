@@ -1,209 +1,134 @@
 export default {
-    title: 'Terms and Conditions',
+    title: 'Điều Khoản và Điều Kiện',
 
     // information that StaLinks Collect
-    h1: 'Information that StaLinks collect',
-    h1p1: 'Information data that you have registered from StaLinks.com, this includes; name, email address, phone ' +
-        'number',
-    h1p2: 'StaLinks use cookies and/or web beacons to enhance experience, gather general visitor information, track ' +
-        'visits to our site',
+    h1: 'Thông tin mà StaLinks thu thập',
+    h1p1: 'Dữ liệu thông tin mà bạn đã đăng ký từ StaLinks.com, bao gồm: tên, địa chỉ email, số điện thoại',
+    h1p2: 'StaLinks sử dụng cookie và / hoặc báo hiệu web để nâng cao trải nghiệm, thu thập thông tin khách truy cập chung, theo dõi lượt truy cập vào trang web của chúng tôi',
 
     // what do we use the information for?
-    h2: 'What do we use your Information for?',
-    h2p1: 'To personalize client’s experience',
-    h2p1s1: 'This helps us to be better at assisting you for your interests',
-    h2p2: 'To improve our customer service',
-    h2p2s1: 'This helps us to effectively respond to your requests, support needs, and complaints',
-    h2p3: 'To send updates on our sites that based on your interests',
-    h2p3s1: 'We will send you an email based on your account from the registration',
+    h2: 'Chúng tôi sử dụng thông tin của bạn để làm gì?',
+    h2p1: 'Để cá nhân hóa trải nghiệm của khách hàng',
+    h2p1s1: 'Điều này giúp chúng tôi hỗ trợ bạn tốt hơn vì lợi ích của bạn',
+    h2p2: 'Để cải thiện dịch vụ khách hàng của chúng tô',
+    h2p2s1: 'Điều này giúp chúng tôi đáp ứng hiệu quả các yêu cầu, nhu cầu hỗ trợ và khiếu nại của bạn',
+    h2p3: 'Gửi thông tin cập nhật trên các trang web của chúng tôi dựa trên sở thích của bạn',
+    h2p3s1: 'Chúng tôi sẽ gửi cho bạn một email dựa trên tài khoản của bạn khi đăng ký',
 
     // how do we protect your personal information?
-    h3: 'How do we protect your personal information?',
-    h3p1: 'We implement a variety of security to maintain the safety of client’s personal information and orders.',
+    h3: 'Làm thế nào để chúng tôi bảo vệ thông tin cá nhân của bạn?',
+    h3p1: 'Chúng tôi triển khai nhiều biện pháp bảo mật khác nhau để duy trì sự an toàn cho thông tin cá nhân và đơn đặt hàng của khách hàng.',
 
     // do we disclose any information to outside parties?
-    h4: 'Do we disclose any information to outside parties?',
-    h4p1: 'We do not sell, buy, or trade any other transfers to outside parties your personal information. This does ' +
-        'not include third parties who assist us in operating our website and assist you, and so our third parties ' +
-        'agreed to keep all the information is confidential. However, non-personal identifiable visitor’s ' +
-        'information may be provided to other parties for marketing, advertisement or other uses.',
+    h4: 'Chúng tôi có được công bố bất cứ thông tin nào ra bên ngoài không?',
+    h4p1: "Chúng tôi không bán, mua hoặc trao đổi bất kỳ hoạt động chuyển nhượng nào khác cho bên ngoài về thông tin cá nhân của bạn. Điều này không bao gồm các bên thứ ba hỗ trợ chúng tôi vận hành trang web và hỗ trợ bạn, và vì vậy các bên thứ ba của chúng tôi đã đồng ý giữ bí mật tất cả thông tin .\n" +
+        "Tuy nhiên, thông tin nhận dạng phi cá nhân của khách truy cập có thể được cung cấp cho các bên khác để tiếp thị, quảng cáo hoặc các mục đích sử dụng khác.",
 
     // children online privacy protector
-    h5: 'Children online privacy protector',
-    h5p1: 'We do not collect any information from anyone under 13 years of age. Our system and service are all' +
-        'directed to people who are at least 13 years or older.',
+    h5: 'Bảo vệ quyền riêng tư của trẻ em trực tuyến',
+    h5p1: "Chúng tôi không thu thập bất kỳ thông tin nào từ bất kỳ ai dưới 13 tuổi. Hệ thống và dịch vụ của chúng tôi đều\n" +
+        "hướng đến những người ít nhất 13 tuổi trở lên.",
 
     // online privacy policy
-    h6: 'Online privacy policy',
-    h6p1: 'We only collected information throughout the website and we do not collect any other information by ' +
-        'offline/outside our system.',
+    h6: 'Chính sách Bảo mật Trực tuyến',
+    h6p1: 'Chúng tôi chỉ thu thập thông tin trên toàn bộ trang web và chúng tôi không thu thập bất kỳ thông tin nào khác bằng cách offline / bên ngoài hệ thống của chúng tôi',
 
     // terms, payments and conditions on StaLinks
-    h7: 'Terms, payments and conditions on StaLinks',
-    h7p1: 'The terms of service agreement set by the standard of StaLinks.com service. By using the StaLinks.com ' +
-        'service, you must agree to the terms, payments, and conditions. If you do not agree to the terms, payments ' +
-        'and conditions, you will immediately cease all the usage of StaLinks.com. We reserve the right, at any time, ' +
-        'to modify, alter or update the terms and conditions of this agreement without prior notice. The modification ' +
-        'shall become effective immediately upon being posted at https://www.stalinks.com website. You continue ' +
-        'the use of the service after amendments are posted constitute an acknowledgment and acceptance of the ' +
-        'agreement and its modifications. Except as provided in this paragraph, this agreement may not amend.',
+    h7: 'Điều khoản, Thanh toán và Điều kiện trên StaLinks',
+    h7p1: 'Các điều khoản của thỏa thuận dịch vụ được thiết lập bởi tiêu chuẩn của dịch vụ StaLinks.com. Khi sử dụng dịch vụ StaLinks.com, bạn phải đồng ý với các điều khoản, thanh toán và điều kiện. Nếu bạn không đồng ý với các điều khoản, thanh toán và điều kiện, bạn sẽ ngay lập tức chấm dứt mọi hoạt động sử dụng StaLinks.com. Chúng tôi có quyền, bất cứ lúc nào, sửa đổi, thay đổi hoặc cập nhật các điều khoản và điều kiện của thỏa thuận này mà không cần thông báo trước. Việc sửa đổi sẽ có hiệu lực ngay sau khi được đăng tại trang web https://www.stalinks.com. Việc bạn tiếp tục sử dụng dịch vụ sau khi các sửa đổi được đăng lên, là một sự thừa nhận và chấp nhận thỏa thuận và các sửa đổi của nó. Trừ khi được quy định trong đoạn này, thỏa thuận này có thể không sửa đổi.',
 
     // description of service
-    h8: 'Description of service',
-    h8p1: 'Our platform provides an online service for making our clients easier to buy or sell backlinks/guest posts. ' +
-        'Our system will verify that all websites are confirmed to our terms and we also reserve to approve and execute' +
-        ' all the transactions between sellers and buyers.',
+    h8: 'Mô tả dịch vụ',
+    h8p1: 'Hệ thống của chúng tôi cung cấp dịch vụ trực tuyến để giúp khách hàng của chúng tôi mua hoặc bán backlinks / guestpost dễ dàng hơn.',
 
     // member of usage?
-    h9: 'Member of usage',
-    h9p1: 'We will not tolerate our clients to use our system for any illegal purposes, including violating the' +
-        ' security of any computer network',
-    h9p2: 'We will not allow our clients to divulge, record or abuse any information in our website (e.g. inventory,' +
-        ' not limited to URL(s), descriptions and images)',
-    h9p3: 'StaLinks reserves all the rights to determine any links within our system that directed to URL(s)' +
-        ' that; not owned, has been deactivated, or cannot be found. Links may be removed without a refund and the' +
-        ' account may be suspended from StaLinks system',
+    h9: 'Thành viên sử dụng',
+    h9p1: 'Chúng tôi sẽ không cho phép khách hàng sử dụng hệ thống của chúng tôi cho bất kỳ mục đích bất hợp pháp nào, bao gồm cả việc vi phạm bảo mật của bất kỳ mạng máy tính nào',
+    h9p2: 'Chúng tôi sẽ không cho phép khách hàng của mình tiết lộ, ghi lại hoặc lạm dụng bất kỳ thông tin nào trong trang web của chúng tôi (ví dụ: khoảng không quảng cáo, không giới hạn ở (các) URL, mô tả và hình ảnh)',
+    h9p3: 'StaLinks bảo lưu tất cả các quyền để xác định bất kỳ liên kết nào trong hệ thống của chúng tôi hướng đến (các) URL mà không được sở hữu, đã bị vô hiệu hóa hoặc không thể tìm thấy. Các liên kết có thể bị xóa mà không được hoàn lại tiền và tài khoản có thể bị tạm ngưng khỏi hệ thống StaLinks',
 
     // payments
-    h10: 'Payments',
-    h10p1: 'Payment will be made in a maximum of 48 hours (during weekdays, exclude; weekends and public holidays)',
-    h10p2: 'The article should be for a lifetime and a minimum of 12 months based on months on the calendar',
-    h10p3: 'Payment will be transfer by PayPal, Skrill, and BTC. (Make sure you have at least one of those accounts' +
-        ' and valid',
-    h10p4: 'Payment currency will be done in USD',
-    h10p5: 'We are not responsible for any kind of changes during proceeds fees or currency conversion charges and' +
-        ' any kind of taxes, (e.g GST, VST, etc)',
+    h10: 'Thanh toán',
+    h10p1: 'Việc thanh toán sẽ được thực hiện trong tối đa 48 giờ (trừ các ngày trong tuần; cuối tuần và ngày lễ)',
+    h10p2: 'Bài viết phải có thời hạn và tối thiểu là 12 tháng dựa trên các tháng trên lịch',
+    h10p3: 'Thanh toán sẽ được chuyển bằng PayPal, Skrill và BTC. (Đảm bảo rằng bạn có ít nhất một trong những tài khoản đó và hợp lệ)',
+    h10p4: 'Đơn vị tiền tệ thanh toán sẽ được thực hiện bằng USD',
+    h10p5: 'Chúng tôi không chịu trách nhiệm về bất kỳ loại thay đổi nào về phí thu được hoặc phí chuyển đổi tiền tệ và bất kỳ loại thuế nào, (ví dụ: GST, VST, v.v.)',
 
     // client account security
-    h11: 'Client account security',
-    h11p1: 'After you registered your own account, you will get access to your own control panel',
-    h11p2: 'You are responsible for maintaining your username and password that is confidential on our website',
-    h11p3: 'You are responsible for your own actions that occur through the use of your account',
-    h11p4: 'You agree not to share out your own personal information with outside parties (i.e. username, email' +
-        ' address, password, company name (if there’s any) and transaction). If anything happens to your account' +
-        ' (e.g. password stolen, breached, or any kind of issue). Please contact our customer service immediately.' +
-        ' We will not responsible for any loss',
-    h11p5: 'StaLinks reserves to terminate your account without prior notice to you if you undergo any violations ' +
-        'and others that are against our agreement.',
+    h11: 'Bảo mật tài khoản khách hàng',
+    h11p1: 'Sau khi đăng ký tài khoản của chính mình, bạn sẽ có quyền truy cập vào bảng điều khiển của riêng mình',
+    h11p2: 'Bạn có trách nhiệm duy trì tên người dùng và mật khẩu được bảo mật trên trang web của chúng tôi',
+    h11p3: 'Bạn chịu trách nhiệm về các hành động của chính mình xảy ra thông qua việc sử dụng tài khoản của bạn',
+    h11p4: 'Bạn đồng ý không chia sẻ thông tin cá nhân của riêng bạn với bên ngoài (nghĩa là tên người dùng, địa chỉ email, mật khẩu, tên công ty (nếu có) và giao dịch). Nếu bất kỳ điều gì xảy ra với tài khoản của bạn (ví dụ: mật khẩu bị đánh cắp, vi phạm hoặc bất kỳ loại vấn đề nào). Hãy liên hệ ngay với bộ phận chăm sóc khách hàng của chúng tôi. Chúng tôi sẽ không chịu trách nhiệm cho bất kỳ tổn thất nào',
+    h11p5: "StaLinks bảo lưu việc chấm dứt tài khoản của bạn mà không cần thông báo trước cho bạn nếu bạn có bất kỳ vi phạm nào và những vi phạm khác trái với thỏa thuận của chúng tôi",
 
     // client information
-    h12: 'Client information',
-    h12p1: 'Your account information must be valid (we will not be responsible if you put invalid, inaccurate,' +
-        ' or misleading information)',
-    h12p2: 'Do not add any stolen information',
-    h12p3: 'You are responsible for maintaining all information details in your own account',
-    h12p4: 'You agree not to disclose your password and username to anyone. StaLinks will not validate any copyrights,' +
-        ' patent, trademark, or property rights, or even publicity privacy',
-    h12p5: 'Do not violate any laws, statue, or regulations (i.e. without limitation government export control,' +
-        ' other client’s personal information, anti-discrimination, etc)',
-    h12p6: 'Do not put human trafficking URLs (e.g. child pornography, harmful to minors, etc)',
-    h12p7: 'Do not put URLs that contain; one-click ads or other computer programming routines that are intended' +
-        ' to damage, detrimentally, interfere with surreptitiously intercept or expropriate any system, data,' +
-        ' or personal information',
-    h12p8: 'Do not create something that could cause StaLinks to lose all of the data or party. Do not add any links' +
-        ' that lead to the opposite of StaLinks terms',
-    h12p9: 'All users shall not create liability intercept or expropriate any system, data, or personal information,' +
-        ' link directly or indirectly to or include goods service that; are prohibited under this agreement;' +
-        ' are identical to other items you have up for sale or rent/currently listed for sale or rent on a web site' +
-        ' other than StaLinks. If users do not have the right link, place to or include in the publisher list,' +
-        ' furthermore you may not allow uploading any links on StaLinks web site (or consummate any transaction' +
-        ' that was initiated using our service) that, could cause StaLinks to violate any applicable law.' +
-        ' A statue or that violates our current prohibited, questionable, and infringing items.',
-    h12p10: 'We will use all of the information you add to our website to help us to identify and verify your account.' +
-        ' We will use your email address for verification of your account on StaLinks and send you updates of' +
-        ' backlinks based on your interest in the future.',
+    h12: 'Thông tin khách hàng',
+    h12p1: 'Thông tin tài khoản của bạn phải hợp lệ (chúng tôi sẽ không chịu trách nhiệm nếu bạn đưa thông tin không hợp lệ, không chính xác hoặc gây hiểu nhầm)',
+    h12p2: 'Không thêm bất kỳ thông tin bị đánh cắp nào',
+    h12p3: 'Bạn có trách nhiệm duy trì tất cả các chi tiết thông tin trong tài khoản của chính mình',
+    h12p4: 'Bạn đồng ý không tiết lộ mật khẩu và tên người dùng của mình cho bất kỳ ai. StaLinks sẽ không xác thực bất kỳ bản quyền, bằng sáng chế, nhãn hiệu, hoặc quyền tài sản, hoặc thậm chí cả quyền riêng tư công khai',
+    h12p5: 'Không vi phạm bất kỳ luật, điều kiện hoặc quy định nào (tức là kiểm soát xuất khẩu không giới hạn của chính phủ, thông tin cá nhân của khách hàng khác, chống phân biệt đối xử, v.v.)',
+    h12p6: 'Không đặt các URL buôn người (ví dụ: nội dung khiêu dâm trẻ em, có hại cho trẻ vị thành niên, v.v.)',
+    h12p7: 'Không đặt các URL có chứa; quảng cáo bằng một cú nhấp chuột hoặc các quy trình lập trình máy tính khác nhằm mục đích làm hỏng, gây phương hại, can thiệp vào việc lén lút đánh chặn hoặc chiếm đoạt bất kỳ hệ thống, dữ liệu hoặc thông tin cá nhân nào',
+    h12p8: 'Không tạo thứ gì đó có thể khiến StaLinks mất tất cả dữ liệu hoặc người tham gia. Không thêm bất kỳ liên kết nào dẫn đến trái ngược với các điều khoản của StaLinks',
+    h12p9: 'Tất cả người dùng sẽ không tạo ra trách nhiệm pháp lý chặn hoặc chiếm đoạt bất kỳ hệ thống, dữ liệu hoặc thông tin cá nhân, liên kết trực tiếp hoặc gián tiếp đến hoặc bao gồm dịch vụ hàng hóa đó; bị cấm theo thỏa thuận này; giống với các mặt hàng khác mà bạn có để bán hoặc cho thuê / hiện đang được liệt kê để bán hoặc cho thuê trên một trang web không phải là StaLinks. Nếu người dùng không có đúng liên kết, vị trí đến hoặc bao gồm trong danh sách nhà xuất bản, hơn nữa bạn không được phép tải lên bất kỳ liên kết nào trên trang web StaLinks (hoặc hoàn thành bất kỳ giao dịch nào được thực hiện bằng dịch vụ của chúng tôi), điều này có thể khiến StaLinks vi phạm bất kỳ luật áp dụng. Một hành động hoặc vi phạm các mục bị cấm, nghi vấn và vi phạm hiện tại của chúng tôi.',
+    h12p10: 'Chúng tôi sẽ sử dụng tất cả thông tin bạn thêm vào trang web của chúng tôi để giúp chúng tôi xác định và xác minh tài khoản của bạn. Chúng tôi sẽ sử dụng địa chỉ email của bạn để xác minh tài khoản của bạn trên StaLinks và gửi cho bạn thông tin cập nhật về các backlink dựa trên sự quan tâm của bạn trong tương lai.',
 
     // publishers or seller’s listings
-    h13: 'Publishers or seller’s listings',
-    h13p1: 'All publishers must be agreed to these terms or risk having their account suspend or deleted. This also' +
-        ' may result in loss of payments and banned from using the StaLinks system and service.',
-    h13p2: 'Publisher URLs must be qualified by our system (we use AHREFs standards), if the link does not qualify' +
-        ' for StaLinks standards, sellers will not able to sell the link in our system',
-    h13p3: 'Sold URL’s must exist/visible on the publisher lists at all times (hiding these links we may consider' +
-        ' as system abuse)',
-    h13p4: 'Publisher URLs must be complete and valid with working pages and links between pages',
-    h13p5: 'Publisher URLs cannot consist of redirection to a different website or page. The URL that has been uploaded' +
-        ' to the StaLinks system must be the exact address of Publisher Lists',
-    h13p6: 'URLs cannot consist of harmful content or any illegal materials',
-    h13p7: 'Publisher must have a valid account and contact information so that StaLinks will contact the publisher' +
-        ' for the payment. (If publisher’s account is invalid, we may delay the payment and possibility to terminate the account)',
-    h13p8: 'Publisher must not put links that lead to different URLs page. ( The URL(s) that been submitted must' +
-        ' lead to the exact other “Link To” of the buyers)',
-    h13p9: 'Publisher must not put links that contain one-click ads or viruses',
-    h13p10: 'Publisher must allow access to the StaLinks system to validate the backlinks is valid',
-    h13p11: 'Publisher URLs must be submitted under the category that fits the theme of StaLinks',
-    h13p12: 'Publisher URL should not contain a reference to “Buying and Selling Text Links” or other terms which may' +
-        ' be deemed by search engines to be in violation of their policies',
-    h13p13: 'Publisher must allow access to URL from StaLinks system to validate that Keyword Anchor is working correctly',
+    h13: 'Nhà xuất bản hoặc Danh sách của Người bán',
+    h13p1: 'Tất cả các nhà xuất bản phải đồng ý với các điều khoản này hoặc có nguy cơ bị tạm ngưng hoặc xóa tài khoản. Điều này cũng có thể dẫn đến mất các khoản thanh toán và bị cấm sử dụng hệ thống và dịch vụ StaLinks.',
+    h13p2: 'URL của nhà xuất bản phải được hệ thống của chúng tôi xác nhận đủ điều kiện (chúng tôi sử dụng tiêu chuẩn AHREFs), nếu liên kết không đủ điều kiện cho các tiêu chuẩn của StaLinks, người bán sẽ không thể bán liên kết trong hệ thống của chúng tôi',
+    h13p3: 'URL đã bán phải luôn tồn tại / hiển thị trên danh sách nhà xuất bản (nếu ẩn các liên kết này, chúng tôi có thể coi là lạm dụng hệ thống)',
+    h13p4: 'URL của nhà xuất bản phải đầy đủ và hợp lệ với các trang đang hoạt động và liên kết giữa các trang',
+    h13p5: 'URL của nhà xuất bản không được bao gồm chuyển hướng đến một trang web hoặc trang khác. URL đã được tải lên hệ thống StaLinks phải là địa chỉ chính xác của Danh sách nhà xuất bản',
+    h13p6: 'URL không được chứa nội dung có hại hoặc bất kỳ tài liệu bất hợp pháp nào',
+    h13p7: 'Nhà xuất bản phải có tài khoản và thông tin liên hệ hợp lệ để StaLinks liên hệ với nhà xuất bản khi thanh toán. (Nếu tài khoản của nhà xuất bản không hợp lệ, chúng tôi có thể trì hoãn việc thanh toán và có khả năng chấm dứt tài khoản)',
+    h13p8: 'Nhà xuất bản không được đặt các liên kết dẫn đến các trang URL khác nhau. (Các URL đã được gửi phải dẫn đến “Liên kết đến” chính xác khác của người mua)',
+    h13p9: 'Nhà xuất bản không được đặt các liên kết chứa quảng cáo một cú nhấp chuột hoặc vi-rút',
+    h13p10: 'Nhà xuất bản phải cho phép truy cập vào hệ thống StaLinks để xác nhận các backlink là hợp lệ',
+    h13p11: 'URL của nhà xuất bản phải được gửi theo danh mục phù hợp với chủ đề của StaLinks',
+    h13p12: 'URL của nhà xuất bản không được nhắc đến “Text Links mua và bán” hoặc các thuật ngữ khác mà các công cụ tìm kiếm có thể coi là vi phạm chính sách của họ',
+    h13p13: 'Nhà xuất bản phải cho phép truy cập vào URL từ hệ thống StaLinks để xác thực rằng Keyword Anchor đang hoạt động chính xác',
 
     // disclaimer of warranties
-    h14: 'DISCLAIMER OF WARRANTIES',
-    h14p1: 'The service that StaLinks provide on an ‘as is and on an ‘as available basis',
-    h14p2: 'StaLinks makes no representation or warranties of any kind, express or implied, regarding the use or the' +
-        ' results of our system in terms of correctness, accuracy, reliability, etc',
-    h14p3: 'StaLinks do not have liability for any interruptions in the use of StaLinks platform',
-    h14p4: 'StaLinks disclaims all warranties with regards to the information provided, including the implied' +
-        ' warranties of merchantability and non-infringement. Some jurisdictions do not allow the exclusion of' +
-        ' implied warranties; therefore, the above-referenced exclusion is inapplicable.',
+    h14: 'TỪ CHỐI BẢO HÀNH',
+    h14p1: 'Dịch vụ mà StaLinks cung cấp trên cơ sở ‘nguyên trạng và‘ trên cơ sở sẵn có',
+    h14p2: 'StaLinks không đại diện hoặc bảo đảm dưới bất kỳ hình thức nào, rõ ràng hay ngụ ý, về việc sử dụng hoặc kết quả của hệ thống của chúng tôi về tính đúng đắn, chính xác, độ tin cậy,...',
+    h14p3: 'StaLinks không chịu trách nhiệm về bất kỳ sự gián đoạn nào trong việc sử dụng nền tảng StaLinks',
+    h14p4: 'StaLinks từ chối mọi bảo đảm liên quan đến thông tin được cung cấp, bao gồm cả những bảo đảm ngụ ý về khả năng bán được và không vi phạm. Một số khu vực pháp lý không cho phép loại trừ các bảo đảm ngụ ý; do đó, loại trừ tham chiếu ở trên là không thể áp dụng được.',
 
     // limitation of liability
-    h15: 'LIMITATION OF LIABILITY',
-    h15p1: 'StaLinks will not take any responsibility for any damage whatsoever and in particular ' +
-        '(i.e. loss profits, loss of use, arising out of/or related to StaLinks or the information contained in it,' +
-        ' whether if the damage arises in contract, or otherwise. Even if StaLinks has been advised of the possibility' +
-        ' of such damages. Some jurisdictions do not allow for the limitation or exclusion of liability for incidental' +
-        ' or consequential damages, therefore some of the above limitations are inapplicable.',
+    h15: 'TRÁCH NHIỆM HỮU HẠN',
+    h15p1: 'StaLinks sẽ không chịu bất kỳ trách nhiệm nào đối với bất kỳ thiệt hại nào và cụ thể là (tức là mất lợi nhuận, mất việc sử dụng, phát sinh từ / hoặc liên quan đến StaLinks hoặc thông tin có trong đó, cho dù thiệt hại phát sinh trong hợp đồng hay cách khác. Ngay cả khi StaLinks đã được thông báo về khả năng xảy ra những thiệt hại như vậy. Một số khu vực pháp lý không cho phép giới hạn hoặc loại trừ trách nhiệm đối với những thiệt hại ngẫu nhiên hoặc do hậu quả, do đó một số giới hạn ở trên là không thể áp dụng.',
 
     // indemnification
-    h16: 'INDEMNIFICATION',
-    h16p1: 'Client agrees to indemnification and holds StaLinks, subsidiaries, affiliates, officers, employees,' +
-        ' harmless from any claim or demand, including reasonable attorney’s fees and costs, made by the third party' +
-        ' due to or arising out of client’s use of service.',
+    h16: 'SỰ BỒI THƯỜNG',
+    h16p1: 'Khách hàng đồng ý bồi thường và giữ StaLinks, công ty con, chi nhánh, cán bộ, nhân viên, không bị tổn hại bởi bất kỳ khiếu nại hoặc yêu cầu nào, bao gồm phí và chi phí luật sư hợp lý, do bên thứ ba đưa ra do hoặc phát sinh từ việc sử dụng dịch vụ của khách hàng.',
 
     // compose and interruption
-    h17: 'COMPOSE AND INTERRUPTION',
-    h17p1: 'StaLinks reserves rearrange and update to new service or even discontinue the service with or without' +
-        ' notice to the client. The client must acknowledge and accept that StaLinks does not guarantee continuous,' +
-        ' uninterrupted, or maintenance of our website might be interfered with/or affected by numerous factors or' +
-        ' circumstances outside of StaLinks’ control.',
+    h17: 'BIÊN SOẠN VÀ GIÁN ĐOẠN',
+    h17p1: 'StaLinks dự trữ sắp xếp lại và cập nhật lên dịch vụ mới hoặc thậm chí ngừng dịch vụ có hoặc không có thông báo cho khách hàng. Khách hàng phải thừa nhận và chấp nhận rằng StaLinks không đảm bảo liên tục, không bị gián đoạn hoặc việc bảo trì trang web của chúng tôi có thể bị can thiệp / hoặc bị ảnh hưởng bởi nhiều yếu tố hoặc hoàn cảnh nằm ngoài tầm kiểm soát của StaLinks.',
 
     // publisher information
-    h18: 'PUBLISHER INFORMATION',
-    h18p1: 'Our URL(s) lists have been provided by the publishers or collected from available sources. ' +
-        'StaLinks always make sure that all the information on the URL(s) is valid. StaLinks do no reserves ' +
-        'for other URL(s) that offer by other third party and you must acknowledge that any reliance out of StaLinks' +
-        ' service will be at your own risk.',
-    h18p2: 'StaLinks makes no warranties or representation whatsoever with regard to any product provided or offered' +
-        ' by any third party, and you acknowledge that any reliance on representations and warranties provided by any' +
-        ' third party shall be at your own risk.',
+    h18: 'THÔNG TIN NHÀ XUẤT BẢN',
+    h18p1: '(Các) danh sách URL của chúng tôi do nhà xuất bản cung cấp hoặc được thu thập từ các nguồn có sẵn. StaLinks luôn đảm bảo rằng tất cả thông tin trên (các) URL là hợp lệ. StaLinks không bảo lưu (các) URL khác do bên thứ ba khác cung cấp và bạn phải thừa nhận rằng bất kỳ sự phụ thuộc nào ngoài dịch vụ StaLinks sẽ do bạn tự chịu rủi ro.',
+    h18p2: 'StaLinks không bảo đảm hoặc đại diện cho bất kỳ sản phẩm nào cung cấp hoặc do bất kỳ bên thứ ba nào cung cấp, và bạn thừa nhận rằng bất kỳ sự phụ thuộc nào vào sự đại diện và bảo đảm do bất kỳ bên thứ ba cung cấp đều sẽ tự chịu rủi ro.',
 
     // compliance with laws
-    h19: 'COMPLIANCE WITH LAWS',
-    h19p1: 'The client must acknowledge applicable law and compliance with such laws. The client must not use the' +
-        ' StaLinks service in any way that violates applicable laws, international laws, or other government' +
-        ' requirements. The client must not transmit any material that contains or encourages conduct that triggers' +
-        ' constitute a criminal offense, violates any applicable local, state, national, or even international laws' +
-        ' or regulations.',
+    h19: 'TUÂN THỦ PHÁP LUẬT',
+    h19p1: 'Khách hàng phải thừa nhận luật hiện hành và tuân thủ các luật đó. Khách hàng không được sử dụng dịch vụ StaLinks theo bất kỳ cách nào vi phạm luật hiện hành, luật quốc tế hoặc các yêu cầu khác của chính phủ. Khách hàng không được truyền tải bất kỳ tài liệu nào có chứa hoặc khuyến khích hành vi kích hoạt cấu thành tội phạm hình sự, vi phạm bất kỳ luật hoặc quy định hiện hành nào của địa phương, tiểu bang, quốc gia hoặc thậm chí quốc tế.',
 
     // confidential information
-    h20: 'CONFIDENTIAL INFORMATION',
-    h20p1: 'All content that published and existed on the StaLinks website, including the design, text, graphics,' +
-        ' software, selection, and arrangements are property of StaLinks and/or third parties that protected by' +
-        ' intellectual property rights. Any use of materials on the website, including modification, replication,' +
-        ' any form of data extraction, or other commercial exploitation of any kind, without prior permission of an,' +
-        ' authorized written approval from StaLinks official controller, is strictly prohibited.',
-    h20p2: 'StaLinks is a form of the official website. StaLinks trademarks might not be used in connection with any' +
-        ' service that is not provided by StaLinks in any case that would likely cause confusion for the clients.',
+    h20: 'THÔNG TIN MẬT',
+    h20p1: 'Tất cả nội dung đã xuất bản và tồn tại trên trang web StaLinks, bao gồm thiết kế, văn bản, đồ họa, phần mềm, lựa chọn và sắp xếp là tài sản của StaLinks và / hoặc các bên thứ ba được bảo vệ bởi quyền sở hữu trí tuệ. Nghiêm cấm mọi hành vi sử dụng tài liệu trên trang web, bao gồm sửa đổi, sao chép, bất kỳ hình thức khai thác dữ liệu nào hoặc khai thác thương mại dưới bất kỳ hình thức nào, mà không có sự cho phép trước bằng văn bản có thẩm quyền từ bộ phận kiểm soát chính thức của StaLinks.',
+    h20p2: 'StaLinks là một dạng của trang web chính thức. Nhãn hiệu StaLinks không được sử dụng liên quan đến bất kỳ dịch vụ nào không được cung cấp bởi StaLinks trong bất kỳ trường hợp nào có thể gây nhầm lẫn cho khách hàng.',
 
     // other terms
-    h21: 'OTHER TERMS',
-    h21p1: 'By reading all these terms, payments, and conditions unlawful, clearheaded, unforced for any reason,' +
-        ' (and any partially-enforceable provision) shall remain valid to the possible extension. You agreed to this' +
-        ' term of service agreement that StaLinks provided. This term of service agreement and other agreements that' +
-        ' have been assigned by StaLinks. These terms of service also apply at our discretion, in addition to not be' +
-        ' superseded by any other written agreement relations between clients and StaLinks.',
-    h21p2: 'Clients agreed to this term of service agreement. All client’s personal information and other use' +
-        ' described in our Privacy Policy Statements.',
+    h21: 'CÁC ĐIỀU KHOẢN KHÁC',
+    h21p1: 'Bằng cách đọc tất cả các điều khoản này, các khoản thanh toán và điều kiện bất hợp pháp, rõ ràng, không bị ép buộc vì bất kỳ lý do gì, (và bất kỳ điều khoản nào có thể thi hành được) sẽ vẫn có giá trị trong thời gian gia hạn có thể. Bạn đã đồng ý với thỏa thuận điều khoản dịch vụ này mà StaLinks cung cấp. Thỏa thuận điều khoản dịch vụ này và các thỏa thuận khác đã được StaLinks chỉ định. Các điều khoản dịch vụ này cũng được áp dụng theo quyết định của chúng tôi, ngoài ra sẽ không bị thay thế bởi bất kỳ mối quan hệ thỏa thuận bằng văn bản nào khác giữa khách hàng và StaLinks.',
+    h21p2: 'Khách hàng đã đồng ý với thỏa thuận điều khoản dịch vụ này. Tất cả thông tin cá nhân của khách hàng và việc sử dụng khác được mô tả trong Tuyên bố về Chính sách Bảo mật của chúng tôi.',
 
-    b: 'Close'
+    b: 'Đóng'
 }

@@ -1,36 +1,36 @@
 export default {
-    ml_title: 'Mail Template',
-    ml_name: 'Template Name',
-    ml_ip_title: 'Title',
-    ml_lang: 'Language',
-    ml_action: 'Action',
+    ml_title: 'Template Surat',
+    ml_name: 'Nama Templat',
+    ml_ip_title: 'Judul',
+    ml_lang: 'Bahasa',
+    ml_action: 'Tindakan',
 
     // filter
     filter_title: 'Filter',
-    filter_search_email_name: 'Search Email Name',
-    filter_search_title: 'Search Title',
+    filter_search_email_name: 'Cari Nama Email',
+    filter_search_title: 'Cari Judul',
 
     // action
-    action_edit: 'Edit',
-    action_delete: 'Delete',
+    action_edit: 'Sunting',
+    action_delete: 'Menghapus',
 
     // add language
-    al_title: 'Add Language',
-    al_lang: 'Language',
-    al_select_lang: 'Select language',
+    al_title: 'Tambahkan Bahasa',
+    al_lang: 'Bahasa',
+    al_select_lang: 'Pilih bahasa',
     al_email: 'Template Name',
     al_enter_email: 'Enter Template Name',
-    al_ip_title: 'Title',
-    al_enter_title: 'Enter Title',
-    al_content: 'Content',
-    al_enter_content: 'Enter Content',
+    al_ip_title: 'Judul',
+    al_enter_title: 'Masukkan Judul',
+    al_content: 'Konten',
+    al_enter_content: 'Masukkan Konten',
 
     // update template
-    ut_title: 'Update Template',
+    ut_title: 'Perbaharui Template',
 
     // delete template
-    dl_info: 'Do you want to delete template ',
+    dl_info: 'Apakah Anda ingin menghapus template ',
 
-    save: 'Save',
-    close: 'Close',
+    save: 'Menyimpan',
+    close: 'Tutup',
 }

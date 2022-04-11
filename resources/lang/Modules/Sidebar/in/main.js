@@ -1,61 +1,61 @@
 export default {
-    admin: 'ADMIN',
+    admin: 'व्यवस्थापक',
 
     // admin settings
-    admin_settings: 'Admin Settings',
-    it: 'IT',
-    finance: 'Finance',
-    devs: 'Devs',
+    admin_settings: 'व्यवस्थापक सेटिंग्स',
+    it: 'यह',
+    finance: 'वित्त',
+    devs: 'देवसो',
 
     // management
-    management: 'Management',
-    role: 'Role',
-    mod: 'Module',
-    tools: 'Tools',
-    mail_logs: 'Mail Logs',
-    system_logs: 'System Logs',
-    teams: 'Teams',
+    management: 'प्रबंध',
+    role: 'भूमिका',
+    mod: 'मापांक',
+    tools: 'उपकरण',
+    mail_logs: 'मेल लॉग्स',
+    system_logs: 'सिस्टम लॉग',
+    teams: 'टीमों',
 
-    dashboard_admin: 'Dashboard',
-    get_alexa: 'Get Alexa',
-    generate_list: 'Generate List',
-    registration_accounts: 'Registration Accounts',
-    survey_dashboard: 'Survey Dashboard',
-    article_admin: 'Article',
-    writer_validation: "Writer's Validation",
-    backlinks_prospect: 'Backlinks Prospect',
-    incomes_admin: 'Incomes',
+    dashboard_admin: 'डैशबोर्ड',
+    get_alexa: 'एलेक्सा प्राप्त करें',
+    generate_list: 'सूची उत्पन्न करें',
+    registration_accounts: 'पंजीकरण खाते',
+    survey_dashboard: 'सर्वेक्षण डैशबोर्ड',
+    article_admin: 'लेख',
+    writer_validation: "लेखक की मान्यता",
+    backlinks_prospect: 'बैकलिंक्स संभावना',
+    incomes_admin: 'आय',
 
     // billing
-    billing: 'Billing',
-    seller_billing: 'Seller Billing',
-    writer_billing: 'Writer Billing',
-    wallet_trans: 'Wallet Transaction',
-    wallet_summary: 'Wallet Summary',
+    billing: 'बिलिंग',
+    seller_billing: 'विक्रेता बिलिंग',
+    writer_billing: 'लेखक बिलिंग',
+    wallet_trans: 'वॉलेट लेनदेन',
+    wallet_summary: 'वॉलेट सारांश',
 
     // main navigation
-    main_navigation: 'MAIN NAVIGATION',
+    main_navigation: 'मुख्य नेविगेशन',
 
-    dashboard: 'Dashboard',
+    dashboard: 'डैशबोर्ड',
 
     // search domains
-    search_domains: 'Search Domains',
-    url_prospect: 'URL Prospect',
-    mails: 'Mails',
+    search_domains: 'डोमेन खोजें',
+    url_prospect: 'यूआरएल संभावना',
+    mails: 'मेल',
 
-    articles: 'Article',
+    articles: 'लेख',
 
     // seller
-    seller: 'Seller',
-    list_publisher: 'List Publisher',
-    follow_up_sale: 'Follow up Sale',
-    incomes: 'Incomes',
+    seller: 'विक्रेता',
+    list_publisher: 'सूची प्रकाशक',
+    follow_up_sale: 'बिक्री का पालन करें',
+    incomes: 'आय',
 
     // buyer
-    buyer: 'Buyer',
-    list_backlinks: 'List Backlinks to Buy',
-    follow_up_backlinks: 'Follow up Backlinks',
-    purchase: 'Purchase',
+    buyer: 'क्रेता',
+    list_backlinks: 'खरीदने के लिए बैकलिंक्स की सूची बनाएं',
+    follow_up_backlinks: 'फॉलो अप बैकलिंक्स',
+    purchase: 'खरीदना',
 
-    help: 'Help'
+    help: 'मदद'
 }

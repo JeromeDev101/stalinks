@@ -1,30 +1,30 @@
 export default {
-    compose: 'Compose',
-    login: 'Login As:',
+    compose: 'Tulis',
+    login: 'Masuk sebagai:',
 
     // folders
-    f_title: 'Folders',
-    f_inbox: 'Inbox',
-    f_sent: 'Sent',
-    f_star: 'Starred',
-    f_trash: 'Trash',
-    f_draft: 'Drafts',
-    f_template: 'Mail Template',
-    f_sig: 'Signatures',
-    f_auto: 'Auto Replies',
+    f_title: 'Folder',
+    f_inbox: 'kotak masuk',
+    f_sent: 'Terkirim',
+    f_star: 'Berbintang',
+    f_trash: 'Sampah',
+    f_draft: 'Draf',
+    f_template: 'Template Surel',
+    f_sig: 'Tanda tangan',
+    f_auto: 'Balasan Otomatis',
 
-    l_default: 'Default Labels',
-    l_user: 'User Labels',
+    l_default: 'Label Awal',
+    l_user: 'Label Pengguna',
 
     // add label
-    al_title: 'Add Label',
-    al_name: 'Label Name',
-    al_color: 'Color',
+    al_title: 'Tambahkan Label',
+    al_name: 'Label Nama',
+    al_color: 'Warna',
 
-    close: 'Close',
-    save: 'Save',
+    close: 'Menutup',
+    save: 'Menyimpan',
 
     // error
-    err_title: 'Error',
-    err_work_mail: 'Please setup first your Work Mail'
+    err_title: 'Terjadi Kesalahan',
+    err_work_mail: 'Silakan atur terlebih dahulu Surel Anda'
 }

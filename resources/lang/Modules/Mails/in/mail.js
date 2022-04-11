@@ -1,30 +1,30 @@
 export default {
-    compose: 'Compose',
-    login: 'Login As:',
+    compose: 'लिखें',
+    login: 'इससे लॉगिन करें:',
 
     // folders
-    f_title: 'Folders',
-    f_inbox: 'Inbox',
-    f_sent: 'Sent',
-    f_star: 'Starred',
-    f_trash: 'Trash',
-    f_draft: 'Drafts',
-    f_template: 'Mail Template',
-    f_sig: 'Signatures',
-    f_auto: 'Auto Replies',
+    f_title: 'फ़ोल्डर',
+    f_inbox: 'इनबॉक्स',
+    f_sent: 'भेज दिया',
+    f_star: 'तारांकित',
+    f_trash: 'कचरा',
+    f_draft: 'ड्राफ्ट',
+    f_template: 'मेल टेम्पलेट',
+    f_sig: 'हस्ताक्षर',
+    f_auto: 'ऑटो जवाब',
 
-    l_default: 'Default Labels',
-    l_user: 'User Labels',
+    l_default: 'डिफ़ॉल्ट लेबल',
+    l_user: 'उपयोगकर्ता लेबल',
 
     // add label
-    al_title: 'Add Label',
-    al_name: 'Label Name',
-    al_color: 'Color',
+    al_title: 'लेबल जोड़ें',
+    al_name: 'लेबल का नाम',
+    al_color: 'रंग',
 
-    close: 'Close',
-    save: 'Save',
+    close: 'बंद करना',
+    save: 'सहेजें',
 
     // error
-    err_title: 'Error',
-    err_work_mail: 'Please setup first your Work Mail'
+    err_title: 'त्रुटि',
+    err_work_mail: 'कृपया पहले अपना कार्य मेल सेट करें'
 }

@@ -1,209 +1,135 @@
 export default {
-    title: 'Terms and Conditions',
+    title: 'नियम व शर्तें',
 
     // information that StaLinks Collect
-    h1: 'Information that StaLinks collect',
-    h1p1: 'Information data that you have registered from StaLinks.com, this includes; name, email address, phone ' +
-        'number',
-    h1p2: 'StaLinks use cookies and/or web beacons to enhance experience, gather general visitor information, track ' +
-        'visits to our site',
+    h1: 'जानकारी जो असटीऐलिंक्स एकत्रित करती है।',
+    h1p1: 'सूचना डेटा जो आपने असटीऐलिंक्स.कॉम से पंजीकृत किया है, इसमें शामिल हैं; नाम, ईमेल पता, फोनसंख्या।',
+    h1p2: 'असटीऐलिंक्स कुकीज़ और/या वेब बीकन का उपयोग अनुभव को बढ़ाने, सामान्य आगंतुक जानकारी एकत्र करने, हमारी साइट पर विज़िट को ट्रैक करने के लिए करती है।',
 
     // what do we use the information for?
-    h2: 'What do we use your Information for?',
-    h2p1: 'To personalize client’s experience',
-    h2p1s1: 'This helps us to be better at assisting you for your interests',
-    h2p2: 'To improve our customer service',
-    h2p2s1: 'This helps us to effectively respond to your requests, support needs, and complaints',
-    h2p3: 'To send updates on our sites that based on your interests',
-    h2p3s1: 'We will send you an email based on your account from the registration',
+    h2: 'हम आपकी जानकारी के लिए क्या उपयोग करते हैं?',
+    h2p1: 'ग्राहक के अनुभव को निजीकृत करने के लिए',
+    h2p1s1: 'इससे हमें आपकी रुचियों के लिए आपकी सहायता करने में बेहतर होने में मदद मिलती है।',
+    h2p2: 'हमारी ग्राहक सेवा में सुधार करने के लिए',
+    h2p2s1: 'इससे हमें आपके अनुरोधों, समर्थन आवश्यकताओं और शिकायतों का प्रभावी ढंग से जवाब देने में मदद मिलती है।',
+    h2p3: 'हमारी साइटों पर आपकी रुचियों के आधार पर अपडेट भेजने के लिए।',
+    h2p3s1: 'हम आपको पंजीकरण से आपके खाते के आधार पर एक ईमेल भेजेंगे।',
 
     // how do we protect your personal information?
-    h3: 'How do we protect your personal information?',
-    h3p1: 'We implement a variety of security to maintain the safety of client’s personal information and orders.',
+    h3: 'हम आपके व्यक्तिगत सूचना को कैसे सुरक्षित रखे?',
+    h3p1: 'हम ग्राहक की व्यक्तिगत जानकारी और आदेशों की सुरक्षा बनाए रखने के लिए कई तरह की सुरक्षा लागू करते हैं। हम ग्राहक की व्यक्तिगत जानकारी और आदेशों की सुरक्षा बनाए रखने के लिए कई तरह की सुरक्षा लागू करते हैं।',
 
     // do we disclose any information to outside parties?
-    h4: 'Do we disclose any information to outside parties?',
-    h4p1: 'We do not sell, buy, or trade any other transfers to outside parties your personal information. This does ' +
-        'not include third parties who assist us in operating our website and assist you, and so our third parties ' +
-        'agreed to keep all the information is confidential. However, non-personal identifiable visitor’s ' +
-        'information may be provided to other parties for marketing, advertisement or other uses.',
+    h4: 'क्या हम किसी बाहरी पक्ष को किसी जानकारी का खुलासा करते हैं?',
+    h4p1: "हम आपकी व्यक्तिगत जानकारी को बाहरी पार्टियों को कोई अन्य हस्तांतरण नहीं बेचते, खरीदते या व्यापार नहीं करते हैं। इसमें तीसरे पक्ष शामिल नहीं हैं जो हमारी वेबसाइट के संचालन में हमारी सहायता करते हैं और आपकी सहायता करते हैं, और इसलिए हमारे तीसरे पक्ष सभी सूचनाओं को गोपनीय रखने के लिए सहमत हुए हैं।\n" +
+        "हालांकि, गैर-व्यक्तिगत पहचान योग्य आगंतुक की जानकारी अन्य पार्टियों को विपणन, विज्ञापन या अन्य उपयोगों के लिए प्रदान की जा सकती है।",
 
     // children online privacy protector
-    h5: 'Children online privacy protector',
-    h5p1: 'We do not collect any information from anyone under 13 years of age. Our system and service are all' +
-        'directed to people who are at least 13 years or older.',
+    h5: 'बच्चे ऑनलाइन गोपनीयता रक्षक',
+    h5p1: "हमने केवल पूरी वेबसाइट पर जानकारी एकत्र की है और हम इसके द्वारा कोई अन्य जानकारी एकत्र नहीं करते हैं\n" +
+        "ऑफ़लाइन/हमारे सिस्टम के बाहर।",
 
     // online privacy policy
-    h6: 'Online privacy policy',
-    h6p1: 'We only collected information throughout the website and we do not collect any other information by ' +
-        'offline/outside our system.',
+    h6: 'ऑनलाइन गोपनीयता नीति',
+    h6p1: "हमने केवल पूरी वेबसाइट पर जानकारी एकत्र की है और हम इसके द्वारा कोई अन्य जानकारी एकत्र नहीं करते हैं\n" +
+        "ऑफ़लाइन/हमारे सिस्टम के बाहर।",
 
     // terms, payments and conditions on StaLinks
-    h7: 'Terms, payments and conditions on StaLinks',
-    h7p1: 'The terms of service agreement set by the standard of StaLinks.com service. By using the StaLinks.com ' +
-        'service, you must agree to the terms, payments, and conditions. If you do not agree to the terms, payments ' +
-        'and conditions, you will immediately cease all the usage of StaLinks.com. We reserve the right, at any time, ' +
-        'to modify, alter or update the terms and conditions of this agreement without prior notice. The modification ' +
-        'shall become effective immediately upon being posted at https://www.stalinks.com website. You continue ' +
-        'the use of the service after amendments are posted constitute an acknowledgment and acceptance of the ' +
-        'agreement and its modifications. Except as provided in this paragraph, this agreement may not amend.',
+    h7: 'StaLinks पर नियम, भुगतान और शर्तें',
+    h7p1: "सेवा अनुबंध की शर्तें असटीऐलिंक्स.कॉम सेवा के मानक द्वारा निर्धारित की जाती हैं।असटीऐलिंक्स.कॉम  सेवा का उपयोग करके, आपको नियम, भुगतान और शर्तों से सहमत होना होगा। यदि आप नियमों, भुगतानों और शर्तों से सहमत नहीं हैं, तो आप तुरंत असटीऐलिंक्स.कॉम के सभी उपयोग बंद कर देंगे। हम बिना किसी पूर्व सूचना के इस समझौते के नियमों और शर्तों को संशोधित करने, बदलने या अपडेट करने का अधिकार सुरक्षित रखते हैं। संशोधन https://www.stalinks.com वेबसाइट पर पोस्ट किए जाने के तुरंत बाद प्रभावी हो जाएगा। संशोधन पोस्ट किए जाने के",
 
     // description of service
-    h8: 'Description of service',
-    h8p1: 'Our platform provides an online service for making our clients easier to buy or sell backlinks/guest posts. ' +
-        'Our system will verify that all websites are confirmed to our terms and we also reserve to approve and execute' +
-        ' all the transactions between sellers and buyers.',
+    h8: 'सेवा का विवरण',
+    h8p1: 'हमारा मंच हमारे ग्राहकों को बैकलिंक्स/गेस्टपोस्ट खरीदने या बेचने में आसान बनाने के लिए एक ऑनलाइन सेवा प्रदान करता है। हमारा सिस्टम यह सत्यापित करेगा कि सभी वेबसाइटें हमारी शर्तों की पुष्टि करती हैं और हम विक्रेताओं और खरीदारों के बीच सभी लेन-देन को स्वीकृत और निष्पादित करने के लिए भी सुरक्षित रखते हैं।',
 
     // member of usage?
-    h9: 'Member of usage',
-    h9p1: 'We will not tolerate our clients to use our system for any illegal purposes, including violating the' +
-        ' security of any computer network',
-    h9p2: 'We will not allow our clients to divulge, record or abuse any information in our website (e.g. inventory,' +
-        ' not limited to URL(s), descriptions and images)',
-    h9p3: 'StaLinks reserves all the rights to determine any links within our system that directed to URL(s)' +
-        ' that; not owned, has been deactivated, or cannot be found. Links may be removed without a refund and the' +
-        ' account may be suspended from StaLinks system',
+    h9: 'उपयोग के सदस्य',
+    h9p1: 'हम अपने ग्राहकों को किसी भी कंप्यूटर नेटवर्क की सुरक्षा का उल्लंघन करने सहित किसी भी अवैध उद्देश्यों के लिए हमारे सिस्टम का उपयोग करने के लिए बर्दाश्त नहीं करेंगे।',
+    h9p2: 'हम अपने ग्राहकों को हमारी वेबसाइट में किसी भी जानकारी को प्रकट करने, रिकॉर्ड करने या दुरुपयोग करने की अनुमति नहीं देंगे (उदाहरण के लिए, सूची, यूआरएल, विवरण और छवियों तक सीमित नहीं)।',
+    h9p3: 'असटीऐलिंक्स हमारे सिस्टम के भीतर किसी भी लिंक को निर्धारित करने के सभी अधिकार सुरक्षित रखता है जो URL को निर्देशित करता है; स्वामित्व नहीं है, निष्क्रिय कर दिया गया है, या नहीं पाया जा सकता है। लिंक को बिना धनवापसी के हटाया जा सकता है और खाते को असटीऐलिंक्स सिस्टम से निलंबित किया जा सकता है।',
 
     // payments
-    h10: 'Payments',
-    h10p1: 'Payment will be made in a maximum of 48 hours (during weekdays, exclude; weekends and public holidays)',
-    h10p2: 'The article should be for a lifetime and a minimum of 12 months based on months on the calendar',
-    h10p3: 'Payment will be transfer by PayPal, Skrill, and BTC. (Make sure you have at least one of those accounts' +
-        ' and valid',
-    h10p4: 'Payment currency will be done in USD',
-    h10p5: 'We are not responsible for any kind of changes during proceeds fees or currency conversion charges and' +
-        ' any kind of taxes, (e.g GST, VST, etc)',
+    h10: 'भुगतान',
+    h10p1: 'भुगतान अधिकतम 48 घंटों में किया जाएगा (सप्ताह के दिनों के दौरान, सप्ताहांत और सार्वजनिक छुट्टियों को छोड़कर)।',
+    h10p2: 'लेख जीवन भर के लिए होना चाहिए और कैलेंडर पर महीनों के आधार पर कम से कम 12 महीने होना चाहिए।\n',
+    h10p3: "भुगतान पायपल स्कृलल और बी टी स  द्वारा हस्तांतरित किया जाएगा। (सुनिश्चित करें कि आपके पास उनमें से कम से कम एक खाता है और मान्य है)।",
+    h10p4: 'भुगतान मुद्रा यु स डी में की जाएगी।',
+    h10p5: 'हम आय शुल्क या मुद्रा रूपांतरण शुल्क और किसी भी प्रकार के करों (जैसे जीएसटी, वीएसटी, आदि) के दौरान किसी भी तरह के बदलाव के लिए जिम्मेदार नहीं हैं।',
 
     // client account security
-    h11: 'Client account security',
-    h11p1: 'After you registered your own account, you will get access to your own control panel',
-    h11p2: 'You are responsible for maintaining your username and password that is confidential on our website',
-    h11p3: 'You are responsible for your own actions that occur through the use of your account',
-    h11p4: 'You agree not to share out your own personal information with outside parties (i.e. username, email' +
-        ' address, password, company name (if there’s any) and transaction). If anything happens to your account' +
-        ' (e.g. password stolen, breached, or any kind of issue). Please contact our customer service immediately.' +
-        ' We will not responsible for any loss',
-    h11p5: 'StaLinks reserves to terminate your account without prior notice to you if you undergo any violations ' +
-        'and others that are against our agreement.',
+    h11: 'ग्राहक खाता सुरक्षा',
+    h11p1: 'अपना खाता पंजीकृत करने के बाद, आपको अपने स्वयं के नियंत्रण कक्ष तक पहुंच प्राप्त होगी।',
+    h11p2: 'आप अपने उपयोगकर्ता नाम और पासवर्ड को बनाए रखने के लिए जिम्मेदार हैं जो हमारी वेबसाइट पर गोपनीय है।',
+    h11p3: 'आप अपने स्वयं के कार्यों के लिए जिम्मेदार हैं जो आपके खाते के उपयोग के माध्यम से होते हैं।',
+    h11p4: 'आप सहमत हैं कि आप अपनी निजी जानकारी को बाहरी पक्षों (अर्थात उपयोगकर्ता नाम, ईमेल पता, पासवर्ड, कंपनी का नाम (यदि कोई हो) और लेनदेन) के साथ साझा नहीं करेंगे। अगर आपके खाते में कुछ भी होता है (उदाहरण के लिए पासवर्ड चोरी, भंग, या किसी भी प्रकार की समस्या)। कृपया हमारी ग्राहक सेवा से तुरंत संपर्क करें। हम किसी भी नुकसान के लिए जिम्मेदार नहीं होंगे।',
+    h11p5: 'यदि आप किसी भी उल्लंघन और हमारे समझौते के खिलाफ हैं, तो असटीऐलिंक्स आपको बिना किसी पूर्व सूचना के आपके खाते को समाप्त करने के लिए सुरक्षित रखता है।',
 
     // client information
-    h12: 'Client information',
-    h12p1: 'Your account information must be valid (we will not be responsible if you put invalid, inaccurate,' +
-        ' or misleading information)',
-    h12p2: 'Do not add any stolen information',
-    h12p3: 'You are responsible for maintaining all information details in your own account',
-    h12p4: 'You agree not to disclose your password and username to anyone. StaLinks will not validate any copyrights,' +
-        ' patent, trademark, or property rights, or even publicity privacy',
-    h12p5: 'Do not violate any laws, statue, or regulations (i.e. without limitation government export control,' +
-        ' other client’s personal information, anti-discrimination, etc)',
-    h12p6: 'Do not put human trafficking URLs (e.g. child pornography, harmful to minors, etc)',
-    h12p7: 'Do not put URLs that contain; one-click ads or other computer programming routines that are intended' +
-        ' to damage, detrimentally, interfere with surreptitiously intercept or expropriate any system, data,' +
-        ' or personal information',
-    h12p8: 'Do not create something that could cause StaLinks to lose all of the data or party. Do not add any links' +
-        ' that lead to the opposite of StaLinks terms',
-    h12p9: 'All users shall not create liability intercept or expropriate any system, data, or personal information,' +
-        ' link directly or indirectly to or include goods service that; are prohibited under this agreement;' +
-        ' are identical to other items you have up for sale or rent/currently listed for sale or rent on a web site' +
-        ' other than StaLinks. If users do not have the right link, place to or include in the publisher list,' +
-        ' furthermore you may not allow uploading any links on StaLinks web site (or consummate any transaction' +
-        ' that was initiated using our service) that, could cause StaLinks to violate any applicable law.' +
-        ' A statue or that violates our current prohibited, questionable, and infringing items.',
-    h12p10: 'We will use all of the information you add to our website to help us to identify and verify your account.' +
-        ' We will use your email address for verification of your account on StaLinks and send you updates of' +
-        ' backlinks based on your interest in the future.',
+    h12: 'क्लाइंट की सूचना',
+    h12p1: 'आपकी खाता जानकारी मान्य होनी चाहिए (यदि आप अमान्य, गलत या भ्रामक जानकारी डालते हैं तो हम जिम्मेदार नहीं होंगे)।',
+    h12p2: 'कोई भी चोरी की जानकारी न जोड़ें।',
+    h12p3: 'आप अपने खाते में सभी जानकारी विवरण बनाए रखने के लिए जिम्मेदार हैं।',
+    h12p4: 'आप सहमत हैं कि आप अपना पासवर्ड और उपयोगकर्ता नाम किसी को न बताएं। असटीऐलिंक्स किसी भी कॉपीराइट, पेटेंट, ट्रेडमार्क, या संपत्ति के अधिकार, या यहां तक ​​कि प्रचार गोपनीयता को मान्य नहीं करेगा।',
+    h12p5: 'किसी भी कानून, प्रतिमा, या विनियमों का उल्लंघन न करें (यानी बिना किसी सीमा के सरकारी निर्यात नियंत्रण, अन्य ग्राहक की व्यक्तिगत जानकारी, भेदभाव-विरोधी, आदि)।',
+    h12p6: 'मानव तस्करी के यूआरएल (जैसे बाल पोर्नोग्राफ़ी, अवयस्कों के लिए हानिकारक, आदि) न डालें।',
+    h12p7: 'ऐसे यूआरएल न डालें जिनमें शामिल हों; एक-क्लिक वाले विज्ञापन या अन्य कंप्यूटर प्रोग्रामिंग रूटीन जिनका उद्देश्य किसी भी सिस्टम, डेटा या व्यक्तिगत जानकारी को नुकसान पहुंचाना, नुकसान पहुंचाना, चोरी-छिपे इंटरसेप्ट करना या हथियाना है।',
+    h12p8: 'ऐसा कुछ न बनाएं जिससे  असटीऐलिंक्स का सारा डेटा या पार्टी खो जाए। कोई भी लिंक न जोड़ें जो असटीऐलिंक्स की शर्तों के विपरीत हो।',
+    h12p9: 'सभी उपयोगकर्ता किसी भी सिस्टम, डेटा, या व्यक्तिगत जानकारी को लायबिलिटी इंटरसेप्ट या ज़ब्त नहीं करेंगे, प्रत्यक्ष या अप्रत्यक्ष रूप से लिंक नहीं करेंगे या माल सेवा को शामिल नहीं करेंगे; इस समझौते के तहत निषिद्ध हैं; अन्य वस्तुओं के समान हैं जिन्हें आपने बिक्री के लिए या किराए पर/वर्तमान मेंअसटीऐलिंक्स  के अलावा किसी अन्य वेब साइट पर बिक्री या किराए के लिए सूचीबद्ध किया है। यदि उपयोगकर्ताओं के पास प्रकाशक सूची में सही लिंक, स्थान या शामिल नहीं है, तो इसके अलावा आप असटीऐलिंक्स  वेब साइट पर किसी भी लिंक को अपलोड करने की अनुमति नहीं दे सकते हैं (या हमारी सेवा का उपयोग करके शुरू किए गए किसी भी लेनदेन को पूरा कर सकते हैं), जिससे असटीऐलिंक्स का उल्लंघन हो सकता है। लागू कानून। एक मूर्ति या जो हमारे वर्तमान निषिद्ध, संदिग्ध और उल्लंघन करने वाली वस्तुओं का उल्लंघन करती है।',
+    h12p10: 'आपके खाते को पहचानने और सत्यापित करने में हमारी सहायता करने के लिए हम आपके द्वारा हमारी वेबसाइट में जोड़ी गई सभी जानकारी का उपयोग करेंगे। हम आपके ईमेल पते का उपयोग असटीऐलिंक्स  पर आपके खाते के सत्यापन के लिए करेंगे और भविष्य में आपकी रुचि के आधार पर आपको बैकलिंक्स के अपडेट भेजेंगे।',
 
     // publishers or seller’s listings
-    h13: 'Publishers or seller’s listings',
-    h13p1: 'All publishers must be agreed to these terms or risk having their account suspend or deleted. This also' +
-        ' may result in loss of payments and banned from using the StaLinks system and service.',
-    h13p2: 'Publisher URLs must be qualified by our system (we use AHREFs standards), if the link does not qualify' +
-        ' for StaLinks standards, sellers will not able to sell the link in our system',
-    h13p3: 'Sold URL’s must exist/visible on the publisher lists at all times (hiding these links we may consider' +
-        ' as system abuse)',
-    h13p4: 'Publisher URLs must be complete and valid with working pages and links between pages',
-    h13p5: 'Publisher URLs cannot consist of redirection to a different website or page. The URL that has been uploaded' +
-        ' to the StaLinks system must be the exact address of Publisher Lists',
-    h13p6: 'URLs cannot consist of harmful content or any illegal materials',
-    h13p7: 'Publisher must have a valid account and contact information so that StaLinks will contact the publisher' +
-        ' for the payment. (If publisher’s account is invalid, we may delay the payment and possibility to terminate the account)',
-    h13p8: 'Publisher must not put links that lead to different URLs page. ( The URL(s) that been submitted must' +
-        ' lead to the exact other “Link To” of the buyers)',
-    h13p9: 'Publisher must not put links that contain one-click ads or viruses',
-    h13p10: 'Publisher must allow access to the StaLinks system to validate the backlinks is valid',
-    h13p11: 'Publisher URLs must be submitted under the category that fits the theme of StaLinks',
-    h13p12: 'Publisher URL should not contain a reference to “Buying and Selling Text Links” or other terms which may' +
-        ' be deemed by search engines to be in violation of their policies',
-    h13p13: 'Publisher must allow access to URL from StaLinks system to validate that Keyword Anchor is working correctly',
+    h13: 'प्रकाशक या विक्रेता की सूचियाँ',
+    h13p1: 'सभी प्रकाशकों को इन शर्तों या उनके खाते को निलंबित या हटाए जाने के जोखिम से सहमत होना चाहिए। इसके परिणामस्वरूप भुगतान की हानि हो सकती है और असटीऐलिंक्स सिस्टम और सेवा का उपयोग करने से प्रतिबंधित किया जा सकता है।',
+    h13p2: 'प्रकाशक यूआरएल हमारे सिस्टम द्वारा योग्य होने चाहिए (हम  अह्रेफ़्स  मानकों का उपयोग करते हैं), यदि लिंक असटीऐलिंक्स मानकों के लिए योग्य नहीं है, तो विक्रेता हमारे सिस्टम में लिंक को बेचने में सक्षम नहीं होंगे।',
+    h13p3: 'बेचे गए यूआरएल को प्रकाशक सूचियों पर हर समय मौजूद/दृश्यमान होना चाहिए (इन लिंक्स को छुपाना हम सिस्टम दुरुपयोग के रूप में विचार कर सकते हैं)।',
+    h13p4: 'प्रकाशकयु र ल पूर्ण और मान्य होने चाहिए जिनमें कार्यशील पृष्ठ और पृष्ठों के बीच लिंक हों।',
+    h13p5: 'प्रकाशक यूआरएल में किसी भिन्न वेबसाइट या पृष्ठ पर पुनर्निर्देशन शामिल नहीं हो सकता है। असटीऐलिंक्स सिस्टम पर अपलोड किया गया यूआरएल प्रकाशक सूचियों का सटीक पता होना चाहिए।',
+    h13p6: 'यूआरएल  में हानिकारक सामग्री या कोई भी अवैध सामग्री शामिल नहीं हो सकती है।',
+    h13p7: 'प्रकाशक के पास एक वैध खाता और संपर्क जानकारी होनी चाहिए ताकि असटीऐलिंक्स  भुगतान के लिए प्रकाशक से संपर्क करे। (यदि प्रकाशक का खाता अमान्य है, तो हम भुगतान में देरी कर सकते हैं और खाते को समाप्त करने की संभावना है)',
+    h13p8: 'प्रकाशक को अलग-अलग यूआरएल पेज पर ले जाने वाले लिंक नहीं डालने चाहिए। (सबमिट किए गए यूआरएल को खरीदारों के ठीक दूसरे "लिंक टू" पर ले जाना चाहिए)',
+    h13p9: 'प्रकाशक को ऐसे लिंक नहीं डालने चाहिए जिनमें एक-क्लिक वाले विज्ञापन या वायरस हों।',
+    h13p10: 'बैकलिंक्स के मान्य होने की पुष्टि करने के लिए प्रकाशक को असटीऐलिंक्स सिस्टम तक पहुंच की अनुमति देनी चाहिए।',
+    h13p11: 'प्रकाशक यूआरएल  को उस श्रेणी के अंतर्गत सबमिट किया जाना चाहिए जो  असटीऐलिंक् की थीम के अनुकूल हो।',
+    h13p12: 'प्रकाशक यूआरएल  में "टेक्स्ट लिंक खरीदना और बेचना" या अन्य शर्तों का संदर्भ नहीं होना चाहिए, जिन्हें खोज इंजन द्वारा उनकी नीतियों का उल्लंघन माना जा सकता है।',
+    h13p13: 'प्रकाशक को यह सत्यापित करने के लिए कि कीवर्ड एंकर सही ढंग से काम कर रहा है, असटीऐलिंक्   सिस्टम से यूआरएल तक पहुंच की अनुमति देनी चाहिए।',
 
     // disclaimer of warranties
-    h14: 'DISCLAIMER OF WARRANTIES',
-    h14p1: 'The service that StaLinks provide on an ‘as is and on an ‘as available basis',
-    h14p2: 'StaLinks makes no representation or warranties of any kind, express or implied, regarding the use or the' +
-        ' results of our system in terms of correctness, accuracy, reliability, etc',
-    h14p3: 'StaLinks do not have liability for any interruptions in the use of StaLinks platform',
-    h14p4: 'StaLinks disclaims all warranties with regards to the information provided, including the implied' +
-        ' warranties of merchantability and non-infringement. Some jurisdictions do not allow the exclusion of' +
-        ' implied warranties; therefore, the above-referenced exclusion is inapplicable.',
+    h14: 'वारंटियों का अस्वीकरण',
+    h14p1: 'वह सेवा जो असटीऐलिंक् \'जैसा है और \'जैसा उपलब्ध है\' के आधार पर प्रदान करती है।',
+    h14p2: 'असटीऐलिंक् शुद्धता, सटीकता, विश्वसनीयता आदि के संदर्भ में हमारे सिस्टम के उपयोग या परिणामों के संबंध में किसी भी प्रकार का कोई प्रतिनिधित्व या वारंटी, व्यक्त या निहित नहीं करता है।',
+    h14p3: 'असटीऐलिंक् के पास असटीऐलिंक् प्लेटफॉर्म के उपयोग में किसी भी रुकावट के लिए कोई दायित्व नहीं है।',
+    h14p4: 'असटीऐलिंक् प्रदान की गई जानकारी के संबंध में सभी वारंटी को अस्वीकार करता है, जिसमें व्यापारिकता और गैर-उल्लंघन की निहित वारंटी शामिल है। कुछ क्षेत्राधिकार निहित वारंटियों के बहिष्करण की अनुमति नहीं देते हैं; इसलिए, उपरोक्त-संदर्भ बहिष्करण लागू नहीं है।',
 
     // limitation of liability
-    h15: 'LIMITATION OF LIABILITY',
-    h15p1: 'StaLinks will not take any responsibility for any damage whatsoever and in particular ' +
-        '(i.e. loss profits, loss of use, arising out of/or related to StaLinks or the information contained in it,' +
-        ' whether if the damage arises in contract, or otherwise. Even if StaLinks has been advised of the possibility' +
-        ' of such damages. Some jurisdictions do not allow for the limitation or exclusion of liability for incidental' +
-        ' or consequential damages, therefore some of the above limitations are inapplicable.',
+    h15: 'दायित्व की सीमा',
+    h15p1: 'असटीऐलिंक् किसी भी नुकसान के लिए और विशेष रूप से (यानी हानि लाभ, उपयोग की हानि, असटीऐलिंक् या उसमें निहित जानकारी से उत्पन्न होने वाली हानि के लिए कोई जिम्मेदारी नहीं लेगा, चाहे अनुबंध में नुकसान हुआ हो, या अन्यथा। भले ही असटीऐलिंक् को इस तरह के नुकसान की संभावना के बारे में सलाह दी गई है। कुछ क्षेत्राधिकार आकस्मिक या परिणामी नुकसान के लिए देयता की सीमा या बहिष्करण की अनुमति नहीं देते हैं, इसलिए उपरोक्त कुछ सीमाएं लागू नहीं होती हैं।',
 
     // indemnification
-    h16: 'INDEMNIFICATION',
-    h16p1: 'Client agrees to indemnification and holds StaLinks, subsidiaries, affiliates, officers, employees,' +
-        ' harmless from any claim or demand, including reasonable attorney’s fees and costs, made by the third party' +
-        ' due to or arising out of client’s use of service.',
+    h16: 'क्षतिपूर्ति',
+    h16p1: 'क्लाइंट क्षतिपूर्ति के लिए सहमत है और असटीऐलिंक् सहायक कंपनियों, सहयोगियों, अधिकारियों, कर्मचारियों को किसी भी दावे या मांग से हानिरहित रखता है, जिसमें उचित वकील की फीस और लागत शामिल है, जो क्लाइंट के सेवा के उपयोग के कारण या तीसरे पक्ष द्वारा की गई है।',
 
     // compose and interruption
-    h17: 'COMPOSE AND INTERRUPTION',
-    h17p1: 'StaLinks reserves rearrange and update to new service or even discontinue the service with or without' +
-        ' notice to the client. The client must acknowledge and accept that StaLinks does not guarantee continuous,' +
-        ' uninterrupted, or maintenance of our website might be interfered with/or affected by numerous factors or' +
-        ' circumstances outside of StaLinks’ control.',
+    h17: 'रचना और व्यवधान',
+    h17p1: 'असटीऐलिंक् नई सेवा को पुनर्व्यवस्थित और अद्यतन करता है या ग्राहक को सूचना दिए बिना या बिना सेवा बंद कर देता है। क्लाइंट को यह स्वीकार करना और स्वीकार करना चाहिए कि असटीऐलिंक् गारंटी नहीं देता है कि हमारी वेबसाइट का निरंतर, निर्बाध, या रखरखाव असटीऐलिंक् के नियंत्रण के बाहर कई कारकों या परिस्थितियों से प्रभावित/या प्रभावित हो सकता है।',
 
     // publisher information
-    h18: 'PUBLISHER INFORMATION',
-    h18p1: 'Our URL(s) lists have been provided by the publishers or collected from available sources. ' +
-        'StaLinks always make sure that all the information on the URL(s) is valid. StaLinks do no reserves ' +
-        'for other URL(s) that offer by other third party and you must acknowledge that any reliance out of StaLinks' +
-        ' service will be at your own risk.',
-    h18p2: 'StaLinks makes no warranties or representation whatsoever with regard to any product provided or offered' +
-        ' by any third party, and you acknowledge that any reliance on representations and warranties provided by any' +
-        ' third party shall be at your own risk.',
+    h18: 'प्रकाशक जानकारी',
+    h18p1: 'हमारी यूआरएल सूचियाँ प्रकाशकों द्वारा प्रदान की गई हैं या उपलब्ध स्रोतों से एकत्र की गई हैं। असटीऐलिंक्  हमेशा सुनिश्चित करता है कि  यूआरएल  की सभी जानकारी मान्य है। अन्य तृतीय पक्ष द्वारा ऑफ़र किए जाने वाले अन्य   यूआरएल  के लिए असटीऐलिंक्   कोई आरक्षित नहीं है और आपको यह स्वीकार करना चाहिए कि असटीऐलिंक्   सेवा से कोई भी निर्भरता आपके अपने जोखिम पर होगी।',
+    h18p2: 'असटीऐलिंक् किसी तीसरे पक्ष द्वारा प्रदान किए गए या पेश किए गए किसी भी उत्पाद के संबंध में कोई वारंटी या प्रतिनिधित्व नहीं करता है, और आप स्वीकार करते हैं कि किसी तीसरे पक्ष द्वारा प्रदान किए गए प्रतिनिधित्व और वारंटी पर कोई निर्भरता आपके अपने जोखिम पर होगी।',
 
     // compliance with laws
-    h19: 'COMPLIANCE WITH LAWS',
-    h19p1: 'The client must acknowledge applicable law and compliance with such laws. The client must not use the' +
-        ' StaLinks service in any way that violates applicable laws, international laws, or other government' +
-        ' requirements. The client must not transmit any material that contains or encourages conduct that triggers' +
-        ' constitute a criminal offense, violates any applicable local, state, national, or even international laws' +
-        ' or regulations.',
+    h19: 'कानूनों का अनुपालन',
+    h19p1: 'क्लाइंट को लागू कानून और ऐसे कानूनों के अनुपालन को स्वीकार करना चाहिए। क्लाइंट को किसी भी तरह से असटीऐलिंक् सेवा का उपयोग नहीं करना चाहिए जो लागू कानूनों, अंतर्राष्ट्रीय कानूनों या अन्य सरकारी आवश्यकताओं का उल्लंघन करता हो। क्लाइंट को ऐसी कोई भी सामग्री प्रसारित नहीं करनी चाहिए जिसमें ऐसे आचरण को शामिल किया गया हो या प्रोत्साहित किया गया हो जो एक आपराधिक अपराध का गठन करता हो, किसी भी लागू स्थानीय, राज्य, राष्ट्रीय या यहां तक ​​कि अंतरराष्ट्रीय कानूनों या विनियमों का उल्लंघन करता हो।',
 
     // confidential information
-    h20: 'CONFIDENTIAL INFORMATION',
-    h20p1: 'All content that published and existed on the StaLinks website, including the design, text, graphics,' +
-        ' software, selection, and arrangements are property of StaLinks and/or third parties that protected by' +
-        ' intellectual property rights. Any use of materials on the website, including modification, replication,' +
-        ' any form of data extraction, or other commercial exploitation of any kind, without prior permission of an,' +
-        ' authorized written approval from StaLinks official controller, is strictly prohibited.',
-    h20p2: 'StaLinks is a form of the official website. StaLinks trademarks might not be used in connection with any' +
-        ' service that is not provided by StaLinks in any case that would likely cause confusion for the clients.',
+    h20: 'गोपनीय जानकारी',
+    h20p1: 'डिजाइन, टेक्स्ट, ग्राफिक्स, सॉफ्टवेयर, चयन, और व्यवस्थाओं सहित असटीऐलिंक् वेबसाइट पर प्रकाशित और अस्तित्व में आने वाली सभी सामग्री असटीऐलिंक् और/या तृतीय पक्षों की संपत्ति हैं जो बौद्धिक संपदा अधिकारों द्वारा संरक्षित हैं। वेबसाइट पर सामग्री का कोई भी उपयोग, जिसमें संशोधन, प्रतिकृति, डेटा निष्कर्षण का कोई भी रूप, या किसी भी प्रकार का अन्य वाणिज्यिक शोषण, असटीऐलिंक् आधिकारिक नियंत्रक से अधिकृत लिखित अनुमोदन की पूर्व अनुमति के बिना, सख्त वर्जित है।',
+    h20p2: 'असटीऐलिंक् आधिकारिक वेबसाइट का एक रूप है। असटीऐलिंक् ट्रेडमार्क का उपयोग ऐसी किसी भी सेवा के संबंध में नहीं किया जा सकता है जो असटीऐलिंक् द्वारा प्रदान नहीं की जाती है, जो किसी भी मामले में ग्राहकों के लिए भ्रम पैदा कर सकती है।',
 
     // other terms
-    h21: 'OTHER TERMS',
-    h21p1: 'By reading all these terms, payments, and conditions unlawful, clearheaded, unforced for any reason,' +
-        ' (and any partially-enforceable provision) shall remain valid to the possible extension. You agreed to this' +
-        ' term of service agreement that StaLinks provided. This term of service agreement and other agreements that' +
-        ' have been assigned by StaLinks. These terms of service also apply at our discretion, in addition to not be' +
-        ' superseded by any other written agreement relations between clients and StaLinks.',
-    h21p2: 'Clients agreed to this term of service agreement. All client’s personal information and other use' +
-        ' described in our Privacy Policy Statements.',
+    h21: 'अन्य निबंधन',
+    h21p1: 'इन सभी नियमों, भुगतानों और शर्तों को पढ़ने से गैरकानूनी, स्पष्ट, किसी भी कारण से मजबूर, (और कोई आंशिक रूप से लागू करने योग्य प्रावधान) संभावित विस्तार के लिए मान्य रहेगा। आप सेवा अनुबंध की इस शर्त से सहमत हैं जो असटीऐलिंक् ने प्रदान की थी। सेवा अनुबंध की यह अवधि और अन्य अनुबंध जो असटीऐलिंक् द्वारा असाइन किए गए हैं। सेवा की ये शर्तें हमारे विवेक पर भी लागू होती हैं, इसके अलावा ग्राहकों और StaLinks के बीच किसी अन्य लिखित समझौते के संबंधों से प्रभावित नहीं होने के अलावा।',
+    h21p2: 'ग्राहक सेवा समझौते की इस अवधि के लिए सहमत हुए। हमारे गोपनीयता नीति वक्तव्यों में वर्णित सभी ग्राहक की व्यक्तिगत जानकारी और अन्य उपयोग।',
 
-    b: 'Close'
+    b: 'बंद करना'
 }

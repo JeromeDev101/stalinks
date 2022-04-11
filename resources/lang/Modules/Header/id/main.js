@@ -1,39 +1,39 @@
 export default {
     // survey
-    survey: 'Help us improve by answering our survey.',
-    stalinks_survey: 'Stalinks Survey',
-    survey_a: 'Survey A',
-    survey_b: 'Survey B',
-    survey_answer: 'Answer Now',
-    survey_thanks: 'Thank you for answering this survey!',
+    survey: 'Bantu kami meningkatkan dengan menjawab survei kami.',
+    stalinks_survey: 'Survei StaLinks',
+    survey_a: 'Survei A',
+    survey_b: 'Survei B',
+    survey_answer: 'Jawab Sekarang',
+    survey_thanks: 'Terima kasih telah menjawab survei ini!',
 
     // buyer credits
-    credit: 'Credit',
-    add_credit: 'Add Credit',
+    credit: 'Kredit',
+    add_credit: 'Tambah Kredit',
 
     // notifications
-    new_notifications: 'New Notifications',
-    view_all_notifications: 'View All Notifications',
-    all_notifications: 'All Notifications',
+    new_notifications: 'Notifikasi Baru',
+    view_all_notifications: 'Lihat semua pemberitahuan',
+    all_notifications: 'Semua notifikasi',
 
     // emails
-    unread_emails: 'Unread Emails',
-    view_all_emails: 'View All Unread Emails',
-    all_emails: 'All Unread Emails',
+    unread_emails: 'Email yang belum dibaca',
+    view_all_emails: 'Lihat semua email yang belum dibaca',
+    all_emails: 'Semua email yang belum dibaca',
 
     // profile
-    profile: 'Profile',
-    sign_out: 'Sign out',
+    profile: 'Profil',
+    sign_out: 'Keluar',
 
     // wallet
-    add_wallet: 'Add Wallet Transaction',
-    amount: 'Amount USD',
-    payment_via: 'Payment Via',
-    proof: 'Proof of Documents',
-    proof_note: 'Note: It must be image type. ( jpg, jpeg, gif and png)',
-    paypal: 'Your Paypal Region',
-    total: 'Total Amount',
-    next: 'Next',
+    add_wallet: 'Tambahkan transaksi dompet',
+    amount: 'Jumlah dalam USD',
+    payment_via: 'Jenis pembayaran',
+    proof: 'Bukti Dokumen',
+    proof_note: 'Catatan: Wajib berjenis (jpg, jpeg, gif, and png)',
+    paypal: 'Wilayah paypal anda',
+    total: 'Jumlah Total',
+    next: 'Lanjut',
 
-    close: 'Close'
+    close: 'Tutup'
 }

@@ -1,36 +1,36 @@
 export default {
-    ml_title: 'Mail Template',
-    ml_name: 'Template Name',
-    ml_ip_title: 'Title',
-    ml_lang: 'Language',
-    ml_action: 'Action',
+    ml_title: 'Mẫu mail',
+    ml_name: 'Mẫu tên',
+    ml_ip_title: 'Tiêu đề',
+    ml_lang: 'Ngôn ngữ',
+    ml_action: 'Hoạt động',
 
     // filter
-    filter_title: 'Filter',
-    filter_search_email_name: 'Search Email Name',
-    filter_search_title: 'Search Title',
+    filter_title: 'Lọc',
+    filter_search_email_name: 'Hiển thị bộ lọc',
+    filter_search_title: 'Tiêu đề tìm kiếm',
 
     // action
-    action_edit: 'Edit',
-    action_delete: 'Delete',
+    action_edit: 'Biên tập',
+    action_delete: 'Xóa bỏ',
 
     // add language
-    al_title: 'Add Language',
-    al_lang: 'Language',
-    al_select_lang: 'Select language',
+    al_title: 'Thêm ngôn ngữ',
+    al_lang: 'Ngôn ngữ',
+    al_select_lang: 'Chọn ngôn ngữ',
     al_email: 'Template Name',
     al_enter_email: 'Enter Template Name',
-    al_ip_title: 'Title',
-    al_enter_title: 'Enter Title',
-    al_content: 'Content',
-    al_enter_content: 'Enter Content',
+    al_ip_title: 'Tiêu đề',
+    al_enter_title: 'Nhập Tiêu đề',
+    al_content: 'Nội dung',
+    al_enter_content: 'Nhập Nội dung',
 
     // update template
-    ut_title: 'Update Template',
+    ut_title: 'Cập nhật mẫu',
 
     // delete template
-    dl_info: 'Do you want to delete template ',
+    dl_info: 'Bạn có muốn xóa mẫu không ',
 
-    save: 'Save',
-    close: 'Close',
+    save: 'Lưu',
+    close: 'Đóng',
 }

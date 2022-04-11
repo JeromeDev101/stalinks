@@ -1,30 +1,30 @@
 export default {
-    compose: 'Compose',
-    login: 'Login As:',
+    compose: 'Biên soạn',
+    login: 'Đăng nhập vào:',
 
     // folders
-    f_title: 'Folders',
-    f_inbox: 'Inbox',
-    f_sent: 'Sent',
-    f_star: 'Starred',
-    f_trash: 'Trash',
-    f_draft: 'Drafts',
-    f_template: 'Mail Template',
-    f_sig: 'Signatures',
-    f_auto: 'Auto Replies',
+    f_title: 'Thư mục',
+    f_inbox: 'Hộp thư đến',
+    f_sent: 'Gởi',
+    f_star: 'Có gắn dấu sao',
+    f_trash: 'Rác',
+    f_draft: 'Bản nháp',
+    f_template: 'Mẫu thư',
+    f_sig: 'Chữ ký',
+    f_auto: 'Trả lời tự động',
 
-    l_default: 'Default Labels',
-    l_user: 'User Labels',
+    l_default: 'Ký hiệu mặc định',
+    l_user: 'Ký hiệu Người dùng',
 
     // add label
-    al_title: 'Add Label',
-    al_name: 'Label Name',
-    al_color: 'Color',
+    al_title: 'Thêm Ký Hiệu',
+    al_name: 'Tên Ký Hiệu',
+    al_color: 'Màu Sắc',
 
-    close: 'Close',
-    save: 'Save',
+    close: 'Đóng',
+    save: 'Lưu',
 
     // error
-    err_title: 'Error',
-    err_work_mail: 'Please setup first your Work Mail'
+    err_title: 'Lỗi',
+    err_work_mail: 'Trước tiên hãy thiết lập mail Công việc của bạn'
 }
