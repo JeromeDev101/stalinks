@@ -154,7 +154,8 @@ class PublisherController extends Controller
     }
 
     private function checkDuplicateUpdate($url, $seller_id, $id) {
-        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id)->where('id', '!=', $id);
+        $publisher = Publisher::where('url', $url)->where('user_id', $seller_id)->where('id', '!=', $id)
+        ->whereNull('deleted_at');
         return $publisher->count() > 0;
     }
 
