@@ -370,6 +370,7 @@
                                         ref="sortComponent"
                                         :sorted="isSorted"
                                         :items="sortOptions"
+                                        :custom-class="['w-25']"
 
                                         @submitSort="sortSubmit"
                                         @updateOptions="updateSortOptions">
