@@ -34,7 +34,9 @@ class MailRepository extends BaseRepository implements MailRepositoryInterface
     public function getTemplateList($page, $perPage, $filters, $isFullPage, $is_general_template)
     {
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $queryBuilder->where('is_general_template', $is_general_template);
+        $queryBuilder->when($is_general_template, function($query) use ($is_general_template) {
+            return $query->where('is_general_template', $is_general_template);
+        });
         // if (Auth::user()->type == config('constant.USER_TYPE_ADMIN')) {
             $queryBuilder->select('id', 'title', 'content', 'mail_name', 'country_id')->with('language')->orderBy('id', 'desc');
         // } else {

@@ -38,6 +38,7 @@ class MailController extends Controller
         $input = $request->all();
         $countryId = 0;
         $page = 0;
+        $is_general_template = null;
         $isFullPage = false;
         $perPage = config('common.paginate.default');
         $filters = [
