@@ -105,18 +105,22 @@
                     <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_2') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/register-new.png" alt="">
                         {{ $t('message.registration.banner2_text1') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/upload-new.png" alt="">
                         {{ $t('message.registration.banner2_text2') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/follow-up-1-1.png" alt="">
                         {{ $t('message.registration.banner2_text3') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/earning-new.png" alt="">
                         {{ $t('message.registration.banner2_text4') }}
                     </p>
                     <br>
@@ -126,14 +130,17 @@
                     <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_3') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/register-new.png" alt="">
                         {{ $t('message.registration.banner3_text1') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/order-1.png" alt="">
                         {{ $t('message.registration.banner3_text2') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/follow-up-1-1.png" alt="">
                         {{ $t('message.registration.banner3_text3') }}
                     </p>
                     <br>
@@ -143,18 +150,22 @@
                     <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_4') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/register-new.png" alt="">
                         {{ $t('message.registration.banner4_text1') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/start-writing.png" alt="">
                         {{ $t('message.registration.banner4_text2') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/follow-up-1-1.png" alt="">
                         {{ $t('message.registration.banner4_text3') }}
                     </p>
                     <br>
                     <p class="text-white lead custom-text">
+                        <img src="/images/icon_registration/earning-new.png" alt="">
                         {{ $t('message.registration.banner4_text4') }}
                     </p>
                     <br>
