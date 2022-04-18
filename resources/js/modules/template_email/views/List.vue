@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="form-check" v-if="user.role_id == 1 || user.role_id == 3 || user.role_id == 8">
+                        <div class="form-check" v-if="user.isOurs == 0">
                             <label class="form-check-label">
                                 <input type="checkbox" class="form-check-input" v-model="filterModel.is_general_template" @click="doSearchList"> 
                                 General template
@@ -181,7 +181,7 @@
                             </div>
 
                             <!-- only admin, dev and QC manager -->
-                            <div class="col-md-12" v-if="user.role_id == 1 || user.role_id == 3 || user.role_id == 8">
+                            <div class="col-md-12" v-if="user.isOurs == 0">
                                 <hr>
                                     <div class="form-check">
                                         <label class="form-check-label">
