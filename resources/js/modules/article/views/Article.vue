@@ -190,7 +190,7 @@
 <!--                            </tr>-->
 <!--                        </table>-->
 
-                        <div class="row bg-info mb-4 text-center rounded">
+                        <div class="d-flex flex-row flex-nowrap overflow-auto bg-info mb-4 text-center rounded">
                             <div class="col p-3">
                                 {{ $t('message.article.filter_queue') }}
                                 <b>({{ statusSummary.total_queue ? statusSummary.total_queue : '0' }})</b>

@@ -161,24 +161,6 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
-                    <div class="card-header py-2">
-                        <table width="100%" style="font-size: 0.85rem">
-                            <tr>
-                                <td>
-                                    <table class="bg-info">
-                                        <tr>
-                                            <td v-for="stat in statusSummary" class="p-3">
-                                                {{ stat.status }}
-                                                <b>{{' ('+ stat.total +')' }}</b>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-
                     <div class="card-header">
                         <h3 class="card-title text-primary">{{ $t('message.follow_backlinks.fub_title') }}</h3>
                         <div class="card-tools"></div>
@@ -186,16 +168,23 @@
 
                     <div class="card-body">
 
+                        <div class="d-flex flex-row flex-nowrap overflow-auto bg-info mb-4 text-center rounded">
+                            <div v-for="stat in statusSummary" class="col p-3">
+                                {{ stat.status }}
+                                <b>{{' ('+ stat.total +')' }}</b>
+                            </div>
+                        </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-8 mb-2">
                                 <div class="input-group" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
-                                    <button class="btn btn-default mr-2"
-                                            @click="selectAll">{{
-                                                allSelected
-                                                    ? $t('message.follow_backlinks.fub_deselect')
-                                                    : $t('message.follow_backlinks.fub_select')
-                                            }} {{ $t('message.follow_backlinks.all') }}
+                                    <button class="btn btn-default mr-2" @click="selectAll">
+                                        {{
+                                            allSelected
+                                            ? $t('message.follow_backlinks.fub_deselect')
+                                            : $t('message.follow_backlinks.fub_select')
+                                        }}
+                                        {{ $t('message.follow_backlinks.all') }}
                                     </button>
 
                                     <div class="dropdown mr-2">
@@ -205,39 +194,39 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item " @click="buyValidated">{{ $t('message.follow_backlinks.fub_buy') }}</a>
                                             <a class="dropdown-item " @click="UnInterestedValidated" >{{ $t('message.follow_backlinks.fub_uninterested') }}</a>
-                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">{{ $t('message.follow_backlinks.delete') }}</a>
+<!--                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">{{ $t('message.follow_backlinks.delete') }}</a>-->
                                         </div>
                                     </div>
-
                                 </div>
+                            </div>
 
-                                <div class="input-group input-group-sm float-right" style="width: 100px">
-                                    <select class="form-control float-right"
-                                            @change="getBackLinkList"
-                                            v-model="fillter.paginate"
-                                            style="height: 37px;">
-                                        <option v-for="option in paginate" v-bind:value="option">
-                                            {{ option }}
-                                        </option>
-                                    </select>
-                                </div>
+                            <div class="col-md-4 mb-2 d-flex" :class="currentWindowWidth > 800 ? 'justify-content-end' : ''">
+                                <button
+                                    data-toggle="modal"
+                                    data-target="#modal-setting-followup-backlinks"
+                                    class="btn btn-default mr-2">
+                                    <i class="fa fa-cog"></i>
+                                </button>
 
-                                <div v-if="Object.keys(listBackLink).length !== 0" class="float-right mr-3">
+                                <div v-if="Object.keys(listBackLink).length !== 0" class="mr-2">
                                     <download-csv
+                                        style="margin-bottom: 0 !important;"
                                         :data="listBackLink.data"
                                         :fileds="data_filed"
                                         :nameFile="file_csv">
                                     </download-csv>
                                 </div>
 
-                                <button
-                                    data-toggle="modal"
-                                    data-target="#modal-setting-followup-backlinks"
-                                    class="btn btn-default float-right mr-3">
+                                <select
+                                    class="form-control w-25"
+                                    v-model="fillter.paginate"
+                                    style="height: 37px; min-width: 100px"
 
-                                    <i class="fa fa-cog"></i>
-                                </button>
-
+                                    @change="getBackLinkList">
+                                    <option v-for="option in paginate" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -338,13 +327,13 @@
                                         <td v-show="tblFollowupBacklinksOpt.date_for_process">{{ backLink.created_at }}</td>
                                         <td v-show="tblFollowupBacklinksOpt.date_completed">{{ backLink.live_date }}</td>
                                         <td v-show="tblFollowupBacklinksOpt.status">{{ backLink.status }}</td>
-                                        <td>
+                                        <td class="text-center">
                                             <div class="btn-group">
                                                 <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
                                             </div>
-                                            <div v-if="user.isAdmin" class="btn-group">
-                                                <button class="btn btn-default" @click="deleteBackLink(backLink.id, backLink.publisher.user.username, backLink.user.username)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>
-                                            </div>
+<!--                                            <div v-if="user.isAdmin" class="btn-group">-->
+<!--                                                <button class="btn btn-default" @click="deleteBackLink(backLink.id, backLink.publisher.user.username, backLink.user.username)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>-->
+<!--                                            </div>-->
                                         </td>
                                     </tr>
                                 </tbody>
@@ -676,6 +665,8 @@
                 checkIds: [],
                 allSelected: false,
                 isDisabled: true,
+
+                currentWindowWidth: window.innerWidth
             }
         },
         async created() {
@@ -688,6 +679,12 @@
             this.getSubAccount();
             this.getFormula();
             this.getSummaryStatus();
+
+            window.addEventListener("resize", this.resizeEventHandler);
+        },
+
+        destroyed() {
+            window.removeEventListener("resize", this.resizeEventHandler);
         },
 
         computed: {
@@ -728,6 +725,10 @@
         },
 
         methods: {
+
+            resizeEventHandler(e) {
+                this.currentWindowWidth = window.innerWidth;
+            },
 
             checkSelected() {
                 this.isDisabled = true;

@@ -365,7 +365,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-8">
+                            <div class="col-md-8 mb-2">
                                 <div class="input-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle"
@@ -390,7 +390,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 d-flex justify-content-end">
+                            <div class="col-md-4 mb-2 d-flex" :class="currentWindowWidth > 800 ? 'justify-content-end' : ''">
 
                                 <button data-toggle="modal" data-target="#modal-setting" class="btn btn-default mr-2">
                                     <i class="fa fa-cog"></i>
@@ -1204,6 +1204,8 @@ export default {
             country_continent_filter_info : '',
             sort_options: [],
             btnBuy: false,
+
+            currentWindowWidth: window.innerWidth
         }
     },
 
@@ -1639,9 +1641,20 @@ export default {
         if (language.length === 0) {
             this.getListLanguages();
         }
+
+        window.addEventListener("resize", this.resizeEventHandler);
+    },
+
+    destroyed() {
+        window.removeEventListener("resize", this.resizeEventHandler);
     },
 
     methods : {
+
+        resizeEventHandler(e) {
+            this.currentWindowWidth = window.innerWidth;
+        },
+
         updateSortOptions(data) {
             this.sort_options = data;
         },
