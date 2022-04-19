@@ -60,6 +60,15 @@ import follow from './FollowUpSales/th/main';
 // incomes
 import incomes from './Incomes/th/main';
 
+// list backlinks to buy
+import list_backlinks from './ListBacklinks/th/main';
+
+// follow up sales
+import follow_backlinks from './FollowUpBacklinks/th/main';
+
+// purchase
+import purchase from './Purchase/th/main';
+
 export default {
     message : {
         help,
@@ -124,5 +133,14 @@ export default {
 
         // incomes
         incomes,
+
+        // list backlinks
+        list_backlinks,
+
+        // follow up backlinks
+        follow_backlinks,
+
+        // purchase
+        purchase,
     }
 }

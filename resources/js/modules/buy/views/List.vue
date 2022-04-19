@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.list_backlinks.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.list_backlinks.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,36 +30,36 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search URL</label>
+                                    <label>{{ $t('message.list_backlinks.filter_search_url') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.search"
                                            name=""
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.list_backlinks.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Status of Purchased</label>
+                                    <label>{{ $t('message.list_backlinks.filter_status_purchased') }}</label>
                                     <v-select multiple
                                               v-model="filterModel.status_purchase"
                                               :options="['New', 'Interested', 'Not interested', 'Purchased']"
                                               :searchable="false"
-                                              placeholder="All"/>
+                                              :placeholder="$t('message.list_backlinks.all')"/>
                                     <!-- <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select> -->
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Language</label>
+                                    <label>{{ $t('message.list_backlinks.filter_lang') }}</label>
                                     <v-select
                                         v-model="filterModel.language_id"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="listLanguages.data"
                                         :reduce="language => language.id"/>
@@ -68,12 +68,12 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Continent</label>
+                                    <label>{{ $t('message.list_backlinks.filter_continent') }}</label>
                                     <v-select
                                         v-model="filterModel.continent_id"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="listContinent.data"
                                         :reduce="continent => continent.id"/>
@@ -82,12 +82,12 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Country</label>
+                                    <label>{{ $t('message.list_backlinks.filter_country') }}</label>
                                     <v-select
                                         v-model="filterModel.country_id"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="filterCountrySelect"
                                         :reduce="country => country.id"/>
@@ -108,9 +108,9 @@
                             <div class="col-md-2"
                                  v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5)">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.list_backlinks.filter_seller') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.seller">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.list_backlinks.all') }}</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -120,18 +120,18 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Accept Casino & Betting Sites</label>
+                                    <label>{{ $t('message.list_backlinks.filter_accept_cb') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.casino_sites">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.list_backlinks.all') }}</option>
+                                        <option value="yes">{{ $t('message.list_backlinks.yes') }}</option>
+                                        <option value="no">{{ $t('message.list_backlinks.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Topic</label>
+                                    <label>{{ $t('message.list_backlinks.filter_topic') }}</label>
                                     <!-- <select name="" class="form-control" v-model="filterModel.topic">
                                         <option value="">All</option>
                                         <option v-for="option in topic" v-bind:value="option">
@@ -142,18 +142,18 @@
                                               v-model="filterModel.topic"
                                               :options="topic"
                                               :searchable="false"
-                                              placeholder="All"/>
+                                              :placeholder="$t('message.list_backlinks.all')"/>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Domain Zone</label>
+                                    <label>{{ $t('message.list_backlinks.filter_dz') }}</label>
                                     <v-select
                                         v-model="filterModel.domain_zone"
                                         multiple
                                         label="name"
-                                        placeholder="All"
+                                        :placeholder="$t('message.list_backlinks.all')"
                                         :options="listDomainZones.data"
                                         :searchable="true"
                                         :reduce="domain => domain.name"/>
@@ -162,36 +162,31 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Is Https?</label>
+                                    <label>{{ $t('message.list_backlinks.filter_https') }}</label>
                                     <select
                                         class="form-control"
                                         v-model="filterModel.is_https">
-                                        <option value="">All</option>
-                                        <option
-                                            value="yes">Yes
-                                        </option>
-                                        <option
-                                            value="no">
-                                            No
-                                        </option>
+                                        <option value="">{{ $t('message.list_backlinks.all') }}</option>
+                                        <option value="yes">{{ $t('message.list_backlinks.yes') }}</option>
+                                        <option value="no">{{ $t('message.list_backlinks.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">UR</label>
+                                    <label>{{ $t('message.list_backlinks.filter_ur') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
                                                     type="button"
-                                                    @click="buttonState.ur = buttonState.ur === 'Above' ? 'Below' : 'Above'">
+                                                    @click="buttonState.ur = buttonState.ur === 'Above' ? $t('message.list_backlinks.below') : $t('message.list_backlinks.above')">
                                                 {{ buttonState.ur }}
                                             </button>
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.list_backlinks.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.ur">
@@ -201,18 +196,18 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">DR</label>
+                                    <label>{{ $t('message.list_backlinks.filter_dr') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
                                                     type="button"
-                                                    @click="buttonState.dr = buttonState.dr === 'Above' ? 'Below' : 'Above'">
+                                                    @click="buttonState.dr = buttonState.dr === 'Above' ? $t('message.list_backlinks.below') : $t('message.list_backlinks.above')">
                                                 {{ buttonState.dr }}
                                             </button>
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.list_backlinks.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.dr">
@@ -222,18 +217,18 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Org Kw</label>
+                                    <label>{{ $t('message.list_backlinks.filter_org_kw') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
                                                     type="button"
-                                                    @click="buttonState.org_kw = buttonState.org_kw === 'Above' ? 'Below' : 'Above'">
+                                                    @click="buttonState.org_kw = buttonState.org_kw === 'Above' ? $t('message.list_backlinks.below') : $t('message.list_backlinks.above')">
                                                 {{ buttonState.org_kw }}
                                             </button>
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.list_backlinks.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.org_kw">
@@ -243,18 +238,18 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Org Traffic</label>
+                                    <label>{{ $t('message.list_backlinks.filter_org_traffic') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
                                                     type="button"
-                                                    @click="buttonState.org_traffic = buttonState.org_traffic === 'Above' ? 'Below' : 'Above'">
+                                                    @click="buttonState.org_traffic = buttonState.org_traffic === 'Above' ? $t('message.list_backlinks.below') : $t('message.list_backlinks.above')">
                                                 {{ buttonState.org_traffic }}
                                             </button>
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.list_backlinks.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.org_traffic">
@@ -264,19 +259,19 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Price</label>
+                                    <label>{{ $t('message.list_backlinks.filter_price') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button
                                                 class="btn btn-outline-secondary"
                                                 type="button"
-                                                @click="buttonState.price = buttonState.price === 'Above' ? 'Below' : 'Above'">
+                                                @click="buttonState.price = buttonState.price === 'Above' ? $t('message.list_backlinks.below') : $t('message.list_backlinks.above')">
                                                 {{ buttonState.price }}
                                             </button>
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.list_backlinks.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.price">
@@ -291,7 +286,7 @@
                             <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
 
                                 <div class="form-group">
-                                    <label>Code</label>
+                                    <label>{{ $t('message.list_backlinks.filter_code') }}</label>
                                     <!-- <select name="" class="form-control" v-model="filterModel.code">
                                         <option value="">All</option>
                                         <option v-for="option in listCode" v-bind:value="option">
@@ -302,7 +297,7 @@
                                     <v-select
                                         v-model="filterModel.code"
                                         multiple
-                                        placeholder="All"
+                                        :placeholder="$t('message.list_backlinks.all')"
                                         :options="listCode"
                                         :searchable="false"
                                     />
@@ -311,12 +306,12 @@
 
                             <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <div class="form-group">
-                                    <label>Price Basis</label>
+                                    <label>{{ $t('message.list_backlinks.filter_price_basis') }}</label>
                                     <v-select multiple
                                               v-model="filterModel.price_basis"
                                               :options="['Good', 'Average', 'High']"
                                               :searchable="false"
-                                              placeholder="All"/>
+                                              :placeholder="$t('message.list_backlinks.all')"/>
                                     <!--                                <select name="" class="form-control" v-model="filterModel.price_basis">-->
                                     <!--                                    <option value="">All</option>-->
                                     <!--                                    <option value="Good">Good</option>-->
@@ -330,10 +325,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.list_backlinks.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search
-                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.list_backlinks.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -345,23 +343,23 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Buy Backlinks</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.list_backlinks.bb_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
                     <div class="card-body">
                         <span class="ml-5 text-primary" v-show="user.role_id == 5">
-                            Credit Left: <b>${{listBuy.credit }}</b>
+                            {{ $t('message.list_backlinks.bb_credit') }} <b>${{listBuy.credit }}</b>
                         </span>
 
                         <div class="row">
                             <div class="col-md-12 mt-0 pt-0">
                                 <div v-if="isCreditAuth" class="alert alert-warning">
-                                    Sorry you cannot Purchase backlinks due to lack of Wallet. Click
+                                    {{ $t('message.list_backlinks.bb_sorry') }}
                                     <button class="btn btn-link" @click="checkCreditAuth">
-                                        Retry
+                                        {{ $t('message.list_backlinks.bb_retry') }}
                                     </button>
-                                    if you have given permission to purchased
+                                    {{ $t('message.list_backlinks.bb_permission') }}
                                 </div>
                             </div>
                         </div>
@@ -377,12 +375,16 @@
                                                 data-toggle="dropdown"
                                                 aria-haspopup="true"
                                                 aria-expanded="false">
-                                            Selected Action
+                                            {{ $t('message.list_backlinks.bb_selected_action') }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <!-- <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a> -->
-                                            <a class="dropdown-item " @click="interestedSelected">Interested</a>
-                                            <a class="dropdown-item " @click="notInterestedSelected">Not Interested</a>
+                                            <a class="dropdown-item " @click="interestedSelected">
+                                                {{ $t('message.list_backlinks.bb_interested') }}
+                                            </a>
+                                            <a class="dropdown-item " @click="notInterestedSelected">
+                                                {{ $t('message.list_backlinks.bb_not_interested') }}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -553,7 +555,7 @@
                                     <button
                                         v-if="scope.row.price != '' && scope.row.price != null"
                                         :disabled="isCreditAuth"
-                                        title="Buy"
+                                        :title="$t('message.list_backlinks.t_buy')"
                                         data-target="#modal-buy-update"
                                         @click="doUpdate(scope.row)"
                                         data-toggle="modal"
@@ -561,12 +563,12 @@
                                     <button
                                         :disabled="scope.row.status_purchased == 'Interested'"
                                         @click="doLike(scope.row)"
-                                        title="Interested"
+                                        :title="$t('message.list_backlinks.bb_interested')"
                                         class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
                                     <button
                                         :disabled="scope.row.status_purchased == 'Not interested'"
                                         @click="doDislike(scope.row.id)"
-                                        title="Not Interested"
+                                        :title="$t('message.list_backlinks.bb_not_interested')"
                                         class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                 </div>
                             </template>
@@ -587,7 +589,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Buy Backlink</h5>
+                        <h5 class="modal-title">{{ $t('message.list_backlinks.b_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -599,7 +601,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL</label>
+                                    <label>{{ $t('message.list_backlinks.t_url') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.url"
@@ -611,7 +613,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Prices</label>
+                                    <label>{{ $t('message.list_backlinks.t_prices') }}</label>
                                     <input type="number"
                                            class="form-control"
                                            v-model="updateModel.price"
@@ -623,7 +625,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Anchor Text</label>
+                                    <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.anchor_text"
@@ -634,7 +636,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Link To</label>
+                                    <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.link"
@@ -645,7 +647,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL Advertiser</label>
+                                    <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.url_advertiser"
@@ -657,8 +659,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitBuy" :disabled="btnBuy" class="btn btn-primary">Buy</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.list_backlinks.close') }}
+                        </button>
+                        <button type="button" @click="submitBuy" :disabled="btnBuy" class="btn btn-primary">
+                            {{ $t('message.list_backlinks.t_buy') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -675,7 +681,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Interested Backlink</h5>
+                        <h5 class="modal-title">{{ $t('message.list_backlinks.i_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -687,7 +693,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL</label>
+                                    <label>{{ $t('message.list_backlinks.t_url') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.url"
@@ -699,7 +705,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Prices</label>
+                                    <label>{{ $t('message.list_backlinks.t_prices') }}</label>
                                     <input type="number"
                                            class="form-control"
                                            v-model="updateModel.price"
@@ -711,7 +717,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Anchor Text</label>
+                                    <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.anchor_text"
@@ -722,7 +728,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Link To</label>
+                                    <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.link"
@@ -733,7 +739,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL Advertiser</label>
+                                    <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="updateModel.url_advertiser"
@@ -745,8 +751,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitInterest" class="btn btn-primary">Interested</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.list_backlinks.close') }}
+                        </button>
+                        <button type="button" @click="submitInterest" class="btn btn-primary">
+                            {{ $t('message.list_backlinks.bb_interested') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -763,7 +773,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Buy Selected Backlink</h5>
+                        <h5 class="modal-title">{{ $t('message.list_backlinks.bs_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -775,7 +785,7 @@
                         <div class="row" v-for="(buy, index) in buyData" :key="index">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL</label>
+                                    <label>{{ $t('message.list_backlinks.t_url') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            :value="buy.url"
@@ -786,7 +796,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Price</label>
+                                    <label>{{ $t('message.list_backlinks.t_price') }}</label>
                                     <input type="number"
                                            class="form-control"
                                            :value="buy.price"
@@ -799,7 +809,8 @@
                                 <button type="button"
                                         class="btn btn-link"
                                         data-toggle="collapse"
-                                        :data-target="'#collapseExample'+index">View more
+                                        :data-target="'#collapseExample'+index">
+                                    {{ $t('message.list_backlinks.bs_view_more') }}
                                 </button>
                             </div>
                             <div class="col-md-12">
@@ -808,7 +819,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="">Anchor Text</label>
+                                                    <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
                                                     <input type="text"
                                                            class="form-control"
                                                            name=""
@@ -818,7 +829,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="">Link To</label>
+                                                    <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
                                                     <input type="text"
                                                            class="form-control"
                                                            name=""
@@ -828,7 +839,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="">URL Advertiser</label>
+                                                    <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
                                                     <input type="text"
                                                            class="form-control"
                                                            name=""
@@ -844,8 +855,12 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Buy All</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.list_backlinks.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            {{ $t('message.list_backlinks.bs_buy_all') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -857,139 +872,182 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.list_backlinks.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6" v-if="user.role_id != 5 && user.isOurs != 1">
                                 <label><input
                                     type="checkbox"
-                                    :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">Seller</label>
+                                    :checked="tblBuyOptions.seller ? 'checked':''" v-model="tblBuyOptions.seller">
+                                    {{ $t('message.list_backlinks.filter_seller') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.topic ? 'checked':''"
-                                    v-model="tblBuyOptions.topic">Topic</label>
+                                    v-model="tblBuyOptions.topic">
+                                    {{ $t('message.list_backlinks.filter_topic') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.casino_sites ? 'checked':''"
-                                    v-model="tblBuyOptions.casino_sites">Casino & Betting Sites</label>
+                                    v-model="tblBuyOptions.casino_sites">
+                                    {{ $t('message.list_backlinks.t_casino') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.language ? 'checked':''"
-                                    v-model="tblBuyOptions.language">Language</label>
+                                    v-model="tblBuyOptions.language">
+                                    {{ $t('message.list_backlinks.filter_lang') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.country ? 'checked':''"
-                                    v-model="tblBuyOptions.country">Country</label>
+                                    v-model="tblBuyOptions.country">
+                                    {{ $t('message.list_backlinks.filter_country') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.continent ? 'checked':''"
-                                    v-model="tblBuyOptions.continent">Continent</label>
+                                    v-model="tblBuyOptions.continent">
+                                    {{ $t('message.list_backlinks.filter_continent') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.url ? 'checked':''"
-                                    v-model="tblBuyOptions.url">URL</label>
+                                    v-model="tblBuyOptions.url">
+                                    {{ $t('message.list_backlinks.t_url') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.ur ? 'checked':''"
-                                    v-model="tblBuyOptions.ur">UR</label>
+                                    v-model="tblBuyOptions.ur">
+                                    {{ $t('message.list_backlinks.filter_ur') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.dr ? 'checked':''"
-                                    v-model="tblBuyOptions.dr">DR</label>
+                                    v-model="tblBuyOptions.dr">
+                                    {{ $t('message.list_backlinks.filter_dr') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.backlinks ? 'checked':''"
-                                    v-model="tblBuyOptions.backlinks">Backlinks</label>
+                                    v-model="tblBuyOptions.backlinks">
+                                    {{ $t('message.list_backlinks.sd_backlinks') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.ref_domains ? 'checked':''"
-                                    v-model="tblBuyOptions.ref_domains">Ref Domains</label>
+                                    v-model="tblBuyOptions.ref_domains">
+                                    {{ $t('message.list_backlinks.t_ref_dom') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.org_keywords ? 'checked':''"
-                                    v-model="tblBuyOptions.org_keywords">Organic Keywords</label>
+                                    v-model="tblBuyOptions.org_keywords">
+                                    {{ $t('message.list_backlinks.filter_org_kw') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.ratio ? 'checked':''"
-                                    v-model="tblBuyOptions.ratio">Ratio</label>
+                                    v-model="tblBuyOptions.ratio">
+                                    {{ $t('message.list_backlinks.t_ratio') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.org_traffic ? 'checked':''"
-                                    v-model="tblBuyOptions.org_traffic">Organic Traffic</label>
+                                    v-model="tblBuyOptions.org_traffic">
+                                    {{ $t('message.list_backlinks.filter_org_traffic') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.price ? 'checked':''"
-                                    v-model="tblBuyOptions.price">{{ user.role_id == 5 ? 'Prices' : 'Price' }}</label>
+                                    v-model="tblBuyOptions.price">
+                                    {{ user.role_id == 5 ? $t('message.list_backlinks.t_prices') : $t('message.list_backlinks.t_price') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6" v-if="user.isAdmin">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.prices ? 'checked':''"
-                                    v-model="tblBuyOptions.prices">Prices</label>
+                                    v-model="tblBuyOptions.prices">
+                                    {{ $t('message.list_backlinks.t_prices') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.status ? 'checked':''"
-                                    v-model="tblBuyOptions.status">Status</label>
+                                    v-model="tblBuyOptions.status">
+                                    {{ $t('message.list_backlinks.t_status') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6" v-show="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <label><input
                                     type="checkbox"
                                     :checked="tblBuyOptions.code_comb ? 'checked':''"
-                                    v-model="tblBuyOptions.code_comb">Code Combination</label>
+                                    v-model="tblBuyOptions.code_comb">
+                                    {{ $t('message.list_backlinks.t_code_comb') }}
+                                </label>
                             </div>
                             <div
                                 class="checkbox col-md-6"
                                 v-show="user.role_id != 5 && user.isOurs != 1">
                                 <label><input type="checkbox"
                                               :checked="tblBuyOptions.code_price ? 'checked':''"
-                                              v-model="tblBuyOptions.code_price">Code Price</label>
+                                              v-model="tblBuyOptions.code_price">
+                                    {{ $t('message.list_backlinks.t_code_price') }}
+                                </label>
                             </div>
                             <div
                                 class="checkbox col-md-6"
                                 v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <label><input type="checkbox"
                                               :checked="tblBuyOptions.price_basis ? 'checked':''"
-                                              v-model="tblBuyOptions.price_basis">Price Basis</label>
+                                              v-model="tblBuyOptions.price_basis">
+                                    {{ $t('message.list_backlinks.filter_price_basis') }}
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.list_backlinks.close') }}
+                        </button>
                         <button type="button"
                                 class="btn btn-primary"
                                 @click="saveColumnSetting"
-                                data-dismiss="modal">Save
+                                data-dismiss="modal">
+                            {{ $t('message.list_backlinks.save') }}
                         </button>
                     </div>
                 </div>
@@ -1150,6 +1208,8 @@ export default {
     },
 
     mounted() {
+        let self = this;
+
         pusher.logToConsole = true;
 
         const channel = pusher.subscribe('private-user.' +
@@ -1168,7 +1228,7 @@ export default {
                 container : this.$refs.buyerBody
             }, {
                 default :
-                    'We are generating the URLs\' best prices, please wait...'
+                    self.$t('message.list_backlinks.alert_generate')
             });
         });
 
@@ -1210,7 +1270,7 @@ export default {
                 // display message
                 this.country_continent_filter_info = is_gone
                     ? ''
-                    : 'Some selected countries that were not within the selected continent(s) are removed.';
+                    : this.$t('message.list_backlinks.alert_countries');
 
                 this.filterModel.country_id = is_gone
                     ? this.filterModel.country_id
@@ -1252,135 +1312,137 @@ export default {
         },
 
         sortOptions() {
-                return [
-                    {
-                        name: 'Seller',
-                        sort: '',
-                        column: 'users.username',
-                        hidden: !this.tblBuyOptions.seller
-                    },
-                    {
-                        name: 'Topic',
-                        sort: '',
-                        column: 'topic',
-                        hidden: !this.tblBuyOptions.topic
-                    },
-                    {
-                        name: 'Casino & Betting sites',
-                        sort: '',
-                        column: 'casino_sites',
-                        hidden: !this.tblBuyOptions.casino_sites
-                    },
-                    {
-                        name: 'Language',
-                        sort: '',
-                        column: 'languages.name',
-                        hidden: !this.tblBuyOptions.language
-                    },
-                    {
-                        name: 'Country',
-                        sort: '',
-                        column: 'countries.name',
-                        hidden: !this.tblBuyOptions.country
-                    },
-                    {
-                        name: 'Continent',
-                        sort: '',
-                        column: 'publisher_continent',
-                        hidden: !this.tblBuyOptions.continent
-                    },
-                    {
-                        name: 'URL',
-                        sort: '',
-                        column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
-                        hidden: !this.tblBuyOptions.url
-                    },
-                    {
-                        name: 'Https',
-                        sort: '',
-                        column: 'is_https',
-                        hidden: false
-                    },
-                    {
-                        name: 'UR',
-                        sort: '',
-                        column: 'ur',
-                        hidden: !this.tblBuyOptions.ur
-                    },
-                    {
-                        name: 'DR',
-                        sort: '',
-                        column: 'dr',
-                        hidden: !this.tblBuyOptions.dr
-                    },
-                    {
-                        name: 'Blinks',
-                        sort: '',
-                        column: 'backlinks',
-                        hidden: !this.tblBuyOptions.backlinks
-                    },
-                    {
-                        name: 'Ref Domain',
-                        sort: '',
-                        column: 'ref_domain',
-                        hidden: !this.tblBuyOptions.ref_domains
-                    },
-                    {
-                        name: 'Org Kw',
-                        sort: '',
-                        column: 'org_keywords',
-                        hidden: !this.tblBuyOptions.org_keywords
-                    },
-                    {
-                        name: 'Ratio',
-                        sort: '',
-                        column: 'ratio_value',
-                        hidden: !this.tblBuyOptions.ratio
-                    },
-                    {
-                        name: 'Org Traffic',
-                        sort: '',
-                        column: 'cast(org_traffic as unsigned)',
-                        hidden: !this.tblBuyOptions.org_traffic
-                    },
-                    {
-                        name: 'Price',
-                        sort: '',
-                        column: 'cast(price as unsigned)',
-                        hidden: !this.tblBuyOptions.price
-                    },
-                    // {
-                    //     name: 'Prices',
-                    //     sort: '',
-                    //     column: 'cast(dr as unsigned)', // for checking
-                    //     hidden: !this.tblBuyOptions.prices
-                    // },
-                    // {
-                    //     name: 'Status',
-                    //     sort: '',
-                    //     column: 'cast(backlinks as unsigned)', // for checking
-                    //     hidden: !this.tblBuyOptions.status
-                    // },
-                    {
-                        name: 'Code Comb',
-                        sort: '',
-                        column: 'code_comb',
-                        hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_comb
-                    },
-                    {
-                        name: 'Code Price',
-                        sort: '',
-                        column: 'code_price',
-                        hidden: !this.tblBuyOptions.code_price
-                    },
-                    {
-                        name: 'Price Basis',
-                        sort: '',
-                        column: 'price_basis',
-                        hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.price_basis
-                    },
-                ]
-            },
+            let self = this;
+
+            return [
+                {
+                    name: self.$t('message.list_backlinks.filter_seller'),
+                    sort: '',
+                    column: 'users.username',
+                    hidden: !this.tblBuyOptions.seller
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_topic'),
+                    sort: '',
+                    column: 'topic',
+                    hidden: !this.tblBuyOptions.topic
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_casino'),
+                    sort: '',
+                    column: 'casino_sites',
+                    hidden: !this.tblBuyOptions.casino_sites
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_lang'),
+                    sort: '',
+                    column: 'languages.name',
+                    hidden: !this.tblBuyOptions.language
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_country'),
+                    sort: '',
+                    column: 'countries.name',
+                    hidden: !this.tblBuyOptions.country
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_continent'),
+                    sort: '',
+                    column: 'publisher_continent',
+                    hidden: !this.tblBuyOptions.continent
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_url'),
+                    sort: '',
+                    column: 'REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(url,\'http://\',\'\'), \'https://\', \'\'), \'www.\', \'\'), \'/\', \'\'), \' \', \'\')',
+                    hidden: !this.tblBuyOptions.url
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_https'),
+                    sort: '',
+                    column: 'is_https',
+                    hidden: false
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_ur'),
+                    sort: '',
+                    column: 'ur',
+                    hidden: !this.tblBuyOptions.ur
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_dr'),
+                    sort: '',
+                    column: 'dr',
+                    hidden: !this.tblBuyOptions.dr
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_backlinks'),
+                    sort: '',
+                    column: 'backlinks',
+                    hidden: !this.tblBuyOptions.backlinks
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_ref_dom'),
+                    sort: '',
+                    column: 'ref_domain',
+                    hidden: !this.tblBuyOptions.ref_domains
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_org_kw'),
+                    sort: '',
+                    column: 'org_keywords',
+                    hidden: !this.tblBuyOptions.org_keywords
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_ratio'),
+                    sort: '',
+                    column: 'ratio_value',
+                    hidden: !this.tblBuyOptions.ratio
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_org_traffic'),
+                    sort: '',
+                    column: 'cast(org_traffic as unsigned)',
+                    hidden: !this.tblBuyOptions.org_traffic
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_price'),
+                    sort: '',
+                    column: 'cast(price as unsigned)',
+                    hidden: !this.tblBuyOptions.price
+                },
+                // {
+                //     name: 'Prices',
+                //     sort: '',
+                //     column: 'cast(dr as unsigned)', // for checking
+                //     hidden: !this.tblBuyOptions.prices
+                // },
+                // {
+                //     name: 'Status',
+                //     sort: '',
+                //     column: 'cast(backlinks as unsigned)', // for checking
+                //     hidden: !this.tblBuyOptions.status
+                // },
+                {
+                    name: self.$t('message.list_backlinks.t_code_comb'),
+                    sort: '',
+                    column: 'code_comb',
+                    hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_comb
+                },
+                {
+                    name: self.$t('message.list_backlinks.t_code_price'),
+                    sort: '',
+                    column: 'code_price',
+                    hidden: !this.tblBuyOptions.code_price
+                },
+                {
+                    name: self.$t('message.list_backlinks.filter_price_basis'),
+                    sort: '',
+                    column: 'price_basis',
+                    hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.price_basis
+                },
+            ]
+        },
 
         tableConfig() {
             return [
@@ -1399,7 +1461,7 @@ export default {
                 },
                 {
                     prop : 'user_name',
-                    name : 'Seller',
+                    name : this.$t('message.list_backlinks.filter_seller'),
                     // sortable : true,
                     width : 100,
                     isHidden : this.user.role_id == 5 &&
@@ -1407,105 +1469,105 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Topic',
+                    name : this.$t('message.list_backlinks.filter_topic'),
                     actionName : 'topicData',
                     width : 100,
                     isHidden : !this.tblBuyOptions.topic
                 },
                 {
                     prop : '_action',
-                    name : 'Casino & Betting sites',
+                    name : this.$t('message.list_backlinks.t_casino'),
                     actionName : 'casinoSiteData',
                     width : 175,
                     isHidden : !this.tblBuyOptions.casino_sites
                 },
                 {
                     prop : 'language_name',
-                    name : 'Language',
+                    name : this.$t('message.list_backlinks.filter_lang'),
                     // sortable : true,
                     width : 110,
                     isHidden : !this.tblBuyOptions.language
                 },
                 {
                     prop : 'country_name',
-                    name : 'Country',
+                    name : this.$t('message.list_backlinks.filter_country'),
                     // sortable : true,
                     width : 120,
                     isHidden : !this.tblBuyOptions.country
                 },
                 {
                     prop : '_action',
-                    name : 'Continent',
+                    name : this.$t('message.list_backlinks.filter_continent'),
                     actionName : 'continentData',
                     width : 150,
                     isHidden : !this.tblBuyOptions.continent
                 },
                 {
                     prop : '_action',
-                    name : 'URL',
+                    name : this.$t('message.list_backlinks.t_url'),
                     actionName : 'urlData',
                     width : 175,
                     isHidden : !this.tblBuyOptions.url
                 },
                 {
                     prop : 'is_https',
-                    name : 'Https',
+                    name : this.$t('message.list_backlinks.t_https'),
                     // sortable : true,
                     width : 200,
                     isHidden : false
                 },
                 {
                     prop : 'ur',
-                    name : 'UR',
+                    name : this.$t('message.list_backlinks.filter_ur'),
                     // sortable : true,
                     width : 50,
                     isHidden : !this.tblBuyOptions.ur
                 },
                 {
                     prop : 'dr',
-                    name : 'DR',
+                    name : this.$t('message.list_backlinks.filter_dr'),
                     // sortable : true,
                     width : 50,
                     isHidden : !this.tblBuyOptions.dr
                 },
                 {
                     prop : 'backlinks',
-                    name : 'Blinks',
+                    name : this.$t('message.list_backlinks.t_backlinks'),
                     // sortable : true,
                     width : 100,
                     isHidden : !this.tblBuyOptions.backlinks
                 },
                 {
                     prop : 'ref_domain',
-                    name : 'Ref Domain',
+                    name : this.$t('message.list_backlinks.t_ref_dom'),
                     // sortable : true,
                     width : 125,
                     isHidden : !this.tblBuyOptions.ref_domains
                 },
                 {
                     prop : '_action',
-                    name : 'Org Kw',
+                    name : this.$t('message.list_backlinks.filter_org_kw'),
                     actionName : 'orgKeywordData',
                     width : 100,
                     isHidden : !this.tblBuyOptions.org_keywords
                 },
                 {
                     prop : '_action',
-                    name : 'Ratio',
+                    name : this.$t('message.list_backlinks.t_ratio'),
                     actionName : 'ratioData',
                     width : 100,
                     isHidden : !this.tblBuyOptions.ratio
                 },
                 {
                     prop : '_action',
-                    name : 'Org Traffic',
+                    name : this.$t('message.list_backlinks.filter_org_traffic'),
                     actionName : 'orgTrafficData',
                     width : 120,
                     isHidden : !this.tblBuyOptions.org_traffic
                 },
                 {
                     prop : '_action',
-                    name : 'Price',
+                    name : this.$t('message.list_backlinks.filter_price'),
                     actionName : 'priceData',
                     // sortable: true,
                     // prefix: '$',
@@ -1514,7 +1576,7 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Prices',
+                    name : this.$t('message.list_backlinks.t_prices'),
                     actionName : 'pricesData',
                     // sortable: true,
                     // prefix: '$',
@@ -1523,21 +1585,21 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Status',
+                    name : this.$t('message.list_backlinks.t_status'),
                     actionName : 'statusData',
                     width : 100,
                     isHidden : !this.tblBuyOptions.status
                 },
                 {
                     prop : 'code_comb',
-                    name : 'Code Comb',
+                    name : this.$t('message.list_backlinks.t_code_comb'),
                     // sortable : true,
                     width : 125,
                     isHidden : !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_comb
                 },
                 {
                     prop : 'code_price',
-                    name : 'Code Price',
+                    name : this.$t('message.list_backlinks.t_code_price'),
                     // sortable : true,
                     prefix : '$ ',
                     width : 120,
@@ -1545,7 +1607,7 @@ export default {
                 },
                 {
                     prop : 'price_basis',
-                    name : 'Price Basis',
+                    name : this.$t('message.list_backlinks.filter_price_basis'),
                     // sortable : true,
                     width : 120,
                     isHidden :
@@ -1553,7 +1615,7 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Action',
+                    name : this.$t('message.list_backlinks.t_action'),
                     actionName : 'actionButtons',
                     width : '200',
                     isHidden : false
@@ -1688,6 +1750,8 @@ export default {
         },
 
         async getBuyList(page = 1) {
+            let self = this;
+
             await
                 this.$store.dispatch('getGeneratorLogs');
 
@@ -1696,7 +1760,7 @@ export default {
                     container : this.$refs.buyerBody
                 }, {
                     default :
-                        'We are generating the URLs\' best prices, please wait...'
+                        self.$t('message.list_backlinks.alert_generate')
                 });
                 return;
             }
@@ -1869,17 +1933,18 @@ export default {
         },
 
         doUpdate(buy) {
+            let self = this;
 
             if(buy.status_purchased == 'Purchased') {
                 swal.fire({
-                    title : "Purchased?",
-                    text : "Are you sure you to purchased these URL again?",
+                    title : self.$t('message.list_backlinks.alert_purchase_url'),
+                    text : self.$t('message.list_backlinks.alert_purchase_confirm'),
                     icon : "question",
                     showCloseButton: true,
                     showCancelButton: true,
                     showConfirmButton: true,
-                    cancelButtonText: 'No',
-                    confirmButtonText: 'Yes',
+                    cancelButtonText: self.$t('message.list_backlinks.no'),
+                    confirmButtonText: self.$t('message.list_backlinks.yes'),
                     cancelButtonColor: 'red',
                     confirmButtonColor: 'green',
                 })
@@ -1915,7 +1980,9 @@ export default {
         },
 
         async doDislike(id) {
-            if (confirm("Are you sure you're Not Interested in these backlink?")) {
+            let self = this;
+
+            if (confirm(self.$t('message.list_backlinks.alert_not_interested'))) {
                 $('#tbl_buy_backlink').DataTable().destroy();
 
                 this.searchLoading = true;
@@ -2051,6 +2118,7 @@ export default {
         },
 
         async submitBuy(params) {
+            let self = this;
             let loader = this.$loading.show();
             let credit_left = parseInt(this.listBuy.credit);
             $('#tbl_buy_backlink').DataTable().destroy();
@@ -2078,8 +2146,8 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Success!',
-                    'Backlink successfully ordered.',
+                    self.$t('message.list_backlinks.alert_success'),
+                    self.$t('message.list_backlinks.alert_order'),
                     'success'
                 )
             }

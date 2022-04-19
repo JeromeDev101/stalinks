@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.purchase.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.purchase.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,52 +30,72 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_id" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.purchase.filter_search_backlink') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.search_id"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.purchase.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-4" v-if="user.isOurs != 1">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.purchase.filter_seller') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.seller">
-                                        <option value="">All</option>
-                                        <option v-for="seller in listPurchase.sellers" v-bind:value="seller.user_id">{{ seller.username }}</option>
+                                        <option value="">{{ $t('message.purchase.all') }}</option>
+                                        <option
+                                            v-for="seller in listPurchase.sellers"
+                                            v-bind:value="seller.user_id">
+                                            {{ seller.username }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-4" v-if="user.isAdmin || user.role_id === 8 || user.user_type.is_sub_account != 1">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label>{{ $t('message.purchase.filter_buyer') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.buyer">
-                                        <option value="">All</option>
-                                        <option v-for="buyer in listPurchase.buyers" v-bind:value="buyer.user_id_buyer">{{ buyer.username }}</option>
+                                        <option value="">{{ $t('message.purchase.all') }}</option>
+                                        <option
+                                            v-for="buyer in listPurchase.buyers"
+                                            v-bind:value="buyer.user_id_buyer">
+                                            {{ buyer.username }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input type="text" class="form-control" v-model="filterModel.search_url_publisher" name="" aria-describedby="helpId" placeholder="Type here">
+                                    <label>{{ $t('message.purchase.filter_search_pub') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        v-model="filterModel.search_url_publisher"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.purchase.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Payment Status</label>
+                                    <label>{{ $t('message.purchase.filter_payment_status') }}</label>
                                     <select name="" id="" class="form-control" v-model="filterModel.payment_status">
-                                        <option value="">All</option>
-                                        <option value="Paid">Paid</option>
-                                        <option value="Not paid">Not paid</option>
+                                        <option value="">{{ $t('message.purchase.all') }}</option>
+                                        <option value="Paid">{{ $t('message.purchase.paid') }}</option>
+                                        <option value="Not paid">{{ $t('message.purchase.not_paid') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Date Completed</label>
+                                    <label>{{ $t('message.purchase.filter_date_completed') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             v-model="filterModel.date_completed"
@@ -94,8 +114,14 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">Clear</button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">
+                                    {{ $t('message.purchase.clear') }}
+                                </button>
+
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">
+                                    {{ $t('message.purchase.search') }}
+                                    <i v-if="isSearching" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -108,14 +134,15 @@
                 <div class="card card-outline card-secondary">
 
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Purchase</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.purchase.p_title') }}</h3>
 
                         <span
                             v-if="user.role_id === 5"
                             class="ml-5 text-primary card-title"
                             style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
 
-                            Wallet: <b>${{ (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet : 0 }}</b>
+                            {{ $t('message.purchase.p_wallet') }}
+                            <b>${{ (typeof listPurchase.wallet !== 'undefined') ? listPurchase.wallet : 0 }}</b>
                         </span>
 
                         <span
@@ -123,7 +150,8 @@
                             class="ml-5 text-primary card-title"
                             style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
 
-                            Deposit: <b>${{ (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit : 0 }}</b>
+                            {{ $t('message.purchase.p_deposit') }}
+                            <b>${{ (typeof listPurchase.deposit !== 'undefined') ? listPurchase.deposit : 0 }}</b>
                         </span>
 
                         <div class="card-tools">
@@ -137,7 +165,9 @@
                                     Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{ listPurchase.total }} entries
                                 </span>
 
-                                <span class="mb-0 ml-5 font-weight-bold">Amount: $ {{ totalAmount }}</span>
+                                <span class="mb-0 ml-5 font-weight-bold">
+                                    {{ $t('message.purchase.p_amount') }} $ {{ totalAmount }}
+                                </span>
                             </div>
 
                             <div class="col-6">
@@ -160,14 +190,16 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Backlink ID</th>
-                                    <th v-show="user.isAdmin || user.isOurs === 0">User Seller</th>
-                                    <th>User Buyer</th>
-                                    <th>URL Publisher</th>
-                                    <th>Prices</th>
-                                    <th>Date Completed</th>
-                                    <th>Status</th>
-                                    <th>Status Payment</th>
+                                    <th>{{ $t('message.purchase.t_title') }}</th>
+                                    <th v-show="user.isAdmin || user.isOurs === 0">
+                                        {{ $t('message.purchase.t_user_seller') }}
+                                    </th>
+                                    <th>{{ $t('message.purchase.t_user_buyer') }}</th>
+                                    <th>{{ $t('message.purchase.t_url_pub') }}</th>
+                                    <th>{{ $t('message.purchase.t_prices') }}</th>
+                                    <th>{{ $t('message.purchase.filter_date_completed') }}</th>
+                                    <th>{{ $t('message.purchase.t_status') }}</th>
+                                    <th>{{ $t('message.purchase.t_status_payment') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -177,7 +209,7 @@
                                     <td v-show="user.isAdmin || user.isOurs === 0">
                                         {{
                                             purchase.publisher == null
-                                                ? 'Record Deleted'
+                                                ? $t('message.purchase.t_record_deleted')
                                                 : purchase.publisher.user == null
                                                     ? 'N/A'
                                                     : purchase.publisher.user.username
@@ -197,7 +229,7 @@
                                     <td>
                                         <!--                                    {{ purchase.publisher == null ? 'Record Deleted':replaceCharacters(purchase.publisher.url) }}-->
                                         <span v-if="purchase.publisher == null">
-                                            Record Deleted
+                                            {{ $t('message.purchase.t_record_deleted') }}
                                         </span>
 
                                         <span v-else>
@@ -225,7 +257,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Purchase Information</h5>
+                        <h5 class="modal-title">{{ $t('message.purchase.up_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -236,36 +268,41 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">User Seller</label>
+                                    <label style="color: #333">{{ $t('message.purchase.t_user_seller') }}</label>
                                     <input type="text" v-model="updateModel.seller" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">User Buyer</label>
+                                    <label style="color: #333">{{ $t('message.purchase.t_user_buyer') }}</label>
                                     <input type="text" v-model="updateModel.buyer" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Price</label>
+                                    <label style="color: #333">{{ $t('message.purchase.up_price') }}</label>
                                     <input type="text" v-model="updateModel.price" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Payment Status</label>
+                                    <label style="color: #333">{{ $t('message.purchase.filter_payment_status') }}</label>
                                     <select name="" v-model="updateModel.payment_status" class="form-control">
-                                        <option value="Paid">Paid</option>
-                                        <option value="Not Paid">Not Paid</option>
+                                        <option value="Paid">{{ $t('message.purchase.paid') }}</option>
+                                        <option value="Not Paid">{{ $t('message.purchase.not_paid') }}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.purchase.close') }}
+                        </button>
+
+                        <button type="button" class="btn btn-primary">
+                            {{ $t('message.purchase.save') }}
+                        </button>
                     </div>
                 </div>
             </div>

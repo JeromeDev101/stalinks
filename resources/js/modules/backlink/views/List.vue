@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.follow_backlinks.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.follow_backlinks.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,16 +30,20 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input v-model="fillter.backlink_id" type="text" class="form-control" placeholder="Type here">
+                                    <label>{{ $t('message.follow_backlinks.filter_search_backlinks') }}</label>
+                                    <input
+                                        v-model="fillter.backlink_id"
+                                        type="text"
+                                        class="form-control"
+                                        :placeholder="$t('message.follow_backlinks.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.follow_backlinks.filter_seller') }}</label>
                                     <select class="form-control" v-model="fillter.seller">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow_backlinks.all') }}</option>
                                         <option v-for="seller in listSeller.data" v-bind:value="seller.id">{{ seller.username }}</option>
                                     </select>
                                 </div>
@@ -47,9 +51,9 @@
 
                             <div class="col-md-3" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label>{{ $t('message.follow_backlinks.filter_buyer') }}</label>
                                     <select class="form-control" v-model="fillter.buyer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.follow_backlinks.all') }}</option>
                                         <option v-for="option in listBuyerBought" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -59,23 +63,28 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search URL Publisher</label>
-                                    <input v-model="fillter.querySearch" type="text" name="search" class="form-control" placeholder="Type here">
+                                    <label>{{ $t('message.follow_backlinks.filter_search_url_pub') }}</label>
+                                    <input
+                                        v-model="fillter.querySearch"
+                                        type="text"
+                                        name="search"
+                                        class="form-control"
+                                        :placeholder="$t('message.follow_backlinks.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search URL Advertiser</label>
-                                    <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" placeholder="Type here">
+                                    <label>{{ $t('message.follow_backlinks.filter_search_url_ad') }}</label>
+                                    <input v-model="fillter.url_advertiser" type="text" name="search" class="form-control" :placeholder="$t('message.follow_backlinks.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>{{ $t('message.follow_backlinks.filter_status') }}</label>
                                     <v-select multiple
-                                              v-model="fillter.status" :options="statusBaclink" :searchable="false" placeholder="All"/>
+                                              v-model="fillter.status" :options="statusBaclink" :searchable="false" :placeholder="$t('message.follow_backlinks.all')"/>
                                     <!--                                <select class="form-control" v-model="fillter.status">-->
                                     <!--                                    <option value="">All</option>-->
                                     <!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
@@ -85,8 +94,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Process Date
-                                    </label>
+                                    <label>{{ $t('message.follow_backlinks.filter_process_date') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -104,8 +112,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date Completed
-                                    </label>
+                                    <label>{{ $t('message.follow_backlinks.filter_date_completed') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -123,10 +130,12 @@
 
                             <div class="col-md-3" v-if="listSubAccounts.length > 0">
                                 <div class="form-group">
-                                    <label for="">User Buyer</label>
+                                    <label>{{ $t('message.follow_backlinks.filter_user_buyer') }}</label>
                                     <select class="form-control" v-model="fillter.sub_buyer_id">
-                                        <option value="">All</option>
-                                        <option v-for="buyer in listSubAccounts" v-bind:value="buyer.user_id">{{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}</option>
+                                        <option value="">{{ $t('message.follow_backlinks.all') }}</option>
+                                        <option v-for="buyer in listSubAccounts" v-bind:value="buyer.user_id">
+                                            {{ buyer.username == null || buyer.username == '' ? buyer.name : buyer.username }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -135,8 +144,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear</button>
-                                <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default" :disabled="isSearching">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.follow_backlinks.clear') }}
+                                </button>
+                                <button @click="getBackLinkList()" type="submit" name="submit" class="btn btn-default" :disabled="isSearching">
+                                    {{ $t('message.follow_backlinks.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -166,7 +180,7 @@
                     </div>
 
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Follow up Backlinks</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.follow_backlinks.fub_title') }}</h3>
                         <div class="card-tools"></div>
                     </div>
 
@@ -178,21 +192,20 @@
                                 <div class="input-group" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
                                     <button class="btn btn-default mr-2"
                                             @click="selectAll">{{
-                                            allSelected
-                                                ?
-                                                "Deselect"
-                                                : "Select"
-                                                               }} All
+                                                allSelected
+                                                    ? $t('message.follow_backlinks.fub_deselect')
+                                                    : $t('message.follow_backlinks.fub_select')
+                                            }} {{ $t('message.follow_backlinks.all') }}
                                     </button>
 
                                     <div class="dropdown mr-2">
                                         <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Selected Action
+                                            {{ $t('message.follow_backlinks.fub_selected_action') }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item " @click="buyValidated" >Buy (To be Validated)</a>
-                                            <a class="dropdown-item " @click="UnInterestedValidated" >Un-Interested (To be Validated)</a>
-                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">Delete</a>
+                                            <a class="dropdown-item " @click="buyValidated">{{ $t('message.follow_backlinks.fub_buy') }}</a>
+                                            <a class="dropdown-item " @click="UnInterestedValidated" >{{ $t('message.follow_backlinks.fub_uninterested') }}</a>
+                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">{{ $t('message.follow_backlinks.delete') }}</a>
                                         </div>
                                     </div>
 
@@ -228,7 +241,7 @@
                             </div>
                         </div>
 
-                        <h5 class="d-inline float-right">Amount: $ {{ totalAmount }}</h5>
+                        <h5 class="d-inline float-right">{{ $t('message.follow_backlinks.fub_amount') }} $ {{ totalAmount }}</h5>
 
                         <span class="pagination-custom-footer-text">
                             <b v-if="fillter.paginate !== 'All'">
@@ -246,23 +259,23 @@
                                 <tr class="label-primary">
                                     <th>#</th>
                                     <th v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"></th>
-                                    <th v-show="tblFollowupBacklinksOpt.id_backlink">ID Bck</th>
-                                    <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">Seller</th>
-                                    <th v-show="tblFollowupBacklinksOpt.buyer">User Buyer</th>
-                                    <th v-show="tblFollowupBacklinksOpt.url_publisher">URL Publisher</th>
-                                    <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">URL Advertiser</th>
-                                    <th v-show="tblFollowupBacklinksOpt.link_from">Link From</th>
-                                    <th v-show="tblFollowupBacklinksOpt.link_to">Link To</th>
-                                    <th v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">Price</th>
-                                    <th v-show="tblFollowupBacklinksOpt.prices">Prices</th>
-                                    <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">Code Comb</th>
-                                    <th v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">Code Price</th>
-                                    <th v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">Price Basis</th>
-                                    <th v-show="tblFollowupBacklinksOpt.anchor_text">Anchor Text</th>
-                                    <th v-show="tblFollowupBacklinksOpt.date_for_process">Date for Proccess</th>
-                                    <th v-show="tblFollowupBacklinksOpt.date_completed">Date Completed</th>
-                                    <th v-show="tblFollowupBacklinksOpt.status">Status</th>
-                                    <th>Action</th>
+                                    <th v-show="tblFollowupBacklinksOpt.id_backlink">{{ $t('message.follow_backlinks.t_id_bck') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{ $t('message.follow_backlinks.filter_seller') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_user_buyer') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.follow_backlinks.t_url_pub') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">{{ $t('message.follow_backlinks.t_url_ad') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.link_from">{{ $t('message.follow_backlinks.t_link_from') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.link_to">{{ $t('message.follow_backlinks.t_link_to') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">{{ $t('message.follow_backlinks.t_price') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.prices">{{ $t('message.follow_backlinks.t_prices') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.code_comb" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">{{ $t('message.follow_backlinks.t_code_comb') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.code_price" v-if="user.isAdmin">{{ $t('message.follow_backlinks.t_code_price') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.price_basis" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">{{ $t('message.follow_backlinks.t_price_basis') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.anchor_text">{{ $t('message.follow_backlinks.t_anchor_text') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.date_for_process">{{ $t('message.follow_backlinks.t_date_process') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.date_completed">{{ $t('message.follow_backlinks.filter_date_completed') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.status">{{ $t('message.follow_backlinks.filter_status') }}</th>
+                                    <th>{{ $t('message.follow_backlinks.t_action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-show="!searchLoading">
@@ -347,63 +360,67 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.follow_backlinks.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.id_backlink ? 'checked':''" v-model="tblFollowupBacklinksOpt.id_backlink">ID backlinks</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.id_backlink ? 'checked':''" v-model="tblFollowupBacklinksOpt.id_backlink">{{ $t('message.follow_backlinks.sd_id_backlinks') }}</label>
                             </div>
                             <div v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.seller ? 'checked':''" v-model="tblFollowupBacklinksOpt.seller">Seller</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.seller ? 'checked':''" v-model="tblFollowupBacklinksOpt.seller">{{ $t('message.follow_backlinks.filter_seller') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.buyer ? 'checked':''" v-model="tblFollowupBacklinksOpt.buyer">Buyer</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.buyer ? 'checked':''" v-model="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_buyer') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_publisher ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_publisher">URL Publisher</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_publisher ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.follow_backlinks.t_url_pub') }}</label>
                             </div>
                             <div v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_advertiser ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_advertiser">URL Advertiser</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_advertiser ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_advertiser">{{ $t('message.follow_backlinks.t_url_ad') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_from ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_from">Link From</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_from ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_from">{{ $t('message.follow_backlinks.t_link_from') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_to ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_to">Link To</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.link_to ? 'checked':''" v-model="tblFollowupBacklinksOpt.link_to">{{ $t('message.follow_backlinks.t_link_to') }}</label>
                             </div>
                             <div v-if="user.isAdmin" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price ? 'checked':''" v-model="tblFollowupBacklinksOpt.price">Price</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price ? 'checked':''" v-model="tblFollowupBacklinksOpt.price">{{ $t('message.follow_backlinks.t_price') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.prices ? 'checked':''" v-model="tblFollowupBacklinksOpt.prices">Prices</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.prices ? 'checked':''" v-model="tblFollowupBacklinksOpt.prices">{{ $t('message.follow_backlinks.t_prices') }}</label>
                             </div>
                             <div v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_comb ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_comb">Code combination</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_comb ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_comb">{{ $t('message.follow_backlinks.sd_code_comb') }}</label>
                             </div>
                             <div v-if="user.isAdmin" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_price ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_price">Code Price</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.code_price ? 'checked':''" v-model="tblFollowupBacklinksOpt.code_price">{{ $t('message.follow_backlinks.t_code_price') }}</label>
                             </div>
                             <div v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)" class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price_basis ? 'checked':''" v-model="tblFollowupBacklinksOpt.price_basis">Price Basis</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.price_basis ? 'checked':''" v-model="tblFollowupBacklinksOpt.price_basis">{{ $t('message.follow_backlinks.t_price_basis') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.anchor_text ? 'checked':''" v-model="tblFollowupBacklinksOpt.anchor_text">Anchor Text</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.anchor_text ? 'checked':''" v-model="tblFollowupBacklinksOpt.anchor_text">{{ $t('message.follow_backlinks.t_anchor_text') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_for_process ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_for_process">Date for Process</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_for_process ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_for_process">{{ $t('message.follow_backlinks.t_date_process') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_completed ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_completed">Date Completed</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.date_completed ? 'checked':''" v-model="tblFollowupBacklinksOpt.date_completed">{{ $t('message.follow_backlinks.filter_date_completed') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.status ? 'checked':''" v-model="tblFollowupBacklinksOpt.status">Status</label>
+                                <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.status ? 'checked':''" v-model="tblFollowupBacklinksOpt.status">{{ $t('message.follow_backlinks.filter_status') }}</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.follow_backlinks.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            {{ $t('message.follow_backlinks.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -414,14 +431,14 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Follow up Backlinks Information</h4>
+                        <h4 class="modal-title">{{ $t('message.follow_backlinks.efb_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
 
                             <div class="col-md-6" v-show="user.role_id != 5">
                                 <div class="form-group">
-                                    <label>Seller name</label>
+                                    <label>{{ $t('message.follow_backlinks.efb_seller_name') }}</label>
                                     <input type="text" v-model="modelBaclink.username" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
@@ -429,7 +446,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label>Date Processed</label>
+                                        <label>{{ $t('message.follow_backlinks.efb_date_processed') }}</label>
                                         <input type="date" :disabled="isBuyer || isPostingWriter || user.role_id == 8" v-model="modelBaclink.date_process" class="form-control">
                                     </div>
                                 </div>
@@ -437,13 +454,13 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.ext_domain_id}" class="form-group">
-                                    <label>URL Publisher</label>
+                                    <label>{{ $t('message.follow_backlinks.t_url_pub') }}</label>
                                     <input type="text" v-model="modelBaclink.ext_domain.domain" :disabled="true" class="form-control" required="required" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>URL Advertiser</label>
+                                    <label>{{ $t('message.follow_backlinks.t_url_ad') }}</label>
                                     <input type="text" v-model="modelBaclink.url_advertiser"  :disabled="isPostingWriter || user.role_id == 8" class="form-control" required="required" >
                                 </div>
                             </div>
@@ -451,7 +468,7 @@
                             <div class="col-md-6" v-show="user.isAdmin">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}" class="form-group">
                                     <div>
-                                        <label>Price</label>
+                                        <label>{{ $t('message.follow_backlinks.t_price') }}</label>
                                         <input type="number" v-model="modelBaclink.price" :disabled="isBuyer || isPostingWriter || modelBaclink.status == 'Live' || user.role_id == 8" class="form-control" value="" required="required" >
                                         <span v-if="messageBacklinkForms.errors.price" v-for="priceErr in messageBacklinkForms.errors.price" class="text-danger">{{ priceErr }}</span>
                                     </div>
@@ -461,7 +478,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
-                                        <label>Prices</label>
+                                        <label>{{ $t('message.follow_backlinks.t_prices') }}</label>
                                         <input type="number" v-model="modelBaclink.prices" :disabled="true" class="form-control" value="" required="required" >
                                     </div>
                                 </div>
@@ -470,7 +487,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.title}" class="form-group">
                                     <div>
-                                        <label>Title</label>
+                                        <label>{{ $t('message.follow_backlinks.efb_ip_title') }}</label>
 
                                         <input type="text" v-model="modelBaclink.title" class="form-control"  :disabled="user.role_id == 8" required="required" >
                                         <span v-if="messageBacklinkForms.errors.title" v-for="titleErr in messageBacklinkForms.errors.title" class="text-danger">{{ titleErr }}</span>
@@ -481,7 +498,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.anchor_text}" class="form-group">
                                     <div>
-                                        <label>Anchor text</label>
+                                        <label>{{ $t('message.follow_backlinks.t_anchor_text') }}</label>
                                         <input type="text" v-model="modelBaclink.anchor_text" :disabled="user.role_id == 8" class="form-control" required="required" >
                                         <span v-if="messageBacklinkForms.errors.anchor_text" v-for="anchorTextErr in messageBacklinkForms.errors.anchor_text" class="text-danger">{{ anchorTextErr }}</span>
                                     </div>
@@ -491,7 +508,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link_from}" class="form-group">
                                     <div>
-                                        <label>Link From</label>
+                                        <label>{{ $t('message.follow_backlinks.t_link_from') }}</label>
                                         <input type="text" v-model="modelBaclink.link_from" class="form-control" :disabled="true">
                                         <span v-if="messageBacklinkForms.errors.link_from" v-for="linkFromErr in messageBacklinkForms.errors.link_from" class="text-danger">{{ linkFromErr }}</span>
                                     </div>
@@ -501,7 +518,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.link}" class="form-group">
                                     <div>
-                                        <label>Link To</label>
+                                        <label>{{ $t('message.follow_backlinks.t_link_to') }}</label>
 
                                         <input type="text" v-model="modelBaclink.link" class="form-control" :disabled="isPostingWriter || user.role_id == 8" required="required" >
                                         <span v-if="messageBacklinkForms.errors.link" v-for="linkToErr in messageBacklinkForms.errors.link" class="text-danger">{{ linkToErr }}</span>
@@ -512,7 +529,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.live_date}" class="form-group">
                                     <div>
-                                        <label>Date Completed</label>
+                                        <label>{{ $t('message.follow_backlinks.filter_date_completed') }}</label>
                                         <input type="date" v-model="modelBaclink.live_date" class="form-control" :disabled="isBuyer || user.role_id == 8">
                                         <span v-if="messageBacklinkForms.errors.live_date" v-for="dateCompletedErr in messageBacklinkForms.errors.live_date" class="text-danger">{{ dateCompletedErr }}</span>
                                     </div>
@@ -522,7 +539,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.status}" class="form-group">
                                     <div>
-                                        <label>Status</label>
+                                        <label>{{ $t('message.follow_backlinks.filter_status') }}</label>
                                         <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer || user.role_id == 8">
                                             <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
                                         </select>
@@ -534,7 +551,7 @@
                             <div class="col-md-6" v-if="withArticle">
                                 <div class="form-group">
                                     <div>
-                                        <label>Article ID</label>
+                                        <label>{{ $t('message.follow_backlinks.efb_article_id') }}</label>
                                         <input type="text" class="form-control" v-model="modelBaclink.id_article" :disabled="true ">
                                         <!-- <input type="text" class="form-control" :disabled="isBuyer || isPostingWriter"> -->
                                     </div>
@@ -543,10 +560,16 @@
 
                             <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated'">
                                 <div class="row">
-                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">Un-Interested
+                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">
+                                        {{ $t('message.follow_backlinks.efb_uninterested') }}
                                     </button>
-                                    <button v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"
-                                            class="btn btn-success col" @click.prevent="buy">Buy
+                                    <button
+                                        v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"
+                                        class="btn btn-success col"
+
+                                        @click.prevent="buy">
+
+                                        {{ $t('message.follow_backlinks.buy') }}
                                     </button>
                                 </div>
                             </div>
@@ -556,8 +579,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="closeModalBacklink">Close</button>
-                        <button type="button" :disabled="checkSelectIntDomain" @click="submitEditBacklink" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" @click="closeModalBacklink">
+                            {{ $t('message.follow_backlinks.close') }}
+                        </button>
+                        <button type="button" :disabled="checkSelectIntDomain" @click="submitEditBacklink" class="btn btn-primary">
+                            {{ $t('message.follow_backlinks.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -710,6 +737,8 @@
             },
 
             UnInterestedValidated() {
+                let self = this;
+
                 let ctr = 0;
                 for(var index in this.checkIds) {
                     if(this.listBackLink.data[index].status !== 'To Be Validated') {
@@ -720,8 +749,8 @@
                 // check if selected is none
                 if(this.checkIds.length === 0) {
                     swal.fire(
-                        'Invalid!',
-                        'Please select first',
+                        self.$t('message.follow_backlinks.alert_invalid'),
+                        self.$t('message.follow_backlinks.alert_selection_empty'),
                         'warning'
                     )
                     return false;
@@ -730,8 +759,8 @@
                 // check if status is not 'To Be Validated'
                 if(ctr > 0) {
                     swal.fire(
-                        'Invalid!',
-                        'Please select only with status of "To Be Validated".',
+                        self.$t('message.follow_backlinks.alert_invalid'),
+                        self.$t('message.follow_backlinks.alert_selection_note'),
                         'warning'
                     )
                     return false;
@@ -741,8 +770,8 @@
                     ids: this.checkIds
                 }).then((response) => {
                     swal.fire(
-                        'Success!',
-                        'Successfully removed interest on backlink.',
+                        self.$t('message.follow_backlinks.alert_success'),
+                        self.$t('message.follow_backlinks.alert_remove_success'),
                         'success'
                     )
 
@@ -751,14 +780,15 @@
                     this.checkIds = [];
                 }).catch((error) => {
                     swal.fire(
-                        'Error!',
-                        'There was an error with your request.',
+                        self.$t('message.follow_backlinks.alert_error'),
+                        self.$t('message.follow_backlinks.alert_error_request'),
                         'error'
                     )
                 });
             },
 
             buyValidated() {
+                let self = this;
                 let ctr = 0;
                 for(var index in this.checkIds) {
                     if(this.listBackLink.data[index].status !== 'To Be Validated') {
@@ -769,8 +799,8 @@
                 // check if selected is none
                 if(this.checkIds.length === 0) {
                     swal.fire(
-                        'Invalid!',
-                        'Please select first',
+                        self.$t('message.follow_backlinks.alert_invalid'),
+                        self.$t('message.follow_backlinks.alert_selection_empty'),
                         'warning'
                     )
                     return false;
@@ -779,8 +809,8 @@
                 // check if status is not 'To Be Validated'
                 if(ctr > 0) {
                     swal.fire(
-                        'Invalid!',
-                        'Please select only with status of "To Be Validated".',
+                        self.$t('message.follow_backlinks.alert_invalid'),
+                        self.$t('message.follow_backlinks.alert_selection_note'),
                         'warning'
                     )
                     return false;
@@ -793,8 +823,8 @@
 
 
                 swal.fire(
-                    'Bought Successfully!',
-                    'Backlink bought successfully.',
+                    self.$t('message.follow_backlinks.alert_bought'),
+                    self.$t('message.follow_backlinks.alert_bought_successfully'),
                     'success'
                 );
 
@@ -813,14 +843,15 @@
             },
 
             doMultipleDelete() {
+                let self = this;
 
                 swal.fire({
-                    title: "Are you sure ?",
-                    html: "Delete Backlinks? <br><br> <i class='text-danger'>Note: Articles is also included to delete, Do you want to continue?</i> <br>",
+                    title: self.$t('message.follow_backlinks.alert_confirm'),
+                    html: self.$t('message.follow_backlinks.alert_delete') + " <br><br> <span class='text-danger'>" + self.$t('message.follow_backlinks.alert_delete_note') + "</span> <br>",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, keep it'
+                    confirmButtonText: self.$t('message.follow_backlinks.delete_sentence'),
+                    cancelButtonText: self.$t('message.follow_backlinks.keep')
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
@@ -834,8 +865,8 @@
                         this.getBackLinkList();
 
                         swal.fire(
-                            'Deleted!',
-                            'Backlinks is already deleted.',
+                            self.$t('message.follow_backlinks.alert_deleted'),
+                            self.$t('message.follow_backlinks.alert_selected_deleted'),
                             'success'
                         )
                     }
@@ -1014,13 +1045,18 @@
             }, 200),
 
             deleteBackLink(id, seller, buyer) {
+                let self = this;
+
                 swal.fire({
                     title: "Are you sure ?",
-                    html: "<b>ID Backlink: </b>" + id + " <br> <b>Seller: </b>" + seller + " <br> <b>Buyer: </b>" + buyer + "<br><br> Articles is also included to delete, Do you want to continue? <br>",
+                    html: "<b>" + self.$t('message.follow_backlinks.sd_id_backlinks') + ": </b>" + id + " <br> <b>"
+                        + self.$t('message.follow_backlinks.filter_seller') + ": </b>" + seller
+                        + " <br> <b>" + self.$t('message.follow_backlinks.filter_buyer') + ": </b>" + buyer
+                        + "<br><br>" + self.$t('message.follow_backlinks.alert_delete_note') + "<br>",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, keep it'
+                    confirmButtonText: self.$t('message.follow_backlinks.delete_sentence'),
+                    cancelButtonText: self.$t('message.follow_backlinks.keep')
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
@@ -1034,8 +1070,8 @@
                         this.getBackLinkList();
 
                         swal.fire(
-                            'Deleted!',
-                            'Backlinks is already deleted.',
+                            self.$t('message.follow_backlinks.alert_deleted'),
+                            self.$t('message.follow_backlinks.alert_deleted_successfully'),
                             'success'
                         )
                     }
@@ -1177,7 +1213,7 @@
             },
 
             async buy() {
-
+                let self = this;
                 this.modelBaclink.credit_left = parseInt(this.listBuy.credit);
 
                 this.isPopupLoading = true;
@@ -1186,8 +1222,8 @@
 
                 if (this.messageForms.action === 'updated') {
                     swal.fire(
-                        'Bought Successfully!',
-                        'Backlink bought successfully.',
+                        self.$t('message.follow_backlinks.alert_bought'),
+                        self.$t('message.follow_backlinks.alert_bought_successfully'),
                         'success'
                     );
 
@@ -1201,13 +1237,14 @@
             },
 
             uninterest() {
+                let self = this;
                 axios.post('/api/buy-uninterested', {
                     backlink_id : this.modelBaclink.id,
                     publisher_id : this.modelBaclink.publisher_id
                 }).then((response) => {
                     swal.fire(
-                        'Success!',
-                        'Successfully removed interest on backlink.',
+                        self.$t('message.follow_backlinks.alert_success'),
+                        self.$t('message.follow_backlinks.alert_remove_success'),
                         'success'
                     )
 
@@ -1216,8 +1253,8 @@
                     this.getBackLinkList();
                 }).catch((error) => {
                     swal.fire(
-                        'Error!',
-                        'There was an error with your request.',
+                        self.$t('message.follow_backlinks.alert_error'),
+                        self.$t('message.follow_backlinks.alert_error_request'),
                         'error'
                     )
                 });
