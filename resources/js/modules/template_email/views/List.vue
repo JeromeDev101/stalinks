@@ -180,7 +180,6 @@
                                 </div>
                             </div>
 
-                            <!-- only admin, dev and QC manager -->
                             <div class="col-md-12" v-if="user.isOurs == 0">
                                 <hr>
                                     <div class="form-check">

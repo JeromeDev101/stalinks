@@ -786,6 +786,18 @@
                                     </label>
                                 </div>
                             </div>
+
+                            <div class="col-md-3" v-show="withTemplateCompose">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="isGeneralTemplate"
+                                            type="checkbox"
+                                            class="form-check-input">
+                                        General Template
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <hr>
                     </div>
@@ -819,7 +831,7 @@
                                             @change="getTemplate('send')">
 
                                             <option v-bind:value="{}">{{ $t('message.inbox.cm_select_temp') }}</option>
-                                            <option v-for="option in listMailTemplateCompose.data" v-bind:value="option.id">
+                                            <option v-for="option in templateFiltered" v-bind:value="option.id">
                                                 {{ option.mail_name }}
                                             </option>
                                         </select>
@@ -1003,6 +1015,18 @@
                                 </div>
                                 <hr>
                             </div>
+                            <div class="col-md-3" v-show="withTemplateReply">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="isGeneralTemplateReply"
+                                            type="checkbox"
+                                            class="form-check-input">
+                                        General Template
+                                    </label>
+                                </div>
+                                <hr>
+                            </div>
                         </div>
                     </div>
 
@@ -1035,7 +1059,7 @@
                                             @change="getTemplate('reply')">
 
                                             <option v-bind:value="{}">{{ $t('message.inbox.cm_select_temp') }}</option>
-                                            <option v-for="option in listMailTemplateReply.data"
+                                            <option v-for="option in templateFilteredReply"
                                                     v-bind:value="option.id">
                                                 {{ option.mail_name }}
                                             </option>
@@ -1435,6 +1459,9 @@ export default {
             },
 
             toggleShowUnreadEmails: false,
+
+            isGeneralTemplate: false,
+            isGeneralTemplateReply: false,
         }
     },
 
@@ -1466,7 +1493,15 @@ export default {
             }
 
             return routeNames[this.$route.name];
-        }
+        },
+
+        templateFiltered() {
+            return (!this.isGeneralTemplate) ? this.listMailTemplateCompose.data:this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+        },
+
+        templateFilteredReply() {
+            return (!this.isGeneralTemplateReply) ? this.listMailTemplateCompose.data:this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+        },
     },
 
     watch : {
