@@ -232,6 +232,23 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
+
+                                    <date-range-picker
+                                        v-model="filterModel.date"
+                                        ref="picker"
+                                        opens="right"
+                                        style="width: 100%"
+                                        :linkedCalendars="true"
+                                        :dateRange="filterModel.date"
+                                        :ranges="generateDefaultDateRange()"
+                                        :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -257,44 +274,46 @@
                                 <b>Showing {{ Listlogs.from }} to {{ Listlogs.to }} of {{ Listlogs.total }} entries.</b>
                             </span>
 
-                        <table class="table table-hover table-bordered table-striped">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Action</th>
-                                <th>User Email</th>
-                                <th>Subject</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Bcc</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(log, index) in Listlogs.data" :key="index">
-                                <td>{{ log.id }}</td>
-                                <td>
-                                    <button
-                                        class="btn btn-default"
-                                        title="Check Email Content"
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Action</th>
+                                    <th>User Email</th>
+                                    <th>Subject</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Bcc</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(log, index) in Listlogs.data" :key="index">
+                                    <td>{{ log.id }}</td>
+                                    <td>
+                                        <button
+                                            class="btn btn-default"
+                                            title="Check Email Content"
 
-                                        @click="viewMailLogContent(log)">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </td>
-                                <td>{{ log.user_mail }}</td>
-                                <td>{{ log.subject }}</td>
-                                <td>{{ log.from }}</td>
-                                <td v-html="checkEmailTo(log.to)"></td>
-                                <td></td>
-                                <td>
-                                    <span class="badge" :class="statusClass(log.status)">{{ statusLabel(log.status) }}</span>
-                                </td>
-                                <td>{{ log.date }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                            @click="viewMailLogContent(log)">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ log.user_mail }}</td>
+                                    <td>{{ log.subject }}</td>
+                                    <td>{{ log.from }}</td>
+                                    <td v-html="checkEmailTo(log.to)"></td>
+                                    <td></td>
+                                    <td>
+                                        <span class="badge" :class="statusClass(log.status)">{{ statusLabel(log.status) }}</span>
+                                    </td>
+                                    <td>{{ log.date }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <pagination
                             :limit="8"
@@ -414,9 +433,10 @@
 <script>
 import {mapState} from 'vuex';
 import axios from 'axios';
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
-
+    mixins: [dateRange],
         data() {
             return {
                 Listlogs: {
@@ -441,6 +461,10 @@ export default {
                     status: this.$route.query.status || '',
                     subject: this.$route.query.subject || '',
                     recipient: '',
+                    date: {
+                        startDate: '',
+                        endDate: ''
+                    },
                 },
                 listUserEmail: [],
 
@@ -620,6 +644,10 @@ export default {
                     paginate: 50,
                     user_email: '',
                     recipient: '',
+                    date: {
+                        startDate: null,
+                        endDate: null
+                    },
                 }
 
                 this.$router.replace({'query': null});
@@ -628,6 +656,9 @@ export default {
             },
 
             doSearch() {
+                // change the format of date
+                this.filterModel.date = this.formatFilterDates(this.filterModel.date)
+
                 this.$router.push({
                     query: this.filterModel,
                 });

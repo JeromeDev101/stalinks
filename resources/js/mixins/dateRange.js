@@ -1,7 +1,7 @@
 export const dateRange = {
     methods: {
         generateDefaultDateRange () {
-            let today = new Date()
+            let today = new Date();
             today.setHours(0, 0, 0, 0)
 
             let yesterday = new Date()
@@ -28,6 +28,20 @@ export const dateRange = {
                     new Date(today.getFullYear() - 1, 11, 31)
                 ],
             }
-        }
+        },
+
+        formatFilterDates (date) {
+            if (date['startDate'] instanceof Date) {
+                return {
+                    startDate: date['startDate'].toDateString(),
+                    endDate: date['endDate'].toDateString(),
+                }
+            } else {
+                return {
+                    startDate: date['startDate'],
+                    endDate: date['endDate']
+                }
+            }
+        },
     }
 }
