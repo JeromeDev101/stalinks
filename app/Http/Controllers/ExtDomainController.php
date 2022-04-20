@@ -210,6 +210,8 @@ class ExtDomainController extends Controller
             if (!isset($input[$key])) $input[$key] = '';
         }
 
+        $input['from'] = 'Manual';
+
         // handle email
         $input['email'] = array_column($input['email'], 'text');
 

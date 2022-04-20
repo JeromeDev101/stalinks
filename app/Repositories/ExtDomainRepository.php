@@ -148,6 +148,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                                         'ref_domains' => 0,
                                         'status' => $status,
                                         'email' => $email,
+                                        'from' => 'Manual'
                                     ]);
 
                                 }else{
@@ -434,6 +435,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         // Domain Filter
         if (isset($input['domain'])) {
             $query->where('domain', 'like', '%' . $input['domain'] . '%');
+        }
+
+        // From Filter
+        if (isset($input['from'])) {
+            $query->where('from', $input['from']);
         }
 
         // Status Filter

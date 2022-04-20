@@ -129,7 +129,19 @@
                                     <label>Status</label>
                                     <select class="form-control" v-model="filterModel.status">
                                         <option value="">Choose Status</option>
-                                        <option v-for="option in status" v-bind:value="option" :key="option">
+                                        <option v-for="option in status1" v-bind:value="option" :key="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Status URL Prospect</label>
+                                    <select class="form-control" v-model="filterModel.status">
+                                        <option value="">Choose Status</option>
+                                        <option v-for="option in status2" v-bind:value="option" :key="option">
                                             {{ option }}
                                         </option>
                                     </select>
@@ -235,6 +247,7 @@
                                                 Selected Action
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" @click="editData();">Edit</a>
                                                 <a class="dropdown-item" @click="deleteData();">Delete</a>
                                             </div>
                                         </div>
@@ -273,6 +286,12 @@
                                 
                             </template>
 
+                            <template  
+                                slot-scope="scope"
+                                slot="actionStatusProspect">
+                            {{ scope.row.prospect != null ? listStatusText[scope.row.prospect.status].text:'' }}
+                            </template>
+
                             <template
                                 slot-scope="scope"
                                 slot="actionButtons">
@@ -280,6 +299,17 @@
                                     <button
                                         data-toggle="modal"
                                         @click="doUpdate(scope.row)" data-target="#modal-update-backlink_prospect" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+
+                                    <button 
+                                        class="btn btn-default"
+                                        title="Move to URL Prospect" 
+                                        @click="moveToUrlProspect(scope.row)"
+                                        v-show="scope.row.status === 'To be contacted'" 
+                                        :disabled="scope.row.is_moved === 1"
+                                    >
+                                        <i class="fa fa-fw fa-share"></i>
+                                    </button>
+                                
                                 </div>
                             </template>
 
@@ -330,7 +360,7 @@
                                     <label for="">Status</label>
                                     <select class="form-control" v-model="updateModel.status">
                                         <option value="">Choose Status</option>
-                                        <option v-for="option in status" v-bind:value="option" :key="option">
+                                        <option v-for="option in status1" v-bind:value="option" :key="option">
                                             {{ option }}
                                         </option>
                                     </select>
@@ -351,6 +381,53 @@
                 </div>
             </div>
         </div>
+        <!-- End of Modal Edit Backlink Prospect -->
+  
+        <!-- Modal Edit Multiple -->
+        <div class="modal fade" id="modalEditMultipleProspect" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Multiple</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Category</label>
+                                    <select class="form-control" v-model="editModel.category">
+                                        <option value="">Choose Category</option>
+                                        <option v-for="option in category" v-bind:value="option" :key="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Status</label>
+                                    <select class="form-control" v-model="editModel.status">
+                                        <option value="">Choose Status</option>
+                                        <option v-for="option in status1" v-bind:value="option" :key="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="saveMultiple">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Edit Multiple -->
 
     </div>
 </template>
@@ -375,6 +452,11 @@ export default {
                 org_traffic : 'Above'
             },
 
+            editModel: {
+                status: '',
+                category: '',
+            },
+
             filterModel: {
                 referring_domain: '',
                 ur: '',
@@ -391,17 +473,20 @@ export default {
                 'Forums',
                 'Free Submission',
             ],
-            status: [
+            status1: [
                 'New',
+                'Unqualified',
+                'Hosting Expired',
+                'Free Submission',
+                'To be contacted',
+            ],
+            status2: [
                 'Contacted',
                 'Contacted Via Form',
                 'In-touched',
                 'Qualified',
                 'Refused',
-                'Unqualified',
                 'No Answer',
-                'Hosting Expired',
-                'Free Submission',
             ],
             paginate : [
                 50,
@@ -432,6 +517,7 @@ export default {
     computed : {
         ...mapState({
             user : state => state.storeAuth.currentUser,
+            listStatusText : state => state.storeExtDomain.listStatusText,
         }),
 
         exportData() {
@@ -528,6 +614,12 @@ export default {
                     isHidden : false
                 },
                 {
+                    prop : '_action',
+                    name : 'Status URL prospect',
+                    actionName : 'actionStatusProspect',
+                    isHidden : false
+                },
+                {
                     prop : 'note',
                     name : 'Note',
                     sortable : true,
@@ -545,6 +637,32 @@ export default {
     },
 
     methods : {
+
+        moveToUrlProspect(backlink_prospect) {
+            axios.post('/api/backlink-prospect-move', {
+                id : backlink_prospect.id,
+                referring_domain: backlink_prospect.referring_domain
+            }).then((res) => {
+                console.log(res.data)
+
+                if(res.data) {
+                    swal.fire(
+                        'Success',
+                        'Successfully moved in URL Prospect.',
+                        'success'
+                    )
+                } else {
+                    swal.fire(
+                        'Sorry',
+                        'Domain is Already exist.',
+                        'error'
+                    )
+                }
+                    
+
+                this.getBacklinkProspect();
+            })
+        },
 
         submitUpdate() {
             axios.post('/api/backlink-prospect-update', this.updateModel)
@@ -611,6 +729,47 @@ export default {
             })
         },
 
+        editData() {
+            if( this.checkIds.length > 0 ) {
+                $('#modalEditMultipleProspect').modal({
+                    show: true
+                });
+            } else {
+                swal.fire(
+                    'Invalid',
+                    'Please select first',
+                    'error'
+                )
+            }  
+        },
+
+        saveMultiple() {
+            axios.post('/api/backlink-prospect-edit', {
+                ids : this.checkIds,
+                category: this.editModel.category,
+                status: this.editModel.status
+            }).then((res) => {
+                swal.fire(
+                    'Success',
+                    'Successfully Updated.',
+                    'success'
+                )
+
+                this.allSelected = true;
+                this.checkIds = [];
+                this.editModel = {
+                    category: '',
+                    status: '',
+                }
+
+                $('#modalEditMultipleProspect').modal({
+                    show: false
+                });
+
+                this.getBacklinkProspect();
+            })
+        },
+
         doUpdate(backlink_prospect) {
 
             this.updateModel = {
@@ -661,19 +820,29 @@ export default {
         },
 
         deleteData() {
-            axios.post('/api/backlink-prospect-delete', {
-                ids : this.checkIds
-            }).then((res) => {
-                swal.fire(
-                    'Deleted',
-                    'Successfully Deleted.',
-                    'success'
-                )
 
-                this.allSelected = true;
-                this.checkIds = [];
-                this.getBacklinkProspect();
-            })
+            if( this.checkIds.length > 0 ) {
+                axios.post('/api/backlink-prospect-delete', {
+                    ids : this.checkIds
+                }).then((res) => {
+                    swal.fire(
+                        'Deleted',
+                        'Successfully Deleted.',
+                        'success'
+                    )
+
+                    this.allSelected = true;
+                    this.checkIds = [];
+                    this.getBacklinkProspect();
+                })
+            } else {
+                swal.fire(
+                    'Invalid',
+                    'Please select first',
+                    'error'
+                )
+            }  
+                
         },
 
         downloadTemplate() {

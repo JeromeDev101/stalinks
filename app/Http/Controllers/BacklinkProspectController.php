@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BacklinkProspect;
+use App\Models\ExtDomain;
+use Illuminate\Support\Facades\Auth;
 
 class BacklinkProspectController extends Controller
 {
@@ -13,7 +15,8 @@ class BacklinkProspectController extends Controller
 
         $backlink_prospects = BacklinkProspect::when(isset($filter['referring_domain']) && !empty($filter['referring_domain']), function($query) use ($filter) {
                                         return $query->where('referring_domain', 'like', '%'.$filter['referring_domain'].'%');
-                                    });
+                                    })
+                                    ->with('prospect');
         
         if (isset($filter['ur']) && !empty($filter['ur'])) {
             if ($filter['ur_direction'] === 'Above') {
@@ -81,7 +84,7 @@ class BacklinkProspectController extends Controller
             // dd(count($line));
             // break;
 
-            if(count($line) > 11 || count($line) < 11){
+            if(count($line) > 10 || count($line) < 10){
                 $message = "Please check the header: Referring Domain, UR, DR, Backlinks, Org Kw, Org Traffic, Ref Domain, Category, Status and Note.";
                 $file_message = "Invalid Header format. ".$message;
                 $result = false;
@@ -133,6 +136,59 @@ class BacklinkProspectController extends Controller
             ]
         ];
 
+    }
+
+    public function moveToUrlProspect(Request $request) {
+        $isExist = $this->checkExistUrlProspect($request->referring_domain);
+        $id = Auth::user()->id;
+        $result = 'true';
+
+        // update backlink prospect is moved
+        $backlink_prospect = BacklinkProspect::find($request->id);
+        $backlink_prospect->update(['is_moved' => 1]);
+
+        if(!$isExist) {
+            ExtDomain::create([
+                'user_id' => $id,
+                'domain' => $request->referring_domain,
+                'country_id' => 5,
+                'ahrefs_rank' => 0,
+                'no_backlinks' => 0,
+                'url_rating' => 0,
+                'domain_rating' => 0,
+                'organic_keywords' => '',
+                'organic_traffic' => '',
+                'alexa_rank' => 0,
+                'ref_domains' => 0,
+                'status' => 0,
+                'email' => null,
+                'from' => 'Prospect'
+            ]);
+
+            $result = 'true';
+        } else {
+            $result = 'false';
+        }
+
+        return $result;
+    }
+
+    private function checkExistUrlProspect($domain) {
+        $ext_domain = ExtDomain::where('domain', $domain)->count();
+
+        return $ext_domain > 0 ? true:false;
+    }
+
+    public function editMultiple(Request $request) {
+        if(is_array($request->ids)) {
+            foreach($request->ids as $id) {
+                $backlink_prospect = BacklinkProspect::find($id);
+                $backlink_prospect->update([
+                    'category' => $request->category == "" ? $backlink_prospect->category:$request->category,
+                    'status' => $request->status == "" ? $backlink_prospect->status:$request->status
+                ]);
+            }
+        }
     }
 
     public function delete(Request $request) {

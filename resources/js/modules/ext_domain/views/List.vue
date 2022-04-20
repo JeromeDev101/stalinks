@@ -170,6 +170,20 @@
                                 </div>
                             </div>
 
+                            <div v-if="tableShow.from" class="col-md-3">
+                                <div class="form-group">
+                                    <label style="color: #333">From</label>
+
+                                    <v-select
+                                        v-model="filterModel.from"
+                                        multiple
+                                        label="name"
+                                        :placeholder="$t('message.url_prospect.all')"
+                                        :options="['Alexa', 'Manual', 'Prospect']"
+                                        :searchable="true"/>
+                                </div>
+                            </div>
+
                             <div v-if="tableShow.status" class="col-md-3">
                                 <div class="form-group">
                                     <label style="color: #333">{{ $t('message.url_prospect.filter_action') }}</label>
@@ -844,6 +858,7 @@
             </div>
         </div>
         <!-- End Modal Add-->
+
         <!-- Modal Backlink -->
         <div class="modal fade" id="modal-backlink" style="display: none;">
             <div class="modal-dialog modal-lg">
@@ -1397,6 +1412,11 @@
                                 <label><input type="checkbox"
                                               @change="toggleColumn(5, tableShow.country)"
                                               :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">{{ $t('message.url_prospect.filter_country') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(5, tableShow.from)"
+                                              :checked="tableShow.from ? 'checked':''" v-model="tableShow.from">From</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
@@ -1977,6 +1997,7 @@ export default {
                 domain : this.$route.query.domain || '',
                 domain_temp : this.$route.query.domain_temp || '',
                 email : this.$route.query.email || '',
+                from : this.$route.query.from || '',
                 status : this.$route.query.status || -1,
                 status_temp :
                     this.$route.query.status_temp ||
@@ -2234,14 +2255,21 @@ export default {
                     name : this.$t('message.url_prospect.tb_id'),
                     sortable : true,
                     width : 75,
-                    isHidden : false
+                    isHidden : !this.tableShow.id
+                },
+                {
+                    prop : 'from',
+                    name : 'From',
+                    sortable : true,
+                    width : 100,
+                    isHidden : !this.tableShow.from
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_emp'),
                     actionName : 'employeeData',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tableShow.employee
                 },
                 {
                     prop : 'created_at',
@@ -2255,28 +2283,28 @@ export default {
                     name : this.$t('message.url_prospect.tb_country'),
                     sortable : true,
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tableShow.country
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.up_url'),
                     actionName : 'domainData',
                     width : 150,
-                    isHidden : false
+                    isHidden : !this.tableShow.domain
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_email'),
                     actionName : 'emailsData',
                     width : 200,
-                    isHidden : false
+                    isHidden : !this.tableShow.email
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_facebook'),
                     actionName : 'facebookData',
                     width : 200,
-                    isHidden : true
+                    isHidden : !this.tableShow.facebook
                 },
                 {
                     prop : '_action',
@@ -2284,21 +2312,21 @@ export default {
                     actionName : 'phoneData',
                     sortable : true,
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tableShow.phone
                 },
                 {
                     prop : 'alexa_rank',
                     name : this.$t('message.url_prospect.tb_alexa'),
                     sortable : true,
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tableShow.rank
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_status'),
                     actionName : 'statusData',
                     width : 100,
-                    isHidden : false
+                    isHidden : !this.tableShow.status
                 },
                 // {
                 //     prop : '_action',
@@ -2312,49 +2340,49 @@ export default {
                     name : this.$t('message.url_prospect.tb_ahrefs'),
                     sortable : true,
                     width : 100,
-                    isHidden : true
+                    isHidden : !this.tableShow.ahrefs_rank
                 },
                 {
                     prop : 'no_backlinks',
                     name : this.$t('message.url_prospect.tb_backlinks'),
                     sortable : true,
                     width : 105,
-                    isHidden : true
+                    isHidden : !this.tableShow.no_backlinks
                 },
                 {
                     prop : 'url_rating',
                     name : this.$t('message.url_prospect.tb_ur'),
                     sortable : true,
                     width : 100,
-                    isHidden : true
+                    isHidden : !this.tableShow.url_rating
                 },
                 {
                     prop : 'domain_rating',
                     name : this.$t('message.url_prospect.tb_dr'),
                     sortable : true,
                     width : 100,
-                    isHidden : true
+                    isHidden : !this.tableShow.domain_rating
                 },
                 {
                     prop : 'ref_domains',
                     name : this.$t('message.url_prospect.tb_ref_domains'),
                     sortable : true,
                     width : 105,
-                    isHidden : true
+                    isHidden : !this.tableShow.ref_domains
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_org_keywords'),
                     actionName : 'organicKwData',
                     width : 110,
-                    isHidden : false
+                    isHidden : !this.tableShow.organic_keywords
                 },
                 {
                     prop : '_action',
                     name : this.$t('message.url_prospect.tb_org_traffic'),
                     actionName : 'organicTrafficData',
                     width : 110,
-                    isHidden : false
+                    isHidden : !this.tableShow.organic_traffic
                 }
             ];
         },
@@ -2378,6 +2406,12 @@ export default {
                     sort: '',
                     column: 'A.username',
                     hidden: !this.tableShow.employee
+                },
+                {
+                    name: 'From',
+                    sort: '',
+                    column: 'from',
+                    hidden: !this.tableShow.from
                 },
                 {
                     name: this.$t('message.url_prospect.tb_date_up'),
@@ -2857,7 +2891,8 @@ export default {
                     alexa_rank_to : that.filterModel.alexa_rank_to,
                     alexa_date_upload :
                     that.filterModel.alexa_date_upload,
-                    domain_zone : that.filterModel.domain_zone
+                    domain_zone : that.filterModel.domain_zone,
+                    from : that.filterModel.from
                 }
             });
         },
@@ -2880,7 +2915,8 @@ export default {
                     that.filterModel.required_email,
                     alexa_date_upload :
                     that.filterModel.alexa_date_upload,
-                    domain_zone : that.filterModel.domain_zone
+                    domain_zone : that.filterModel.domain_zone,
+                    from : that.filterModel.from
                 }
             });
         },

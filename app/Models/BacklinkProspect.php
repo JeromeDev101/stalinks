@@ -11,4 +11,8 @@ class BacklinkProspect extends Model
 
     protected $table = 'backlink_prospect';
     protected $guarded = [];
+
+    public function prospect() {
+        return $this->HasOne('App\Models\ExtDomain', 'backlink_prospect_id');
+    }
 }

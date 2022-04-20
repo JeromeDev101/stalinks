@@ -111,6 +111,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-backlink-prospect')->get('backlink-prospect', 'BacklinkProspectController@getList');
     Route::name('backlink-prospect-upload-csv')->post('backlink-prospect-upload-csv', 'BacklinkProspectController@importCsv');
     Route::name('backlink-prospect-delete')->post('backlink-prospect-delete', 'BacklinkProspectController@delete');
+    Route::name('backlink-prospect-edit')->post('backlink-prospect-edit', 'BacklinkProspectController@editMultiple');
+    Route::name('backlink-prospect-move')->post('backlink-prospect-move', 'BacklinkProspectController@moveToUrlProspect');
     Route::name('backlink-prospect-update')->post('backlink-prospect-update', 'BacklinkProspectController@update');
 
     //Buy
