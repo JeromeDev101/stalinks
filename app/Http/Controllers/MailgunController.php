@@ -240,22 +240,43 @@ class MailgunController extends Controller
 
         $res = preg_replace("/[<->]/", "", $sender->getId());
 
-        $sendEmail = Reply::create([
-            'sender'          => $work_mail,
-            'subject'         => $request->title,
-            'is_sent'         => 1,
-            'is_viewed'       => 1,
-            'label_id'        => 0,
-            'received'        => $str,
-            'body'            => json_encode($input),
-            'from_mail'       => $work_mail,
-            'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
-            'date'            => date('Y-m-d'),
-            'message_id'      => $res,
-            'references_mail' => '',
-            'status_code'     => 0,
-            'message_status'  => '',
-        ]);
+//        $sendEmail = Reply::create([
+//            'sender'          => $work_mail,
+//            'subject'         => $request->title,
+//            'is_sent'         => 1,
+//            'is_viewed'       => 1,
+//            'label_id'        => 0,
+//            'received'        => $str,
+//            'body'            => json_encode($input),
+//            'from_mail'       => $work_mail,
+//            'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
+//            'date'            => date('Y-m-d'),
+//            'message_id'      => $res,
+//            'references_mail' => '',
+//            'status_code'     => 0,
+//            'message_status'  => '',
+//        ]);
+
+        // save emails to db one by one
+
+        foreach ($list_emails as $address) {
+            $sendEmail = Reply::create([
+                'sender'          => $work_mail,
+                'subject'         => $request->title,
+                'is_sent'         => 1,
+                'is_viewed'       => 1,
+                'label_id'        => 0,
+                'received'        => $address,
+                'body'            => json_encode($input),
+                'from_mail'       => $work_mail,
+                'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
+                'date'            => date('Y-m-d'),
+                'message_id'      => $res,
+                'references_mail' => '',
+                'status_code'     => 0,
+                'message_status'  => '',
+            ]);
+        }
 
         return response()->json([
             'success' => true,

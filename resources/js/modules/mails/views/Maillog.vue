@@ -44,7 +44,10 @@
             <div class="col-lg-3 col-xs-6">
                 <div class="small-box rounded bg-warning text-light">
                     <div class="inner">
-                        <h3>{{ listLogsTotals.sent }}</h3>
+                        <h3>
+                            {{ listLogsTotals.sent }}
+                        </h3>
+
                         <p>
                             <i
                                 class="fa fa-question-circle"
@@ -53,6 +56,10 @@
                                 title="Total emails sent from our system">
                             </i>
                             Total Mail Sent
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.sent) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -73,6 +80,10 @@
                                 title="Total emails sent from our system today">
                             </i>
                             Total Mail Today
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.sent_today) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -93,6 +104,10 @@
                                 title="Mailgun rejected the request to send/forward the email">
                             </i>
                             Total Mail Rejected
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.rejected) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -113,6 +128,10 @@
                                 title="Mailgun could not deliver the email to the recipient email server">
                             </i>
                             Total Mail Failed
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.failed) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -133,6 +152,10 @@
                                 title="The email recipient clicked on the spam complaint button within their email client">
                             </i>
                             Total Mail Reported
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.reported) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -153,6 +176,10 @@
                                 title="Mailgun sent the email and it was accepted by the recipient email server.">
                             </i>
                             Total Mail Delivered
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.delivered) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -173,6 +200,10 @@
                                 title="The email recipient opened the email">
                             </i>
                             Total Mail Opened
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.opened) }}%)
+                            </span>
                         </p>
                     </div>
                     <div class="icon">
@@ -267,6 +298,10 @@
                     <div class="card-header">
                         <h3 class="card-title text-primary">Mail Logs</h3>
                         <div class="card-tools">
+                            <button class="btn btn-primary" @click="getStatus">
+                                <i class="fas fa-sync"></i>
+                                Update Status
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -313,14 +348,14 @@
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <pagination
+                                :limit="8"
+                                :data="Listlogs"
+                                @pagination-change-page="getMaillogs">
+
+                            </pagination>
                         </div>
-
-                        <pagination
-                            :limit="8"
-                            :data="Listlogs"
-                            @pagination-change-page="getMaillogs">
-
-                        </pagination>
                     </div>
                 </div>
             </div>
@@ -714,6 +749,14 @@ export default {
                         loader.hide();
                     })
             },
+
+            calculatePercentage (number) {
+                if (this.listLogsTotals.total_mail === 0) {
+                    return 0;
+                } else {
+                    return ((number / this.listLogsTotals.total_mail) * 100).toFixed(2);
+                }
+            }
         },
     }
 </script>
