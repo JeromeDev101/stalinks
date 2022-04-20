@@ -857,10 +857,8 @@ class MailgunController extends Controller
         if (isset($request->date) && $request->date != '') {
             $date = \GuzzleHttp\json_decode($request->date, true);
             if (!empty($date) && $date['startDate'] != null) {
-                $mail_logs =  $mail_logs->whereBetween('replies.created_at', [
-                    Carbon::create($date['startDate'])->subDay()->format('Y-m-d'),
-                    Carbon::create($date['endDate'])->addDay()->format('Y-m-d')
-                ]);
+                $mail_logs = $mail_logs->whereDate('created_at', '>=', Carbon::create($date['startDate'])->format('Y-m-d'))
+                    ->whereDate('created_at', '<=', Carbon::create($date['endDate'])->format('Y-m-d'));
             }
         }
 
