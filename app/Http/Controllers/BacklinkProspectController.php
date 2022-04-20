@@ -151,6 +151,7 @@ class BacklinkProspectController extends Controller
             ExtDomain::create([
                 'user_id' => $id,
                 'domain' => $request->referring_domain,
+                'backlink_prospect_id' => $request->id,
                 'country_id' => 5,
                 'ahrefs_rank' => 0,
                 'no_backlinks' => 0,
