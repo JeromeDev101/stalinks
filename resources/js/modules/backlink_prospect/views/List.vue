@@ -304,7 +304,7 @@
                                         class="btn btn-default"
                                         title="Move to URL Prospect" 
                                         @click="moveToUrlProspect(scope.row)"
-                                        v-show="scope.row.status === 'To be contacted'" 
+                                        v-show="scope.row.status === 'To be contacted' || scope.row.status === 'Free Submission'" 
                                         :disabled="scope.row.is_moved === 1"
                                     >
                                         <i class="fa fa-fw fa-share"></i>
@@ -475,6 +475,7 @@ export default {
             ],
             status1: [
                 'New',
+                'Qualified',
                 'Unqualified',
                 'Hosting Expired',
                 'Free Submission',
@@ -499,6 +500,7 @@ export default {
             btnUpload : true,
             allSelected: false,
             backinkProspectList: [],
+            backinkProspectListExport: [],
             checkIds : [],
             updateModel: {
                 id: '',
@@ -512,6 +514,7 @@ export default {
 
     async created() {
         this.getBacklinkProspect();
+        this.excelExportData();
     },
 
     computed : {
@@ -524,12 +527,12 @@ export default {
             let obj = [];
             let _prop = {};
 
-            for(let index in this.backinkProspectList.data) {
+            for(let index in this.backinkProspectListExport.data) {
                 _prop = {
-                    "domain": this.backinkProspectList.data[index].referring_domain,
-                    "category": this.backinkProspectList.data[index].category,
-                    "status": this.backinkProspectList.data[index].status,
-                    "note": this.backinkProspectList.data[index].note
+                    "domain": this.backinkProspectListExport.data[index].referring_domain,
+                    "category": this.backinkProspectListExport.data[index].category,
+                    "status": this.backinkProspectListExport.data[index].status,
+                    "note": this.backinkProspectListExport.data[index].note
                 }
 
                 obj.push(_prop)
@@ -616,6 +619,7 @@ export default {
                 {
                     prop : '_action',
                     name : 'Status URL prospect',
+                    sortable : true,
                     actionName : 'actionStatusProspect',
                     isHidden : false
                 },
@@ -637,6 +641,27 @@ export default {
     },
 
     methods : {
+
+        excelExportData() {
+            axios.get('/api/backlink-prospect', {
+                params : {
+                    referring_domain : this.filterModel.referring_domain,
+                    ur : this.filterModel.ur,
+                    dr : this.filterModel.dr,
+                    status : this.filterModel.status,
+                    paginate : 'All',
+                    org_kw : this.filterModel.org_kw,
+                    org_traffic : this.filterModel.org_traffic,
+                    ur_direction : this.buttonState.ur,
+                    dr_direction : this.buttonState.dr,
+                    org_kw_direction : this.buttonState.org_kw,
+                    org_traffic_direction : this.buttonState.org_traffic,
+                    page : 1,
+                }
+            }).then((res) => {
+                this.backinkProspectListExport = res.data
+            })
+        },
 
         moveToUrlProspect(backlink_prospect) {
             axios.post('/api/backlink-prospect-move', {
