@@ -2451,6 +2451,10 @@ export default {
                 this.searchLoading = true;
                 this.isSearching = true;
 
+                // change the format of date
+                this.filterModel.uploaded = this.formatFilterDates(this.filterModel.uploaded)
+                this.filterModel.date = this.formatFilterDates(this.filterModel.date)
+
                 if (this.isSorted) {
                     this.filterModel.sort = this.getSortData()
                 }
@@ -2469,8 +2473,7 @@ export default {
                             paginate: 1000000,
                             got_ahref: this.filterModel.got_ahref,
                             date: this.filterModel.date,
-                            uploaded:
-                            this.filterModel.uploaded,
+                            uploaded: this.filterModel.uploaded,
                             valid: this.filterModel.valid,
                             in_charge: this.filterModel.in_charge,
                             casino_sites: this.filterModel.casino_sites,
@@ -3164,6 +3167,10 @@ export default {
 
             doSearch() {
                 this.removedItems = [];
+
+                // change the format of date
+                this.filterModel.uploaded = this.formatFilterDates(this.filterModel.uploaded)
+                this.filterModel.date = this.formatFilterDates(this.filterModel.date)
 
                 this.$router.push({
                     query: this.filterModel,

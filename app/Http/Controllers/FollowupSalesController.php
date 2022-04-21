@@ -104,16 +104,16 @@ class FollowupSalesController extends Controller
         if (isset($filter['process_date'])) {
             $filter['process_date'] = \GuzzleHttp\json_decode($filter['process_date'], true);
             if (!empty($filter['process_date']) && $filter['process_date']['startDate'] != null) {
-                $list->where('date_process', '>=', Carbon::create($filter['process_date']['startDate'])->format('Y-m-d'));
-                $list->where('date_process', '<=', Carbon::create($filter['process_date']['endDate'])->format('Y-m-d'));
+                $list->whereDate('date_process', '>=', Carbon::create($filter['process_date']['startDate'])->format('Y-m-d'));
+                $list->whereDate('date_process', '<=', Carbon::create($filter['process_date']['endDate'])->format('Y-m-d'));
             }
         }
 
         if (isset($filter['date_completed'])) {
             $filter['date_completed'] = \GuzzleHttp\json_decode($filter['date_completed'], true);
             if (!empty($filter['date_completed']) && $filter['date_completed']['startDate'] != null) {
-                $list->where('live_date', '>=', Carbon::create($filter['date_completed']['startDate'])->format('Y-m-d'));
-                $list->where('live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
+                $list->whereDate('live_date', '>=', Carbon::create($filter['date_completed']['startDate'])->format('Y-m-d'));
+                $list->whereDate('live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
             }
         }
 

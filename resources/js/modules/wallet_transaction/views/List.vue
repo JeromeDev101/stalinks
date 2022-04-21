@@ -531,6 +531,9 @@ export default {
         },
 
         doSearch() {
+            // change the format of date
+            this.filterModel.date = this.formatFilterDates(this.filterModel.date)
+
             this.$router.push({
                 query : this.filterModel,
             });

@@ -506,6 +506,10 @@ export default {
         },
 
         doSearch() {
+            // change the format of date
+            this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+            this.filterModel.date_created = this.formatFilterDates(this.filterModel.date_created)
+
             this.$router.push({
                 query : this.filterModel,
             });

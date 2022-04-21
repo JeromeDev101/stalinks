@@ -478,8 +478,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
         $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
 
         if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
-            $query->where('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
-            $query->where('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+            $query->whereDate('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+            $query->whereDate('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
         }
 
         // Include relationships

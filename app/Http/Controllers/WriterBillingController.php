@@ -50,9 +50,9 @@ class WriterBillingController extends Controller
         }
 
         if( isset($filter['date_completed']) && !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
-            $list->where('date_complete', '>=', Carbon::create($filter['date_completed']->startDate)
+            $list->whereDate('date_complete', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
-            $list->where('date_complete', '<=', Carbon::create($filter['date_completed']->endDate)
+            $list->whereDate('date_complete', '<=', Carbon::create($filter['date_completed']->endDate)
                 ->format('Y-m-d'));
         }
 
@@ -61,9 +61,9 @@ class WriterBillingController extends Controller
         }
 
         if( isset($filter['date_created']) && !empty($filter['date_created']) && $filter['date_created']->startDate != ''){
-            $list->where('article.created_at', '>=', Carbon::create($filter['date_created']->startDate)
+            $list->whereDate('article.created_at', '>=', Carbon::create($filter['date_created']->startDate)
                 ->format('Y-m-d'));
-            $list->where('article.created_at', '<=', Carbon::create($filter['date_created']->endDate)
+            $list->whereDate('article.created_at', '<=', Carbon::create($filter['date_created']->endDate)
                 ->format('Y-m-d'));
         }
 

@@ -41,8 +41,8 @@ class IncomesAdminController extends Controller
             $filter['date_completed'] = \GuzzleHttp\json_decode($filter['date_completed'], true);
 
             if ($filter['date_completed']['startDate'] != null && $filter['date_completed']['endDate'] != null) {
-                $list = $list->where('backlinks.live_date', '>=', Carbon::create( $filter['date_completed']['startDate'])->format('Y-m-d'));
-                $list = $list->where('backlinks.live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
+                $list = $list->whereDate('backlinks.live_date', '>=', Carbon::create( $filter['date_completed']['startDate'])->format('Y-m-d'));
+                $list = $list->whereDate('backlinks.live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
             }
         }
 

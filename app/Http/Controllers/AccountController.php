@@ -226,8 +226,8 @@ class AccountController extends Controller
             $is_sub = $is_sub_account == 'Sub' ? 1 : 0;
             return $query->where( 'is_sub_account', $is_sub);
         })->when( $created_at->startDate, function($query) use ($created_at){
-            return $query->where('created_at', '>=', Carbon::create($created_at->startDate)->format('Y-m-d'))
-                ->where('created_at', '<=', Carbon::create($created_at->endDate)->format('Y-m-d'));
+            return $query->whereDate('created_at', '>=', Carbon::create($created_at->startDate)->format('Y-m-d'))
+                ->whereDate('created_at', '<=', Carbon::create($created_at->endDate)->format('Y-m-d'));
         })->when( $isTeamSeller, function($query) use ($user_id){
 //            return $query->whereHas('team_in_charge', function ($subquery) use( $user_id ) {
 //                $subquery->where('team_in_charge', $user_id);

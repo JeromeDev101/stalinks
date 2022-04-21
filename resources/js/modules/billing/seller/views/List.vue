@@ -699,6 +699,10 @@ export default {
 
             $('#tbl_seller_billing').DataTable().destroy();
 
+            // change the format of date
+            this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+            this.filterModel.date_of_payment = this.formatFilterDates(this.filterModel.date_of_payment)
+
             this.$router.push({
                 query : this.filterModel,
             });

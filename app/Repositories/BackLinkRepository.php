@@ -201,13 +201,13 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         }
 
         if (!empty($filters->process_date) && $filters->process_date->startDate != null) {
-            $query->where('date_process', '>=', Carbon::create($filters->process_date->startDate)->format('Y-m-d'));
-            $query->where('date_process', '<=', Carbon::create($filters->process_date->endDate)->format('Y-m-d'));
+            $query->whereDate('date_process', '>=', Carbon::create($filters->process_date->startDate)->format('Y-m-d'));
+            $query->whereDate('date_process', '<=', Carbon::create($filters->process_date->endDate)->format('Y-m-d'));
         }
 
         if (!empty($filters->date_completed) && $filters->date_completed->startDate != null) {
-            $query->where('live_date', '>=', Carbon::create($filters->date_completed->startDate)->format('Y-m-d'));
-            $query->where('live_date', '<=', Carbon::create($filters->date_completed->endDate)->format('Y-m-d'));
+            $query->whereDate('live_date', '>=', Carbon::create($filters->date_completed->startDate)->format('Y-m-d'));
+            $query->whereDate('live_date', '<=', Carbon::create($filters->date_completed->endDate)->format('Y-m-d'));
         }
 
         return $query;

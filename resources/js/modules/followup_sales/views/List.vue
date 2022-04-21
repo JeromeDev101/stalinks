@@ -1194,6 +1194,10 @@
 
             async getListSales(params){
 
+                // change the format of date
+                this.filterModel.process_date = this.formatFilterDates(this.filterModel.process_date)
+                this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+
                 $('#tbl-followupsales').DataTable().destroy();
 
                 this.searchLoading = true;
@@ -1211,12 +1215,9 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
-                            date_completed:
-                            this.filterModel.date_completed,
-                            process_date:
-                            this.filterModel.process_date,
+                            date_completed: this.filterModel.date_completed,
+                            process_date: this.filterModel.process_date,
                         }
-
                     });
 
                 }else
@@ -1232,10 +1233,8 @@
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
                             country_id: this.filterModel.country_id,
-                            date_completed:
-                            this.filterModel.date_completed,
-                            process_date:
-                            this.filterModel.process_date,
+                            date_completed: this.filterModel.date_completed,
+                            process_date: this.filterModel.process_date,
                         }
 
                     });
@@ -1350,6 +1349,10 @@
             doSearch() {
                 $('#tbl-followupsales').DataTable().destroy();
 
+                // change the format of date
+                this.filterModel.process_date = this.formatFilterDates(this.filterModel.process_date)
+                this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+
                 this.$router.push({
                     query: this.filterModel,
                 });
@@ -1365,10 +1368,8 @@
                         article: this.filterModel.article,
                         country_id: this.filterModel.country_id,
                         in_charge: this.filterModel.in_charge,
-                        process_date:
-                        this.filterModel.process_date,
-                        date_completed:
-                        this.filterModel.date_completed
+                        process_date: this.filterModel.process_date,
+                        date_completed: this.filterModel.date_completed
                     }
                 });
 

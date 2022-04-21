@@ -979,6 +979,10 @@
             getBackLinkList: _.debounce(async function(page) {
                 $("#tbl_backlink").DataTable().destroy();
 
+                // change the format of date
+                this.fillter.process_date = this.formatFilterDates(this.fillter.process_date)
+                this.fillter.date_completed = this.formatFilterDates(this.fillter.date_completed)
+
                 if (page) {
                     this.page = page
                 }

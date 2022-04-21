@@ -48,9 +48,9 @@ class WalletTransactionController extends Controller
         }
 
         if( isset($filter['date']) && !empty($filter['date']) && $filter['date']->startDate != ''){
-            $list->where('wallet_transactions.date', '>=', Carbon::create($filter['date']->startDate)
+            $list->whereDate('wallet_transactions.date', '>=', Carbon::create($filter['date']->startDate)
                 ->format('Y-m-d'));
-            $list->where('wallet_transactions.date', '<=', Carbon::create($filter['date']->endDate)
+            $list->whereDate('wallet_transactions.date', '<=', Carbon::create($filter['date']->endDate)
                 ->format('Y-m-d'));
         }
 

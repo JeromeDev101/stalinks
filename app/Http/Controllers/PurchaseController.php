@@ -70,9 +70,9 @@ class PurchaseController extends Controller
         }
 
         if( !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
-            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+            $list->whereDate('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
-            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+            $list->whereDate('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
                 ->format('Y-m-d'));
         }
 

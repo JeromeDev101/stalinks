@@ -362,6 +362,9 @@
             async getPurchaseList(params){
                 $('#tbl-purchase').DataTable().destroy();
 
+                // change the format of date
+                this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+
                 this.isSearching = true;
                 this.isSearchingLoading = true;
 
@@ -427,6 +430,9 @@
 
             doSearch() {
                 $('#tbl-purchase').DataTable().destroy();
+
+                // change the format of date
+                this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
 
                 this.$router.push({
                     query: this.filterModel,

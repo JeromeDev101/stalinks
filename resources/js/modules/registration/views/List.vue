@@ -2769,6 +2769,9 @@ export default {
 
         async getAccountList(page = 1) {
 
+            // change the format of date
+            this.filterModel.created_at = this.formatFilterDates(this.filterModel.created_at)
+
             $("#tbl_account").DataTable().destroy();
             this.isLoadingTable = true;
             this.isSearchLoading = true;
@@ -2865,6 +2868,9 @@ export default {
         },
 
         async doSearch() {
+            // change the format of date
+            this.filterModel.created_at = this.formatFilterDates(this.filterModel.created_at)
+
             this.$router.push({
                 query : this.filterModel,
             });

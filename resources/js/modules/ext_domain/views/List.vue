@@ -2893,6 +2893,10 @@ export default {
             that.filterModel.id = that.filterModel.id_temp;
             that.filterModel.required_email = that.filterModel.required_email_temp;
             that.filterModel.sort = that.filterModel.sort_key + ',' + that.filterModel.sort_value;
+
+            // change the format of date
+            that.filterModel.alexa_date_upload = this.formatFilterDates(this.filterModel.alexa_date_upload)
+
             this.$router.push({
                 query : that.filterModel,
             });
@@ -2909,8 +2913,7 @@ export default {
                     per_page : that.filterModel.per_page,
                     alexa_rank_from : that.filterModel.alexa_rank_from,
                     alexa_rank_to : that.filterModel.alexa_rank_to,
-                    alexa_date_upload :
-                    that.filterModel.alexa_date_upload,
+                    alexa_date_upload : that.filterModel.alexa_date_upload,
                     domain_zone : that.filterModel.domain_zone,
                     from : that.filterModel.from
                 }
@@ -2918,6 +2921,10 @@ export default {
         },
         async goToPage(pageNum) {
             let that = this;
+
+            // change the format of date
+            that.filterModel.alexa_date_upload = this.formatFilterDates(this.filterModel.alexa_date_upload)
+
             this.$router.push({
                 query : that.filterModel,
             });
@@ -2931,10 +2938,8 @@ export default {
                     sort : that.filterModel.sort_key + ',' + that.filterModel.sort_value,
                     per_page : that.filterModel.per_page,
                     employee_id : that.filterModel.employee_id,
-                    required_email :
-                    that.filterModel.required_email,
-                    alexa_date_upload :
-                    that.filterModel.alexa_date_upload,
+                    required_email : that.filterModel.required_email,
+                    alexa_date_upload : that.filterModel.alexa_date_upload,
                     domain_zone : that.filterModel.domain_zone,
                     from : that.filterModel.from
                 }

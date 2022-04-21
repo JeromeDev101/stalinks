@@ -65,9 +65,9 @@ class SellerBillingController extends Controller
         }
 
         if( isset($filter['date_completed']) && !empty($filter['date_completed']) && $filter['date_completed']->startDate != ''){
-            $list->where('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
+            $list->whereDate('live_date', '>=', Carbon::create($filter['date_completed']->startDate)
                 ->format('Y-m-d'));
-            $list->where('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
+            $list->whereDate('live_date', '<=', Carbon::create($filter['date_completed']->endDate)
                 ->format('Y-m-d'));
         }
 
@@ -76,9 +76,9 @@ class SellerBillingController extends Controller
         }
 
         if( isset($filter['date_of_payment']) && !empty($filter['date_of_payment']) && $filter['date_of_payment']->startDate != ''){
-            $list->where('billing.date_billing', '>=', Carbon::create($filter['date_of_payment']->startDate)
+            $list->whereDate('billing.date_billing', '>=', Carbon::create($filter['date_of_payment']->startDate)
                 ->format('Y-m-d'));
-            $list->where('billing.date_billing', '<=', Carbon::create($filter['date_of_payment']->endDate)
+            $list->whereDate('billing.date_billing', '<=', Carbon::create($filter['date_of_payment']->endDate)
                 ->format('Y-m-d'));
         }
 

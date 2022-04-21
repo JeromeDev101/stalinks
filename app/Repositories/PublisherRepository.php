@@ -189,16 +189,16 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         if (isset($filter['date'])) {
             $filter['date'] = \GuzzleHttp\json_decode($filter['date'], true);
             if ($filter['date']['startDate'] != null && $filter['date']['endDate'] != null) {
-                $list = $list->where('publisher.updated_at', '>=', Carbon::create($filter['date']['startDate'])->format('Y-m-d'));
-                $list = $list->where('publisher.updated_at', '<=', Carbon::create($filter['date']['endDate'])->format('Y-m-d'));
+                $list = $list->whereDate('publisher.updated_at', '>=', Carbon::create($filter['date']['startDate'])->format('Y-m-d'));
+                $list = $list->whereDate('publisher.updated_at', '<=', Carbon::create($filter['date']['endDate'])->format('Y-m-d'));
             }
         }
 
         if (isset($filter['uploaded'])) {
             $filter['uploaded'] = \GuzzleHttp\json_decode($filter['uploaded'], true);
             if ($filter['uploaded']['startDate'] != null && $filter['uploaded']['endDate'] != null) {
-                $list = $list->where('publisher.created_at', '>=', Carbon::create($filter['uploaded']['startDate'])->format('Y-m-d'));
-                $list = $list->where('publisher.created_at', '<=', Carbon::create($filter['uploaded']['endDate'])->format('Y-m-d'));
+                $list = $list->whereDate('publisher.created_at', '>=', Carbon::create($filter['uploaded']['startDate'])->format('Y-m-d'));
+                $list = $list->whereDate('publisher.created_at', '<=', Carbon::create($filter['uploaded']['endDate'])->format('Y-m-d'));
             }
         }
 

@@ -421,6 +421,9 @@ export default {
         },
 
         doSearch() {
+            // change the format of date
+            this.filterModel.date_completed = this.formatFilterDates(this.filterModel.date_completed)
+
             this.$router.push({
                 query : this.filterModel,
             });
