@@ -2289,6 +2289,7 @@ export default {
             formData.append('title', this.modelMail.title);
             formData.append('content', this.modelMail.content);
             formData.append('work_mail', this.user.work_mail);
+            formData.append('from', 'registration');
 
             // get attachments
 

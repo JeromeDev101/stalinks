@@ -421,6 +421,7 @@ export default {
             this.formData.append('work_mail', this.user.work_mail_orig);
             this.formData.append('content', appendContent);
             this.formData.append('forwardAttachment', 'undefined');
+            this.formData.append('from', 'drafts');
 
             // attachments
             if (!attachments.length) {

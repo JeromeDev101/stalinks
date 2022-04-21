@@ -2713,6 +2713,7 @@ export default {
             this.formData.append('type', type);
             this.formData.append('work_mail', this.user.work_mail);
             this.formData.append('content', appendContent);
+            this.formData.append('from', 'inbox');
 
             // attachments
             if (!attachments.length) {

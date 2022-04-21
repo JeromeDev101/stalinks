@@ -275,6 +275,9 @@ class MailgunController extends Controller
                 'references_mail' => '',
                 'status_code'     => 0,
                 'message_status'  => '',
+
+                // save from
+                'from' => isset($request->from) ? $request->from : null
             ]);
         }
 
@@ -851,7 +854,7 @@ class MailgunController extends Controller
             ->where('replies.is_sent', 1)
             ->select(
                 'replies.id',
-                'replies.from_mail as from',
+                'replies.from_mail as from_mail',
                 'replies.sender as user_mail',
                 'replies.received as to',
                 'replies.status_code as status',
@@ -860,7 +863,8 @@ class MailgunController extends Controller
                 'replies.body_html',
                 'replies.stripped_html',
                 'replies.subject',
-                'replies.attachment'
+                'replies.attachment',
+                'replies.from'
             );
 
         if (isset($request->status) && $request->status != '') {
@@ -873,6 +877,14 @@ class MailgunController extends Controller
 
         if (isset($request->user_email) && $request->user_email != '') {
             $mail_logs = $mail_logs->where('replies.sender', $request->user_email);
+        }
+
+        if (isset($request->from_page) && $request->from_page != '') {
+            if ($request->from_page === 'none') {
+                $mail_logs = $mail_logs->whereNull('replies.from');
+            } else {
+                $mail_logs = $mail_logs->where('replies.from', 'like', '%' . $request->from_page . '%');
+            }
         }
 
         if (isset($request->date) && $request->date != '') {
@@ -902,6 +914,10 @@ class MailgunController extends Controller
         $rejected   = Reply::where('is_sent', 1)->where('status_code', 500)->count();
         $opened     = Reply::where('is_sent', 1)->where('status_code', 260)->count();
         $reported   = Reply::where('is_sent', 1)->where('status_code', 570)->count();
+        $inbox   = Reply::where('is_sent', 1)->whereNotNull('from')->where('from', 'inbox')->count();
+        $drafts   = Reply::where('is_sent', 1)->where('from', 'drafts')->count();
+        $prospect   = Reply::where('is_sent', 1)->where('from', 'prospect')->count();
+        $registration   = Reply::where('is_sent', 1)->where('from', 'registration')->count();
 
         return response()->json([
             'total_mail' => $total,
@@ -912,6 +928,10 @@ class MailgunController extends Controller
             'rejected'   => $rejected,
             'opened'     => $opened,
             'reported'   => $reported,
+            'inbox'   => $inbox,
+            'drafts'   => $drafts,
+            'prospect'   => $prospect,
+            'registration'   => $registration,
         ]);
     }
 

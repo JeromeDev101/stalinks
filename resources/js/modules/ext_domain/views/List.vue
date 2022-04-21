@@ -3480,6 +3480,7 @@ export default {
             formData.append('email', JSON.stringify(this.urlEmails));
             formData.append('title', this.modelMail.title);
             formData.append('content', this.modelMail.content);
+            formData.append('from', 'prospect');
 
             // get attachments
 

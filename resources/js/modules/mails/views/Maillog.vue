@@ -211,6 +211,102 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box rounded bg-gradient-cyan">
+                    <div class="inner">
+                        <h3>{{ listLogsTotals.inbox }}</h3>
+                        <p>
+                            <i
+                                class="fa fa-question-circle"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Emails sent from inbox, sent, starred and trash tabs in mail">
+                            </i>
+                            From Inbox
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.inbox) }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box rounded bg-gradient-orange">
+                    <div class="inner">
+                        <h3>{{ listLogsTotals.drafts }}</h3>
+                        <p>
+                            <i
+                                class="fa fa-question-circle"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Emails sent from drafts">
+                            </i>
+                            From Drafts
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.drafts) }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fab fa-firstdraft"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box rounded bg-gradient-purple">
+                    <div class="inner">
+                        <h3>{{ listLogsTotals.prospect }}</h3>
+                        <p>
+                            <i
+                                class="fa fa-question-circle"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Emails sent from URL prospect">
+                            </i>
+                            From URL Prospect
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.prospect) }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box rounded bg-gradient-teal">
+                    <div class="inner">
+                        <h3>{{ listLogsTotals.registration }}</h3>
+                        <p>
+                            <i
+                                class="fa fa-question-circle"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Emails sent from registration accounts">
+                            </i>
+                            From Registration
+
+                            <span>
+                                ({{ calculatePercentage(listLogsTotals.registration) }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -225,7 +321,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>User Email</label>
+                                    <label>Sender</label>
                                     <select class="form-control" v-model="filterModel.user_email">
                                         <option value="">All</option>
                                         <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
@@ -280,6 +376,20 @@
                                         :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"/>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>From</label>
+                                    <select class="form-control" v-model="filterModel.from_page">
+                                        <option value="">All</option>
+                                        <option value="none">N/A (past data)</option>
+                                        <option value="inbox">Inbox</option>
+                                        <option value="drafts">Drafts</option>
+                                        <option value="prospect">URL Prospect</option>
+                                        <option value="registration">Registration Account</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -315,12 +425,12 @@
                                 <tr class="label-primary">
                                     <th>#</th>
                                     <th>Action</th>
-                                    <th>User Email</th>
+                                    <th>Sender</th>
                                     <th>Subject</th>
-                                    <th>From</th>
                                     <th>To</th>
                                     <th>Bcc</th>
                                     <th>Status</th>
+                                    <th>From</th>
                                     <th>Date</th>
                                 </tr>
                                 </thead>
@@ -338,11 +448,15 @@
                                     </td>
                                     <td>{{ log.user_mail }}</td>
                                     <td>{{ log.subject }}</td>
-                                    <td>{{ log.from }}</td>
                                     <td v-html="checkEmailTo(log.to)"></td>
                                     <td></td>
                                     <td>
                                         <span class="badge" :class="statusClass(log.status)">{{ statusLabel(log.status) }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" :class="statusClassFrom(log.from)">
+                                            {{ log.from ? log.from : 'N/A' }}
+                                        </span>
                                     </td>
                                     <td>{{ log.date }}</td>
                                 </tr>
@@ -487,6 +601,10 @@ export default {
                     rejected: 0,
                     reported: 0,
                     opened: 0,
+                    inbox: 0,
+                    drafts: 0,
+                    prospect: 0,
+                    registration: 0,
                 },
 
                 filterModel: {
@@ -500,6 +618,7 @@ export default {
                         startDate: '',
                         endDate: ''
                     },
+                    from_page: this.$route.query.from_page || ''
                 },
                 listUserEmail: [],
 
@@ -649,6 +768,16 @@ export default {
                 }
             },
 
+            statusClassFrom(from) {
+                return {
+                    'bg-gradient-cyan': from === 'inbox',
+                    'bg-gradient-orange': from === 'drafts',
+                    'bg-gradient-purple': from === 'prospect',
+                    'bg-gradient-teal': from === 'registration',
+                    'bg-light': from === null,
+                }
+            },
+
             statusLabel(code) {
                 let label = '';
 
@@ -683,6 +812,7 @@ export default {
                         startDate: null,
                         endDate: null
                     },
+                    from_page: '',
                 }
 
                 this.$router.replace({'query': null});
