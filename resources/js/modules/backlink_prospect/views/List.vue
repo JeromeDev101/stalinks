@@ -248,7 +248,7 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" @click="editData();">Edit</a>
-                                                <a class="dropdown-item" @click="deleteData();">Delete</a>
+                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin">Delete</a>
                                             </div>
                                         </div>
 
@@ -678,9 +678,9 @@ export default {
                     )
                 } else {
                     swal.fire(
-                        'Sorry',
-                        'Domain is Already exist.',
-                        'error'
+                        'Success',
+                        'Domain is Already exist and Match with the record',
+                        'success'
                     )
                 }
                     

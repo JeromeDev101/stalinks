@@ -106,19 +106,22 @@ class BacklinkProspectController extends Controller
                 if( trim($referring_domain, " ") != '' ){
 
                     if($status == 'New' && $status != '') {
-                    // if($status != '') {
-                        BacklinkProspect::create([
-                            'referring_domain' => $referring_domain,
-                            'ur' => $ur,
-                            'dr' => $dr,
-                            'backlinks' => $backlinks,
-                            'ref_domain_ahref' => $ref_domain,
-                            'org_kw' => $org_kw,
-                            'org_traffic' => $org_traffic,
-                            'category' => $category,
-                            'status' => $status,
-                            'note' => $note,
-                        ]);
+                        $isRefDomainExist = $this->checkRefDomainExist($referring_domain);
+
+                        if(!$isRefDomainExist) {
+                            BacklinkProspect::create([
+                                'referring_domain' => $referring_domain,
+                                'ur' => $ur,
+                                'dr' => $dr,
+                                'backlinks' => $backlinks,
+                                'ref_domain_ahref' => $ref_domain,
+                                'org_kw' => $org_kw,
+                                'org_traffic' => $org_traffic,
+                                'category' => $category,
+                                'status' => $status,
+                                'note' => $note,
+                            ]);
+                        }
                     } 
                 }
             }
@@ -136,6 +139,12 @@ class BacklinkProspectController extends Controller
             ]
         ];
 
+    }
+
+    private function checkRefDomainExist($domain) {
+        $ref_domain = BacklinkProspect::where('referring_domain', $domain)->count();
+
+        return $ref_domain > 0 ? true:false; 
     }
 
     public function moveToUrlProspect(Request $request) {
@@ -168,6 +177,11 @@ class BacklinkProspectController extends Controller
 
             $result = 'true';
         } else {
+            $ext_domain = ExtDomain::where('domain', $request->referring_domain)->first();
+            $ext_domain->update([
+                'backlink_prospect_id' => $request->id,
+                'from' => 'Backlinks'
+            ]); 
             $result = 'false';
         }
 

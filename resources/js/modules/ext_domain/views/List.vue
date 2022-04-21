@@ -172,14 +172,14 @@
 
                             <div v-if="tableShow.from" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">From</label>
+                                    <label style="color: #333">Prospect From</label>
 
                                     <v-select
                                         v-model="filterModel.from"
                                         multiple
                                         label="name"
                                         :placeholder="$t('message.url_prospect.all')"
-                                        :options="['Alexa', 'Backlinks', 'Prospect']"
+                                        :options="['Alexa', 'Backlinks', 'Manual']"
                                         :searchable="true"/>
                                 </div>
                             </div>
@@ -1048,7 +1048,7 @@
                                     <label style="color: #333">From</label>
 
                                     <select v-model="extUpdate.from" class="form-control pull-right">
-                                        <option v-for="option in ['Alexa', 'Backlinks', 'Prospect']" v-bind:value="option">
+                                        <option v-for="option in ['Alexa', 'Backlinks', 'Manual']" v-bind:value="option">
                                             {{ option }}
                                         </option>
                                     </select>

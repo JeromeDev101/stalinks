@@ -148,7 +148,7 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
                                         'ref_domains' => 0,
                                         'status' => $status,
                                         'email' => $email,
-                                        'from' => 'Prospect'
+                                        'from' => 'Manual'
                                     ]);
 
                                 }else{
