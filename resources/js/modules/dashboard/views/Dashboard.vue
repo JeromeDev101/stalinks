@@ -356,7 +356,7 @@
                                         <thead>
                                         <tr>
                                             <th>
-                                                $t('message.dashboard.tbb_buyer') }}
+                                                {{ $t('message.dashboard.tbb_buyer') }}
                                                 <span class="text-primary">({{ backlink_buyer.total }})</span>
                                             </th>
                                             <th>
