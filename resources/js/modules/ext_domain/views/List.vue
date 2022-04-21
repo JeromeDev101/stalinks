@@ -179,7 +179,7 @@
                                         multiple
                                         label="name"
                                         :placeholder="$t('message.url_prospect.all')"
-                                        :options="['Alexa', 'Manual', 'Prospect']"
+                                        :options="['Alexa', 'Backlinks', 'Prospect']"
                                         :searchable="true"/>
                                 </div>
                             </div>
@@ -1041,6 +1041,26 @@
                                     </span>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.from}"
+                                     class="form-group">
+                                    <label style="color: #333">From</label>
+
+                                    <select v-model="extUpdate.from" class="form-control pull-right">
+                                        <option v-for="option in ['Alexa', 'Backlinks', 'Prospect']" v-bind:value="option">
+                                            {{ option }}
+                                        </option>
+                                    </select>
+
+                                    <span v-if="messageForms.errors.from"
+                                          v-for="err in messageForms.errors.from"
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="col-md-12">
                                 <div
                                     :class="{ 'has-error': messageForms.errors.email || checkEmailValidationError(messageForms.errors).length !== 0 }"

@@ -163,7 +163,7 @@ class BacklinkProspectController extends Controller
                 'ref_domains' => 0,
                 'status' => 0,
                 'email' => null,
-                'from' => 'Prospect'
+                'from' => 'Backlinks'
             ]);
 
             $result = 'true';

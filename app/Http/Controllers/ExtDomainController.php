@@ -210,7 +210,7 @@ class ExtDomainController extends Controller
             if (!isset($input[$key])) $input[$key] = '';
         }
 
-        $input['from'] = 'Manual';
+        $input['from'] = 'Prospect';
 
         // handle email
         $input['email'] = array_column($input['email'], 'text');
@@ -432,6 +432,7 @@ class ExtDomainController extends Controller
         $input['organic_traffic']  = $request->ext['organic_traffic'];
         $input['country_id']  = $request->ext['country_id'];
         $input['user_id'] = $request->ext['user_id'];
+        $input['from'] = $request->ext['from'];
 
         $input['email'] = array_column($input['email'], 'text');
 
