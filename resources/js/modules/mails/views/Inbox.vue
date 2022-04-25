@@ -787,24 +787,58 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3" v-show="withTemplateCompose">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input
-                                            v-model="isGeneralTemplate"
-                                            type="checkbox"
-                                            class="form-check-input">
-                                        General Template
-                                    </label>
-                                </div>
-                            </div>
+<!--                            <div class="col-md-3" v-show="withTemplateCompose">-->
+<!--                                <div class="form-check">-->
+<!--                                    <label class="form-check-label">-->
+<!--                                        <input-->
+<!--                                            v-model="isGeneralTemplate"-->
+<!--                                            type="checkbox"-->
+<!--                                            class="form-check-input">-->
+<!--                                        General Template-->
+<!--                                    </label>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                         <hr>
                     </div>
 
                     <div class="col-md-12" v-show="withTemplateCompose">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div>
+                                    <select
+                                        v-model="templateTypeAndCategory.category"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="templateTypeAndCategory.category === '' ? 'selected-placeholder' : ''">
+
+                                        <option value="">Select Category</option>
+                                        <option value="none">N/A</option>
+                                        <option v-for="category in templateCategories" :value="category.value">
+                                            {{ category.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div>
+                                    <select
+                                        v-model="templateTypeAndCategory.type"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="templateTypeAndCategory.type === '' ? 'selected-placeholder' : ''">
+
+                                        <option value="">Select Type</option>
+                                        <option value="none">N/A</option>
+                                        <option v-for="type in templateTypes" :value="type.value">
+                                            {{ type.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div>
                                     <select
                                         v-model="countryMailIdCompose"
@@ -820,7 +854,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
                                         <select
@@ -1015,24 +1049,58 @@
                                 </div>
                                 <hr>
                             </div>
-                            <div class="col-md-3" v-show="withTemplateReply">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input
-                                            v-model="isGeneralTemplateReply"
-                                            type="checkbox"
-                                            class="form-check-input">
-                                        General Template
-                                    </label>
-                                </div>
-                                <hr>
-                            </div>
+<!--                            <div class="col-md-3" v-show="withTemplateReply">-->
+<!--                                <div class="form-check">-->
+<!--                                    <label class="form-check-label">-->
+<!--                                        <input-->
+<!--                                            v-model="isGeneralTemplateReply"-->
+<!--                                            type="checkbox"-->
+<!--                                            class="form-check-input">-->
+<!--                                        General Template-->
+<!--                                    </label>-->
+<!--                                </div>-->
+<!--                                <hr>-->
+<!--                            </div>-->
                         </div>
                     </div>
 
                     <div class="col-md-12" v-show="withTemplateReply">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div>
+                                    <select
+                                        v-model="templateTypeAndCategoryReply.category"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="templateTypeAndCategoryReply.category === '' ? 'selected-placeholder' : ''">
+
+                                        <option value="">Select Category</option>
+                                        <option value="none">N/A</option>
+                                        <option v-for="category in templateCategories" :value="category.value">
+                                            {{ category.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div>
+                                    <select
+                                        v-model="templateTypeAndCategoryReply.type"
+                                        class="form-control form-control-sm pull-right"
+                                        :class="templateTypeAndCategoryReply.type === '' ? 'selected-placeholder' : ''">
+
+                                        <option value="">Select Type</option>
+                                        <option value="none">N/A</option>
+                                        <option v-for="type in templateTypes" :value="type.value">
+                                            {{ type.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div>
                                     <select
                                         v-model="countryMailIdReply"
@@ -1048,7 +1116,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div>
                                         <select
@@ -1462,6 +1530,38 @@ export default {
 
             isGeneralTemplate: false,
             isGeneralTemplateReply: false,
+
+            templateTypeAndCategory: {
+                type: '',
+                category: ''
+            },
+
+            templateTypeAndCategoryReply: {
+                type: '',
+                category: ''
+            },
+
+            templateCategories: [
+                {
+                    label: 'Prospect',
+                    value: 'prospect'
+                },
+                {
+                    label: 'Follow up',
+                    value: 'follow'
+                },
+            ],
+
+            templateTypes: [
+                {
+                    label: 'Corporate',
+                    value: 'corporate'
+                },
+                {
+                    label: 'Straight Forward',
+                    value: 'straight'
+                },
+            ]
         }
     },
 
@@ -1496,11 +1596,86 @@ export default {
         },
 
         templateFiltered() {
-            return (!this.isGeneralTemplate) ? this.listMailTemplateCompose.data:this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+            let self = this;
+
+            // return (!this.isGeneralTemplate)
+            //     ? this.listMailTemplateCompose.data:this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+
+            return (self.templateTypeAndCategory.category === '' && self.templateTypeAndCategory.type === '')
+                ? self.listMailTemplateCompose.data
+                : self.listMailTemplateCompose.data.filter(function(item) {
+                    if (self.templateTypeAndCategory.category && self.templateTypeAndCategory.type === '') {
+
+                        if (self.templateTypeAndCategory.category === 'none') {
+                            return (item['category'] === null);
+                        } else {
+                            return (item['category'] === self.templateTypeAndCategory.category);
+                        }
+
+                    } else if (self.templateTypeAndCategory.type && self.templateTypeAndCategory.category === '') {
+
+                        if (self.templateTypeAndCategory.type === 'none') {
+                            return (item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategory.type);
+                        }
+
+                    } else if (self.templateTypeAndCategory.type && self.templateTypeAndCategory.category) {
+
+                        if (self.templateTypeAndCategory.type === 'none' && self.templateTypeAndCategory.category !== 'none') {
+                            return (item['type'] === null && item['category'] === self.templateTypeAndCategory.category);
+                        } else if (self.templateTypeAndCategory.category === 'none' && self.templateTypeAndCategory.type !== 'none') {
+                            return (item['category'] === null && item['type'] === self.templateTypeAndCategory.type);
+                        } else if (self.templateTypeAndCategory.category === 'none' && self.templateTypeAndCategory.type === 'none') {
+                            return (item['category'] === null && item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategory.type && item['category'] === self.templateTypeAndCategory.category);
+                        }
+
+                    }
+                })
         },
 
         templateFilteredReply() {
-            return (!this.isGeneralTemplateReply) ? this.listMailTemplateCompose.data:this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+            let self = this;
+
+            // return (!this.isGeneralTemplateReply)
+            //     ? this.listMailTemplateCompose.data
+            //     :this.listMailTemplateCompose.data.filter(item => item.is_general_template === 1)
+
+            return (self.templateTypeAndCategoryReply.category === '' && self.templateTypeAndCategoryReply.type === '')
+                ? self.listMailTemplateCompose.data
+                : self.listMailTemplateCompose.data.filter(function(item) {
+                    if (self.templateTypeAndCategoryReply.category && self.templateTypeAndCategoryReply.type === '') {
+
+                        if (self.templateTypeAndCategoryReply.category === 'none') {
+                            return (item['category'] === null);
+                        } else {
+                            return (item['category'] === self.templateTypeAndCategoryReply.category);
+                        }
+
+                    } else if (self.templateTypeAndCategoryReply.type && self.templateTypeAndCategoryReply.category === '') {
+
+                        if (self.templateTypeAndCategoryReply.type === 'none') {
+                            return (item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategoryReply.type);
+                        }
+
+                    } else if (self.templateTypeAndCategoryReply.type && self.templateTypeAndCategoryReply.category) {
+
+                        if (self.templateTypeAndCategoryReply.type === 'none' && self.templateTypeAndCategoryReply.category !== 'none') {
+                            return (item['type'] === null && item['category'] === self.templateTypeAndCategoryReply.category);
+                        } else if (self.templateTypeAndCategoryReply.category === 'none' && self.templateTypeAndCategoryReply.type !== 'none') {
+                            return (item['category'] === null && item['type'] === self.templateTypeAndCategoryReply.type);
+                        } else if (self.templateTypeAndCategoryReply.category === 'none' && self.templateTypeAndCategoryReply.type === 'none') {
+                            return (item['category'] === null && item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategoryReply.type && item['category'] === self.templateTypeAndCategoryReply.category);
+                        }
+
+                    }
+                })
         },
     },
 

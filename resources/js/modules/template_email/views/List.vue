@@ -10,115 +10,164 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="form-check" v-if="user.isOurs == 0">
-                            <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" v-model="filterModel.is_general_template" @click="doSearchList"> 
-                                General template
-                            </label>
+<!--                        <div class="form-check" v-if="user.isOurs == 0">-->
+<!--                            <label class="form-check-label">-->
+<!--                                <input type="checkbox" class="form-check-input" v-model="filterModel.is_general_template" @click="doSearchList">-->
+<!--                                General template-->
+<!--                            </label>-->
+<!--                        </div>-->
+
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+
+                                <div class="input-group input-group-sm float-right mr-2" style="width: 65px">
+                                    <select @change="doSearchList" class="form-control" v-model="filterModel.per_page" style="height: 37px;">
+                                        <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
-                        <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
-                        <div class="input-group input-group-sm float-right" style="width: 65px">
-                            <select @change="doSearchList" class="form-control pull-right" v-model="filterModel.per_page" style="height: 37px;">
-                                <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
-                            </select>
-                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped rlink-table">
+                                <tbody>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>Category</th>
+                                    <th>Type</th>
+                                    <th>{{ $t('message.template.ml_name') }}</th>
+                                    <th>{{ $t('message.template.ml_ip_title') }}</th>
+                                    <th>{{ $t('message.template.ml_lang') }}</th>
+                                    <th>{{ $t('message.template.ml_action') }}</th>
+                                </tr>
+                                <tr>
+                                    <td style="max-width: 30px;">
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <select v-model="filterModel.category_temp" class="form-control pull-right">
+                                                <option value="">All</option>
+                                                <option value="none">N/A</option>
+                                                <option v-for="category in categories" :value="category.value">
+                                                    {{ category.label }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <select v-model="filterModel.type_temp" class="form-control pull-right">
+                                                <option value="">All</option>
+                                                <option value="none">N/A</option>
+                                                <option v-for="type in types" :value="type.value">
+                                                    {{ type.label }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                type="text"
+                                                v-model="filterModel.mail_name_temp"
+                                                class="form-control pull-right"
+                                                :placeholder="$t('message.template.filter_search_email_name')">
+                                        </div>
+                                    </td>
 
-                        <table class="table table-hover table-bordered table-striped rlink-table">
-                            <tbody>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>{{ $t('message.template.ml_name') }}</th>
-                                <th>{{ $t('message.template.ml_ip_title') }}</th>
-                                <th>{{ $t('message.template.ml_lang') }}</th>
-                                <th>{{ $t('message.template.ml_action') }}</th>
-                            </tr>
-                            <tr>
-                                <td style="max-width: 30px;">
-                                </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                type="text"
+                                                v-model="filterModel.title_temp"
+                                                class="form-control pull-right"
+                                                :placeholder="$t('message.template.filter_search_title')">
+                                        </div>
+                                    </td>
 
-                                <td>
-                                    <div class="input-group input-group-sm">
-                                        <input
-                                            type="text"
-                                            v-model="filterModel.mail_name_temp"
-                                            class="form-control pull-right"
-                                            :placeholder="$t('message.template.filter_search_email_name')">
-                                    </div>
-                                </td>
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="input-group input-group-sm">-->
+                                    <!--                                            <input type="text" v-model="filterModel.content_temp"  class="form-control pull-right" placeholder="Search Content">-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
 
-                                <td>
-                                    <div class="input-group input-group-sm">
-                                        <input
-                                            type="text"
-                                            v-model="filterModel.title_temp"
-                                            class="form-control pull-right"
-                                            :placeholder="$t('message.template.filter_search_title')">
-                                    </div>
-                                </td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <select v-model="filterModel.country_id_temp" class="form-control pull-right">
+                                                <option value="0"></option>
+                                                <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                    {{ option.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button
+                                                @click="doSearchList"
+                                                type="submit"
+                                                :title="$t('message.template.filter_title')"
+                                                class="btn btn-default">
+                                                <i class="fa fa-fw fa-search"></i>
+                                            </button>
 
-                                <!--                                    <td>-->
-                                <!--                                        <div class="input-group input-group-sm">-->
-                                <!--                                            <input type="text" v-model="filterModel.content_temp"  class="form-control pull-right" placeholder="Search Content">-->
-                                <!--                                        </div>-->
-                                <!--                                    </td>-->
+                                            <button
+                                                @click="clearSearch()"
+                                                title="Clear search"
+                                                class="btn btn-default">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-for="(item, index) in emailList.data" :key="index">
+                                    <td class="center-content">{{ item.id }}</td>
+                                    <td>
+                                        <span class="badge" :class="getCategoryClass(item.category)">
+                                            {{ getCategoryLabel(item.category) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" :class="getTypeClass(item.type)">
+                                            {{ getTypeLabel(item.type) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ item.mail_name }}</td>
+                                    <td>{{ item.title }}</td>
+                                    <td>{{ (item.language) ? item.language.name : '' }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button @click="Export2Word(item, item.title)" class="btn btn-default">Export as Doc</button>
+                                            <button
+                                                @click="doEdit(item)"
+                                                data-toggle="modal"
+                                                data-target="#modal-update"
+                                                type="submit"
+                                                :title="$t('message.template.action_edit')"
+                                                class="btn btn-default">
 
-                                <td>
-                                    <div class="input-group input-group-sm">
-                                        <select v-model="filterModel.country_id_temp" class="form-control pull-right">
-                                            <option value="0"></option>
-                                            <option v-for="option in listLanguages.data" v-bind:value="option.id">
-                                                {{ option.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button
-                                            @click="doSearchList"
-                                            type="submit"
-                                            :title="$t('message.template.filter_title')"
-                                            class="btn btn-default">
-                                            <i class="fa fa-fw fa-search"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr v-for="(item, index) in emailList.data" :key="index">
-                                <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ item.mail_name }}</td>
-                                <td>{{ item.title }}</td>
-                                <td>{{ (item.language) ? item.language.name : '' }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button @click="Export2Word(item, item.title)" class="btn btn-default">Export as Doc</button>
-                                        <button
-                                            @click="doEdit(item)"
-                                            data-toggle="modal"
-                                            data-target="#modal-update"
-                                            type="submit"
-                                            :title="$t('message.template.action_edit')"
-                                            class="btn btn-default">
+                                                <i class="fa fa-fw fa-edit"></i>
+                                            </button>
 
-                                            <i class="fa fa-fw fa-edit"></i>
-                                        </button>
+                                            <button
+                                                @click="doDelete(item)"
+                                                data-toggle="modal"
+                                                :title="$t('message.template.action_delete')"
+                                                class="btn btn-default">
 
-                                        <button
-                                            @click="doDelete(item)"
-                                            data-toggle="modal"
-                                            :title="$t('message.template.action_delete')"
-                                            class="btn btn-default">
-
-                                            <i class="fa fa-fw fa-times"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="overlay" v-if="isLoadingTable">
-                            <i class="fa fa-refresh fa-spin"></i>
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="overlay" v-if="isLoadingTable">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -181,14 +230,40 @@
                             </div>
 
                             <div class="col-md-12" v-if="user.isOurs == 0">
-                                <hr>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" v-model="emailModel.is_general_template"> 
-                                            General template
-                                        </label>
-                                    </div>
-                                <hr>
+                                <!--                                <hr>-->
+                                <!--                                    <div class="form-check">-->
+                                <!--                                        <label class="form-check-label">-->
+                                <!--                                            <input type="checkbox" class="form-check-input" v-model="emailModel.is_general_template">-->
+                                <!--                                            General template-->
+                                <!--                                        </label>-->
+                                <!--                                    </div>-->
+                                <!--                                <hr>-->
+                            </div>
+
+                            <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
+                                <label style="color: #333">Category</label>
+
+                                <div>
+                                    <select v-model="emailModel.category" class="form-control pull-right">
+                                        <option value="">None</option>
+                                        <option v-for="category in categories" :value="category.value">
+                                            {{ category.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
+                                <label style="color: #333">Type</label>
+
+                                <div>
+                                    <select v-model="emailModel.type" class="form-control pull-right">
+                                        <option value="">None</option>
+                                        <option v-for="type in types" :value="type.value">
+                                            {{ type.label }}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="col-md-12">
@@ -303,7 +378,33 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
+                                <label style="color: #333">Category</label>
+
+                                <div>
+                                    <select v-model="emailUpdate.category" class="form-control pull-right">
+                                        <option value="null">None</option>
+                                        <option v-for="category in categories" :value="category.value">
+                                            {{ category.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
+                                <label style="color: #333">Type</label>
+
+                                <div>
+                                    <select v-model="emailUpdate.type" class="form-control pull-right">
+                                        <option value="null">None</option>
+                                        <option v-for="type in types" :value="type.value">
+                                            {{ type.label }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
                                     <label style="color: #333">{{ $t('message.template.al_ip_title') }}</label>
                                     <input
@@ -377,20 +478,28 @@
                     title: '',
                     content: '',
                     country_id: 0,
-                    is_general_template: false
+                    is_general_template: false,
+                    category: '',
+                    type: '',
                 },
 
                 emailUpdate: {
                     id: 0,
                     title: '',
                     content: '',
-                    country_id: 0
+                    country_id: 0,
+                    category: '',
+                    type: '',
                 },
 
                 filterModel: {
                     title: this.$route.query.title || '',
                     is_general_template: this.$route.query.is_general_template || false,
                     mail_name: this.$route.query.mail_name || '',
+                    category: this.$route.query.category || '',
+                    category_temp: this.$route.query.category_temp || '',
+                    type: this.$route.query.type || '',
+                    type_temp: this.$route.query.type_temp || '',
                     mail_name_temp: this.$route.query.mail_name_temp || '',
                     content: this.$route.query.content || '',
                     title_temp: this.$route.query.title_temp || '',
@@ -404,7 +513,29 @@
 
                 listPageOptions: [5, 10, 25, 50, 100],
                 isLoadingTable: false,
-                isPopupLoading: false
+                isPopupLoading: false,
+
+                categories: [
+                    {
+                        label: 'Prospect',
+                        value: 'prospect'
+                    },
+                    {
+                        label: 'Follow up',
+                        value: 'follow'
+                    },
+                ],
+
+                types: [
+                    {
+                        label: 'Corporate',
+                        value: 'corporate'
+                    },
+                    {
+                        label: 'Straight Forward',
+                        value: 'straight'
+                    },
+                ]
             };
         },
 
@@ -463,7 +594,34 @@
                 that.filterModel.content = that.filterModel.content_temp;
                 that.filterModel.country_id = that.filterModel.country_id_temp;
                 that.filterModel.mail_name = that.filterModel.mail_name_temp;
+                that.filterModel.category = that.filterModel.category_temp;
+                that.filterModel.type = that.filterModel.type_temp;
                 that.filterModel.is_general_template = that.filterModel.is_general_template ? 0:1;
+
+                this.$router.push({
+                    query: that.filterModel,
+                });
+
+                this.getEmailList({
+                    params: that.filterModel
+                });
+            },
+
+            clearSearch() {
+                let that = this;
+
+                that.filterModel.title = '';
+                that.filterModel.title_temp = '';
+                that.filterModel.content = '';
+                that.filterModel.content_temp = '';
+                that.filterModel.country_id = 0;
+                that.filterModel.country_id_temp = 0;
+                that.filterModel.mail_name = '';
+                that.filterModel.mail_name_temp = '';
+                that.filterModel.category = '';
+                that.filterModel.category_temp = '';
+                that.filterModel.type = '';
+                that.filterModel.type_temp = '';
 
                 this.$router.push({
                     query: that.filterModel,
@@ -522,7 +680,9 @@
                 this.emailModel = {
                     id: 0,
                     name: '',
-                    code: ''
+                    code: '',
+                    category: '',
+                    type: '',
                 };
             },
 
@@ -573,6 +733,12 @@
                     this.getEmailList({
                         params: this.filterModel
                     });
+
+                    await swal.fire(
+                        'Saved!',
+                        'Email template successfully saved.',
+                        'success'
+                    )
                 }
             },
 
@@ -595,7 +761,47 @@
                             break;
                         }
                     }
+
+                    await swal.fire(
+                        'Updated!',
+                        'Email template successfully updated.',
+                        'success'
+                    )
                 }
+            },
+
+            getCategoryClass (category) {
+                return {
+                    'bg-primary': category === 'prospect',
+                    'bg-success': category === 'follow',
+                    'bg-danger': category === null,
+                }
+            },
+
+            getCategoryLabel (category) {
+                let categories = {
+                    prospect:  'Prospect',
+                    follow: 'Follow up'
+                }
+
+                return category ? categories[category] : 'N/A';
+            },
+
+            getTypeClass (type) {
+                return {
+                    'bg-info': type === 'corporate',
+                    'bg-warning': type === 'straight',
+                    'bg-danger': type === null,
+                }
+            },
+
+            getTypeLabel (type) {
+                let types = {
+                    corporate:  'Corporate',
+                    straight: 'Straight Forward'
+                }
+
+                return type ? types[type] : 'N/A';
             },
         },
     }

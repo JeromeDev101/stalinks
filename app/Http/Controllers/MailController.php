@@ -46,7 +46,6 @@ class MailController extends Controller
             'where' => []
         ];
 
-
         if (isset($input['is_general_template'])) {
             $is_general_template = $input['is_general_template'];
         }
@@ -79,13 +78,29 @@ class MailController extends Controller
             $filters['where'][] = ['country_id', '=', $input['country_id']];
         }
 
+        if (isset($input['category']) && $input['category'] != '') {
+            if ($input['category'] === 'none') {
+                $filters['where'][] = ['category', '=', null];
+            } else {
+                $filters['where'][] = ['category', '=', $input['category']];
+            }
+        }
+
+        if (isset($input['type']) && $input['type'] != '') {
+            if ($input['type'] === 'none') {
+                $filters['where'][] = ['type', '=', null];
+            } else {
+                $filters['where'][] = ['type', '=', $input['type']];
+            }
+        }
+
         $data = $this->mailRepository->getTemplateList($page, $perPage, $filters, $isFullPage, $is_general_template);
 
         return response()->json($this->addPaginationRaw($data));
     }
 
     public function store(Request $request) {
-        $input = $request->only(['title', 'content', 'mail_name', 'country_id']);
+        $input = $request->only(['title', 'content', 'mail_name', 'country_id', 'category', 'type']);
         $input['is_general_template'] = $request->is_general_template ? 1:0;
 
         Validator::make($input, [
@@ -103,7 +118,7 @@ class MailController extends Controller
 
     public function edit(UpdateMailTemplateRequest $request) {
         $response = ['success' => false];
-        $input = $request->only('id', 'title', 'content', 'mail_name', 'country_id');
+        $input = $request->only('id', 'title', 'content', 'mail_name', 'country_id', 'type', 'category');
 
         $item = $this->mailRepository->findById($input['id']);
         if (!$item) {
