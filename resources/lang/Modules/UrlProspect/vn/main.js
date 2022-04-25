@@ -176,5 +176,7 @@ export default {
     close: 'Đóng',
     save: 'Lưu',
     send: 'Gửi',
-    update: 'Cập nhật'
+    update: 'Cập nhật',
+    prospect_from: 'Triển vọng Từ',
+    simple_from: 'Từ',
 }

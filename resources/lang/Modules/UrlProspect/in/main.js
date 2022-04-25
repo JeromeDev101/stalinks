@@ -176,5 +176,7 @@ export default {
     close: 'बंद करना',
     save: 'सहेजें',
     send: 'भेजना',
-    update: 'अद्यतन'
+    update: 'अद्यतन',
+    prospect_from: 'से संभावना',
+    simple_from: 'से',
 }

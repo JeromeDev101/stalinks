@@ -172,7 +172,7 @@
 
                             <div v-if="tableShow.from" class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Prospect From</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.prospect_from') }}</label>
 
                                     <v-select
                                         v-model="filterModel.from"
@@ -1045,7 +1045,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.from}"
                                      class="form-group">
-                                    <label style="color: #333">From</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.simple_from') }}</label>
 
                                     <select v-model="extUpdate.from" class="form-control pull-right">
                                         <option v-for="option in ['Alexa', 'Backlinks', 'Manual']" v-bind:value="option">
@@ -1436,7 +1436,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
                                               @change="toggleColumn(5, tableShow.from)"
-                                              :checked="tableShow.from ? 'checked':''" v-model="tableShow.from">From</label>
+                                              :checked="tableShow.from ? 'checked':''" v-model="tableShow.from">{{ $t('message.url_prospect.simple_from') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
@@ -2279,7 +2279,7 @@ export default {
                 },
                 {
                     prop : 'from',
-                    name : 'From',
+                    name : this.$t('message.url_prospect.simple_from'),
                     sortable : true,
                     width : 100,
                     isHidden : !this.tableShow.from
@@ -2428,7 +2428,7 @@ export default {
                     hidden: !this.tableShow.employee
                 },
                 {
-                    name: 'From',
+                    name: this.$t('message.url_prospect.simple_from'),
                     sort: '',
                     column: 'from',
                     hidden: !this.tableShow.from

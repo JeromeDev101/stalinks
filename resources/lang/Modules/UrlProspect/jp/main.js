@@ -176,5 +176,7 @@ export default {
     close: '閉じる',
     save: '保存',
     send: '送信',
-    update: '更新'
+    update: '更新',
+    prospect_from: 'からの見通し',
+    simple_from: 'から',
 }

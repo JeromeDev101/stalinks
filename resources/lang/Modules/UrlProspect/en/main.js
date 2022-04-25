@@ -176,5 +176,7 @@ export default {
     close: 'Close',
     save: 'Save',
     send: 'Send',
-    update: 'Update'
+    update: 'Update',
+    prospect_from: 'Prospect From',
+    simple_from: 'From',
 }

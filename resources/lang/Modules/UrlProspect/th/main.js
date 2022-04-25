@@ -176,5 +176,7 @@ export default {
     close: 'ปิด',
     save: 'บันทึก',
     send: 'ส่ง',
-    update: 'อัปเดต'
+    update: 'อัปเดต',
+    prospect_from: 'ผู้มุ่งหวังจาก',
+    simple_from: 'จาก',
 }

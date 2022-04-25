@@ -176,5 +176,7 @@ export default {
     close: 'Menutup',
     save: 'Menyimpan',
     send: 'Kirim',
-    update: 'Memperbarui'
+    update: 'Memperbarui',
+    prospect_from: 'Prospek Dari',
+    simple_from: 'Dari',
 }
