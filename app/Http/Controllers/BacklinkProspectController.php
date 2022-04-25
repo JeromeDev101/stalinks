@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\BacklinkProspect;
 use App\Models\ExtDomain;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client as GuzzleClient;
+use Carbon\Carbon;
 
 class BacklinkProspectController extends Controller
 {
     public function getList(Request $request){
         $filter = $request->all();
+
         $paginate = (isset($filter['paginate']) && !empty($filter['paginate']) ) ? $filter['paginate']:50;
 
         $backlink_prospects = BacklinkProspect::when(isset($filter['referring_domain']) && !empty($filter['referring_domain']), function($query) use ($filter) {
@@ -24,6 +27,14 @@ class BacklinkProspectController extends Controller
             } else {
                 $backlink_prospects->where('ur', '<=', intval($filter['ur']));
             }
+        }
+
+        // Date upload filter
+        $filter['date_upload'] = \GuzzleHttp\json_decode($filter['date_upload'], true);
+
+        if (isset($filter['date_upload']) && $filter['date_upload']['startDate'] != null && $filter['date_upload']['endDate'] != null) {
+            $backlink_prospects->whereDate('created_at', '>=', Carbon::create($filter['date_upload']['startDate'])->format('Y-m-d'));
+            $backlink_prospects->whereDate('created_at', '<=', Carbon::create($filter['date_upload']['endDate'])->format('Y-m-d'));
         }
 
         if (isset($filter['dr']) && !empty($filter['dr'])) {

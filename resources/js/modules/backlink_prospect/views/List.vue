@@ -148,6 +148,24 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label style="color: #333">Date</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            ref="picker"
+                                            opens="left"
+                                            v-model="filterModel.date_upload"
+                                            :ranges="generateDefaultDateRange()"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                            :dateRange="filterModel.date_upload"
+                                            :linkedCalendars="true"
+                                            style="width: 100%"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="row mb-3">
@@ -437,12 +455,13 @@ import {mapState} from 'vuex';
 import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
 import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
     components : {
         VueVirtualTable,
     },
-    mixins: [csvTemplateMixin],
+    mixins: [csvTemplateMixin, dateRange],
     data() {
         return {
             buttonState : {
@@ -464,6 +483,10 @@ export default {
                 org_kw: '',
                 org_traffic: '',
                 status: '',
+                date_upload: {
+                    startDate : null,
+                    endDate : null
+                },
                 paginate: 50,
             },
             category: [
@@ -630,6 +653,12 @@ export default {
                     isHidden : false
                 },
                 {
+                    prop : 'created_at',
+                    name : 'Date Uploaded',
+                    sortable : true,
+                    isHidden : false
+                },
+                {
                     prop : '_action',
                     name : 'Action',
                     actionName : 'actionButtons',
@@ -656,6 +685,7 @@ export default {
                     dr_direction : this.buttonState.dr,
                     org_kw_direction : this.buttonState.org_kw,
                     org_traffic_direction : this.buttonState.org_traffic,
+                    date_upload : this.filterModel.date_upload,
                     page : 1,
                 }
             }).then((res) => {
@@ -743,6 +773,7 @@ export default {
                     paginate : this.filterModel.paginate,
                     org_kw : this.filterModel.org_kw,
                     org_traffic : this.filterModel.org_traffic,
+                    date_upload : this.filterModel.date_upload,
                     ur_direction : this.buttonState.ur,
                     dr_direction : this.buttonState.dr,
                     org_kw_direction : this.buttonState.org_kw,
@@ -826,6 +857,10 @@ export default {
                 dr : '',
                 org_kw : '',
                 org_traffic : '',
+                date_upload : {
+                    startDate : null,
+                    endDate : null
+                },
             }
 
             this.$router.replace({'query' : null});
