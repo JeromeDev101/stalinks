@@ -818,6 +818,7 @@ export default {
                 this.$router.replace({'query': null});
 
                 this.getMaillogs();
+                this.getMailLogsTotals();
             },
 
             doSearch() {
@@ -829,6 +830,7 @@ export default {
                 });
 
                 this.getMaillogs();
+                this.getMailLogsTotals();
             },
 
             getMaillogs(page = 1) {
@@ -848,7 +850,9 @@ export default {
             },
 
             getMailLogsTotals() {
-                axios.get('/api/mail/mail-logs-totals')
+                axios.get('/api/mail/mail-logs-totals', {
+                    params: this.filterModel
+                })
                 .then((res) => {
                     this.listLogsTotals = res.data
                 })

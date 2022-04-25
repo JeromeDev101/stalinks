@@ -904,35 +904,57 @@ class MailgunController extends Controller
         return $mail_logs;
     }
 
-    public function mail_logs_totals()
+    public function mail_logs_totals(Request $request)
     {
-        $total      = Reply::where('is_sent', 1)->count();
-        $sent_today = Reply::where('is_sent', 1)->where('created_at', 'like', '%' . date('Y-m-d') . '%')->count();
-        $sent       = Reply::where('is_sent', 1)->where('status_code', 0)->count();
-        $failed     = Reply::where('is_sent', 1)->where('status_code', 552)->count();
-        $delivered  = Reply::where('is_sent', 1)->where('status_code', 250)->count();
-        $rejected   = Reply::where('is_sent', 1)->where('status_code', 500)->count();
-        $opened     = Reply::where('is_sent', 1)->where('status_code', 260)->count();
-        $reported   = Reply::where('is_sent', 1)->where('status_code', 570)->count();
-        $inbox   = Reply::where('is_sent', 1)->whereNotNull('from')->where('from', 'inbox')->count();
-        $drafts   = Reply::where('is_sent', 1)->where('from', 'drafts')->count();
-        $prospect   = Reply::where('is_sent', 1)->where('from', 'prospect')->count();
-        $registration   = Reply::where('is_sent', 1)->where('from', 'registration')->count();
+        $totals = DB::table('replies')
+            ->selectRaw('count(*) as total_mail')
+            ->selectRaw("count(case when created_at LIKE '%" . date('Y-m-d') . "%' then 1 end) as sent_today")
+            ->selectRaw("count(case when status_code = 0 then 1 end) as sent")
+            ->selectRaw("count(case when status_code = 552 then 1 end) as failed")
+            ->selectRaw("count(case when status_code = 250 then 1 end) as delivered")
+            ->selectRaw("count(case when status_code = 500 then 1 end) as rejected")
+            ->selectRaw("count(case when status_code = 260 then 1 end) as opened")
+            ->selectRaw("count(case when status_code = 570 then 1 end) as reported")
+            ->selectRaw("count(case when replies.from = 'inbox' then 1 end) as inbox")
+            ->selectRaw("count(case when replies.from = 'drafts' then 1 end) as drafts")
+            ->selectRaw("count(case when replies.from = 'prospect' then 1 end) as prospect")
+            ->selectRaw("count(case when replies.from = 'registration' then 1 end) as registration");
 
-        return response()->json([
-            'total_mail' => $total,
-            'sent'       => $sent,
-            'sent_today' => $sent_today,
-            'failed'     => $failed,
-            'delivered'  => $delivered,
-            'rejected'   => $rejected,
-            'opened'     => $opened,
-            'reported'   => $reported,
-            'inbox'   => $inbox,
-            'drafts'   => $drafts,
-            'prospect'   => $prospect,
-            'registration'   => $registration,
-        ]);
+        if (isset($request->status) && $request->status != '') {
+            $totals = $totals->where('replies.status_code', $request->status);
+        }
+
+        if (isset($request->subject) && $request->subject != '') {
+            $totals = $totals->where('replies.subject', 'like', '%' . $request->subject . '%');
+        }
+
+        if (isset($request->user_email) && $request->user_email != '') {
+            $totals = $totals->where('replies.sender', $request->user_email);
+        }
+
+        if (isset($request->from_page) && $request->from_page != '') {
+            if ($request->from_page === 'none') {
+                $totals = $totals->whereNull('replies.from');
+            } else {
+                $totals = $totals->where('replies.from', 'like', '%' . $request->from_page . '%');
+            }
+        }
+
+        if (isset($request->date) && $request->date != '') {
+            $date = \GuzzleHttp\json_decode($request->date, true);
+            if (!empty($date) && $date['startDate'] != null) {
+                $totals = $totals->whereDate('created_at', '>=', Carbon::create($date['startDate'])->format('Y-m-d'))
+                    ->whereDate('created_at', '<=', Carbon::create($date['endDate'])->format('Y-m-d'));
+            }
+        }
+
+        if (isset($request->recipient) && $request->recipient != '') {
+            $totals = $totals->where('replies.received', 'like', '%' . $request->recipient . '%');
+        }
+
+        $totals = $totals->where('replies.is_sent', 1)->first();
+
+        return response()->json($totals);
     }
 
     public function get_mail_list()
