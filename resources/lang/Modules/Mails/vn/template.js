@@ -44,6 +44,8 @@ export default {
     alert_saved_success: 'Đã lưu thành công mẫu email.',
     alert_updated: 'Đã cập nhật!',
     alert_updated_success: 'Đã cập nhật thành công mẫu email.',
+    alert_deleted: 'Đã xóa!',
+    alert_deleted_success: 'Đã xóa thành công mẫu email.',
 
     save: 'Lưu',
     close: 'Đóng',

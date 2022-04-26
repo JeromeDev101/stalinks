@@ -44,6 +44,8 @@ export default {
     alert_saved_success: 'Email template successfully saved.',
     alert_updated: 'Updated!',
     alert_updated_success: 'Email template successfully updated.',
+    alert_deleted: 'Deleted!',
+    alert_deleted_success: 'Email template successfully deleted.',
 
     save: 'Save',
     close: 'Close',

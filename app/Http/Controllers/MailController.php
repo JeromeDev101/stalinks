@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateMailTemplateRequest;
+use App\Models\MailContent;
 use App\Models\User;
 use App\Repositories\Contracts\MailRepositoryInterface;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class MailController extends Controller
@@ -131,16 +133,14 @@ class MailController extends Controller
     }
 
     public function delete(Request $request) {
-        $input = $request->only('id');
         $response = ['success' => false];
+        $content = MailContent::find($request->id);
 
-        $item = $this->mailRepository->findMail($input['id']);
-        if (!$item) {
-            return response()->json($response);
+        if ($content) {
+            $content->delete();
+            $response['success'] = true;
         }
 
-        $this->mailRepository->delete($item);
-        $response['success'] = true;
         return response()->json($response);
     }
 

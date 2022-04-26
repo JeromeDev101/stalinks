@@ -44,6 +44,8 @@ export default {
     alert_saved_success: 'Template email berhasil disimpan.',
     alert_updated: 'Diperbarui!',
     alert_updated_success: 'Template email berhasil diperbarui.',
+    alert_deleted: 'Dihapus!',
+    alert_deleted_success: 'Template email berhasil dihapus.',
 
     save: 'Menyimpan',
     close: 'Tutup',

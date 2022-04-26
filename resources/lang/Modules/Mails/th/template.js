@@ -44,6 +44,9 @@ export default {
     alert_saved_success: 'บันทึกเทมเพลตอีเมลเรียบร้อยแล้ว',
     alert_updated: 'อัพเดท!',
     alert_updated_success: 'อัปเดตเทมเพลตอีเมลเรียบร้อยแล้ว',
+    alert_deleted: 'ถูกลบ!',
+    alert_deleted_success: 'ลบเทมเพลตอีเมลเรียบร้อยแล้ว',
+
 
     save: 'บันทึก',
     close: 'ปิด ',

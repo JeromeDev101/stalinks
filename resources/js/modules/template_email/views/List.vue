@@ -722,6 +722,12 @@
                     this.getEmailList({
                         params: this.filterModel
                     });
+
+                    await swal.fire(
+                        self.$t('message.template.alert_deleted'),
+                        self.$t('message.template.alert_deleted_success'),
+                        'success'
+                    )
                 }
             },
 

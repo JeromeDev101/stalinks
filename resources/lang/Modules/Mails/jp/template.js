@@ -44,6 +44,8 @@ export default {
     alert_saved_success: 'メールテンプレートが正常に保存されました。',
     alert_updated: '更新しました!',
     alert_updated_success: 'メールテンプレートが正常に更新されました。',
+    alert_deleted: '削除!',
+    alert_deleted_success: 'メールテンプレートが正常に削除されました。',
 
     save: '保存',
     close: '閉じる',

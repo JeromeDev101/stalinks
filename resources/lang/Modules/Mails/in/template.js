@@ -44,6 +44,8 @@ export default {
     alert_saved_success: 'ईमेल टेम्प्लेट सफलतापूर्वक सहेजा गया.',
     alert_updated: 'अद्यतन!',
     alert_updated_success: 'ईमेल टेम्प्लेट सफलतापूर्वक अपडेट किया गया.',
+    alert_deleted: 'हटाए गए!',
+    alert_deleted_success: 'ईमेल टेम्प्लेट सफलतापूर्वक हटाया गया.',
 
     save: 'सहेजें',
     close: 'बंद करना',
