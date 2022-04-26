@@ -46,6 +46,10 @@ export default {
     cm_attachments: 'फ़ाइलों को संलग्न करें',
     cm_files: ' फाइल्स अनुलग्न',
 
+    // categories and types
+    select_cat: 'श्रेणी चुनना',
+    select_type: 'प्रकार चुनें',
+
     // alerts
     alert_save_draft: 'ड्राफ्ट के रूप में सेव करें?',
     alert_save_draft_note: 'ईमेल सामग्री को ड्राफ़्ट के रूप में सहेजें?',

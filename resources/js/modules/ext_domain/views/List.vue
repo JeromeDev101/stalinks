@@ -1649,8 +1649,40 @@
                     <div class="modal-body relative">
                         <form class="row" action="">
                             <div class="col-md-12">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label style="color: #333">{{ $t('message.url_prospect.et_cat') }}</label>
+                                        <div>
+                                            <select
+                                                v-model="templateTypeAndCategory.category"
+                                                class="form-control">
+
+                                                <option value="none">N/A</option>
+                                                <option v-for="category in templateCategories" :value="category.value">
+                                                    {{ category.label }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label style="color: #333">{{ $t('message.url_prospect.et_type') }}</label>
+                                        <div>
+                                            <select
+                                                v-model="templateTypeAndCategory.type"
+                                                class="form-control pull-right">
+
+                                                <option value="none">N/A</option>
+                                                <option v-for="type in templateTypes" :value="type.value">
+                                                    {{ type.label }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <label style="color: #333">{{ $t('message.url_prospect.se_language') }}</label>
                                         <div>
                                             <select @change="doChangeEmailCountry"
@@ -1662,7 +1694,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label style="color: #333">
                                                 {{ $t('message.url_prospect.se_select_template') }}
@@ -1671,12 +1703,14 @@
 
                                             <div>
                                                 <select
-                                                    @change="doChangeEmailTemplate"
                                                     v-model="mailInfo.tpl"
-                                                    class="form-control pull-right">
+                                                    class="form-control pull-right"
 
-                                                    <option v-for="option in listMailTemplate.data"
-                                                            v-bind:value="option.id">
+                                                    @change="doChangeEmailTemplate">
+
+                                                    <option
+                                                        v-for="option in templateFiltered"
+                                                        v-bind:value="option.id">
                                                         {{ option.mail_name }}
                                                     </option>
                                                 </select>
@@ -2169,6 +2203,11 @@ export default {
 
             sort_options: [],
             isDomainExistListPublisher: false,
+
+            templateTypeAndCategory: {
+                type: '',
+                category: ''
+            },
         };
     },
     async created() {
@@ -2524,6 +2563,70 @@ export default {
                     hidden: !this.tableShow.organic_traffic
                 },
             ]
+        },
+
+        templateCategories () {
+            return [
+                {
+                    label: this.$t('message.template.prospect'),
+                    value: 'prospect'
+                },
+                {
+                    label: this.$t('message.template.follow'),
+                    value: 'follow'
+                },
+            ]
+        },
+
+        templateTypes () {
+            return [
+                {
+                    label: this.$t('message.template.corporate'),
+                    value: 'corporate'
+                },
+                {
+                    label: this.$t('message.template.straight'),
+                    value: 'straight'
+                },
+            ]
+        },
+
+        templateFiltered() {
+            let self = this;
+
+            return (self.templateTypeAndCategory.category === '' && self.templateTypeAndCategory.type === '')
+                ? self.listMailTemplate.data
+                : self.listMailTemplate.data.filter(function(item) {
+                    if (self.templateTypeAndCategory.category && self.templateTypeAndCategory.type === '') {
+
+                        if (self.templateTypeAndCategory.category === 'none') {
+                            return (item['category'] === null);
+                        } else {
+                            return (item['category'] === self.templateTypeAndCategory.category);
+                        }
+
+                    } else if (self.templateTypeAndCategory.type && self.templateTypeAndCategory.category === '') {
+
+                        if (self.templateTypeAndCategory.type === 'none') {
+                            return (item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategory.type);
+                        }
+
+                    } else if (self.templateTypeAndCategory.type && self.templateTypeAndCategory.category) {
+
+                        if (self.templateTypeAndCategory.type === 'none' && self.templateTypeAndCategory.category !== 'none') {
+                            return (item['type'] === null && item['category'] === self.templateTypeAndCategory.category);
+                        } else if (self.templateTypeAndCategory.category === 'none' && self.templateTypeAndCategory.type !== 'none') {
+                            return (item['category'] === null && item['type'] === self.templateTypeAndCategory.type);
+                        } else if (self.templateTypeAndCategory.category === 'none' && self.templateTypeAndCategory.type === 'none') {
+                            return (item['category'] === null && item['type'] === null);
+                        } else {
+                            return (item['type'] === self.templateTypeAndCategory.type && item['category'] === self.templateTypeAndCategory.category);
+                        }
+
+                    }
+                })
         },
     },
     mounted() {

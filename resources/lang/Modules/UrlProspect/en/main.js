@@ -167,6 +167,10 @@ export default {
     swal_err_10: 'Only 10 recipients per email is allowed',
     swal_err_check_email: 'Please check if record has email.',
 
+    // email template
+    et_cat: 'Template Category',
+    et_type: 'Template Type',
+
     // others
     no: 'No',
     yes: 'Yes',

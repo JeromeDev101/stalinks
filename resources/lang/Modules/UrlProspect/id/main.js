@@ -167,6 +167,10 @@ export default {
     swal_err_10: 'Hanya 10 penerima per email yang diperbolehkan',
     swal_err_check_email: 'Silakan periksa apakah arsip memiliki email.',
 
+    // email template
+    et_cat: 'Kategori Templat',
+    et_type: 'Jenis Templat',
+
     // others
     no: 'Tidak',
     yes: 'Ya',

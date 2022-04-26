@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'Bạn có muốn xóa mẫu không ',
 
+    // category
+    prospect: 'Tiềm năng',
+    follow: 'Theo sát',
+
+    // types
+    corporate: 'Công ty',
+    straight: 'Tiến thẳng',
+
+    // alerts
+    alert_saved: 'Đã lưu!',
+    alert_saved_success: 'Đã lưu thành công mẫu email.',
+    alert_updated: 'Đã cập nhật!',
+    alert_updated_success: 'Đã cập nhật thành công mẫu email.',
+
     save: 'Lưu',
     close: 'Đóng',
+    category: 'Danh mục',
+    type: 'Gõ phím',
+    all: 'Tất cả các',
+    export_text: 'Xuất dưới dạng Tài liệu',
+    none: 'Không có',
 }

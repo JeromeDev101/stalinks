@@ -46,6 +46,10 @@ export default {
     cm_attachments: 'Attach files',
     cm_files: ' file(s) attached',
 
+    // categories and types
+    select_cat: 'Select Category',
+    select_type: 'Select Type',
+
     // alerts
     alert_save_draft: 'Save as Draft?',
     alert_save_draft_note: 'Save email contents as draft?',

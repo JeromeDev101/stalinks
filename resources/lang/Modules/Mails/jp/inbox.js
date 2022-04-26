@@ -46,6 +46,10 @@ export default {
     cm_attachments: '添付ファイル',
     cm_files: ' ファイルを添付する',
 
+    // categories and types
+    select_cat: 'カテゴリを選んでください',
+    select_type: 'タイプを選択',
+
     // alerts
     alert_save_draft: '下書きに保存しますか?',
     alert_save_draft_note: 'メールの内容を下書きとして保存しますか？',

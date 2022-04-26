@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'テンプレートを削除しますか ',
 
+    // category
+    prospect: '見込み',
+    follow: 'ファローアップ',
+
+    // types
+    corporate: '企業',
+    straight: 'まっすぐ進む',
+
+    // alerts
+    alert_saved: '保存しました!',
+    alert_saved_success: 'メールテンプレートが正常に保存されました。',
+    alert_updated: '更新しました!',
+    alert_updated_success: 'メールテンプレートが正常に更新されました。',
+
     save: '保存',
     close: '閉じる',
+    category: 'カテゴリー',
+    type: 'タイプ',
+    all: '全て',
+    export_text: 'ドキュメントとしてエクスポート',
+    none: 'なし',
 }

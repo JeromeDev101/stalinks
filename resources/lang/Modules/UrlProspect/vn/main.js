@@ -167,6 +167,10 @@ export default {
     swal_err_10: 'Chỉ cho phép 10 người nhận trên mỗi email',
     swal_err_check_email: 'Vui lòng kiểm tra xem hồ sơ có email không.',
 
+    // email template
+    et_cat: 'Bản mẫu Danh mục',
+    et_type: 'Bản mẫu Gõ phím',
+
     // others
     no: 'Không',
     yes: 'Có',

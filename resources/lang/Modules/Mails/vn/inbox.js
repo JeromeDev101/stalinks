@@ -46,6 +46,10 @@ export default {
     cm_attachments: 'Đính kèm tập tin',
     cm_files: ' tập tin đính kèm',
 
+    // categories and types
+    select_cat: 'Chọn danh mục',
+    select_type: 'Lựa chọn đối tượng',
+
     // alerts
     alert_save_draft: 'Lưu dưới dạng Bản nháp?',
     alert_save_draft_note: 'Lưu nội dung email dưới dạng bản nháp?',

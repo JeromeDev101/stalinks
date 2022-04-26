@@ -167,6 +167,10 @@ export default {
     swal_err_10: '1回のメール送信で受信可能な人数は10人です',
     swal_err_check_email: 'メールが登録されているかを確認してください',
 
+    // email template
+    et_cat: 'テンプレートカテゴリ',
+    et_type: 'テンプレートタイプ',
+
     // others
     no: 'いいえ',
     yes: 'はい',

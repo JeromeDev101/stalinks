@@ -811,7 +811,7 @@
                                         class="form-control form-control-sm pull-right"
                                         :class="templateTypeAndCategory.category === '' ? 'selected-placeholder' : ''">
 
-                                        <option value="">Select Category</option>
+                                        <option value="">{{ $t('message.inbox.select_cat') }}</option>
                                         <option value="none">N/A</option>
                                         <option v-for="category in templateCategories" :value="category.value">
                                             {{ category.label }}
@@ -827,7 +827,7 @@
                                         class="form-control form-control-sm pull-right"
                                         :class="templateTypeAndCategory.type === '' ? 'selected-placeholder' : ''">
 
-                                        <option value="">Select Type</option>
+                                        <option value="">{{ $t('message.inbox.select_type') }}</option>
                                         <option value="none">N/A</option>
                                         <option v-for="type in templateTypes" :value="type.value">
                                             {{ type.label }}
@@ -1073,7 +1073,7 @@
                                         class="form-control form-control-sm pull-right"
                                         :class="templateTypeAndCategoryReply.category === '' ? 'selected-placeholder' : ''">
 
-                                        <option value="">Select Category</option>
+                                        <option value="">{{ $t('message.inbox.select_cat') }}</option>
                                         <option value="none">N/A</option>
                                         <option v-for="category in templateCategories" :value="category.value">
                                             {{ category.label }}
@@ -1089,7 +1089,7 @@
                                         class="form-control form-control-sm pull-right"
                                         :class="templateTypeAndCategoryReply.type === '' ? 'selected-placeholder' : ''">
 
-                                        <option value="">Select Type</option>
+                                        <option value="">{{ $t('message.inbox.select_type') }}</option>
                                         <option value="none">N/A</option>
                                         <option v-for="type in templateTypes" :value="type.value">
                                             {{ type.label }}
@@ -1540,28 +1540,6 @@ export default {
                 type: '',
                 category: ''
             },
-
-            templateCategories: [
-                {
-                    label: 'Prospect',
-                    value: 'prospect'
-                },
-                {
-                    label: 'Follow up',
-                    value: 'follow'
-                },
-            ],
-
-            templateTypes: [
-                {
-                    label: 'Corporate',
-                    value: 'corporate'
-                },
-                {
-                    label: 'Straight Forward',
-                    value: 'straight'
-                },
-            ]
         }
     },
 
@@ -1593,6 +1571,32 @@ export default {
             }
 
             return routeNames[this.$route.name];
+        },
+
+        templateCategories () {
+            return [
+                {
+                    label: this.$t('message.template.prospect'),
+                    value: 'prospect'
+                },
+                {
+                    label: this.$t('message.template.follow'),
+                    value: 'follow'
+                },
+            ]
+        },
+
+        templateTypes () {
+            return [
+                {
+                    label: this.$t('message.template.corporate'),
+                    value: 'corporate'
+                },
+                {
+                    label: this.$t('message.template.straight'),
+                    value: 'straight'
+                },
+            ]
         },
 
         templateFiltered() {

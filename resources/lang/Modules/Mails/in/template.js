@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'क्या आप टेम्प्लेट हटाना चाहते हैं ',
 
+    // category
+    prospect: 'आशा',
+    follow: 'आगे की कार्रवाई करना',
+
+    // types
+    corporate: 'निगमित',
+    straight: 'सीधा',
+
+    // alerts
+    alert_saved: 'बचाया!',
+    alert_saved_success: 'ईमेल टेम्प्लेट सफलतापूर्वक सहेजा गया.',
+    alert_updated: 'अद्यतन!',
+    alert_updated_success: 'ईमेल टेम्प्लेट सफलतापूर्वक अपडेट किया गया.',
+
     save: 'सहेजें',
     close: 'बंद करना',
+    category: 'श्रेणी',
+    type: 'प्रकार',
+    all: 'सभी',
+    export_text: 'दस्तावेज़ के रूप में निर्यात करें',
+    none: 'कोई भी नहीं',
 }

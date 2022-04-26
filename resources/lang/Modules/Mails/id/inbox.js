@@ -46,6 +46,10 @@ export default {
     cm_attachments: 'Lampirkan file',
     cm_files: ' file terlampir',
 
+    // categories and types
+    select_cat: 'Pilih Kategori',
+    select_type: 'Pilih tipe',
+
     // alerts
     alert_save_draft: 'Simpan sebagai draf?',
     alert_save_draft_note: 'Simpan konten email sebagai draf?',

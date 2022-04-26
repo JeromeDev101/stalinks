@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'คุณต้องการลบเทมเพลตหรือไม่? ',
 
+    // category
+    prospect: 'อนาคต',
+    follow: 'ติดตาม',
+
+    // types
+    corporate: 'ขององค์กร',
+    straight: 'ตรงไปตรงมา',
+
+    // alerts
+    alert_saved: 'บันทึกแล้ว!',
+    alert_saved_success: 'บันทึกเทมเพลตอีเมลเรียบร้อยแล้ว',
+    alert_updated: 'อัพเดท!',
+    alert_updated_success: 'อัปเดตเทมเพลตอีเมลเรียบร้อยแล้ว',
+
     save: 'บันทึก',
     close: 'ปิด ',
+    category: 'หมวดหมู่',
+    type: 'พิมพ์',
+    all: 'ทั้งหมด',
+    export_text: 'ส่งออกเป็น Doc',
+    none: 'ไม่มี',
 }

@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'Do you want to delete template ',
 
+    // category
+    prospect: 'Prospect',
+    follow: 'Follow up',
+
+    // types
+    corporate: 'Corporate',
+    straight: 'Straight Forward',
+
+    // alerts
+    alert_saved: 'Saved!',
+    alert_saved_success: 'Email template successfully saved.',
+    alert_updated: 'Updated!',
+    alert_updated_success: 'Email template successfully updated.',
+
     save: 'Save',
     close: 'Close',
+    category: 'Category',
+    type: 'Type',
+    all: 'All',
+    export_text: 'Export as Doc',
+    none: 'None',
 }

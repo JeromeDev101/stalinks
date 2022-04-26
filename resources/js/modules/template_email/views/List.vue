@@ -36,8 +36,8 @@
                                 <tbody>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Category</th>
-                                    <th>Type</th>
+                                    <th>{{ $t('message.template.category') }}</th>
+                                    <th>{{ $t('message.template.type') }}</th>
                                     <th>{{ $t('message.template.ml_name') }}</th>
                                     <th>{{ $t('message.template.ml_ip_title') }}</th>
                                     <th>{{ $t('message.template.ml_lang') }}</th>
@@ -49,7 +49,7 @@
                                     <td>
                                         <div class="input-group input-group-sm">
                                             <select v-model="filterModel.category_temp" class="form-control pull-right">
-                                                <option value="">All</option>
+                                                <option value="">{{ $t('message.template.all') }}</option>
                                                 <option value="none">N/A</option>
                                                 <option v-for="category in categories" :value="category.value">
                                                     {{ category.label }}
@@ -60,7 +60,7 @@
                                     <td>
                                         <div class="input-group input-group-sm">
                                             <select v-model="filterModel.type_temp" class="form-control pull-right">
-                                                <option value="">All</option>
+                                                <option value="">{{ $t('message.template.all') }}</option>
                                                 <option value="none">N/A</option>
                                                 <option v-for="type in types" :value="type.value">
                                                     {{ type.label }}
@@ -140,7 +140,7 @@
                                     <td>{{ (item.language) ? item.language.name : '' }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <button @click="Export2Word(item, item.title)" class="btn btn-default">Export as Doc</button>
+                                            <button @click="Export2Word(item, item.title)" class="btn btn-default">{{ $t('message.template.export_text') }}</button>
                                             <button
                                                 @click="doEdit(item)"
                                                 data-toggle="modal"
@@ -241,11 +241,11 @@
                             </div>
 
                             <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
-                                <label style="color: #333">Category</label>
+                                <label style="color: #333">{{ $t('message.template.category') }}</label>
 
                                 <div>
                                     <select v-model="emailModel.category" class="form-control pull-right">
-                                        <option value="">None</option>
+                                        <option value="">{{ $t('message.template.none') }}</option>
                                         <option v-for="category in categories" :value="category.value">
                                             {{ category.label }}
                                         </option>
@@ -254,11 +254,11 @@
                             </div>
 
                             <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
-                                <label style="color: #333">Type</label>
+                                <label style="color: #333">{{ $t('message.template.type') }}</label>
 
                                 <div>
                                     <select v-model="emailModel.type" class="form-control pull-right">
-                                        <option value="">None</option>
+                                        <option value="">{{ $t('message.template.none') }}</option>
                                         <option v-for="type in types" :value="type.value">
                                             {{ type.label }}
                                         </option>
@@ -379,11 +379,11 @@
                             </div>
 
                             <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
-                                <label style="color: #333">Category</label>
+                                <label style="color: #333">{{ $t('message.template.category') }}</label>
 
                                 <div>
                                     <select v-model="emailUpdate.category" class="form-control pull-right">
-                                        <option value="null">None</option>
+                                        <option value="null">{{ $t('message.template.none') }}</option>
                                         <option v-for="category in categories" :value="category.value">
                                             {{ category.label }}
                                         </option>
@@ -392,11 +392,11 @@
                             </div>
 
                             <div class="col-md-6 mb-3" v-if="user.isOurs === 0">
-                                <label style="color: #333">Type</label>
+                                <label style="color: #333">{{ $t('message.template.type') }}</label>
 
                                 <div>
                                     <select v-model="emailUpdate.type" class="form-control pull-right">
-                                        <option value="null">None</option>
+                                        <option value="null">{{ $t('message.template.none') }}</option>
                                         <option v-for="type in types" :value="type.value">
                                             {{ type.label }}
                                         </option>
@@ -514,28 +514,6 @@
                 listPageOptions: [5, 10, 25, 50, 100],
                 isLoadingTable: false,
                 isPopupLoading: false,
-
-                categories: [
-                    {
-                        label: 'Prospect',
-                        value: 'prospect'
-                    },
-                    {
-                        label: 'Follow up',
-                        value: 'follow'
-                    },
-                ],
-
-                types: [
-                    {
-                        label: 'Corporate',
-                        value: 'corporate'
-                    },
-                    {
-                        label: 'Straight Forward',
-                        value: 'straight'
-                    },
-                ]
             };
         },
 
@@ -574,6 +552,32 @@
                     }
                 }
             },
+
+            categories () {
+                return [
+                    {
+                        label: this.$t('message.template.prospect'),
+                        value: 'prospect'
+                    },
+                    {
+                        label: this.$t('message.template.follow'),
+                        value: 'follow'
+                    },
+                ]
+            },
+
+            types () {
+                return [
+                    {
+                        label: this.$t('message.template.corporate'),
+                        value: 'corporate'
+                    },
+                    {
+                        label: this.$t('message.template.straight'),
+                        value: 'straight'
+                    },
+                ]
+            }
         },
 
         methods: {
@@ -735,14 +739,16 @@
                     });
 
                     await swal.fire(
-                        'Saved!',
-                        'Email template successfully saved.',
+                        that.$t('message.template.alert_saved'),
+                        that.$t('message.template.alert_saved_success'),
                         'success'
                     )
                 }
             },
 
             async submitUpdate() {
+                let self = this;
+
                 this.isPopupLoading = true;
                 await this.$store.dispatch('actionUpdateEmailTemplate', this.emailUpdate);
                 this.isPopupLoading = false;
@@ -763,8 +769,8 @@
                     }
 
                     await swal.fire(
-                        'Updated!',
-                        'Email template successfully updated.',
+                        self.$t('message.template.alert_updated'),
+                        self.$t('message.template.alert_updated_success'),
                         'success'
                     )
                 }
@@ -779,9 +785,11 @@
             },
 
             getCategoryLabel (category) {
+                let self = this;
+
                 let categories = {
-                    prospect:  'Prospect',
-                    follow: 'Follow up'
+                    prospect:  self.$t('message.template.prospect'),
+                    follow: self.$t('message.template.follow')
                 }
 
                 return category ? categories[category] : 'N/A';
@@ -796,9 +804,11 @@
             },
 
             getTypeLabel (type) {
+                let self = this;
+
                 let types = {
-                    corporate:  'Corporate',
-                    straight: 'Straight Forward'
+                    corporate:  self.$t('message.template.corporate'),
+                    straight: self.$t('message.template.straight')
                 }
 
                 return type ? types[type] : 'N/A';

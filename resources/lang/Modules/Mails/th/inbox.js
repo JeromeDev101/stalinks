@@ -46,6 +46,10 @@ export default {
     cm_attachments: 'แนบไฟล์',
     cm_files: ' ไฟล์แนบ',
 
+    // categories and types
+    select_cat: 'เลือกประเภท',
+    select_type: 'เลือกประเภท',
+
     // alerts
     alert_save_draft: 'บันทึกฉบับร่าง',
     alert_save_draft_note: 'บันทึกเนื้อหาอีเมลเป็นฉบับร่างหรือไม่?',

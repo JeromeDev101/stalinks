@@ -31,6 +31,25 @@ export default {
     // delete template
     dl_info: 'Apakah Anda ingin menghapus template ',
 
+    // category
+    prospect: 'Prospek',
+    follow: 'Menindaklanjuti',
+
+    // types
+    corporate: 'Perusahaan',
+    straight: 'Lurus ke Depan',
+
+    // alerts
+    alert_saved: 'Diselamatkan!',
+    alert_saved_success: 'Template email berhasil disimpan.',
+    alert_updated: 'Diperbarui!',
+    alert_updated_success: 'Template email berhasil diperbarui.',
+
     save: 'Menyimpan',
     close: 'Tutup',
+    category: 'Kategori',
+    type: 'Jenis',
+    all: 'Semua',
+    export_text: 'Ekspor sebagai Doc',
+    none: 'Tidak ada',
 }
