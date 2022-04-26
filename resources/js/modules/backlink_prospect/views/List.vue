@@ -672,6 +672,7 @@ export default {
     methods : {
 
         excelExportData() {
+            this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
             axios.get('/api/backlink-prospect', {
                 params : {
                     referring_domain : this.filterModel.referring_domain,
@@ -764,6 +765,8 @@ export default {
         },
 
         getBacklinkProspect(page = 1) {
+            this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
+            
             axios.get('/api/backlink-prospect', {
                 params : {
                     referring_domain : this.filterModel.referring_domain,
