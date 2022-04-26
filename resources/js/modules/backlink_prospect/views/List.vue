@@ -171,8 +171,30 @@
                         <div class="row mb-3">
                             <div class="col-md-2">
                                 <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                                <button class="btn btn-default" @click="getBacklinkProspect()">Search <i v-if="false" class="fa fa-refresh fa-spin"></i>
+                                <button class="btn btn-default" @click="getBacklinkProspect(); excelExportData();">Search <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3 col-xs-6" v-for="option in total_summary" :key="option.status">
+                                <!-- small box -->
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3>{{ option.total }}</h3>
+                                        <p>{{ option.status }}</p>
+                                    </div>
+                                    <div class="icon">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -532,6 +554,8 @@ export default {
                 status: '',
                 note: '',
             },
+
+            total_summary: [],
         }
     },
 
@@ -691,7 +715,37 @@ export default {
                 }
             }).then((res) => {
                 this.backinkProspectListExport = res.data
+                this.summaryTotal();
+
+                console.log(this.total_summary)
             })
+        },
+
+        summaryTotal() {
+            let _obj = [];
+            let _prop = {};
+            for(let i in this.status1) {
+                _prop = {
+                    "status": this.status1[i],
+                    "total": this.computeTotal(this.status1[i])
+                }
+
+                _obj.push(_prop)
+            }
+
+            this.total_summary = _obj
+        },
+
+        computeTotal(stat) {
+            let total = 0;
+            let arr = [];
+            for(let i in this.backinkProspectListExport.data) {
+                if(stat === this.backinkProspectListExport.data[i].status) {
+                    arr.push(this.backinkProspectListExport.data[i].status)
+                }
+            }
+
+            return arr.length > 0 ? arr.length:total;
         },
 
         moveToUrlProspect(backlink_prospect) {
@@ -868,6 +922,7 @@ export default {
 
             this.$router.replace({'query' : null});
             this.getBacklinkProspect();
+            this.excelExportData();
         },
 
         selectAll() {
