@@ -627,13 +627,11 @@
                 that.filterModel.type = '';
                 that.filterModel.type_temp = '';
 
-                this.$router.push({
-                    query: that.filterModel,
-                });
-
                 this.getEmailList({
                     params: that.filterModel
                 });
+
+                this.$router.replace({'query' : null});
             },
 
             Export2Word(element, filename = ''){
@@ -740,7 +738,7 @@
 
                 if (this.messageForms.action === 'saved_template') {
                     this.clearModel();
-                    this.getEmailList({
+                    await this.getEmailList({
                         params: this.filterModel
                     });
 
@@ -760,19 +758,10 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_tpl') {
-                    for (var index in this.emailList.data) {
-                        if (this.emailList.data[index].id === this.emailUpdate.id) {
-                            this.emailList.data[index] = this.emailUpdate;
 
-                            for (var indct in this.countryList.data) {
-                                if (this.countryList.data[indct].id === this.emailUpdate.country_id) {
-                                    this.emailList.data[index].country = this.countryList.data[indct];
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
+                    await this.getEmailList({
+                        params: this.filterModel
+                    });
 
                     await swal.fire(
                         self.$t('message.template.alert_updated'),
