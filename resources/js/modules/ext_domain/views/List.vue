@@ -1734,7 +1734,6 @@
 
                                     <vue-tags-input
                                         v-model="email_to"
-                                        :disabled="true"
                                         :separators="separators"
                                         :tags="urlEmails"
                                         :class="{'vue-tag-error': messageFormsMail.errors.email}"
