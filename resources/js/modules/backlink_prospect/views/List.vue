@@ -187,12 +187,13 @@
                         <div class="row">
                             <div class="col-lg-3 col-xs-6" v-for="option in total_summary" :key="option.status">
                                 <!-- small box -->
-                                <div class="small-box bg-info">
+                                <div :class="option.bg_color">
                                     <div class="inner">
                                         <h3>{{ option.total }}</h3>
                                         <p>{{ option.status }}</p>
                                     </div>
                                     <div class="icon">
+                                        <i :class="option.icon"></i>
                                     </div>
                                 </div>
                             </div>
@@ -717,21 +718,37 @@ export default {
                 this.backinkProspectListExport = res.data
                 this.summaryTotal();
 
-                console.log(this.total_summary)
             })
         },
 
         summaryTotal() {
             let _obj = [];
+            let total = [];
             let _prop = {};
+            let total_val = 0;
+            let icons = ['fa fa-bell', 'fa fa-check', 'fa fa-thumbs-down', 'fa fa-exclamation', 'fa fa-envelope', 'fa fa-user'];
+            let bg_colors = ['small-box bg-info', 'small-box bg-green', 'small-box bg-danger', 'small-box bg-warning', 'small-box bg-olive', 'small-box bg-gradient-purple'];
             for(let i in this.status1) {
                 _prop = {
                     "status": this.status1[i],
-                    "total": this.computeTotal(this.status1[i])
+                    "total": this.computeTotal(this.status1[i]),
+                    "icon": icons[i],
+                    "bg_color": bg_colors[i]
                 }
 
+                total.push(this.computeTotal(this.status1[i]))
                 _obj.push(_prop)
             }
+
+            total_val = total.reduce((partialSum, a) => partialSum + a, 0);
+
+            _obj = Object.assign({6:{
+                "status": "Total URLs",
+                "total": total_val,
+                "icon": "fa fa-link",
+                "bg_color": "small-box bg-gradient-teal"
+            }}, _obj)
+
 
             this.total_summary = _obj
         },
