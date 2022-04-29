@@ -324,10 +324,10 @@
                                     :id="scope.row.id"
                                     v-model="checkIds">
 
-                                
+
                             </template>
 
-                            <template  
+                            <template
                                 slot-scope="scope"
                                 slot="actionStatusProspect">
                             {{ scope.row.prospect != null ? listStatusText[scope.row.prospect.status].text:'' }}
@@ -341,16 +341,16 @@
                                         data-toggle="modal"
                                         @click="doUpdate(scope.row)" data-target="#modal-update-backlink_prospect" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
 
-                                    <button 
+                                    <button
                                         class="btn btn-default"
-                                        title="Move to URL Prospect" 
+                                        title="Move to URL Prospect"
                                         @click="moveToUrlProspect(scope.row)"
-                                        v-show="scope.row.status === 'To be contacted' || scope.row.status === 'Free Submission'" 
+                                        v-show="scope.row.status === 'To be contacted' || scope.row.status === 'Free Submission'"
                                         :disabled="scope.row.is_moved === 1"
                                     >
                                         <i class="fa fa-fw fa-share"></i>
                                     </button>
-                                
+
                                 </div>
                             </template>
 
@@ -366,7 +366,7 @@
             </div>
         </div>
 
-        
+
         <!-- Modal Edit Backlink Prospect -->
         <div class="modal fade" id="modal-update-backlink_prospect" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -423,7 +423,7 @@
             </div>
         </div>
         <!-- End of Modal Edit Backlink Prospect -->
-  
+
         <!-- Modal Edit Multiple -->
         <div class="modal fade" id="modalEditMultipleProspect" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -740,9 +740,20 @@ export default {
                 _obj.push(_prop)
             }
 
-            total_val = total.reduce((partialSum, a) => partialSum + a, 0);
+            // contacted via form
 
             _obj = Object.assign({6:{
+                    "status": "Contacted Via Form",
+                    "total": this.computeTotal('Contacted Via Form'),
+                    "icon": "fas fa-newspaper",
+                    "bg_color": "small-box bg-gradient-orange"
+                }}, _obj)
+
+            total.push(this.computeTotal('Contacted Via Form'))
+
+            total_val = total.reduce((partialSum, a) => partialSum + a, 0);
+
+            _obj = Object.assign({7:{
                 "status": "Total URLs",
                 "total": total_val,
                 "icon": "fa fa-link",
@@ -785,7 +796,7 @@ export default {
                         'success'
                     )
                 }
-                    
+
 
                 this.getBacklinkProspect();
             })
@@ -837,7 +848,7 @@ export default {
 
         getBacklinkProspect(page = 1) {
             this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
-            
+
             axios.get('/api/backlink-prospect', {
                 params : {
                     referring_domain : this.filterModel.referring_domain,
@@ -870,7 +881,7 @@ export default {
                     'Please select first',
                     'error'
                 )
-            }  
+            }
         },
 
         saveMultiple() {
@@ -976,8 +987,8 @@ export default {
                     'Please select first',
                     'error'
                 )
-            }  
-                
+            }
+
         },
 
         downloadTemplate() {
