@@ -10,6 +10,38 @@
             </div><!-- /.container-fluid -->
         </div>
 
+        <div v-if="Object.keys(extListTotals).length !== 0" class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box rounded bg-aqua">
+                    <div class="inner">
+                        <h3>{{ listExt.total }}</h3>
+                        <p>Total URL's</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div v-for="total in extListStatusTotals" class="col-lg-3 col-6">
+                <div class="small-box rounded" :class="total.badge">
+                    <div class="inner">
+                        <h3>{{ total.total }}</h3>
+                        <p>
+                            {{ total.text }}
+
+                            <span>
+                                ({{ total.percentage }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i :class="total.icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
@@ -548,9 +580,9 @@
                                 </template>
 
                                 <template slot-scope="scope" slot="statusData">
-                                    <span :class="['badge', 'badge-' + (listStatusText[scope.row.status]
+                                    <span :class="['badge', (listStatusText[scope.row.status]
                                      ? listStatusText[scope.row.status].label
-                                     : 'warning')]">
+                                     : 'bg-warning')]">
                                         {{
                                             listStatusText[scope.row.status]
                                                 ? listStatusText[scope.row.status].text
@@ -2207,6 +2239,8 @@ export default {
                 type: '',
                 category: ''
             },
+
+            extListTotals: [],
         };
     },
     async created() {
@@ -2234,6 +2268,7 @@ export default {
         this.getListSellerTeam();
         this.getListLanguages();
         this.getListDomainZones();
+        await this.getExtListTotals();
     },
     computed : {
         ...mapState({
@@ -2627,6 +2662,108 @@ export default {
                     }
                 })
         },
+
+        extListStatusTotals () {
+            let self = this;
+
+             return [
+                 {
+                     text: 'New',
+                     total: self.extListTotals['New'],
+                     badge: 'bg-primary',
+                     icon: 'fas fa-asterisk',
+                     percentage: self.calculatePercentage(self.extListTotals['New'])
+                 },
+
+                 {
+                     text: 'Crawl Failed',
+                     total: self.extListTotals['CrawlFailed'],
+                     badge: 'bg-danger',
+                     icon: 'fas fa-times-circle',
+                     percentage: self.calculatePercentage(self.extListTotals['CrawlFailed'])
+                 },
+
+                 {
+                     text: 'Contacted',
+                     total: self.extListTotals['Contacted'],
+                     badge: 'bg-success',
+                     icon: 'fas fa-check-circle',
+                     percentage: self.calculatePercentage(self.extListTotals['Contacted'])
+                 },
+
+                 {
+                     text: 'Contacted Via Form',
+                     total: self.extListTotals['ContactedViaForm'],
+                     badge: 'bg-secondary',
+                     icon: 'fab fa-wpforms',
+                     percentage: self.calculatePercentage(self.extListTotals['ContactedViaForm'])
+                 },
+
+                 {
+                     text: 'Contact Null',
+                     total: self.extListTotals['ContactNull'],
+                     badge: 'bg-warning',
+                     icon: 'fas fa-comment-slash',
+                     percentage: self.calculatePercentage(self.extListTotals['ContactNull'])
+                 },
+
+                 {
+                     text: 'Got Contacts',
+                     total: self.extListTotals['GotContacts'],
+                     badge: 'bg-gradient-teal',
+                     icon: 'fas fa-address-card',
+                     percentage: self.calculatePercentage(self.extListTotals['GotContacts'])
+                 },
+
+                 {
+                     text: 'Got Email',
+                     total: self.extListTotals['GotEmail'],
+                     badge: 'bg-cyan',
+                     icon: 'fas fa-at',
+                     percentage: self.calculatePercentage(self.extListTotals['GotEmail'])
+                 },
+
+                 {
+                     text: 'No Answer',
+                     total: self.extListTotals['NoAnswer'],
+                     badge: 'bg-orange',
+                     icon: 'fas fa-phone-slash',
+                     percentage: self.calculatePercentage(self.extListTotals['NoAnswer'])
+                 },
+
+                 {
+                     text: 'Refused',
+                     total: self.extListTotals['Refused'],
+                     badge: 'bg-maroon',
+                     icon: 'fas fa-handshake-alt-slash',
+                     percentage: self.calculatePercentage(self.extListTotals['Refused'])
+                 },
+
+                 {
+                     text: 'In Touched',
+                     total: self.extListTotals['InTouched'],
+                     badge: 'bg-purple',
+                     icon: 'fas fa-comments',
+                     percentage: self.calculatePercentage(self.extListTotals['InTouched'])
+                 },
+
+                 {
+                     text: 'Unqualified',
+                     total: self.extListTotals['Unqualified'],
+                     badge: 'bg-dark',
+                     icon: 'fas fa-ban',
+                     percentage: self.calculatePercentage(self.extListTotals['Unqualified'])
+                 },
+
+                 {
+                     text: 'Qualified',
+                     total: self.extListTotals['Qualified'],
+                     badge: 'bg-olive',
+                     icon: 'fas fa-certificate',
+                     percentage: self.calculatePercentage(self.extListTotals['Qualified'])
+                 },
+             ];
+        }
     },
     mounted() {
         let that = this;
@@ -2987,6 +3124,27 @@ export default {
             this.isResultCrawled = false;
             loader.hide();
         },
+
+        getExtListTotals () {
+            axios.get('/api/ext-totals', {
+                params: this.filterModel
+            })
+            .then((res) => {
+                this.extListTotals = res.data
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        },
+
+        calculatePercentage (number) {
+            if (this.listExt.total === 0) {
+                return 0;
+            } else {
+                return ((number / this.listExt.total) * 100).toFixed(2);
+            }
+        },
+
         async doSearchList() {
             let that = this;
             that.filterModel.country_id = that.filterModel.country_id_temp;
@@ -3020,6 +3178,8 @@ export default {
                     from : that.filterModel.from
                 }
             });
+
+            this.getExtListTotals()
         },
         async goToPage(pageNum) {
             let that = this;
@@ -3894,6 +4054,8 @@ export default {
             this.getExtList({
                 params : this.filterModel
             });
+
+            this.getExtListTotals()
 
             this.$refs.sortComponent.resetSort();
 

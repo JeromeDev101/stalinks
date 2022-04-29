@@ -189,6 +189,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-get-alexa')->post('/ext/alexa', 'ExtDomainController@getAlexaLink');
     Route::name('ext-get-ahrefs')->put('/ext/ahrefs', 'ExtDomainController@getAhrefs');
     Route::name('ext-get')->get('/ext', 'ExtDomainController@getList');
+    Route::name('ext-totals')->get('/ext-totals', 'ExtDomainController@getListTotals');
     Route::name('ext-create')->post('/ext', 'ExtDomainController@store');
     Route::name('ext-update-status')->put('/ext/status', 'ExtDomainController@updateStatus');
     Route::name('ext-update')->put('/ext', 'ExtDomainController@update');
