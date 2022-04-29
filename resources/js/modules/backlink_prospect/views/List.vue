@@ -526,6 +526,8 @@ export default {
                 'Hosting Expired',
                 'Free Submission',
                 'To be contacted',
+                'Contacted',
+                'Contacted Via Form',
             ],
             status2: [
                 'Contacted',
@@ -722,12 +724,31 @@ export default {
         },
 
         summaryTotal() {
+            let self = this;
             let _obj = [];
             let total = [];
             let _prop = {};
             let total_val = 0;
-            let icons = ['fa fa-bell', 'fa fa-check', 'fa fa-thumbs-down', 'fa fa-exclamation', 'fa fa-envelope', 'fa fa-user'];
-            let bg_colors = ['small-box bg-info', 'small-box bg-green', 'small-box bg-danger', 'small-box bg-warning', 'small-box bg-olive', 'small-box bg-gradient-purple'];
+            let icons = [
+                'fa fa-bell',
+                'fa fa-check',
+                'fa fa-thumbs-down',
+                'fa fa-exclamation',
+                'fa fa-envelope',
+                'fa fa-user',
+                'fas fa-envelope-open-text',
+                'fas fa-newspaper',
+            ];
+            let bg_colors = [
+                'small-box bg-info',
+                'small-box bg-green',
+                'small-box bg-danger',
+                'small-box bg-warning',
+                'small-box bg-olive',
+                'small-box bg-gradient-purple',
+                'small-box bg-navy',
+                'small-box bg-gradient-orange'
+            ];
             for(let i in this.status1) {
                 _prop = {
                     "status": this.status1[i],
@@ -740,26 +761,25 @@ export default {
                 _obj.push(_prop)
             }
 
-            // contacted via form
+            // total_val = total.reduce((partialSum, a) => partialSum + a, 0);
+            //
+            // _obj = Object.assign({8:{
+            //     "status": "Total URLs",
+            //     "total": total_val,
+            //     "icon": "fa fa-link",
+            //     "bg_color": "small-box bg-gradient-teal"
+            // }}, _obj)
 
-            _obj = Object.assign({6:{
-                    "status": "Contacted Via Form",
-                    "total": this.computeTotal('Contacted Via Form'),
-                    "icon": "fas fa-newspaper",
-                    "bg_color": "small-box bg-gradient-orange"
-                }}, _obj)
+            // total urls
 
-            total.push(this.computeTotal('Contacted Via Form'))
-
-            total_val = total.reduce((partialSum, a) => partialSum + a, 0);
-
-            _obj = Object.assign({7:{
+            let temp_total = {
                 "status": "Total URLs",
-                "total": total_val,
+                "total": self.backinkProspectListExport.total,
                 "icon": "fa fa-link",
                 "bg_color": "small-box bg-gradient-teal"
-            }}, _obj)
+            }
 
+            _obj.unshift(temp_total);
 
             this.total_summary = _obj
         },
