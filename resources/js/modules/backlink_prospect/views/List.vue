@@ -867,6 +867,7 @@ export default {
         },
 
         getBacklinkProspect(page = 1) {
+            let loader = this.$loading.show();
             this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
 
             axios.get('/api/backlink-prospect', {
@@ -887,6 +888,7 @@ export default {
                 }
             }).then((res) => {
                 this.backinkProspectList = res.data
+                loader.hide();
             })
         },
 
