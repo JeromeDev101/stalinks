@@ -1,3 +1,15 @@
+// profile
+import profile from './Profile/th/main';
+
+// surveys
+import buyer_survey from './Survey/th/buyer';
+import seller_survey from './Survey/th/seller';
+import writer_survey from './Survey/th/writer';
+
+// subscription
+import subscription from './Subscription/th/main';
+
+// help
 import help from './Help/th/main';
 import buyer_1 from './Help/th/buyer_1';
 import buyer_2 from './Help/th/buyer_2';
@@ -71,6 +83,18 @@ import purchase from './Purchase/th/main';
 
 export default {
     message : {
+        // profile
+        profile,
+
+        // surveys
+        buyer_survey,
+        seller_survey,
+        writer_survey,
+
+        // subscription
+        subscription,
+
+        // help
         help,
         buyer_1,
         buyer_2,

@@ -5,7 +5,7 @@
                 <!-- USERS LIST -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Avatar</h3>
+                        <h3 class="box-title">{{ $t('message.profile.p_avatar') }}</h3>
                     </div>
                     <div class="box-body no-padding">
                         <ul class="users-list avatar clearfix">
@@ -13,7 +13,7 @@
                                 <img v-bind:src="user.avatar ? user.avatar : defaultAvatar" alt="User Image" class="img-fluid avatar-img">
                             </li>
                             <li>
-                                <label>Username</label>
+                                <label>{{ $t('message.profile.p_username') }}</label>
                                 <h3>{{ user.username }}</h3>
                             </li>
                             <li>
@@ -23,16 +23,18 @@
                                            ref="photo"
                                            accept="image/png, image/gif, image/jpeg"
                                            name="photo">
-                                <button class="btn btn-block btn-default btn-sm" @click="submitUpload">Upload photo</button>
+                                <button class="btn btn-block btn-default btn-sm" @click="submitUpload">
+                                    {{ $t('message.profile.p_upload_photo') }}
+                                </button>
                             </li>
                             <li>
                                 <p>
-                                    By registering with us, you have read and accepted the
+                                    {{ $t('message.profile.p_terms_1') }}
                                     <a
                                         href="#"
                                         data-toggle="modal"
                                         data-target="#modalTermsAndCondition">
-                                        Terms and Conditions
+                                        {{ $t('message.profile.p_terms_2') }}
                                     </a>
                                 </p>
                             </li>
@@ -45,122 +47,122 @@
             <div class="col-sm-9">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Information</h3>
-                        <h3 class="box-title"  v-if="currentUser.isOurs == 0">[Team]</h3>
-                        <h3 class="box-title"  v-if="currentUser.isOurs == 1">[Registration Account]</h3>
+                        <h3 class="box-title">{{ $t('message.profile.p_info') }}</h3>
+                        <h3 class="box-title"  v-if="currentUser.isOurs == 0">[{{ $t('message.profile.p_team') }}]</h3>
+                        <h3 class="box-title"  v-if="currentUser.isOurs == 1">[{{ $t('message.profile.p_registration') }}]</h3>
                     </div>
                     <div class="box-body no-padding">
                         <div class="table-responsive">
                             <table class="table no-margin">
                                 <tbody>
                                 <tr>
-                                    <td><b>Name</b></td>
+                                    <td><b>{{ $t('message.profile.p_name') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
-                                            <input type="text" v-model="user.name" class="form-control" value="" required="required" placeholder="Enter Name">
+                                            <input type="text" v-model="user.name" class="form-control" value="" required="required" :placeholder="$t('message.registration.ph4')">
                                             <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Email</b></td>
+                                    <td><b>{{ $t('message.profile.p_email') }}</b></td>
                                     <td>
                                         <input type="text" class="form-control" v-model="user.email" :disabled="true">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Phone</b></td>
+                                    <td><b>{{ $t('message.profile.p_phone') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}" class="form-group">
-                                            <input type="text" v-model="user.phone" class="form-control" value="" required="required" placeholder="Enter Phone">
+                                            <input type="text" v-model="user.phone" class="form-control" value="" required="required" :placeholder="$t('message.profile.p_enter_phone')">
                                             <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 0">
-                                    <td><b>Role</b></td>
+                                    <td><b>{{ $t('message.profile.p_role') }}</b></td>
                                     <td>{{ user.role ? user.role.name : null }}</td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1">
-                                    <td><b>Type</b></td>
+                                    <td><b>{{ $t('message.profile.p_type') }}</b></td>
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
-                                    <td><b>Pricing Type</b></td>
+                                    <td><b>{{ $t('message.profile.p_pricing_type') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
                                             <select class="form-control" disabled>
-                                                <option value="ppw">Pay Per Words (PPW)</option>
-                                                <option value="ppa">Pay Per Article (PPA)</option>
+                                                <option value="ppw">{{ $t('message.profile.p_ppw') }}</option>
+                                                <option value="ppa">{{ $t('message.profile.p_ppa') }}</option>
                                             </select>
                                             <span v-if="messageForms.errors.rate_type" class="text-danger">
-                                                The Pricing Type field is required.
+                                                {{ $t('message.profile.p_pt_req') }}
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
-                                    <td><b>Writer Price (USD)</b></td>
+                                    <td><b>{{ $t('message.profile.p_writer_price') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
-                                            <input type="number" class="form-control" disabled value="" required="required" placeholder="Enter Price">
+                                            <input type="number" class="form-control" disabled value="" required="required" :placeholder="$t('message.profile.p_enter_price')">
                                             <span
                                                 v-if="messageForms.errors.writer_price"
                                                 class="text-danger">
-                                                The Writer Price field is required.
+                                                {{ $t('message.profile.p_price_error') }}
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1">
-                                    <td><b>Company Type</b></td>
+                                    <td><b>{{ $t('message.profile.p_company_type') }}</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_type}" class="form-group">
                                             <select class="form-control"  v-model="company_type" @click="checkCompanyType()">
-                                                <option value="Company">Company</option>
-                                                <option value="Freelancer">Freelancer</option>
+                                                <option value="Company">{{ $t('message.profile.p_company') }}</option>
+                                                <option value="Freelancer">{{ $t('message.profile.p_freelancer') }}</option>
                                             </select>
                                             <span v-if="messageForms.errors.company_type" v-for="err in messageForms.errors.company_type" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
-                                    <td><b>Company Name</b></td>
+                                    <td><b>{{ $t('message.profile.p_company_name') }}</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'has-error': messageForms.errors.hasOwnProperty('user_type.company_name')}" class="form-group">
-                                            <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" placeholder="Enter Company Name">
+                                            <input type="text" v-model="user.user_type.company_name" class="form-control" value="" required="required" :placeholder="$t('message.profile.p_enter_cn')">
                                             <span
                                                 v-if="messageForms.errors.hasOwnProperty('user_type.company_name')"
                                                 class="text-danger">
-                                                The company name field is required when company type is 'Company'
+                                                {{ $t('message.profile.p_cn_error') }}
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1" v-show="CompanyName">
-                                    <td><b>Company URL</b></td>
+                                    <td><b>{{ $t('message.profile.p_company_url') }}</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.company_url}" class="form-group">
-                                            <input type="text" v-model="user.user_type.company_url" class="form-control" value="" required="required" placeholder="Enter Company URL">
+                                            <input type="text" v-model="user.user_type.company_url" class="form-control" value="" required="required" :placeholder="$t('message.profile.p_enter_cu')">
                                             <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Skype</b></td>
+                                    <td><b>{{ $t('message.profile.p_skype') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}" class="form-group">
-                                            <input type="text" v-model="user.skype" class="form-control" value="" required="required" placeholder="Enter Skype">
+                                            <input type="text" v-model="user.skype" class="form-control" value="" required="required" :placeholder="$t('message.profile.p_enter_skype')">
                                             <span
                                                 v-if="messageForms.errors.skype"
                                                 class="text-danger">
-                                                The skype field is required when user is internal.
+                                                {{ $t('message.profile.p_skype_error') }}
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="currentUser.isOurs == 1">
-                                    <td><b>Country</b></td>
+                                    <td><b>{{ $t('message.profile.p_country') }}</b></td>
                                     <td v-if="user.user_type">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}" class="form-group">
                                             <select name="" class="form-control" v-model="country_id">
@@ -173,10 +175,10 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>New Password</b></td>
+                                    <td><b>{{ $t('message.profile.p_new_pass') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
-                                            <input type="password" class="form-control" v-model="new_password" placeholder="Type New Password">
+                                            <input type="password" class="form-control" v-model="new_password" :placeholder="$t('message.profile.p_enter_np')">
                                             <span
                                                 v-if="messageForms.errors.password"
                                                 v-for="err in messageForms.errors.password"
@@ -188,17 +190,19 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Confirm Password</b></td>
+                                    <td><b>{{ $t('message.profile.p_confirm_pass') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}" class="form-group">
-                                            <input type="password" class="form-control" v-model="c_password" placeholder="Type Confirm Password">
+                                            <input type="password" class="form-control" v-model="c_password" :placeholder="$t('message.profile.p_enter_cp')">
                                             <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                                            {{ $t('message.profile.save') }}
+                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -213,7 +217,7 @@
             <div class="col-12">
                 <div class="box box-primary">
                     <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
-                        <h3 class="box-title" style="margin-bottom: 0 !important;">Affiliate Code</h3>
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">{{ $t('message.profile.ac_title') }}</h3>
                     </div>
                 </div>
 
@@ -222,7 +226,7 @@
                         <div class="card-header">
                             <div class="alert alert-info mb-0">
                                 <i class="fa fa-info-circle"></i>
-                                Generate an affiliate code and use it upon inviting potential buyers.
+                                {{ $t('message.profile.ac_note') }}
                             </div>
                         </div>
 
@@ -236,12 +240,12 @@
                                                 class="btn btn-outline-success"
 
                                                 @click="generateAffiliateCode">
-                                                Generate Affiliate Code
+                                                {{ $t('message.profile.ac_generate') }}
                                             </button>
 
                                             <button
                                                 type="button"
-                                                title="Copy to clipboard"
+                                                :title="$t('message.profile.ac_copy')"
                                                 class="btn btn-outline-secondary"
                                                 :disabled="!user.user_type.affiliate_code"
 
@@ -257,7 +261,7 @@
                                             type="text"
                                             ref="affiliateCode"
                                             class="form-control"
-                                            placeholder="Current code is empty. Please click generate button."
+                                            :placeholder="$t('message.profile.ac_code_empty')"
 
                                             @focus="$event.target.select()">
                                     </div>
@@ -271,7 +275,7 @@
             <div class="col-12 mb-3">
                 <div class="box box-primary">
                     <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
-                        <h3 class="box-title" style="margin-bottom: 0 !important;">Affiliate Buyers</h3>
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">{{ $t('message.profile.ac_affiliate_buyers') }}</h3>
                     </div>
                 </div>
 
@@ -281,22 +285,22 @@
                             <table id="tbl_affiliate_buyers" class="table table-condensed table-hover table-bordered">
                                 <thead>
                                     <tr class="label-primary">
-                                        <th >User ID#</th>
-                                        <th>Date Registered</th>
-                                        <th>Email</th>
-                                        <th>Name</th>
-                                        <th>Company Type</th>
-                                        <th>Account Validation</th>
-                                        <th>Status</th>
+                                        <th>{{ $t('message.profile.ac_user_id') }}</th>
+                                        <th>{{ $t('message.profile.ac_date_registered') }}</th>
+                                        <th>{{ $t('message.profile.p_email') }}</th>
+                                        <th>{{ $t('message.profile.p_name') }}</th>
+                                        <th>{{ $t('message.profile.p_company_type') }}</th>
+                                        <th>{{ $t('message.profile.ac_account_validation') }}</th>
+                                        <th>{{ $t('message.profile.ac_status') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(account, index) in affiliateBuyers.data" :key="index">
-                                        <td>{{ account.user == null ? 'Not yet Verified' : account.user.id }}</td>
+                                        <td>{{ account.user == null ? $t('message.profile.ac_not_yet_verified') : account.user.id }}</td>
                                         <td>{{ account.created_at }}</td>
                                         <td>{{ account.email }}</td>
                                         <td>{{ account.name }}</td>
-                                        <td>{{ account.is_freelance == 1 ? 'Freelancer' : 'Company' }}</td>
+                                        <td>{{ account.is_freelance == 1 ? $t('message.profile.p_freelancer') : $t('message.profile.p_company') }}</td>
                                         <td>{{ account.account_validation }}</td>
                                         <td>{{ account.status }}</td>
                                     </tr>
@@ -320,20 +324,20 @@
             <div class="col-sm-12">
                 <div class="box box-primary">
                     <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
-                        <h3 class="box-title" style="margin-bottom: 0 !important;">Billing</h3>
+                        <h3 class="box-title" style="margin-bottom: 0 !important;">{{ $t('message.profile.b_title') }}</h3>
                     </div>
 
                     <div class="box-body no-padding">
 
                         <div class="alert alert-info m-2">
                             <i class="fa fa-info-circle"></i>
-                            Please provide at least one payment solution to be able to upload URL's.
+                            {{ $t('message.profile.b_note_1') }}
                         </div>
 
                         <span
                             v-if="messageForms.errors.id_payment_type"
                             class="text-danger mx-2">
-                            Please provide at least one payment type.
+                            {{ $t('message.profile.b_note_2') }}
                         </span>
 
                         <div class="table-responsive">
@@ -344,7 +348,7 @@
                                     <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
                                             <div class="form-group">
-                                                <label>{{ payment_method.type }} Account</label>
+                                                <label>{{ payment_method.type }} {{ $t('message.profile.b_account') }}</label>
                                             </div>
                                         </td>
                                         <td style="width: 50px;vertical-align:middle;" class="text-center">
@@ -364,7 +368,7 @@
                                     <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
                                         <td>
                                             <div class="form-group">
-                                                <label>{{ payment_method.type }} Account</label>
+                                                <label>{{ payment_method.type }} {{ $t('message.profile.b_account') }}</label>
                                             </div>
                                         </td>
                                         <td style="width: 50px;vertical-align:middle;" class="text-center">
@@ -383,7 +387,9 @@
 
                     <div class="row mb-2 pl-3">
                         <div>
-                            <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                            <button type="button" @click="submitUpdate" class="btn btn-primary">
+                                {{ $t('message.profile.save') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -394,7 +400,7 @@
             <div class="col-sm-12">
                 <div class="box box-primary">
                     <div class="box-header"  >
-                        <h3 class="box-title">Add Sub Account</h3>
+                        <h3 class="box-title">{{ $t('message.profile.sa_title') }}</h3>
                     </div>
 
                     <div class="box-body no-padding" >
@@ -402,7 +408,7 @@
                             <table class="table no-margin">
                                 <tbody>
                                 <tr>
-                                    <td><b>Username</b></td>
+                                    <td><b>{{ $t('message.profile.p_username') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.username}" class="form-group">
                                             <input type="text" v-model="modelAddSubAccount.username" class="form-control" required="required" >
@@ -411,7 +417,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Email</b></td>
+                                    <td><b>{{ $t('message.profile.p_email') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.email}" class="form-group">
                                             <input type="text" v-model="modelAddSubAccount.email" class="form-control" required="required" >
@@ -420,7 +426,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><b>Password</b></td>
+                                    <td><b>{{ $t('message.profile.sa_password') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.password}" class="form-group">
                                             <input type="password" v-model="modelAddSubAccount.password" class="form-control" required="required">
@@ -434,20 +440,22 @@
                     </div>
 
                     <div class="col-lg-8">
-                        <button type="button" @click="addSubAccount" class="btn btn-primary">Add Sub Account</button>
+                        <button type="button" @click="addSubAccount" class="btn btn-primary">
+                            {{ $t('message.profile.sa_title') }}
+                        </button>
                     </div>
 
                     <div class="col-md-12">
                         <table class="table table-condensed table-hover table-bordered mt-4">
                             <thead>
                             <tr class="label-primary">
-                                <th >Username</th>
-                                <th>Email</th>
-                                <th>Credit Authorization</th>
-                                <th>Show Price Basis</th>
-                                <th>Can Validate Backlink</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.profile.p_username') }}</th>
+                                <th>{{ $t('message.profile.p_email') }}</th>
+                                <th>{{ $t('message.profile.sa_credit_auth') }}</th>
+                                <th>{{ $t('message.profile.sa_show_price_basis') }}</th>
+                                <th>{{ $t('message.profile.sa_can_validate') }}</th>
+                                <th>{{ $t('message.profile.ac_status') }}</th>
+                                <th>{{ $t('message.profile.sa_action') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -455,14 +463,14 @@
                                 <td>{{ account.username }}</td>
                                 <td>{{ account.email }}</td>
                                 <td>{{ account.credit_auth }}</td>
-                                <td>{{ account.is_show_price_basis === 1 ? 'Yes' : 'No' }}</td>
-                                <td>{{ account.can_validate_backlink === 1 ? 'Yes' : 'No' }}</td>
+                                <td>{{ account.is_show_price_basis === 1 ? $t('message.profile.yes') : $t('message.profile.no') }}</td>
+                                <td>{{ account.can_validate_backlink === 1 ? $t('message.profile.yes') : $t('message.profile.no') }}</td>
                                 <td>{{ account.status }}</td>
                                 <td>
-                                    <button class="btn btn-default" title="Edit" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
+                                    <button class="btn btn-default" :title="$t('message.profile.edit')" @click="doUpdateSubAccounts(account)" data-toggle="modal" data-target="#modal-edit-sub-account">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn btn-default" title="Delete" @click="deleteSubAccount(account.id)"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-default" :title="$t('message.profile.delete')" @click="deleteSubAccount(account.id)"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                             </tbody>
@@ -477,7 +485,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Account</h5>
+                        <h5 class="modal-title">{{ $t('message.profile.ea_title') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -488,12 +496,11 @@
                             <div class="alert alert-info alert-dismissible fade show" role="alert">
                                 <strong>
                                     <i class="fa fa-info-circle"></i>
-                                    Note
+                                    {{ $t('message.profile.ea_note') }}
                                 </strong>
 
                                 <span>
-                                    Your account is currently not able to view price basis. You cannot update the 'is show price basis' field of your sub buyer account.
-                                    Please contact an administrator or person in charge.
+                                    {{ $t('message.profile.ea_note_long') }}
                                 </span>
 
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -505,83 +512,87 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Username</label>
+                                    <label>{{ $t('message.profile.p_username') }}</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.username" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Name</label>
+                                    <label>{{ $t('message.profile.p_name') }}</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.name" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Password</label>
+                                    <label>{{ $t('message.profile.sa_password') }}</label>
                                     <input type="password" class="form-control" v-model="updateModelSubAccount.password">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageErrors.c_password != ''}" class="form-group">
-                                    <label>Confirm Password</label>
+                                    <label>{{ $t('message.profile.p_confirm_pass') }}</label>
                                     <input type="password" class="form-control" v-model="updateModelSubAccount.c_password">
                                     <span v-show="messageErrors.c_password != ''" class="text-danger">{{ messageErrors.c_password }}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Email</label>
+                                    <label>{{ $t('message.profile.p_email') }}</label>
                                     <input type="text" class="form-control" v-model="updateModelSubAccount.email" :disabled="true">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Status</label>
+                                    <label>{{ $t('message.profile.ac_status') }}</label>
                                     <select class="form-control" v-model="updateModelSubAccount.status">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="active">{{ $t('message.profile.active') }}</option>
+                                        <option value="inactive">{{ $t('message.profile.inactive') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Credit Authorization</label>
+                                    <label>{{ $t('message.profile.sa_credit_auth') }}</label>
                                     <select class="form-control" v-model="updateModelSubAccount.credit_auth">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="Yes">{{ $t('message.profile.yes') }}</option>
+                                        <option value="No">{{ $t('message.profile.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Is Show Price Basis</label>
+                                    <label>{{ $t('message.profile.ea_is_show_price_basis') }}</label>
                                     <select
                                         v-model="updateModelSubAccount.is_show_price_basis"
                                         class="form-control"
                                         :disabled="!isShowPriceBasis(currentUser)">
 
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.profile.yes') }}</option>
+                                        <option value="no">{{ $t('message.profile.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Can validate Backlinks</label>
+                                    <label>{{ $t('message.profile.sa_can_validate') }}</label>
                                     <select
                                         v-model="updateModelSubAccount.can_validate_backlink"
                                         class="form-control">
 
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
+                                        <option value="1">{{ $t('message.profile.yes') }}</option>
+                                        <option value="0">{{ $t('message.profile.no') }}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitUpdateSubAccount">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.profile.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateSubAccount">
+                            {{ $t('message.profile.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -794,6 +805,8 @@ export default {
         },
 
         submitUpdateSubAccount() {
+            let self = this;
+
             axios.get('/api/update-sub-account', {
                 params: {
                     id: this.updateModelSubAccount.id,
@@ -814,8 +827,8 @@ export default {
                 $("#modal-edit-sub-account").modal('hide')
 
                 swal.fire(
-                    'Update!',
-                    'Successfully Updated',
+                    self.$t('message.profile.alert_update'),
+                    self.$t('message.profile.alert_success_update'),
                     'success'
                 )
 
@@ -831,13 +844,15 @@ export default {
         },
 
         deleteSubAccount(id) {
+            let self = this;
+
             swal.fire({
-                title: "Are you sure ?",
-                html: "Delete these account?",
+                title: self.$t('message.profile.alert_confirm'),
+                html: self.$t('message.profile.alert_delete_account'),
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, keep it'
+                confirmButtonText: self.$t('message.profile.delete_yes'),
+                cancelButtonText: self.$t('message.profile.keep')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -845,8 +860,8 @@ export default {
                     axios.get('/api/delete-sub-account',{ params: { id: id } })
 
                     swal.fire(
-                        'Deleted!',
-                        'Messages is move to Trash.',
+                        self.$t('message.profile.alert_deleted'),
+                        self.$t('message.profile.alert_deleted_sub_account'),
                         'success'
                     )
 
@@ -919,12 +934,14 @@ export default {
         },
 
         async addSubAccount() {
+            let self = this;
+
             await this.$store.dispatch('actionAddSubAccount', this.modelAddSubAccount);
 
             if (this.messageForms.action === 'saved_account') {
                 swal.fire(
-                    'Success',
-                    'Successfully created!',
+                    self.$t('message.profile.alert_success'),
+                    self.$t('message.profile.alert_success_created'),
                     'success'
                 )
 
@@ -951,6 +968,7 @@ export default {
         },
 
         async submitUpdate() {
+            let self = this;
             this.isPopupLoading = true;
 
             if( this.currentUser.isOurs == 1 ) {
@@ -979,8 +997,8 @@ export default {
                 }
 
                 swal.fire(
-                        'Updated!',
-                        'Information has been updated.',
+                    self.$t('message.profile.alert_update'),
+                    self.$t('message.profile.alert_info_updated'),
                         'success'
                         )
 
@@ -988,8 +1006,8 @@ export default {
                 this.c_password = '';
             } else {
                 swal.fire(
-                    'Failed!',
-                    'Information not updated.',
+                    self.$t('message.profile.alert_failed'),
+                    self.$t('message.profile.alert_info_not_updated'),
                     'error'
                 )
             }
@@ -1013,6 +1031,7 @@ export default {
         },
 
         generateAffiliateCode() {
+            let self = this;
             let loader = this.$loading.show();
 
             this.user.user_type.affiliate_code = this.generateRandomString(10);
@@ -1027,8 +1046,8 @@ export default {
                 this.getAffiliateCodeSet();
 
                 swal.fire(
-                    'Saved!',
-                    'Affiliate code successfully generated',
+                    self.$t('message.profile.alert_saved'),
+                    self.$t('message.profile.alert_affiliate_code_generated'),
                     'success'
                 )
             })
@@ -1037,20 +1056,21 @@ export default {
                 loader.hide();
 
                 swal.fire(
-                    'Error!',
-                    'Something went wrong while generating affiliate code',
+                    self.$t('message.profile.alert_error'),
+                    self.$t('message.profile.alert_error_affiliate_code'),
                     'error'
                 )
             })
         },
 
         copyAffiliateCode() {
+            let self = this;
             this.$refs.affiliateCode.focus();
             document.execCommand('copy');
 
             swal.fire(
-                'Copied!',
-                'Affiliate code successfully copied to clipboard',
+                self.$t('message.profile.alert_copied'),
+                self.$t('message.profile.alert_success_copied'),
                 'success'
             )
         },

@@ -1,12 +1,97 @@
 <template>
     <div :class="{'homepage-login': survey.answers.code}">
+        <!-- language -->
+        <div v-if="survey.answers.code" class="row p-2">
+            <div class="col-12 d-flex justify-content-end">
+                <div>
+                    <button
+                        type="button"
+                        class="btn btn-default btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+
+                        <i
+                            class="flag-icon"
+                            :class="pageLanguage === 'en'
+                                ? 'flag-icon-us'
+                                    : pageLanguage === 'ind'
+                                    ? 'flag-icon-in'
+                                        : 'flag-icon-' + pageLanguage">
+                        </i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-0">
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'en'}"
+
+                            @click="pageLanguage = 'en'">
+
+                            <i class="flag-icon flag-icon-us mr-2"></i>
+                            English
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'jp'}"
+
+                            @click="pageLanguage = 'jp'">
+                            <i class="flag-icon flag-icon-jp mr-2"></i>
+                            Japanese
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'th'}"
+
+                            @click="pageLanguage = 'th'">
+
+                            <i class="flag-icon flag-icon-th mr-2"></i>
+                            Thai
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'vn'}"
+
+                            @click="pageLanguage = 'vn'">
+
+                            <i class="flag-icon flag-icon-vn mr-2"></i>
+                            Vietnamese
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'ind'}"
+
+                            @click="pageLanguage = 'ind'">
+
+                            <i class="flag-icon flag-icon-in mr-2"></i>
+                            Hindi
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'id'}"
+
+                            @click="pageLanguage = 'id'">
+
+                            <i class="flag-icon flag-icon-id mr-2"></i>
+                            Indonesian
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row justify-content-center mx-5 my-5">
             <div v-if="!survey.isCodeError" class="col-12 col-md-12 col-lg-8 col-xl-8">
                 <!-- SURVEY -->
                 <div class="card card-outline card-secondary align-items-center">
                     <div class="card-header">
                         <h3 class="card-title text-primary my-3" style="font-size: 2.5vw">
-                            Stalinks Seller Survey {{ survey.answers.set === 'a' ? 'A' : 'B' }}
+                            {{ $t('message.seller_survey.s_title') }} {{ survey.answers.set === 'a' ? $t('message.seller_survey.a') : $t('message.seller_survey.b') }}
                         </h3>
 
                         <div class="card-tools">
@@ -19,7 +104,7 @@
                             <!-- a1 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    1. Do you think our system is efficient for you to sell your guest posts?
+                                    {{ $t('message.seller_survey.seller_survey_a_q_1') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -40,13 +125,13 @@
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.one === 'no'" class="form-group">
-                                    <label>If no, please let us know why and how we can improve...</label>
+                                    <label>{{ $t('message.seller_survey.improve_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.one_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.seller_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -57,7 +142,7 @@
                             <!-- a2 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    2. Are you satisfied with our CS Team service?
+                                    {{ $t('message.seller_survey.seller_survey_a_q_2') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -78,13 +163,13 @@
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.two === 'no'" class="form-group">
-                                    <label>If no, please let us know why and how we can improve...</label>
+                                    <label>{{ $t('message.seller_survey.improve_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.two_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.seller_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -95,7 +180,7 @@
                             <!-- a3 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    3. Do you have any problems using our payment methods?
+                                    {{ $t('message.seller_survey.seller_survey_a_q_3') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -116,13 +201,13 @@
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.three === 'yes'" class="form-group">
-                                    <label>If yes, please let us know why and how we can improve...</label>
+                                    <label>{{ $t('message.seller_survey.improve_yes') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.three_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.seller_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -133,7 +218,7 @@
                             <!-- a4 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    4. Do you find our platform helpful to you in getting orders easily?
+                                    {{ $t('message.seller_survey.seller_survey_a_q_4') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -154,13 +239,13 @@
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.four === 'no'" class="form-group">
-                                    <label>If no, please let us know why and how we can improve...</label>
+                                    <label>{{ $t('message.seller_survey.improve_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.four_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.seller_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -171,7 +256,7 @@
                             <!-- a5 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    5. Based on your most recent experience, please rate your satisfaction by using our service.
+                                    {{ $t('message.seller_survey.seller_survey_a_q_5') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -198,7 +283,7 @@
                             <!-- a6 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    6. Please rate if you would recommend us and our services to your connections.
+                                    {{ $t('message.seller_survey.seller_survey_a_q_6') }}
                                 </p>
                                 <div class="form-group">
                                     <div
@@ -226,15 +311,14 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>
-                                        Aside from the issues you have already mentioned above, are there any other
-                                        comments you would like to share?
+                                        {{ $t('message.seller_survey.seller_survey_aside') }}
                                     </label>
 
                                     <textarea
                                         v-model="survey.answers.comment"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.seller_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -254,7 +338,7 @@
                                 class="btn btn-primary"
 
                                 @click="submitSurvey">
-                                Submit
+                                {{ $t('message.seller_survey.submit') }}
                             </button>
                         </div>
                     </div>
@@ -265,8 +349,8 @@
                             <i class="fas fa-check-circle fa-10x text-success"></i>
                         </div>
 
-                        <h3 class="text-center mt-5 text-success">Thank you for answering this survey!</h3>
-                        <p>This would help us a lot to understand your needs even better!</p>
+                        <h3 class="text-center mt-5 text-success">{{ $t('message.seller_survey.thanks_1') }}</h3>
+                        <p>{{ $t('message.seller_survey.thanks_2') }}</p>
                     </div>
                 </div>
             </div>
@@ -278,11 +362,11 @@
                             <i class="fas fa-exclamation-triangle fa-10x text-danger"></i>
                         </div>
 
-                        <h3 class="text-center mt-5 text-danger">Survey Code Not Found</h3>
-                        <p>Contact an administrator to get the correct survey link</p>
+                        <h3 class="text-center mt-5 text-danger">{{ $t('message.seller_survey.errors_1') }}</h3>
+                        <p>{{ $t('message.seller_survey.errors_2') }}</p>
 
                         <button class="btn btn-default btn-lg btn-block mt-5" @click="redirectToLogin()">
-                            Go to Login
+                            {{ $t('message.seller_survey.login') }}
                         </button>
                     </div>
                 </div>
@@ -325,7 +409,15 @@ export default {
                     type: 'seller'
                 }
             },
+
+            pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
         }
+    },
+
+    watch : {
+        pageLanguage(newvalue, oldValue) {
+            this.$i18n.locale = newvalue;
+        },
     },
 
     created() {
@@ -334,6 +426,7 @@ export default {
 
     methods: {
         sellerSurveyAnswers(set, number) {
+            let self = this;
             let answers = {};
 
             if (set === 'a') {
@@ -343,13 +436,13 @@ export default {
                             id: 'question-' + number + 'a-yes',
                             name: 'question-' + number + 'a-yes',
                             value: 'yes',
-                            label: 'Yes'
+                            label: self.$t('message.seller_survey.yes')
                         },
                         {
                             id: 'question-' + number + 'a-no',
                             name: 'question-' + number + 'a-no',
                             value: 'no',
-                            label: 'No'
+                            label: self.$t('message.seller_survey.no')
                         }
                     ],
 
@@ -358,13 +451,13 @@ export default {
                             id: 'question-' + number + 'a-yes',
                             name: 'question-' + number + 'a-yes',
                             value: 'yes',
-                            label: 'Yes'
+                            label: self.$t('message.seller_survey.yes')
                         },
                         {
                             id: 'question-' + number + 'a-no',
                             name: 'question-' + number + 'a-no',
                             value: 'no',
-                            label: 'No'
+                            label: self.$t('message.seller_survey.no')
                         }
                     ],
 
@@ -373,13 +466,13 @@ export default {
                             id: 'question-' + number + 'a-no',
                             name: 'question-' + number + 'a-no',
                             value: 'No, I am okay with the current payment methods options',
-                            label: 'No, I am okay with the current payment methods options'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_3_no')
                         },
                         {
                             id: 'question-' + number + 'a-yes',
                             name: 'question-' + number + 'a-yes',
                             value: 'yes',
-                            label: 'Yes'
+                            label: self.$t('message.seller_survey.yes')
                         }
                     ],
 
@@ -388,13 +481,13 @@ export default {
                             id: 'question-' + number + 'a-yes',
                             name: 'question-' + number + 'a-yes',
                             value: 'yes',
-                            label: 'Yes'
+                            label: self.$t('message.seller_survey.yes')
                         },
                         {
                             id: 'question-' + number + 'a-no',
                             name: 'question-' + number + 'a-no',
                             value: 'no',
-                            label: 'No'
+                            label: self.$t('message.seller_survey.no')
                         }
                     ],
 
@@ -403,31 +496,31 @@ export default {
                             id: 'question-' + number + 'a-a',
                             name: 'question-' + number + 'a-a',
                             value: 'Extremely dissatisfied',
-                            label: 'Extremely dissatisfied'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_5_a')
                         },
                         {
                             id: 'question-' + number + 'a-b',
                             name: 'question-' + number + 'a-b',
                             value: 'Somewhat dissatisfied',
-                            label: 'Somewhat dissatisfied'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_5_b')
                         },
                         {
                             id: 'question-' + number + 'a-c',
                             name: 'question-' + number + 'a-c',
                             value: 'Neither',
-                            label: 'Neither'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_5_c')
                         },
                         {
                             id: 'question-' + number + 'a-d',
                             name: 'question-' + number + 'a-d',
                             value: 'Somewhat satisfied',
-                            label: 'Somewhat satisfied'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_5_d')
                         },
                         {
                             id: 'question-' + number + 'a-e',
                             name: 'question-' + number + 'a-e',
                             value: 'Extremely satisfied',
-                            label: 'Extremely satisfied'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_5_e')
                         }
                     ],
 
@@ -436,19 +529,19 @@ export default {
                             id: 'question-' + number + 'a-a',
                             name: 'question-' + number + 'a-a',
                             value: '1-4 I will not recommend to anyone',
-                            label: '1-4 I will not recommend to anyone'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_6_a')
                         },
                         {
                             id: 'question-' + number + 'a-b',
                             name: 'question-' + number + 'a-b',
                             value: '5-7 I will consider it',
-                            label: '5-7 I will consider it'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_6_b')
                         },
                         {
                             id: 'question-' + number + 'a-c',
                             name: 'question-' + number + 'a-c',
                             value: '7-10 I will definitely recommend to my connections to use your services',
-                            label: '7-10 I will definitely recommend to my connections to use your services'
+                            label: self.$t('message.seller_survey.seller_survey_a_q_6_c')
                         }
                     ],
                 }
@@ -470,15 +563,15 @@ export default {
         },
 
         submitSurvey () {
-
+            let self = this;
             let path = this.survey.answers.code === null ? '/api/survey' : '/api/survey-code'
 
             axios.post(path, this.survey.answers)
                 .then((response) => {
 
                     swal.fire(
-                        'Success',
-                        'Thank you for your time! This means a lot for us to understand your needs even better!',
+                        self.$t('message.seller_survey.alert_success'),
+                        self.$t('message.seller_survey.alert_success_text'),
                         'success',
                     )
 
@@ -486,7 +579,7 @@ export default {
                 })
                 .catch((err) => {
                     swal.fire(
-                        'Error',
+                        self.$t('message.seller_survey.alert_error'),
                         err.response.data.message,
                         'error',
                     )

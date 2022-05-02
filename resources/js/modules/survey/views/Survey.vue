@@ -1,12 +1,97 @@
 <template>
     <div :class="{'homepage-login': survey.answers.code}">
+        <!-- language -->
+        <div v-if="survey.answers.code" class="row p-2">
+            <div class="col-12 d-flex justify-content-end">
+                <div>
+                    <button
+                        type="button"
+                        class="btn btn-default btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+
+                        <i
+                            class="flag-icon"
+                            :class="pageLanguage === 'en'
+                                ? 'flag-icon-us'
+                                    : pageLanguage === 'ind'
+                                    ? 'flag-icon-in'
+                                        : 'flag-icon-' + pageLanguage">
+                        </i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-0">
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'en'}"
+
+                            @click="pageLanguage = 'en'">
+
+                            <i class="flag-icon flag-icon-us mr-2"></i>
+                            English
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'jp'}"
+
+                            @click="pageLanguage = 'jp'">
+                            <i class="flag-icon flag-icon-jp mr-2"></i>
+                            Japanese
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'th'}"
+
+                            @click="pageLanguage = 'th'">
+
+                            <i class="flag-icon flag-icon-th mr-2"></i>
+                            Thai
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'vn'}"
+
+                            @click="pageLanguage = 'vn'">
+
+                            <i class="flag-icon flag-icon-vn mr-2"></i>
+                            Vietnamese
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'ind'}"
+
+                            @click="pageLanguage = 'ind'">
+
+                            <i class="flag-icon flag-icon-in mr-2"></i>
+                            Hindi
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            :class="{'active' : pageLanguage === 'id'}"
+
+                            @click="pageLanguage = 'id'">
+
+                            <i class="flag-icon flag-icon-id mr-2"></i>
+                            Indonesian
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row justify-content-center mx-5 my-5">
             <div v-if="!survey.isCodeError" class="col-12 col-md-12 col-lg-8 col-xl-8">
                 <!-- SURVEY -->
                 <div class="card card-outline card-secondary align-items-center">
                     <div class="card-header">
                         <h3 class="card-title text-primary my-3" style="font-size: 2.5vw">
-                            Stalinks Survey {{ survey.answers.set === 'a' ? 'A' : 'B' }}
+                            {{ $t('message.buyer_survey.s_title') }} {{ survey.answers.set === 'a' ? $t('message.buyer_survey.a') : $t('message.buyer_survey.b') }}
                         </h3>
 
                         <div class="card-tools">
@@ -18,7 +103,7 @@
                         <div v-if="survey.answers.set === 'a'" class="row">
                             <!-- a1 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">1. Do you find using our system efficient?</p>
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_a_q_1') }}</p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
                                         <input
@@ -30,7 +115,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-a-yes" class="custom-control-label font-weight-normal">
-                                            Yes
+                                            {{ $t('message.buyer_survey.yes') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -43,18 +128,18 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-a-no" class="custom-control-label font-weight-normal">
-                                            No
+                                            {{ $t('message.buyer_survey.no') }}
                                         </label>
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.one === 'no'" class="form-group">
-                                    <label>If no, please let us know how we can improve it…</label>
+                                    <label>{{ $t('message.buyer_survey.buyer_survey_a_q_1_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.one_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -65,7 +150,7 @@
                             <!-- a2 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    2. Does our system provide the URLs that you are looking for?
+                                    {{ $t('message.buyer_survey.buyer_survey_a_q_2') }}
                                 </p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
@@ -78,7 +163,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-two-a-yes" class="custom-control-label font-weight-normal">
-                                            Yes
+                                            {{ $t('message.buyer_survey.yes') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -91,18 +176,18 @@
                                             class="custom-control-input">
 
                                         <label for="question-two-a-no" class="custom-control-label font-weight-normal">
-                                            No
+                                            {{ $t('message.buyer_survey.no') }}
                                         </label>
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.two === 'no'" class="form-group">
-                                    <label>If no, please let us know what more to add…</label>
+                                    <label>{{ $t('message.buyer_survey.buyer_survey_a_q_2_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.two_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -112,7 +197,7 @@
 
                             <!-- a3 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">3. Do you find our HELP page easy to follow?</p>
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_a_q_3') }}</p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
                                         <input
@@ -124,7 +209,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-three-a-yes" class="custom-control-label font-weight-normal">
-                                            Yes
+                                            {{ $t('message.buyer_survey.yes') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -137,18 +222,18 @@
                                             class="custom-control-input">
 
                                         <label for="question-three-a-no" class="custom-control-label font-weight-normal">
-                                            No
+                                            {{ $t('message.buyer_survey.no') }}
                                         </label>
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.three === 'no'" class="form-group">
-                                    <label>If no, please let us know how we can improve it...</label>
+                                    <label>{{ $t('message.buyer_survey.buyer_survey_a_q_1_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.three_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -159,7 +244,7 @@
                             <!-- a4 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    4. Do you find our payment methods too complicated for you?
+                                    {{ $t('message.buyer_survey.buyer_survey_a_q_4') }}
                                 </p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
@@ -172,7 +257,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-four-a-yes" class="custom-control-label font-weight-normal">
-                                            Yes
+                                            {{ $t('message.buyer_survey.yes') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -185,21 +270,20 @@
                                             class="custom-control-input">
 
                                         <label for="question-four-a-no" class="custom-control-label font-weight-normal">
-                                            No
+                                            {{ $t('message.buyer_survey.no') }}
                                         </label>
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.four === 'yes'" class="form-group">
                                     <label>
-                                        If yes, please let us know other methods you preferred to make the transaction
-                                        easier for you
+                                        {{ $t('message.buyer_survey.buyer_survey_a_q_4_yes') }}
                                     </label>
 
                                     <textarea
                                         v-model="survey.answers.four_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -210,7 +294,7 @@
                             <!-- a5 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    5. Are you satisfied with the service that we provide right now?
+                                    {{ $t('message.buyer_survey.buyer_survey_a_q_5') }}
                                 </p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
@@ -223,7 +307,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-five-a-yes" class="custom-control-label font-weight-normal">
-                                            Yes
+                                            {{ $t('message.buyer_survey.yes') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -236,18 +320,18 @@
                                             class="custom-control-input">
 
                                         <label for="question-five-a-no" class="custom-control-label font-weight-normal">
-                                            No
+                                            {{ $t('message.buyer_survey.no') }}
                                         </label>
                                     </div>
                                 </div>
                                 <div v-if="survey.answers.five === 'no'" class="form-group">
-                                    <label>If no, please let us know what can we improve</label>
+                                    <label>{{ $t('message.buyer_survey.buyer_survey_a_q_5_no') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.five_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -259,15 +343,14 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>
-                                        Aside from the issues you have already mentioned above, are there any other
-                                        comments you would like to share?
+                                        {{ $t('message.buyer_survey.buyer_survey_aside') }}
                                     </label>
 
                                     <textarea
                                         v-model="survey.answers.comment"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -281,7 +364,7 @@
                             <!-- b1 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    1. In your opinion, what is the most important thing to have in desk management?
+                                    {{ $t('message.buyer_survey.buyer_survey_b_q_1') }}
                                 </p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
@@ -294,7 +377,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-b-a" class="custom-control-label font-weight-normal">
-                                            Complete URLs info
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_a') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -307,7 +390,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-b-b" class="custom-control-label font-weight-normal">
-                                            Good user interface
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_b') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -320,7 +403,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-b-c" class="custom-control-label font-weight-normal">
-                                            Secured transaction
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_c') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -333,7 +416,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-b-d" class="custom-control-label font-weight-normal">
-                                            Good price
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_d') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -346,19 +429,19 @@
                                             class="custom-control-input">
 
                                         <label for="question-one-b-e" class="custom-control-label font-weight-normal">
-                                            Others. Please specify...
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_others') }}
                                         </label>
                                     </div>
 
                                 </div>
                                 <div v-if="survey.answers.one === 'other'" class="form-group">
-                                    <label>Other</label>
+                                    <label>{{ $t('message.buyer_survey.other') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.one_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -368,7 +451,7 @@
 
                             <!-- b2 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">2. From 1-6, how would you rate our tools?</p>
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_b_q_2') }}</p>
                                 <div class="form-group">
                                     <div v-for="answer in surveyBTwoThreeOptions('two')" class="custom-control custom-radio">
                                         <input
@@ -385,13 +468,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Comment</label>
+                                    <label>{{ $t('message.buyer_survey.comment') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.two_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -402,7 +485,7 @@
                             <!-- b3 -->
                             <div class="col-12">
                                 <p class="font-weight-bold">
-                                    3. From 1-10, how well do you understand Stalinks and what can we do to help you?
+                                    {{ $t('message.buyer_survey.buyer_survey_b_q_3') }}
                                 </p>
                                 <div class="form-group">
                                     <div v-for="answer in surveyBTwoThreeOptions('three')" class="custom-control custom-radio">
@@ -420,13 +503,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Comment</label>
+                                    <label>{{ $t('message.buyer_survey.comment') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.three_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -436,7 +519,7 @@
 
                             <!-- b4 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">4. What would you like to see in Stalinks?</p>
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_b_q_4') }}</p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
                                         <input
@@ -448,7 +531,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-four-b-a" class="custom-control-label font-weight-normal">
-                                            More promotion
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_4_a') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -461,7 +544,7 @@
                                             value="Detailed guide on how to use the tools">
 
                                         <label for="question-four-b-b" class="custom-control-label font-weight-normal">
-                                            Detailed guide on how to use the tools
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_4_b') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -474,7 +557,7 @@
                                             value="Personalized help choosing the right URLs">
 
                                         <label for="question-four-b-c" class="custom-control-label font-weight-normal">
-                                            Personalized help choosing the right URLs
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_4_c') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -487,19 +570,19 @@
                                             class="custom-control-input">
 
                                         <label for="question-four-b-d" class="custom-control-label font-weight-normal">
-                                            Others. Please specify
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_1_others') }}
                                         </label>
                                     </div>
 
                                 </div>
                                 <div v-if="survey.answers.four === 'other'" class="form-group">
-                                    <label>Other</label>
+                                    <label>{{ $t('message.buyer_survey.other') }}</label>
 
                                     <textarea
                                         v-model="survey.answers.four_other"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -509,7 +592,7 @@
 
                             <!-- b5 -->
                             <div class="col-12">
-                                <p class="font-weight-bold">5. How would you rate our team interaction with you?</p>
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_b_q_5') }}</p>
                                 <div class="form-group">
                                     <div class="custom-control custom-radio">
                                         <input
@@ -521,7 +604,7 @@
                                             class="custom-control-input">
 
                                         <label for="question-five-b-yes" class="custom-control-label font-weight-normal">
-                                            1-> Disappointed
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_5_1') }}
                                         </label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -534,7 +617,7 @@
                                             value="10-> Very satisfied, would recommend">
 
                                         <label for="question-five-b-no" class="custom-control-label font-weight-normal">
-                                            10-> Very satisfied, would recommend
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_5_10') }}
                                         </label>
                                     </div>
                                 </div>
@@ -546,15 +629,14 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label>
-                                        Aside from the issues you have already mentioned above, are there any other
-                                        comments you would like to share?
+                                        {{ $t('message.buyer_survey.buyer_survey_aside') }}
                                     </label>
 
                                     <textarea
                                         v-model="survey.answers.comment"
                                         rows="3"
                                         class="form-control"
-                                        placeholder="Enter ...">
+                                        :placeholder="$t('message.buyer_survey.enter')">
 
                                     </textarea>
                                 </div>
@@ -567,7 +649,7 @@
                                 class="btn btn-primary"
 
                                 @click="submitSurvey">
-                                Submit
+                                {{ $t('message.buyer_survey.submit') }}
                             </button>
                         </div>
                     </div>
@@ -578,8 +660,8 @@
                             <i class="fas fa-check-circle fa-10x text-success"></i>
                         </div>
 
-                        <h3 class="text-center mt-5 text-success">Thank you for answering this survey!</h3>
-                        <p>This would help us a lot to understand your needs even better!</p>
+                        <h3 class="text-center mt-5 text-success">{{ $t('message.buyer_survey.thanks_1') }}</h3>
+                        <p>{{ $t('message.buyer_survey.thanks_2') }}</p>
                     </div>
                 </div>
             </div>
@@ -591,11 +673,11 @@
                             <i class="fas fa-exclamation-triangle fa-10x text-danger"></i>
                         </div>
 
-                        <h3 class="text-center mt-5 text-danger">Survey Code Not Found</h3>
-                        <p>Contact an administrator to get the correct survey link</p>
+                        <h3 class="text-center mt-5 text-danger">{{ $t('message.buyer_survey.errors_1') }}</h3>
+                        <p>{{ $t('message.buyer_survey.errors_2') }}</p>
 
                         <button class="btn btn-default btn-lg btn-block mt-5" @click="redirectToLogin()">
-                            Go to Login
+                            {{ $t('message.buyer_survey.login') }}
                         </button>
                     </div>
                 </div>
@@ -636,7 +718,15 @@ export default {
                     type: 'buyer'
                 }
             },
+
+            pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
         }
+    },
+
+    watch : {
+        pageLanguage(newvalue, oldValue) {
+            this.$i18n.locale = newvalue;
+        },
     },
 
     created() {
@@ -645,42 +735,44 @@ export default {
 
     methods: {
         surveyBTwoThreeOptions(number) {
+            let self = this;
+
             return [
                 {
                     id: 'question-' + number + '-b-a',
                     name: 'question-' + number + '-b-a',
                     value: '6-> Really Easy',
-                    label: '6-> Really Easy'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_6')
                 },
                 {
                     id: 'question-' + number + '-b-b',
                     name: 'question-' + number + '-b-b',
                     value: '5-> Easy',
-                    label: '5-> Easy'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_5')
                 },
                 {
                     id: 'question-' + number + '-b-c',
                     name: 'question-' + number + '-b-c',
                     value: '4-> Took a time to look but ok',
-                    label: '4-> Took a time to look but ok'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_4')
                 },
                 {
                     id: 'question-' + number + '-b-d',
                     name: 'question-' + number + '-b-d',
                     value: '3-> After a time and reading - understood',
-                    label: '3-> After a time and reading - understood'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_3')
                 },
                 {
                     id: 'question-' + number + '-b-e',
                     name: 'question-' + number + '-b-e',
                     value: '2-> Difficult',
-                    label: '2-> Difficult'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_2')
                 },
                 {
                     id: 'question-' + number + '-b-f',
                     name: 'question-' + number + '-b-f',
                     value: '1-> Very Difficult',
-                    label: '1-> Very Difficult'
+                    label: self.$t('message.buyer_survey.buyer_survey_b_q_2_1')
                 },
             ]
         },
@@ -698,6 +790,7 @@ export default {
         },
 
         submitSurvey () {
+            let self = this;
 
             let path = this.survey.answers.code === null ? '/api/survey' : '/api/survey-code'
 
@@ -705,8 +798,8 @@ export default {
                 .then((response) => {
 
                     swal.fire(
-                        'Success',
-                        'Thank you for your time! This means a lot for us to understand your needs even better!',
+                        self.$t('message.buyer_survey.alert_success'),
+                        self.$t('message.buyer_survey.alert_success_text'),
                         'success',
                     )
 
@@ -714,7 +807,7 @@ export default {
                 })
                 .catch((err) => {
                     swal.fire(
-                        'Error',
+                        self.$t('message.buyer_survey.alert_error'),
                         err.response.data.message,
                         'error',
                     )
