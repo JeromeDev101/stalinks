@@ -10,38 +10,6 @@
             </div><!-- /.container-fluid -->
         </div>
 
-        <div v-if="Object.keys(extListTotals).length !== 0" class="row">
-            <div class="col-lg-3 col-6">
-                <div class="small-box rounded bg-aqua">
-                    <div class="inner">
-                        <h3>{{ listExt.total }}</h3>
-                        <p>Total URL's</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-link"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div v-for="total in extListStatusTotals" class="col-lg-3 col-6">
-                <div class="small-box rounded" :class="total.badge">
-                    <div class="inner">
-                        <h3>{{ total.total }}</h3>
-                        <p>
-                            {{ total.text }}
-
-                            <span>
-                                ({{ total.percentage }}%)
-                            </span>
-                        </p>
-                    </div>
-                    <div class="icon">
-                        <i :class="total.icon"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
@@ -232,6 +200,38 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="Object.keys(extListTotals).length !== 0" class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box rounded bg-aqua">
+                    <div class="inner">
+                        <h3>{{ listExt.total }}</h3>
+                        <p>Total URL's</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div v-for="total in extListStatusTotals" class="col-lg-3 col-6">
+                <div class="small-box rounded" :class="total.badge">
+                    <div class="inner">
+                        <h3>{{ total.total }}</h3>
+                        <p>
+                            {{ total.text }}
+
+                            <span>
+                                ({{ total.percentage }}%)
+                            </span>
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i :class="total.icon"></i>
                     </div>
                 </div>
             </div>
