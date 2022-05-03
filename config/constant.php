@@ -48,5 +48,11 @@ return [
         '26' => 190,
         '29' => 83,
         '32' => 179
+    ],
+
+    'FORMULA' => [
+        'EXT_BUYER_ADDITIONAL' => 10,
+        'EXT_PERCENTAGE' => 17,
+        'AFFILIATE_PERCENTAGE' => 15,
     ]
 ];

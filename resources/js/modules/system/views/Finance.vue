@@ -11,24 +11,26 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-6">
-                <div class="col-sm-12">
-                    <payment-method :is-popup-loading="isPopupLoading" :message-forms="messageForms"></payment-method>
-                </div>
+            <div class="col-sm-12">
+                <Formula :message-forms="messageForms"></Formula>
+            </div>
 
-                <div class="col-sm-12">
-                    <btc v-on:getconfiglist="getConfigList"></btc>
-                </div>
+            <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig === 'affiliate'">
+                <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
+            </div>
+
+            <div class="col-sm-12">
+                <payment-method :is-popup-loading="isPopupLoading" :message-forms="messageForms"></payment-method>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-sm-6">
+                
+                
             </div>
 
             <div class="col-sm-6">
-                <div class="col-sm-12">
-                    <Formula :message-forms="messageForms"></Formula>
-                </div>
-
-                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig === 'skrill' || typeConfig === 'affiliate' || typeConfig === 'payoneer'">
-                    <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
-                </div>
 
                 <div class="col-sm-12">
                     <Usdt v-on:getconfiglist="getConfigList"></Usdt>
@@ -39,7 +41,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 

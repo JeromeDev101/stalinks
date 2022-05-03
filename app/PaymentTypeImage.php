@@ -10,7 +10,8 @@ class PaymentTypeImage extends Model
 
     protected $fillable = [
         'payment_type_id',
-        'path'
+        'path',
+        'image_type'
     ];
   
     public function payment_type()

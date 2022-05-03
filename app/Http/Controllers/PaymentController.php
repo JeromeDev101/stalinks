@@ -23,9 +23,14 @@ class PaymentController extends Controller
     public function getPaymentTypeImageList(Request $request)
     {
         if ($request->has('payment_type_id')) {
-            $response = PaymentTypeImage::where('payment_type_id', $request->get('payment_type_id'))->get();
+            $response = PaymentTypeImage::where('payment_type_id', $request->get('payment_type_id'))
+            ->get();
         } else {
-            $response = PaymentTypeImage::all();
+            $response = PaymentTypeImage::whereHas('payment_type', function($q) {
+                return $q->where('receive_payment', 'yes');
+            })
+            ->where('image_type', 'logo')
+            ->get();
         }
 
         return response()->json($response);
@@ -77,6 +82,7 @@ class PaymentController extends Controller
         }
 
         $response = PaymentTypeImage::create([
+            'image_type' => $request->image_type,
             'payment_type_id' => $id,
             'path' => $file->getClientOriginalName()
         ]);

@@ -123,18 +123,44 @@
                                   class="text-danger">{{ err }}</span>
                         </div>
 
+                        <div :class="{'form-group': true, 'has-error': messageForms.errors.account_value}"
+                             class="form-group">
+                            <label for="">Email / Account / Address</label>
+
+                            <input type="text"
+                                   v-model="paymentUpdate.account_value"
+                                   class="form-control"
+                                   placeholder="Enter Email / Account / Address"
+                                   required>
+                            
+                            <span v-if="messageForms.errors.account_value"
+                                  v-for="err in messageForms.errors.account_value"
+                                  class="text-danger">{{ err }}</span>
+                        </div>
+
                         <div class="form-group">
                             <label for="">Upload logo</label>
                             <div class="row">
                                 <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo">
 
-                                <button type="button" @click="uploadImage" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+                                <button type="button" @click="uploadImage('logo')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">QR Code Image</label>
+                            <div class="row">
+                                <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo2">
+
+                                <button type="button" @click="uploadImage('qr')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
 
                             </div>
                         </div>
 
                         <div class="row mb-4" v-for="image in paymentImages">
                             <div class="col-2 mr-4">
+                                ({{ image.image_type }}) 
                                 <img :src="'/storage/' + image.path" width="100%" alt="">
                             </div>
                             <div class="col-3 d-flex align-items-center mr-4">
@@ -176,6 +202,7 @@ export default {
                 type : '',
                 receive_payment : '',
                 send_payment : '',
+                account_value : '',
             },
             paymentModel : {
                 id : 0,
@@ -196,9 +223,16 @@ export default {
     },
 
     methods : {
-        uploadImage() {
+        uploadImage(type) {
             let formData = new FormData();
-            formData.append('file', this.$refs.logo.files[0]);
+            if(type === 'logo') {
+                formData.append('file', this.$refs.logo.files[0]);
+            } else{ 
+                formData.append('file', this.$refs.logo2.files[0]);
+            }
+
+            formData.append('image_type', type);
+                
 
             axios.post('/api/admin/payment-type/image/' + this.paymentUpdate.id, formData)
                 .then((response) => {
