@@ -141,6 +141,13 @@ class WriterValidationController extends Controller
     }
 
     public function store(Request $request) {
+
+        $request->validate([
+            'topic' => 'required',
+            'anchor_text' => 'required',
+            'link_to' => 'required',
+        ]);
+
         $input = $request->except('writer_name', 'duration', 'topic');
         $input['status'] = 'Setup';
         $input['topic'] = is_array($request->topic) ? implode(",", $request->topic) : $request->topic;

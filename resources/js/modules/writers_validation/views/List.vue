@@ -127,7 +127,7 @@
                                             <template v-if="writer.writer_exam.length === 0">
                                                 <tr>
                                                     <td class="align-middle font-weight-bold">
-                                                        {{ writer.username }}
+                                                        (#{{ writer.id }}) {{ writer.username }}
                                                     </td>
 
                                                     <td class="align-middle">
@@ -164,7 +164,7 @@
                                                         :rowspan="checkExamsHaveDisapproved(writer.writer_exam) ? 2 : writer.writer_exam.length"
                                                         :style="index > 0 ? 'display: none !important' : ''">
 
-                                                        {{ writer.username }}
+                                                        (#{{ writer.id }}) {{ writer.username }}
                                                     </td>
 
                                                     <td
@@ -234,7 +234,7 @@
                                                         class="align-middle font-weight-bold"
                                                         style="display: none !important;">
 
-                                                        {{ writer.username }}
+                                                        (#{{ writer.id }}) {{ writer.username }}
                                                     </td>
 
                                                     <td class="align-middle" style="border: none !important;">
@@ -329,6 +329,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label>Topic Notes</label>
+                                        <textarea v-model="addExam.topic_notes" class="form-control" rows="3">
+
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label>Anchor Text</label>
                                         <input type="text" class="form-control" v-model="addExam.anchor_text">
                                     </div>
@@ -388,6 +396,14 @@
                                             :searchable="false"
                                             :disabled=true
                                             placeholder="Select Topic"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Topic Notes</label>
+                                        <textarea v-model="viewModel.topic_notes" class="form-control" rows="3" disabled>
+
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -557,6 +573,18 @@
                                                 placeholder="Select Topic"/>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Topic Notes</label>
+                                            <textarea
+                                                v-model="ExamUpdateFirst.topic_notes"
+                                                disabled
+                                                rows="3"
+                                                class="form-control">
+
+                                            </textarea>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Anchor Text</label>
@@ -695,6 +723,18 @@
                                                 placeholder="Select Topic"/>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Topic Notes</label>
+                                            <textarea
+                                                v-model="ExamUpdateSecond.topic_notes"
+                                                disabled
+                                                rows="3"
+                                                class="form-control">
+
+                                            </textarea>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Anchor Text</label>
@@ -774,6 +814,7 @@ export default {
             },
             addExam: {
                 topic: '',
+                topic_notes: '',
                 writer_name: '',
                 writer_id: '',
                 anchor_text: '',
@@ -793,6 +834,7 @@ export default {
 
             ExamUpdateFirst: {
                 topic: '',
+                topic_notes: '',
                 link_to: '',
                 anchor_text: '',
                 meta_description: '',
@@ -803,6 +845,7 @@ export default {
 
             ExamUpdateSecond: {
                 topic: '',
+                topic_notes: '',
                 link_to: '',
                 anchor_text: '',
                 meta_description: '',
@@ -817,6 +860,7 @@ export default {
                 id: '',
                 title: '',
                 topic: '',
+                topic_notes: '',
                 anchor_text: '',
                 meta_description: '',
                 status: '',
@@ -845,6 +889,7 @@ export default {
                 'Education',
                 'Fashion',
                 'Finance',
+                'Gambling',
                 'Games',
                 'Health',
                 'History',
@@ -1108,22 +1153,13 @@ export default {
             this.viewModel.meta_description = exam.meta_description;
             this.viewModel.attempt = exam.attempt;
             this.viewModel.topic = topic;
+            this.viewModel.topic_notes = exam.topic_notes;
             this.data2 = exam.content === null ? '' : exam.content;
 
             $("#modalEditWriterValidateViewContent").modal('show')
         },
 
         submitExam() {
-            if(this.addExam.anchor_text == "" || this.addExam.link_to == "" || this.addExam.topic == "") {
-                swal.fire(
-                    'Error',
-                    'Please Fill up all fields.',
-                    'error',
-                )
-
-                return false;
-            }
-
             // if 2nd attempt, duration must be <= 0
             if (this.addExam.attempt === 2) {
                 if (this.addExam.duration > 0) {
@@ -1153,14 +1189,30 @@ export default {
                     )
 
                     $("#modalEditWriterValidate").modal('hide');
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     loader.hide();
+
+                    let errorMessages = Object.values(err.response.data.errors);
+                    let html = "<span style='color: red; text-transform: uppercase'>" + err.response.data.message + "</span><br/><br/>";
+
+                    for(let i = 0; i < errorMessages.length; i++) {
+                        html += "<span>" + errorMessages[i] + "</span><br>";
+                    }
+
+                    swal.fire(
+                        'Error',
+                        html,
+                        'error',
+                    )
+
                     console.log(err)
                 })
         },
 
         doCreateExam(writer_id, writer_username, attempt, duration) {
             this.addExam.topic = '';
+            this.addExam.topic_notes = '';
             this.addExam.writer_name = writer_username;
             this.addExam.writer_id = writer_id;
             this.addExam.title = '';

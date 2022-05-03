@@ -2195,6 +2195,7 @@ export default {
                 'Education',
                 'Fashion',
                 'Finance',
+                'Gambling',
                 'Games',
                 'Health',
                 'History',

@@ -25,6 +25,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     protected $httpClient;
 
     private $topic_list = [
+        'Adult',
         'Art',
         'Beauty',
         'Charity',
@@ -33,6 +34,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         'Education',
         'Fashion',
         'Finance',
+        'Gambling',
         'Games',
         'Health',
         'History',

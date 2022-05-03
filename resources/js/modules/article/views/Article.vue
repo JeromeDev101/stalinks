@@ -817,6 +817,7 @@
                     'Education',
                     'Fashion',
                     'Finance',
+                    'Gambling',
                     'Games',
                     'Health',
                     'History',
