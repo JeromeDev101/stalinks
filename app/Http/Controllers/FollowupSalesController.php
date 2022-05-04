@@ -46,7 +46,7 @@ class FollowupSalesController extends Controller
             ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
-        $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
+        $publisher_ids = Publisher::withTrashed()->where('user_id', $user->id)->pluck('id')->toArray();
 
         if ($user->type != 10 && isset($registered->type) && $registered->type == 'Seller') {
             $list->whereIn('backlinks.publisher_id', $publisher_ids);
