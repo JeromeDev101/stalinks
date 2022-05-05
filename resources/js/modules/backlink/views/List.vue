@@ -553,7 +553,7 @@
                                         {{ $t('message.follow_backlinks.efb_uninterested') }}
                                     </button>
                                     <button
-                                        v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || isSubAccount"
+                                        v-if="user.isAdmin || isCanValidateBacklink || isSubAccount"
                                         class="btn btn-success col"
 
                                         @click.prevent="buy">
