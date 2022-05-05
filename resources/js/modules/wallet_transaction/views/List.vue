@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.wallet_transaction.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -22,9 +22,9 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label>{{ $t('message.wallet_transaction.filter_buyer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.buyer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.wallet_transaction.all') }}</option>
                                         <option v-for="option
                                      in
                                      listBuyerTransactions.data" v-bind:value="option.id">
@@ -36,9 +36,9 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Payment Type</label>
+                                    <label>{{ $t('message.wallet_transaction.filter_payment_type') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.payment_type">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.wallet_transaction.all') }}</option>
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
                                         </option>
@@ -48,14 +48,14 @@
 
                             <!--                        <div class="col-md-3">-->
                             <!--                            <div class="form-group">-->
-                            <!--                                <label for="">Date</label>-->
+                            <!--                                <label>Date</label>-->
                             <!--                                <input type="date" class="form-control" v-model="filterModel.date"  name="" aria-describedby="helpId" placeholder="Type here">-->
                             <!--                            </div>-->
                             <!--                        </div>-->
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Date</label>
+                                    <label>{{ $t('message.wallet_transaction.filter_date') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -75,9 +75,12 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch">Clear</button>
-                                <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading"
-                                                                                            class="fa fa-refresh fa-spin"></i>
+                                <button class="btn btn-default" @click="clearSearch">
+                                    {{ $t('message.wallet_transaction.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="doSearch">
+                                    {{ $t('message.wallet_transaction.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
                                 </button>
                             </div>
                         </div>
@@ -90,34 +93,41 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Wallet Transaction</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.wallet_transaction.wt_title') }}</h3>
                         <div class="card-tools">
                             <button v-if="user.isAdmin"
                                     data-toggle="modal"
                                     @click="clearMessageform"
                                     data-target="#modal-add-wallet"
-                                    class="btn btn-success float-right"><i class="fa fa-plus"></i> Add Wallet
+                                    class="btn btn-success float-right"><i class="fa fa-plus"></i>
+                                {{ $t('message.wallet_transaction.wt_add_wallet') }}
                             </button>
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="text-primary"
-                              v-show="user.role_id == 5">Total deposit: <b>${{listWallet.deposit}}</b></span>
-                        <span class="text-primary">Total amount: <b>${{ totalAmount }}</b></span>
+                        <span class="text-primary" v-show="user.role_id == 5">
+                            {{ $t('message.wallet_transaction.wt_total_deposit') }}
+                            <b>${{listWallet.deposit}}</b>
+                        </span>
+
+                        <span class="text-primary">
+                            {{ $t('message.wallet_transaction.wt_total_amount') }}
+                            <b>${{ totalAmount }}</b>
+                        </span>
 
                         <table id="tbl_wallet_transaction"
                                class="table table-hover table-bordered table-striped rlink-table">
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Id Buyer</th>
-                                <th>Buyer</th>
-                                <th>Payment Via</th>
-                                <th>Amount USD</th>
-                                <th>Date</th>
-                                <th>Proof of Doc</th>
-                                <th>Confirmation</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.wallet_transaction.wt_id_buyer') }}</th>
+                                <th>{{ $t('message.wallet_transaction.filter_buyer') }}</th>
+                                <th>{{ $t('message.wallet_transaction.wt_payment_via') }}</th>
+                                <th>{{ $t('message.wallet_transaction.wt_amount_usd') }}</th>
+                                <th>{{ $t('message.wallet_transaction.filter_date') }}</th>
+                                <th>{{ $t('message.wallet_transaction.wt_proof_of_doc') }}</th>
+                                <th>{{ $t('message.wallet_transaction.wt_confirmation') }}</th>
+                                <th>{{ $t('message.wallet_transaction.wt_action') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -132,27 +142,35 @@
                                     <div class="btn-group">
                                         <button
                                             v-if="wallet.invoice"
-                                            title="Download Invoice"
+                                            :title="$t('message.wallet_transaction.wt_download_invoice')"
                                             @click="downloadInvoice(wallet.id)"
-                                            class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
-                                        <button v-else
-                                                title="Proof of Documents"
-                                                @click="doShow(wallet.proof_doc)"
-                                                data-target="#modal-wallet-docs"
-                                                data-toggle="modal"
-                                                class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                            class="btn btn-default">
+                                            <i class="fa fa-fw fa-download"></i>
+                                        </button>
+
+                                        <button
+                                            v-else
+                                            :title="$t('message.wallet_transaction.wt_proof_of_documents')"
+                                            @click="doShow(wallet.proof_doc)"
+                                            data-target="#modal-wallet-docs"
+                                            data-toggle="modal"
+                                            class="btn btn-default">
+                                            <i class="fa fa-fw fa-eye"></i>
+                                        </button>
                                     </div>
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
                                 <td>
-                                    <div
-                                        class="btn-group"
-                                        v-if="user.isAdmin">
-                                        <button title="Edit"
-                                                @click="doUpdate(wallet)"
-                                                data-target="#modal-wallet-transaction-update"
-                                                data-toggle="modal"
-                                                class="btn btn-default"><i class="fas fa-pencil-alt"></i></button>
+                                    <div class="btn-group" v-if="user.isAdmin">
+                                        <button
+                                            :title="$t('message.wallet_transaction.edit')"
+                                            @click="doUpdate(wallet)"
+                                            data-target="#modal-wallet-transaction-update"
+                                            data-toggle="modal"
+                                            class="btn btn-default">
+
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -173,7 +191,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Proof of Documents</h5>
+                        <h5 class="modal-title">{{ $t('message.wallet_transaction.wt_proof_of_documents') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -181,12 +199,14 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <img class="img-fluid" :src="proof_doc" atl="Proof of Billing">
+                                <img class="img-fluid" :src="proof_doc" :atl="$t('message.wallet_transaction.pd_proof_billing')">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.wallet_transaction.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -200,66 +220,89 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Wallet Transaction</h5>
+                        <h5 class="modal-title">{{ $t('message.wallet_transaction.awt_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
                     </div>
                     <div class="modal-body">
-                        <div class="row" v-if="walletStep
-                         === 0">
+                        <div class="row" v-if="walletStep === 0">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">
-                                    <label for="">User Buyer</label>
+                                    <label>{{ $t('message.wallet_transaction.awt_user_buyer') }}</label>
+
                                     <select name="" class="form-control" v-model="updateModel.user_id_buyer">
-                                        <option value="">Select Buyer</option>
+                                        <option value="">{{ $t('message.wallet_transaction.awt_select_buyer') }}</option>
                                         <option v-for="option in listBuyer.data" v-bind:value="option.id">
                                             {{ 'ID: ' + option.id + ' - Name: ' + option.name }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.user_id_buyer"
-                                          v-for="err in messageForms.errors.user_id_buyer"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.user_id_buyer"
+                                        v-for="err in messageForms.errors.user_id_buyer"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
-                                    <label for="">Amount USD</label>
-                                    <input type="number"
-                                           class="form-control"
-                                           name=""
-                                           placeholder="0.00"
-                                           v-model="updateModel.amount_usd">
-                                    <span v-if="messageForms.errors.amount_usd"
-                                          v-for="err in messageForms.errors.amount_usd"
-                                          class="text-danger">{{ err }}</span>
+                                    <label>{{ $t('message.wallet_transaction.wt_amount_usd') }}</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name=""
+                                        placeholder="0.00"
+                                        v-model="updateModel.amount_usd">
+
+                                    <span
+                                        v-if="messageForms.errors.amount_usd"
+                                        v-for="err in messageForms.errors.amount_usd"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
-                                    <label for="">Payment Via</label>
+                                    <label>{{ $t('message.wallet_transaction.wt_payment_via') }}</label>
+
                                     <select name="" class="form-control" v-model="updateModel.payment_type">
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.payment_type"
-                                          v-for="err in messageForms.errors.payment_type"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.payment_type"
+                                        v-for="err in messageForms.errors.payment_type"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-12"
                                  v-if="updateModel.payment_type != 1">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
-                                    <label for="">Proof of Documents</label>
-                                    <input type="file"
-                                           class="form-control"
-                                           enctype="multipart/form-data"
-                                           ref="proof"
-                                           name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png
-                                                              )</small><br/>
-                                    <span v-if="messageForms.errors.file"
-                                          v-for="err in messageForms.errors.file"
-                                          class="text-danger">{{ err }}</span>
+                                    <label>{{ $t('message.wallet_transaction.wt_proof_of_documents') }}</label>
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        enctype="multipart/form-data"
+                                        ref="proof"
+                                        name="file">
+
+                                    <small class="text-muted">
+                                        {{ $t('message.wallet_transaction.awt_proof_note') }}
+                                    </small>
+
+                                    <br/>
+
+                                    <span
+                                        v-if="messageForms.errors.file"
+                                        v-for="err in messageForms.errors.file"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -277,8 +320,12 @@
                     </div>
                     <div class="modal-footer"
                          v-if="walletStep === 0">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitPay" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.wallet_transaction.close') }}
+                        </button>
+                        <button type="button" @click="submitPay" class="btn btn-primary">
+                            {{ $t('message.wallet_transaction.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -295,7 +342,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Wallet Transaction</h5>
+                        <h5 class="modal-title">{{ $t('message.wallet_transaction.uw_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -308,82 +355,112 @@
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">
-                                    <label for="">User Buyer</label>
+                                    <label>{{ $t('message.wallet_transaction.awt_user_buyer') }}</label>
                                     <select name="" class="form-control" v-model="editModel.user_id_buyer">
-                                        <option value="">Select Buyer</option>
+                                        <option value="">{{ $t('message.wallet_transaction.awt_select_buyer') }}</option>
                                         <option v-for="option in listBuyer.data" v-bind:value="option.id">
                                             {{ 'ID: ' + option.id + ' - Name: ' + option.name }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.user_id_buyer"
-                                          v-for="err in messageForms.errors.user_id_buyer"
-                                          class="text-danger">{{ err }}</span>
+                                    <span
+                                        v-if="messageForms.errors.user_id_buyer"
+                                        v-for="err in messageForms.errors.user_id_buyer"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
-                                    <label for="">Amount USD</label>
-                                    <input type="number"
-                                           class="form-control"
-                                           name=""
-                                           placeholder="0.00"
-                                           v-model="editModel.amount_usd">
-                                    <span v-if="messageForms.errors.amount_usd"
-                                          v-for="err in messageForms.errors.amount_usd"
-                                          class="text-danger">{{ err }}</span>
+                                    <label>{{ $t('message.wallet_transaction.wt_amount_usd') }}</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name=""
+                                        placeholder="0.00"
+                                        v-model="editModel.amount_usd">
+
+                                    <span
+                                        v-if="messageForms.errors.amount_usd"
+                                        v-for="err in messageForms.errors.amount_usd"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
-                                    <label for="">Payment Via</label>
+                                    <label>{{ $t('message.wallet_transaction.wt_payment_via') }}</label>
+
                                     <select name="" class="form-control" v-model="editModel.payment_type">
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.payment_type"
-                                          v-for="err in messageForms.errors.payment_type"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.payment_type"
+                                        v-for="err in messageForms.errors.payment_type"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
-                                    <label for="">Proof of Documents</label>
-                                    <input type="file"
-                                           class="form-control"
-                                           enctype="multipart/form-data"
-                                           ref="proof_edit"
-                                           name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png
-                                                              )</small><br/>
+                                    <label>{{ $t('message.wallet_transaction.wt_proof_of_documents') }}</label>
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        enctype="multipart/form-data"
+                                        ref="proof_edit"
+                                        name="file">
+
+                                    <small class="text-muted">
+                                        {{ $t('message.wallet_transaction.awt_proof_note') }}
+                                    </small>
+
+                                    <br/>
+
                                     <span v-if="messageForms.errors.file"
                                           v-for="err in messageForms.errors.file"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.admin_confirmation}">
-                                    <label for="">Confirmation</label>
+                                    <label>{{ $t('message.wallet_transaction.wt_confirmation') }}</label>
+
                                     <select name="" class="form-control" v-model="editModel.admin_confirmation">
-                                        <option value="">Select Confirmation</option>
-                                        <option value="Paid">Paid</option>
-                                        <option value="Not Paid">Not Paid</option>
+                                        <option value="">{{ $t('message.wallet_transaction.uw_select_confirmation') }}</option>
+                                        <option value="Paid">{{ $t('message.wallet_transaction.uw_paid') }}</option>
+                                        <option value="Not Paid">{{ $t('message.wallet_transaction.uw_not_paid') }}</option>
                                     </select>
-                                    <span v-if="messageForms.errors.admin_confirmation"
-                                          v-for="err in messageForms.errors.admin_confirmation"
-                                          class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.admin_confirmation"
+                                        v-for="err in messageForms.errors.admin_confirmation"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdatePay" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.wallet_transaction.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdatePay" class="btn btn-primary">
+                            {{ $t('message.wallet_transaction.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -448,6 +525,7 @@ export default {
 
     methods : {
         initPaypalButtons() {
+            let self = this;
             paypal.Buttons({
                 style : {
                     shape : 'rect',
@@ -475,8 +553,8 @@ export default {
                             };
 
                             swal.fire(
-                                'Success',
-                                'Successfully Added',
+                                self.$t('message.wallet_transaction.alert_success'),
+                                self.$t('message.wallet_transaction.alert_successfully_added'),
                                 'success'
                             );
 
@@ -489,8 +567,8 @@ export default {
 
                 onError : function (err) {
                     swal.fire(
-                        'Error',
-                        'There was an error on processing your payment.',
+                        self.$t('message.wallet_transaction.alert_error'),
+                        self.$t('message.wallet_transaction.alert_error_payment'),
                         'error'
                     )
                 }
@@ -579,6 +657,7 @@ export default {
         },
 
         downloadInvoice(id) {
+            let self = this;
             axios({
                 url : '/api/files/invoice/paypal/' + id,
                 method : 'GET',
@@ -595,8 +674,8 @@ export default {
                 fileLink.click();
             }).catch((error) => {
                 swal.fire(
-                    'Error',
-                    'File not found.',
+                    self.$t('message.wallet_transaction.alert_error'),
+                    self.$t('message.wallet_transaction.alert_file_not_found'),
                     'error'
                 )
             });
@@ -623,6 +702,7 @@ export default {
         },
 
         async submitPay() {
+            let self = this;
             this.formData = new FormData();
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
@@ -651,8 +731,8 @@ export default {
                     this.$refs.proof.value = '';
 
                     swal.fire(
-                        'Success',
-                        'Successfully Added',
+                        self.$t('message.wallet_transaction.alert_success'),
+                        self.$t('message.wallet_transaction.alert_successfully_added'),
                         'success'
                     )
 

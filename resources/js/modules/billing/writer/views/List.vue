@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.writer_billing.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,21 +23,21 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
+                                    <label>{{ $t('message.writer_billing.filter_search_id_backlink') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name=""
                                            v-model="filterModel.search_backlink"
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.writer_billing.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Writer</label>
+                                    <label>{{ $t('message.writer_billing.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.writer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.writer_billing.all') }}</option>
                                         <option v-for="option in listWriter.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -47,8 +47,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date Completed
-                                    </label>
+                                    <label>{{ $t('message.writer_billing.filter_date_completed') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -66,8 +65,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date Created
-                                    </label>
+                                    <label>{{ $t('message.writer_billing.filter_date_created') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -86,10 +84,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.writer_billing.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search
-                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.writer_billing.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -101,7 +102,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Writer Billing</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.writer_billing.wb_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -115,71 +116,82 @@
                                         data-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false">
-                                    Selected Action
+                                    {{ $t('message.writer_billing.wb_selected_action') }}
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" @click="doUpdatePay" href="#">Pay</a>
+                                    <a class="dropdown-item" @click="doUpdatePay" href="#">
+                                        {{ $t('message.writer_billing.wb_pay') }}
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
-                        <table id="tbl_writer_billing"
-                               class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Select</th>
-                                <th>Date Completed</th>
-                                <th>Date Created</th>
-                                <th>ID Backlink</th>
-                                <th>ID Article</th>
-                                <th>Writer</th>
-                                <th>Price for writer</th>
-                                <th>Payment Status</th>
-                                <th>Proof Documents</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(article, index) in listArticle.data" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-default">
-                                            <input type="checkbox"
-                                                   :disabled="article.payment_status == 'Paid'"
-                                                   v-model="checkIds"
-                                                   v-on:change="checkSelected"
-                                                   :id="article.id"
-                                                   :value="article">
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>{{ article.date_complete }}</td>
-                                <td>{{ article.created_at }}</td>
-                                <td>{{ article.id_backlink }}</td>
-                                <td>{{ article.id }}</td>
-                                <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
-                                <td>{{ '$ ' + computeWriterPrice(article) }}</td>
-                                <td>{{ article.payment_status == null ? 'Not Paid' : article.payment_status }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button
-                                            v-if="article.proof_doc_path == null || !isFilePdf(article.proof_doc_path)"
-                                            title="View Proof of Billing"
-                                            :disabled="article.proof_doc_path == null"
-                                            @click="doShow(article.proof_doc_path)"
-                                            data-target="#modal-view-docs"
-                                            data-toggle="modal"
-                                            class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
-                                        <button v-else
-                                                title="Download Proof"
-                                                @click="downloadProof(article.billing_writer_id)"
-                                                class="btn btn-default"><i class="fa fa-fw fa-download"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="tbl_writer_billing"
+                                   class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>{{ $t('message.writer_billing.wb_select') }}</th>
+                                    <th>{{ $t('message.writer_billing.filter_date_completed') }}</th>
+                                    <th>{{ $t('message.writer_billing.filter_date_created') }}</th>
+                                    <th>{{ $t('message.writer_billing.wb_id_backlink') }}</th>
+                                    <th>{{ $t('message.writer_billing.wb_id_article') }}</th>
+                                    <th>{{ $t('message.writer_billing.filter_writer') }}</th>
+                                    <th>{{ $t('message.writer_billing.wb_price_writer') }}</th>
+                                    <th>{{ $t('message.writer_billing.wb_payment_status') }}</th>
+                                    <th>{{ $t('message.writer_billing.wb_proof_doc') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(article, index) in listArticle.data" :key="index">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-default">
+                                                <input type="checkbox"
+                                                       :disabled="article.payment_status == 'Paid'"
+                                                       v-model="checkIds"
+                                                       v-on:change="checkSelected"
+                                                       :id="article.id"
+                                                       :value="article">
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>{{ article.date_complete }}</td>
+                                    <td>{{ article.created_at }}</td>
+                                    <td>{{ article.id_backlink }}</td>
+                                    <td>{{ article.id }}</td>
+                                    <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
+                                    <td>{{ '$ ' + computeWriterPrice(article) }}</td>
+                                    <td>{{ article.payment_status == null ? $t('message.writer_billing.wb_not_paid') : article.payment_status }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button
+                                                v-if="article.proof_doc_path == null || !isFilePdf(article.proof_doc_path)"
+                                                :title="$t('message.writer_billing.wb_view_proof_billing')"
+                                                :disabled="article.proof_doc_path == null"
+                                                data-target="#modal-view-docs"
+                                                data-toggle="modal"
+                                                class="btn btn-default"
+
+                                                @click="doShow(article.proof_doc_path)">
+                                                <i class="fa fa-fw fa-eye"></i>
+                                            </button>
+                                            <button
+                                                v-else
+                                                :title="$t('message.writer_billing.wb_download_proof')"
+                                                class="btn btn-default"
+
+                                                @click="downloadProof(article.billing_writer_id)">
+                                                <i class="fa fa-fw fa-download"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,7 +208,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Payment</h5>
+                        <h5 class="modal-title">{{ $t('message.writer_billing.p_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
@@ -210,20 +222,20 @@
                             <div class="col-md-12 mb-4">
                                 <table class="table">
                                     <tr>
-                                        <td style="border-top: 0px;">Writer: <b>{{ info.writer }}</b></td>
-                                        <td style="border-top: 0px;">Amount to Pay: <b>$ {{ info.amount }}</b></td>
+                                        <td style="border-top: 0px;">{{ $t('message.writer_billing.filter_writer') }}: <b>{{ info.writer }}</b></td>
+                                        <td style="border-top: 0px;">{{ $t('message.writer_billing.p_amount_to_pay') }} <b>$ {{ info.amount }}</b></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Payment Type:
-                                            <b :class="{ 'text-danger' : info.payment_type == 'Not yet setup' }">{{
-                                                    info.payment_type
-                                                                                                                 }}</b>
+                                            {{ $t('message.writer_billing.p_payment_type') }}
+                                            <b :class="{ 'text-danger' : info.payment_type == 'Not yet setup' }">
+                                                {{ info.payment_type }}
+                                            </b>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Account:
+                                            {{ $t('message.writer_billing.p_account') }}
                                             <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">
                                                 {{ info.account }}
                                             </b>
@@ -232,27 +244,36 @@
                                 </table>
                             </div>
 
-                            <div class="col-md-12"
-                                 v-if="info.payment_type_id
-                                 != 1">
+                            <div
+                                class="col-md-12"
+                                v-if="info.payment_type_id != 1">
+
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
-                                    <label for="">Proof of Documents</label>
-                                    <input type="file"
-                                           class="form-control"
-                                           enctype="multipart/form-data"
-                                           ref="proof"
-                                           name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png
-                                                              )</small><br/>
+                                    <label>{{ $t('message.writer_billing.p_proof_documents') }}</label>
+                                    <input
+                                        type="file"
+                                       class="form-control"
+                                       enctype="multipart/form-data"
+                                       ref="proof"
+                                       name="file">
+
+                                    <small class="text-muted">
+                                        {{ $t('message.writer_billing.p_proof_note') }}
+                                    </small>
+
+                                    <br/>
+
                                     <span v-if="messageForms.errors.file"
                                           v-for="err in messageForms.errors.file"
-                                          class="text-danger">{{ err }}</span>
+                                          class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <!-- <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.payment_type}">
-                                    <label for="">Payment Type</label>
+                                    <label>Payment Type</label>
                                     <select name="" class="form-control" v-model="updateModel.payment_type">
                                         <option v-for="option in listPayment.data" v-bind:value="option.id">
                                             {{ option.type }}
@@ -265,8 +286,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="doPay" class="btn btn-primary" :disabled="isDisabledPay">Pay
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.writer_billing.close') }}
+                        </button>
+                        <button type="button" @click="doPay" class="btn btn-primary" :disabled="isDisabledPay">
+                            {{ $t('message.writer_billing.pay') }}
                         </button>
                     </div>
                 </div>
@@ -284,17 +308,19 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Proof of Document</h5>
+                        <h5 class="modal-title">{{ $t('message.writer_billing.pd_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <img class="img-fluid" :src="proof_doc" atl="Proof of Billing">
+                                <img class="img-fluid" :src="proof_doc" :atl="$t('message.writer_billing.pd_proof_billing')">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.writer_billing.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -386,6 +412,7 @@ export default {
         },
 
         async doUpdatePay() {
+            let self = this;
             await this.$store.dispatch('actionGetWriterInfo', {ids : this.checkIds});
 
             if (this.writerInfo.success) {
@@ -443,8 +470,8 @@ export default {
                 $(modal).modal('show')
             } else {
                 swal.fire(
-                    'Invalid',
-                    'Multiple Payment in different Writer is invalid.',
+                    self.$t('message.writer_billing.alert_invalid'),
+                    self.$t('message.writer_billing.alert_multiple_different_writer'),
                     'error'
                 )
             }

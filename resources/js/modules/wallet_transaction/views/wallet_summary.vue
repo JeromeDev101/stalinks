@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.wallet_summary.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,9 +23,9 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Buyer</label>
+                                    <label>{{ $t('message.wallet_summary.filter_buyer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.buyer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.wallet_summary.all') }}</option>
                                         <option v-for="option in summaryData" v-bind:value="option.id">
                                             {{ option.username }}
                                         </option>
@@ -35,9 +35,9 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Month</label>
+                                    <label>{{ $t('message.wallet_summary.filter_month') }}</label>
                                     <select class="form-control" v-model="filterModel.month">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.wallet_summary.all') }}</option>
                                         <option v-for="month in months" v-bind:value="month.value">
                                             {{ month.label }}
                                         </option>
@@ -47,13 +47,13 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Year</label>
+                                    <label>{{ $t('message.wallet_summary.filter_year') }}</label>
                                     <date-picker
                                         v-model="dateTemp"
                                         format="yyyy"
                                         minimum-view="year"
                                         maximum-view="year"
-                                        placeholder="All"
+                                        :placeholder="$t('message.wallet_summary.all')"
                                         clear-button-icon="fas fa-times"
                                         :typeable=true
                                         :clear-button=true
@@ -69,8 +69,12 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                                <button class="btn btn-default" @click="getWalletSummary()">Search </button>
+                                <button class="btn btn-default" @click="clearSearch()">
+                                    {{ $t('message.wallet_summary.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="getWalletSummary()">
+                                    {{ $t('message.wallet_summary.search') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -82,7 +86,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Wallet Summary</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.wallet_summary.ws_title') }}</h3>
                     </div>
 
                     <div class="card-body">
@@ -91,14 +95,14 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Buyer</th>
-                                    <th>Deposit</th>
-                                    <th>Orders</th>
-                                    <th>Orders Cancelled</th>
-                                    <th>Valid Orders</th>
-                                    <th>Credit Left</th>
-                                    <th>Purchase</th>
-                                    <th>Wallet</th>
+                                    <th>{{ $t('message.wallet_summary.filter_buyer') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_deposit') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_orders') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_orders_cancelled') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_valid_orders') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_credit_left') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_purchase') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_wallet') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>

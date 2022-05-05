@@ -9,6 +9,12 @@ import writer_survey from './Survey/id/writer';
 // subscription
 import subscription from './Subscription/id/main';
 
+// billing
+import seller_billing from './SellerBilling/id/main';
+import writer_billing from './WriterBilling/id/main';
+import wallet_transaction from './WalletTransaction/id/main';
+import wallet_summary from './WalletSummary/id/main';
+
 // help
 import help from './Help/id/main';
 import buyer_1 from './Help/id/buyer_1';
@@ -93,6 +99,12 @@ export default {
 
         // subscription
         subscription,
+
+        // billing
+        seller_billing,
+        writer_billing,
+        wallet_transaction,
+        wallet_summary,
 
         // help
         help,

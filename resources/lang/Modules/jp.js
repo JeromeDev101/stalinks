@@ -9,6 +9,12 @@ import writer_survey from './Survey/jp/writer';
 // subscription
 import subscription from './Subscription/jp/main';
 
+// billing
+import seller_billing from './SellerBilling/jp/main';
+import writer_billing from './WriterBilling/jp/main';
+import wallet_transaction from './WalletTransaction/jp/main';
+import wallet_summary from './WalletSummary/jp/main';
+
 // help
 import help from './Help/jp/main'
 import buyer_1 from "./Help/jp/buyer_1";
@@ -93,6 +99,12 @@ export default {
 
         // subscription
         subscription,
+
+        // billing
+        seller_billing,
+        writer_billing,
+        wallet_transaction,
+        wallet_summary,
 
         // help
         help,

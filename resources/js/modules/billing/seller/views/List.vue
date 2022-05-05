@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.seller_billing.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,33 +23,33 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
+                                    <label>{{ $t('message.seller_billing.filter_search_id_backlink') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.search"
                                            name=""
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.seller_billing.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Status Billing </label>
+                                    <label>{{ $t('message.seller_billing.filter_status_billing') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.status_billing">
-                                        <option value="">All</option>
-                                        <option value="Not Yet">Not Yet</option>
-                                        <option value="Done">Done</option>
-                                        <option value="Voided">Voided</option>
+                                        <option value="">{{ $t('message.seller_billing.all') }}</option>
+                                        <option value="Not Yet">{{ $t('message.seller_billing.not_yet') }}</option>
+                                        <option value="Done">{{ $t('message.seller_billing.done') }}</option>
+                                        <option value="Voided">{{ $t('message.seller_billing.voided') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Seller </label>
+                                    <label>{{ $t('message.seller_billing.filter_seller') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.seller">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.seller_billing.all') }}</option>
                                         <option v-for="option in listSeller.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -59,8 +59,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date Completed
-                                    </label>
+                                    <label>{{ $t('message.seller_billing.filter_date_completed') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -78,8 +77,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date of Payment
-                                    </label>
+                                    <label>{{ $t('message.seller_billing.filter_date_payment') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -98,10 +96,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.seller_billing.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search
-                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.seller_billing.search') }}
+                                    <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -113,12 +114,12 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Seller Billing</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.seller_billing.sb_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="d-inline pull-right">Amount: $ {{ totalAmount }}</h5>
+                        <h5 class="d-inline pull-right">{{ $t('message.seller_billing.sb_amount') }} $ {{ totalAmount }}</h5>
 
                         <div class="row">
                             <div class="col-md-2 my-3">
@@ -132,12 +133,16 @@
                                                 data-toggle="dropdown"
                                                 aria-haspopup="true"
                                                 aria-expanded="false">
-                                            Selected Action
+                                            {{ $t('message.seller_billing.sb_selected_action') }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" @click="doUpdatePayment" href="#">Pay</a>
+                                            <a class="dropdown-item" @click="doUpdatePayment" href="#">
+                                                {{ $t('message.seller_billing.sb_pay') }}
+                                            </a>
 
-                                            <a class="dropdown-item" @click="updatePayment" href="#">Void</a>
+                                            <a class="dropdown-item" @click="updatePayment" href="#">
+                                                {{ $t('message.seller_billing.sb_void') }}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -150,15 +155,15 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>Select</th>
-                                <th>ID Backlink</th>
-                                <th>Seller</th>
-                                <th>Seller Price</th>
-                                <th>Date of Payment</th>
-                                <th>Date Completed</th>
-                                <th>Status Billing</th>
-                                <th>Status Payment</th>
-                                <th>Proof Documents</th>
+                                <th>{{ $t('message.seller_billing.sb_select') }}</th>
+                                <th>{{ $t('message.seller_billing.sb_id_backlink') }}</th>
+                                <th>{{ $t('message.seller_billing.filter_seller') }}</th>
+                                <th>{{ $t('message.seller_billing.sb_seller_price') }}</th>
+                                <th>{{ $t('message.seller_billing.filter_date_payment') }}</th>
+                                <th>{{ $t('message.seller_billing.filter_date_completed') }}</th>
+                                <th>{{ $t('message.seller_billing.filter_status_billing') }}</th>
+                                <th>{{ $t('message.seller_billing.sb_status_payment') }}</th>
+                                <th>{{ $t('message.seller_billing.sb_proof') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -178,15 +183,15 @@
                                 </td>
                                 <td>{{ seller.id }}</td>
                                 <td>{{
-                                        seller.publisher == null ? 'Record Deleted' : seller.publisher.user == null ? 'Record Deleted' : seller.publisher.user.username
+                                        seller.publisher == null ? 'Record Deleted' : seller.publisher.user == null ? $t('message.seller_billing.sb_record_deleted') : seller.publisher.user.username
                                     }}
                                 </td>
                                 <td>{{
-                                        seller.price == null || seller.price == '' ? 'Record Deleted' : '$ ' + formatPrice(seller.price)
+                                        seller.price == null || seller.price == '' ? $t('message.seller_billing.sb_record_deleted') : '$ ' + formatPrice(seller.price)
                                     }}
                                 </td>
                                 <td>
-                                    {{ seller.date_billing == null || seller.date_billing === '' ? 'Pending' : seller.date_billing }}
+                                    {{ seller.date_billing == null || seller.date_billing === '' ? $t('message.seller_billing.sb_pending') : seller.date_billing }}
                                 </td>
                                 <td>{{ seller.live_date }}</td>
                                 <td>{{
@@ -203,7 +208,7 @@
                                             v-if="seller.proof_doc_path == null || !isFilePdf(seller.proof_doc_path)"
                                             @click="doShow(seller.proof_doc_path)"
                                             :disabled="seller.proof_doc_path == null"
-                                            title="View Proof of Billing"
+                                            :title="$t('message.seller_billing.sb_view_proof')"
                                             data-target="#modal-view-docs"
                                             data-toggle="modal"
                                             class="btn btn-default">
@@ -213,7 +218,7 @@
 
                                         <button
                                             v-else
-                                            title="Download Proof"
+                                            :title="$t('message.seller_billing.sb_download_proof')"
                                             @click="downloadProof(wallet.id)"
                                             class="btn btn-default">
 
@@ -224,7 +229,7 @@
                                             data-target="#modal-re-upload-doc"
                                             data-toggle="modal"
                                             class="btn btn-default px-3 ml-2"
-                                            title="Re-upload Proof of Billing"
+                                            :title="$t('message.seller_billing.sb_re_upload_proof')"
                                             :disabled="seller.proof_doc_path == null"
 
                                             @click="doShowReupload(seller.proof_doc_path, seller.billing_id)">
@@ -251,19 +256,21 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Proof of Document</h5>
+                        <h5 class="modal-title">{{ $t('message.seller_billing.pd_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <img class="img-fluid"
                                      :src="proof_doc"
-                                     alt="Proof of Billing">
+                                     :alt="$t('message.seller_billing.pd_proof_billing')">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.seller_billing.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -280,11 +287,13 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Payment</h5>
+                        <h5 class="modal-title">{{ $t('message.seller_billing.p_title') }}</h5>
+
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
-                        <span v-if="messageForms.message != '' && !isPopupLoading"
-                              :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                        <span
+                            v-if="messageForms.message != '' && !isPopupLoading"
+                            :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
                             {{ messageForms.message }}
                         </span>
                     </div>
@@ -293,22 +302,29 @@
                             <div class="col-md-12 mb-4">
                                 <table class="table">
                                     <tr>
-                                        <td style="border-top: 0px;">Seller: <b>{{ info.seller }}</b></td>
-                                        <td style="border-top: 0px;">Amount to Pay: <b>$ {{ info.amount }}</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            Payment Type:
-                                            <b :class="{ 'text-danger' : info.payment_type == 'Not yet setup' }">{{
-                                                    info.payment_type
-                                                                                                                 }}</b>
+                                        <td style="border-top: 0px;">
+                                            {{ $t('message.seller_billing.filter_seller') }}:
+                                            <b>{{ info.seller }}</b>
+                                        </td>
+                                        <td style="border-top: 0px;">
+                                            {{ $t('message.seller_billing.p_amount_to_pay') }}
+                                            <b>$ {{ info.amount }}</b>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Account: <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">{{
-                                                info.account
-                                                                                                                     }}</b>
+                                            {{ $t('message.seller_billing.p_payment_type') }}
+                                            <b :class="{ 'text-danger' : info.payment_type == 'Not yet setup' }">
+                                                {{ info.payment_type }}
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            {{ $t('message.seller_billing.p_account') }}
+                                            <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">
+                                                {{ info.account }}
+                                            </b>
                                         </td>
                                     </tr>
                                 </table>
@@ -316,24 +332,33 @@
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
-                                    <label for="">Proof of Documents</label>
-                                    <input type="file"
-                                           class="form-control"
-                                           enctype="multipart/form-data"
-                                           ref="proof"
-                                           name="file">
-                                    <small class="text-muted">Note: It must be image type. ( jpg, jpeg, gif and png
-                                                              )</small><br/>
-                                    <span v-if="messageForms.errors.file"
-                                          v-for="err in messageForms.errors.file"
-                                          class="text-danger">{{ err }}</span>
+                                    <label>{{ $t('message.seller_billing.pd_title') }}</label>
+
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        enctype="multipart/form-data"
+                                        ref="proof"
+                                        name="file">
+
+                                    <small class="text-muted">
+                                        {{ $t('message.seller_billing.p_note') }}
+                                    </small>
+
+                                    <br/>
+
+                                    <span
+                                        v-if="messageForms.errors.file"
+                                        v-for="err in messageForms.errors.file"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="row" v-else-if="step
-                        == 1">
+                        <div class="row" v-else-if="step == 1">
                             <div class="col-sm-12">
                                 <div id="smart-button-container">
                                     <div style="text-align: center;">
@@ -343,12 +368,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer" v-if="step
-                    == 0">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button"
-                                @click="doPay"
-                                class="btn btn-primary" :disabled="isDisabledPay">Pay
+                    <div class="modal-footer" v-if="step == 0">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.seller_billing.close') }}
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="isDisabledPay"
+
+                            @click="doPay">
+                            {{ $t('message.seller_billing.pay') }}
                         </button>
                     </div>
                 </div>
@@ -368,22 +399,23 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Re-upload Document</h5>
+                        <h5 class="modal-title">{{ $t('message.seller_billing.rud_title') }}</h5>
                     </div>
 
                     <div class="modal-body">
 
                         <div class="card">
                             <div class="card-header">
-                                <strong>Uploaded Document</strong>
+                                <strong>{{ $t('message.seller_billing.rud_uploaded') }}</strong>
                             </div>
 
                             <div class="cad-body">
                                 <div class="row">
                                     <div class="col-md-12 text-center">
-                                        <img class="img-fluid"
-                                             :src="proof_doc_re_upload"
-                                             alt="Proof of Billing">
+                                        <img
+                                            class="img-fluid"
+                                            :src="proof_doc_re_upload"
+                                            :alt="$t('message.seller_billing.pd_proof_billing')">
                                     </div>
                                 </div>
                             </div>
@@ -391,7 +423,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <strong>New Document</strong>
+                                <strong>{{ $t('message.seller_billing.rud_new') }}</strong>
                             </div>
 
                             <div class="card-body">
@@ -405,7 +437,7 @@
                                             name="file">
 
                                         <small class="text-muted">
-                                            Note: It must be image type. ( jpg, jpeg, gif and png )
+                                            {{ $t('message.seller_billing.p_note') }}
                                         </small> <br/>
 
                                         <span
@@ -421,7 +453,9 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.seller_billing.close') }}
+                        </button>
 
                         <button
                             type="button"
@@ -430,7 +464,7 @@
 
                             @click="doReupload">
 
-                            Re-Upload
+                            {{ $t('message.seller_billing.rud_re_upload') }}
                         </button>
                     </div>
                 </div>
@@ -565,8 +599,8 @@ export default {
 
                 onError : function (err) {
                     swal.fire(
-                        'Error',
-                        'There was an error on processing your payment.',
+                        vm.$t('message.seller_billing.alert_error'),
+                        vm.$t('message.seller_billing.alert_payment_error'),
                         'error'
                     )
                 }
@@ -602,6 +636,7 @@ export default {
         },
 
         async doUpdatePayment() {
+            let self = this;
             await this.$store.dispatch('actionGetSellerInfo', {ids : this.checkIds});
 
             if (this.sellerInfo.success) {
@@ -644,8 +679,8 @@ export default {
 
             } else {
                 swal.fire(
-                    'Invalid',
-                    'Multiple Payment in different seller is invalid.',
+                    self.$t('message.seller_billing.alert_invalid'),
+                    self.$t('message.seller_billing.alert_multiple_different_seller'),
                     'error'
                 )
             }
@@ -757,6 +792,7 @@ export default {
         },
 
         async doPay() {
+            let self = this;
             $('#tbl_seller_billing').DataTable().destroy();
             this.isDisabledPay = true;
 
@@ -780,8 +816,8 @@ export default {
                 this.checkIds = [];
 
                 swal.fire(
-                    'Success',
-                    'Paid Successfully',
+                    self.$t('message.seller_billing.alert_success'),
+                    self.$t('message.seller_billing.alert_paid_successfully'),
                     'success'
                 )
 
@@ -793,13 +829,14 @@ export default {
         },
 
         doReupload () {
+            let self = this;
             swal.fire({
-                title : "Re-upload new document",
-                html : "Are you sure that you want to update the uploaded document? An automatic email will be sent to the seller.",
+                title : self.$t('message.seller_billing.alert_re_upload'),
+                html : self.$t('message.seller_billing.alert_re_upload_note'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, update it!',
-                cancelButtonText : 'No, keep it'
+                confirmButtonText : self.$t('message.seller_billing.yes_update'),
+                cancelButtonText : self.$t('message.seller_billing.keep')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -809,7 +846,7 @@ export default {
         },
 
         async submitReupload () {
-
+            let self = this;
             let loader = this.$loading.show();
 
             $('#tbl_seller_billing').DataTable().destroy();
@@ -834,8 +871,8 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Success',
-                    'Document re-uploaded successfully!',
+                    self.$t('message.seller_billing.alert_success'),
+                    self.$t('message.seller_billing.alert_re_upload_success'),
                     'success'
                 )
             } else {
@@ -843,8 +880,8 @@ export default {
                 this.isDisabledReupload = false;
 
                 await swal.fire(
-                    'Error',
-                    'There were some errors while uploading the document',
+                    self.$t('message.seller_billing.alert_error'),
+                    self.$t('message.seller_billing.alert_re_upload_error'),
                     'error'
                 )
             }
@@ -884,6 +921,7 @@ export default {
         },
 
         updatePayment() {
+            let self = this;
             let ids = this.checkIds;
             $('#tbl_seller_billing').DataTable().destroy();
 
@@ -893,16 +931,16 @@ export default {
                 data : {ids : ids}
             }).then((response) => {
                 swal.fire(
-                    'Success',
-                    'Payment Voided',
+                    self.$t('message.seller_billing.alert_success'),
+                    self.$t('message.seller_billing.alert_payment_voided'),
                     'success'
                 )
 
                 this.getSellerBilling();
             }).catch((error) => {
                 swal.fire(
-                    'Error',
-                    'Error',
+                    self.$t('message.seller_billing.alert_error'),
+                    self.$t('message.seller_billing.alert_error'),
                     'error'
                 )
             })
