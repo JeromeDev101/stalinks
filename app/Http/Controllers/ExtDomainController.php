@@ -212,7 +212,7 @@ class ExtDomainController extends Controller
         // Employee Filter
         if (isset($input['employee_id']) && !empty($input['employee_id'])) {
             if (is_array($input['employee_id'])) {
-                $query->where(function ($q) use ($input) {
+                $totals = $totals->where(function ($q) use ($input) {
                     foreach ($input['employee_id'] as $name) {
                         if ($name == 'N/A') {
                             $q->orWhere('user_id', null);
