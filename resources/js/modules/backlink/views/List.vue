@@ -177,7 +177,7 @@
 
                         <div class="row">
                             <div class="col-md-8 mb-2">
-                                <div class="input-group" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
+                                <div class="input-group" v-if="user.isAdmin || isCanValidateBacklink || isSubAccount">
                                     <button class="btn btn-default mr-2" @click="selectAll">
                                         {{
                                             allSelected
@@ -247,7 +247,7 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"></th>
+                                    <th v-if="user.isAdmin || isCanValidateBacklink || isSubAccount"></th>
                                     <th v-show="tblFollowupBacklinksOpt.id_backlink">{{ $t('message.follow_backlinks.t_id_bck') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{ $t('message.follow_backlinks.filter_seller') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_user_buyer') }}</th>
@@ -270,7 +270,7 @@
                                 <tbody v-show="!searchLoading">
                                     <tr v-for="(backLink, index) in listBackLink.data">
                                         <td class="center-content">{{ index + 1 }}</td>
-                                        <td class="text-center" v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0">
+                                        <td class="text-center" v-if="user.isAdmin || isCanValidateBacklink || isSubAccount">
                                             <input type="checkbox"
                                             class="custom-checkbox"
                                             @change="checkSelected"
@@ -553,7 +553,7 @@
                                         {{ $t('message.follow_backlinks.efb_uninterested') }}
                                     </button>
                                     <button
-                                        v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || user.registration.is_sub_account === 0"
+                                        v-if="user.isAdmin || user.registration.can_validate_backlink === 1 || isSubAccount"
                                         class="btn btn-success col"
 
                                         @click.prevent="buy">
@@ -665,11 +665,15 @@
                 checkIds: [],
                 allSelected: false,
                 isDisabled: true,
+                isCanValidateBacklink: false,
+                isSubAccount: false,
 
                 currentWindowWidth: window.innerWidth
             }
         },
         async created() {
+            console.log(this.user)
+
             await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
             await this.getBackLinkList();
             this.checkAccountType();
@@ -679,6 +683,8 @@
             this.getSubAccount();
             this.getFormula();
             this.getSummaryStatus();
+            this.canValidateBacklink();
+            this.checkSubAccount();
 
             window.addEventListener("resize", this.resizeEventHandler);
         },
@@ -725,6 +731,29 @@
         },
 
         methods: {
+            checkSubAccount() {
+                if(this.user.registration) {
+                    if(this.user.registration.is_sub_account === 0) {
+                        this.isSubAccount = true;
+                    } else {
+                        this.isSubAccount = false;
+                    }
+                } else {
+                    this.this.isSubAccount = false;
+                }
+            },
+
+            canValidateBacklink() {
+                if(this.user.registration) {
+                    if(this.user.registration.can_validate_backlink === 1) {
+                        this.isCanValidateBacklink = true;
+                    } else {
+                        this.isCanValidateBacklink = false;
+                    }
+                } else {
+                    this.this.isCanValidateBacklink = false;
+                }
+            },
 
             resizeEventHandler(e) {
                 this.currentWindowWidth = window.innerWidth;
