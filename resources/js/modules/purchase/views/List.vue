@@ -55,7 +55,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4" v-if="user.isAdmin || user.role_id === 8 || user.user_type.is_sub_account != 1">
+                            <div class="col-md-4" v-if="user.isAdmin || user.role_id === 8 || isSubAccount">
                                 <div class="form-group">
                                     <label>{{ $t('message.purchase.filter_buyer') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.buyer">
@@ -343,11 +343,13 @@
                 totalAmount: 0,
                 isSearching: false,
                 isSearchingLoading: false,
+                isSubAccount: false,
             }
         },
 
         async created() {
             this.getPurchaseList()
+            this.checkSubAccount();
         },
 
         computed: {
@@ -359,6 +361,14 @@
         },
 
         methods: {
+            checkSubAccount() {
+                if(this.user.user_type) {
+                    if(this.user.user_type.is_sub_account != 1) {
+                        this.isSubAccount = true;
+                    }
+                }
+            },
+
             async getPurchaseList(params){
                 $('#tbl-purchase').DataTable().destroy();
 
