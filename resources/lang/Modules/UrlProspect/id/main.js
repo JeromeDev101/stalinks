@@ -171,6 +171,21 @@ export default {
     et_cat: 'Kategori Templat',
     et_type: 'Jenis Templat',
 
+    // status
+    s_total: 'Total URLs',
+    s_new: 'Diperbarui',
+    s_crawl_failed: 'Perayapan Gagal',
+    s_contacted: 'Telah Dihubungi',
+    s_contacted_via_form: 'Menghubungi melalui',
+    s_contact_null: 'Hubungi Null',
+    s_got_contacts: 'Menemukan Contact ',
+    s_got_email: 'Punya Email',
+    s_no_answer: 'Tidak ada jawaban',
+    s_refused: 'Ditolak',
+    s_in_touched: 'Terhubung',
+    s_unqualified: 'Tidak Memenuhi Syarat',
+    s_qualified: 'Berkualitas',
+
     // others
     no: 'Tidak',
     yes: 'Ya',

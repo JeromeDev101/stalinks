@@ -210,7 +210,7 @@
                 <div class="small-box rounded bg-aqua">
                     <div class="inner">
                         <h3>{{ listExt.total }}</h3>
-                        <p>Total URL's</p>
+                        <p>{{ $t('message.url_prospect.s_total') }}</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-link"></i>
@@ -2669,7 +2669,7 @@ export default {
 
              return [
                  {
-                     text: 'New',
+                     text: self.$t('message.url_prospect.s_new'),
                      total: self.extListTotals['New'],
                      badge: 'bg-primary',
                      icon: 'fas fa-asterisk',
@@ -2677,7 +2677,7 @@ export default {
                  },
 
                  {
-                     text: 'Crawl Failed',
+                     text: self.$t('message.url_prospect.s_crawl_failed'),
                      total: self.extListTotals['CrawlFailed'],
                      badge: 'bg-danger',
                      icon: 'fas fa-times-circle',
@@ -2685,7 +2685,7 @@ export default {
                  },
 
                  {
-                     text: 'Contacted',
+                     text: self.$t('message.url_prospect.s_contacted'),
                      total: self.extListTotals['Contacted'],
                      badge: 'bg-success',
                      icon: 'fas fa-check-circle',
@@ -2693,7 +2693,7 @@ export default {
                  },
 
                  {
-                     text: 'Contacted Via Form',
+                     text: self.$t('message.url_prospect.s_contacted_via_form'),
                      total: self.extListTotals['ContactedViaForm'],
                      badge: 'bg-secondary',
                      icon: 'fab fa-wpforms',
@@ -2701,7 +2701,7 @@ export default {
                  },
 
                  {
-                     text: 'Contact Null',
+                     text: self.$t('message.url_prospect.s_contact_null'),
                      total: self.extListTotals['ContactNull'],
                      badge: 'bg-warning',
                      icon: 'fas fa-comment-slash',
@@ -2709,7 +2709,7 @@ export default {
                  },
 
                  {
-                     text: 'Got Contacts',
+                     text: self.$t('message.url_prospect.s_got_contacts'),
                      total: self.extListTotals['GotContacts'],
                      badge: 'bg-gradient-teal',
                      icon: 'fas fa-address-card',
@@ -2717,7 +2717,7 @@ export default {
                  },
 
                  {
-                     text: 'Got Email',
+                     text: self.$t('message.url_prospect.s_got_email'),
                      total: self.extListTotals['GotEmail'],
                      badge: 'bg-cyan',
                      icon: 'fas fa-at',
@@ -2725,7 +2725,7 @@ export default {
                  },
 
                  {
-                     text: 'No Answer',
+                     text: self.$t('message.url_prospect.s_no_answer'),
                      total: self.extListTotals['NoAnswer'],
                      badge: 'bg-orange',
                      icon: 'fas fa-phone-slash',
@@ -2733,7 +2733,7 @@ export default {
                  },
 
                  {
-                     text: 'Refused',
+                     text: self.$t('message.url_prospect.s_refused'),
                      total: self.extListTotals['Refused'],
                      badge: 'bg-maroon',
                      icon: 'fas fa-handshake-alt-slash',
@@ -2741,7 +2741,7 @@ export default {
                  },
 
                  {
-                     text: 'In Touched',
+                     text: self.$t('message.url_prospect.s_in_touched'),
                      total: self.extListTotals['InTouched'],
                      badge: 'bg-purple',
                      icon: 'fas fa-comments',
@@ -2749,7 +2749,7 @@ export default {
                  },
 
                  {
-                     text: 'Unqualified',
+                     text: self.$t('message.url_prospect.s_unqualified'),
                      total: self.extListTotals['Unqualified'],
                      badge: 'bg-dark',
                      icon: 'fas fa-ban',
@@ -2757,7 +2757,7 @@ export default {
                  },
 
                  {
-                     text: 'Qualified',
+                     text: self.$t('message.url_prospect.s_qualified'),
                      total: self.extListTotals['Qualified'],
                      badge: 'bg-olive',
                      icon: 'fas fa-certificate',

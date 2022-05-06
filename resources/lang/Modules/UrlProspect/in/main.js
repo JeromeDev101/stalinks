@@ -171,6 +171,21 @@ export default {
     et_cat: 'टेम्पलेट श्रेणी',
     et_type: 'टेम्पलेट प्रकार',
 
+    // status
+    s_total: 'संपूर्ण',
+    s_new: 'नया',
+    s_crawl_failed: 'क्रॉलिंग विफल',
+    s_contacted: 'व्यक्ति से संपर्क किया',
+    s_contacted_via_form: 'फॉर्म के माध्यम से संपर्क किया गया',
+    s_contact_null: 'संपर्क शून्य',
+    s_got_contacts: 'संपर्क मिल गया',
+    s_got_email: 'ईमेल मिला',
+    s_no_answer: 'कोई जवाब नहीं',
+    s_refused: 'मना कर दिया',
+    s_in_touched: 'इनटच्ड',
+    s_unqualified: 'अपरिपक्व',
+    s_qualified: 'योग्य',
+
     // others
     no: 'नहीं',
     yes: 'हां',

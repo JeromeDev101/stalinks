@@ -171,6 +171,21 @@ export default {
     et_cat: 'Template Category',
     et_type: 'Template Type',
 
+    // status
+    s_total: 'Total URLs',
+    s_new: 'New',
+    s_crawl_failed: 'Crawl Failed',
+    s_contacted: 'Contacted',
+    s_contacted_via_form: 'Contacted Via Form',
+    s_contact_null: 'Contact Null',
+    s_got_contacts: 'Got Contacts',
+    s_got_email: 'Got Email',
+    s_no_answer: 'No Answer',
+    s_refused: 'Refused',
+    s_in_touched: 'In Touched',
+    s_unqualified: 'Unqualified',
+    s_qualified: 'Qualified',
+
     // others
     no: 'No',
     yes: 'Yes',

@@ -171,6 +171,21 @@ export default {
     et_cat: 'テンプレートカテゴリ',
     et_type: 'テンプレートタイプ',
 
+    // status
+    s_total: '合計',
+    s_new: '新規',
+    s_crawl_failed: 'クロールに失敗しました',
+    s_contacted: '問い合わせ済み',
+    s_contacted_via_form: 'フォーム問い合わせ済み',
+    s_contact_null: 'ヌルに連絡',
+    s_got_contacts: '問い合わせ入手',
+    s_got_email: 'メールを受け取った',
+    s_no_answer: '無答',
+    s_refused: '拒否',
+    s_in_touched: '連絡中',
+    s_unqualified: '不適正',
+    s_qualified: '適正',
+
     // others
     no: 'いいえ',
     yes: 'はい',

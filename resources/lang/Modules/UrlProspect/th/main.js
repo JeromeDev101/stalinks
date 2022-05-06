@@ -171,6 +171,21 @@ export default {
     et_cat: 'หมวดหมู่เทมเพลต',
     et_type: 'ประเภทเทมเพลต',
 
+    // status
+    s_total: 'ทั้งหมด',
+    s_new: 'ใหม่',
+    s_crawl_failed: 'การรวบรวมข้อมูลล้มเหลว',
+    s_contacted: 'ติดต่อแล้ว',
+    s_contacted_via_form: 'ติดต่อผ่านแบบฟอร์ม',
+    s_contact_null: 'ติดต่อ Null',
+    s_got_contacts: 'ได้รายชื่อผู้ติดต่อ',
+    s_got_email: 'ได้รับอีเมล',
+    s_no_answer: 'ไม่มีคำตอบ',
+    s_refused: 'ปฏิเสธ',
+    s_in_touched: 'พูดคุยแล้ว',
+    s_unqualified: 'ไม่ผ่านเงื่อนไข',
+    s_qualified: 'ผ่านการรับรอง',
+
     // others
     no: 'ไม่',
     yes: 'ตกลง',

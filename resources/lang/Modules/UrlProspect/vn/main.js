@@ -171,6 +171,21 @@ export default {
     et_cat: 'Bản mẫu Danh mục',
     et_type: 'Bản mẫu Gõ phím',
 
+    // status
+    s_total: 'Tổng cộng',
+    s_new: 'Mới',
+    s_crawl_failed: 'Thu thập thông tin không thành công',
+    s_contacted: 'Đã liên hệ',
+    s_contacted_via_form: 'Đã liên hệ qua Biểu mẫu',
+    s_contact_null: 'Liên hệ với Null',
+    s_got_contacts: 'Có Danh bạ',
+    s_got_email: 'Có email',
+    s_no_answer: 'Không trả lời',
+    s_refused: 'Bị từ chối',
+    s_in_touched: 'Liên lạc',
+    s_unqualified: 'Không đủ tiêu chuẩn',
+    s_qualified: 'Đạt tiêu chuẩn',
+
     // others
     no: 'Không',
     yes: 'Có',
