@@ -56,6 +56,9 @@ class PaymentController extends Controller
         $input['type'] = $request->type;
         $input['receive_payment'] = $request->receive_payment;
         $input['send_payment'] = $request->send_payment;
+        $input['account_value'] = $request->account_value;
+        $input['email_value'] = $request->email_value;
+        $input['address_value'] = $request->address_value;
         $payment = PaymentType::findOrFail($request->id);
         $payment->update($input);
         return response()->json(['success' => true], 200);

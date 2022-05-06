@@ -288,13 +288,13 @@ class UserController extends Controller
 
     public function getPaymentList()
     {
-        $list = PaymentType::all();
+        $list = PaymentType::with('payment_type_image')->get();
 
-        $list[5]->account = Config::where('code', 'payoneer')->first()->value;
-        $list[4]->address = Config::where('code', 'usdt_address')->first()->value;
-        $list[3]->address = Config::where('code', 'eth_address')->first()->value;
-        $list[2]->address = Config::where('code', 'btc_address')->first()->value;
-        $list[1]->email = Config::where('code', 'skrill')->first()->value;
+        // $list[5]->account = Config::where('code', 'payoneer')->first()->value;
+        // $list[4]->address = Config::where('code', 'usdt_address')->first()->value;
+        // $list[3]->address = Config::where('code', 'eth_address')->first()->value;
+        // $list[2]->address = Config::where('code', 'btc_address')->first()->value;
+        // $list[1]->email = Config::where('code', 'skrill')->first()->value;
 
         return response()->json([
             'data' => $list

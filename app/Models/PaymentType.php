@@ -17,6 +17,13 @@ class PaymentType extends Model
         'type',
         'show_registration',
         'receive_payment',
-        'send_payment'
+        'send_payment',
+        'account_value',
+        'email_value',
+        'address_value'
     ];
+
+    public function payment_type_image() {
+        return $this->hasMany('App\PaymentTypeImage');
+    }
 }

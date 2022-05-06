@@ -519,7 +519,21 @@
                                 </div>
                             </div>
 
-                            <div v-if="updateModel.payment_type === 3" class="col-md-12">
+                            <div class="col-md-12" v-if="updateModel.payment_type != 1 && updateModel.payment_type != ''">
+                                <div v-for="option in listPayment.data" v-if="option.receive_payment === 'yes' && option.id === updateModel.payment_type" :key="option.id">
+
+                                    <img v-if="updateModel.payment_type === 3" src="storage/btc.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <img v-if="updateModel.payment_type === 7" src="storage/eth.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <img v-if="updateModel.payment_type === 6" src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+
+                                    <p v-if="option.account_value != '' && option.account_value != null" class="text-center"><b>Account: </b>{{ option.account_value }}</p>
+                                    <p v-if="option.email_value != '' && option.email_value != null" class="text-center"><b>Email: </b>{{ option.email_value }}</p>
+                                    <p v-if="option.address_value != '' && option.address_value != null" class="text-center"><b>Address: </b>{{ option.address_value }}</p>
+                                    
+                                </div>
+                            </div>
+
+                            <!-- <div v-if="updateModel.payment_type === 3" class="col-md-12">
                                 <img src="storage/btc.jpg" width="250px" alt="" class="mx-auto d-block">
                                 <p class="text-center">{{ listPayment.data[2].address }}</p>
                             </div>
@@ -544,7 +558,7 @@
                                 <p class="text-center">
                                     Payoneer Account: {{ listPayment.data[5].account }}
                                 </p>
-                            </div>
+                            </div> -->
 
                             <div
                                 v-if="updateModel.payment_type != 1"
@@ -573,6 +587,7 @@
                                     </span>
                                 </div>
                             </div>
+
                             <div v-if="updateModel.payment_type == 1" class="col-md-6">
                                 <div class="form-group">
                                     <label for="">{{ $t('message.header.paypal') }}</label>
@@ -1044,7 +1059,7 @@ export default {
             },
 
             writerSurvey : {
-                show: false,
+            show: false,
                 isSetAAnswered: false
             },
 

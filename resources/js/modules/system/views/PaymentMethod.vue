@@ -81,96 +81,149 @@
              aria-labelledby="modelTitleId"
              aria-hidden="true"
             ref="modalUpdatePaymentType">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Update Payment Type</h5>
                     </div>
                     <div class="modal-body">
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
-                            <label for="">Payment Type</label>
-                            <input type="text"
-                                   v-model="paymentUpdate.type"
-                                   class="form-control"
-                                   placeholder="Enter Payment Type"
-                                   required>
-                            <span v-if="messageForms.errors.type"
-                                  v-for="err in messageForms.errors.type"
-                                  class="text-danger">{{ err }}</span>
-                        </div>
+                        <div class="row">
 
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.receive_payment}"
-                             class="form-group">
-                            <label for="">Receive Payment</label>
-                            <select name="" id="" class="form-control" v-model="paymentUpdate.receive_payment">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                            <span v-if="messageForms.errors.receive_payment"
-                                  v-for="err in messageForms.errors.receive_payment"
-                                  class="text-danger">{{ err }}</span>
-                        </div>
-
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.send_payment}"
-                             class="form-group">
-                            <label for="">Send Payment</label>
-                            <select name="" id="" class="form-control" v-model="paymentUpdate.send_payment">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                            <span v-if="messageForms.errors.send_payment"
-                                  v-for="err in messageForms.errors.send_payment"
-                                  class="text-danger">{{ err }}</span>
-                        </div>
-
-                        <div :class="{'form-group': true, 'has-error': messageForms.errors.account_value}"
-                             class="form-group">
-                            <label for="">Email / Account / Address</label>
-
-                            <input type="text"
-                                   v-model="paymentUpdate.account_value"
-                                   class="form-control"
-                                   placeholder="Enter Email / Account / Address"
-                                   required>
+                            <div class="col-sm-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
+                                    <label for="">Payment Type</label>
+                                    <input type="text"
+                                        v-model="paymentUpdate.type"
+                                        class="form-control"
+                                        placeholder="Enter Payment Type"
+                                        required>
+                                    <span v-if="messageForms.errors.type"
+                                        v-for="err in messageForms.errors.type"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.receive_payment}"
+                                    class="form-group">
+                                    <label for="">Receive Payment</label>
+                                    <select name="" id="" class="form-control" v-model="paymentUpdate.receive_payment">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.receive_payment"
+                                        v-for="err in messageForms.errors.receive_payment"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
                             
-                            <span v-if="messageForms.errors.account_value"
-                                  v-for="err in messageForms.errors.account_value"
-                                  class="text-danger">{{ err }}</span>
-                        </div>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.send_payment}"
+                                    class="form-group">
+                                    <label for="">Send Payment</label>
+                                    <select name="" id="" class="form-control" v-model="paymentUpdate.send_payment">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <span v-if="messageForms.errors.send_payment"
+                                        v-for="err in messageForms.errors.send_payment"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="">Upload logo</label>
-                            <div class="row">
-                                <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo">
+                            <div class="col-sm-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.email_value}"
+                                    class="form-group">
+                                    <label for="">Email</label>
 
-                                <button type="button" @click="uploadImage('logo')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+                                    <input type="text"
+                                        v-model="paymentUpdate.email_value"
+                                        class="form-control"
+                                        placeholder="Enter Email"
+                                        required>
+                                    
+                                    <span v-if="messageForms.errors.email_value"
+                                        v-for="err in messageForms.errors.email_value"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
 
+                            <div class="col-sm-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.account_value}"
+                                    class="form-group">
+                                    <label for="">Account</label>
+
+                                    <input type="text"
+                                        v-model="paymentUpdate.account_value"
+                                        class="form-control"
+                                        placeholder="Enter Account"
+                                        required>
+                                    
+                                    <span v-if="messageForms.errors.account_value"
+                                        v-for="err in messageForms.errors.account_value"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.address_value}"
+                                    class="form-group">
+                                    <label for="">Address</label> <small class="text-danger"><i>(for Cypto only)</i></small>
+
+                                    <input type="text"
+                                        v-model="paymentUpdate.address_value"
+                                        class="form-control"
+                                        placeholder="Enter Address"
+                                        required>
+                                    
+                                    <span v-if="messageForms.errors.address_value"
+                                        v-for="err in messageForms.errors.address_value"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">Upload logo</label>
+                                    <div class="row">
+                                        <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo">
+
+                                        <button type="button" @click="uploadImage('logo')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="">QR Code Image</label>
+                                    <div class="row">
+                                        <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo2">
+
+                                        <button type="button" @click="uploadImage('qr')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-12">
+                                <div class="row mb-4" v-for="image in paymentImages">
+                                    <div class="col-2 d-flex align-items-center">
+                                        ({{ image.image_type }})
+                                    </div>
+                                    <div class="col-2 mr-4">
+                                        <img :src="'/storage/' + image.path" width="100%" alt="">
+                                    </div>
+                                    <div class="col-3 d-flex align-items-center mr-4">
+                                        <a href="">{{ image.path }}</a>
+                                    </div>
+                                    <div class="col-1 d-flex align-items-center">
+                                        <a href="" @click.prevent="deleteImage(image.id)" title="Delete" style="color: #444"><i class="fas fa-times"></i></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="">QR Code Image</label>
-                            <div class="row">
-                                <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo2">
-
-                                <button type="button" @click="uploadImage('qr')" class="btn btn-primary col-2"><i class="fas fa-upload"></i></button>
-
-                            </div>
-                        </div>
-
-                        <div class="row mb-4" v-for="image in paymentImages">
-                            <div class="col-2 mr-4">
-                                ({{ image.image_type }}) 
-                                <img :src="'/storage/' + image.path" width="100%" alt="">
-                            </div>
-                            <div class="col-3 d-flex align-items-center mr-4">
-                                <a href="">{{ image.path }}</a>
-                            </div>
-                            <div class="col-1 d-flex align-items-center">
-                                <a href="" @click.prevent="deleteImage(image.id)" style="color: #444"><i class="fas fa-times"></i></a>
-                            </div>
-                        </div>
-
 
                     </div>
                     <div class="modal-footer">
@@ -203,6 +256,8 @@ export default {
                 receive_payment : '',
                 send_payment : '',
                 account_value : '',
+                address_value : '',
+                email_value : '',
             },
             paymentModel : {
                 id : 0,
