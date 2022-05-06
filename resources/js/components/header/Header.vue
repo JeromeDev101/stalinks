@@ -522,9 +522,7 @@
                             <div class="col-md-12" v-if="updateModel.payment_type != 1 && updateModel.payment_type != ''">
                                 <div v-for="option in listPayment.data" v-if="option.receive_payment === 'yes' && option.id === updateModel.payment_type" :key="option.id">
 
-                                    <img v-if="updateModel.payment_type === 3" src="storage/btc.jpg" width="250px" alt="" class="mx-auto d-block">
-                                    <img v-if="updateModel.payment_type === 7" src="storage/eth.jpg" width="250px" alt="" class="mx-auto d-block">
-                                    <img v-if="updateModel.payment_type === 6" src="storage/usdt.jpg" width="250px" alt="" class="mx-auto d-block">
+                                    <img v-if="option.qr_img_path != '' && option.qr_img_path != null" :src="'storage/'+option.qr_img_path" width="250px" alt="" class="mx-auto d-block">
 
                                     <p v-if="option.account_value != '' && option.account_value != null" class="text-center"><b>Account: </b>{{ option.account_value }}</p>
                                     <p v-if="option.email_value != '' && option.email_value != null" class="text-center"><b>Email: </b>{{ option.email_value }}</p>

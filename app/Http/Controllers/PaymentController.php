@@ -69,6 +69,11 @@ class PaymentController extends Controller
         $file = PaymentTypeImage::find($id);
         $paymentTypeId = $file->payment_type_id;
 
+        if($file->image_type == 'qr') {
+            $paymet_type = PaymentType::find($paymentTypeId);
+            $paymet_type->update(['qr_img_path'=>null]);
+        }
+
         Storage::delete($file->path);
 
         PaymentTypeImage::destroy($file->id);
@@ -82,6 +87,11 @@ class PaymentController extends Controller
 
         if ($file) {
             Storage::disk('local')->put($file->getClientOriginalName(), file_get_contents($file));
+        }
+
+        if($request->image_type === 'qr') {
+            $paymet_type = PaymentType::find($id);
+            $paymet_type->update(['qr_img_path'=>$file->getClientOriginalName()]);
         }
 
         $response = PaymentTypeImage::create([
